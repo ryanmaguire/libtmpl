@@ -28,6 +28,13 @@
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       February 1, 2021                                              *
+ ******************************************************************************
+ *                          Revision History                                  *
+ ******************************************************************************
+ *  2021/02/01: Ryan Maguire                                                  *
+ *      Copied from rss_ringoccs and edited.                                  *
+ *  2021/02/02: Ryan Maguire:                                                 *
+ *      Soft freeze for libtmpl alpha release.                                *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -44,3 +51,4 @@ typedef enum {tmpl_False, tmpl_True} tmpl_Bool;
 
 #endif
 /*  End of include guard.                                                     */
+

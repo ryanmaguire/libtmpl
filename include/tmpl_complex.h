@@ -1,195 +1,121 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           rss_ringoccs_complex                             *
+ *                               tmpl_complex                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Define complex data types and provide various functions for           *
  *      creating complex variables and performing complex arithmetic.         *
- ******************************************************************************
- *                               DEPENDENCIES                                 *
- ******************************************************************************
- *  1.) complex.h (if your compiler supports C99. None otherwise):            *
- *      Standard library for complex types.                                   *
- ******************************************************************************
- *                                 WARNINGS                                   *
- ******************************************************************************
- *  1.) If your compiler supports C99 complex.h and you would rather use the  *
- *      built-in complex data type and complex functions with rss_ringoccs,   *
- *      you must build rss_ringoccs with such a configuration beforehand.     *
- *      See the config script config_librssringoccs.sh for details.           *
+ *  NOTES:                                                                    *
+ *      This file is a fork of the complex library I wrote for rss_ringoccs.  *
+ *      rss_ringoccs is also released under GPL 3.                            *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/NASA-Planetary-Science/rss_ringoccs/issues             *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
  *                                EXAMPLES                                    *
  ******************************************************************************
  *  Examples of all of the functions can be found in:                         *
- *      rss_ringoccs/examples/complex_examples/                               *
+ *      libtmpl/examples/complex_examples/                                    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       September 13, 2020                                            *
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       February 2, 2021                                              *
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
+ *  2020/11/13 (Ryan Maguire):                                                *
+ *      Created file.                                                         *
  *  2020/11/30 (Ryan Maguire):                                                *
  *      Added float and long double precision complex types.                  *
+ *  2021/02/02 (Ryan Maguire):                                                *
+ *      Copied from rss_ringoccs.                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __RSS_RINGOCCS_COMPLEX_H__
-#define __RSS_RINGOCCS_COMPLEX_H__
+#ifndef __TMPL_COMPLEX_H__
+#define __TMPL_COMPLEX_H__
 
 /*  Config header file containing the macros for how to build rss_ringoccs.   */
-#include <rss_ringoccs/include/rss_ringoccs_config.h>
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Booleans defined here. Needed for the FFT and compare routines.           */
-#include <rss_ringoccs/include/rss_ringoccs_bool.h>
-
-/*  C99 requires complex.h, but C11 makes it optional. If you have C99        *
- *  support and would like to use built-in complex numbers, change the setup  *
- *  script config_librssringoccs.sh. See that file for details.               *
- *  When tested against something simple like the complex exponential         *
- *  function, the cexp provided by glibc (GNU C library) for complex.h is     *
- *  slightly faster than rss_ringoccs. This was tested on an array of one     *
- *  million points in the complex plane, the times are as follows:            *
- *  (iMac 2017 running MacOS)                                                 *
- *      C89 Time: 0.026958                                                    *
- *      C99 Time: 0.022602                                                    *
- *  This is not to say one can't achieve better times with C89 compliant code.*
- *  rss_ringoccs uses simple, but effective algorithms, not necessary the     *
- *  fastest. Still, ~0.027 seconds for a very large array isn't bad. The code *
- *  was compiled using gcc 10 with -O3 optimization. For 10 million points    *
- *  the times were:                                                           *
- *      C89 Time: 0.267769                                                    *
- *      C99 Time: 0.231087                                                    *
- *  Which seems linear.                                                       */
-
-/*  Check if the user has requested building using C99 compliant code.        */
-#if __RSS_RINGOCCS_USING_COMPLEX_H__ == 1
-
-/*  We'll only use C99 if the compiler supports it. The __STDC_VERSION__      *
- *  should be 199901L or higher and the __STDC_NO_COMPLEX__ macro should not  *
- *  be defined. By default the -std=c89 and -ansi flags are enabled for the   *
- *  compiler in the config_librssringoccs.sh script. This will set            *
- *  __STDC_VERSION__ to its C89 value. Remove -ansi and change -std=c89 to    *
- *  -std=c99 if you want complex.h support. If you are using a compiler other *
- *  than clang or gcc, see it's documentation for details.                    */
-#if !defined(__STDC_NO_COMPLEX__) && __STDC_VERSION__ >= 199901L
-
-/*  The various .c files will check if this is 1 or 0 to compile the right    *
- *  code, depending on if you have complex.h or not.                          */
-#define _RSS_RINGOCCS_USING_COMPLEX_H_ 1
-
-/*  Grab everything from the C99 standard complex.h and we'll just alias the  *
- *  functions and macros defined within.                                      */
-#include <complex.h>
-
-/*  You have complex.h support, so we'll just typedef double _Complex.        */
-typedef double _Complex rssringoccs_ComplexDouble;
-
-/*  Typedef single and long double precision equivalents.                     */
-typedef float _Complex rssringoccs_ComplexFloat;
-typedef long double _Complex rssringoccs_ComplexLongDouble;
-
-#else
-/*  Else for #if !defined(__STDC_NO_COMPLEX__) && __STDC_VERSION__ >= 199901L */
-
-/*  If we get here, then you've requested C99 complex.h but your compiler     *
- *  not support it. Abort compiling with an error.                            */
-
-#error __RSS_RINGOCCS_USING_COMPLEX_H__ set to 1 but you do not have complex.h
-
-#endif
-/*  End of #if !defined(__STDC_NO_COMPLEX__) && __STDC_VERSION__ >= 199901L.  */
-
-#else
-/*  Else statement for #if __RSS_RINGOCCS_USING_COMPLEX_H__ == 1.             */
-
-/*  This is the default build for rss_ringoccs. The code is strictly C89      *
- *  compliant and attempts to be as portable as possible.                     */
-
-/*  Set the _RSS_RINGOCCS_USING_COMPLEX_H_ macro to zero.                     */
-#define _RSS_RINGOCCS_USING_COMPLEX_H_ 0
+/*  Booleans defined here. Needed for the compare routines.                   */
+#include <libtmpl/include/tmpl_bool.h>
 
 /*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
  *  data structure containing a single array double dat[2];. If you are using *
- *  the GSL v2.6, you can use rss_ringoccs functions with that library. That  *
- *  is, if we have a pointer rssringoccs_ComplexDouble *z; and another        *
- *  pointer gsl_complex *w; we can safely cast via:                           *
- *      z = (rssringoccs_ComplexDouble *)&w;                                  *
+ *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
+ *  if we have a pointer tmpl_ComplexDouble *z; and another pointer           *
+ *  gsl_complex *w; we can safely cast via:                                   *
+ *      z = (tmpl_ComplexDouble *)&w;                                         *
  *  And similarly we can do w = (gsl_complex *)&z;                            */
-typedef struct rssringoccs_ComplexDouble {
+typedef struct tmpl_ComplexDouble {
     double dat[2];
-} rssringoccs_ComplexDouble;
+} tmpl_ComplexDouble;
 
 /*  Define single and long double precision equivalents.                      */
-typedef struct rssringoccs_ComplexFloat {
+typedef struct tmpl_ComplexFloat {
     float dat[2];
-} rssringoccs_ComplexFloat;
+} tmpl_ComplexFloat;
 
-typedef struct rssringoccs_ComplexLongDouble {
+typedef struct tmpl_ComplexLongDouble {
     long double dat[2];
-} rssringoccs_ComplexLongDouble;
-
-#endif
-/*  End of __RSS_RINGOCCS_USING_COMPLEX_H__ == 1.                             */
+} tmpl_ComplexLongDouble;
 
 /*  Useful constants used throughout computations.                            */
 
 /*  The imaginary unit, z = 0 + i 1.                                          */
-extern const rssringoccs_ComplexFloat rssringoccs_CFloat_I;
-extern const rssringoccs_ComplexDouble rssringoccs_CDouble_I;
-extern const rssringoccs_ComplexLongDouble rssringoccs_CLDouble_I;
+extern const tmpl_ComplexFloat tmpl_CFloat_I;
+extern const tmpl_ComplexDouble tmpl_CDouble_I;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_I;
 
 /*  Complex zero, z = 0 + i0.                                                 */
-extern const rssringoccs_ComplexFloat rssringoccs_CFloat_Zero;
-extern const rssringoccs_ComplexDouble rssringoccs_CDouble_Zero;
-extern const rssringoccs_ComplexLongDouble rssringoccs_CLDouble_Zero;
+extern const tmpl_ComplexFloat tmpl_CFloat_Zero;
+extern const tmpl_ComplexDouble tmpl_CDouble_Zero;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_Zero;
 
 /*  Complex one, z = 1 + i0.                                                  */
-extern const rssringoccs_ComplexFloat rssringoccs_CFloat_One;
-extern const rssringoccs_ComplexDouble rssringoccs_CDouble_One;
-extern const rssringoccs_ComplexLongDouble rssringoccs_CLDouble_One;
+extern const tmpl_ComplexFloat tmpl_CFloat_One;
+extern const tmpl_ComplexDouble tmpl_CDouble_One;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
 
 /*  Complex Not-a-Number, set to NaN + i NaN.                                 */
-extern const rssringoccs_ComplexFloat rssringoccs_CFloat_NaN;
-extern const rssringoccs_ComplexDouble rssringoccs_CDouble_NaN;
-extern const rssringoccs_ComplexLongDouble rssringoccs_CLDouble_NaN;
+extern const tmpl_ComplexFloat tmpl_CFloat_NaN;
+extern const tmpl_ComplexDouble tmpl_CDouble_NaN;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
 
 /*  Complex infinity, set to inf + i inf. This is the "north pole" on the     *
  *  Riemann sphere.                                                           */
-extern const rssringoccs_ComplexFloat rssringoccs_CFloat_Infinity;
-extern const rssringoccs_ComplexDouble rssringoccs_CDouble_Infinity;
-extern const rssringoccs_ComplexLongDouble rssringoccs_CLDouble_Infinity;
+extern const tmpl_ComplexFloat tmpl_CFloat_Infinity;
+extern const tmpl_ComplexDouble tmpl_CDouble_Infinity;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Abs                                               *
+ *      tmpl_CDouble_Abs                                                      *
  *  Purpose:                                                                  *
  *      Compute the absolute value of a complex number. This is equivalent to *
  *      the cabs function found in complex.h (C99).                           *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      double abs_z:                                                         *
@@ -197,50 +123,50 @@ extern const rssringoccs_ComplexLongDouble rssringoccs_CLDouble_Infinity;
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
  ******************************************************************************/
 extern float
-rssringoccs_CFloat_Abs(rssringoccs_ComplexFloat z);
+tmpl_CFloat_Abs(tmpl_ComplexFloat z);
 
 extern double
-rssringoccs_CDouble_Abs(rssringoccs_ComplexDouble z);
+tmpl_CDouble_Abs(tmpl_ComplexDouble z);
 
 extern long double
-rssringoccs_CLDouble_Abs(rssringoccs_ComplexLongDouble z);
+tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Abs_Squared                                       *
+ *      tmpl_CDouble_Abs_Squared                                              *
  *  Purpose:                                                                  *
  *      Compute the square of the absolute value of a complex number z. This  *
  *      is useful for when |z|^2 is needed so we can avoid an expensive and   *
  *      redundant square root calculation. We can just compute x*x + y*y for  *
  *      the complex number z = x + iy.                                        *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      double abs_sq:                                                        *
  *          The square of the absolute value of z, |z|^2.                     *
  ******************************************************************************/
 extern float
-rssringoccs_CFloat_Abs_Squared(rssringoccs_ComplexFloat z);
+tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
 
 extern double
-rssringoccs_CDouble_Abs_Squared(rssringoccs_ComplexDouble z);
+tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
 
 extern long double
-rssringoccs_CLDouble_Abs_Squared(rssringoccs_ComplexLongDouble z);
+tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Add                                               *
+ *      tmpl_CDouble_Add                                                      *
  *  Purpose:                                                                  *
  *      Add two complex numbers.                                              *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z0:                                         *
+ *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
- *      rssringoccs_ComplexDouble z1:                                         *
+ *      tmpl_ComplexDouble z1:                                                *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble sum:                                        *
+ *      tmpl_ComplexDouble sum:                                               *
  *          The sum of z0 and z1.                                             *
  *  NOTES:                                                                    *
  *      In C99, since _Complex is a built-in data type, given double _Complex *
@@ -248,53 +174,50 @@ rssringoccs_CLDouble_Abs_Squared(rssringoccs_ComplexLongDouble z);
  *      structs to define complex numbers. Structs cannot be added, so we     *
  *      need a function for computing the sum of two complex values.          *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Add(rssringoccs_ComplexFloat z1,
-                             rssringoccs_ComplexFloat z2);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Add(tmpl_ComplexFloat z1, tmpl_ComplexFloat z2);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Add(rssringoccs_ComplexDouble z1,
-                              rssringoccs_ComplexDouble z2);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Add(tmpl_ComplexDouble z1, tmpl_ComplexDouble z2);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Add(rssringoccs_ComplexLongDouble z1,
-                                  rssringoccs_ComplexLongDouble z2);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Add(tmpl_ComplexLongDouble z1, tmpl_ComplexLongDouble z2);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Add_Imag                                          *
+ *      tmpl_CDouble_Add_Imag                                                 *
  *  Purpose:                                                                  *
  *      Add an imaginary number to a complex one.                             *
  *  Arguments:                                                                *
  *      double y:                                                             *
  *          An imaginary number.                                              *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble sum:                                        *
+ *      tmpl_ComplexDouble sum:                                               *
  *          The sum of y and z.                                               *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Add_Imag(float y, rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Add_Imag(double y, rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Add_Imag(double y, tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Add_Imag(long double y, rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Add_Real                                          *
+ *      tmpl_CDouble_Add_Real                                                 *
  *  Purpose:                                                                  *
  *      Add a real number to a complex one.                                   *
  *  Arguments:                                                                *
  *      double x:                                                             *
  *          A real number.                                                    *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble sum:                                        *
+ *      tmpl_ComplexDouble sum:                                               *
  *          The sum of x and z.                                               *
  *  NOTES:                                                                    *
  *      This function is provided for convenience. It is somewhat laborious   *
@@ -302,23 +225,23 @@ rssringoccs_CLDouble_Add_Imag(long double y, rssringoccs_ComplexLongDouble z);
  *      rssringoccs_CDouble_Add to add the two complex numbers, so this       *
  *      function can be used to skip the intermediate step.                   *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Add_Real(float x, rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Add_Real(double x, rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Add_Real(double x, tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Add_Real(long double x, rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Argument                                          *
+ *      tmpl_CDouble_Argument                                                 *
  *  Purpose:                                                                  *
  *      Compute the argument (phase) of a non-zero complex number. This is    *
  *      equivalent of carg found in complex.h (C99).                          *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      double arg:                                                           *
@@ -344,90 +267,87 @@ rssringoccs_CLDouble_Argument(rssringoccs_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Compare                                           *
+ *      tmpl_CDouble_Compare                                                  *
  *  Purpose:                                                                  *
  *      Compare two complex numbers z0 and z1. This returns true if both the  *
  *      real and imaginary parts of z0 and z1 are identical, and false        *
  *      otherwise.                                                            *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z0:                                         *
+ *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
- *      rssringoccs_ComplexDouble z1:                                         *
+ *      tmpl_ComplexDouble z1:                                                *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_Bool comp:                                                *
+ *      tmpl_Bool comp:                                                       *
  *          A Boolean indicating whether or not z0 and z1 are the same.       *
  ******************************************************************************/
-extern rssringoccs_Bool
-rssringoccs_CFloat_Compare(rssringoccs_ComplexFloat z,
-                                 rssringoccs_ComplexFloat w);
+extern tmpl_Bool
+tmpl_CFloat_Compare(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-extern rssringoccs_Bool
-rssringoccs_CDouble_Compare(rssringoccs_ComplexDouble z,
-                                  rssringoccs_ComplexDouble w);
+extern tmpl_Bool
+tmpl_CDouble_Compare(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-extern rssringoccs_Bool
-rssringoccs_CLDouble_Compare(rssringoccs_ComplexLongDouble z,
-                                      rssringoccs_ComplexLongDouble w);
+extern tmpl_Bool
+tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Conjugate                                         *
+ *      tmpl_CDouble_Conjugate                                                *
  *  Purpose:                                                                  *
  *      Returns the complex conjugate of a complex number z. This is          *
  *      equivalent to conj found in complex.h (C99). If z = x + iy, the       *
  *      complex conjugate of z is conj_z = x - iy.                            *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble conj_z:                                     *
+ *      tmpl_ComplexDouble conj_z:                                            *
  *          The complex conjugate of z.                                       *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Conjugate(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Conjugate(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Conjugate(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Conjugate(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Conjugate(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Cos                                               *
+ *      tmpl_CDouble_Cos                                                      *
  *  Purpose:                                                                  *
  *      Compute the cosine of a complex number z.                             *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble cos_z:                                      *
+ *      tmpl_ComplexDouble cos_z:                                             *
  *          The cosine of z.                                                  *
  *  NOTE:                                                                     *
  *      We simply use the fact that cos(x+iy) = cos(x)cos(iy)-sin(x)sin(iy)   *
  *      and then invoke the definition of hyperbolic cosine and hyperbolic    *
  *      sine yielding cos(x+iy) = cos(x)cosh(y) - i * sin(x)sinh(y).          *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Cos(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Cos(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Cos(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Cos(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Cos(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Dist                                              *
+ *      tmpl_CDouble_Dist                                                     *
  *  Purpose:                                                                  *
  *      Compute the distance between two points in the complex plane.         *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble cos_z:                                      *
+ *      tmpl_ComplexDouble cos_z:                                             *
  *          The cosine of z.                                                  *
  *  NOTE:                                                                     *
  *      This function is provided to save one from performing                 *
@@ -435,29 +355,26 @@ rssringoccs_CLDouble_Cos(rssringoccs_ComplexLongDouble z);
  *      This saves a redundant function call and makes code look cleaner.     *
  ******************************************************************************/
 extern float
-rssringoccs_CFloat_Dist(rssringoccs_ComplexFloat z0,
-                        rssringoccs_ComplexFloat z1);
+tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
 extern double
-rssringoccs_CDouble_Dist(rssringoccs_ComplexDouble z0,
-                         rssringoccs_ComplexDouble z1);
+tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern long double
-rssringoccs_CLDouble_Dist(rssringoccs_ComplexLongDouble z0,
-                          rssringoccs_ComplexLongDouble z1);
+tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Divide                                      *
+ *      tmpl_CDouble_Divide                                                   *
  *  Purpose:                                                                  *
  *     Compute the quotient of a complex number z0 by z1.                     *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z0:                                         *
+ *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
- *      rssringoccs_ComplexDouble z1:                                         *
+ *      tmpl_ComplexDouble z1:                                                *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble quotient:                                   *
+ *      tmpl_ComplexDouble quotient:                                          *
  *          The complex number z0 / z1.                                       *
  *  NOTE:                                                                     *
  *      No error check is performed on whether or not z1 = 0+0i. If this is   *
@@ -468,88 +385,85 @@ rssringoccs_CLDouble_Dist(rssringoccs_ComplexLongDouble z0,
  *      Division is not commutative, so given (z0, z1), this returns z0/z1 and*
  *      not z1/z0. That is, we divide the first entry by the second.          *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Divide(rssringoccs_ComplexFloat z1,
-                          rssringoccs_ComplexFloat z2);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Divide(tmpl_ComplexFloat z1, tmpl_ComplexFloat z2);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Divide(rssringoccs_ComplexDouble z1,
-                           rssringoccs_ComplexDouble z2);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Divide(tmpl_ComplexDouble z1, tmpl_ComplexDouble z2);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Divide(rssringoccs_ComplexLongDouble z1,
-                            rssringoccs_ComplexLongDouble z2);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z1, tmpl_ComplexLongDouble z2);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Erf                                               *
+ *      tmpl_CDouble_Erf                                                      *
  *  Purpose:                                                                  *
  *     Compute the complex error function of z, erf(z).                       *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble erf_z:                                      *
+ *      tmpl_ComplexDouble erf_z:                                             *
  *          The error function evaluated at z.                                *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Erf(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Erf(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Erf(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Erf(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Erf(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Erf(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Erfc                                              *
+ *      tmpl_CDouble_Erfc                                                     *
  *  Purpose:                                                                  *
  *     Compute the complementary complex error function of z, erf(z).         *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble erf_z:                                      *
+ *      tmpl_ComplexDouble erf_z:                                             *
  *          The complementary error function evaluated at z.                  *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Erfc(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Erfc(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Erfc(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Erfc(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Erfc(tmpl_ComplexLongDouble z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Real_Part                                         *
+ *      tmpl_Complex_Real_Part                                                *
  *  Purpose:                                                                  *
  *      Return the real part of a complex number. This is equivalent to creal *
  *      found in complex.h (C99).                                             *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      double real:                                                          *
  *          The real part of z.                                               *
  ******************************************************************************/
 extern float
-rssringoccs_CFloat_Real_Part(rssringoccs_ComplexFloat z);
+tmpl_CFloat_Real_Part(tmpl_ComplexFloat z);
 
 extern double
-rssringoccs_CDouble_Real_Part(rssringoccs_ComplexDouble z);
+tmpl_CDouble_Real_Part(tmpl_ComplexDouble z);
 
 extern long double
-rssringoccs_CLDouble_Real_Part(rssringoccs_ComplexLongDouble z);
+tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Imag_Part                                         *
+ *      tmpl_Complex_Imag_Part                                                *
  *  Purpose:                                                                  *
  *      Return the imaginary part of a complex number. This is equivalent to  *
  *      cimag found in complex.h (C99).                                       *
@@ -561,27 +475,27 @@ rssringoccs_CLDouble_Real_Part(rssringoccs_ComplexLongDouble z);
  *          The imaginary part of z.                                          *
  ******************************************************************************/
 extern float
-rssringoccs_CFloat_Imag_Part(rssringoccs_ComplexFloat z);
+tmpl_CFloat_Imag_Part(tmpl_ComplexFloat z);
 
 extern double
-rssringoccs_CDouble_Imag_Part(rssringoccs_ComplexDouble z);
+tmpl_CDouble_Imag_Part(tmpl_ComplexDouble z);
 
 extern long double
-rssringoccs_CLDouble_Imag_Part(rssringoccs_ComplexLongDouble z);
+tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Exp                                               *
+ *      tmpl_CDouble_Exp                                                      *
  *  Purpose:                                                                  *
  *      Compute the complex exponential of a complex number z. This is        *
  *      equivalent to cexp defined in complex.h (C99). The complex            *
  *      exponential has the same definition as the real exponential, a power  *
  *      series with terms z^n / n!.                                           *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble exp_z:                                      *
+ *      tmpl_ComplexDouble exp_z:                                             *
  *          The complex exponential of z.                                     *
  *  NOTE:                                                                     *
  *      The algorithm does not actually use the power series directly, but    *
@@ -592,26 +506,26 @@ rssringoccs_CLDouble_Imag_Part(rssringoccs_ComplexLongDouble z);
  *                 = exp(x)cos(y) + i exp(x)sin(y)                            *
  *      So we compute using the trig functions and the real exponential.      *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Exp(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Exp(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Exp(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Exp(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Exp(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Exp(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Sqrt                                              *
+ *      tmpl_CDouble_Sqrt                                                     *
  *  Purpose:                                                                  *
  *      Compute the principal square root of a complex number. This is        *
  *      equivalent to csqrt defined in complex.h (C99).                       *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble sqrt_z:                                     *
+ *      tmpl_ComplexDouble sqrt_z:                                            *
  *          The square root of z.                                             *
  *  NOTE:                                                                     *
  *      The algorithm computes the complex square root by putting z into polar*
@@ -622,46 +536,29 @@ rssringoccs_CLDouble_Exp(rssringoccs_ComplexLongDouble z);
  *      along the negative x axis. rss_ringoccs does not provide the option   *
  *      to choose a different branch.                                         *
  ******************************************************************************/
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Sqrt(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Sqrt(tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Sqrt(tmpl_ComplexDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Log                                               *
+ *      tmpl_CDouble_Log                                                      *
  *  Purpose:                                                                  *
  *      Compute the principal log of a complex number z. This is equivalent   *
  *      to clog defined in complex.h (C99).                                   *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble ln_z:                                       *
+ *      tmpl_ComplexDouble ln_z:                                              *
  *          The log of z.                                                     *
  *  NOTE:                                                                     *
  *      The algorithm computes the complex log by putting z into polar        *
  *      form, z = r exp(i theta). It then returns ln(r) + i theta, where      *
  *      ln is the real valued natural log. Because of this there is a branch  *
  *      cut along the negative x axis.                                        *
- *  Example:                                                                  *
- *          #include <stdio.h>                                                *
- *          #include <rss_ringoccs_complex.h>                                 *
- *                                                                            *
- *          int main(void)                                                    *
- *          {                                                                 *
- *              double real, imag;                                            *
- *              rssringoccs_ComplexDouble z, ln_z;                            *
- *                                                                            *
- *              z = rssringoccs_Complex_Rect(1.0, 1.0);                       *
- *              ln_z = rssringoccs_Complex_Log(z);                            *
- *                                                                            *
- *              real = rssringoccs_Complex_Real_Part(ln_z);                   *
- *              imag = rssringoccs_Complex_Imag_Part(ln_z);                   *
- *                                                                            *
- *              printf("%f + %fi\n", real, imag);                             *
- *              return 0;                                                     *
- *          }                                                                 *
- *                                                                            *
- *      This will ouptut 0.346574 + 0.785398i. i.e. ln(1+i) = 0.3465+0.7853i. *
  ******************************************************************************/
 extern rssringoccs_ComplexFloat
 rssringoccs_CFloat_Log(rssringoccs_ComplexFloat z);
@@ -672,10 +569,53 @@ rssringoccs_CDouble_Log(rssringoccs_ComplexDouble z);
 extern rssringoccs_ComplexLongDouble
 rssringoccs_CLDouble_Log(rssringoccs_ComplexLongDouble z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Pow(rssringoccs_ComplexDouble z0,
-                        rssringoccs_ComplexDouble z1);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Pow                                                      *
+ *  Purpose:                                                                  *
+ *      Computes z0^z1 for two complex numbers z0 and z1. This uses the       *
+ *      formula/definition:                                                   *
+ *          z0^z1 = exp(z1*ln(z0))                                            *
+ *      Since natural log has a branch cut along the negative real axis, so   *
+ *      does this function.                                                   *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z0:                                                *
+ *          A complex number, the base.                                       *
+ *      tmpl_ComplexDouble z1:                                                *
+ *          A complex number, the exponent.                                   *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z0_to_the_z1:                                      *
+ *          The complex number z0^z1.                                         *
+ *  NOTE:                                                                     *
+ *      The algorithm uses complex log, so there is a branch cut on the       *
+ *      negative real axis.                                                   *
+ *                                                                            *
+ *      0^0 will return NaN. This is because the output will be:              *
+ *          0^0 = exp(0 * 0) = exp(0 * -infinifty) = exp(NaN) = NaN.          *
+ ******************************************************************************/
+extern tmpl_ComplexDouble
+tmpl_CDouble_Pow(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Real_Pow                                                 *
+ *  Purpose:                                                                  *
+ *      Computes z^x for complex z and real x.                                *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z0:                                                *
+ *          A complex number, the base.                                       *
+ *      tmpl_ComplexDouble z1:                                                *
+ *          A complex number, the exponent.                                   *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z0_to_the_z1:                                      *
+ *          The complex number z0^z1.                                         *
+ *  NOTE:                                                                     *
+ *      The algorithm uses complex log, so there is a branch cut on the       *
+ *      negative real axis.                                                   *
+ *                                                                            *
+ *      0^0 will return NaN. This is because the output will be:              *
+ *          0^0 = exp(0 * 0) = exp(0 * -infinifty) = exp(NaN) = NaN.          *
+ ******************************************************************************/
 extern rssringoccs_ComplexDouble
 rssringoccs_CDouble_Real_Pow(rssringoccs_ComplexDouble z, double x);
 

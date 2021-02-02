@@ -2,26 +2,38 @@
 #define __TMPL_VECTOR_H__
 
 #include <libtmpl/include/tmpl_bool.h>
+#include <libtmpl/include/tmpl_complex.h>
 
-typedef struct tmpl_Vector {
+typedef struct tmpl_DoubleVector {
     double *data;
     unsigned long length;
     tmpl_Bool error_occurred;
     char *error_message;
-} tmpl_Vector;
+} tmpl_DoubleVector;
 
-extern tmpl_Vector *
-tmpl_Create_Vector_From_Data(double *v, unsigned long length);
+typedef struct tmpl_ComplexDoubleVector {
+    tmpl_ComplexDouble *data;
+    unsigned long length;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_ComplexDoubleVector;
 
-extern tmpl_Vector *tmpl_Create_Empty_Vector(unsigned long length);
+extern tmpl_DoubleVector *
+tmpl_Create_DoubleVector_From_Data(double *v, unsigned long length);
 
-extern tmpl_Vector *
-rssringoccs_Create_Zero_Vector(unsigned long length);
+extern tmpl_DoubleVector *
+tmpl_Create_Empty_DoubleVector(unsigned long length);
 
-extern void tmpl_Destroy_Vector(tmpl_Vector *v);
+extern tmpl_DoubleVector *
+rssringoccs_Create_Zero_DoubleVector(unsigned long length);
 
-extern void rssringoccs_Vector_Add(tmpl_Vector *v,
-                                   tmpl_Vector *u,
-                                   tmpl_Vector *sum);
+extern void
+tmpl_Destroy_DoubleVector(tmpl_DoubleVector *v);
+
+extern void
+rssringoccs_DoubleVector_Add(tmpl_DoubleVector *v,
+                             tmpl_DoubleVector *u,
+                             tmpl_DoubleVector *sum);
 
 #endif
+
