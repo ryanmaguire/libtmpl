@@ -34,6 +34,13 @@
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       February 1, 2021                                              *
+ ******************************************************************************
+ *                          Revision History                                  *
+ ******************************************************************************
+ *  2021/02/01: Ryan Maguire                                                  *
+ *      Copied from rss_ringoccs and edited.                                  *
+ *  2021/02/02: Ryan Maguire:                                                 *
+ *      Soft freeze for libtmpl alpha release.                                *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -47,6 +54,10 @@ typedef enum {
     tmpl_MixedEndian,
     tmpl_BigEndian
 } tmpl_Endian;
+/*  This part of libtmpl is used in the rss_ringoccs library for reading RSR  *
+ *  binary files. For most functions if a platform is neither little-endian   *
+ *  nor big-endian, nothing can be done. That is, there's no attempts to mess *
+ *  with mixed-endian systems. Personally, I've never come across such things.*/
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -98,3 +109,4 @@ extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
 
 #endif
 /*  End of include guard.                                                     */
+
