@@ -33,41 +33,41 @@ Bessel functions, to Lambert's W function, and more. Real and complex versions
 are given. The algorithms are simple, but fast, usually relying on a combination
 of Taylor series for certain values and asymptotic expansions for others.
 
-# geometry
+## geometry
 Basic 2D and 3D Euclidean geometry.
 
-# matrix
+## matrix
 Basic matrix tools and typedef's.
 
-# vector
+## vector
 Tools for working with vectors, including vector arithmetic, and basic vector
 functions.
 
-# linear_algebra
+## linear_algebra
 Combines the matrix and vector sublibraries together with a bunch of other tools
 to perform common operations from linear algebra. This include less common 
 operations like Moore-Penrose pseudo inverses. Such tools are useful for filter
 applications, such as the Savitzky-Golay smoothing filter.
 
-# numerical
+## numerical
 A bunch of numerical algorithms for differentiation and integration.
 
-# interpolate
+## interpolate
 Linear and cubic splining interpolation tools for working with data.
 
-# string
+## string
 Provides basic string manipulations that are defined in the POSIX version of C,
 but are not part of the C standard. This includes the strdup function. The
 phrase "tmpl" is preprended to all functions to avoid name conflicts.
 
-# fft
+## fft
 Tukey-Cooley and Bluestein FFT algorithms for real and complex inputs.
 Convolutions are also provided.
 
-# Wish List
+## Wish List
 Graph theory, abstract algebra (groups), topology, knot theory.
 
-## NOTE:
+# NOTE:
 **This library is still being ported over from rss_ringoccs and others.** The
 code was scattered across several projects of mine, and this is an attempt to
 centralize all of it.
