@@ -55,7 +55,7 @@ unsigned long tmpl_Get_Low_Word64(tmpl_IEE754_Word64 x)
     /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *
      *  an unsigned long.                                                     */
-	unsigned long out = x.integer;
+    unsigned long out = x.integer;
 
     /*  Bit-wise AND can help us zero out the high-word. If we have:          *
      *  s eeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx     *
@@ -67,6 +67,7 @@ unsigned long tmpl_Get_Low_Word64(tmpl_IEE754_Word64 x)
      *  = 0 0000000000 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   *
      *                                                                        *
      *  In other words, we get the low-word.                                  */
-	out = out & 4503599627370495UL;
-	return out;
+    out = out & 4503599627370495UL;
+    return out;
 }
+
