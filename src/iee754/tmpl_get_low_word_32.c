@@ -6,3 +6,4 @@ unsigned int tmpl_Get_Low_Word32(tmpl_IEE754_Word32 x)
 	out = out & 8388607U;
 	return out;
 }
+

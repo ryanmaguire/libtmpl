@@ -68,7 +68,7 @@ unsigned long tmpl_Get_High_Word64(tmpl_IEE754_Word64 x)
      *  would not perform long division, but rather just shift the decimal    *
      *  point over by 2, giving 10. This is the binary version of this.       */
 	out = out >> 52;
-
 	return out;
 }
 /*  End of tmpl_Get_High_Word64.                                              */
+
