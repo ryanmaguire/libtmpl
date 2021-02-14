@@ -50,6 +50,8 @@
 #ifndef __TMPL_IEEE754_H__
 #define __TMPL_IEEE754_H__
 
+#include <libtmpl/include/tmpl_integer.h>
+
 /******************************************************************************
  *  For a non-negative integer that is less than 2^64, we can store the       *
  *  number in a computer using binary. That is, 64 bits of zeroes and ones    *
@@ -148,21 +150,18 @@
  *  corresponding to the IEEE754 format.                                      */
 
 /*  Data type for a 32-bit floating point number. This is assumed to          *
- *  correspond to the float data type. Note that char is assumed to be 8 bits.*
- *  Also, an unsigned int is assumed to be 32-bit.                            */
+ *  correspond to the float data type. Note that float is assumed to be 32    *
+ *  bits. If your compiler supports the IEEE 754 format, it is.               */
 typedef union word32 {
 	float real;
-	unsigned int integer;
-	unsigned char bits[4];
+	tmpl_uint32 integer;
 } tmpl_IEE754_Word32;
 
 /*  Data type for a 64-bit floating point number. This is assumed to          *
- *  correspond to the double data type. Note that char is assumed to be 8     *
- *  bits. Also, an unsigned long is assumed to be 64-bit.                     */
+ *  correspond to the double data type.                                       */
 typedef union word64 {
 	double real;
-	unsigned long integer;
-	unsigned char bits[8];
+	tmpl_uint64 integer;
 } tmpl_IEE754_Word64;
 
 /******************************************************************************
@@ -179,10 +178,10 @@ typedef union word64 {
  *      unsigned int high:                                                    *
  *          The numerical value of the high word of x.                        *
  ******************************************************************************/
-unsigned int
+tmpl_uint32
 tmpl_Get_High_Word32(tmpl_IEE754_Word32 x);
 
-unsigned long
+tmpl_uint64
 tmpl_Get_High_Word64(tmpl_IEE754_Word64 x);
 
 /******************************************************************************
@@ -199,10 +198,10 @@ tmpl_Get_High_Word64(tmpl_IEE754_Word64 x);
  *      unsigned int low:                                                     *
  *          The numerical value of the low word of x.                         *
  ******************************************************************************/
-unsigned int
+tmpl_uint32
 tmpl_Get_Low_Word32(tmpl_IEE754_Word32 x);
 
-unsigned long
+tmpl_uint64
 tmpl_Get_Low_Word64(tmpl_IEE754_Word64 x);
 
 #endif

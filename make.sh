@@ -74,6 +74,14 @@ $CC $sharedobjectlist -O3 -flto -shared -o libtmpl.so -lm
 echo "Moving to /usr/local/lib/libtmpl.so"
 sudo mv libtmpl.so /usr/local/lib/libtmpl.so
 
+echo "Setting LD_LIBRARY_PATH environment variable to include /usr/local/lib..."
+if [[ $LD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
+    echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
+    echo "LD_LIBRARY_PATH=/usr/local/lib" >> ~/.bashrc
+    echo "export LD_LIBRARY_PATH" >> ~/.bashrc
+    source ~/.bashrc
+fi
+
 echo "Cleaning up..."
 rm -f *.o
 

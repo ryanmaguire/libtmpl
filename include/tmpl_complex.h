@@ -54,9 +54,6 @@
 #ifndef __TMPL_COMPLEX_H__
 #define __TMPL_COMPLEX_H__
 
-/*  Config header file containing the macros for how to build rss_ringoccs.   */
-#include <libtmpl/include/tmpl_config.h>
-
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 

@@ -51,12 +51,12 @@
 #include <libtmpl/include/tmpl_ieee754.h>
 
 /*  Computes the high word of a 64-bit floating-point number.                 */
-unsigned long tmpl_Get_High_Word64(tmpl_IEE754_Word64 x)
+tmpl_uint64 tmpl_Get_High_Word64(tmpl_IEE754_Word64 x)
 {
     /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *
      *  an unsigned long.                                                     */
-	unsigned long out = x.integer;
+	tmpl_uint64 out = x.integer;
 
     /*  The first bit is the sign, the next 11 are the exponent, and the last *
      *  52 are the fractional parts. We don't care about the fractional part  *
