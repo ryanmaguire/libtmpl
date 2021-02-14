@@ -39,6 +39,8 @@
 #ifndef __TMPL_CONFIG_H__
 #define __TMPL_CONFIG_H__
 
+#define __TMPL_USE_C99_STDINT_H__ 0
+
 /******************************************************************************
  *  rss_ringoccs allowed the user to build the complex library in one of two  *
  *  ways: Using rss_ringoccs, or using C99 complex.h (if available). No time  *
@@ -89,11 +91,10 @@
  *  Which seems linear.                                                       */
 
 /*  There are subtle differences between the C89/C90 and C99 math.h header    *
- *  files. The C99 math.h is a superset of the C89 one. libtmpl provides      *
+ *  files. The C99 math.h is a superset of the C89 one. If your compiler      *
  *  supports C99 math.h, then setting this macro to 1 will make libtmpl alias *
- *  the functions that are missing in tmpl_math.h. If you have a compiler that*
- *  those functions rather than providing new algorithms. By default we do not*
- *  assume C99 compliance.                                                    */
+ *  the functions in math.h. Setting this to 0 will have libtmpl provide      *
+ *  the missing functions for a C89/C90 compatible implementation.            */
 #define __TMPL_USING_C99_MATH_H__ 0
 
 /*  For compilers supporting IEEE754 floating point arithmetic, there is a    *

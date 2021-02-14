@@ -27,7 +27,9 @@
  *      the case for your computer. The only devices I know of where this may *
  *      not be true are hand-held calculators. So don't try to use            *
  *      libtmpl on those, I suppose. If CHAR_BITS (defined in limits.h)       *
- *      is neither of these, libtmpl will fail to build.                      *
+ *      is neither of these, libtmpl will fail to build. The rest of libtmpl  *
+ *      is independent of this part, and if needed you can just remove this   *
+ *      from the config script to build on abnormal systems.                  *
  *                                                                            *
  *      This file is a fork of the bytes library I wrote for rss_ringoccs.    *
  *      rss_ringoccs is also released under the GPL 3.                        *
@@ -54,6 +56,7 @@ typedef enum {
     tmpl_MixedEndian,
     tmpl_BigEndian
 } tmpl_Endian;
+
 /*  This part of libtmpl is used in the rss_ringoccs library for reading RSR  *
  *  binary files. For most functions if a platform is neither little-endian   *
  *  nor big-endian, nothing can be done. That is, there's no attempts to mess *
