@@ -1,0 +1,8 @@
+Add polynomial library.
+	Have a polynomial be a struct with an unsigned integer pointer
+	and an unsigned int. The int is the degree, the pointer is the
+	coefficients. Similarly for double and complex pointers.
+
+	Implement root finding algorithm for polynomial from that MIT paper.
+
+	Implement eval function for polynomials.
