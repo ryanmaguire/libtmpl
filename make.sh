@@ -25,6 +25,24 @@
 #   compiler "should" work, though it hasn't been tested.
 CC=gcc
 
+if [ $CC == "gcc" ]; then
+    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra"
+    CArgs2="-Wpedantic -Wmisleading-indentation -Wmissing-field-initializers"
+    CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
+    CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
+    CArgs5="-Wconversion -Wdouble-promotion -Wfloat-conversion"
+    CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
+    CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
+elif [ $CC == "clang" ]; then
+    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra"
+    CArgs2="-Wpedantic -Wmissing-field-initializers"
+    CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
+    CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
+    CArgs5="-Wconversion -Wdouble-promotion -Wfloat-conversion"
+    CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
+    CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
+fi
+
 echo -e "\nClearing older files..."
 rm -f *.so
 rm -f *.o
@@ -39,22 +57,13 @@ sudo rm -f "$includedir/include/*.h"
 sudo cp ./include/* "$includedir/include/"
 
 echo "Compiling libtmpl..."
-CompilerArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra"
-CompilerArgs2="-Wpedantic -Wmisleading-indentation -Wmissing-field-initializers"
-CompilerArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
-CompilerArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
-CompilerArgs5="-Wconversion -Wdouble-promotion -Wfloat-conversion"
-CompilerArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
-CompilerArgs="$CompilerArgs1 $CompilerArgs2 $CompilerArgs3"
-CompilerArgs="$CompilerArgs $CompilerArgs4 $CompilerArgs5 $CompilerArgs6"
-
 echo -e "\n\tCompiler Options:"
-echo -e "\t\t$CompilerArgs1"
-echo -e "\t\t$CompilerArgs2"
-echo -e "\t\t$CompilerArgs3"
-echo -e "\t\t$CompilerArgs4"
-echo -e "\t\t$CompilerArgs5"
-echo -e "\t\t$CompilerArgs6"
+echo -e "\t\t$CArgs1"
+echo -e "\t\t$CArgs2"
+echo -e "\t\t$CArgs3"
+echo -e "\t\t$CArgs4"
+echo -e "\t\t$CArgs5"
+echo -e "\t\t$CArgs6"
 
 for dir in ./src/*; do
     echo -e "\n\tCompiling $dir"
