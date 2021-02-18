@@ -53,7 +53,10 @@
  *  1.) tmpl_bytes.h:                                                         *
  *          Header where tmpl_Endian enum data type is defined, and           *
  *          where the function's prototype is given.                          *
- *  2.) limits.h:                                                             *
+ *  2.) tmpl_integer.h:                                                       *
+ *          Header file containing fixed-width integer data types for 32-bit  *
+ *          and 64-bit integers.                                              *
+ *  3.) limits.h:                                                             *
  *          Standard C library header file containing the CHAR_BIT macro      *
  *          which tells us how many bits are in one char.                     *
  ******************************************************************************

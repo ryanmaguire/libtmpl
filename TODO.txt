@@ -6,3 +6,30 @@ Add polynomial library.
 	Implement root finding algorithm for polynomial from that MIT paper.
 
 	Implement eval function for polynomials.
+
+More functions for complex library:
+	complex_abs_log:
+		returns log(|z|).
+		Compute via 0.5 * log(|z|^2).
+		This saves sqrt computation and increases precision.
+
+	complex_negative.
+		returns -z.
+
+	complex_sqrt_real
+		sqrt of real number, allowing negative real numbers.
+
+	complex_log10
+	complex_logb
+		complex log in different bases.
+
+	complex_sec/complex_csc/complex_cot.
+		Additional complex trig functions.
+
+		Also add inverse trig functions.
+
+	Hyperbolic trig functions for complex arguments.
+	Inverse hyperbolic trig functions as well.
+
+	Various powers of small exponent:
+		square, cube, fourth power, etc.
