@@ -16,16 +16,21 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_real_part                            *
+ *                             tmpl_complex_pow                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for extracting the real part from            *
- *      a complex number.                                                     *
+ *      Contains the source code for the complex power function with a        *
+ *      real exponent.                                                        *
+ *  NOTES:                                                                    *
+ *      This function implicitly uses the complex log function, and hence     *
+ *      there is a branch cut in the second variable. The function is         *
+ *      continuous in the first variable, i.e. no branch cut.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *          Header file where tmpl_ComplexDouble is defined, as well          *
+ *          as the prototype for tmpl_CDouble_Pow.                            *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -45,54 +50,72 @@
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       February 18, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                                History                                     *
  ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
  *  2021/02/18: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
+ *      Created file.                                                         *
  ******************************************************************************/
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  This function is equivalent to the creal function in complex.h (C99).     */
-float tmpl_CFloat_Real_Part(tmpl_ComplexFloat z)
+/*  Compute the complex power z^x for x real.                                 */
+tmpl_ComplexFloat
+tmpl_CFloat_Pow_Real(tmpl_ComplexFloat z, float x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float real;
+    tmpl_ComplexFloat z_to_the_x, ln_z, x_ln_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexFloat struct. Return this.                 */
-    real = z.dat[0];
-    return real;
+    /*  We can write z^x as exp(x ln(z)) and this is how we'll compute for    *
+     *  complex powers. First compute log(z).                                 */
+    ln_z = tmpl_CFloat_Log(z);
+
+    /*  Next use tmpl_CFloat_Multiply_Real to compute the product with x.     */
+    x_ln_z = tmpl_CFloat_Multiply_Real(x, ln_z);
+
+    /*  And finally exponentiate.                                             */
+    z_to_the_x = tmpl_CFloat_Exp(x_ln_z);
+    return z_to_the_x;
 }
-/*  End of tmpl_CFloat_Real_Part.                                             */
+/*  End of tmpl_CFloat_Pow_Real.                                              */
 
-double tmpl_CDouble_Real_Part(tmpl_ComplexDouble z)
+/*  Compute the complex power z^x for x real.                                 */
+tmpl_ComplexDouble
+tmpl_CDouble_Pow_Real(tmpl_ComplexDouble z, double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double real;
+    tmpl_ComplexDouble z_to_the_x, ln_z, x_ln_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexDouble struct. Return this.                */
-    real = z.dat[0];
-    return real;
+    /*  We can write z^x as exp(x ln(z)) and this is how we'll compute for    *
+     *  complex powers. First compute log(z).                                 */
+    ln_z = tmpl_CDouble_Log(z);
+
+    /*  Next use tmpl_CDouble_Multiply_Real to compute the product with x.    */
+    x_ln_z = tmpl_CDouble_Multiply_Real(x, ln_z);
+
+    /*  And finally exponentiate.                                             */
+    z_to_the_x = tmpl_CDouble_Exp(x_ln_z);
+    return z_to_the_x;
 }
-/*  End of tmpl_CDouble_Real_Part.                                            */
+/*  End of tmpl_CDouble_Pow_Real.                                             */
 
-long double
-tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z)
+/*  Compute the complex power z^x for x real.                                 */
+tmpl_ComplexLongDouble
+tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double real;
+    tmpl_ComplexLongDouble z_to_the_x, ln_z, x_ln_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexLongDouble struct. Return this.            */
-    real = z.dat[0];
-    return real;
+    /*  We can write z^x as exp(x ln(z)) and this is how we'll compute for    *
+     *  complex powers. First compute log(z).                                 */
+    ln_z = tmpl_CLDouble_Log(z);
+
+    /*  Next use tmpl_CLDouble_Multiply_Real to compute the product with x.   */
+    x_ln_z = tmpl_CLDouble_Multiply_Real(x, ln_z);
+
+    /*  And finally exponentiate.                                             */
+    z_to_the_x = tmpl_CLDouble_Exp(x_ln_z);
+    return z_to_the_x;
 }
-/*  End of tmpl_CLDouble_Real_Part.                                           */
+/*  End of tmpl_CLDouble_Pow_Real.                                            */
 

@@ -16,18 +16,27 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_real_part                            *
+ *                           tmpl_complex_log_abs                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for extracting the real part from            *
- *      a complex number.                                                     *
+ *      Contains the source code for the function f(z) = ln(|z|).             *
+ *  Method:                                                                   *
+ *      Write:                                                                *
+ *          ln(|z|) = ln(|x+iy|)                                              *
+ *                  = ln(sqrt(x^2 + y^2))                                     *
+ *                  = 0.5 * ln(x^2 + y^2)                                     *
+ *      This avoids the square root computation and is more accurate.         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
+ *  1.) tmpl_math.h:                                                          *
+ *          This file provides compatibility between the two standard math.h  *
+ *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
+ *          provides aliases for the functions, and if C89 math.h is used     *
+ *          it defines the functions missing in the earlier version.          *
+ *  2.) tmpl_complex.h:                                                       *
+ *          Header file where tmpl_ComplexDouble is defined, as well as the   *
+ *          prototype for tmpl_CDouble_Log.                                   *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
@@ -47,52 +56,59 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
  *  2021/02/18: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
+ *      Created file.                                                         *
  ******************************************************************************/
+
+/*  Header file which contains aliases for the function in the standard C     *
+ *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  This function is equivalent to the creal function in complex.h (C99).     */
-float tmpl_CFloat_Real_Part(tmpl_ComplexFloat z)
+/*  Single precision complex log(|z|) function.                               */
+float tmpl_CFloat_Log_Abs(tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float real;
+    float abs_squared, ln_abs_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexFloat struct. Return this.                 */
-    real = z.dat[0];
-    return real;
+    /*  Compute |z|^2.                                                        */
+    abs_squared = tmpl_CFloat_Abs_Squared(z);
+
+    /*  By log rules we have ln(|x+iy)| = 0.5 ln(x^2+y^2). Use this.          */
+    ln_abs_z = 0.5F * tmpl_Float_Log(abs_squared);
+    return ln_abs_z;
 }
-/*  End of tmpl_CFloat_Real_Part.                                             */
+/*  End of tmpl_CFloat_Log_Abs.                                               */
 
-double tmpl_CDouble_Real_Part(tmpl_ComplexDouble z)
+/*  Double precision complex log(|z|) function.                               */
+double tmpl_CDouble_Log_Abs(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double real;
+    double abs_squared, ln_abs_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexDouble struct. Return this.                */
-    real = z.dat[0];
-    return real;
+    /*  Compute |z|^2.                                                        */
+    abs_squared = tmpl_CDouble_Abs_Squared(z);
+
+    /*  By log rules we have ln(|x+iy)| = 0.5 ln(x^2+y^2). Use this.          */
+    ln_abs_z = 0.5 * tmpl_Double_Log(abs_squared);
+    return ln_abs_z;
 }
-/*  End of tmpl_CDouble_Real_Part.                                            */
+/*  End of tmpl_CDouble_Log_Abs.                                              */
 
-long double
-tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z)
+/*  long double precision complex log(|z|) function.                          */
+long double tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double real;
+    long double abs_squared, ln_abs_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexLongDouble struct. Return this.            */
-    real = z.dat[0];
-    return real;
+    /*  Compute |z|^2.                                                        */
+    abs_squared = tmpl_CLDouble_Abs_Squared(z);
+
+    /*  By log rules we have ln(|x+iy)| = 0.5 ln(x^2+y^2). Use this.          */
+    ln_abs_z = 0.5L * tmpl_LDouble_Log(abs_squared);
+    return ln_abs_z;
 }
-/*  End of tmpl_CLDouble_Real_Part.                                           */
+/*  End of tmpl_CLDouble_Log_Abs.                                             */
 

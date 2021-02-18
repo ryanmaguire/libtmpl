@@ -16,11 +16,30 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_real_part                            *
+ *                            tmpl_complex_negate                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for extracting the real part from            *
- *      a complex number.                                                     *
+ *      Contains the source code for the complex negative.                    *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_CFloat_Negate:                                                   *
+ *      tmpl_CDouble_Negate:                                                  *
+ *      tmpl_CLDouble_Negate:                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the negative of a complex number.                            *
+ *                                                                            *
+ *          neg(z) = neg(x + iy) = -x - iy                                    *
+ *                                                                            *
+ *  Arguments:                                                                *
+ *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      neg_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):            *
+ *          The negative of z.                                                *
+ *  Method:                                                                   *
+ *      Negate the real and imaginary part of z and return.                   *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -43,56 +62,63 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       February 18, 2021                                             *
+ *  Date:       February 18, 2020                                             *
  ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
  *  2021/02/18: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
+ *      Created file.                                                         *
  ******************************************************************************/
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  This function is equivalent to the creal function in complex.h (C99).     */
-float tmpl_CFloat_Real_Part(tmpl_ComplexFloat z)
+/*  Single precision complex negative function.                               */
+tmpl_ComplexFloat tmpl_CFloat_Negate(tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float real;
+    float real, imag;
+    tmpl_ComplexFloat neg_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexFloat struct. Return this.                 */
-    real = z.dat[0];
-    return real;
+    /*  Extract the values from the complex number.                           */
+    real = tmpl_CFloat_Real_Part(z);
+    imag = tmpl_CFloat_Imag_Part(z);
+
+    /*  The negative of x+iy is just -x-iy, compute this.                     */
+    neg_z = tmpl_CFloat_Rect(-real, -imag);
+    return neg_z;
 }
-/*  End of tmpl_CFloat_Real_Part.                                             */
+/*  End of tmpl_CFloat_Negate.                                                */
 
-double tmpl_CDouble_Real_Part(tmpl_ComplexDouble z)
+/*  Double precision complex negative function.                               */
+tmpl_ComplexDouble tmpl_CDouble_Negate(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double real;
+    double real, imag;
+    tmpl_ComplexDouble neg_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexDouble struct. Return this.                */
-    real = z.dat[0];
-    return real;
+    /*  Extract the values from the complex number.                           */
+    real = tmpl_CDouble_Real_Part(z);
+    imag = tmpl_CDouble_Imag_Part(z);
+
+    /*  The negative of x+iy is just -x-iy, compute this.                     */
+    neg_z = tmpl_CDouble_Rect(-real, -imag);
+    return neg_z;
 }
-/*  End of tmpl_CDouble_Real_Part.                                            */
+/*  End of tmpl_CDouble_Negate.                                               */
 
-long double
-tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z)
+/*  Long double precision complex negative function.                          */
+tmpl_ComplexLongDouble tmpl_CLDouble_Negate(tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double real;
+    long double real, imag;
+    tmpl_ComplexLongDouble neg_z;
 
-    /*  The real component is stored as the first entry in the dat array      *
-     *  contained in a tmpl_ComplexLongDouble struct. Return this.            */
-    real = z.dat[0];
-    return real;
+    /*  Extract the values from the complex number.                           */
+    real = tmpl_CLDouble_Real_Part(z);
+    imag = tmpl_CLDouble_Imag_Part(z);
+
+    /*  The negative of x+iy is just -x-iy, compute this.                     */
+    neg_z = tmpl_CLDouble_Rect(-real, -imag);
+    return neg_z;
 }
-/*  End of tmpl_CLDouble_Real_Part.                                           */
+/*  End of tmpl_CLDouble_Negate.                                              */
 
