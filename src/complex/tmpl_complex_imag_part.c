@@ -1,94 +1,98 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        rss_ringoccs_complex_add                            *
+ *                           tmpl_complex_imag_part                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex addition.                        *
+ *      Contains the source code for extract the imaginary part of a          *
+ *      complex number.                                                       *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) rss_ringoccs_complex.h:                                               *
+ *  1.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       November 30, 2020                                             *
+ *                            A NOTE ON COMMENTS                              *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *                            A FRIENDLY WARNING                              *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ ******************************************************************************
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       February 18, 2020                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2020/11/30: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied file from rss_ringoccs.                                        *
+ *  2021/02/18: Ryan Maguire                                                  *
+ *      Edited file for use in libtmpl.                                       *
  ******************************************************************************/
 
 /*  Where the prototypes are declared and where complex types are defined.    */
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
+#include <libtmpl/include/tmpl_complex.h>
 
-/*  If _RSS_RINGOCCS_USING_COMPLEX_H_ is set to zero, then C99 complex.h has  *
- *  not been included and we must define our own algorithms.                  */
-#if _RSS_RINGOCCS_USING_COMPLEX_H_ == 0
-
-/*  This function is equivalent to the cimag function in complex.h (C99).     */
-float rssringoccs_CFloat_Imag_Part(rssringoccs_ComplexFloat z)
+/*  This function is equivalent to the cimagf function in complex.h (C99).    */
+float tmpl_CFloat_Imag_Part(tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     float imag;
 
     /*  The imaginary component is stored as the second entry in the dat      *
-     *  array contained in a rssringoccs_ComplexDouble struct. Return this.   */
+     *  array contained in a tmpl_ComplexFloat struct. Return this.           */
     imag = z.dat[1];
     return imag;
 }
+/*  End of tmpl_CFloat_Imag_Part.                                             */
 
-double rssringoccs_CDouble_Imag_Part(rssringoccs_ComplexDouble z)
+/*  This function is equivalent to the cimagl function in complex.h (C99).    */
+double tmpl_CDouble_Imag_Part(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     double imag;
 
     /*  The imaginary component is stored as the second entry in the dat      *
-     *  array contained in a rssringoccs_ComplexDouble struct. Return this.   */
+     *  array contained in a tmpl_ComplexDouble struct. Return this.          */
     imag = z.dat[1];
     return imag;
 }
+/*  End of tmpl_CDouble_Imag_Part.                                            */
 
-long double
-rssringoccs_CLDouble_Imag_Part(rssringoccs_ComplexLongDouble z)
+long double tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     long double imag;
 
     /*  The imaginary component is stored as the second entry in the dat      *
-     *  array contained in a rssringoccs_ComplexDouble struct. Return this.   */
+     *  array contained in a tmpl_ComplexDouble struct. Return this.          */
     imag = z.dat[1];
     return imag;
 }
+/*  End of tmpl_CLDouble_Imag_Part.                                           */
 
-#else
-
-float rssringoccs_CFloat_Imag_Part(rssringoccs_ComplexFloat z)
-{
-    return cimagf(z);
-}
-
-double rssringoccs_CDouble_Imag_Part(rssringoccs_ComplexDouble z)
-{
-    return cimag(z);
-}
-
-long double
-rssringoccs_CLDouble_Imag_Part(rssringoccs_ComplexLongDouble z)
-{
-    return cimagl(z);
-}
-
-
-#endif

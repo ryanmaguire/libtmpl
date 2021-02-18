@@ -37,81 +37,64 @@
  *  and double _Complex z2, you can just do z1 + z2. Structs can't be added,  *
  *  so we need a function for computing the sum of two complex values.        */
 
-/*  Single precision complex subtraction.                                     */
-tmpl_ComplexFloat
-tmpl_CFloat_Subtract(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
+/*  Single precision complex addition where one variable is real.             */
+tmpl_ComplexFloat tmpl_CFloat_Subtract_Real(float x, tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexFloat sum;
-    float real0, real1;
-    float imag0, imag1;
-    float sum_re, sum_im;
+    float real, imag, sum_re;
 
     /*  Extract the real and imaginary parts from the inputs.                 */
-    real0 = tmpl_CFloat_Real_Part(z0);
-    real1 = tmpl_CFloat_Real_Part(z1);
-    imag0 = tmpl_CFloat_Imag_Part(z0);
-    imag1 = tmpl_CFloat_Imag_Part(z1);
+    real = tmpl_CFloat_Real_Part(z);
+    imag = tmpl_CFloat_Imag_Part(z);
 
-    /*  The sum of two complex numbers simply adds their components.          */
-    sum_re = real0 - real1;
-    sum_im = imag0 - imag1;
+    /*  Add the real variable to the real part of z.                          */
+    sum_re = x - real;
 
-    /*  Create the output from sum_re and sum_im and return.                  */
-    sum = tmpl_CFloat_Rect(sum_re, sum_im);
+    /*  Create the output from sum_re and imag and return.                    */
+    sum = tmpl_CFloat_Rect(sum_re, -imag);
     return sum;
 }
-/*  End of tmpl_CFloat_Subtract.                                              */
+/*  End of tmpl_CFloat_Subtract_Real.                                         */
 
-/*  Double precision complex subtraction.                                     */
-tmpl_ComplexDouble
-tmpl_CDouble_Subtract(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
+/*  Double precision complex addition where one variable is real.             */
+tmpl_ComplexDouble tmpl_CDouble_Subtract_Real(double x, tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexDouble sum;
-    double real0, real1;
-    double imag0, imag1;
-    double sum_re, sum_im;
+    double real, imag, sum_re;
 
     /*  Extract the real and imaginary parts from the inputs.                 */
-    real0 = tmpl_CDouble_Real_Part(z0);
-    real1 = tmpl_CDouble_Real_Part(z1);
-    imag0 = tmpl_CDouble_Imag_Part(z0);
-    imag1 = tmpl_CDouble_Imag_Part(z1);
+    real = tmpl_CDouble_Real_Part(z);
+    imag = tmpl_CDouble_Imag_Part(z);
 
-    /*  The sum of two complex numbers simply adds their components.          */
-    sum_re = real0 - real1;
-    sum_im = imag0 - imag1;
+    /*  Add the real variable to the real part of z.                          */
+    sum_re = x - real;
 
-    /*  Create the output from sum_re and sum_im and return.                  */
-    sum = tmpl_CDouble_Rect(sum_re, sum_im);
+    /*  Create the output from sum_re and imag and return.                    */
+    sum = tmpl_CDouble_Rect(sum_re, -imag);
     return sum;
 }
-/*  End of tmpl_CDouble_Subtract.                                             */
+/*  End of tmpl_CDouble_Subtract_Real.                                        */
 
-/*  Long double precision complex subtraction.                                */
+/*  Long double precision complex addition where one variable is real.        */
 tmpl_ComplexLongDouble
-tmpl_CLDouble_Subtract(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
+tmpl_CLDouble_Subtract_Real(long double x, tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexLongDouble sum;
-    long double real0, real1;
-    long double imag0, imag1;
-    long double sum_re, sum_im;
+    long double real, imag, sum_re;
 
     /*  Extract the real and imaginary parts from the inputs.                 */
-    real0 = tmpl_CLDouble_Real_Part(z0);
-    real1 = tmpl_CLDouble_Real_Part(z1);
-    imag0 = tmpl_CLDouble_Imag_Part(z0);
-    imag1 = tmpl_CLDouble_Imag_Part(z1);
+    real = tmpl_CLDouble_Real_Part(z);
+    imag = tmpl_CLDouble_Imag_Part(z);
 
-    /*  The sum of two complex numbers simply adds their components.          */
-    sum_re = real0 - real1;
-    sum_im = imag0 - imag1;
+    /*  Add the real variable to the real part of z.                          */
+    sum_re = x - real;
 
-    /*  Create the output from sum_re and sum_im and return.                  */
-    sum = tmpl_CLDouble_Rect(sum_re, sum_im);
+    /*  Create the output from sum_re and imag and return.                    */
+    sum = tmpl_CLDouble_Rect(sum_re, -imag);
     return sum;
 }
-/*  End of tmpl_CLDouble_Subtract.                                            */
+/*  End of tmpl_CLDouble_Subtract_Real.                                       */
 

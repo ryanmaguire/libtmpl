@@ -8,13 +8,6 @@ Add polynomial library.
 	Implement eval function for polynomials.
 
 More functions for complex library:
-	complex_abs_log:
-		returns log(|z|).
-		Compute via 0.5 * log(|z|^2).
-		This saves sqrt computation and increases precision.
-
-	complex_negative.
-		returns -z.
 
 	complex_sqrt_real
 		sqrt of real number, allowing negative real numbers.

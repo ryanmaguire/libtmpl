@@ -1,22 +1,22 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       rss_ringoccs_complex_erfc                            *
+ *                             tmpl_complex_erfc                              *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complementary complex error function.    *
@@ -24,9 +24,9 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      rssringoccs_CFloat_Erfc:                                              *
- *      rssringoccs_CDouble_Erfc:                                             *
- *      rssringoccs_CLDouble_Erfc:                                            *
+ *      tmpl_CFloat_Erfc:                                                     *
+ *      tmpl_CDouble_Erfc:                                                    *
+ *      tmpl_CLDouble_Erfc:                                                   *
  *  Purpose:                                                                  *
  *      Computes the complementary error function of a complex value z.       *
  *                                                                            *
@@ -41,21 +41,21 @@
  *      Note, the integral formula only applied to real z. For complex we use *
  *      the expression 1 - Erf(z) as the definition.                          *
  *  Arguments:                                                                *
- *      z (rssringoccs_ComplexFloat/ComplexDouble/ComplexLongDouble):         *
+ *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      erfc_z (rssringoccs_ComplexFloat/ComplexDouble/ComplexLongDouble):    *
+ *      erfc_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):           *
  *          The complementary error function, Erfc(z).                        *
  *  Method:                                                                   *
  *      Analyze the input to see which region of the complex plane it lies in *
  *      and use the fadeeva and Erfcx functions to compute.                   *
  *  NOTES:                                                                    *
  *      No actual float or long double algorithms have been implemented by    *
- *      rss_ringoccs. The complementary error functions simply convert float  *
+ *      libtmpl. The complementary error functions simply convert float       *
  *      and long double inputs to doubles.                                    *
  *                                                                            *
  *      This is an alteration of the MIT Faddeeva package. It has been        *
- *      altered to be C89/C90 compliant and uses the rest of the rss_ringoccs *
+ *      altered to be C89/C90 compliant and uses the rest of the libtmpl      *
  *      complex routines to perform the computation. The original authors are:*
  *          Steven G. Johnson, Massachusetts Institute of Technology          *
  *          Joachim Wuttke, Forschungszentrum Jülich, 2013                    *
@@ -66,9 +66,9 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) rss_ringoccs_complex.h:                                               *
+ *  1.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
- *  2.) rss_ringoccs_math.h:                                                  *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file containing lots of real-valued math functions.        *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -76,18 +76,23 @@
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/NASA-Planetary-Science/rss_ringoccs/issues             *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
  *                            A FRIENDLY WARNING                              *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in config_librssringoccs.sh uses gcc and has the  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
  *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       December 23, 2020                                             *
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       February 18, 2021                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2020/12/23: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
  ******************************************************************************/
 
 /******************************************************************************
@@ -142,23 +147,22 @@
 
 /*  Header file which contains aliases for the function in the standard C     *
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
+#include <libtmpl/include/tmpl_complex.h>
 
 /*  Double precision complementary error function.                            */
-rssringoccs_ComplexDouble
-rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
+tmpl_ComplexDouble tmpl_CDouble_Erfc(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     double z_x, z_y, w_x, w_y;
     double mRe_z2, mIm_z2;
-    rssringoccs_ComplexDouble w, temp;
+    tmpl_ComplexDouble w, temp;
 
     /*  Extract the real and imaginary parts from the input z.                */
-    z_x = rssringoccs_CDouble_Real_Part(z);
-    z_y = rssringoccs_CDouble_Imag_Part(z);
+    z_x = tmpl_CDouble_Real_Part(z);
+    z_y = tmpl_CDouble_Imag_Part(z);
 
     /*  For purely imaginary inputs we can use the Faddeeva function. This    *
      *  is a scaled error function defined by w(z) = exp(-z^2) Erfc(-iz).     */
@@ -174,29 +178,28 @@ rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
          *  case seperately.                                                  */
 
         /*  If the square of the y component is greater than the              *
-         *  rssringoccs_Max_Double_Base_E macro, exp(y^2) will return         *
-         *  infinity. Check this.                                             */
-        if (z_y*z_y > rssringoccs_Max_Double_Base_E)
+         *  tmpl_Max_Double_Base_E macro, exp(y^2) will return infinity.      */
+        if (z_y*z_y > tmpl_Max_Double_Base_E)
         {
             /*  Erf(0+iy) tends to infinity for large y, so                   *
              *  Erfc(0+iy) = 1 - Erf(0+iy) tends to 1 - i infinity.           */
             if (z_y>0)
-                w_y = -rssringoccs_Infinity;
+                w_y = -tmpl_Infinity;
 
             /*  The error function is odd valued, so Erf(0 - iy) tends to     *
              *  minus infinity as y gets large and positive. Hence Erfc tends *
              *  to 1 + i infinity.                                            */
             else
-                w_y = rssringoccs_Infinity;
+                w_y = tmpl_Infinity;
         }
 
         /*  If exp(y^2) won't return infinity, use the definition of the      *
          *  Faddeeva function to compute the imaginary part of Erfc(z).       */
         else
-            w_y = -exp(z_y*z_y) * rssringoccs_Double_Faddeeva_Im(z_y);
+            w_y = -exp(z_y*z_y) * tmpl_Double_Faddeeva_Im(z_y);
 
-        /*  Create the output complex number using rssringoccs_CDouble_Rect.  */
-        w = rssringoccs_CDouble_Rect(w_x, w_y);
+        /*  Create the output complex number using tmpl_CDouble_Rect.         */
+        w = tmpl_CDouble_Rect(w_x, w_y);
     }
     /*  End of if (z_x == 0.0).                                               */
 
@@ -210,12 +213,12 @@ rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
          *  case a "signed zero" is needed in a computation.                  */
         w_y = -z_y;
 
-        /*  Check for underflow. The macro rssringoccs_Min_Double_Base_E is   *
+        /*  Check for underflow. The macro tmpl_Min_Double_Base_E is          *
          *  the smallest value which will not yield zero when exp(x) is       *
          *  computed. We need to check if -x^2 will result in and underflow.  */
-        if (-z_x*z_x < rssringoccs_Min_Double_Base_E)
+        if (-z_x*z_x < tmpl_Min_Double_Base_E)
         {
-            /*  If x is positive and -x^2 < rssringoccs_Min_Double_Base_E,    *
+            /*  If x is positive and -x^2 < tmpl_Min_Double_Base_E,           *
              *  then erf(x) is 1 to many decimals, and erfc(x) = 0.           */
             if (z_x >= 0.0)
                 w_x = 0.0;
@@ -231,15 +234,15 @@ rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
         {
             /*  For positive x we can use erfc(x) = exp(-x^2) erfcx(x).       */
             if (z_x >= 0.0)
-                w_x = exp(-z_x*z_x) * rssringoccs_Double_Erfcx(z_x);
+                w_x = exp(-z_x*z_x) * tmpl_Double_Erfcx(z_x);
 
             /*  And for negative we use the reflection formula for erfc.      */
             else
-                w_x = 2.0 - exp(-z_x*z_x) * rssringoccs_Double_Erfcx(z_x);
+                w_x = 2.0 - exp(-z_x*z_x) * tmpl_Double_Erfcx(z_x);
         }
 
-        /*  Create the output complex number using rssringoccs_CDouble_Rect.  */
-        w = rssringoccs_CDouble_Rect(w_x, w_y);
+        /*  Create the output complex number using tmpl_CDouble_Rect.         */
+        w = tmpl_CDouble_Rect(w_x, w_y);
     }
     /*  End of else statement else if (z_y == 0.0).                           */
 
@@ -257,7 +260,7 @@ rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
         mIm_z2 = -2.0*z_x*z_y;
 
         /*  In the underflow case where the real part has a value less then   *
-         *  the macro rssringoccs_Min_Double_Base_E we'll simply return       *
+         *  the macro tmpl_Min_Double_Base_E we'll simply return              *
          *  2.0. We have erfc(z) = exp(-z^2) w(iz). Expanding this yields:    *
          *                                                                    *
          *      erfc(z) = exp(-mRe_z2 + i mIm_z2) w(iz)                       *
@@ -265,14 +268,14 @@ rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
          *                                                                    *
          *  The exp term will dominate the imaginary part and the real part   *
          *  is determined by the sign of x.                                   */
-        if (mRe_z2 < rssringoccs_Min_Double_Base_E)
+        if (mRe_z2 < tmpl_Min_Double_Base_E)
         {
             w_y = 0.0;
             if (z_x >= 0.0)
                 w_x = 0.0;
             else
                 w_x = 2.0;
-            w = rssringoccs_CDouble_Rect(w_x, w_y);
+            w = tmpl_CDouble_Rect(w_x, w_y);
         }
 
         /*  If we won't underflow, use the complex Faddeeva function.         */
@@ -280,88 +283,87 @@ rssringoccs_CDouble_Erfc(rssringoccs_ComplexDouble z)
         {
             if (z_x >= 0.0)
             {
-                temp = rssringoccs_CDouble_Rect(mRe_z2, mIm_z2);
-                temp = rssringoccs_CDouble_Exp(temp);
-                w = rssringoccs_CDouble_Rect(-z_y, z_x);
-                w = rssringoccs_CDouble_Faddeeva(w);
-                w = rssringoccs_CDouble_Multiply(w, temp);
+                temp = tmpl_CDouble_Rect(mRe_z2, mIm_z2);
+                temp = tmpl_CDouble_Exp(temp);
+                w = tmpl_CDouble_Rect(-z_y, z_x);
+                w = tmpl_CDouble_Faddeeva(w);
+                w = tmpl_CDouble_Multiply(w, temp);
             }
 
             /*  For negative x, use the reflection formula.                   */
             else
             {
-                temp = rssringoccs_CDouble_Rect(mRe_z2, mIm_z2);
-                temp = rssringoccs_CDouble_Exp(temp);
-                w = rssringoccs_CDouble_Rect(z_y, -z_x);
-                w = rssringoccs_CDouble_Faddeeva(w);
-                w = rssringoccs_CDouble_Multiply(w, temp);
-                w = rssringoccs_CDouble_Subtract_Real(2.0, w);
+                temp = tmpl_CDouble_Rect(mRe_z2, mIm_z2);
+                temp = tmpl_CDouble_Exp(temp);
+                w = tmpl_CDouble_Rect(z_y, -z_x);
+                w = tmpl_CDouble_Faddeeva(w);
+                w = tmpl_CDouble_Multiply(w, temp);
+                w = tmpl_CDouble_Subtract_Real(2.0, w);
             }
         }
-        /*  End of if (mRe_z2 < rssringoccs_Min_Double_Base_E).               */
+        /*  End of if (mRe_z2 < tmpl_Min_Double_Base_E).                      */
     }
     /*  End of else statement for if (z_x == 0.0).                            */
 
     return w;
 }
-/*  End of rssringoccs_CDouble_Erfc.                                          */
+/*  End of tmpl_CDouble_Erfc.                                                 */
 
 /*  Single precision complex complementary error function.                    */
-rssringoccs_ComplexFloat
-rssringoccs_CFloat_Erfc(rssringoccs_ComplexFloat z)
+tmpl_ComplexFloat tmpl_CFloat_Erfc(tmpl_ComplexFloat z)
 {
     /*  Declare all necessary variales. C89 requires this at the top.         */
     float x, y;
-    rssringoccs_ComplexDouble z_double, erfc_z_double;
-    rssringoccs_ComplexFloat erfc_z;
+    tmpl_ComplexDouble z_double, erfc_z_double;
+    tmpl_ComplexFloat erfc_z;
 
     /*  Extract the real and imaginary parts from z.                          */
-    x = rssringoccs_CFloat_Real_Part(z);
-    y = rssringoccs_CFloat_Imag_Part(z);
+    x = tmpl_CFloat_Real_Part(z);
+    y = tmpl_CFloat_Imag_Part(z);
 
     /*  Convert this to a double version.                                     */
-    z_double = rssringoccs_CDouble_Rect((double)x, (double)y);
+    z_double = tmpl_CDouble_Rect((double)x, (double)y);
 
     /*  Compute Erfc(z) on the double version.                                */
-    erfc_z_double = rssringoccs_CDouble_Erfc(z_double);
+    erfc_z_double = tmpl_CDouble_Erfc(z_double);
 
     /*  Extract the real and imaginary parts from erf_z_double, converting    *
      *  them to single precision floats.                                      */
-    x = (float)rssringoccs_CDouble_Real_Part(erfc_z_double);
-    y = (float)rssringoccs_CDouble_Imag_Part(erfc_z_double);
+    x = (float)tmpl_CDouble_Real_Part(erfc_z_double);
+    y = (float)tmpl_CDouble_Imag_Part(erfc_z_double);
 
     /*  Create the float version of erf_z_double and return.                  */
-    erfc_z = rssringoccs_CFloat_Rect(x, y);
+    erfc_z = tmpl_CFloat_Rect(x, y);
     return erfc_z;
 }
-/*  End of rssringoccs_CFloat_Erfc.                                           */
+/*  End of tmpl_CFloat_Erfc.                                                  */
 
 /*  Long double precision complex complementary error function.               */
-rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Erfc(rssringoccs_ComplexLongDouble z)
+tmpl_ComplexLongDouble tmpl_CLDouble_Erfc(tmpl_ComplexLongDouble z)
 {
     /*  Declare all necessary variales. C89 requires this at the top.         */
     long double x, y;
-    rssringoccs_ComplexDouble z_double, erfc_z_double;
-    rssringoccs_ComplexLongDouble erfc_z;
+    tmpl_ComplexDouble z_double, erfc_z_double;
+    tmpl_ComplexLongDouble erfc_z;
 
     /*  Extract the real and imaginary parts from z.                          */
-    x = rssringoccs_CLDouble_Real_Part(z);
-    y = rssringoccs_CLDouble_Imag_Part(z);
+    x = tmpl_CLDouble_Real_Part(z);
+    y = tmpl_CLDouble_Imag_Part(z);
 
     /*  Convert this to a double version.                                     */
-    z_double = rssringoccs_CDouble_Rect((double)x, (double)y);
+    z_double = tmpl_CDouble_Rect((double)x, (double)y);
 
     /*  Compute Erfc(z) on the double version.                                */
-    erfc_z_double = rssringoccs_CDouble_Erfc(z_double);
+    erfc_z_double = tmpl_CDouble_Erfc(z_double);
 
     /*  Extract the real and imaginary parts from erf_z_double, converting    *
      *  them to long double precision.                                        */
-    x = (long double)rssringoccs_CDouble_Real_Part(erfc_z_double);
-    y = (long double)rssringoccs_CDouble_Imag_Part(erfc_z_double);
+    x = (long double)tmpl_CDouble_Real_Part(erfc_z_double);
+    y = (long double)tmpl_CDouble_Imag_Part(erfc_z_double);
 
     /*  Create the long double version of erf_z_double and return.            */
-    erfc_z = rssringoccs_CLDouble_Rect(x, y);
+    erfc_z = tmpl_CLDouble_Rect(x, y);
     return erfc_z;
 }
-/*  End of rssringoccs_CFloat_Erfc.                                           */
+/*  End of tmpl_CLDouble_Erfc.                                                */
+

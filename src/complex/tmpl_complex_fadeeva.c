@@ -1,22 +1,22 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     rss_ringoccs_complex_faddeeva                          *
+ *                           tmpl_complex_faddeeva                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for the Faddeeva function.                   *
@@ -24,9 +24,9 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      rssringoccs_CFloat_Faddeeva:                                          *
- *      rssringoccs_CDouble_Faddeeva:                                         *
- *      rssringoccs_CLDouble_Faddeeva:                                        *
+ *      tmpl_CFloat_Faddeeva:                                                 *
+ *      tmpl_CDouble_Faddeeva:                                                *
+ *      tmpl_CLDouble_Faddeeva:                                               *
  *  Purpose:                                                                  *
  *      Computes the Faddeeva function w(z):                                  *
  *                                                                            *
@@ -34,20 +34,20 @@
  *                                                                            *
  *      Where Erfc is the complementary error function.                       *
  *  Arguments:                                                                *
- *      z (rssringoccs_ComplexFloat/ComplexDouble/ComplexLongDouble):         *
+ *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      w (rssringoccs_ComplexFloat/ComplexDouble/ComplexLongDouble):         *
+ *      w (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          The Faddeeva function w(z).                                       *
  *  Method:                                                                   *
  *      Analyze the input to see which region of the complex plane it lies in *
  *      and use the fadeeva and Erfcx functions to compute.                   *
  *  NOTES:                                                                    *
  *      No actual float or long double algorithms have been implemented by    *
- *      rss_ringoccs. We simply cast to double and compute using that version.*
+ *      libtmpl. We simply cast to double and compute using that version.     *
  *                                                                            *
  *      This is an alteration of the MIT Faddeeva package. It has been        *
- *      altered to be C89/C90 compliant and uses the rest of the rss_ringoccs *
+ *      altered to be C89/C90 compliant and uses the rest of the libtmpl      *
  *      complex routines to perform the computation. The original authors are:*
  *          Steven G. Johnson, Massachusetts Institute of Technology          *
  *          Joachim Wuttke, Forschungszentrum Jülich, 2013                    *
@@ -58,9 +58,9 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) rss_ringoccs_complex.h:                                               *
+ *  1.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
- *  2.) rss_ringoccs_math.h:                                                  *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file containing lots of real-valued math functions.        *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -68,18 +68,27 @@
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/NASA-Planetary-Science/rss_ringoccs/issues             *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
  *                            A FRIENDLY WARNING                              *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in config_librssringoccs.sh uses gcc and has the  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
  *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Wellesley College                               *
  *  Date:       December 28, 2020                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2020/12/28: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied from rss_ringoccs.                                             *
+ *  2021/02/18: Ryan Maguire                                                  *
+ *      Edited file for use in libtmpl.                                       *
  ******************************************************************************/
 
 /******************************************************************************
@@ -137,9 +146,8 @@
  *   w_of_z(3)
  */
 
-
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
+#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_complex.h>
 
 /******************************************************************************
  *  Precomputed table of expa2n2[n-1] = exp(-a2*n*n)                          *
@@ -204,8 +212,7 @@ static const double expa2n2[] = {
 };
 
 /*  Double precsision complex Faddeeva function.                              */
-rssringoccs_ComplexDouble
-rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
+tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. We'll declare all variables used in any  *
      *  branch here for clarity. C89/C90 requires variables to be delcared at *
@@ -225,7 +232,7 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
     double re_temp, n0, dx;
     double np, nm, tp, tm;
     double exp1, exp1dn;
-    rssringoccs_ComplexDouble w, temp;
+    tmpl_ComplexDouble w, temp;
 
     /*  Define a to be pi / sqrt(-ln(DBL_EPSILON*0.5)). This value assumes    *
      *  DBL_EPSILON = 2.22045e-16. This is in compliance with IEEE 754 double *
@@ -240,8 +247,8 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
     const double a2 = 0.268657157075235951582;
 
     /*  Extract the real and imaginary parts from the input z.                */
-    z_x = rssringoccs_CDouble_Real_Part(z);
-    z_y = rssringoccs_CDouble_Imag_Part(z);
+    z_x = tmpl_CDouble_Real_Part(z);
+    z_y = tmpl_CDouble_Imag_Part(z);
 
     /*  If we have a purely imaginary input, we get a purely real output. We  *
      *  have:                                                                 *
@@ -251,9 +258,9 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
      *  definition of the Erfcx function, so use this.                        */
     if (z_x == 0.0)
     {
-        w_x = rssringoccs_Double_Erfcx(z_y);
+        w_x = tmpl_Double_Erfcx(z_y);
         w_y = 0.0;
-        w = rssringoccs_CDouble_Rect(w_x, w_y);
+        w = tmpl_CDouble_Rect(w_x, w_y);
         return w;
     }
 
@@ -261,21 +268,21 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
      *      w(x) = exp(-x^2) Erfc(-ix)                                        *
      *  So we need the complementary function for a purely imaginary input.   *
      *  We can use the imaginary part of the Faddeeva function for this.      *
-     *  rssringoccs_Double_Faddeeva_Im is defined in rss_ringoccs_math.h.     */
+     *  tmpl_Double_Faddeeva_Im is defined in tmpl_math.h.                    */
     else if (z_y == 0)
     {
-        w_x = rssringoccs_Double_Exp(-z_x*z_x);
-        w_y = rssringoccs_Double_Faddeeva_Im(z_x);
-        w = rssringoccs_CDouble_Rect(w_x, w_y);
+        w_x = tmpl_Double_Exp(-z_x*z_x);
+        w_y = tmpl_Double_Faddeeva_Im(z_x);
+        w = tmpl_CDouble_Rect(w_x, w_y);
         return w;
     }
 
     /*  Get the absolute values of both the real and imaginary parts of z.    */
-    abs_x = rssringoccs_Double_Abs(z_x);
-    abs_y = rssringoccs_Double_Abs(z_y);
+    abs_x = tmpl_Double_Abs(z_x);
+    abs_y = tmpl_Double_Abs(z_y);
 
     /*  Initialize the output to 0+i0.                                        */
-    w = rssringoccs_CDouble_Zero;
+    w = tmpl_CDouble_Zero;
 
     /*  And initialize all of the sum variables to zero.                      */
     sum1 = 0.0;
@@ -320,35 +327,33 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
                 if (abs_x > abs_y)
                 {
                     abs_y_by_xs = abs_y / xs;
-                    denom = rssringoccs_Sqrt_One_By_Pi /
-                            (xs + abs_y_by_xs*abs_y);
+                    denom = tmpl_Sqrt_One_By_Pi / (xs + abs_y_by_xs*abs_y);
                     w_x = denom*abs_y_by_xs;
                     w_y = denom;
-                    w = rssringoccs_CDouble_Rect(w_x, w_y);
+                    w = tmpl_CDouble_Rect(w_x, w_y);
                 }
                 /*  Use the limiting behavior of w(x+iy) if y = inf.          */
-                else if (rssringoccs_Is_Inf(abs_y))
+                else if (tmpl_Is_Inf(abs_y))
                 {
                     /*  Check if the x component is a NaN. If it is, or if    *
                      *  if the y component is negative infinity, return       *
                      *  complex NaN.                                          */
-                    if ((rssringoccs_Is_NaN(z_x)) || (z_y < 0.0))
-                        w = rssringoccs_CDouble_NaN;
+                    if ((tmpl_Is_NaN(z_x)) || (z_y < 0.0))
+                        w = tmpl_CDouble_NaN;
 
                     /*  In the limiting case with y = +infinity we get zero.  */
                     else
-                        w = rssringoccs_CDouble_Zero;
+                        w = tmpl_CDouble_Zero;
 
                     return w;
                 }
                 else
                 {
                     xs_by_abs_y = xs / abs_y;
-                    denom = rssringoccs_Sqrt_One_By_Pi /
-                            (xs_by_abs_y*xs + abs_y);
+                    denom = tmpl_Sqrt_One_By_Pi / (xs_by_abs_y*xs + abs_y);
                     w_x = denom;
                     w_y = denom*xs_by_abs_y;
-                    w = rssringoccs_CDouble_Rect(w_x, w_y);
+                    w = tmpl_CDouble_Rect(w_x, w_y);
                 }
             }
 
@@ -357,10 +362,10 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
             {
                 dr = xs*xs - abs_y*abs_y - 0.5;
                 di = 2.0*xs*abs_y;
-                denom = rssringoccs_Sqrt_One_By_Pi / (dr*dr + di*di);
+                denom = tmpl_Sqrt_One_By_Pi / (dr*dr + di*di);
                 w_x = denom * (xs*di - abs_y*dr);
                 w_y = denom * (xs*dr + abs_y*di);
-                w = rssringoccs_CDouble_Rect(w_x, w_y);
+                w = tmpl_CDouble_Rect(w_x, w_y);
             }
         }
 
@@ -385,10 +390,10 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
                 nu -= 0.5;
             }
             /*  w(z) = i/sqrt(pi) / w:                                        */
-            denom = rssringoccs_Sqrt_One_By_Pi / (wr*wr + wi*wi);
+            denom = tmpl_Sqrt_One_By_Pi / (wr*wr + wi*wi);
             w_x = denom*wi;
             w_y = denom*wr;
-            w = rssringoccs_CDouble_Rect(w_x, w_y);
+            w = tmpl_CDouble_Rect(w_x, w_y);
         }
 
         if (z_y < 0)
@@ -397,10 +402,10 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
              *  in exp(-z*z).                                                 */
             w_x = (abs_y - xs) * (xs + abs_y);
             w_y = 2*xs*z_y;
-            temp = rssringoccs_CDouble_Rect(w_x, w_y);
-            temp = rssringoccs_CDouble_Exp(temp);
-            temp = rssringoccs_CDouble_Multiply_Real(2.0, temp);
-            w = rssringoccs_CDouble_Subtract(temp, w);
+            temp = tmpl_CDouble_Rect(w_x, w_y);
+            temp = tmpl_CDouble_Exp(temp);
+            temp = tmpl_CDouble_Multiply_Real(2.0, temp);
+            w = tmpl_CDouble_Subtract(temp, w);
 
             return w;
         }
@@ -425,9 +430,9 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
         prod2ax = 1.0;
         prodm2ax = 1.0;
 
-        if (rssringoccs_Is_Inf(z_y))
+        if (tmpl_Is_Inf(z_y))
         {
-            w = rssringoccs_CDouble_Rect(z_y, z_y);
+            w = tmpl_CDouble_Rect(z_y, z_y);
             return w;
         }
 
@@ -455,7 +460,7 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
                 sum3 += coef * prod2ax;
 
                 /*  really = sum5 - sum4                                      */
-                sum5 += coef*(2*a)*n*rssringoccs_Double_Sinh((2*a)*n*abs_x);
+                sum5 += coef*(2*a)*n*tmpl_Double_Sinh((2*a)*n*abs_x);
 
                 /*  test convergence via sum3.                                */
                 if (coef * prod2ax < DBL_EPSILON * sum3)
@@ -489,58 +494,46 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
         /*  Avoid spurious overflow for large negative y. For y < -6,         *
          *  erfcx(y) = 2*exp(y*y) to double precision.                        */
         if (z_y > -6.0)
-            expx2erfcxy = expx2*rssringoccs_Double_Erfcx(z_y);
+            expx2erfcxy = expx2*tmpl_Double_Erfcx(z_y);
         else
             expx2erfcxy = 2*exp(z_y*z_y-abs_x*abs_x);
 
         /*  Imaginary terms cancel.                                           */
         if (z_y > 5.0)
         {
-            sinxy = rssringoccs_Double_Sin(abs_x*z_y);
-            sincxy = rssringoccs_Double_Sinc(abs_x*z_y);
-            cos2xy = rssringoccs_Double_Cos(2.0*abs_x*z_y);
+            sinxy = tmpl_Double_Sin(abs_x*z_y);
+            sincxy = tmpl_Double_Sinc(abs_x*z_y);
+            cos2xy = tmpl_Double_Cos(2.0*abs_x*z_y);
             w_x = (expx2erfcxy - c*z_y*sum1)*cos2xy +
                   c*abs_x*expx2*sinxy*sincxy;
-            w = rssringoccs_CDouble_Rect(w_x, 0.0);
+            w = tmpl_CDouble_Rect(w_x, 0.0);
         }
         else
         {
             xs = z_x;
-            sinxy = rssringoccs_Double_Sin(xs*z_y);
-            sin2xy = rssringoccs_Double_Sin(2.0*xs*z_y);
-            cos2xy = rssringoccs_Double_Cos(2.0*xs*z_y);
+            sinxy = tmpl_Double_Sin(xs*z_y);
+            sin2xy = tmpl_Double_Sin(2.0*xs*z_y);
+            cos2xy = tmpl_Double_Cos(2.0*xs*z_y);
             coef1 = expx2erfcxy - c*z_y*sum1;
             coef2 = c*xs*expx2;
-            sincxy = rssringoccs_Double_Sinc(xs*z_y);
-            sinc2xy = rssringoccs_Double_Sinc(2*xs*z_y);
+            sincxy = tmpl_Double_Sinc(xs*z_y);
+            sinc2xy = tmpl_Double_Sinc(2*xs*z_y);
             w_x = coef1 * cos2xy + coef2 * sinxy * sincxy;
             w_y = coef2 * sinc2xy - coef1 * sin2xy;
-            w = rssringoccs_CDouble_Rect(w_x, w_y);
+            w = tmpl_CDouble_Rect(w_x, w_y);
         }
     }
 
     /*  x large: only sum3 & sum5 contribute (see above note).                */
     else
     {
-        if (rssringoccs_Is_NaN(abs_x))
-        {
-            w_x = rssringoccs_NaN;
-            w_y = rssringoccs_NaN;
-            w = rssringoccs_CDouble_Rect(w_x, w_y);
-            return w;
-        }
-        else if (rssringoccs_Is_NaN(z_y))
-        {
-            w_x = rssringoccs_NaN;
-            w_y = rssringoccs_NaN;
-            w = rssringoccs_CDouble_Rect(w_x, w_y);
-            return w;
-        }
+        if ((tmpl_Is_NaN(abs_x)) || (tmpl_Is_NaN(z_y)))
+            return tmpl_CDouble_NaN;
 
         /*  |y| < 1e-10, so we only need exp(-x*x) term (round instead of     *
          *  ceil as in original paper; note that x/a > 1 here).               */
         re_temp = exp(-z_x*z_x);
-        w = rssringoccs_CDouble_Rect(re_temp, 0.0);
+        w = tmpl_CDouble_Rect(re_temp, 0.0);
 
         /*  sum in both directions, starting at n0.                           */
         n0 = floor(abs_x/a + 0.5);
@@ -570,8 +563,7 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
         while (1)
         {
             np = n0 + dn++;
-            tp = exp(-(a*dn+dx)*(a*dn+dx)
-            ) / (a2*(np*np) + z_y*z_y);
+            tp = exp(-(a*dn+dx)*(a*dn+dx)) / (a2*(np*np) + z_y*z_y);
             sum3 += tp;
             sum5 += a * np * tp;
             if (a * np * tp < DBL_EPSILON * sum5)
@@ -582,9 +574,69 @@ rssringoccs_CDouble_Faddeeva(rssringoccs_ComplexDouble z)
 finish:
     {
         w_x = (0.5*c)*z_y*(sum2+sum3);
-        w_y = (0.5*c)*rssringoccs_Double_Copysign(sum5-sum4, z_x);
-        temp = rssringoccs_CDouble_Rect(w_x, w_y);
-        w = rssringoccs_CDouble_Add(w, temp);
+        w_y = (0.5*c)*tmpl_Double_Copysign(sum5-sum4, z_x);
+        temp = tmpl_CDouble_Rect(w_x, w_y);
+        w = tmpl_CDouble_Add(w, temp);
         return w;
     }
 }
+/*  End of tmpl_CDouble_Faddeeva.                                             */
+
+/*  Single precision complex Faddeeva function.                               */
+tmpl_ComplexFloat tmpl_CFloat_Faddeeva(tmpl_ComplexFloat z)
+{
+    /*  Declare all necessary variales. C89 requires this at the top.         */
+    float x, y;
+    tmpl_ComplexDouble z_double, erfc_z_double;
+    tmpl_ComplexFloat erfc_z;
+
+    /*  Extract the real and imaginary parts from z.                          */
+    x = tmpl_CFloat_Real_Part(z);
+    y = tmpl_CFloat_Imag_Part(z);
+
+    /*  Convert this to a double version.                                     */
+    z_double = tmpl_CDouble_Rect((double)x, (double)y);
+
+    /*  Compute w(z) on the double version.                                   */
+    erfc_z_double = tmpl_CDouble_Faddeeva(z_double);
+
+    /*  Extract the real and imaginary parts from erf_z_double, converting    *
+     *  them to single precision floats.                                      */
+    x = (float)tmpl_CDouble_Real_Part(erfc_z_double);
+    y = (float)tmpl_CDouble_Imag_Part(erfc_z_double);
+
+    /*  Create the float version of erf_z_double and return.                  */
+    erfc_z = tmpl_CFloat_Rect(x, y);
+    return erfc_z;
+}
+/*  End of tmpl_CFloat_Faddeeva.                                              */
+
+/*  Long double precision complex complementary error function.               */
+tmpl_ComplexLongDouble tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z)
+{
+    /*  Declare all necessary variales. C89 requires this at the top.         */
+    long double x, y;
+    tmpl_ComplexDouble z_double, erfc_z_double;
+    tmpl_ComplexLongDouble erfc_z;
+
+    /*  Extract the real and imaginary parts from z.                          */
+    x = tmpl_CLDouble_Real_Part(z);
+    y = tmpl_CLDouble_Imag_Part(z);
+
+    /*  Convert this to a double version.                                     */
+    z_double = tmpl_CDouble_Rect((double)x, (double)y);
+
+    /*  Compute w(z) on the double version.                                   */
+    erfc_z_double = tmpl_CDouble_Faddeeva(z_double);
+
+    /*  Extract the real and imaginary parts from erf_z_double, converting    *
+     *  them to long double precision.                                        */
+    x = (long double)tmpl_CDouble_Real_Part(erfc_z_double);
+    y = (long double)tmpl_CDouble_Imag_Part(erfc_z_double);
+
+    /*  Create the long double version of erf_z_double and return.            */
+    erfc_z = tmpl_CLDouble_Rect(x, y);
+    return erfc_z;
+}
+/*  End of tmpl_CLDouble_Faddeeva.                                            */
+
