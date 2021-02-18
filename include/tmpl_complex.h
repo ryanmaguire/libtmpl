@@ -32,6 +32,14 @@
  *  much as possible. Vagueness or unclear code should be reported to:        *
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
+ *                            A FRIENDLY WARNING                              *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ ******************************************************************************
  *                                EXAMPLES                                    *
  ******************************************************************************
  *  Examples of all of the functions can be found in:                         *
@@ -42,12 +50,14 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2020/11/13 (Ryan Maguire):                                                *
- *      Created file.                                                         *
- *  2020/11/30 (Ryan Maguire):                                                *
+ *  2020/11/13: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2020/11/30: Ryan Maguire                                                  *
  *      Added float and long double precision complex types.                  *
- *  2021/02/02 (Ryan Maguire):                                                *
+ *  2021/02/02: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Edited file for use in libtmpl.                                       *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -60,8 +70,8 @@
 /*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
  *  data structure containing a single array double dat[2];. If you are using *
  *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
- *  if we have a pointer tmpl_ComplexDouble *z; and another pointer           *
- *  gsl_complex *w; we can safely cast via:                                   *
+ *  if you have a pointer tmpl_ComplexDouble *z; and another pointer          *
+ *  gsl_complex *w; you can safely cast via:                                  *
  *      z = (tmpl_ComplexDouble *)&w;                                         *
  *  And similarly we can do w = (gsl_complex *)&z;                            */
 typedef struct tmpl_ComplexDouble {
@@ -172,13 +182,13 @@ tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
  *      need a function for computing the sum of two complex values.          *
  ******************************************************************************/
 extern tmpl_ComplexFloat
-tmpl_CFloat_Add(tmpl_ComplexFloat z1, tmpl_ComplexFloat z2);
+tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Add(tmpl_ComplexDouble z1, tmpl_ComplexDouble z2);
+tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Add(tmpl_ComplexLongDouble z1, tmpl_ComplexLongDouble z2);
+tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -219,7 +229,7 @@ tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
  *  NOTES:                                                                    *
  *      This function is provided for convenience. It is somewhat laborious   *
  *      to convert a real number to a complex number and then use             *
- *      rssringoccs_CDouble_Add to add the two complex numbers, so this       *
+ *      tmpl_CDouble_Add to add the two complex numbers, so this              *
  *      function can be used to skip the intermediate step.                   *
  ******************************************************************************/
 extern tmpl_ComplexFloat
@@ -254,13 +264,13 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
  *      includes GNU's glibc/gcc and clang.                                   *
  ******************************************************************************/
 extern float
-rssringoccs_CFloat_Argument(rssringoccs_ComplexFloat z);
+tmpl_CFloat_Argument(tmpl_ComplexFloat z);
 
 extern double
-rssringoccs_CDouble_Argument(rssringoccs_ComplexDouble z);
+tmpl_CDouble_Argument(tmpl_ComplexDouble z);
 
 extern long double
-rssringoccs_CLDouble_Argument(rssringoccs_ComplexLongDouble z);
+tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -341,15 +351,17 @@ tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z);
  *  Purpose:                                                                  *
  *      Compute the distance between two points in the complex plane.         *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z:                                                 *
+ *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
+ *      tmpl_ComplexDouble z1:                                                *
+ *          Another complex number.                                           *
  *  Output:                                                                   *
- *      tmpl_ComplexDouble cos_z:                                             *
- *          The cosine of z.                                                  *
+ *      double dist:                                                          *
+ *          The Euclidean distance between z0 and z1.                         *
  *  NOTE:                                                                     *
  *      This function is provided to save one from performing                 *
- *      rssringoccs_CDouble_Subtract followed by rssringoccs_CDouble_Abs.     *
- *      This saves a redundant function call and makes code look cleaner.     *
+ *      tmpl_CDouble_Subtract followed by tmpl_CDouble_Abs. This saves a      *
+ *      redundant function call and makes code look cleaner.                  *
  ******************************************************************************/
 extern float
 tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
@@ -359,6 +371,35 @@ tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern long double
 tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Dist_Squared                                             *
+ *  Purpose:                                                                  *
+ *      Compute the square of the distance between two points in the          *
+ *      complex plane.                                                        *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z0:                                                *
+ *          A complex number.                                                 *
+ *      tmpl_ComplexDouble z1:                                                *
+ *          Another complex number.                                           *
+ *  Output:                                                                   *
+ *      double dist:                                                          *
+ *          The square of the Euclidean distance between z0 and z1.           *
+ *  NOTE:                                                                     *
+ *      This function is provided to avoid the redundant and expensive call   *
+ *      to the square root function that would be required by using the       *
+ *      tmpl_CDouble_Dist function.                                           *
+ ******************************************************************************/
+extern float
+tmpl_CFloat_Dist_Squared(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+
+extern double
+tmpl_CDouble_Dist_Squared(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+
+extern long double
+tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0,
+                           tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -376,20 +417,82 @@ tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *  NOTE:                                                                     *
  *      No error check is performed on whether or not z1 = 0+0i. If this is   *
  *      true, depending on your system, you will either get +infinity for both*
- *      real and imaginary parts, or an error will occur. On MacOS and Linux  *
- *      the result is NaN + iNaN.                                             *
+ *      real and imaginary parts, or an error will occur. On macOS and        *
+ *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
  *                                                                            *
  *      Division is not commutative, so given (z0, z1), this returns z0/z1 and*
  *      not z1/z0. That is, we divide the first entry by the second.          *
  ******************************************************************************/
 extern tmpl_ComplexFloat
-tmpl_CFloat_Divide(tmpl_ComplexFloat z1, tmpl_ComplexFloat z2);
+tmpl_CFloat_Divide(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Divide(tmpl_ComplexDouble z1, tmpl_ComplexDouble z2);
+tmpl_CDouble_Divide(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z1, tmpl_ComplexLongDouble z2);
+tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Divide_Imag                                              *
+ *  Purpose:                                                                  *
+ *     Compute the quotient of an imaginary number y by a complex one z.      *
+ *  Arguments:                                                                *
+ *      double y:                                                             *
+ *          An imaginary number.                                              *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble quotient:                                          *
+ *          The complex number y / z.                                         *
+ *  NOTE:                                                                     *
+ *      No error check is performed on whether or not z = 0+0i. If this is    *
+ *      true, depending on your system, you will either get +infinity for both*
+ *      real and imaginary parts, or an error will occur. On macOS and        *
+ *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
+ *                                                                            *
+ *      Division is not commutative, so given (y, z), this returns y/z and    *
+ *      not z/y. That is, we divide the first entry by the second.            *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Divide_Imag(float y, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Divide_Imag(double y, tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Divide_Imag(long double y, tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Divide_Real                                              *
+ *  Purpose:                                                                  *
+ *     Compute the quotient of a real number x by a complex one z.            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble quotient:                                          *
+ *          The complex number x / z.                                         *
+ *  NOTE:                                                                     *
+ *      No error check is performed on whether or not z = 0+0i. If this is    *
+ *      true, depending on your system, you will either get +infinity for both*
+ *      real and imaginary parts, or an error will occur. On macOS and        *
+ *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
+ *                                                                            *
+ *      Division is not commutative, so given (y, z), this returns y/z and    *
+ *      not z/y. That is, we divide the first entry by the second.            *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Divide_Real(float x, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Divide_Real(double x, tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Divide_Real(long double x, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -433,8 +536,27 @@ tmpl_CDouble_Erfc(tmpl_ComplexDouble z);
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Erfc(tmpl_ComplexLongDouble z);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Faddeeva                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the Faddeeva functio, w(z), which is the scaled complementary *
+ *      error function.                                                       *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble erf_z:                                             *
+ *          The Faddeeva function evaluated at z.                             *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Faddeeva(tmpl_ComplexFloat z);
+
 extern tmpl_ComplexDouble
 tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -465,7 +587,7 @@ tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z);
  *      Return the imaginary part of a complex number. This is equivalent to  *
  *      cimag found in complex.h (C99).                                       *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      double real:                                                          *
@@ -528,9 +650,9 @@ tmpl_CLDouble_Exp(tmpl_ComplexLongDouble z);
  *      The algorithm computes the complex square root by putting z into polar*
  *      form, z = r exp(i theta). It then returns sqrt(r) exp(i theta/2).     *
  *      This is well defined since r is non-negative. To compute theta we use *
- *      the rssringoccs_Complex_Argument function, which returns a value in   *
+ *      the tmpl_Complex_Argument function, which returns a value in          *
  *      the range -pi < theta <= pi. Because of this there is a branch cut    *
- *      along the negative x axis. rss_ringoccs does not provide the option   *
+ *      along the negative x axis. libtmpl does not provide the option        *
  *      to choose a different branch.                                         *
  ******************************************************************************/
 extern tmpl_ComplexFloat
@@ -538,6 +660,9 @@ tmpl_CFloat_Sqrt(tmpl_ComplexFloat z);
 
 extern tmpl_ComplexDouble
 tmpl_CDouble_Sqrt(tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Sqrt(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -557,14 +682,14 @@ tmpl_CDouble_Sqrt(tmpl_ComplexDouble z);
  *      ln is the real valued natural log. Because of this there is a branch  *
  *      cut along the negative x axis.                                        *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Log(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Log(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Log(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Log(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Log(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -588,10 +713,16 @@ rssringoccs_CLDouble_Log(rssringoccs_ComplexLongDouble z);
  *      negative real axis.                                                   *
  *                                                                            *
  *      0^0 will return NaN. This is because the output will be:              *
- *          0^0 = exp(0 * 0) = exp(0 * -infinifty) = exp(NaN) = NaN.          *
+ *          0^0 = exp(0 * ln(0)) = exp(0 * -infinifty) = exp(NaN) = NaN.      *
  ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Pow(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+
 extern tmpl_ComplexDouble
 tmpl_CDouble_Pow(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Pow(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -599,89 +730,75 @@ tmpl_CDouble_Pow(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
  *  Purpose:                                                                  *
  *      Computes z^x for complex z and real x.                                *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z0:                                                *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number, the base.                                       *
- *      tmpl_ComplexDouble z1:                                                *
- *          A complex number, the exponent.                                   *
+ *      double x:                                                             *
+ *          A real number, the exponent.                                      *
  *  Output:                                                                   *
- *      tmpl_ComplexDouble z0_to_the_z1:                                      *
- *          The complex number z0^z1.                                         *
+ *      tmpl_ComplexDouble z_to_the_x:                                        *
+ *          The complex number z^x.                                           *
  *  NOTE:                                                                     *
  *      The algorithm uses complex log, so there is a branch cut on the       *
  *      negative real axis.                                                   *
  *                                                                            *
  *      0^0 will return NaN. This is because the output will be:              *
- *          0^0 = exp(0 * 0) = exp(0 * -infinifty) = exp(NaN) = NaN.          *
+ *          0^0 = exp(0 * ln(0)) = exp(0 * -infinifty) = exp(NaN) = NaN.      *
  ******************************************************************************/
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Real_Pow(rssringoccs_ComplexDouble z, double x);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Real_Pow(tmpl_ComplexFloat z, float x);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Real_Pow(tmpl_ComplexDouble z, double x);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Real_Pow(tmpl_ComplexLongDouble z, long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Sin                                               *
+ *      tmpl_CDouble_Sin                                                      *
  *  Purpose:                                                                  *
  *      Compute the sine of a complex number z.                               *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble sin_z:                                      *
+ *      tmpl_ComplexDouble sin_z:                                             *
  *          The sine of z.                                                    *
  *  NOTE:                                                                     *
  *      We simply use the fact that sin(x+iy) = sin(x)cos(iy)+cos(x)sin(iy)   *
  *      and then invoke the definition of hyperbolic cosine and hyperbolic    *
  *      sine yielding sin(x+iy) = sin(x)cosh(y) + i * cos(x)sinh(y).          *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Sin(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Sin(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Sin(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Sin(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Sin(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Tan                                               *
+ *      tmpl_CDouble_Tan                                                      *
  *  Purpose:                                                                  *
  *      Compute the tangent of a complex number z.                            *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble sin_z:                                      *
+ *      tmpl_ComplexDouble sin_z:                                             *
  *          The tangent of z.                                                 *
  *  NOTE:                                                                     *
  *      We compute this via tan(z) = sin(z)/cos(z) using the complex versions *
  *      of cosine and sine.                                                   *
- *  Example:                                                                  *
- *          #include <stdio.h>                                                *
- *          #include <rss_ringoccs_complex.h>                                 *
- *                                                                            *
- *          int main(void)                                                    *
- *          {                                                                 *
- *              double real, imag;                                            *
- *              rssringoccs_ComplexDouble z, tan_z;                           *
- *                                                                            *
- *              z = rssringoccs_Complex_Rect(1.0, 1.0);                       *
- *              cos_z = rssringoccs_Complex_Tan(z);                           *
- *                                                                            *
- *              real = rssringoccs_Complex_Real_Part(tan_z);                  *
- *              imag = rssringoccs_Complex_Imag_Part(tan_z);                  *
- *                                                                            *
- *              printf("%f + %fi\n", real, imag);                             *
- *              return 0;                                                     *
- *          }                                                                 *
- *                                                                            *
- *      This will ouptut 1.298458 + 0.634964i i.e. sin(1+i)=1.29845+0.63496i. *
  ******************************************************************************/
-extern rssringoccs_ComplexDouble
-rssringoccs_Complex_Tan(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Tan(tmpl_ComplexDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Rect                                              *
+ *      tmpl_CDouble_Rect                                                     *
  *  Purpose:                                                                  *
  *      Create a complex number given it's components in Cartesian format,    *
  *      also known as rectangular format. That is, given (x, y), return x+iy. *
@@ -690,30 +807,27 @@ rssringoccs_Complex_Tan(rssringoccs_ComplexDouble z);
  *      complex variables are primitive data types, but in C89 we need to     *
  *      create a struct for them (as above). Structs can't be added, so we    *
  *      need a function for creating a complex number from two doubles.       *
- *                                                                            *
- *      By default, rss_ringoccs assumes you do NOT have a C99 compliant      *
- *      compiler, hence the need for this function.                           *
  *  Arguments:                                                                *
  *      double x:                                                             *
  *          The real component of a complex number z.                         *
  *      double y:                                                             *
  *          The imaginary component of a complex number z.                    *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          The complex number x + iy.                                        *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Rect(float x, float y);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Rect(float x, float y);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Rect(double x, double y);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Rect(double x, double y);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Rect(long double x, long double y);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Rect(long double x, long double y);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Polar                                             *
+ *      tmpl_CDouble_Polar                                                    *
  *  Purpose:                                                                  *
  *      Create a complex number given it's components in polar format. That   *
  *      is, given (r, theta), return r*exp(i * theta).                        *
@@ -723,143 +837,207 @@ rssringoccs_CLDouble_Rect(long double x, long double y);
  *      double theta:                                                         *
  *          The argument of z.                                                *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          The complex number r exp(i theta).                                *
  ******************************************************************************/
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Polar(double r, double theta);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Polar(float r, float theta);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Polar(double r, double theta);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Polar(long double r, long double theta);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Subtract                                          *
+ *      tmpl_CDouble_Subtract                                                 *
  *  Purpose:                                                                  *
  *      Subtract two complex numbers.                                         *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z0:                                         *
+ *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
- *      rssringoccs_ComplexDouble z1:                                         *
+ *      tmpl_ComplexDouble z1:                                                *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble diff:                                       *
+ *      tmpl_ComplexDouble diff:                                              *
  *          The difference of z0 and z1, z0 - z1.                             *
  *  NOTE:                                                                     *
  *      Subtraction is not commutative, so given (z0, z1), this computes      *
  *      the first entry minus the second. That is, z0 - z1.                   *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Subtract(rssringoccs_ComplexFloat z1,
-                                  rssringoccs_ComplexFloat z2);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Subtract(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Subtract(rssringoccs_ComplexDouble z1,
-                                   rssringoccs_ComplexDouble z2);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Subtract(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Subtract(rssringoccs_ComplexLongDouble z1,
-                                       rssringoccs_ComplexLongDouble z2);
-
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Subtract_Real(float x, rssringoccs_ComplexFloat z);
-
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Subtract_Real(double x, rssringoccs_ComplexDouble z);
-
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Subtract_Real(long double x,
-                                            rssringoccs_ComplexLongDouble z);
-
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Subtract_Imag(float y, rssringoccs_ComplexFloat z);
-
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Subtract_Imag(double y, rssringoccs_ComplexDouble z);
-
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Subtract_Imag(long double y,
-                                            rssringoccs_ComplexLongDouble z);
-
-
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Subtract(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Multiply                                          *
+ *      tmpl_CDouble_Subtract_Real                                            *
+ *  Purpose:                                                                  *
+ *      Subtract a complex number from a real one.                            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble diff:                                              *
+ *          The difference x - z.                                             *
+ *  NOTE:                                                                     *
+ *      Subtraction is not commutative, so given (x, z), this computes        *
+ *      the first entry minus the second. That is, x - z.                     *
+ *                                                                            *
+ *      If you want to compute z - x, simply use tmpl_CDouble_Add_Real with   *
+ *      -x and z. tmpl_ComplexDouble's are structs, so -z is undefined, but   *
+ *      x is a double and -x is well defined.                                 *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Subtract_Real(float x, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Subtract_Real(double x, tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Subtract_Real(long double x, tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Subtract_Imag                                            *
+ *  Purpose:                                                                  *
+ *      Subtract a complex number from an imaginary one.                      *
+ *  Arguments:                                                                *
+ *      double y:                                                             *
+ *          An imaginary number.                                              *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble diff:                                              *
+ *          The difference y - z.                                             *
+ *  NOTE:                                                                     *
+ *      Subtraction is not commutative, so given (y, z), this computes        *
+ *      the first entry minus the second. That is, y - z.                     *
+ *                                                                            *
+ *      If you want to compute z - y, simply use tmpl_CDouble_Add_Imag with   *
+ *      -y and z. tmpl_ComplexDouble's are structs, so -z is undefined, but   *
+ *      y is a double and -y is well defined.                                 *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Subtract_Imag(float y, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Subtract_Imag(double y, tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Subtract_Imag(long double y, tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Multiply                                                 *
  *  Purpose:                                                                  *
  *      Mutliply two complex numbers.                                         *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z0:                                         *
+ *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
- *      rssringoccs_ComplexDouble z1:                                         *
+ *      tmpl_ComplexDouble z1:                                                *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble prod:                                       *
+ *      tmpl_ComplexDouble prod:                                              *
  *          The product of z0 and z1.                                         *
  *  NOTE:                                                                     *
  *      In C99, since _Complex is a built-in data type, given double _Complex *
- *      z1 and double _Complex z2, you can just do z1 * z2. In C89 we use     *
+ *      z0 and double _Complex z1, you can just do z0 * z1. In C89 we use     *
  *      structs to define complex numbers. Structs cannot be multiplied, so   *
  *      we need a function for computing the product of two complex values.   *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Multiply(rssringoccs_ComplexFloat z1,
-                                  rssringoccs_ComplexFloat z2);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Multiply(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Multiply(rssringoccs_ComplexDouble z1,
-                                   rssringoccs_ComplexDouble z2);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Multiply(rssringoccs_ComplexLongDouble z1,
-                                       rssringoccs_ComplexLongDouble z2);
-
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Multiply_Real(float x, rssringoccs_ComplexFloat z);
-
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Multiply_Real(double x, rssringoccs_ComplexDouble z);
-
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Multiply_Real(long double x,
-                                            rssringoccs_ComplexLongDouble z);
-
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Multiply_Imag(float x, rssringoccs_ComplexFloat z);
-
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Multiply_Imag(double x, rssringoccs_ComplexDouble z);
-
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Multiply_Imag(long double x,
-                                            rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_CDouble_Reciprocal                                  *
+ *      tmpl_CDouble_Multiply_Real                                            *
+ *  Purpose:                                                                  *
+ *      Multiply a complex number with a real one.                            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble prod:                                              *
+ *          The product x * z.                                                *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Multiply_Real(float x, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Multiply_Real(double x, tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Multiply_Imag                                            *
+ *  Purpose:                                                                  *
+ *      Multiply a complex number with an imaginary one.                      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          An imaginary number.                                              *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble prod:                                              *
+ *          The product y * z.                                                *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Multiply_Imag(float x, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Multiply_Imag(double x, tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Multiply_Imag(long double x, tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Reciprocal                                               *
  *  Purpose:                                                                  *
  *     Compute the reciprocal (or inverse) of a complex number.               *
  *  Arguments:                                                                *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble rcpr_z:                                     *
+ *      tmpl_ComplexDouble rcpr_z:                                            *
  *          The reciprocal of z.                                              *
  *  NOTE:                                                                     *
  *      No error check is performed on whether or not z is 0+0i. If this is   *
  *      true, depending on your system, you will either get +infinity for both*
- *      real and imaginary parts, or an error will occur. On MacOS and Linux  *
- *      the result is NaN + iNaN.                                             *
+ *      real and imaginary parts, or an error will occur. On MacOS and        *
+ *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
  ******************************************************************************/
-extern rssringoccs_ComplexFloat
-rssringoccs_CFloat_Reciprocal(rssringoccs_ComplexFloat z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Reciprocal(tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Reciprocal(rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Reciprocal(tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexLongDouble
-rssringoccs_CLDouble_Reciprocal(rssringoccs_ComplexLongDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Reciprocal(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      rssringoccs_Complex_Poly_Real_Coeffs                                  *
+ *      tmpl_CDouble_Poly_Real_Coeffs                                         *
  *  Purpose:                                                                  *
  *      Given a set of "degree+1" number of real coefficients and a complex   *
  *      number z, computes the polynomial f(z) = a_0 + a_1 z + ... + a_N z^N  *
@@ -869,7 +1047,7 @@ rssringoccs_CLDouble_Reciprocal(rssringoccs_ComplexLongDouble z);
  *          A pointer to an array of doubles, the polynomial coefficients.    *
  *      unsigned int degree:                                                  *
  *          The degree of the polynomial.                                     *
- *      rssringoccs_ComplexDouble z:                                          *
+ *      tmpl_ComplexDouble z:                                                 *
  *          A complex number.                                                 *
  *  NOTE:                                                                     *
  *      One error check is performed to ensure the input coeffs pointer isn't *
@@ -883,57 +1061,69 @@ rssringoccs_CLDouble_Reciprocal(rssringoccs_ComplexLongDouble z);
  *      must be of size degree+1 or more. If not, a segmentation fault may    *
  *      occur as the result of trying to access memory we don't have.         *
  *  Output:                                                                   *
- *      rssringoccs_ComplexDouble poly:                                       *
+ *      tmpl_ComplexDouble poly:                                              *
  *          The complex number given by the polynomial                        *
  *          a_0 + a_1 z + ... a_N z^N                                         *
- *  Example:                                                                  *
- *          #include <stdio.h>                                                *
- *          #include <rss_ringoccs_complex.h>                                 *
- *                                                                            *
- *          int main(void)                                                    *
- *          {                                                                 *
- *              double coeffs[31];                                            *
- *              double factorial, real, imag;                                 *
- *              unsigned int n;                                               *
- *              unsigned long N = 30;                                         *
- *              rssringoccs_ComplexDouble z, poly;                            *
- *                                                                            *
- *              z = rssringoccs_Complex_Rect(1.0, 0.0);                       *
- *              factorial = 1.0;                                              *
- *                                                                            *
- *              for (n=0; n<=N; ++n)                                          *
- *              {                                                             *
- *                  coeffs[n] = 1/factorial;                                  *
- *                  factorial *= n+1;                                         *
- *              }                                                             *
- *                                                                            *
- *              poly = rssringoccs_Complex_Poly_Real_Coeffs(coeffs, N, z);    *
- *                                                                            *
- *              real = rssringoccs_Complex_Real_Part(poly);                   *
- *              imag = rssringoccs_Complex_Imag_Part(poly);                   *
- *                                                                            *
- *              printf("f(z) = %f + i%f\n", real, imag);                      *
- *              return 0;                                                     *
- *          }                                                                 *
- *                                                                            *
- *      This output is f(z) = 2.718282 + 0.0i. Note that this polynomial is   *
- *      is just the 30th order Taylor approximation of exp(z), so the output  *
- *      is roughly exp(1) = e.                                                *
  ******************************************************************************/
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Poly_Real_Coeffs(double *coeffs, unsigned int degree,
-                                           rssringoccs_ComplexDouble z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Poly_Real_Coeffs(float *coeffs, unsigned int degree,
+                             tmpl_ComplexFloat z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Poly_Complex_Coeffs(rssringoccs_ComplexDouble *coeffs,
-                                              unsigned int degree,
-                                              rssringoccs_ComplexDouble z);
+extern tmpl_ComplexDouble
+tmpl_CDouble_Poly_Real_Coeffs(double *coeffs, unsigned int degree,
+                              tmpl_ComplexDouble z);
 
-extern rssringoccs_ComplexDouble
-rssringoccs_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs,
-                                                 unsigned int degree,
-                                                 unsigned int deriv,
-                                                 rssringoccs_ComplexDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Poly_Real_Coeffs(long double *coeffs, unsigned int degree,
+                               tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Poly_Complex_Coeffs                                      *
+ *  Purpose:                                                                  *
+ *      Given a set of "degree+1" number of complex coefficients and a complex*
+ *      number z, computes the polynomial f(z) = a_0 + a_1 z + ... + a_N z^N  *
+ *      where N = degree.                                                     *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble *coeffs:                                           *
+ *          A pointer to an array of complex numbers, the polynomial          *
+ *          coefficients.                                                     *
+ *      unsigned int degree:                                                  *
+ *          The degree of the polynomial.                                     *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  NOTE:                                                                     *
+ *      One error check is performed to ensure the input coeffs pointer isn't *
+ *      NULL. An exit(0) will occur if it is, crashing the program. This is   *
+ *      to avoid the cryptic "segmentation fault" message that occurs when    *
+ *      one tries to access a NULL pointer.                                   *
+ *                                                                            *
+ *      It is the users responsibility to ensure coeffs points to at least    *
+ *      degree + 1 complex values. Since a polynomial of degree N has N+1     *
+ *      coefficients (since we need to count the zeroth term a_0), coeffs     *
+ *      must be of size degree+1 or more. If not, a segmentation fault may    *
+ *      occur as the result of trying to access memory we don't have.         *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble poly:                                              *
+ *          The complex number given by the polynomial                        *
+ *          a_0 + a_1 z + ... a_N z^N                                         *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Poly_Complex_Coeffs(tmpl_ComplexFloat *coeffs,
+                                unsigned int degree, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Poly_Complex_Coeffs(tmpl_ComplexDouble *coeffs,
+                                 unsigned int degree, tmpl_ComplexDouble z);
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Poly_Complex_Coeffs(tmpl_ComplexLongDouble *coeffs,
+                                  unsigned int degree,
+                                  tmpl_ComplexLongDouble z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs, unsigned int degree,
+                                    unsigned int deriv, tmpl_ComplexDouble z);
 
 #endif
 /*  End of include guard.                                                     */
+

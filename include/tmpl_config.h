@@ -39,7 +39,7 @@
 #ifndef __TMPL_CONFIG_H__
 #define __TMPL_CONFIG_H__
 
-#define __TMPL_USE_C99_STDINT_H__ 0
+#define __TMPL_USING_C99_STDINT_H__ 0
 
 /******************************************************************************
  *  rss_ringoccs allowed the user to build the complex library in one of two  *

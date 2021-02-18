@@ -27,22 +27,42 @@
  *      the case for your computer. The only devices I know of where this may *
  *      not be true are hand-held calculators. So don't try to use            *
  *      libtmpl on those, I suppose. If CHAR_BITS (defined in limits.h)       *
- *      is neither of these, libtmpl will fail to build. The rest of libtmpl  *
- *      is independent of this part, and if needed you can just remove this   *
- *      from the config script to build on abnormal systems.                  *
+ *      is neither of these, the tmpl_Determine_Endianness function will      *
+ *      return tmpl_UnknownEndian. This part of the library is not needed in  *
+ *      any other subdirectories of libtmpl, so this can be ignored for       *
+ *      abnormal systems.                                                     *
  *                                                                            *
  *      This file is a fork of the bytes library I wrote for rss_ringoccs.    *
  *      rss_ringoccs is also released under the GPL 3.                        *
+ ******************************************************************************
+ *                            A NOTE ON COMMENTS                              *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *                            A FRIENDLY WARNING                              *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       February 1, 2021                                              *
  ******************************************************************************
  *                          Revision History                                  *
  ******************************************************************************
+ *  2021/01/14: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs.                   *
  *  2021/02/01: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs and edited.                                  *
- *  2021/02/02: Ryan Maguire:                                                 *
+ *  2021/02/02: Ryan Maguire                                                  *
  *      Soft freeze for libtmpl alpha release.                                *
+ *  2021/02/17: Ryan Maguire                                                  *
+ *      Updated doc-strings for functions.                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -58,7 +78,7 @@ typedef enum {
 } tmpl_Endian;
 
 /*  This part of libtmpl is used in the rss_ringoccs library for reading RSR  *
- *  binary files. For most functions if a platform is neither little-endian   *
+ *  binary files. For most functions, if a platform is neither little-endian  *
  *  nor big-endian, nothing can be done. That is, there's no attempts to mess *
  *  with mixed-endian systems. Personally, I've never come across such things.*/
 
@@ -74,8 +94,9 @@ typedef enum {
  *          A tmpl_Endian data type whose value corresponds to the            *
  *          endianness of your system.                                        *
  *  NOTES:                                                                    *
- *      1.) This function assumes CHAR_BITS (defined in limits.h) is either   *
- *          8 or 16. If this is not true, libtmpl will fail to build.         *
+ *      This function assumes CHAR_BITS (defined in limits.h) is either       *
+ *      8 or 16. If this is not true, this function automatically             *
+ *      returns tmpl_UnknownEndian.                                           *
  ******************************************************************************/
 extern tmpl_Endian tmpl_Determine_Endianness(void);
 
@@ -85,9 +106,9 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *  Purpose:                                                                  *
  *      Swaps the values of two char pointers.                                *
  *  Arguments:                                                                *
- *      ptr1 (char *):                                                        *
+ *      char *ptr1:                                                           *
  *          The first pointer to a char.                                      *
- *      ptr2 (char *):                                                        *
+ *      char *ptr2:                                                           *
  *          The second pointer to a char.                                     *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -99,9 +120,9 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *      tmpl_Swap_Most_Significant_Bit_2                                      *
  *  Purpose:                                                                  *
  *      Changes the endianness of a data type that is two chars long. This    *
- *      is usually a "short". Similarly functions are provided for 4 and 8.   *
+ *      is usually a "short". Similar functions are provided for 4 and 8.     *
  *  Arguments:                                                                *
- *      ptr (char *):                                                         *
+ *      char *ptr:                                                            *
  *          A pointer to a char array.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *

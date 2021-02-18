@@ -1,7 +1,8 @@
 /*  Header file which contains aliases for the function in the standard C     *
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
-#include <rss_ringoccs/include/rss_ringoccs_ieee754.h>
+#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_ieee754.h>
 
 #if __RSS_RINGOCCS_USE_LOG_ALGORITHM__ != 0
 
@@ -28,70 +29,70 @@ static double __log_coeffs[11] = {
     0.095238095238095238
 };
 
-float rssringoccs_Float_Log(float x)
+float tmpl_Float_Log(float x)
 {
-	rssringoccs_IEE754_Word32 w, frac;
-	unsigned int low, high;
+	tmpl_IEE754_Word32 w, frac;
+	tmpl_uint32 low, high;
 	float exponent, poly, A, A_sq;
 	float out;
 
 	if (x < 0.0F)
-		return rssringoccs_NaN_F;
+		return tmpl_NaN_F;
 	else if (x == 0.0F)
-		return -rssringoccs_Infinity_F;
+		return -tmpl_Infinity_F;
 	else
 		w.real = x;
 
-	low  = rssringoccs_Get_Low_Word32(w);
-	high = rssringoccs_Get_High_Word32(w);
+	low  = tmpl_Get_Low_Word32(w);
+	high = tmpl_Get_High_Word32(w);
 
 	exponent = (float)high - 127.0;
 	frac.integer = 0x3F800000 + low;
     A = (frac.real-1.0)/(frac.real+1);
     A_sq = A*A;
-    poly = rssringoccs_Real_Poly_Float_Coeffs(__log_coeffs_f, 5U, A_sq);
+    poly = tmpl_Real_Poly_Float_Coeffs(__log_coeffs_f, 5U, A_sq);
 
-	out = rssringoccs_Natural_Log_of_2_F*exponent + A*poly;
+	out = tmpl_Natural_Log_of_2_F*exponent + A*poly;
 	return out;
 }
 
-double rssringoccs_Double_Log(double x)
+double tmpl_Double_Log(double x)
 {
-	rssringoccs_IEE754_Word64 w, frac;
-	unsigned long low, high;
+	tmpl_IEE754_Word64 w, frac;
+	tmpl_uint64 low, high;
 	double exponent, poly, A, A_sq;
 	double out;
 
 	if (x < 0.0)
-		return rssringoccs_NaN;
+		return tmpl_NaN;
 	else if (x == 0.0)
-		return -rssringoccs_Infinity;
+		return -tmpl_Infinity;
 	else
 		w.real = x;
 
-	low  = rssringoccs_Get_Low_Word64(w);
-	high = rssringoccs_Get_High_Word64(w);
+	low  = tmpl_Get_Low_Word64(w);
+	high = tmpl_Get_High_Word64(w);
 
 	exponent = (double)high - 1023.0;
 	frac.integer = (0x3FFUL << 52) + low;
     A = (frac.real-1.0)/(frac.real+1);
     A_sq = A*A;
-    poly = rssringoccs_Real_Poly_Double_Coeffs(__log_coeffs, 10U, A_sq);
+    poly = tmpl_Real_Poly_Double_Coeffs(__log_coeffs, 10U, A_sq);
 
-	out = rssringoccs_Natural_Log_of_2*exponent + A*poly;
+	out = tmpl_Natural_Log_of_2*exponent + A*poly;
 	return out;
 }
 
-long double rssringoccs_LDouble_Log(long double x)
+long double tmpl_LDouble_Log(long double x)
 {
-    return (long double)rssringoccs_Double_Log((long double) x);
+    return (long double)tmpl_Double_Log((double) x);
 }
 
 #else
 
 /*  The "double" version of cos is defined in both C89 and C99 math.h so we   *
  *  only need to alias this function.                                         */
-double rssringoccs_Double_Log(double x)
+double tmpl_Double_Log(double x)
 {
     return log(x);
 }
@@ -100,12 +101,12 @@ double rssringoccs_Double_Log(double x)
 
 /*  C89 math.h does not have cosf or cosfl, so we'll need to provide these to  *
  *  make the code forward compatible. We'll do this in a very simple manner.  */
-float rssringoccs_Float_Log(float x)
+float tmpl_Float_Log(float x)
 {
     return (float)log((double)x);
 }
 
-long double rssringoccs_LDouble_Log(long double x)
+long double tmpl_LDouble_Log(long double x)
 {
     return (long double)log((double)x);
 }
@@ -115,12 +116,12 @@ long double rssringoccs_LDouble_Log(long double x)
 
 /*  C99 provides float and long double support for their math functions, so   *
  *  simply use to these.                                                      */
-float rssringoccs_Float_Log(float x)
+float tmpl_Float_Log(float x)
 {
     return logf(x);
 }
 
-long double rssringoccs_LDouble_Log(long double x)
+long double tmpl_LDouble_Log(long double x)
 {
     return logl(x);
 }

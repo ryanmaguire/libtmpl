@@ -35,6 +35,7 @@ includedir="/usr/local/include/libtmpl"
 #   Check if /usr/local/include/libtmpl/ is already a directory. If not
 #   then create this via mkdir.
 [ ! -d "$includedir" ] && sudo mkdir -p "$includedir/include/"
+sudo rm -f "$includedir/include/*.h"
 sudo cp ./include/* "$includedir/include/"
 
 echo "Compiling libtmpl..."
