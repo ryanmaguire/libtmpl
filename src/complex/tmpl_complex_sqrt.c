@@ -98,7 +98,7 @@ tmpl_ComplexFloat tmpl_CFloat_Sqrt(tmpl_ComplexFloat z)
     real = sqrt_r * tmpl_Float_Cos(0.5F * theta);
     imag = sqrt_r * tmpl_Float_Sin(0.5F * theta);
 
-    /*  Use rssringoccs_CFloatRect to compute and return sqrt_z.              */
+    /*  Use tmpl_CFloat_Rect to compute and return sqrt_z.                    */
     sqrt_z = tmpl_CFloat_Rect(real, imag);
     return sqrt_z;
 }
@@ -121,7 +121,7 @@ tmpl_ComplexDouble tmpl_CDouble_Sqrt(tmpl_ComplexDouble z)
     real = sqrt_r * tmpl_Double_Cos(0.5*theta);
     imag = sqrt_r * tmpl_Double_Sin(0.5*theta);
 
-    /*  Use rssringoccs_CDoubleRect to compute and return sqrt_z.             */
+    /*  Use tmpl_CDouble_Rect to compute and return sqrt_z.                   */
     sqrt_z = tmpl_CDouble_Rect(real, imag);
     return sqrt_z;
 }
@@ -144,7 +144,7 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Sqrt(tmpl_ComplexLongDouble z)
     real = sqrt_r * tmpl_LDouble_Cos(0.5L * theta);
     imag = sqrt_r * tmpl_LDouble_Sin(0.5L * theta);
 
-    /*  Use rssringoccs_CLDoubleRect to compute and return sqrt_z.            */
+    /*  Use tmpl_CLDouble_Rect to compute and return sqrt_z.                  */
     sqrt_z = tmpl_CLDouble_Rect(real, imag);
     return sqrt_z;
 }

@@ -4,7 +4,7 @@
 #include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_ieee754.h>
 
-#if __RSS_RINGOCCS_USE_LOG_ALGORITHM__ != 0
+#if __TMPL_USE_LOG_ALGORITHM__ != 0
 
 static float __log_coeffs_f[6] = {
     2.000000000F,
@@ -46,9 +46,9 @@ float tmpl_Float_Log(float x)
 	low  = tmpl_Get_Low_Word32(w);
 	high = tmpl_Get_High_Word32(w);
 
-	exponent = (float)high - 127.0;
+	exponent = (float)high - 127.0F;
 	frac.integer = 0x3F800000 + low;
-    A = (frac.real-1.0)/(frac.real+1);
+    A = (frac.real - 1.0F)/(frac.real + 1.0F);
     A_sq = A*A;
     poly = tmpl_Real_Poly_Float_Coeffs(__log_coeffs_f, 5U, A_sq);
 
@@ -97,7 +97,7 @@ double tmpl_Double_Log(double x)
     return log(x);
 }
 
-#if __HAS_C99_MATH_H__ == 0
+#if __TMPL_HAS_C99_MATH_H__ == 0
 
 /*  C89 math.h does not have cosf or cosfl, so we'll need to provide these to  *
  *  make the code forward compatible. We'll do this in a very simple manner.  */
@@ -129,4 +129,4 @@ long double tmpl_LDouble_Log(long double x)
 /*  End of #if __HAS_C99_MATH_H__ == 0                                        */
 
 #endif
-/*  End of #if __RSS_RINGOCCS_USE_LOG_ALGORITHM__ != 0.                       */
+/*  End of #if __TMPL_USE_LOG_ALGORITHM__ != 0.                               */
