@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_complex_sin                                *
+ *                            tmpl_complex_tan                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the complex sine function.               *
+ *      Contains the source code for the complex tangent function.            *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Sin:                                                      *
- *      tmpl_CDouble_Sin:                                                     *
- *      tmpl_CLDouble_Sin:                                                    *
+ *      tmpl_CFloat_Tan:                                                      *
+ *      tmpl_CDouble_Tan:                                                     *
+ *      tmpl_CLDouble_Tan:                                                    *
  *  Purpose:                                                                  *
- *      Computes the complex sine of a complex number.                        *
+ *      Computes the complex tangent of a complex number.                     *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      sin_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):            *
- *          The complex sine of z.                                            *
+ *      tan_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):            *
+ *          The complex tangent of z.                                         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
