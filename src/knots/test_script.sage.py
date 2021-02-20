@@ -141,7 +141,7 @@ for n in range(Torus_Start, Torus_End):
                     torus_poly = -torus_poly
 
                 # Compare the two polynomials.
-            	if (torus_poly == knot_poly):
+                if (torus_poly == knot_poly):
             	    print("\n\tMATCH: %s %s\n" % (k[0], knot_string))
 
 # print(100.0*counter_success/counter_gcd)
