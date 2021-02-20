@@ -63,11 +63,7 @@ for k in range(3, 12):
 
 # We need to loop over all Torus knots within a certain range. A torus knot
 # can be specified by an ordered pair (n, m) of COPRIME integers.
-for n in range(Torus_Start, Torus_End):rmaguire@gauss:~$ free -m
-              total        used        free      shared  buff/cache   available
-Mem:          95329       89364         494          37        5470        5093
-Swap:          8191        8191           0
-
+for n in range(Torus_Start, Torus_End):
     print("Current: %d  Total: %d" % (n, Torus_End))
 
     # If n is -1, 0, or 1, skip. There are no Torus knots with -1, 0, or 1 as
