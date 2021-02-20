@@ -47,14 +47,18 @@ echo -e "\nClearing older files..."
 rm -f *.so
 rm -f *.o
 
-echo "Copying include/ directory to /usr/local/include/libtmpl/"
-includedir="/usr/local/include/libtmpl"
+if [[ $1 == "-d" ]]; then
+    echo "Building in place..."
+else
+    echo "Copying include/ directory to /usr/local/include/libtmpl/"
+    includedir="/usr/local/include/libtmpl"
 
-#   Check if /usr/local/include/libtmpl/ is already a directory. If not
-#   then create this via mkdir.
-[ ! -d "$includedir" ] && sudo mkdir -p "$includedir/include/"
-sudo rm -f "$includedir/include/*.h"
-sudo cp ./include/* "$includedir/include/"
+    #   Check if /usr/local/include/libtmpl/ is already a directory. If not
+    #   then create this via mkdir.
+    [ ! -d "$includedir" ] && sudo mkdir -p "$includedir/include/"
+    sudo rm -f "$includedir/include/*.h"
+    sudo cp ./include/* "$includedir/include/"
+fi
 
 echo "Compiling libtmpl..."
 echo -e "\n\tCompiler Options:"
@@ -81,13 +85,27 @@ done
 
 $CC $sharedobjectlist -O3 -flto -shared -o libtmpl.so -lm
 
-echo "Moving to /usr/local/lib/libtmpl.so"
-sudo mv libtmpl.so /usr/local/lib/libtmpl.so
+if [[ $1 == "-d" ]]; then
+    echo "Adding current directory to LD_LIBRARY_PATH..."
+    u=$(pwd)
+else
+    echo "Moving to /usr/local/lib/libtmpl.so"
+    sudo mv libtmpl.so /usr/local/lib/libtmpl.so
 
-echo "Setting LD_LIBRARY_PATH environment variable to include /usr/local/lib..."
-if [[ $LD_LIBRARY_PATH != *"/usr/local/lib"* ]]; then
+    echo "Adding /usr/local/lib to LD_LIBRARY_PATH..."
+    u=/usr/local/lib
+fi
+
+if [[ $LD_LIBRARY_PATH == "" ]]; then
+    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$u"
     echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
-    echo "LD_LIBRARY_PATH=/usr/local/lib" >> ~/.bashrc
+    echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
+    echo "export LD_LIBRARY_PATH" >> ~/.bashrc
+    source ~/.bashrc
+elif [[ $LD_LIBRARY_PATH != *"$u"$ ]]; then
+    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$u"
+    echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
+    echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
     echo "export LD_LIBRARY_PATH" >> ~/.bashrc
     source ~/.bashrc
 fi
