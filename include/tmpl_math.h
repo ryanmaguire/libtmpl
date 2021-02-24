@@ -387,6 +387,10 @@ extern float tmpl_Float_Log(float x);
 extern double tmpl_Double_Log(double x);
 extern long double tmpl_LDouble_Log(long double x);
 
+extern float tmpl_Float_Floor(float x);
+extern double tmpl_Double_Floor(double x);
+extern long double tmpl_LDouble_Floor(long double x);
+
 /*  Set INFINITY to the HUGE_VAL macro that is specified in math.h. Most      *
  *  implementations already have an INFINITY macro, but it is not required.   */
 #define tmpl_Infinity (HUGE_VAL)

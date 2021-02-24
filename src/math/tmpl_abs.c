@@ -95,6 +95,59 @@
 /*  Header file where the prototypes for these functions are defined.         */
 #include <libtmpl/include/tmpl_math.h>
 
+#if __TMPL_USE_FABS_ALGORITHM__ != 0
+#include <libtmpl/include/tmpl_ieee754.h>
+#include <libtmpl/include/tmpl_bytes.h>
+
+/*  Single precision absolute value function (fabsf equivalent).              */
+float tmpl_Float_Abs(float x)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEE754_Word32 w;
+
+    /*  Set the float part of the word to the input x.                        */
+    w.real = x;
+
+    /*  Use bit-wise and to set the first bit to zero.                        */
+    w.integer = 0x7FFFFFFF & w.integer;
+
+    return w.real;
+}
+/*  End of tmpl_Float_Abs.                                                    */
+
+/*  Single precision absolute value function (fabsf equivalent).              */
+double tmpl_Double_Abs(double x)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEE754_Word64 w;
+
+    /*  Set the double part of the word to the input x.                       */
+    w.real = x;
+
+    /*  Use bit-wise and to set the first bit to zero.                        */
+    w.integer = 0x7FFFFFFFFFFFFFFF & w.integer;
+
+    return w.real;
+}
+/*  End of tmpl_Float_Abs.                                                    */
+
+/*  Long double precision absolute value function (fabsl equivalent).         */
+long double tmpl_LDouble_Abs(long double x)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEE754_Word80 w;
+
+    /*  Set the double part of the word to the input x.                       */
+    w.real = x;
+
+    /*  Use bit-wise and to set the first bit to zero.                        */
+    w.integer[1] = 0x0000000000007FFF & w.integer[1];
+
+    return w.real;
+}
+/*  End of tmpl_LDouble_Abs.                                                  */
+
+#else
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
 {
@@ -142,4 +195,7 @@ long double tmpl_LDouble_Abs(long double x)
     return abs_x;
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
+
+#endif
+
 

@@ -33,6 +33,8 @@ if [ $CC == "gcc" ]; then
     CArgs5="-Wconversion -Wdouble-promotion -Wfloat-conversion"
     CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
+
+#   Clang has different compiler options, so specify those here if using clang.
 elif [ $CC == "clang" ]; then
     CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra"
     CArgs2="-Wpedantic -Wmissing-field-initializers"
@@ -44,19 +46,36 @@ elif [ $CC == "clang" ]; then
 fi
 
 echo -e "\nClearing older files..."
-rm -f *.so
-rm -f *.o
 
+#   There may be left-over .so and .o files from a previous build. Remove those
+#   to avoid a faulty build.
+rm -f *.so *.o
+
+#   The -d option means does-not-have-sudo-support. It is for building libtmpl
+#   without super-user/sudo permissions.
 if [[ $1 == "-d" ]]; then
     echo "Building in place..."
+
+#   If we have sudo permissions, it is easiest to use libtmpl by placing the
+#   header files in /usr/local/include and the compiled shared-object into
+#   /usr/local/lib.
 else
     echo "Copying include/ directory to /usr/local/include/libtmpl/"
     includedir="/usr/local/include/libtmpl"
 
     #   Check if /usr/local/include/libtmpl/ is already a directory. If not
     #   then create this via mkdir.
-    [ ! -d "$includedir" ] && sudo mkdir -p "$includedir/include/"
-    sudo rm -f "$includedir/include/*.h"
+    if [ ! -d "$includedir" ]; then
+        sudo mkdir -p "$includedir/include/"
+    else
+
+        #   Remove the old header files in case libtmpl has been updated since
+        #   the most recent build on your computer.
+        sudo rm -f "$includedir/include/*.h"
+    fi
+
+    #   Copy the header files to the include directory. This requires sudo
+    #   permissions and you will be prompted for a password.
     sudo cp ./include/* "$includedir/include/"
 fi
 
@@ -69,6 +88,7 @@ echo -e "\t\t$CArgs4"
 echo -e "\t\t$CArgs5"
 echo -e "\t\t$CArgs6"
 
+#   Loop over all directories in src/ and compile all .c files.
 for dir in ./src/*; do
     echo -e "\n\tCompiling $dir"
     for filename in $dir/*.c; do
