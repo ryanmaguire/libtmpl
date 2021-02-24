@@ -1,0 +1,12 @@
+
+
+
+#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_ieee754.h>
+
+double tmpl_Double_Floor(double x)
+{
+    tmpl_IEE754_Word64 w64.real = x;
+    tmpl_int32 i32 = ((w64.integer>>52) & 0x7ff) - 0x3ff;
+}
+

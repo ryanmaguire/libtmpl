@@ -67,7 +67,9 @@
  *  file is required to define fixed-width unsigned integer data types of     *
  *  both 32-bits and 64-bits. Typedef these for later use in libtmpl.         */
 typedef uint32_t tmpl_uint32;
+typedef int32_t tmpl_int32;
 typedef uint64_t tmpl_uint64;
+typedef int64_t tmpl_int64;
 
 #else
 /*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.    *
@@ -101,24 +103,32 @@ typedef uint64_t tmpl_uint64;
  *  except with Microsoft's compiler which implements it as a 32-bit integer. */
 #if USHRT_MAX == 0xFFFFFFFF
 typedef short unsigned int tmpl_uint32;
+typedef short int tmpl_int32;
 #elif UINT_MAX == 0xFFFFFFFF
 typedef unsigned int tmpl_uint32;
+typedef int tmpl_int32;
 #elif ULONG_MAX == 0xFFFFFFFF
 typedef long unsigned int tmpl_uint32;
+typedef long int tmpl_int32;
 #elif define(ULLONG_MAX) && ULLONG_MAX == 0xFFFFFFFF
 typedef long long unsigned int tmpl_uint32;
+typedef long long int tmpl_int32;
 #else
 #error "libtmpl: No 32-bit integer type found."
 #endif
 
 #if USHRT_MAX == 0xFFFFFFFFFFFFFFFF
 typedef short unsigned int tmpl_uint64;
+typedef short int tmpl_int64;
 #elif UINT_MAX == 0xFFFFFFFFFFFFFFFF
 typedef unsigned int tmpl_uint64;
+typedef int tmpl_int64;
 #elif ULONG_MAX == 0xFFFFFFFFFFFFFFFF
 typedef long unsigned int tmpl_uint64;
+typedef long int tmpl_int64;
 #elif defined(ULLONG_MAX) && ULLONG_MAX == 0xFFFFFFFFFFFFFFFF
 typedef long long unsigned int tmpl_uint64;
+typedef long long int tmpl_int64;
 #else
 #error "libtmpl: No 64-bit integer type found."
 #endif

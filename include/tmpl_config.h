@@ -97,6 +97,8 @@
  *  the missing functions for a C89/C90 compatible implementation.            */
 #define __TMPL_USING_C99_MATH_H__ 0
 
+#define __TMPL_USE_FABS_ALGORITHM__ 1
+
 /*  For compilers supporting IEEE754 floating point arithmetic, there is a    *
  *  fast and simple method of computing logarithms and square roots. These    *
  *  functions are provided by libtmpl for two reason. The first is learning,  *
