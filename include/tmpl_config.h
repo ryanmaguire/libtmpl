@@ -30,7 +30,7 @@
  *                             Revision History                               *
  ******************************************************************************
  *  2020/12/2 (Ryan Maguire):                                                 *
- *      Created file.                                                         *
+ *      Created file (Wellesley College for librssringoccs).                  *
  *  2021/02/02 (Ryan Maguire):                                                *
  *      Copied from rss_ringoccs.                                             *
  ******************************************************************************/
@@ -39,7 +39,28 @@
 #ifndef __TMPL_CONFIG_H__
 #define __TMPL_CONFIG_H__
 
+/*  The C99 standard defines the header file stdint.h. It includes            *
+ *  fixed-width integer data types, which is especially useful when writing   *
+ *  code for IEEE754 floating point arithmetic. If your compiler supports the *
+ *  C99 standard, libtmpl uses stdint.h and typedef's several of the data     *
+ *  types it defines. If your compiler does not support stdint.h, libtmpl     *
+ *  attempts to typedef the default integer data types defined in C89/C90 by  *
+ *  using the macros in limits.h. Since it is not required that 32-bit and    *
+ *  64-bit integer data types be defined in the C89/C90 standard, this may    *
+ *  result in libtmpl failing to build. For macOS and GNU/Linux systems using *
+ *  clang or GCC, 32-bit and 64-bit data types exist in the C89/C90 standard  *
+ *  via int and long int, respectively. On Microsoft's MSVC, long long int is *
+ *  a 64-bit integer. Nevertheless, it is easiest and most portable to use    *
+ *  stdint.h, if available, so libtmpl tries this first.                      */
+
+/*  The __STDC_VERSION__ macro was introduced in the 1995 amendment to the C  *
+ *  standard. If the compiler supports the C99, C11, or C18 standard of the   *
+ *  language, stdint.h is provided. Check for this.                           */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define __TMPL_USING_C99_STDINT_H__ 1
+#else
 #define __TMPL_USING_C99_STDINT_H__ 0
+#endif
 
 /******************************************************************************
  *  rss_ringoccs allowed the user to build the complex library in one of two  *
@@ -52,7 +73,7 @@
  *  compilers (LLVM's clang and GNU's gcc). The complex data type defined by  *
  *  libtmpl copies the method in GNU's Scientific Library (GSL) which is a    *
  *  struct consisting of a double array with two elements. Similar types are  *
- *  defined for float and long double precision. You can mix libtmpl code with*
+ *  defined for float and long double precision. You can mix libtmpl code     *
  *  with C99 code with a simple union:                                        *
  *                                                                            *
  *      typedef union my_complex {                                            *
@@ -60,16 +81,28 @@
  *          tmpl_ComplexDouble tmpl_complex;                                  *
  *      } my_complex;                                                         *
  *                                                                            *
+ *  NOTE: This assumes complex couble is precisely the size of two doubles.   *
+ *  I've never seen a scenario where this is not true, but figured I should   *
+ *  mention it.                                                               *
+ *                                                                            *
  *  You can then pass a variable my_complex z; to a C99 function by:          *
  *      complex double w = ccos(z.c99_complex);                               *
  *  And you can pass it to a libtmpl function by:                             *
  *      tmpl_ComplexDouble w = tmpl_CDouble_Cos(z.tmpl_complex);              *
+ *                                                                            *
+ *  The reason for removing the C99 option is because the C11 version made    *
+ *  support for comlex.h OPTIONAL. Support could be tested via the use of the *
+ *  __STDC_NO_COMPLEX__ macro. Since there was little difference in           *
+ *  performance found, to save on the headaches only the C89/C90 method is    *
+ *  implemented. As stated, the C89/C90 method is forward compatible with C99,*
+ *  C11, and C18, it simply uses structs to define complex numbers.           *
  ******************************************************************************/
 
-/*  The following comment block was originally part of rss_ringoccs and has   *
- *  been included here for completeness of documentation. The times mentioned *
- *  did not use linking optimization. With this, the times are identical.     *
- *  Without linking optimization, the times are still similar.                */
+/*  NOTE:                                                                     *
+ *      The following comment block was originally part of rss_ringoccs and   *
+ *      has been included here for completeness of documentation. The times   *
+ *      mentioned did not use linking optimization. With this, the times are  *
+ *      identical. Without linking optimization, the times are still similar. */
 
 /*  C99 requires complex.h, but C11 makes it optional. If you have C99        *
  *  support and would like to use built-in complex numbers, change the setup  *
@@ -94,22 +127,30 @@
  *  files. The C99 math.h is a superset of the C89 one. If your compiler      *
  *  supports C99 math.h, then setting this macro to 1 will make libtmpl alias *
  *  the functions in math.h. Setting this to 0 will have libtmpl provide      *
- *  the missing functions for a C89/C90 compatible implementation.            */
+ *  the missing functions for a C89/C90 compatible implementation. We can     *
+ *  probe support via the __STDC_VERSION__ macro.                             */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define __TMPL_USING_C99_MATH_H__ 1
+#else
 #define __TMPL_USING_C99_MATH_H__ 0
+#endif
 
-#define __TMPL_USE_FABS_ALGORITHM__ 1
-
-/*  For compilers supporting IEEE754 floating point arithmetic, there is a    *
- *  fast and simple method of computing logarithms and square roots. These    *
- *  functions are provided by libtmpl for two reason. The first is learning,  *
- *  the algorithms help one understand how IEEE754 works. Second is because   *
- *  some compilers offer single/long double precision, but do not provide     *
- *  functions that actually compute to the correct accuracy. For example, log *
- *  and logl, defined in the C99 standard of math.h, may have the same        *
- *  precision. The log algorithms provided are as fast as those provided in   *
- *  C standard, tested on Linux and macOS systems, and have the correct       *
- *  precisions for the various data types.                                    */
-#define __TMPL_USE_LOG_ALGORITHM__ 0
+/*  For compilers supporting IEEE754 floating point arithmetic, there are     *
+ *  fast and simple method of computing logarithms and square roots and many  *
+ *  other functions. These functions are provided by libtmpl for two reason.  *
+ *  The first is learning, the algorithms help one understand how IEEE754     *
+ *  works. Second is because some compilers offer single/long double precision*
+ *  but do not provide functions that actually compute to the correct         *
+ *  accuracy. For example, log and logl, defined in the C99 standard of       *
+ *  math.h, may have the same precision. The log algorithms provided are as   *
+ *  fast as those provided in many implementations of the C language, such as *
+ *  glibc, but require IEEE 754 support. We can check for this support with   *
+ *  the __STDC_IEC_559__ macro, introduced in the C99 standard.               */
+#if defined(__STDC_IEC_559__)
+#define __TMPL_USE_IEEE754_ALGORITHMS__ 1
+#else
+#define __TMPL_USE_IEEE754_ALGORITHMS__ 0
+#endif
 
 /*  If long double precision (80, 96, or 128 bit format, 24 decimal accuracy) *
  *  is needed for calculations but your platform lacks sinl or is strictly    *

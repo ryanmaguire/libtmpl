@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+unsigned int counter;
+
 typedef struct long_double_test_struct_in {
     long double (*ftmpl)(long double);
     long double (*fext)(long double);
@@ -18,8 +20,8 @@ typedef struct long_double_test_struct_out {
     long double worst_rel_point;
     long double abs_error;
     long double worst_abs_point;
-    long double tmpl_comp_time;
-    long double ext_comp_time;
+    double tmpl_comp_time;
+    double ext_comp_time;
 } long_double_test_struct_out;
 
 static void
@@ -30,7 +32,7 @@ test_func(long_double_test_struct_in test_data, FILE *fp, const char *func_name)
     long_double_test_struct_out out_data;
     clock_t t1, t2;
 
-    dx = (test_data.end - test_data.start) / (double)test_data.samples;
+    dx = (test_data.end - test_data.start) / (long double)test_data.samples;
 
     x = malloc(sizeof(*x) * test_data.samples);
     yext = malloc(sizeof(*yext) * test_data.samples);
@@ -75,12 +77,20 @@ test_func(long_double_test_struct_in test_data, FILE *fp, const char *func_name)
     }
 
     fprintf(fp, "%s\n", func_name);
-    fprintf(fp, "\tMax Rel Error:   %Lf\n", out_data.rel_error);
-    fprintf(fp, "\tWorst Rel Point: %Lf\n", out_data.worst_rel_point);
-    fprintf(fp, "\tMax Abs Error:   %Lf\n", out_data.abs_error);
-    fprintf(fp, "\tWorst Abs Point: %Lf\n", out_data.worst_abs_point);
-    fprintf(fp, "\ttmpl Time:       %Lf\n", out_data.tmpl_comp_time);
-    fprintf(fp, "\text Time:        %Lf\n", out_data.ext_comp_time);
+    fprintf(fp, "\tMax Rel Error:   %.24Lf\n", out_data.rel_error);
+    fprintf(fp, "\tWorst Rel Point: %.24Lf\n", out_data.worst_rel_point);
+    fprintf(fp, "\tMax Abs Error:   %.24Lf\n", out_data.abs_error);
+    fprintf(fp, "\tWorst Abs Point: %.24Lf\n", out_data.worst_abs_point);
+    fprintf(fp, "\ttmpl Time:       %f\n", out_data.tmpl_comp_time);
+    fprintf(fp, "\text Time:        %f\n", out_data.ext_comp_time);
+
+    if (out_data.rel_error <= test_data.EPS)
+        fprintf(fp, "Test PASSED\n\n");
+    else
+    {
+        fprintf(fp, "Test FAILED\n\n");
+        counter = 1UL;
+    }
 
     free(x);
     free(yext);
@@ -100,9 +110,23 @@ int main(void)
     in.start = -1.0e6L;
     in.end   =  1.0e6L;
     in.samples = 1E8;
+    test_func(in, fp, "tmpl_LDouble_Abs vs. fabsl (C99)");
 
-    test_func(in, fp, "tmpl_Double_Abs vs. fabs (C89)");
+    in.fext    = logl;
+    in.ftmpl   = tmpl_LDouble_Log;
+    in.start   = 0.0L;
+    in.end     = 1.0e6L;
+    in.samples = 1E8;
+    in.EPS     = 1.0e-16L;
 
+    test_func(in, fp, "tmpl_LDouble_Log vs. logl (C99)");
+
+    if (counter != 0)
+        printf("FAILED\nSee test_results_ldouble.txt for details.\n");
+    else
+        printf("PASSED\nSee test_results_ldouble.txt for details.\n");
+
+    fclose(fp);
     return 0;
 }
 
