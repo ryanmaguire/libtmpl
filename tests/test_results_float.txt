@@ -1,0 +1,22 @@
+tmpl_Float_Abs vs. fabsf (C99)
+	tmpl_Float_Abs:	0.164484
+	fabsf (C99):	0.143427
+	Max Abs Error:   0.00000000
+	Worst Abs Point: -1000000.00000000
+	Max Rel Error:   0.00000000
+	Worst Rel Point: -1000000.00000000
+		tmpl_Float_Abs:		1000000.0000000000000000
+		fabsf (C99):		1000000.0000000000000000
+PASSED
+
+tmpl_Float_Log vs. logf (C99)
+	tmpl_Float_Log:	1.253444
+	logf (C99):	0.276655
+	Max Abs Error:   0.00000095
+	Worst Abs Point: 2981.58764648
+	Max Rel Error:   0.09090836
+	Worst Rel Point: 0.99999934
+		tmpl_Float_Log:		-0.0000007152555099
+		logf (C99):		-0.0000006556513199
+PASSED
+

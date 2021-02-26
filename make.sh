@@ -122,7 +122,7 @@ if [[ $LD_LIBRARY_PATH == "" ]]; then
     echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
     echo "export LD_LIBRARY_PATH" >> ~/.bashrc
     source ~/.bashrc
-elif [[ $LD_LIBRARY_PATH != *"$u"$ ]]; then
+elif [[ $LD_LIBRARY_PATH != *"$u"* ]]; then
     CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$u"
     echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
     echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
