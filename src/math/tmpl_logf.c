@@ -3,7 +3,7 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 
-#if __TMPL_USE_IEEE754_ALGORITHMS__ == 2
+#if __TMPL_USE_IEEE754_ALGORITHMS__ != 0
 
 #include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_ieee754.h>
@@ -19,10 +19,9 @@ static float __log_coeffs_f[6] = {
 
 float tmpl_Float_Log(float x)
 {
-	tmpl_IEE754_Word32 w, frac;
-	tmpl_uint32 low, high;
+	tmpl_IEEE754_Word32 w;
 	float exponent, poly, A, A_sq;
-	float out;
+	float mantissa, out;
 
 	if (x < 0.0F)
 		return tmpl_NaN_F;
@@ -31,12 +30,9 @@ float tmpl_Float_Log(float x)
 	else
 		w.real = x;
 
-	low  = tmpl_Get_Low_Word32(w);
-	high = tmpl_Get_High_Word32(w);
-
-	exponent = (float)high - 127.0F;
-	frac.integer = 0x3F800000 + low;
-    A = (frac.real - 1.0F)/(frac.real + 1.0F);
+	exponent = (float)tmpl_Get_Base_2_Exp32(w);
+    mantissa = tmpl_Get_Mantissa32(w);
+    A = (mantissa - 1.0F)/(mantissa + 1.0F);
     A_sq = A*A;
     poly = tmpl_Real_Poly_Float_Coeffs(__log_coeffs_f, 5U, A_sq);
 

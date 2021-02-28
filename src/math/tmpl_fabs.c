@@ -121,7 +121,7 @@
 float tmpl_Float_Abs(float x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEE754_Word32 w;
+    tmpl_IEEE754_Word32 w;
 
     /*  Set the float part of the word to the input x.                        */
     w.real = x;
@@ -148,7 +148,7 @@ float tmpl_Float_Abs(float x)
 double tmpl_Double_Abs(double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEE754_Word64 w;
+    tmpl_IEEE754_Word64 w;
 
     /*  Set the double part of the word to the input x.                       */
     w.real = x;

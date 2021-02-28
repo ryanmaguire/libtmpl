@@ -50,7 +50,9 @@
 #ifndef __TMPL_IEEE754_H__
 #define __TMPL_IEEE754_H__
 
+#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_endianness.h>
 
 /******************************************************************************
  *  For a non-negative integer that is less than 2^64, we can store the       *
@@ -152,17 +154,48 @@
 /*  Data type for a 32-bit floating point number. This is assumed to          *
  *  correspond to the float data type. Note that float is assumed to be 32    *
  *  bits. If your compiler supports the IEEE 754 format, it is.               */
-typedef union word32 {
-	float real;
-	tmpl_uint32 integer;
-} tmpl_IEE754_Word32;
+typedef union _tmpl_IEE754_Word32 {
+    float real;
+    tmpl_uint32 integer;
+} tmpl_IEEE754_Word32;
 
 /*  Data type for a 64-bit floating point number. This is assumed to          *
  *  correspond to the double data type.                                       */
-typedef union word64 {
-	double real;
-	tmpl_uint64 integer;
-} tmpl_IEE754_Word64;
+#if defined(__TMPL_ENDIAN__) && __TMPL_ENDIAN__ == __TMPL_BIG_ENDIAN__
+
+typedef union _tmpl_IEE754_Word64 {
+    double real;
+    struct {
+        tmpl_int32 most_significant_word;
+        tmpl_int32 least_significant_word;
+    } parts;
+    struct {
+        tmpl_uint32 most_significant_word;
+        tmpl_uint32 least_significant_word;
+    } uparts;
+	  tmpl_uint64 integer;
+} tmpl_IEEE754_Word64;
+
+#elif defined(__TMPL_ENDIAN__) &&  __TMPL_ENDIAN__ == __TMPL_LITTLE_ENDIAN__
+
+typedef union _tmpl_IEE754_Word64 {
+    double real;
+    struct {
+        tmpl_int32 least_significant_word;
+        tmpl_int32 most_significant_word;
+    } parts;
+    struct {
+        tmpl_uint32 least_significant_word;
+        tmpl_uint32 most_significant_word;
+    } uparts;
+	  tmpl_uint64 integer;
+} tmpl_IEEE754_Word64;
+
+#else
+
+#error "Unsupported endianness."
+
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -172,37 +205,76 @@ typedef union word64 {
  *      is just the binary value of the exponent part of the number.          *
  *      A 64 bit version is also provided.                                    *
  *  Arguments:                                                                *
- *      tmpl_IEE754_Word32 z:                                                 *
+ *      tmpl_IEE754_Word32 w:                                                 *
  *          A union for 32-bit float and 32-bit unsigned int.                 *
  *  Output:                                                                   *
- *      unsigned int high:                                                    *
+ *      tmpl_uint32 high:                                                     *
  *          The numerical value of the high word of x.                        *
  ******************************************************************************/
-tmpl_uint32
-tmpl_Get_High_Word32(tmpl_IEE754_Word32 x);
+extern tmpl_uint32
+tmpl_Get_High_Word32(tmpl_IEEE754_Word32 w);
 
-tmpl_uint64
-tmpl_Get_High_Word64(tmpl_IEE754_Word64 x);
+extern tmpl_uint32
+tmpl_Get_High_Word64(tmpl_IEEE754_Word64 w);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Get_High_Word32                                                  *
+ *      tmpl_Get_Low_Word32                                                   *
  *  Purpose:                                                                  *
  *      Gets the "low word" of a 32-bit IEEE754 floating point number. This   *
  *      is just the binary value of the fractional part of the number.        *
  *      A 64 bit version is also provided.                                    *
  *  Arguments:                                                                *
- *      tmpl_IEE754_Word32 z:                                                 *
+ *      tmpl_IEE754_Word32 w:                                                 *
  *          A union for 32-bit float and 32-bit unsigned int.                 *
  *  Output:                                                                   *
- *      unsigned int low:                                                     *
+ *      tmpl_uint32 low:                                                      *
  *          The numerical value of the low word of x.                         *
  ******************************************************************************/
-tmpl_uint32
-tmpl_Get_Low_Word32(tmpl_IEE754_Word32 x);
+extern tmpl_uint32
+tmpl_Get_Low_Word32(tmpl_IEEE754_Word32 w);
 
-tmpl_uint64
-tmpl_Get_Low_Word64(tmpl_IEE754_Word64 x);
+extern tmpl_uint64
+tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 w);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Get_Base_2_Exp32                                                 *
+ *  Purpose:                                                                  *
+ *      Gets the exponent of a 32-bit word. This is the value b such that the *
+ *      number x is represented by 1.m * 2^b, m being the mantissa.           *
+ *      tmpl_IEE754_Word32 w:                                                 *
+ *          A union for 32-bit float and 32-bit unsigned int.                 *
+ *  Output:                                                                   *
+ *      tmpl_uint32 exp:                                                      *
+ *          The numerical value of the exponential part of x in base 2.       *
+ *  Source Code:                                                              *
+ *      libtmpl/src/ieee754/tmpl_get_base_2_exp32.c                           *
+ *      libtmpl/src/ieee754/tmpl_get_base_2_exp64.c                           *
+ ******************************************************************************/
+extern tmpl_int32
+tmpl_Get_Base_2_Exp32(tmpl_IEEE754_Word32 w);
+
+extern tmpl_int32
+tmpl_Get_Base_2_Exp64(tmpl_IEEE754_Word64 w);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Get_Mantissa32                                                   *
+ *  Purpose:                                                                  *
+ *      Gets the mantissa of a 32-bit word. This is the value 1.m such that   *
+ *      the number x is represented by 1.m * 2^b, b being the exponent.       *
+ *      tmpl_IEE754_Word32 w:                                                 *
+ *          A union for 32-bit float and 32-bit unsigned int.                 *
+ *  Output:                                                                   *
+ *      float mantissa:                                                       *
+ *          The numerical value of the mantissa of x.                         *
+ ******************************************************************************/
+extern float
+tmpl_Get_Mantissa32(tmpl_IEEE754_Word32 w);
+
+extern double
+tmpl_Get_Mantissa64(tmpl_IEEE754_Word64 w);
 
 #endif
 /*  End of include guard.                                                     */

@@ -55,7 +55,6 @@ const tmpl_ComplexFloat tmpl_CFloat_Zero = {{0.0F, 0.0F}};
 
 const tmpl_ComplexFloat tmpl_CFloat_One = {{1.0F, 0.0F}};
 
-const tmpl_ComplexFloat tmpl_CFloat_NaN = {{tmpl_NaN_F, tmpl_NaN_F}};
 
 const tmpl_ComplexFloat
 tmpl_CFloat_Infinity = {{tmpl_Infinity_F, tmpl_Infinity_F}};
@@ -67,7 +66,6 @@ const tmpl_ComplexDouble tmpl_CDouble_Zero = {{0.0, 0.0}};
 
 const tmpl_ComplexDouble tmpl_CDouble_One = {{1.0, 0.0}};
 
-const tmpl_ComplexDouble tmpl_CDouble_NaN = {{tmpl_NaN, tmpl_NaN}};
 
 const tmpl_ComplexDouble
 tmpl_CDouble_Infinity = {{tmpl_Infinity, tmpl_Infinity}};
@@ -78,8 +76,6 @@ const tmpl_ComplexLongDouble tmpl_CLDouble_I = {{0.0L, 1.0L}};
 const tmpl_ComplexLongDouble tmpl_CLDouble_Zero = {{0.0L, 0.0L}};
 
 const tmpl_ComplexLongDouble tmpl_CLDouble_One = {{1.0L, 0.0L}};
-
-const tmpl_ComplexLongDouble tmpl_CLDouble_NaN = {{tmpl_NaN_L, tmpl_NaN_L}};
 
 const tmpl_ComplexLongDouble
 tmpl_CLDouble_Infinity = {{tmpl_Infinity_L, tmpl_Infinity_L}};

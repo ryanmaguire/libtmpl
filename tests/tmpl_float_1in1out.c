@@ -164,7 +164,7 @@ tmpl_Compare_Float_1in1out(const char *ftmpl_name, float_1in1out ftmpl,
     /*  t2-t1 is the number of clock cycles that have passed between grabbing *
      *  t1 and t2. To convert this to seconds, use the macro CLOCKS_PER_SEC   *
      *  provided in time.h.                                                   */
-    fprintf(fp, "\t%s:\t%f\n", ftmpl_name, (double)(t2-t1)/CLOCKS_PER_SEC);
+    fprintf(fp, "\tlibtmpl time:    %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     /*  Reset the clock.                                                      */
     t1 = clock();
@@ -177,7 +177,7 @@ tmpl_Compare_Float_1in1out(const char *ftmpl_name, float_1in1out ftmpl,
     t2 = clock();
 
     /*  Print out how long it took for fext to compute.                       */
-    fprintf(fp, "\t%s:\t%f\n", fext_name, (double)(t2-t1)/CLOCKS_PER_SEC);
+    fprintf(fp, "\texternal time:   %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     /*  NOTE:                                                                 *
      *      Without the following comparison of the two pointers yext and     *
@@ -221,8 +221,8 @@ tmpl_Compare_Float_1in1out(const char *ftmpl_name, float_1in1out ftmpl,
     fprintf(fp, "\tWorst Abs Point: %.8f\n", (double)worst_abs_point);
     fprintf(fp, "\tMax Rel Error:   %.8f\n", (double)max_rel_err);
     fprintf(fp, "\tWorst Rel Point: %.8f\n", (double)worst_rel_point);
-    fprintf(fp, "\t\t%s:\t\t%.16f\n", ftmpl_name, (double)worst_rel_tmpl);
-    fprintf(fp, "\t\t%s:\t\t%.16f\n", fext_name,  (double)worst_rel_ext);
+    fprintf(fp, "\t\tlibtmpl:  %.16f\n",     (double)worst_rel_tmpl);
+    fprintf(fp, "\t\texternal: %.16f\n",     (double)worst_rel_ext);
 
     if ((max_rel_err >= eps) && (max_abs_err >= eps))
         fprintf(fp, "FAILED\n\n");

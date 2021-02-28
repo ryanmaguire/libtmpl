@@ -51,10 +51,28 @@
 #include <complex.h>
 #include <stdio.h>
 
+/*  Used for testing functions of the form y = f(x) at single precision.      *
+ *  Examples:                                                                 *
+ *      C99:      sinf, cosf, logf                                            *
+ *      libtmpl:  tmpl_Float_Sin, tmpl_Float_Cos, tmpl_Float_Log              */
 typedef float (*float_1in1out)(float);
+
+/*  Used for testing functions of the form y = f(x0, x1) at single precision. *
+ *  Examples:                                                                 *
+ *      C99:      atan2f, copysignf                                           *
+ *      libtmpl:  tmpl_Float_Atan2, tmpl_Float_Copysign                       */
 typedef float (*float_2in1out)(float, float);
 
+/*  Used for testing functions of the form y = f(x) at double precision.      *
+ *  Examples:                                                                 *
+ *      C89:      sin, cos, log                                               *
+ *      libtmpl:  tmpl_Double_Sin, tmpl_Double_Cos, tmpl_Double_Log           */
 typedef double (*double_1in1out)(double);
+
+/*  Used for testing functions of the form y = f(x0, x1) at double precision. *
+ *  Examples:                                                                 *
+ *      C99:      atan2, copysign                                             *
+ *      libtmpl:  tmpl_Double_Atan2, tmpl_Double_Copysign                     */
 typedef double (*double_2in1out)(double, double);
 
 typedef long double (*ldouble_1in1out)(long double);

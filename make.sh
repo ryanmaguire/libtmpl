@@ -23,24 +23,87 @@
 #   clang and gcc on both linux and mac systems using strict compiler options to
 #   ensure compliance with the ANSI standard. Changing this to a different
 #   compiler "should" work, though it hasn't been tested.
-CC=gcc
+CC=clang
+
+if [ ! -e "include/tmpl_endianness.h" ]; then
+    touch include/tmpl_endianness.h
+    $CC -I../ src/bytes/tmpl_determine_endianness.c -c
+    $CC det_end.c tmpl_determine_endianness.o -o det_end -ltmpl
+    end=`./det_end`
+    echo "
+/******************************************************************************
+ *                                 LICENSE                                    *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                              tmpl_endianness                               *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      This file is created by the make.sh file. It provides the macro       *
+ *      __TMPL_ENDIANNESS__ which is used in various functions where the code *
+ *      is endian specific.                                                   *
+ ******************************************************************************/
+#ifndef __TMPL_ENDIANNESS_H__
+#define __TMPL_ENDIANNESS_H__
+
+#define __TMPL_BIG_ENDIAN__ 0
+#define __TMPL_LITTLE_ENDIAN__ 1
+#define __TMPL_MIXED_ENDIAN__ 2
+#define __TMPL_UNKNOWN_ENDIAN__ 3
+
+#define __TMPL_ENDIAN__ $end
+
+#endif
+
+" >> include/tmpl_endianness.h
+    rm -f det_end tmpl_determine_endianness.o
+fi
 
 if [ $CC == "gcc" ]; then
-    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra"
-    CArgs2="-Wpedantic -Wmisleading-indentation -Wmissing-field-initializers"
+    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
+    CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
-    CArgs5="-Wconversion -Wdouble-promotion -Wfloat-conversion"
+    CArgs5="-Wdouble-promotion -Wfloat-conversion"
     CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
 
 #   Clang has different compiler options, so specify those here if using clang.
 elif [ $CC == "clang" ]; then
-    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra"
-    CArgs2="-Wpedantic -Wmissing-field-initializers"
+    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
+    CArgs2="-Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
-    CArgs5="-Wconversion -Wdouble-promotion -Wfloat-conversion"
+    CArgs5="-Wdouble-promotion -Wfloat-conversion"
+    CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
+    CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
+elif [ $CC == "tcc" ]; then
+    CArgs1="-std=c89 -pedantic -Wall -Wextra -Wpedantic"
+    CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
+    CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
+    CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
+    CArgs5="-Wdouble-promotion -Wfloat-conversion"
+    CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
+    CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
+elif [ $CC == "cc" ]; then
+    CArgs1="-std=c89 -pedantic -Wall -Wextra -Wpedantic"
+    CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
+    CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
+    CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
+    CArgs5="-Wdouble-promotion -Wfloat-conversion"
     CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
 fi
@@ -93,7 +156,9 @@ for dir in ./src/*; do
     echo -e "\n\tCompiling $dir"
     for filename in $dir/*.c; do
         echo -e "\t\tCompiling: $filename"
-        $CC $CompilerArgs $filename
+        if !($CC $CompilerArgs $filename); then
+            exit 1
+        fi
     done
 done
 

@@ -104,11 +104,6 @@ extern const tmpl_ComplexFloat tmpl_CFloat_One;
 extern const tmpl_ComplexDouble tmpl_CDouble_One;
 extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
 
-/*  Complex Not-a-Number, set to NaN + i NaN.                                 */
-extern const tmpl_ComplexFloat tmpl_CFloat_NaN;
-extern const tmpl_ComplexDouble tmpl_CDouble_NaN;
-extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
-
 /*  Complex infinity, set to inf + i inf. This is the "north pole" on the     *
  *  Riemann sphere.                                                           */
 extern const tmpl_ComplexFloat tmpl_CFloat_Infinity;
