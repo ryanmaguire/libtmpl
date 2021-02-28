@@ -22,8 +22,9 @@ static double __log_coeffs[11] = {
 
 double tmpl_Double_Log(double x)
 {
-	tmpl_IEE754_Word64 w, frac;
-	tmpl_uint64 low, high;
+	tmpl_IEEE754_Word64 w, frac;
+	tmpl_uint64 low;
+    tmpl_uint32 high;
 	double exponent, poly, A, A_sq;
 	double out;
 

@@ -339,7 +339,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
                      *  if the y component is negative infinity, return       *
                      *  complex NaN.                                          */
                     if ((tmpl_Is_NaN(z_x)) || (z_y < 0.0))
-                        w = tmpl_CDouble_NaN;
+                        w = tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
                     /*  In the limiting case with y = +infinity we get zero.  */
                     else
@@ -528,7 +528,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
     else
     {
         if ((tmpl_Is_NaN(abs_x)) || (tmpl_Is_NaN(z_y)))
-            return tmpl_CDouble_NaN;
+            w = tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
         /*  |y| < 1e-10, so we only need exp(-x*x) term (round instead of     *
          *  ceil as in original paper; note that x/a > 1 here).               */

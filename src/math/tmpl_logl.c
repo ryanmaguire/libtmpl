@@ -20,9 +20,9 @@ long double tmpl_LDouble_Log(long double x)
     long double mant, A, A_sq, log_x, factor;
 
     if (x < 0.0L)
-        return tmpl_NaN;
+        return tmpl_NaN_L;
     else if (x == 0.0L)
-        return -tmpl_Infinity;
+        return -tmpl_Infinity_L;
 
     if (x < 1.0L)
         mant = 1.0L/x;

@@ -114,6 +114,13 @@ int main(void)
 
     test_func(in, fp, "tmpl_Double_Abs vs. fabs (C89)");
 
+    in.start   =  -1.0e8;
+    in.end     =  1.0e8;
+    in.samples = 1E8;
+    in.fext    = floor;
+    in.ftmpl   = tmpl_Double_Floor;
+    test_func(in, fp, "tmpl_Double_Floor vs. floor (C89)");
+
     in.start   = 0.0;
     in.end     = 1.0e6;
     in.fext    = log;

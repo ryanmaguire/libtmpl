@@ -51,7 +51,7 @@
 #include <libtmpl/include/tmpl_ieee754.h>
 
 /*  Computes the high word of a 64-bit floating-point number.                 */
-tmpl_uint64 tmpl_Get_High_Word64(tmpl_IEE754_Word64 x)
+tmpl_uint32 tmpl_Get_High_Word64(tmpl_IEEE754_Word64 x)
 {
     /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *
@@ -68,7 +68,7 @@ tmpl_uint64 tmpl_Get_High_Word64(tmpl_IEE754_Word64 x)
      *  would not perform long division, but rather just shift the decimal    *
      *  point over by 2, giving 10. This is the binary version of this.       */
 	out = out >> 52;
-	return out;
+	return (tmpl_uint32)out;
 }
 /*  End of tmpl_Get_High_Word64.                                              */
 

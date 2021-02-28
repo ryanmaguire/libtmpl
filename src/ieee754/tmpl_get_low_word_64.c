@@ -50,7 +50,7 @@
  ******************************************************************************/
 #include <libtmpl/include/tmpl_ieee754.h>
 
-tmpl_uint64 tmpl_Get_Low_Word64(tmpl_IEE754_Word64 x)
+tmpl_uint64 tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 x)
 {
     /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *

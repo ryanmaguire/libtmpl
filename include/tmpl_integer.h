@@ -66,6 +66,7 @@
 /*  If we get here, we have support for the library stdint.h. This header     *
  *  file is required to define fixed-width unsigned integer data types of     *
  *  both 32-bits and 64-bits. Typedef these for later use in libtmpl.         */
+
 typedef uint32_t tmpl_uint32;
 typedef int32_t tmpl_int32;
 typedef uint64_t tmpl_uint64;
