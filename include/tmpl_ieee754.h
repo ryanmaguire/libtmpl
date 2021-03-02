@@ -163,7 +163,7 @@ typedef union _tmpl_IEE754_Word32 {
  *  correspond to the double data type.                                       */
 #if defined(__TMPL_ENDIAN__) && __TMPL_ENDIAN__ == __TMPL_BIG_ENDIAN__
 
-typedef union _tmpl_IEE754_Word64 {
+typedef union _tmpl_IEEE754_Word64 {
     double real;
     struct {
         tmpl_int32 most_significant_word;
@@ -178,7 +178,7 @@ typedef union _tmpl_IEE754_Word64 {
 
 #elif defined(__TMPL_ENDIAN__) &&  __TMPL_ENDIAN__ == __TMPL_LITTLE_ENDIAN__
 
-typedef union _tmpl_IEE754_Word64 {
+typedef union _tmpl_IEEE754_Word64 {
     double real;
     struct {
         tmpl_int32 least_significant_word;
