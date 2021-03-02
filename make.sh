@@ -23,12 +23,12 @@
 #   clang and gcc on both linux and mac systems using strict compiler options to
 #   ensure compliance with the ANSI standard. Changing this to a different
 #   compiler "should" work, though it hasn't been tested.
-CC=clang
+CC=gcc
 
 if [ ! -e "include/tmpl_endianness.h" ]; then
     touch include/tmpl_endianness.h
     $CC -I../ src/bytes/tmpl_determine_endianness.c -c
-    $CC det_end.c tmpl_determine_endianness.o -o det_end -ltmpl
+    $CC det_end.c tmpl_determine_endianness.o -o det_end
     end=`./det_end`
     echo "
 /******************************************************************************
