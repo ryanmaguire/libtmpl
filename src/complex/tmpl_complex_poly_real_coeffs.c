@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   rss_ringoccs_complex_poly_real_coeffs                    *
+ *                       tmpl_complex_poly_real_coeffs                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Efficiently compute polynomials of a complex variable using Horner's  *

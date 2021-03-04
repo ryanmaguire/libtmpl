@@ -110,6 +110,15 @@ extern const tmpl_ComplexFloat tmpl_CFloat_Infinity;
 extern const tmpl_ComplexDouble tmpl_CDouble_Infinity;
 extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
 
+/*  There used to be complex NaN data types, defined by NaN + i*NaN, where    *
+ *  NaN is defined in tmpl_math.h as 0.0 * HUGE_VAL. This wasn't portable     *
+ *  since these are not compile time constants, so we can't trust that the    *
+ *  compiler will be able to handle it. It worked with GCC and LLVM's clang,  *
+ *  but not on a few others (either tcc, or pcc, I can't recall which). For   *
+ *  absolute portability, these have been removed, and instead when a complex *
+ *  NaN is needed, it is created at runtime with tmpl_CDouble_Rect, or the    *
+ *  float or long double equivalent.                                          */
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_CDouble_Abs                                                      *
@@ -197,7 +206,7 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      tmpl_ComplexDouble sum:                                               *
- *          The sum of y and z.                                               *
+ *          The sum of iy and z.                                              *
  ******************************************************************************/
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
@@ -439,7 +448,7 @@ tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      tmpl_ComplexDouble quotient:                                          *
- *          The complex number y / z.                                         *
+ *          The complex number iy / z.                                        *
  *  NOTE:                                                                     *
  *      No error check is performed on whether or not z = 0+0i. If this is    *
  *      true, depending on your system, you will either get +infinity for both*

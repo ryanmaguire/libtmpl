@@ -74,9 +74,7 @@
  *      Frozen for v1.3.                                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Edited to make it compatible with libtmpl.                            *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 

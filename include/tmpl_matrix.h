@@ -28,7 +28,7 @@
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef __TMPL_MATRIX_H__
-#define __TMPL_MATRIX_LINALG_H__
+#define __TMPL_MATRIX_H__
 
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_complex.h>

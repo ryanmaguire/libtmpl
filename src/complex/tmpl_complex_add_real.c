@@ -68,15 +68,11 @@
  ******************************************************************************
  *  2020/12/03: Ryan Maguire                                                  *
  *      Created function (Wellesley college for librssringoccs).              *
- *  2020/12/03: Ryan Maguire                                                  *
  *      Moved here from rss_ringoccs_complex_add.c.                           *
- *  2020/12/03: Ryan Maguire                                                  *
  *      Frozen for v1.3 of rss_ringoccs.                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Made compatible with libtmpl.                                         *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 

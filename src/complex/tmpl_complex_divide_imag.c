@@ -30,7 +30,7 @@
  *  Purpose:                                                                  *
  *      Divides an imaginary number by a complex one.                         *
  *                                                                            *
- *          div(y, z) = y / z                                                 *
+ *          div(y, z) = iy / z                                                *
  *                                                                            *
  *  Arguments:                                                                *
  *      y (float/double/long double):                                         *
@@ -39,7 +39,7 @@
  *          A complex number.                                                 *
  *  Output:                                                                   *
  *      y_by_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):           *
- *          The quotient y / z.                                               *
+ *          The quotient iy / z.                                              *
  *  Method:                                                                   *
  *      Use the fact that y / z = y * z^-1. The reciprocal formula for z      *
  *      yields:                                                               *

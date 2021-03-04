@@ -67,8 +67,18 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       January 14, 2021                                              *
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       February 11, 2021                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2021/01/14: Ryan Maguire                                                  *
+ *      Created file (rss_ringoccs for Wellesley College).                    *
+ *  2021/02/11: Ryan Maguire                                                  *
+ *      Ported to libtmpl.                                                    *
+ *  2021/02/11: Ryan Maguire                                                  *
+ *      Added comments and license.                                           *
+ *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 
 /*  Standard library file containing the CHAR_BIT macro and more.             */
@@ -103,16 +113,20 @@
 tmpl_Endian tmpl_Determine_Endianness(void)
 {
     /*  Use the union C-keyword to create a data-type that has an unsigned    *
-     *  int and a char array consisting of two elements, which share the same *
+     *  int and a char array consisting of four elements which share the same *
      *  address in memory. By setting the integer portion to the hexidecimal  *
-     *  0x0102 we can use the fact that the char array c is occupying the     *
-     *  same address as the unsigned int i and interpret the value as a char. *
-     *  With this we can see if the zeroth value of the array is 01 or if it  *
-     *  is 02. This will tell us if we have little-endian or big-endian.      */
+     *  0x01020304 we can use the fact that the char array c is occupying the *
+     *  same address as the unsigned int i and interpret the value as a char  *
+     *  array. With this we can see if the zeroth value of the array is 01,   *
+     *  02, 03, or 04. This will tell us if we have little-endian or          *
+     *  big-endian, or the rarer mixed-endian.                                */
 
     if (CHAR_BIT == 8)
     {
         union {
+            /*  For 8-bit char, we'll use the tmpl_uint32 data type, which is *
+             *  typedef'd in tmpl_integer.h, to guarantee a 32-bit unsigned   *
+             *  integer data type.                                            */
             tmpl_uint32 i;
             char c[4];
         } e = { 0x01020304 };
@@ -133,6 +147,9 @@ tmpl_Endian tmpl_Determine_Endianness(void)
     else if (CHAR_BIT == 16)
     {
         union {
+            /*  For 16-bit char, we'll use the tmpl_uint32 data type, which   *
+             *  is typedef'd in tmpl_integer.h, to guarantee a 64-bit         *
+             *  unsigned integer data type.                                   */
             tmpl_uint64 i;
             char c[4];
         } e = { 0x0001000200030004 };
@@ -150,6 +167,8 @@ tmpl_Endian tmpl_Determine_Endianness(void)
         else
             return tmpl_UnknownEndian;
     }
+
+    /*  For all other CHAR_BIT values, return unknown.                        */
     else
         return tmpl_UnknownEndian;
 }
