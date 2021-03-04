@@ -83,7 +83,7 @@
 float tmpl_CFloat_Dist_Squared(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
 {
     /*  Declare necessary variables C89 requires this at the top.             */
-    float x0, y0, x1, y1, dx, dy, dist;
+    float x0, y0, x1, y1, dx, dy, dist_squared;
 
     /*  Extract the real and imaginary parts from z0.                         */
     x0 = tmpl_CFloat_Real_Part(z0);
@@ -99,8 +99,8 @@ float tmpl_CFloat_Dist_Squared(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
 
     /*  Use the Pythagorean formula to compute the square of the distance     *
      *  and return.                                                           */
-    dist = dx*dx + dy*dy;
-    return dist;
+    dist_squared = dx*dx + dy*dy;
+    return dist_squared;
 }
 /*  End of tmpl_CFloat_Dist_Squared.                                          */
 
@@ -108,7 +108,7 @@ float tmpl_CFloat_Dist_Squared(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
 double tmpl_CDouble_Dist_Squared(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
     /*  Declare necessary variables C89 requires this at the top.             */
-    double x0, y0, x1, y1, dx, dy, dist;
+    double x0, y0, x1, y1, dx, dy, dist_squared;
 
     /*  Extract the real and imaginary parts from z0.                         */
     x0 = tmpl_CDouble_Real_Part(z0);
@@ -124,8 +124,8 @@ double tmpl_CDouble_Dist_Squared(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 
     /*  Use the Pythagorean formula to compute the square of the distance     *
      *  and return.                                                           */
-    dist = dx*dx + dy*dy;
-    return dist;
+    dist_squared = dx*dx + dy*dy;
+    return dist_squared;
 }
 /*  End of tmpl_CDouble_Dist_Squared.                                         */
 
@@ -134,7 +134,7 @@ long double
 tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
 {
     /*  Declare necessary variables C89 requires this at the top.             */
-    long double x0, y0, x1, y1, dx, dy, dist;
+    long double x0, y0, x1, y1, dx, dy, dist_squared;
 
     /*  Extract the real and imaginary parts from z0.                         */
     x0 = tmpl_CLDouble_Real_Part(z0);
@@ -150,8 +150,8 @@ tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
 
     /*  Use the Pythagorean formula to compute the square of the distance     *
      *  and return.                                                           */
-    dist = dx*dx + dy*dy;
-    return dist;
+    dist_squared = dx*dx + dy*dy;
+    return dist_squared;
 }
 /*  End of tmpl_CLDouble_Dist_Squared.                                        */
 

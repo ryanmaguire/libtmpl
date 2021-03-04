@@ -29,7 +29,7 @@
  *  Purpose:                                                                  *
  *      Swaps the values of a pointer to an array of 2 char elements. Useful  *
  *      for dealing with binary data files with big vs. little endianness     *
- *      concerns. The original use was for extracted the data from binary RSR *
+ *      concerns. The original use was for extracting the data from binary RSR*
  *      files for the NASA Cassini mission which had big endianness, and read *
  *      them on little endian platforms.                                      *
  *  Arguments:                                                                *
@@ -75,11 +75,11 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2021/01/14 (Ryan Maguire):                                                *
+ *  2021/01/14: Ryan Maguire                                                  *
  *      Created file (rss_ringoccs for Wellesley College).                    *
- *  2021/02/11 (Ryan Maguire):                                                *
+ *  2021/02/11: Ryan Maguire                                                  *
  *      Ported to libtmpl.                                                    *
- *  2021/02/11 (Ryan Maguire):                                                *
+ *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/

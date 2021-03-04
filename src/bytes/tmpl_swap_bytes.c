@@ -67,11 +67,11 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2021/01/14 (Ryan Maguire):                                                *
+ *  2021/01/14: Ryan Maguire                                                  *
  *      Created file (rss_ringoccs for Wellesley College).                    *
- *  2021/02/11 (Ryan Maguire):                                                *
+ *  2021/02/11: Ryan Maguire                                                  *
  *      Ported to libtmpl.                                                    *
- *  2021/02/11 (Ryan Maguire):                                                *
+ *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
@@ -85,7 +85,7 @@ void tmpl_Swap_Bytes(char *ptr1, char *ptr2)
     /*  We'll use a third temporary variable to store the intermediate value. */
     char tmp;
 
-    /*  Set tmp to the value pointer to by ptr1. This way we don't lose the   *
+    /*  Set tmp to the value pointed to by ptr1. This way we don't lose the   *
      *  value when we reassign ptr1. You can do this whole thing in one line  *
      *  with a bitwise XOR, but to me it is very unreadable and offers no     *
      *  computational time advantage.                                         */

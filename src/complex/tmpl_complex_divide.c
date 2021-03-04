@@ -94,8 +94,8 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
- *  and double _Complex z2, you can just do z1 / z2. Structs cannot be        *
+/*  In C99, since _Complex is a built-in data type, given double _Complex z0  *
+ *  and double _Complex z1, you can just do z0 / z1. Structs cannot be        *
  *  divided so we need a function for computing this.                         */
 
 /*  Single precision complex division.                                        */

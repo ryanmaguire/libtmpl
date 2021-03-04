@@ -19,12 +19,12 @@
  *                          tmpl_complex_constants                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Define 0, 1, i, complex infinity, and complex NaN constants.          *
+ *      Define 0, 1, i, and complex infinity.                                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
- *          Header file where NaN and Infinity are defined.                   *
+ *          Header file where infinity is defined.                            *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -37,7 +37,6 @@
  *      Frozen for v1.3.                                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 
@@ -49,34 +48,23 @@
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Single precision constants.                                               */
-const tmpl_ComplexFloat tmpl_CFloat_I = {{0.0F, 1.0F}};
-
+const tmpl_ComplexFloat tmpl_CFloat_I    = {{0.0F, 1.0F}};
 const tmpl_ComplexFloat tmpl_CFloat_Zero = {{0.0F, 0.0F}};
-
-const tmpl_ComplexFloat tmpl_CFloat_One = {{1.0F, 0.0F}};
-
-
+const tmpl_ComplexFloat tmpl_CFloat_One  = {{1.0F, 0.0F}};
 const tmpl_ComplexFloat
 tmpl_CFloat_Infinity = {{tmpl_Infinity_F, tmpl_Infinity_F}};
 
 /*  Double precision constants.                                               */
-const tmpl_ComplexDouble tmpl_CDouble_I = {{0.0, 1.0}};
-
+const tmpl_ComplexDouble tmpl_CDouble_I    = {{0.0, 1.0}};
 const tmpl_ComplexDouble tmpl_CDouble_Zero = {{0.0, 0.0}};
-
-const tmpl_ComplexDouble tmpl_CDouble_One = {{1.0, 0.0}};
-
-
+const tmpl_ComplexDouble tmpl_CDouble_One  = {{1.0, 0.0}};
 const tmpl_ComplexDouble
 tmpl_CDouble_Infinity = {{tmpl_Infinity, tmpl_Infinity}};
 
 /*  Long double precision constants.                                          */
-const tmpl_ComplexLongDouble tmpl_CLDouble_I = {{0.0L, 1.0L}};
-
+const tmpl_ComplexLongDouble tmpl_CLDouble_I    = {{0.0L, 1.0L}};
 const tmpl_ComplexLongDouble tmpl_CLDouble_Zero = {{0.0L, 0.0L}};
-
-const tmpl_ComplexLongDouble tmpl_CLDouble_One = {{1.0L, 0.0L}};
-
+const tmpl_ComplexLongDouble tmpl_CLDouble_One  = {{1.0L, 0.0L}};
 const tmpl_ComplexLongDouble
 tmpl_CLDouble_Infinity = {{tmpl_Infinity_L, tmpl_Infinity_L}};
 

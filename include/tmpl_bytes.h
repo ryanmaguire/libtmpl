@@ -28,9 +28,14 @@
  *      not be true are hand-held calculators. So don't try to use            *
  *      libtmpl on those, I suppose. If CHAR_BITS (defined in limits.h)       *
  *      is neither of these, the tmpl_Determine_Endianness function will      *
- *      return tmpl_UnknownEndian. This part of the library is not needed in  *
- *      any other subdirectories of libtmpl, so this can be ignored for       *
- *      abnormal systems.                                                     *
+ *      return tmpl_UnknownEndian. This part of the library is needed for use *
+ *      of the ieee754 part of libtmpl. The ieee754 functions can be ignored  *
+ *      by compiling without the ieee754 option set to false. If your device  *
+ *      does have mixed-endian, or has CHAR_BITS not equal to 8 or 16, but    *
+ *      you would still like to use libtmpl, raise an issue at:               *
+ *        https://github.com/ryanmaguire/libtmpl/issues                       *
+ *      I don't have such things, and will not meddle in emulation unless     *
+ *      there's an actual need.                                               *
  *                                                                            *
  *      This file is a fork of the bytes library I wrote for rss_ringoccs.    *
  *      rss_ringoccs is also released under the GPL 3.                        *

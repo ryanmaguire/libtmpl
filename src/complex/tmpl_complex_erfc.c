@@ -183,7 +183,7 @@ tmpl_ComplexDouble tmpl_CDouble_Erfc(tmpl_ComplexDouble z)
         {
             /*  Erf(0+iy) tends to infinity for large y, so                   *
              *  Erfc(0+iy) = 1 - Erf(0+iy) tends to 1 - i infinity.           */
-            if (z_y>0)
+            if (z_y > 0.0)
                 w_y = -tmpl_Infinity;
 
             /*  The error function is odd valued, so Erf(0 - iy) tends to     *

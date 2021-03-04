@@ -30,7 +30,7 @@
  *  Purpose:                                                                  *
  *      Divides a real number by a complex one.                               *
  *                                                                            *
- *          div(x, z) = y / z                                                 *
+ *          div(x, z) = x / z                                                 *
  *                                                                            *
  *  Arguments:                                                                *
  *      x (float/double/long double):                                         *

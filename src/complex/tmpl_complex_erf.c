@@ -19,7 +19,7 @@
  *                             tmpl_complex_erf                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex error function.                  *
+ *      Contains the source code for the complex error function.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************

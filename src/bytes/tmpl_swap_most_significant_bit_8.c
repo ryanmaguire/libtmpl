@@ -29,17 +29,17 @@
  *  Purpose:                                                                  *
  *      Swaps the values of a pointer to an array of 8 char elements. Useful  *
  *      for dealing with binary data files with big vs. little endianness     *
- *      concerns. The original use was for extracted the data from binary RSR *
+ *      concerns. The original use was for extracting the data from binary RSR*
  *      files for the NASA Cassini mission which had big endianness, and read *
  *      them on little endian platforms.                                      *
  *  Arguments:                                                                *
  *      ptr1 (char *):                                                        *
- *          A pointer to a char array containing four elements.               *
+ *          A pointer to a char array containing eight elements.              *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Method:                                                                   *
- *      Use tmpl_Swap_Bytes twice on the elements. The input/output scheme    *
- *      is as follows:                                                        *
+ *      Use tmpl_Swap_Bytes four times on the elements. The input/output      *
+ *      scheme is as follows:                                                 *
  *                                                                            *
  *          -------------------------------------------------                 *
  *      IN  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |                 *
@@ -82,11 +82,11 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2021/01/14 (Ryan Maguire):                                                *
+ *  2021/01/14: Ryan Maguire                                                  *
  *      Created file (rss_ringoccs for Wellesley College).                    *
- *  2021/02/11 (Ryan Maguire):                                                *
+ *  2021/02/11: Ryan Maguire                                                  *
  *      Ported to libtmpl.                                                    *
- *  2021/02/11 (Ryan Maguire):                                                *
+ *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/

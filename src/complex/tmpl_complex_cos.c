@@ -84,7 +84,6 @@
  *      Frozen for v1.3 of rss_ringoccs.                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 
@@ -95,7 +94,7 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Single precision complex cosine.                                          */
+/*  Single precision complex cosine (ccosf equivalent).                       */
 tmpl_ComplexFloat tmpl_CFloat_Cos(tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -118,7 +117,7 @@ tmpl_ComplexFloat tmpl_CFloat_Cos(tmpl_ComplexFloat z)
 }
 /*  End of tmpl_CFloat_Cos.                                                   */
 
-/*  Double precision complex cosine.                                          */
+/*  Double precision complex cosine (ccos equivalent).                        */
 tmpl_ComplexDouble tmpl_CDouble_Cos(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -141,7 +140,7 @@ tmpl_ComplexDouble tmpl_CDouble_Cos(tmpl_ComplexDouble z)
 }
 /*  End of tmpl_CDouble_Cos.                                                  */
 
-/*  Long double precision complex cosine.                                     */
+/*  Long double precision complex cosine (ccosl equivalent).                  */
 tmpl_ComplexLongDouble tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */

@@ -1,22 +1,22 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        rss_ringoccs_complex_abs                            *
+ *                            tmpl_complex_abs                                *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex modulus (absolute value).        *
@@ -83,11 +83,11 @@
  *      Frozen for rss_ringoccs v1.3.                                         *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from librssringoccs to libtmpl.                                *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Edited code, made it compatibile with the rest of libtmpl. Removed    *
  *      "C99" mode. Removed complex.h as a dependency.                        *
- *  2021/02/16: Ryan Maguire                                                  *
  *      Soft freeze for alpha version of libtmpl.                             *
+ *  2021/03/03: Ryan Maguire                                                  *
+ *      Edited license.                                                       *
  ******************************************************************************/
 
 /*  Header file which contains aliases for the functions in the standard C    *
