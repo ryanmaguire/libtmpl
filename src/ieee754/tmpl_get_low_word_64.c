@@ -27,6 +27,7 @@
  *      and perform bitwise AND with the magic number                         *
  *      11111111111111111111111111111111111111111111111111_2                  *
  *          = 4503599627370495                                                *
+ *          = 0xFFFFFFFFFFFFF (in hexidecimal).                               *
  *  NOTES:                                                                    *
  *      While the code is written in ANSI C, this is NOT portable since it    *
  *      assumes various things. This part of the code makes the following     *
@@ -48,8 +49,14 @@
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       January 22, 2021                                              *
  ******************************************************************************/
+
+/*  Fixed-width integer data types contained here.                            */
+#include <libtmpl/include/tmpl_integer.h>
+
+/*  Definitions, typedefs, and prototypes found here.                         */
 #include <libtmpl/include/tmpl_ieee754.h>
 
+/*  Computes the low word of a 64-bit floating-point number.                  */
 tmpl_uint64 tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 x)
 {
     /*  x.real is a double. Use the union and look at x.integer. This will    *
@@ -63,11 +70,12 @@ tmpl_uint64 tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 x)
      *                                                                        *
      *  And then perform bitwise AND with 4503599627370495, we get:           *
      *    s eeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   *
-     *    0 0000000000 1111111111111111111111111111111111111111111111111111   *
+     *  & 0 0000000000 1111111111111111111111111111111111111111111111111111   *
      *  = 0 0000000000 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   *
      *                                                                        *
      *  In other words, we get the low-word.                                  */
-    out = out & 4503599627370495UL;
+    out = out & 0xFFFFFFFFFFFFF;
     return out;
 }
+/*  End of tmpl_Get_Low_Word64.                                               */
 
