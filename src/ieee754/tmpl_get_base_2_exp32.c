@@ -45,6 +45,11 @@
  *              64-bit integers, but are NOT required too. Usually, int is    *
  *              32-bit and long is 64-bit, except with Microsoft's compiler   *
  *              where int and long are 32-bit, and long long is 64-bit.       *
+ *      If your compiler supports the C99 version of the C programming        *
+ *      language, then this code is portable since 32-bit and 64-bit integers *
+ *      are required, and the IEEE754 is recommended in the appendix of the   *
+ *      standard. Most compilers will run this code just fine.                *
+ *                                                                            *
  *      Endianness shouldn't matter, however the code has only been tested on *
  *      Little Endian systems.                                                *
  ******************************************************************************
@@ -106,7 +111,7 @@ tmpl_int32 tmpl_Get_Base_2_Exp32(tmpl_IEEE754_Word32 w)
     /*  The IEEE 754 format specifies that the exponent value of a 32-bit     *
      *  floating point number is the high word minus 127 (which is 2^7 - 1).  *
      *  The high word is an unsigned (non-negative) integer. Subtracting 127  *
-     *  from the  *high word allows for negative exponents, which is useful for          *
+     *  from the high word allows for negative exponents, which is useful for *
      *  fractional values like 0.5.                                           */
 	tmpl_int32 out = (tmpl_int32)highword - 127;
 	return out;
