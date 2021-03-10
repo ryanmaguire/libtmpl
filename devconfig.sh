@@ -26,49 +26,8 @@
 CC=gcc
 
 if [ ! -e "include/tmpl_endianness.h" ]; then
-    touch include/tmpl_endianness.h
-    $CC -I../ src/bytes/tmpl_determine_endianness.c -c
     $CC det_end.c tmpl_determine_endianness.o -o det_end
-    end=`./det_end`
-    echo "
-/******************************************************************************
- *                                 LICENSE                                    *
- ******************************************************************************
- *  This file is part of libtmpl.                                             *
- *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  it under the terms of the GNU General Public License as published by      *
- *  the Free Software Foundation, either version 3 of the License, or         *
- *  (at your option) any later version.                                       *
- *                                                                            *
- *  libtmpl is distributed in the hope that it will be useful,                *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
- *  GNU General Public License for more details.                              *
- *                                                                            *
- *  You should have received a copy of the GNU General Public License         *
- *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *                              tmpl_endianness                               *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      This file is created by the make.sh file. It provides the macro       *
- *      __TMPL_ENDIANNESS__ which is used in various functions where the code *
- *      is endian specific.                                                   *
- ******************************************************************************/
-#ifndef __TMPL_ENDIANNESS_H__
-#define __TMPL_ENDIANNESS_H__
-
-#define __TMPL_BIG_ENDIAN__ 0
-#define __TMPL_LITTLE_ENDIAN__ 1
-#define __TMPL_MIXED_ENDIAN__ 2
-#define __TMPL_UNKNOWN_ENDIAN__ 3
-
-#define __TMPL_ENDIAN__ $end
-
-#endif
-
-" >> include/tmpl_endianness.h
+    ./det_end
     rm -f det_end tmpl_determine_endianness.o
 fi
 
