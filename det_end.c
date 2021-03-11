@@ -16,28 +16,16 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_integer                                 *
+ *                                det_end                                     *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Typedefs fixed-width integer data types in an attempt to provide      *
- *      portability for C89/C90 compliant compilers, but also C99, C11, and   *
- *      C18 compilers.                                                        *
- *  NOTES:                                                                    *
- *      If the __TMPL_USE_C99_STDINT_H__ macro, defined in tmpl_config.h, is  *
- *      set to 1, then it is assumed your compiler supports stdint.h and      *
- *      libtmpl will typedef the data types found there. Setting this macro   *
- *      to 1 without stdint.h support will result in the compiler aborting    *
- *      with error.                                                           *
- *                                                                            *
- *      If __TMPL_USE_C99_STDINT_H__ is set to 0, the code attempts to parse  *
- *      some of the macros defined in limits.h to see if any integer data     *
- *      types are 32 or 64 bit. While this is likely the case, it is not      *
- *      required by the C89/C90 standard. If the compiler fails, you may need *
- *      to adjust the settings in tmpl_config.h or use a compiler that        *
- *      supports the C99 standard (GCC, clang, and MSVC do).                  *
+ *      This file is used in both the Makefile and make.sh shell script when  *
+ *      libtmpl is built. It determines the endianness of your platform and   *
+ *      creates the file include/tmpl_endianness.h in the process. This file  *
+ *      is NOT directly part of libtmpl.                                      *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       February 17, 2021                                             *
+ *  Date:       March 10, 2021                                                *
  ******************************************************************************/
 
 /*  Macros for determining the size of integer data types found here.         */
@@ -59,7 +47,12 @@ typedef uint64_t det_end_uint64;
 #else
 
 /*  Without stdint.h support we need to probe various integer types to see if *
- *  there exist 32 and 64 bit integers. This is NOT required in C89/C90.      */
+ *  there exist 32 and 64 bit integers. This is NOT required in C89/C90.      *
+ *  When tested on macOS, GNU/Linux, and FreeBSD, int and long int gave       *
+ *  32-bit and 64-bit integers, respectively. On Microsoft Windows, using     *
+ *  MSVC, int and long long int corresponded to 32-bit and 64-bit,            *
+ *  respectively. In all compilers tested (clang, gcc, pcc, tcc, MSVC) this   *
+ *  file was able to create include/tmpl_endianness.h successfully.           */
 
 #if USHRT_MAX == 0xFFFFFFFF
 typedef short unsigned int det_end_uint32;
@@ -86,7 +79,6 @@ typedef long long unsigned int det_end_uint64;
 #endif
 
 #endif
-/*  End of include guard.                                                     */
 
 
 int main(void)
@@ -96,9 +88,7 @@ int main(void)
         __tmpl_big_end,
         __tmpl_mixed_end,
         __tmpl_unknown_end
-    };
-
-    enum end_type end;
+    } end;
 
     FILE *fp = fopen("./include/tmpl_endianness.h", "w");
     char end_str[48];
@@ -143,12 +133,10 @@ int main(void)
         else if ((e.c[0] == 0x0002) || (e.c[0] = 0x0003))
             end = __tmpl_mixed_end;
         else
-            return __tmpl_unknown_end;
+            end = __tmpl_unknown_end;
     }
-
-    /*  For all other CHAR_BIT values, return unknown.                        */
     else
-        return __tmpl_unknown_end;
+        end = __tmpl_unknown_end;
 
     if (end == __tmpl_little_end)
         strcpy(end_str, "__TMPL_LITTLE_ENDIAN__");
