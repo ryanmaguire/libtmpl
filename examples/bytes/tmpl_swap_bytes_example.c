@@ -22,7 +22,7 @@
  *  file libtmpl.so must be in your path. It is placed in /usr/local/lib/     *
  *  if libtmpl was build with the make.sh file. /usr/local/lib/ should be in  *
  *  your path by default. This was tested with GCC, TCC, PCC, and LLVM's      *
- *  clang, and this worked as expected, with the exception the PCC did NOT    *
+ *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/ tmpl_swap_bytes_example.c -o test -ltmpl    *
  *  We can the run the executable via:                                        *
@@ -42,7 +42,7 @@
  *      clang: version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)               *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       February 16, 2021                                             *
+ *  Date:       March 10, 2021                                                *
  ******************************************************************************/
 
 /*  The printf function is found here.                                        */
