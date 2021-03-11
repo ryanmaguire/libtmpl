@@ -1,22 +1,13 @@
 #!/bin/bash
 
-# This file is for developers and internal use. It has many pedantic compiler
-# arguments to ensure libtmpl is written in strict ANSI compliant C code. It
-# also has debugging options. The Makefile can be used for most purposes, simply
-# by typing make in libtmpl/. This file can also be used via ./make.sh. Both the
-# shell script and Makefile have similar functionality, and will build a working
-# version of libtmpl, the difference being that the Makefile lacks all of the
-# warning compiler options.
+# This file is for building libtmpl "in-place", meaning the compiled .so will
+# remain in this directory and the include files (header files with .h) will
+# remain here as well. This should only be used if you are building on a
+# system where you DO NOT have root/sudo privileges.
 
 #   Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
 #   on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
 CC=gcc
-
-# Name of the created Share Object file (.so).
-SONAME="libtmpl.so"
-
-# Location to store SONAME at the end of building.
-SODIR="/usr/local/lib"
 
 # Linking arguments.
 # -O3 is optimization level 3.
@@ -25,10 +16,8 @@ SODIR="/usr/local/lib"
 # -lm means link against the standard math library.
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
+SONAME="libtmpl.so"
 LinkerArgs="-O3 -I../ -flto -shared -o $SONAME -lm"
-
-# Location where the .h files will be stored.
-INCLUDE_TARGET=/usr/local/include/libtmpl
 
 # Name of the header file containing endianness info. We need to create this.
 END_HEADER=include/tmpl_endianness.h
@@ -92,22 +81,10 @@ if [ -e "$END_HEADER" ]; then
     rm -f "$END_HEADER";
 fi
 
-if [ -d "$INCLUDE_TARGET" ]; then
-    sudo rm -rf "$INCLUDE_TARGET";
-fi
-
-if [ -d "$SODIR/$SONAME" ]; then
-    rm -f "$SODIR/$SONAME";
-fi
-
 echo "Creating include/tmpl_endianness.h file..."
 $CC $DET_END_FILE -o $DET_END_EXEC
 ./$DET_END_EXEC
 rm -f $DET_END_EXEC
-
-echo "Copying include/ directory to /usr/local/include/libtmpl/"
-sudo mkdir -p "$INCLUDE_TARGET/include/"
-sudo cp ./include/*.h "$INCLUDE_TARGET/include/"
 
 echo "Compiling libtmpl..."
 echo -e "\n\tCompiler Options:"
@@ -137,9 +114,6 @@ done
 
 $CC $sharedobjectlist $LinkerArgs
 
-echo "Moving to /usr/local/lib/libtmpl.so"
-sudo mv $SONAME $SODIR
-
 if [[ $LD_LIBRARY_PATH == "" ]]; then
     CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$u"
     echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
@@ -157,4 +131,19 @@ fi
 echo "Cleaning up..."
 rm -f *.o
 
-echo "Done"
+echo -e "Done\n"
+
+echo "PLEASE NOTE:"
+echo -e "\tYou used the in-place script."
+echo -e "\tlibtmpl was only installed in this directory:"
+echo -e "\t\t$(pwd)."
+echo -e "\tTo use libtmpl you must have this in your path."
+echo -e "\tThe header files are located in:"
+echo -e "\t\t$(pwd)/include/"
+echo -e "\tand have NOT been placed in /usr/local/include/"
+echo -e "\tYour compiler will not see these if you"
+echo -e "\tdo not pass the correct options."
+echo -e "\tFor most compilers (GCC, Clang, PCC, TCC) you can link"
+echo -e "\tlibtmpl to you programs with the proper include"
+echo -e "\tdirectories using the -I option as follows:"
+echo -e "\t\tgcc -I$(pwd)/ my_file.c -o my_output -ltmpl"
