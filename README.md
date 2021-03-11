@@ -1,4 +1,21 @@
 # libtmpl
+
+## Installation
+Simply run the Makefile with:
+```
+make
+```
+Note, this requires sudo privileges. This has been tested on various GNU/Linux
+distributions, macOS, and FreeBSD. I tried to make an nmake file for Windows
+users, but gave up. I may return to this eventually.
+
+There is also `make.sh` which is a shell script written in bash that has the
+same functionality as `Makefile` except that various pedantic compiler options
+are passed to the compiler. This is to ensure as best as possible that the code
+is written in strictly compliant C89/C90 code. This has been tested with several
+compilers, including GCC (GNU), Clang (LLVM), TCC (Tiny C Compiler), and
+PCC (Portable C Compiler).
+
 ## The Mathematicians Programming Library
 This project is a collection of code written in C89/C90 (commonly called ANSI C)
 for mathematicians and physicists to use on various types of projects. It
