@@ -35,11 +35,11 @@ SRCS_LINK = ./*.o
 all: make
 
 make:
-	nmake clean
-	nmake determine_endianness
-	nmake compile
-	nmake link
-	nmake clean
+	make clean
+	make determine_endianness
+	make compile
+	make link
+	make clean
 
 clean:
 	del  *.dll *.obj *.o
