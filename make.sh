@@ -1,35 +1,50 @@
 #!/bin/bash
 
-#   Apple aliases gcc to mean clang. If you have installed gcc via homebrew,
-#   version 10, then you can use the following to compile with that. Otherwise,
-#   this will compile with clang on mac and gcc on linux.
+# This file is for developers and internal use. It has many pedantic compiler
+# arguments to ensure libtmpl is written in strict ANSI compliant C code. It
+# also has debugging options. The Makefile can be used for most purposes, simply
+# by typing make in libtmpl/. This file can also be used via ./make.sh. Both the
+# shell script and Makefile have similar functionality, and will build a working
+# version of libtmpl, the difference being that the Makefile lacks all of the
+# warning compiler options.
 
-#   osstring=`uname`
-#   if [ "$osstring" = "Darwin" ]; then
-#   	CC=gcc-10
-#   elif [ "$osstring" = "Linux" ]; then
-#   	CC=gcc
-#   else
-#       echo "Operating System not recognized"
-#       echo "Only MacOSX and Linux supported"
-#       echo "Exiting script"
-#       exit 1
-#   fi
-
-#   To make life easy, we'll just use gcc to mean whatever the operating
-#   system aliased it as. As stated, for MacOS this is clang, and for linux
-#   distribution this is actually gcc. However, you can set this to whichever
-#   compiler you want. It should be noted that libtmpl has been tested on
-#   clang and gcc on both linux and mac systems using strict compiler options to
-#   ensure compliance with the ANSI standard. Changing this to a different
-#   compiler "should" work, though it hasn't been tested.
+#   Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
+#   on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
 CC=gcc
 
-if [ ! -e "include/tmpl_endianness.h" ]; then
-    $CC det_end.c tmpl_determine_endianness.o -o det_end
-    ./det_end
-    rm -f det_end tmpl_determine_endianness.o
-fi
+# Name of the created Share Object file (.so).
+SONAME="libtmpl.so"
+
+# Location to store SONAME at the end of building.
+SODIR="/usr/local/lib"
+
+#   Compiler arguments (works for GCC, Clang, TCC, and PCC).
+#   -O3 is optimization level 3
+#   -c means compiler without linking.
+#   -I../ means include the parent directory so libtmpl/ is in the path.
+#   -flto is link time optimization.
+
+
+# Linking arguments.
+# -O3 is optimization level 3.
+# -I../ means include the parent directory so libtmpl/ is in the path.
+# -flto is link time optimization.
+# -lm means link against the standard math library.
+# -o means create an output.
+# -shared means the output is a shared object, like a library file.
+LinkerArgs="-O3 -I../ -flto -shared -o $SONAME -lm"
+
+# Location where the .h files will be stored.
+INCLUDE_TARGET=/usr/local/include/libtmpl
+
+# Name of the header file containing endianness info. We need to create this.
+END_HEADER=include/tmpl_endianness.h
+
+# C file for determining endianness and creating END_HEADER.
+DET_END_FILE=./det_end.c
+
+# Name of the executable create by DET_END_FILE.
+DET_END_EXEC=det_end_out
 
 if [ $CC == "gcc" ]; then
     CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
@@ -80,34 +95,26 @@ echo -e "\nClearing older files..."
 #   There may be left-over .so and .o files from a previous build. Remove those
 #   to avoid a faulty build.
 rm -f *.so *.o
-
-#   The -d option means does-not-have-sudo-support. It is for building libtmpl
-#   without super-user/sudo permissions.
-if [[ $1 == "-d" ]]; then
-    echo "Building in place..."
-
-#   If we have sudo permissions, it is easiest to use libtmpl by placing the
-#   header files in /usr/local/include and the compiled shared-object into
-#   /usr/local/lib.
-else
-    echo "Copying include/ directory to /usr/local/include/libtmpl/"
-    includedir="/usr/local/include/libtmpl"
-
-    #   Check if /usr/local/include/libtmpl/ is already a directory. If not
-    #   then create this via mkdir.
-    if [ ! -d "$includedir" ]; then
-        sudo mkdir -p "$includedir/include/"
-    else
-
-        #   Remove the old header files in case libtmpl has been updated since
-        #   the most recent build on your computer.
-        sudo rm -f "$includedir/include/*.h"
-    fi
-
-    #   Copy the header files to the include directory. This requires sudo
-    #   permissions and you will be prompted for a password.
-    sudo cp ./include/* "$includedir/include/"
+if [ -e "$END_HEADER" ]; then
+    rm -f "$END_HEADER";
 fi
+
+if [ -d "$INCLUDE_TARGET" ]; then
+    sudo rm -rf "$INCLUDE_TARGET";
+fi
+
+if [ -d "$SODIR/$SONAME" ]; then
+    rm -f "$SODIR/$SONAME";
+fi
+
+echo "Creating include/tmpl_endianness.h file..."
+$CC $DET_END_FILE -o $DET_END_EXEC
+./$DET_END_EXEC
+rm -f $DET_END_EXEC
+
+echo "Copying include/ directory to /usr/local/include/libtmpl/"
+sudo mkdir -p "$INCLUDE_TARGET/include/"
+sudo cp ./include/*.h "$INCLUDE_TARGET/include/"
 
 echo "Compiling libtmpl..."
 echo -e "\n\tCompiler Options:"
@@ -135,18 +142,10 @@ for filename in ./*.o; do
     sharedobjectlist="$sharedobjectlist $filename"
 done
 
-$CC $sharedobjectlist -O3 -flto -shared -o libtmpl.so -lm
+$CC $sharedobjectlist $LinkerArgs
 
-if [[ $1 == "-d" ]]; then
-    echo "Adding current directory to LD_LIBRARY_PATH..."
-    u=$(pwd)
-else
-    echo "Moving to /usr/local/lib/libtmpl.so"
-    sudo mv libtmpl.so /usr/local/lib/libtmpl.so
-
-    echo "Adding /usr/local/lib to LD_LIBRARY_PATH..."
-    u=/usr/local/lib
-fi
+echo "Moving to /usr/local/lib/libtmpl.so"
+sudo mv $SONAME $SODIR
 
 if [[ $LD_LIBRARY_PATH == "" ]]; then
     CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$u"
