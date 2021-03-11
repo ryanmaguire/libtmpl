@@ -34,11 +34,11 @@ DET_END_FILE = ./det_end.c
 DET_END_EXEC = det_end_out
 
 #   Location of source files for all sub-libraries.
-SRCS_MATH = ./src/math/*.c
-SRCS_BYTE = ./src/bytes/*.c
-SRCS_CMPL = ./src/complex/*.c
-SRCS_EUC2 = ./src/euclidean_planar_geometry/*.c
-SRCS_IEEE = ./src/ieee754/*.c
+SRCS =  ./src/math/*.c \
+	./src/bytes/*.c \
+	./src/complex/*.c \
+	./src/euclidean_planar_geometry/*.c \
+	./src/ieee754/*.c
 SRCS_LINK = ./*.o
 
 all: make
@@ -72,11 +72,7 @@ determine_endianness:
 
 
 compile:
-	if !($(CC) $(CARGS) $(SRCS_MATH)); then exit 1; fi
-	if !($(CC) $(CARGS) $(SRCS_CMPL)); then exit 1; fi
-	if !($(CC) $(CARGS) $(SRCS_BYTE)); then exit 1; fi
-	if !($(CC) $(CARGS) $(SRCS_EUC2)); then exit 1; fi
-	if !($(CC) $(CARGS) $(SRCS_IEEE)); then exit 1; fi
+	if !($(CC) $(CARGS) $(SRCS)); then exit 1; fi
 
 link:
 	if !($(CC) $(SRCS_LINK) $(LARGS)); then exit 1; fi
