@@ -56,37 +56,25 @@
  *  use strict C89/C90 compliant code to typedef 32 and 64 bit integers.      */
 #if __TMPL_USING_C99_STDINT_H__ == 1
 
-/*  The user requested the use of stdint.h, but this only exists in C99 and   *
- *  higher standards of the language. Check that the __STDC_VERSION__ macro   *
- *  has been defined (introduced in the 1995 extension of the language), and  *
- *  check that the value is at least 199901L (The C99 value of the macro).    */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+/*  stdint.h is a standard header file required by C99 and higher. It         *
+ *  typedefs for fixed-width integer data types.                              */
 #include <stdint.h>
 
 /*  If we get here, we have support for the library stdint.h. This header     *
  *  file is required to define fixed-width unsigned integer data types of     *
  *  both 32-bits and 64-bits. Typedef these for later use in libtmpl.         */
 
+typedef uint16_t tmpl_uint16;
+typedef int16_t tmpl_int16;
 typedef uint32_t tmpl_uint32;
 typedef int32_t tmpl_int32;
 typedef uint64_t tmpl_uint64;
 typedef int64_t tmpl_int64;
 
 #else
-/*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.    *
- *  If we get here, the user requested stdint.h, but __STDC_VERSION__ macro   *
- *  indicates their compiler likely doesn't support this. Abort the           *
- *  compiling process and raise an error.                                     */
-
-#error "User requested stdint.h (C99) but compiler version less than 199901L."
-
-#endif
-/*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
-
-#else
 /*  Else statement for __TMPL_USE_C99_STDINT_H__ == 1. If we get here, the    *
  *  user has opted for strict C89/C90 compliant code (commonly called ANSI C).*
- *  Unfortunately, the C89/C90 standard does not required fixed-width data    *
+ *  Unfortunately, the C89/C90 standard does not require fixed-width data     *
  *  types, but instead only defined what the minimum sizes must be. For       *
  *  example, and int must be at least 16-bits, and a long must be at least 32.*
  *  However, for most unix-like systems, short is 16 bits, int is 32, and     *
@@ -98,10 +86,23 @@ typedef int64_t tmpl_int64;
  *  If all of these options fail, which is incredibly unlikely, you may need  *
  *  to resort to a different compiler such as GCC or clang which support C99. */
 
+/*  It is occasionally useful to have 16-bit integers, so we'll try and find  *
+ *  those as well. This is usually a "short."                                 */
+#if USHRT_MAX == 0xFFFF
+typedef short unsigned int tmpl_uint16;
+typedef short int tmpl_int16;
+#elif UINT_MAX == 0xFFFF
+typedef unsigned int tmpl_uint16;
+typedef int tmpl_int16;
+#else
+#error "libtmpl: No 32-bit integer type found."
+#endif
+
 /*  We'll use the macros defined in limits.h to see if your compiler supports *
  *  a 32-bit integer. This is usually a regular int. The C standard requires  *
  *  long int to be 'at least' 32-bits. In most implementations it is 64-bits, *
  *  except with Microsoft's compiler which implements it as a 32-bit integer. */
+
 #if USHRT_MAX == 0xFFFFFFFF
 typedef short unsigned int tmpl_uint32;
 typedef short int tmpl_int32;
@@ -118,6 +119,7 @@ typedef long long int tmpl_int32;
 #error "libtmpl: No 32-bit integer type found."
 #endif
 
+/*  Lastly, try to find a 64-bit data type.                                   */
 #if USHRT_MAX == 0xFFFFFFFFFFFFFFFF
 typedef short unsigned int tmpl_uint64;
 typedef short int tmpl_int64;
