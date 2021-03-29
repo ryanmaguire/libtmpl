@@ -86,6 +86,8 @@
 
 /*  Where the function's prototype and tmpl_Endian are defined.               */
 #include <libtmpl/include/tmpl_bytes.h>
+
+/*  32-bit and 64-bit fixed-width integer data types defined here.            */
 #include <libtmpl/include/tmpl_integer.h>
 
 /******************************************************************************
@@ -147,7 +149,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
     else if (CHAR_BIT == 16)
     {
         union {
-            /*  For 16-bit char, we'll use the tmpl_uint32 data type, which   *
+            /*  For 16-bit char, we'll use the tmpl_uint64 data type, which   *
              *  is typedef'd in tmpl_integer.h, to guarantee a 64-bit         *
              *  unsigned integer data type.                                   */
             tmpl_uint64 i;

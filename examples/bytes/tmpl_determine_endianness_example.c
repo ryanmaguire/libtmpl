@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  To compile, simply run:                                                   *
- *      gcc tmpl_swap_most_significant_bit_2_example.c -o test -ltmpl         *
+ *      gcc tmpl_determine_endianness_example.c -o test -ltmpl                *
  *  You must have libtmpl built prior so that we may link with -ltmpl. The    *
  *  file libtmpl.so must be in your path. It is placed in /usr/local/lib/     *
  *  if libtmpl was built with the make.sh file. /usr/local/lib/ should be in  *
@@ -25,12 +25,11 @@
  *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
- *          tmpl_swap_most_significant_bit_2_example.c -o test -ltmpl         *
+ *          tmpl_determine_endianness_example.c -o test -ltmpl                *
  *  We can the run the executable via:                                        *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
- *      Before: 65280                                                         *
- *      After: 255                                                            *
+ *      Little Endian                                                         *
  *  This was tested on Debian 10 (Buster) GNU/Linux with gcc, tcc, pcc, and   *
  *  clang from the Debian 10 main repository. Version numbers are:            *
  *      gcc: Debian 8.3.0-6                                                   *
@@ -39,53 +38,30 @@
  *      clang: version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)               *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       March 12, 2021                                                *
+ *  Date:       March 29, 2021                                                *
  ******************************************************************************/
 
 /*  The printf function is found here.                                        */
 #include <stdio.h>
 
-/*  tmpl_Swap_Most_Significant_Bit_2 is declared here.                        */
+/*  tmpl_Determine_Endianness is declared here.                               */
 #include <libtmpl/include/tmpl_bytes.h>
 
-/*  16-bit and 32-bit fixed-width integer data types typedef'd here.          */
-#include <libtmpl/include/tmpl_integer.h>
-
-/*  We'll need the macro CHAR_BIT from limits.h to see how big a char is.     *
- *  This is almost universally always 8 bits, but it can be 16 bits on        *
- *  handheld calculators, and 12-bits on other strange devices. For           *
- *  portability it never hurts to check.                                      */
-#include <limits.h>
-
-/*  Function for testing the tmpl_Swap_Most_Significant_Bit_2 function and    *
- *  showing basic use.                                                        */
+/*  Function for testing the tmpl_Determine_Endianness function.              */
 int main(void)
 {
-    /*  Based on the size of a char, create a union with a char array and     *
-     *  either a 16-bit integer, or a 32-bit integer. If CHAR_BIT is neither  *
-     *  8 nor 16, abort the program.                                          */
-#if CHAR_BIT == 8
-    union {
-        tmpl_uint16 x;
-        char c[2];
-    } u = { 0xFF00 };
-#elif CHAR_BIT == 16
-    union {
-        tmpl_uint32 x;
-        char c[2];
-    } u = { 0xFFFF0000 };
-#else
-#error "CHAR_BIT is neither 8 nor 16. Aborting."
-#endif
+    /*  Declare a tmpl_Endian data type and compute the endianness.           */
+    tmpl_Endian end = tmpl_Determine_Endianness();
 
-    /*  Print the result before the swap.                                     */
-    printf("Before: %u\n", u.x);
-
-    /*  Swap the most significant bit using the char array inside the union.  */
-    tmpl_Swap_Most_Significant_Bit_2(u.c);
-
-    /*  Print the result after the swap.                                      */
-    printf("After: %u\n", u.x);
+    /*  Check the value of end and print the corresponding endianness.        */
+    if (end == tmpl_LittleEndian)
+        puts("Little Endian");
+    else if (end == tmpl_MixedEndian)
+        puts("Mixed Endian");
+    else if (end == tmpl_BigEndian)
+        puts("Big Endian");
+    else
+        puts("Unknown Endian");
 
     return 0;
 }
