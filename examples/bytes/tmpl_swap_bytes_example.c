@@ -20,7 +20,7 @@
  *      gcc tmpl_swap_bytes_example.c -o test -ltmpl                          *
  *  You must have libtmpl built prior so that we may link with -ltmpl. The    *
  *  file libtmpl.so must be in your path. It is placed in /usr/local/lib/     *
- *  if libtmpl was build with the make.sh file. /usr/local/lib/ should be in  *
+ *  if libtmpl was built with the make.sh file. /usr/local/lib/ should be in  *
  *  your path by default. This was tested with GCC, TCC, PCC, and LLVM's      *
  *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
@@ -48,7 +48,7 @@
 /*  The printf function is found here.                                        */
 #include <stdio.h>
 
-/*  tmpl_Swap_Bytes is defined here.                                          */
+/*  tmpl_Swap_Bytes is declared here.                                         */
 #include <libtmpl/include/tmpl_bytes.h>
 
 /*  Function for testing the tmpl_Swap_Bytes function and showing basic use.  */
