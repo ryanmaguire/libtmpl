@@ -86,6 +86,8 @@
  ******************************************************************************
  *  2021/02/27: Ryan Maguire                                                  *
  *      Created file.                                                         *
+ *  2021/03/31: Ryan Maguire                                                  *
+ *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 
 /*  tmpl_int32 and tmpl_uint32 are typedef'd here.                            */
