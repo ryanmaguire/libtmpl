@@ -140,14 +140,15 @@ $CC $sharedobjectlist $LinkerArgs
 echo "Moving to /usr/local/lib/libtmpl.so"
 sudo mv $SONAME $SODIR
 
+LDPATH=/usr/local/lib
 if [[ $LD_LIBRARY_PATH == "" ]]; then
-    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$u"
+    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LDPATH"
     echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
     echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
     echo "export LD_LIBRARY_PATH" >> ~/.bashrc
     source ~/.bashrc
-elif [[ $LD_LIBRARY_PATH != *"$u"* ]]; then
-    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$u"
+elif [[ $LD_LIBRARY_PATH != *"$LDPATH"* ]]; then
+    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LDPATH"
     echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
     echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
     echo "export LD_LIBRARY_PATH" >> ~/.bashrc
