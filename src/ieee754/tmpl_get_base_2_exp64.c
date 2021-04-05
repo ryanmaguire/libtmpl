@@ -45,8 +45,13 @@
  *              64-bit integers, but are NOT required too. Usually, int is    *
  *              32-bit and long is 64-bit, except with Microsoft's compiler   *
  *              where int and long are 32-bit, and long long is 64-bit.       *
+ *      If your compiler supports the C99 version of the C programming        *
+ *      language, then this code is portable since 32-bit and 64-bit integers *
+ *      are required, and the IEEE754 is recommended in the appendix of the   *
+ *      standard. Most compilers will run this code just fine.                *
+ *                                                                            *
  *      Endianness shouldn't matter, however the code has only been tested on *
- *      Little Endian systems.                                                *
+ *      Little Endian systems. Mixed-Endian is not supported.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************

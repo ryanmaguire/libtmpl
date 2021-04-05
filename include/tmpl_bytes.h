@@ -102,6 +102,10 @@ typedef enum {
  *      This function assumes CHAR_BITS (defined in limits.h) is either       *
  *      8 or 16. If this is not true, this function automatically             *
  *      returns tmpl_UnknownEndian.                                           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/bytes/tmpl_determine_endianness.c                         *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern tmpl_Endian tmpl_Determine_Endianness(void);
 
@@ -117,6 +121,10 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *          The second pointer to a char.                                     *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/bytes/tmpl_swap_bytes.c                                   *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_swap_bytes_example.c                      *
  ******************************************************************************/
 extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
 
@@ -131,6 +139,14 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *          A pointer to a char array.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_2.c                  *
+ *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_4.c                  *
+ *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_8.c                  *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_2_example.c     *
+ *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_4_example.c     *
+ *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_8_example.c     *
  ******************************************************************************/
 extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
 extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);

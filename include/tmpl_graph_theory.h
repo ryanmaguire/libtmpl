@@ -112,11 +112,46 @@ typedef struct tmpl_Graph {
 
 } tmpl_Graph;
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Sort_Graph_Edges                                                 *
+ *  Purpose:                                                                  *
+ *      Sorts the edges in a graph via lexicographic ordering of the          *
+ *      vertices in an edge. That is, since an edge is an ordered pair of     *
+ *      non-negative integers (m, n) we can produce a total order on the edge *
+ *      set via lexicographic, also called "dictionary," ordering. This       *
+ *      function sorts the edge set based on this ordering.                   *
+ *  Arguments:                                                                *
+ *      tmpl_Graph **G_ptr:                                                   *
+ *          A pointer to a tmpl_Graph pointer. Given a tmpl_Graph pointer     *
+ *          G, we can pass this to the function with &G.                      *
+ *  Output:                                                                   *
+ *      None (void)                                                           *
+ ******************************************************************************/
+extern void tmpl_Sort_Graph_Edges(tmpl_Graph **G);
+
 extern tmpl_Graph *
 tmpl_Create_Complete_Bipartite_Graph(tmpl_uint32 m, tmpl_uint32 n);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Create_Complete_Graph                                            *
+ *  Purpose:                                                                  *
+ *      Creates the complete graph on N vertices, K_N.                        *
+ *  Arguments:                                                                *
+ *      tmpl_uint32 N:                                                        *
+ *          The number of vertices in the output graph.                       *
+ *  Output:                                                                   *
+ *      tmpl_Graph *G:                                                        *
+ *          A pointer to a tmpl_Graph structure, the complete graph K_N.      *
+ *  Warnings:                                                                 *
+ *      This function uses malloc internally to allocate memory for the       *
+ *      pointer that is returned. If malloc fails, this function will return  *
+ *      NULL. It is the user's responsibility to check that malloc did not    *
+ *      fail. Trying to access a NULL pointer may crash the program.          *
+ ******************************************************************************/
 extern tmpl_Graph *
-tmpl_Create_Complete_Graph(tmpl_uint32 m);
+tmpl_Create_Complete_Graph(tmpl_uint32 N);
 
 extern tmpl_Bool
 tmpl_Is_Graph_Simple(tmpl_Graph *G);
