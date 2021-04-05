@@ -33,14 +33,48 @@
  *          2.) You have 32-bit float and 64-bit double. This is NOT          *
  *              required by the C89/C90 standard, only minimum sizes are      *
  *              specified. 32-bit/64-bit single and double precision is the   *
- *              most common, but this can break portability.                  *
- *          3.) An unsigned long int has 64-bits, and an unsigned int has     *
- *              32-bits. This will most likely NOT be true on 32-bit systems, *
- *              especially 32-bit Microsoft Windows machines where unsigned   *
- *              long int is 32-bit. This assumption is true for 64-bit        *
- *              computers, including all of those libtmpl was tested on.      *
+ *              most common, but this can break portability. Compilers        *
+ *              supporting annex F of the C99 standard are required to        *
+ *              provide 32-bit float and 64-bit double.                       *
+ *          3.) The tmpl_integer.h file was successfully able to find 32-bit  *
+ *              and 64-bit data types. tmpl_integer.h is required for libtmpl *
+ *              to successfully run, so this shouldn't be a problem. On       *
+ *              unix-based (GNU, Linux, macOS, FreeBSD, etc), unsigned int is *
+ *              32-bits and unsigned long is 64-bits, for just about every    *
+ *              compiler on those platforms. Microsoft Windows uses a 32-bit  *
+ *              unsigned long, and has a 64-bit unsigned long long. However,  *
+ *              the C99 standard (and higher) require 32-bit and 64-bit       *
+ *              integer data types be provided, so this shouldn't be an issue.*
  *      Endianness shouldn't matter, however the code has only been tested on *
- *      Little Endian systems.                                                *
+ *      Little Endian systems. There is no support for mixed-endian, only     *
+ *      big and little.                                                       *
+ ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_integer.h:                                                       *
+ *          Header file which provides fixed-width signed and unsigned        *
+ *          integer data types for 16, 32, and 64 bits.                       *
+ *  2.) tmpl_endianness.h:                                                    *
+ *          Header file that is created during the install of libtmpl. This   *
+ *          header contains the macro __TMPL__ENDIAN__ which specifies        *
+ *          the endianness of your platform. This code only works on little   *
+ *          and big endian platforms. Since mixed-endian computers are        *
+ *          essentially extinct, this shouldn't cause problems.               *
+ ******************************************************************************
+ *                            A NOTE ON COMMENTS                              *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *                            A FRIENDLY WARNING                              *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       January 22, 2021                                              *
@@ -50,15 +84,17 @@
 #ifndef __TMPL_IEEE754_H__
 #define __TMPL_IEEE754_H__
 
-#include <libtmpl/include/tmpl_config.h>
+/*  32-bit and 64-bit integers are found here.                                */
 #include <libtmpl/include/tmpl_integer.h>
+
+/*  Macros for the endianness of your computer are found here.                */
 #include <libtmpl/include/tmpl_endianness.h>
 
 /******************************************************************************
  *  For a non-negative integer that is less than 2^64, we can store the       *
  *  number in a computer using binary. That is, 64 bits of zeroes and ones    *
- *  which represent our ordinal base-10 integer. With this we can store every *
- *  integer between 0 and 2^64-1.                                             *
+ *  which represent our original base-10 integer. With this we can store      *
+ *  every integer between 0 and 2^64-1.                                       *
  *                                                                            *
  *    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        *
  *    ----------------------------------------------------------------        *
@@ -89,7 +125,7 @@
  *                                                                            *
  *  This turns out to be a very bad idea since we cannot represent very many  *
  *  numbers with this. The largest number is now 2^32-1, or roughly 4 billion.*
- *  Any larger number would be treated as infinity. And the other hand, we    *
+ *  Any larger number would be treated as infinity. On the other hand, we     *
  *  only have about 9 significant digits past the decimal point (in decimal)  *
  *  whereas many applications need up to 16. The solution is the IEEE754      *
  *  Floating Point Format. It represents a real number as follows:            *
@@ -142,10 +178,9 @@
  *      = 1                                                                   *
  ******************************************************************************/
 
-
-/*  To access binary representation of a floating point number, we use unions.*
- *  Unions allows us to have different data types share the same block of     *
- *  memory. If we have a union of a floating point and an integer, and then   *
+/*  To access the binary representation of a floating point number, we use    *
+ *  unions. Unions allows us to have different data types share the same block*
+ *  of memory. If we have a union of a floating point and an integer, and then*
  *  set the floating point part to some number, then when we try to access the*
  *  integer part it will already have its bits set (They'll be set by the     *
  *  floating point value). The resulting integer is the actual binary value   *
@@ -160,9 +195,15 @@ typedef union _tmpl_IEE754_Word32 {
 } tmpl_IEEE754_Word32;
 
 /*  Data type for a 64-bit floating point number. This is assumed to          *
- *  correspond to the double data type.                                       */
+ *  correspond to the double data type. We can think of a 64-bit data type as *
+ *  two "words," each word being 32 bits long. This is often useful in        *
+ *  computations and it is a good idea to separate the most-significant-word  *
+ *  (MSW) and the least-significant-word (LSW). Which word is most            *
+ *  significant (the zeroth or the first) depends on the endianness. Use the  *
+ *  __TMPL_ENDIAN__ macro to correctly define our 64-bit union data type.     */
 #if defined(__TMPL_ENDIAN__) && __TMPL_ENDIAN__ == __TMPL_BIG_ENDIAN__
 
+/*  Big Endian has the MSW in the zeroth slot, followed by the LSW.           */
 typedef union _tmpl_IEEE754_Word64 {
     double real;
     struct {
@@ -178,6 +219,7 @@ typedef union _tmpl_IEEE754_Word64 {
 
 #elif defined(__TMPL_ENDIAN__) &&  __TMPL_ENDIAN__ == __TMPL_LITTLE_ENDIAN__
 
+/*  Little Endian has LSW follwed by MSW.                                     */
 typedef union _tmpl_IEEE754_Word64 {
     double real;
     struct {
@@ -193,6 +235,7 @@ typedef union _tmpl_IEEE754_Word64 {
 
 #else
 
+/*  libtmpl does not support the rare mixed-endian.                           */
 #error "Unsupported endianness."
 
 #endif
@@ -206,10 +249,16 @@ typedef union _tmpl_IEEE754_Word64 {
  *      A 64 bit version is also provided.                                    *
  *  Arguments:                                                                *
  *      tmpl_IEE754_Word32 w:                                                 *
- *          A union for 32-bit float and 32-bit unsigned int.                 *
+ *          A union for 32-bit float and 32-bit unsigned integer.             *
  *  Output:                                                                   *
  *      tmpl_uint32 high:                                                     *
- *          The numerical value of the high word of x.                        *
+ *          The numerical value of the high word of w.real.                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/ieee754/tmpl_get_high_word32.c                            *
+ *      libtmpl/src/ieee754/tmpl_get_high_word64.c                            *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/ieee754/tmpl_get_high_word32_example.c               *
+ *      libtmpl/examples/ieee754/tmpl_get_high_word64_example.c               *
  ******************************************************************************/
 extern tmpl_uint32
 tmpl_Get_High_Word32(tmpl_IEEE754_Word32 w);
@@ -229,7 +278,13 @@ tmpl_Get_High_Word64(tmpl_IEEE754_Word64 w);
  *          A union for 32-bit float and 32-bit unsigned int.                 *
  *  Output:                                                                   *
  *      tmpl_uint32 low:                                                      *
- *          The numerical value of the low word of x.                         *
+ *          The numerical value of the low word of w.real.                    *
+ *  Source Code:                                                              *
+ *      libtmpl/src/ieee754/tmpl_get_low_word32.c                             *
+ *      libtmpl/src/ieee754/tmpl_get_low_word64.c                             *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/ieee754/tmpl_get_low_word32_example.c                *
+ *      libtmpl/examples/ieee754/tmpl_get_low_word64_example.c                *
  ******************************************************************************/
 extern tmpl_uint32
 tmpl_Get_Low_Word32(tmpl_IEEE754_Word32 w);

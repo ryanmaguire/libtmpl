@@ -51,7 +51,7 @@
  *      standard. Most compilers will run this code just fine.                *
  *                                                                            *
  *      Endianness shouldn't matter, however the code has only been tested on *
- *      Little Endian systems.                                                *
+ *      Little Endian systems. Mixed-endian is not supported.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
