@@ -25,7 +25,7 @@ double tmpl_Double_Floor(double x)
                 return -1.0;
         }
         else
-	    {
+	      {
             i = 0x000FFFFFU >> exp;
             if (((w.uparts.most_significant_word & i) |
                   w.uparts.least_significant_word) == 0)
@@ -39,7 +39,7 @@ double tmpl_Double_Floor(double x)
         }
     }
     else if (exp > 51)
-	    return x;
+	      return x;
     else
     {
         i = ((tmpl_uint32) (0xffffffff)) >> (exp - 20);
@@ -47,20 +47,20 @@ double tmpl_Double_Floor(double x)
             return x;
 
         if (w.parts.most_significant_word < 0)
-	    {
-	        if (exp == 20)
-	            w.parts.most_significant_word += 1;
-	        else
-	        {
-	            j = (tmpl_uint32)
+	      {
+	          if (exp == 20)
+	              w.parts.most_significant_word += 1;
+	          else
+	          {
+	              j = (tmpl_uint32)
                     (w.parts.least_significant_word + (1 << (52 - exp)));
 
-	            if (j < w.uparts.least_significant_word)
-		            w.parts.most_significant_word += 1;
+	              if (j < w.uparts.least_significant_word)
+		                w.parts.most_significant_word += 1;
 
-	            w.parts.least_significant_word = (tmpl_int32)j;
-	        }
-	    }
+	              w.parts.least_significant_word = (tmpl_int32)j;
+	          }
+	      }
 
         w.uparts.least_significant_word &= (~i);
     }
@@ -68,6 +68,8 @@ double tmpl_Double_Floor(double x)
 }
 
 #else
+
+#include <math.h>
 
 double tmpl_Double_Floor(double x)
 {
