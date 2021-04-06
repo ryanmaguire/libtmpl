@@ -37,6 +37,11 @@
  *      pcc: Portable C Compiler 1.2.0.DEVEL 20181216 for x86_64-pc-linux-gnu *
  *      tcc: version 0.9.27 (x86_64 Linux)                                    *
  *      clang: version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)               *
+ *  This was also tested on Debian 11 alpha-3 (Bullseye) with the following:  *
+ *      gcc: Debian 10.2.1-6                                                  *
+ *      pcc: Portable C Compiler 1.2.0.DEVEL 20200630 for x86_64-pc-linux-gnu *
+ *      tcc: tcc version 0.9.27 (x86_64 Linux)                                *
+ *      clang: Debian clang version 11.0.1-2                                  *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       March 12, 2021                                                *
@@ -86,13 +91,13 @@ int main(void)
     } u = { 0xFFFF000000000000 };
 
     /*  Print the result before the swap.                                     */
-    printf("Before: %Lu\n", u.x);
+    printf("Before: %lu\n", u.x);
 
     /*  Swap the most significant bit using the char array inside the union.  */
     tmpl_Swap_Most_Significant_Bit_4(u.c);
 
     /*  Print the result after the swap.                                      */
-    printf("After: %Lu\n", u.x);
+    printf("After: %lu\n", u.x);
 
 #else
 #error "CHAR_BIT is neither 8 nor 16. Aborting."
