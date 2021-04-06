@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  To compile, simply run:                                                   *
- *      gcc tmpl_get_base_2_exp32_example.c.c -o test -ltmpl                  *
+ *      gcc tmpl_get_base_2_exp32_example.c -o test -ltmpl                    *
  *  You must have libtmpl built prior so that we may link with -ltmpl. The    *
  *  file libtmpl.so must be in your path. It is placed in /usr/local/lib/     *
  *  if libtmpl was built with the make.sh file. /usr/local/lib/ should be in  *
@@ -25,7 +25,7 @@
  *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
- *          tmpl_get_base_2_exp32_example.c.c -o test -ltmpl                  *
+ *          tmpl_get_base_2_exp32_example.c -o test -ltmpl                    *
  *  We can the run the executable via:                                        *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
