@@ -68,6 +68,8 @@
  *      Soft freeze for libtmpl alpha release.                                *
  *  2021/02/17: Ryan Maguire                                                  *
  *      Updated doc-strings for functions.                                    *
+ *  2021/04/05: Ryan Maguire                                                  *
+ *      Added source code and example code locations to comments.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
