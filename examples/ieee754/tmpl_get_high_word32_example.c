@@ -56,30 +56,17 @@
 /*  Function for testing the tmpl_Get_High_Word32 function.                   */
 int main(void)
 {
-    /*  Set several floating point values to test.                            */
-    float x0, x1, x2, x3;
-
-    /*  Declare variables for the exponents.                                  */
+    /*  Declare variables for the high words.                                 */
     tmpl_int32 b0, b1, b2, b3;
 
     /*  And declare variables for the IEEE 754 float union.                   */
     tmpl_IEEE754_Word32 w0, w1, w2, w3;
 
-    /*  This is a power of two. The function should return 3.                 */
-    x0 = 8.0F;
-
-    /*  This is not a power of 2, but the function should return 1.           */
-    x1 = 3.333333333F;
-
-    /*  And a few other values.                                               */
-    x2 = 0.5F;
-    x3 = 0.33333333333F;
-
-    /*  Set the float part of the IEEE 754 union to these values.             */
-    w0.real = x0;
-    w1.real = x1;
-    w2.real = x2;
-    w3.real = x3;
+    /*  Set the float part of the IEEE 754 union to various values.           */
+    w0.real = 8.0F;
+    w1.real = 3.333333333F;
+    w2.real = 0.5F;
+    w3.real = 0.3333333333F;
 
     /*  Extract the high words from the floating point numbers.               */
     b0 = tmpl_Get_High_Word32(w0);
@@ -88,10 +75,10 @@ int main(void)
     b3 = tmpl_Get_High_Word32(w3);
 
     /*  Print the results.                                                    */
-    printf("High Word of %f: %d\n", x0, b0);
-    printf("High Word of %f: %d\n", x1, b1);
-    printf("High Word of %f: %d\n", x2, b2);
-    printf("High Word of %f: %d\n", x3, b3);
+    printf("High Word of %f: %d\n", w0.real, b0);
+    printf("High Word of %f: %d\n", w1.real, b1);
+    printf("High Word of %f: %d\n", w2.real, b2);
+    printf("High Word of %f: %d\n", w3.real, b3);
 
     return 0;
 }

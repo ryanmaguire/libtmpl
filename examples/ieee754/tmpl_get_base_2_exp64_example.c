@@ -50,7 +50,7 @@
 /*  tmpl_int32 data type typedef'd here.                                      */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  tmpl_Get_Base_2_Exp32 is declared here.                                   */
+/*  tmpl_Get_Base_2_Exp64 is declared here.                                   */
 #include <libtmpl/include/tmpl_ieee754.h>
 
 /*  Function for testing the tmpl_Get_Base_2_Exp64 function.                  */
@@ -75,7 +75,7 @@ int main(void)
     x2 = 0.5;
     x3 = 0.33333333333;
 
-    /*  Set the float part of the IEEE 754 union to these values.             */
+    /*  Set the double part of the IEEE 754 union to these values.            */
     w0.real = x0;
     w1.real = x1;
     w2.real = x2;
