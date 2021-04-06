@@ -100,7 +100,7 @@ float tmpl_Float_Copysign(float x, float y)
 
     return out;
 }
-/*  End of tmpl_Float_Copysign.                                        */
+/*  End of tmpl_Float_Copysign.                                               */
 
 /*  Double precision copysign function.                                       */
 double tmpl_Double_Copysign(double x, double y)

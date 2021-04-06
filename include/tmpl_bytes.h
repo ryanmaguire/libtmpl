@@ -61,7 +61,7 @@
  *                          Revision History                                  *
  ******************************************************************************
  *  2021/01/14: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs.                   *
+ *      Created file (Wellesley College for librssringoccs).                  *
  *  2021/02/01: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs and edited.                                  *
  *  2021/02/02: Ryan Maguire                                                  *
@@ -147,6 +147,7 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *      libtmpl/src/bytes/tmpl_swap_most_significant_bit_8.c                  *
  *  Examples:                                                                 *
  *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_2_example.c     *
+ *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_2_alt_example.c *
  *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_4_example.c     *
  *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_8_example.c     *
  ******************************************************************************/
