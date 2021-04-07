@@ -31,9 +31,8 @@ extern void
 tmpl_Destroy_DoubleVector(tmpl_DoubleVector *v);
 
 extern void
-rssringoccs_DoubleVector_Add(tmpl_DoubleVector *v,
-                             tmpl_DoubleVector *u,
-                             tmpl_DoubleVector *sum);
+tmpl_DoubleVector_Add(tmpl_DoubleVector *v,
+                      tmpl_DoubleVector *u, tmpl_DoubleVector *sum);
 
 #endif
 
