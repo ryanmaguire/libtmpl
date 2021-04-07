@@ -71,11 +71,11 @@ tmpl_uint32 tmpl_Get_Low_Word32(tmpl_IEEE754_Word32 x)
     /*  x.real is a float. Use the union and look at x.integer. This will     *
      *  give us the actual binary value of x.real and we can pretend it is    *
      *  a 32-bit unsigned integer.                                            */
-	tmpl_uint32 out = x.integer;
+    tmpl_uint32 out = x.integer;
 
     /*  Bit-wise AND can help us zero out the high-word.                      */
-	out = out & 0x7FFFFF;
-	return out;
+    out = out & 0x7FFFFF;
+    return out;
 }
 /*  End of tmpl_Get_Low_Word32.                                               */
 

@@ -76,7 +76,7 @@ float tmpl_Get_Mantissa32(tmpl_IEEE754_Word32 w)
     out.integer = (w.integer & 0x007FFFFF) + 0x3F800000;
 
     /*  Return the float part from the IEEE 754 union data type.              */
-	return out.real;
+    return out.real;
 }
 /*  End of tmpl_Get_Mantissa32.                                               */
 

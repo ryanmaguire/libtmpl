@@ -108,15 +108,15 @@ tmpl_int32 tmpl_Get_Base_2_Exp32(tmpl_IEEE754_Word32 w)
      *  which is the last 9 bits. To do this, we bit-shift to the right using *
      *  the >> operator, bit-shifting 23 bits. The bitwise AND is performed   *
      *  via the & operator.                                                   */
-	tmpl_uint32 highword = (0x7FFFFFFF & w.integer) >> 23;
+    tmpl_uint32 highword = (0x7FFFFFFF & w.integer) >> 23;
 
     /*  The IEEE 754 format specifies that the exponent value of a 32-bit     *
      *  floating point number is the high word minus 127 (which is 2^7 - 1).  *
      *  The high word is an unsigned (non-negative) integer. Subtracting 127  *
      *  from the high word allows for negative exponents, which is useful for *
      *  fractional values like 0.5.                                           */
-	tmpl_int32 out = (tmpl_int32)highword - 127;
-	return out;
+    tmpl_int32 out = (tmpl_int32)highword - 127;
+    return out;
 }
 /*  End of tmpl_Get_Base_2_Exp32.                                             */
 
