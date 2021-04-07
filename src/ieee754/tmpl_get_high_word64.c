@@ -68,7 +68,7 @@ tmpl_uint32 tmpl_Get_High_Word64(tmpl_IEEE754_Word64 x)
     /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *
      *  an unsigned long.                                                     */
-	tmpl_uint64 out = x.integer;
+    tmpl_uint64 out = x.integer;
 
     /*  The first bit is the sign, the next 11 are the exponent, and the last *
      *  52 are the fractional parts. We don't care about the fractional part  *
@@ -79,8 +79,8 @@ tmpl_uint32 tmpl_Get_High_Word64(tmpl_IEEE754_Word64 x)
      *  To put the problem into decimal, if asked to divide 1000 by 100, you  *
      *  would not perform long division, but rather just shift the decimal    *
      *  point over by 2, giving 10. This is the binary version of this.       */
-	out = out >> 52;
-	return (tmpl_uint32)out;
+    out = out >> 52;
+    return (tmpl_uint32)out;
 }
 /*  End of tmpl_Get_High_Word64.                                              */
 

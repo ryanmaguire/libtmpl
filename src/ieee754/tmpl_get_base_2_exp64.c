@@ -106,15 +106,15 @@ tmpl_int32 tmpl_Get_Base_2_Exp64(tmpl_IEEE754_Word64 w)
      *  then need to extract the high word, which is the last 10 bits. To do  *
      *  this, we bit-shift to the right using the >> operator, bit-shifting   *
      *  52 bits. The bitwise AND is performed via the & operator.             */
-	tmpl_uint64 highword = (0x7FFFFFFFFFFFFFFF & w.integer) >> 52;
+    tmpl_uint64 highword = (0x7FFFFFFFFFFFFFFF & w.integer) >> 52;
 
     /*  The IEEE 754 format specifies that the exponent value of a 64-bit     *
      *  floating point number is the high word minus 1023 (which is 2^10 - 1).*
      *  The high word is an unsigned (non-negative) integer. Subtracting 1023 *
      *  from the high word allows for negative exponents, which is useful for *
      *  fractional values like 0.5.                                           */
-	tmpl_int32 out = (tmpl_int32)highword - 1023;
-	return out;
+    tmpl_int32 out = (tmpl_int32)highword - 1023;
+    return out;
 }
 /*  End of tmpl_Get_Base_2_Exp64.                                             */
 

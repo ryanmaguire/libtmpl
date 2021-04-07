@@ -68,7 +68,7 @@ tmpl_uint32 tmpl_Get_High_Word32(tmpl_IEEE754_Word32 x)
     /*  x.real is a float. Use the union and look at x.integer. This will     *
      *  give us the actual binary value of x.real and we can pretend it is    *
      *  a 32-bit unsigned integer.                                            */
-	tmpl_uint32 out = x.integer;
+    tmpl_uint32 out = x.integer;
 
     /*  The first bit is the sign, the next 8 are the exponent, and the last  *
      *  23 are the fractional parts. We don't care about the fractional part  *
@@ -79,8 +79,8 @@ tmpl_uint32 tmpl_Get_High_Word32(tmpl_IEEE754_Word32 x)
      *  To put the problem into decimal, if asked to divide 1000 by 100, you  *
      *  would not perform long division, but rather just shift the decimal    *
      *  point over by 2, giving 10. This is the binary version of this.       */
-	out = out >> 23;
-	return out;
+    out = out >> 23;
+    return out;
 }
 /*  End of tmpl_Get_High_Word32.                                              */
 
