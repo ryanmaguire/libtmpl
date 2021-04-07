@@ -16,12 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_get_high_word_32                            *
+ *                           tmpl_get_high_word32                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains source code for getting the "high word" of an IEEE754        *
- *      double precision 32-bit floating point number. This is the            *
- *      exponent part of the number.                                          *
+ *      single precision 32-bit floating point number. This is the            *
+ *      exponent part of the number and the sign.                             *
  *  Method:                                                                   *
  *      Get the 32-bit unsigned integer equivalent of the single-precision    *
  *      number and bit shift it over 23-binary digits.                        *

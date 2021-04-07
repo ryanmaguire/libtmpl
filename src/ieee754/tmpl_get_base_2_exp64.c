@@ -88,7 +88,10 @@
  *      Created file.                                                         *
  ******************************************************************************/
 
+/*  tmpl_int32 and tmpl_uint64 are typedef'd here.                            */
 #include <libtmpl/include/tmpl_integer.h>
+
+/*  Function prototype and tmpl_IEEE754_Word64 data type defined here.        */
 #include <libtmpl/include/tmpl_ieee754.h>
 
 /*  Function for extracting the exponent value of a 64-bit double.            */
@@ -105,7 +108,7 @@ tmpl_int32 tmpl_Get_Base_2_Exp64(tmpl_IEEE754_Word64 w)
      *  52 bits. The bitwise AND is performed via the & operator.             */
 	tmpl_uint64 highword = (0x7FFFFFFFFFFFFFFF & w.integer) >> 52;
 
-    /*  The IEEE 754 format specifies that the exponent value of a 32-bit     *
+    /*  The IEEE 754 format specifies that the exponent value of a 64-bit     *
      *  floating point number is the high word minus 1023 (which is 2^10 - 1).*
      *  The high word is an unsigned (non-negative) integer. Subtracting 1023 *
      *  from the high word allows for negative exponents, which is useful for *
