@@ -306,6 +306,9 @@ tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 w);
  *  Source Code:                                                              *
  *      libtmpl/src/ieee754/tmpl_get_base_2_exp32.c                           *
  *      libtmpl/src/ieee754/tmpl_get_base_2_exp64.c                           *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/ieee754/tmpl_get_base_2_exp32_example.c              *
+ *      libtmpl/examples/ieee754/tmpl_get_base_2_exp64_example.c              *
  ******************************************************************************/
 extern tmpl_int32
 tmpl_Get_Base_2_Exp32(tmpl_IEEE754_Word32 w);
@@ -324,6 +327,12 @@ tmpl_Get_Base_2_Exp64(tmpl_IEEE754_Word64 w);
  *  Output:                                                                   *
  *      float mantissa:                                                       *
  *          The numerical value of the mantissa of x.                         *
+ *  Source Code:                                                              *
+ *      libtmpl/src/ieee754/tmpl_get_mantissa32.c                             *
+ *      libtmpl/src/ieee754/tmpl_get_mantissa64.c                             *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/ieee754/tmpl_get_mantissa32_example.c                *
+ *      libtmpl/examples/ieee754/tmpl_get_mantissa64_example.c                *
  ******************************************************************************/
 extern float
 tmpl_Get_Mantissa32(tmpl_IEEE754_Word32 w);
