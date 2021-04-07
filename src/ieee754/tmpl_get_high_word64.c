@@ -16,14 +16,14 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_get_high_word_64                            *
+ *                           tmpl_get_high_word64                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains source code for getting the "high word" of an IEEE754        *
  *      double precision 64-bit floating point number. This is the            *
- *      exponent part of the number.                                          *
+ *      exponent part of the number and the sign.                             *
  *  Method:                                                                   *
- *      Get the unsigned long int equivalent of the double-precision number,  *
+ *      Get the unsigned integer equivalent of the double-precision number,   *
  *      bit shift it over 52-binary digits.                                   *
  *  NOTES:                                                                    *
  *      While the code is written in ANSI C, this is NOT portable since it    *
@@ -34,14 +34,23 @@
  *          2.) You have 32-bit float and 64-bit double. This is NOT          *
  *              required by the C89/C90 standard, only minimum sizes are      *
  *              specified. 32-bit/64-bit single and double precision is the   *
- *              most common, but this can break portability.                  *
- *          3.) An unsigned long int has 64-bits, and an unsigned int has     *
- *              32-bits. This will most likely NOT be true on 32-bit systems, *
- *              especially 32-bit Microsoft Windows machines where unsigned   *
- *              long int is 32-bit. This assumption is true for 64-bit        *
- *              computers, including all of those libtmpl was tested on.      *
+ *              most common, but this can break portability. Compilers        *
+ *              supporting annex F of the C99 standard are required to        *
+ *              provide this.                                                 *
+ *          3.) The tmpl_integer.h header file was able to successfully       *
+ *              typedef 32-bit and 64-bit integer data types. Compilers       *
+ *              supporting the C99 standard are required to provide these     *
+ *              data types in stdint.h. C89/C90 compilers may support 32-bit  *
+ *              64-bit integers, but are NOT required too. Usually, int is    *
+ *              32-bit and long is 64-bit, except with Microsoft's compiler   *
+ *              where int and long are 32-bit, and long long is 64-bit.       *
+ *      If your compiler supports the C99 version of the C programming        *
+ *      language, then this code is portable since 32-bit and 64-bit integers *
+ *      are required, and the IEEE754 is recommended in the appendix of the   *
+ *      standard. Most compilers will run this code just fine.                *
+ *                                                                            *
  *      Endianness shouldn't matter, however the code has only been tested on *
- *      Little Endian systems.                                                *
+ *      Little Endian systems. Mixed-Endian is not supported.                 *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       January 22, 2021                                              *

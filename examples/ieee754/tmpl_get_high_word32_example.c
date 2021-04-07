@@ -47,7 +47,7 @@
 /*  The printf function is found here.                                        */
 #include <stdio.h>
 
-/*  tmpl_int32 data type typedef'd here.                                      */
+/*  tmpl_uint32 data type typedef'd here.                                     */
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  tmpl_Get_High_Word32 is declared here.                                    */
@@ -57,7 +57,7 @@
 int main(void)
 {
     /*  Declare variables for the high words.                                 */
-    tmpl_int32 b0, b1, b2, b3;
+    tmpl_uint32 b0, b1, b2, b3;
 
     /*  And declare variables for the IEEE 754 float union.                   */
     tmpl_IEEE754_Word32 w0, w1, w2, w3;
@@ -75,10 +75,10 @@ int main(void)
     b3 = tmpl_Get_High_Word32(w3);
 
     /*  Print the results.                                                    */
-    printf("High Word of %f: %d\n", w0.real, b0);
-    printf("High Word of %f: %d\n", w1.real, b1);
-    printf("High Word of %f: %d\n", w2.real, b2);
-    printf("High Word of %f: %d\n", w3.real, b3);
+    printf("High Word of %f: %u\n", (double)w0.real, b0);
+    printf("High Word of %f: %u\n", (double)w1.real, b1);
+    printf("High Word of %f: %u\n", (double)w2.real, b2);
+    printf("High Word of %f: %u\n", (double)w3.real, b3);
 
     return 0;
 }

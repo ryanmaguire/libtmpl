@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  To compile, simply run:                                                   *
- *      gcc tmpl_get_high_word64_example.c -o test -ltmpl                     *
+ *      gcc tmpl_get_mantissa32_example.c -o test -ltmpl                      *
  *  You must have libtmpl built prior so that we may link with -ltmpl. The    *
  *  file libtmpl.so must be in your path. It is placed in /usr/local/lib/     *
  *  if libtmpl was built with the make.sh file. /usr/local/lib/ should be in  *
@@ -25,14 +25,14 @@
  *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
- *          tmpl_get_high_word64_example.c -o test -ltmpl                     *
+ *          tmpl_get_mantissa32_example.c -o test -ltmpl                      *
  *  We can the run the executable via:                                        *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
- *      High Word of 8.000000: 1026                                           *
- *      High Word of 3.333333: 1024                                           *
- *      High Word of 0.500000: 1022                                           *
- *      High Word of 0.333333: 1021                                           *
+ *      Mantissa of 8.000000: 1.000000                                        *
+ *      Mantissa of 3.333333: 1.666667                                        *
+ *      Mantissa of 0.500000: 1.000000                                        *
+ *      Mantissa of 0.333333: 1.333333                                        *
  *  This was tested on Debian 10 (Buster) GNU/Linux with gcc, tcc, pcc, and   *
  *  clang from the Debian 10 main repository. Version numbers are:            *
  *      gcc: Debian 8.3.0-6                                                   *
@@ -50,35 +50,35 @@
 /*  tmpl_uint32 data type typedef'd here.                                     */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  tmpl_Get_High_Word64 is declared here.                                    */
+/*  tmpl_Get_Low_Word32 is declared here.                                     */
 #include <libtmpl/include/tmpl_ieee754.h>
 
-/*  Function for testing the tmpl_Get_High_Word64 function.                   */
+/*  Function for testing the tmpl_Get_Low_Word32 function.                    */
 int main(void)
 {
-    /*  Declare variables for the high words.                                 */
-    tmpl_uint32 b0, b1, b2, b3;
+    /*  Declare variables for the low words.                                  */
+    float y0, y1, y2, y3;
 
-    /*  And declare variables for the IEEE 754 double union.                  */
-    tmpl_IEEE754_Word64 w0, w1, w2, w3;
+    /*  And declare variables for the IEEE 754 float union.                   */
+    tmpl_IEEE754_Word32 w0, w1, w2, w3;
 
-    /*  Set the double part of the IEEE 754 union to various values.          */
-    w0.real = 8.0;
-    w1.real = 3.333333333;
-    w2.real = 0.5;
-    w3.real = 0.3333333333;
+    /*  Set the float part of the IEEE 754 union to various values.           */
+    w0.real = 8.0F;
+    w1.real = 3.333333333F;
+    w2.real = 0.5F;
+    w3.real = 0.3333333333F;
 
-    /*  Extract the high words from the floating point numbers.               */
-    b0 = tmpl_Get_High_Word64(w0);
-    b1 = tmpl_Get_High_Word64(w1);
-    b2 = tmpl_Get_High_Word64(w2);
-    b3 = tmpl_Get_High_Word64(w3);
+    /*  Extract the low words from the floating point numbers.                */
+    y0 = tmpl_Get_Mantissa32(w0);
+    y1 = tmpl_Get_Mantissa32(w1);
+    y2 = tmpl_Get_Mantissa32(w2);
+    y3 = tmpl_Get_Mantissa32(w3);
 
     /*  Print the results.                                                    */
-    printf("High Word of %f: %u\n", w0.real, b0);
-    printf("High Word of %f: %u\n", w1.real, b1);
-    printf("High Word of %f: %u\n", w2.real, b2);
-    printf("High Word of %f: %u\n", w3.real, b3);
+    printf("Mantissa of %f: %f\n", (double)w0.real, (double)y0);
+    printf("Mantissa of %f: %f\n", (double)w1.real, (double)y1);
+    printf("Mantissa of %f: %f\n", (double)w2.real, (double)y2);
+    printf("Mantissa of %f: %f\n", (double)w3.real, (double)y3);
 
     return 0;
 }

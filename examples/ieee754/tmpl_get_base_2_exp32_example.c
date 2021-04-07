@@ -88,10 +88,10 @@ int main(void)
     b3 = tmpl_Get_Base_2_Exp32(w3);
 
     /*  Print the results.                                                    */
-    printf("Base 2 exponent of %f: %d\n", x0, b0);
-    printf("Base 2 exponent of %f: %d\n", x1, b1);
-    printf("Base 2 exponent of %f: %d\n", x2, b2);
-    printf("Base 2 exponent of %f: %d\n", x3, b3);
+    printf("Base 2 exponent of %f: %d\n", (double)x0, b0);
+    printf("Base 2 exponent of %f: %d\n", (double)x1, b1);
+    printf("Base 2 exponent of %f: %d\n", (double)x2, b2);
+    printf("Base 2 exponent of %f: %d\n", (double)x3, b3);
 
     return 0;
 }
