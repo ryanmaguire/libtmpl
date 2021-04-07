@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  To compile, simply run:                                                   *
- *      gcc tmpl_get_mantissa32_example.c -o test -ltmpl                      *
+ *      gcc tmpl_get_mantissa64_example.c -o test -ltmpl                      *
  *  You must have libtmpl built prior so that we may link with -ltmpl. The    *
  *  file libtmpl.so must be in your path. It is placed in /usr/local/lib/     *
  *  if libtmpl was built with the make.sh file. /usr/local/lib/ should be in  *
@@ -25,7 +25,7 @@
  *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
- *          tmpl_get_mantissa32_example.c -o test -ltmpl                      *
+ *          tmpl_get_mantissa64_example.c -o test -ltmpl                      *
  *  We can the run the executable via:                                        *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
@@ -47,35 +47,35 @@
 /*  The printf function is found here.                                        */
 #include <stdio.h>
 
-/*  tmpl_Get_Mantissa32 is declared here.                                     */
+/*  tmpl_Get_Mantissa64 is declared here.                                     */
 #include <libtmpl/include/tmpl_ieee754.h>
 
-/*  Function for testing the tmpl_Get_Mantissa32 function.                    */
+/*  Function for testing the tmpl_Get_Mantissa64 function.                    */
 int main(void)
 {
     /*  Declare variables for the mantissa.                                   */
-    float y0, y1, y2, y3;
+    double y0, y1, y2, y3;
 
-    /*  And declare variables for the IEEE 754 float union.                   */
-    tmpl_IEEE754_Word32 w0, w1, w2, w3;
+    /*  And declare variables for the IEEE 754 double union.                  */
+    tmpl_IEEE754_Word64 w0, w1, w2, w3;
 
-    /*  Set the float part of the IEEE 754 union to various values.           */
-    w0.real = 8.0F;
-    w1.real = 3.333333333F;
-    w2.real = 0.5F;
-    w3.real = 0.3333333333F;
+    /*  Set the double part of the IEEE 754 union to various values.          */
+    w0.real = 8.0;
+    w1.real = 3.333333333;
+    w2.real = 0.5;
+    w3.real = 0.3333333333;
 
     /*  Extract the mantissa from the floating point numbers.                 */
-    y0 = tmpl_Get_Mantissa32(w0);
-    y1 = tmpl_Get_Mantissa32(w1);
-    y2 = tmpl_Get_Mantissa32(w2);
-    y3 = tmpl_Get_Mantissa32(w3);
+    y0 = tmpl_Get_Mantissa64(w0);
+    y1 = tmpl_Get_Mantissa64(w1);
+    y2 = tmpl_Get_Mantissa64(w2);
+    y3 = tmpl_Get_Mantissa64(w3);
 
     /*  Print the results.                                                    */
-    printf("Mantissa of %f: %f\n", (double)w0.real, (double)y0);
-    printf("Mantissa of %f: %f\n", (double)w1.real, (double)y1);
-    printf("Mantissa of %f: %f\n", (double)w2.real, (double)y2);
-    printf("Mantissa of %f: %f\n", (double)w3.real, (double)y3);
+    printf("Mantissa of %f: %f\n", w0.real, y0);
+    printf("Mantissa of %f: %f\n", w1.real, y1);
+    printf("Mantissa of %f: %f\n", w2.real, y2);
+    printf("Mantissa of %f: %f\n", w3.real, y3);
 
     return 0;
 }
