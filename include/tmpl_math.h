@@ -247,9 +247,36 @@
 #define tmpl_Min_Double_Base_E   (DBL_MIN_10_EXP  * tmpl_Natural_Log_Of_10)
 #define tmpl_Min_LDouble_Base_E  (LDBL_MIN_10_EXP * tmpl_Natural_Log_Of_10_L)
 
+/*  Set infinity to the HUGE_VAL macro that is specified in math.h. Most      *
+ *  implementations already have an INFINITY macro, but it is not required.   */
+#define tmpl_Infinity (HUGE_VAL)
+
+/*  Float and long double version of HUGE_VAL may be provided, but are not    *
+ *  required. Probe this with a preprocessor statement.                       */
+#ifdef HUGE_VALF
+#define tmpl_Infinity_F (HUGE_VALF)
+#else
+#define tmpl_Infinity_F ((float)(tmpl_Infinity))
+#endif
+
+#ifdef HUGE_VALL
+#define tmpl_Infinity_L (HUGE_VALL)
+#else
+#define tmpl_Infinity_L ((long double)(tmpl_Infinity))
+#endif
+
+/*  We'll use the CPYTHON method of defining NAN, the source code of which is *
+ *  contained in python/cpython/Include/pymath.h.                             */
+#define tmpl_NaN (tmpl_Infinity * 0.0)
+#define tmpl_NaN_F ((float)(tmpl_NaN))
+#define tmpl_NaN_L ((long double)(tmpl_NaN))
+
+#define tmpl_Is_Inf(x) ((x) == ((x)+1))
+#define tmpl_Is_NaN(x) ((x) != (x))
+
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Abs                                                *
+ *      tmpl_Double_Abs                                                       *
  *  Purpose:                                                                  *
  *      Compute the absolute value of a real number (fabs alias).             *
  *  Arguments:                                                                *
@@ -265,7 +292,7 @@ extern long double tmpl_LDouble_Abs(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Arctan                                             *
+ *      tmpl_Double_Arctan                                                    *
  *  Purpose:                                                                  *
  *      Compute the arctan (inverse tangent) of a real number.                *
  *  Arguments:                                                                *
@@ -281,7 +308,7 @@ extern long double tmpl_LDouble_Arctan(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Arctan2                                            *
+ *      tmpl_Double_Arctan2                                                   *
  *  Purpose:                                                                  *
  *      Compute the 2-dimensional arctan (inverse tangent) of a point in the  *
  *      Cartesian plane. This is the angle the point makes with the positive  *
@@ -313,7 +340,7 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Copysign                                           *
+ *      tmpl_Double_Copysign                                                  *
  *  Purpose:                                                                  *
  *      Given two numbers x and y, returns a value that has the magnitude of  *
  *      x and the sign of y.                                                  *
@@ -332,7 +359,7 @@ extern long double tmpl_LDouble_Copysign(long double x, long double y);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Cos                                                *
+ *      tmpl_Double_Cos                                                       *
  *  Purpose:                                                                  *
  *      Computes the cosine of a real number.                                 *
  *  Arguments:                                                                *
@@ -348,7 +375,7 @@ extern long double tmpl_LDouble_Cos(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Cosh                                               *
+ *      tmpl_Double_Cosh                                                      *
  *  Purpose:                                                                  *
  *      Computes the hyperbolic cosine of a real number.                      *
  *  Arguments:                                                                *
@@ -390,21 +417,6 @@ extern long double tmpl_LDouble_Log(long double x);
 extern float tmpl_Float_Floor(float x);
 extern double tmpl_Double_Floor(double x);
 extern long double tmpl_LDouble_Floor(long double x);
-
-/*  Set INFINITY to the HUGE_VAL macro that is specified in math.h. Most      *
- *  implementations already have an INFINITY macro, but it is not required.   */
-#define tmpl_Infinity (HUGE_VAL)
-#define tmpl_Infinity_F ((float)(tmpl_Infinity))
-#define tmpl_Infinity_L ((long double)(tmpl_Infinity))
-
-/*  We'll use the CPYTHON method of defining NAN, the source code of which is *
- *  contained in python/cpython/Include/pymath.h.                             */
-#define tmpl_NaN (tmpl_Infinity * 0.0)
-#define tmpl_NaN_F ((float)(tmpl_NaN))
-#define tmpl_NaN_L ((long double)(tmpl_NaN))
-
-#define tmpl_Is_Inf(x) ((x) == ((x)+1))
-#define tmpl_Is_NaN(x) ((x) != (x))
 
 /*  The following functions are not required in C89/C90 implementations of    *
  *  math.h. The algorithms for their computations are very straight-forward,  *
