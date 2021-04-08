@@ -24,6 +24,25 @@
  *      This file was originally in rss_ringoccs but has been moved here.     *
  *      rss_ringoccs is also released under GPL 3.                            *
  ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  None.                                                                     *
+ ******************************************************************************
+ *                            A NOTE ON COMMENTS                              *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *                            A FRIENDLY WARNING                              *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       February 2, 2021                                              *
  ******************************************************************************
@@ -111,7 +130,7 @@
  *  function, the cexp provided by glibc (GNU C library) for complex.h is     *
  *  slightly faster than rss_ringoccs. This was tested on an array of one     *
  *  million points in the complex plane, the times are as follows:            *
- *  (iMac 2017 running MacOS)                                                 *
+ *  (iMac 2017 running macOS)                                                 *
  *      C89 Time: 0.026958                                                    *
  *      C99 Time: 0.022602                                                    *
  *  This is not to say one can't achieve better times with C89 compliant code.*

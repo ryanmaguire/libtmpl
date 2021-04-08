@@ -78,6 +78,14 @@
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       January 22, 2021                                              *
+ ******************************************************************************
+ *                          Revision History                                  *
+ ******************************************************************************
+ *  2021/01/22: Ryan Maguire                                                  *
+ *      Created file.                                                         *
+ *  2021/04/08: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -107,8 +115,7 @@
  *  enough, the difference between these two numbers is 2^64-2, not 2^64-1.   *
  *  In reserving a bit for the sign, we now have two zeroes. A "positive"     *
  *  zero and a "negative" zero, These are called "signed zeroes." When using  *
- *  these, compilers treat them nearly the same, and testing -0 == +0 return  *
- *  True.                                                                     *
+ *  these, compilers treat them nearly the same, and -0 == +0 returns true.   *
  *                                                                            *
  *    x xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx       *
  *    - ---------------------------------------------------------------       *
@@ -164,13 +171,14 @@
  *      ~ 10^308                                                              *
  *      = Infinity (according to the standard).                               *
  *                                                                            *
- *    Seting 2^1023 to infinity means we can reserve a number of Not-a-Number *
- *    (NaN) as follows:                                                       *
+ *    Setting 2^1023 to infinity means we can reserve a number of             *
+ *    Not-a-Number (NaN) as follows:                                          *
  *                                                                            *
  *    0 11111111111 1111111111111111111111111111111111111111111111111111      *
  *      = NaN                                                                 *
  *                                                                            *
- *    This is useful for log(-1) or sqrt(-1) or 0.0/0.0.                      *
+ *    This is useful for log(-1) or sqrt(-1) or 0.0/0.0. As a final example,  *
+ *    the IEEE 754 64-bit representation of 1.0:                              *
  *                                                                            *
  *    0 01111111111 0000000000000000000000000000000000000000000000000000      *
  *      = 2^(1023 - 1023)                                                     *
@@ -245,8 +253,8 @@ typedef union _tmpl_IEEE754_Word64 {
  *      tmpl_Get_High_Word32                                                  *
  *  Purpose:                                                                  *
  *      Gets the "high word" of a 32-bit IEEE754 floating point number. This  *
- *      is just the binary value of the exponent part of the number.          *
- *      A 64 bit version is also provided.                                    *
+ *      is just the binary value of the exponent part of the number, together *
+ *      with the sign. A 64 bit version is also provided.                     *
  *  Arguments:                                                                *
  *      tmpl_IEE754_Word32 w:                                                 *
  *          A union for 32-bit float and 32-bit unsigned integer.             *
@@ -298,11 +306,12 @@ tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 w);
  *  Purpose:                                                                  *
  *      Gets the exponent of a 32-bit word. This is the value b such that the *
  *      number x is represented by 1.m * 2^b, m being the mantissa.           *
+ *  Arguments:                                                                *
  *      tmpl_IEE754_Word32 w:                                                 *
  *          A union for 32-bit float and 32-bit unsigned int.                 *
  *  Output:                                                                   *
- *      tmpl_uint32 exp:                                                      *
- *          The numerical value of the exponential part of x in base 2.       *
+ *      tmpl_int32 exp:                                                       *
+ *          The numerical value of the exponential part of w.real in base 2.  *
  *  Source Code:                                                              *
  *      libtmpl/src/ieee754/tmpl_get_base_2_exp32.c                           *
  *      libtmpl/src/ieee754/tmpl_get_base_2_exp64.c                           *
@@ -322,11 +331,12 @@ tmpl_Get_Base_2_Exp64(tmpl_IEEE754_Word64 w);
  *  Purpose:                                                                  *
  *      Gets the mantissa of a 32-bit word. This is the value 1.m such that   *
  *      the number x is represented by 1.m * 2^b, b being the exponent.       *
+ *  Arguments:                                                                *
  *      tmpl_IEE754_Word32 w:                                                 *
  *          A union for 32-bit float and 32-bit unsigned int.                 *
  *  Output:                                                                   *
  *      float mantissa:                                                       *
- *          The numerical value of the mantissa of x.                         *
+ *          The numerical value of the mantissa of w.real.                    *
  *  Source Code:                                                              *
  *      libtmpl/src/ieee754/tmpl_get_mantissa32.c                             *
  *      libtmpl/src/ieee754/tmpl_get_mantissa64.c                             *

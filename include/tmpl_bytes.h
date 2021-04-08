@@ -40,6 +40,10 @@
  *      This file is a fork of the bytes library I wrote for rss_ringoccs.    *
  *      rss_ringoccs is also released under the GPL 3.                        *
  ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  None.                                                                     *
+ ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
@@ -70,6 +74,9 @@
  *      Updated doc-strings for functions.                                    *
  *  2021/04/05: Ryan Maguire                                                  *
  *      Added source code and example code locations to comments.             *
+ *  2021/04/08: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */

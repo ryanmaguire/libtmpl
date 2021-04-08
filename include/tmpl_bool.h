@@ -56,6 +56,9 @@
  *      Copied from rss_ringoccs and edited.                                  *
  *  2021/02/02: Ryan Maguire                                                  *
  *      Soft freeze for libtmpl alpha release.                                *
+ *  2021/04/08: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
