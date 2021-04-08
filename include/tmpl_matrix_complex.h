@@ -27,18 +27,19 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_MATRIX_H__
-#define __TMPL_MATRIX_H__
+#ifndef __TMPL_MATRIX_COMPLEX_H__
+#define __TMPL_MATRIX_COMPLEX_H__
 
 #include <libtmpl/include/tmpl_bool.h>
+#include <libtmpl/include/tmpl_complex.h>
 
-typedef struct tmpl_DoubleMatrix {
-    double **data;
+typedef struct tmpl_ComplexDoubleMatrix {
+    tmpl_ComplexDouble **data;
     unsigned long row_length;
     unsigned long column_length;
     tmpl_Bool error_occurred;
     char *error_message;
-} tmpl_DoubleMatrix;
+} tmpl_ComplexDoubleMatrix;
 
 #endif
 /*  End of include guard.                                                     */
