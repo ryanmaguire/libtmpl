@@ -26,6 +26,10 @@
  *      rssringoccs titles have been replaced with tmpl. rss_ringoccs is also *
  *      released under GPL3.                                                  *
  ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  None.                                                                     *
+ ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
