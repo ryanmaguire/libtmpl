@@ -10,7 +10,17 @@
 
 #   Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
 #   on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
-CC=gcc
+if [ "$1" == "" ]; then
+    CC=gcc
+else
+    CC=$1
+fi
+
+if [ "$2" == "" ]; then
+    STDVER="-std=c89 -ansi"
+else
+    STDVER=$2
+fi
 
 # Name of the created Share Object file (.so).
 SONAME="libtmpl.so"
@@ -40,7 +50,7 @@ DET_END_FILE=./det_end.c
 DET_END_EXEC=det_end_out
 
 if [ $CC == "gcc" ]; then
-    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
     CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
@@ -50,7 +60,7 @@ if [ $CC == "gcc" ]; then
 
 #   Clang has different compiler options, so specify those here if using clang.
 elif [ $CC == "clang" ]; then
-    CArgs1="-std=c89 -ansi -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
     CArgs2="-Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
@@ -58,7 +68,7 @@ elif [ $CC == "clang" ]; then
     CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
 elif [ $CC == "tcc" ]; then
-    CArgs1="-std=c89 -pedantic -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -pedantic -Wall -Wextra -Wpedantic"
     CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
@@ -66,7 +76,7 @@ elif [ $CC == "tcc" ]; then
     CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
 elif [ $CC == "pcc" ]; then
-    CArgs1="-std=c89 -pedantic -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -pedantic -Wall -Wextra -Wpedantic"
     CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
@@ -74,7 +84,7 @@ elif [ $CC == "pcc" ]; then
     CArgs6="-Wstrict-prototypes -I../ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
 elif [ $CC == "cc" ]; then
-    CArgs1="-std=c89 -pedantic -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -pedantic -Wall -Wextra -Wpedantic"
     CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
@@ -111,6 +121,7 @@ sudo cp ./include/*.h "$INCLUDE_TARGET/include/"
 
 echo "Compiling libtmpl..."
 echo -e "\n\tCompiler Options:"
+echo -e "\t\tCompiler: $CC"
 echo -e "\t\t$CArgs1"
 echo -e "\t\t$CArgs2"
 echo -e "\t\t$CArgs3"
