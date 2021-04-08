@@ -23,6 +23,20 @@
  *      represented using the IEEE 754 single precision format. That is,      *
  *      given a floating point number x = 1.m * 2^b, this function returns    *
  *      b. The value 1.m is called the mantissa.                              *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Get_Base_2_Exp32:                                                *
+ *  Purpose:                                                                  *
+ *      Get's the base-2 exponent of a 32-bit floating point number.          *
+ *  Arguments:                                                                *
+ *      w (tmpl_IEEE754_Word32).                                              *
+ *          A union representing a 32-bit floating point value in binary.     *
+ *  Output:                                                                   *
+ *      exp (tmpl_int32):                                                     *
+ *          A 32-bit signed integer corresponding to the exponent of          *
+ *          the input.                                                        *
  *  Method:                                                                   *
  *      Extract the high word of the floating point number and subtract 127   *
  *      from this, as specified in the IEEE 754 format.                       *
