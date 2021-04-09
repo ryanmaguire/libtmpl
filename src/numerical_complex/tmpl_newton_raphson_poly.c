@@ -1,51 +1,49 @@
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
-#include <rss_ringoccs/include/rss_ringoccs_numerical.h>
-#include <rss_ringoccs/include/rss_ringoccs_bool.h>
+#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_numerical_complex.h>
+#include <libtmpl/include/tmpl_bool.h>
 
-#define EPS 1.0e-16
-
-rssringoccs_ComplexDouble
-rssringoccs_Newton_Raphson_CDouble_Poly_Real(
-    rssringoccs_ComplexDouble z, double *coeffs, unsigned int degree,
-    unsigned int max_iters
-)
+tmpl_ComplexDouble
+tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z, double *coeffs,
+                                      unsigned int degree,
+                                      unsigned int max_iters, double eps)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    rssringoccs_ComplexDouble dz, w, wp;
-    rssringoccs_Bool comp;
+    tmpl_ComplexDouble dz, w, wp;
+    tmpl_Bool comp;
     unsigned int n;
 
     /*  Evaluate the perturbation term, then compute the next iteration.      */
-    w = rssringoccs_CDouble_Poly_Real_Coeffs(coeffs, degree, z);
-    wp = rssringoccs_CDouble_Poly_Deriv_Real_Coeffs(coeffs, degree, 1, z);
+    w = tmpl_CDouble_Poly_Real_Coeffs(coeffs, degree, z);
+    wp = tmpl_CDouble_Poly_Deriv_Real_Coeffs(coeffs, degree, 1, z);
 
     /*  If the derivative is zero at your initial guess, Newton-Raphson       *
      *  fails. Return Not-a-Number in this case.                              */
-    comp = rssringoccs_CDouble_Compare(wp, rssringoccs_CDouble_Zero);
+    comp = tmpl_CDouble_Compare(wp, tmpl_CDouble_Zero);
     if (comp)
-        return rssringoccs_CDouble_NaN;
+        return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
     /*  Compute the first iteration of Newton-Raphson.                        */
-    dz = rssringoccs_CDouble_Divide(w, wp);
-    z  = rssringoccs_CDouble_Subtract(z, dz);
+    dz = tmpl_CDouble_Divide(w, wp);
+    z  = tmpl_CDouble_Subtract(z, dz);
 
     /*  The first iteration has been computed above, so set n to 1.           */
     n = 1;
 
     /*  Continuing this computation until the error is below the threshold.   */
-    while(rssringoccs_CDouble_Abs(dz) > EPS)
+    while(tmpl_CDouble_Abs(dz) > eps)
     {
-        w = rssringoccs_CDouble_Poly_Real_Coeffs(coeffs, degree, z);
-        wp = rssringoccs_CDouble_Poly_Deriv_Real_Coeffs(coeffs, degree,
+        w = tmpl_CDouble_Poly_Real_Coeffs(coeffs, degree, z);
+        wp = tmpl_CDouble_Poly_Deriv_Real_Coeffs(coeffs, degree,
                                                               1, z);
 
-        comp = rssringoccs_CDouble_Compare(wp, rssringoccs_CDouble_Zero);
+        comp = tmpl_CDouble_Compare(wp, tmpl_CDouble_Zero);
 
         if (comp)
-            return rssringoccs_CDouble_NaN;
+            return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
-        dz = rssringoccs_CDouble_Divide(w, wp);
-        z  = rssringoccs_CDouble_Subtract(z, dz);
+        dz = tmpl_CDouble_Divide(w, wp);
+        z  = tmpl_CDouble_Subtract(z, dz);
         ++n;
 
         /*  Break if too many iterations have been run.                       */
@@ -56,4 +54,3 @@ rssringoccs_Newton_Raphson_CDouble_Poly_Real(
     return z;
 }
 
-#undef EPS

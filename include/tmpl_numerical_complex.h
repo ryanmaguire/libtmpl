@@ -39,6 +39,6 @@ tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
 extern tmpl_ComplexDouble
 tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z,
                                       double *coeffs, unsigned int degree,
-                                      unsigned int max_iters);
+                                      unsigned int max_iters, double eps);
 
 #endif
