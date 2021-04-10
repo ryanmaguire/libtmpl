@@ -34,11 +34,15 @@
  *      endianness (tmpl_Endian):                                             *
  *          An enum data-type whose value corresponds to the endianness.      *
  *  Method:                                                                   *
- *      Use a union data type between an unsigned int and a char array whose  *
- *      size makes it so that the entire array has the same number of bits as *
- *      an unsigned int (determined via macros in limits.h). Set the          *
- *      unsigned bit portion to 1 and then see which element of the char      *
- *      array is one. This will tell us the endianness.                       *
+ *      Use a union data type between a char array with 4 elements and an     *
+ *      unsigned integer data type that is 4 chars wide. This is usually a    *
+ *      32-bit unsigned int, but may vary depending on your platform. We'll   *
+ *      check the size of char with the CHAR_BIT macro from limits.h. If      *
+ *      this is 8 (which it probably is), we'll use a tmpl_uint32 which is a  *
+ *      32-bit unsigned integer data type from tmpl_integer.h. If CHAR_BIT is *
+ *      16, we'll use a tmpl_uint64 data type. If CHAR_BIT is neither 8 nor   *
+ *      16 (which is incredibly rare), we give up and return                  *
+ *      tmpl_UnknownEndian.                                                   *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -79,6 +83,9 @@
  *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/04/10: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  Standard library file containing the CHAR_BIT macro and more.             */
@@ -93,9 +100,9 @@
 /******************************************************************************
  *                             The Basic Idea                                 *
  ******************************************************************************
- *  We'll use union to have an unsigned int and a char array share the same   *
- *  memory. We'll then set the integer part to the hexidecimal number         *
- *  0x01020304 (for platforms with sizeof(int) = 4). The char array will      *
+ *  We'll use union to have an unsigned integer and a char array share the    *
+ *  same memory. We'll then set the integer part to the hexidecimal number    *
+ *  0x01020304 (for platforms with CHAR_BIT = 8). The char array will         *
  *  see this as follows for little-endian systems:                            *
  *                                                                            *
  *          -----------------------------                                     *
@@ -115,10 +122,10 @@
 tmpl_Endian tmpl_Determine_Endianness(void)
 {
     /*  Use the union C-keyword to create a data-type that has an unsigned    *
-     *  int and a char array consisting of four elements which share the same *
-     *  address in memory. By setting the integer portion to the hexidecimal  *
-     *  0x01020304 we can use the fact that the char array c is occupying the *
-     *  same address as the unsigned int i and interpret the value as a char  *
+     *  integer and a char array consisting of four elements which share the  *
+     *  same address in memory. By setting the integer portion to 0x01020304  *
+     *  we can use the fact that the char array c is occupying the            *
+     *  same address as the unsigned integer and interpret the value as a char*
      *  array. With this we can see if the zeroth value of the array is 01,   *
      *  02, 03, or 04. This will tell us if we have little-endian or          *
      *  big-endian, or the rarer mixed-endian.                                */
