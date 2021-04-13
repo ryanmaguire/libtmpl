@@ -35,7 +35,7 @@
  *      required by the C89/C90 standard. If the compiler fails, you may need *
  *      to adjust the settings in tmpl_config.h or use a compiler that        *
  *      supports the C99 standard (GCC, clang, and MSVC do).                  *
-******************************************************************************
+ ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
