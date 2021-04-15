@@ -114,7 +114,24 @@ typedef struct _tmpl_VirtualKnot {
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Are_Virtual_Knots_Equal                                          *
+ *      tmpl_Are_Gauss_Tuples_Identical                                       *
+ *  Purpose:                                                                  *
+ *      Compares two Gauss tuples and determines if they are the same.        *
+ *  Arguments:                                                                *
+ *      tmpl_GaussTuple *T0:                                                  *
+ *          A pointer to the zeroth Gauss tuple.                              *
+ *      tmpl_GaussTuple *T1:                                                  *
+ *          A pointer to the first Gauss tuple.                               *
+ *  Output:                                                                   *
+ *      tmpl_Bool endianness:                                                 *
+ *          A Boolean which determines whether or not the tuples are equal.   *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_Are_Gauss_Tuples_Identical(tmpl_GaussTuple *T0, tmpl_GaussTuple *T1);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Are_Virtual_Knots_Identical                                      *
  *  Purpose:                                                                  *
  *      Compares the Gauss code of two knots to check if they're the same.    *
  *  Arguments:                                                                *
@@ -127,10 +144,101 @@ typedef struct _tmpl_VirtualKnot {
  *          A Boolean which determines whether or not the two knots are equal.*
  ******************************************************************************/
 extern tmpl_Bool
-tmpl_Are_Virtual_Knots_Equal(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1);
+tmpl_Are_Virtual_Knots_Identical(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1);
 
-extern tmpl_Bool
-tmpl_Are_Gauss_Tuples_Equal(tmpl_GaussTuple *T0, tmpl_GaussTuple *T1);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Delete_Virtual_Knot_Crossing                                     *
+ *  Purpose:                                                                  *
+ *      Deletes a crossing in a virtual knot and shifts the crossing numbers  *
+ *      of all of the crossings accordingly.                                  *
+ *  NOTES:                                                                    *
+ *      If the crossing that is to be deleted is greater than the number of   *
+ *      crossings, nothing is done. If there is only one crossing in the knot *
+ *      and you are trying to delete this, the Gauss tuple pointer is set to  *
+ *      NULL, representing the unknot.                                        *
+ *  Arguments:                                                                *
+ *      tmpl_VirtualKnot *K:                                                  *
+ *          A pointer to a virtual knot.                                      *
+ *      tmpl_uint64 crossing:                                                 *
+ *          The crossing that is to be deleted.                               *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K, tmpl_uint64 crossing);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Destroy_Gauss_Tuple_Pointer                                      *
+ *  Purpose:                                                                  *
+ *      Free's the memory allocated to a pointer to a Gauss tuple.            *
+ *  NOTES:                                                                    *
+ *      This takes a pointer to a pointer to a Gauss tuple. This is so we can *
+ *      second the Gauss tuple pointer to NULL so we don't accidentally try   *
+ *      to free it twice.                                                     *
+ *  Arguments:                                                                *
+ *      tmpl_VirtualKnot *K0:                                                 *
+ *          A pointer to the zeroth virtual knot.                             *
+ *      tmpl_VirtualKnot *K1:                                                 *
+ *          A pointer to the first virtual knot.                              *
+ *  Output:                                                                   *
+ *      tmpl_Bool endianness:                                                 *
+ *          A Boolean which determines whether or not the two knots are equal.*
+ ******************************************************************************/
+extern void tmpl_Destroy_Gauss_Tuple_Pointer(tmpl_GaussTuple **T_ptr);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Destroy_Virtual_Knot_Pointer                                     *
+ *  Purpose:                                                                  *
+ *      Free's the memory allocated to a pointer to a virtual knot.           *
+ *  NOTES:                                                                    *
+ *      This takes a pointer to a pointer to a virtual knot. This is so we    *
+ *      can set the virtual knot pointer to NULL so we don't accidentally try *
+ *      to free it twice.                                                     *
+ *  Arguments:                                                                *
+ *      tmpl_VirtualKnot **K:                                                 *
+ *          A pointer to a pointer to a virtual knot.                         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Destroy_Virtual_Knot_Pointer(tmpl_VirtualKnot **K_ptr);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Gauss_Code_From_String                                           *
+ *  Purpose:                                                                  *
+ *      Creates a pointer to a virtual knot from a string, the Gauss code.    *
+ *  NOTES:                                                                    *
+ *      The string must be of the form "tnstnstns...tns" where t is the type, *
+ *      either over ("O" or "o") or under ("U" or "u"), n is an unsigned      *
+ *      integer (the crossing number), and s is the sign, either positive     *
+ *      ("+") or negative ("-").                                              *
+ *  Arguments:                                                                *
+ *      char *str:                                                            *
+ *          The string representing the Gauss code of the knot.               *
+ *  Output:                                                                   *
+ *      tmpl_VirtualKnot *K:                                                  *
+ *          A pointer to a virtual knot struct given by the Gauss code of str.*
+ ******************************************************************************/
+extern tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Print_Gauss_Code                                                 *
+ *  Purpose:                                                                  *
+ *      Prints the Gauss code of a knot.                                      *
+ *  NOTES:                                                                    *
+ *      If the input knot has the Gauss code pointer set to NULL, this        *
+ *      function prints out "Unknot."                                         *
+ *  Arguments:                                                                *
+ *      tmpl_VirtualKnot *K0:                                                 *
+ *          A pointer to the zeroth virtual knot.                             *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K);
 
 #endif
 /*  End of include guard.                                                     */

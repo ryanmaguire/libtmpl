@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 tmpl_Bool
-tmpl_Are_Virtual_Knots_Equal(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1)
+tmpl_Are_Virtual_Knots_Identical(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1)
 {
     /*  Variable for indexing over all of the Gauss tuples in the knots.      */
     tmpl_uint64 ind;
@@ -48,7 +48,7 @@ tmpl_Are_Virtual_Knots_Equal(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1)
         
         /*  If the two Gauss tuples are different, the Gauss codes are        *
          *  different so return false. Otherwise, proceed.                    */
-        if (!tmpl_Are_Gauss_Tuples_Equal(T0, T1))
+        if (!tmpl_Are_Gauss_Tuples_Identical(T0, T1))
             return tmpl_False;
     }
     
