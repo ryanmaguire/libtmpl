@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                 tmpl_knot                                  *
+ *                                tmpl_knots                                  *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides the prototypes and typedef's for a host of tools useful for  *
