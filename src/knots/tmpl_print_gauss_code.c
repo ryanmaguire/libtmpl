@@ -122,6 +122,16 @@ void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
      *  check that the error_occured Boolean is not True.                     */
     if (K->error_occured)
     {
+        if (K->error_message == NULL)
+            puts("Error Encountered: libtmpl\n"
+                 "    tmpl_Print_Gauss_Code\n\n"
+                 "Input virtual knot has error_occured Boolean set to True.\n"
+                 "error_message variable is NULL, so can't print the cause.");
+        else
+            printf("Error Encountered: libtmpl\n"
+                   "    tmpl_Print_Gauss_Code\n\n"
+                   "Input virtual knot has error_occured Boolean set to True.\n"
+                   "Original Error Message:\n\n%s", K->error_message);
         return;
     }
 
