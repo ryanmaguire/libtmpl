@@ -17,5 +17,6 @@ int main(void)
 	printf("After:\t");
 	tmpl_Print_Gauss_Code(K);
 	tmpl_Destroy_Virtual_Knot_Pointer(&K);
+
 	return 0;
 }
