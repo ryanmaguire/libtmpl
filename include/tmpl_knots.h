@@ -90,10 +90,10 @@ typedef struct _tmpl_GaussTuple {
      *  need to first be labelled 0 to n-1, where n is the number of          *
      *  crossings.                                                            */
     tmpl_uint64 crossing_number;
-  
+
     /*  The crossing type (over or under) of this crossing.                   */
     tmpl_CrossingType crossing_type;
-  
+
     /*  And the crossing sign (positive or negative).                         */
     tmpl_CrossingSign crossing_sign;
 } tmpl_GaussTuple;
@@ -106,10 +106,18 @@ typedef struct _tmpl_VirtualKnot {
      *  efficient to use 32-bit integers instead of 64. A 64-bit integer is   *
      *  extreme overkill, as it is.                                           */
     tmpl_uint64 number_of_crossings;
-  
+
     /*  A pointer to an array of Gauss tuples, representing the Gauss code of *
      *  the virtual knot. This pointer has 2*number_of_crossings elements.    */
     tmpl_GaussTuple *gauss_code;
+
+  /*  A Boolean indicating if something went wrong in a computation. This     *
+   *  should always be checked before trying to perform a computation.        */
+  tmpl_Bool error_occured;
+
+  /*  A string containing an error message that can be set if something goes  *
+   *  wrong. This is set to NULL by default, meaning no error has occured.    */
+  char *error_message;
 } tmpl_VirtualKnot;
 
 /******************************************************************************

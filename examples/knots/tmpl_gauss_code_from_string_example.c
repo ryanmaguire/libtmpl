@@ -5,7 +5,7 @@
 int main(void)
 {
 	char str[] = "O0+U1+O2+U0+O1+U2+";
-	int to_delete = 1;
+	int to_delete = 0;
 	tmpl_VirtualKnot *K = tmpl_Gauss_Code_From_String(str);
 
 	printf("Before:\t");
