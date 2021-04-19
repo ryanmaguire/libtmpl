@@ -20,7 +20,7 @@ extern tmpl_ULongVector *
 rssringoccs_Create_Zero_ULongVector(unsigned long length);
 
 extern void
-tmpl_Destroy_ULongVector(tmpl_ULongVector *v);
+tmpl_Destroy_ULongVector(tmpl_ULongVector **v);
 
 extern void
 tmpl_ULongVector_Add(tmpl_ULongVector *v,
