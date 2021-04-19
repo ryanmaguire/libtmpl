@@ -1,18 +1,18 @@
 
 
 #include <libtmpl/include/tmpl_knots.h>
-#include <libtmpl/include/tmpl_integer.h>
 
 /*  Needed for the NULL macro.                                                */
 #include <stdlib.h>
 
 void
-tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K, tmpl_uint64 crossing)
+tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K,
+                                  unsigned long int crossing)
 {
-    tmpl_uint64 ind;
-    tmpl_uint64 pos0, pos1;
+    unsigned long int ind;
+    unsigned long int pos0, pos1;
     tmpl_Bool found_pos0;
-    tmpl_uint64 gauss_code_length;
+    unsigned long int gauss_code_length;
 
     /*  First things first, before trying to access elements of the pointer   *
      *  K, make sure that it is not NULL.                                     */

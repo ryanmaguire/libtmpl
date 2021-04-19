@@ -1,6 +1,5 @@
 
 #include <libtmpl/include/tmpl_bool.h>
-#include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_knots.h>
 
 /*  The macro NULL is defined here.                                           */
@@ -10,7 +9,7 @@ tmpl_Bool
 tmpl_Are_Virtual_Knots_Identical(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1)
 {
     /*  Variable for indexing over all of the Gauss tuples in the knots.      */
-    tmpl_uint64 ind;
+    unsigned long int ind;
     
     /*  Variables for storing pointers to Gauss tuples.                       */
     tmpl_GaussTuple *T0, *T1;

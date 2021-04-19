@@ -61,9 +61,6 @@
 #ifndef __TMPL_KNOTS_H__
 #define __TMPL_KNOTS_H__
 
-/*  Fixed-width integer data types found here.                                */
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -89,7 +86,7 @@ typedef struct _tmpl_GaussTuple {
     /*  The crossing number of the crossing. Note, a virtual knot's crossings *
      *  need to first be labelled 0 to n-1, where n is the number of          *
      *  crossings.                                                            */
-    tmpl_uint64 crossing_number;
+    unsigned long int crossing_number;
 
     /*  The crossing type (over or under) of this crossing.                   */
     tmpl_CrossingType crossing_type;
@@ -105,7 +102,7 @@ typedef struct _tmpl_VirtualKnot {
      *  crossings in the knot. 32-bit architectures may find it beneficial /  *
      *  efficient to use 32-bit integers instead of 64. A 64-bit integer is   *
      *  extreme overkill, as it is.                                           */
-    tmpl_uint64 number_of_crossings;
+    unsigned long int number_of_crossings;
 
     /*  A pointer to an array of Gauss tuples, representing the Gauss code of *
      *  the virtual knot. This pointer has 2*number_of_crossings elements.    */
@@ -174,7 +171,8 @@ tmpl_Are_Virtual_Knots_Identical(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1);
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K, tmpl_uint64 crossing);
+tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K,
+                                  unsigned long int crossing);
 
 /******************************************************************************
  *  Function:                                                                 *
