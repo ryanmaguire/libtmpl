@@ -1,42 +1,42 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Compute a vector that is orthogonal to the input.                     *
+ *      Computes the cross product of two vectors.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire, Wellesley College                               *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <rss_ringoccs/include/rss_ringoccs_geometry.h>
+#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for computing an orthogonal vector to the given input.           */
-rssringoccs_ThreeVector
-rssringoccs_Orthogonal_ThreeVector(rssringoccs_ThreeVector P)
+tmpl_ThreeVector
+tmpl_Orthogonal_ThreeVector(tmpl_ThreeVector P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     double Px, Py, x, y, z;
-    rssringoccs_ThreeVector out;
+    tmpl_ThreeVector out;
 
     /*  Extract the x and y components from P. We won't need the z part.      */
-    Px = rssringoccs_ThreeVector_X(P);
-    Py = rssringoccs_ThreeVector_Y(P);
+    Px = tmpl_ThreeVector_X(P);
+    Py = tmpl_ThreeVector_Y(P);
 
     /*  If the x component is zero, (1,0,0) will be orthogonal to P since the *
      *  dot product will be 1*0 + 0*Py + 0*Pz = 0. Return (1,0,0).            */
@@ -68,7 +68,7 @@ rssringoccs_Orthogonal_ThreeVector(rssringoccs_ThreeVector P)
     }
     /*  End of if (Px == 0.0).                                                */
 
-    out = rssringoccs_ThreeVector_Rect(x, y, z);
+    out = tmpl_ThreeVector_Rect(x, y, z);
     return out;
 }
-/*  End of rssringoccs_Orthogonal_ThreeVector.                                */
+/*  End of tmpl_Orthogonal_ThreeVector.                                */

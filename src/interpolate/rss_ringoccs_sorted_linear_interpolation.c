@@ -1,22 +1,22 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                 rss_ringoccs_sorted_linear_interpolation                   *
+ *                     tmpl_sorted_linear_interpolation                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for linear interpolation of sorted data.     *
@@ -24,9 +24,9 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      rssringoccs_Float_Sorted_Interp1d:                                    *
- *      rssringoccs_Double_Sorted_Interp1d:                                   *
- *      rssringoccs_LDouble_Sorted_Interp1d:                                  *
+ *      tmpl_Float_Sorted_Interp1d:                                           *
+ *      tmpl_Double_Sorted_Interp1d:                                          *
+ *      tmpl_LDouble_Sorted_Interp1d:                                         *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
@@ -68,12 +68,12 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) rss_ringoccs_math.h:                                                  *
+ *  1.) tmpl_math.h:                                                          *
  *          This file provides compatibility between the two standard math.h  *
  *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
  *          provides aliases for the functions, and if C89 math.h is used     *
  *          it defines the functions missing in the earlier version.          *
- *  2.) rss_ringoccs_interpolate.h:                                           *
+ *  2.) tmpl_interpolate.h:                                                   *
  *          Header where the function prototypes are defined.                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -81,12 +81,12 @@
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/NASA-Planetary-Science/rss_ringoccs/issues             *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
  *                            A FRIENDLY WARNING                              *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in config_librssringoccs.sh uses gcc and has the  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
  *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
@@ -95,20 +95,16 @@
  *  Date:       December 30, 2020                                             *
  ******************************************************************************/
 
-/*  rssringoccs_NaN is defined here.                                          */
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
+/*  tmpl_NaN is defined here.                                                 */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  And the function prototypes are found here.                               */
-#include <rss_ringoccs/include/rss_ringoccs_interpolate.h>
+#include <libtmpl/include/tmpl_interpolate.h>
 
 /*  Single precision linear interpolation of sorted data.                     */
 void
-rssringoccs_Float_Sorted_Interp1d(float *x,
-                                  float *y,
-                                  unsigned long N,
-                                  float *x_new,
-                                  float *y_new,
-                                  unsigned long N_new)
+tmpl_Float_Sorted_Interp1d(float *x, float *y, unsigned long N,
+                           float *x_new, float *y_new, unsigned long N_new)
 {
     /*  Declare two variables for indexing the interpolated and raw data.     */
     unsigned long m, n;
@@ -124,7 +120,7 @@ rssringoccs_Float_Sorted_Interp1d(float *x,
 
         /*  If x_new[m] falls outside of the bounds of x, return NaN.         */
         if ((x_new[m] < x[0]) || (x_new[m] > x[N-1]))
-            y_new[m] = rssringoccs_NaN_F;
+            y_new[m] = tmpl_NaN_F;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
         else if (x_new[m] == x[N-1])
@@ -148,16 +144,12 @@ rssringoccs_Float_Sorted_Interp1d(float *x,
     }
     /*  End of for loop computing y_new[m].                                   */
 }
-/*  End of rssringoccs_Float_Sorted_Interp1d.                                 */
+/*  End of tmpl_Float_Sorted_Interp1d.                                        */
 
 /*  Double precision linear interpolation of sorted data.                     */
 void
-rssringoccs_Double_Sorted_Interp1d(double *x,
-                                   double *y,
-                                   unsigned long N,
-                                   double *x_new,
-                                   double *y_new,
-                                   unsigned long N_new)
+tmpl_Double_Sorted_Interp1d(double *x, double *y, unsigned long N,
+                            double *x_new, double *y_new, unsigned long N_new)
 {
     /*  Declare two variables for indexing the interpolated and raw data.     */
     unsigned long m, n;
@@ -173,7 +165,7 @@ rssringoccs_Double_Sorted_Interp1d(double *x,
 
         /*  If x_new[m] falls outside of the bounds of x, return NaN.         */
         if ((x_new[m] < x[0]) || (x_new[m] > x[N-1]))
-            y_new[m] = rssringoccs_NaN;
+            y_new[m] = tmpl_NaN;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
         else if (x_new[m] == x[N-1])
@@ -197,16 +189,13 @@ rssringoccs_Double_Sorted_Interp1d(double *x,
     }
     /*  End of for loop computing y_new[m].                                   */
 }
-/*  End of rssringoccs_Double_Sorted_Interp1d.                                */
+/*  End of tmpl_Double_Sorted_Interp1d.                                       */
 
 /*  Long double precision linear interpolation of sorted data.                */
 void
-rssringoccs_LDouble_Sorted_Interp1d(long double *x,
-                                    long double *y,
-                                    unsigned long N,
-                                    long double *x_new,
-                                    long double *y_new,
-                                    unsigned long N_new)
+tmpl_LDouble_Sorted_Interp1d(long double *x, long double *y, unsigned long N,
+                             long double *x_new, long double *y_new,
+                             unsigned long N_new)
 {
     /*  Declare two variables for indexing the interpolated and raw data.     */
     unsigned long m, n;
@@ -222,7 +211,7 @@ rssringoccs_LDouble_Sorted_Interp1d(long double *x,
 
         /*  If x_new[m] falls outside of the bounds of x, return NaN.         */
         if ((x_new[m] < x[0]) || (x_new[m] > x[N-1]))
-            y_new[m] = rssringoccs_NaN_L;
+            y_new[m] = tmpl_NaN_L;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
         else if (x_new[m] == x[N-1])
@@ -246,4 +235,5 @@ rssringoccs_LDouble_Sorted_Interp1d(long double *x,
     }
     /*  End of for loop computing y_new[m].                                   */
 }
-/*  End of rssringoccs_LDouble_Sorted_Interp1d.                               */
+/*  End of tmpl_LDouble_Sorted_Interp1d.                                      */
+

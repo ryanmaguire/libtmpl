@@ -1,57 +1,57 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Source code for adding three dimensional vectors.                     *
+ *      Computes the cross product of two vectors.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire, Wellesley College                               *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <rss_ringoccs/include/rss_ringoccs_geometry.h>
+#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for adding 2 three-dimensional vectors.                          */
-rssringoccs_ThreeVector
-rssringoccs_ThreeVector_Add(rssringoccs_ThreeVector P,
-                            rssringoccs_ThreeVector Q)
+/*  Function for computing the cross product of two vectors.                  */
+tmpl_ThreeVector
+tmpl_Cross_Product(tmpl_ThreeVector P, tmpl_ThreeVector Q)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
+    /*  Declare necessary variables.                                          */
     double Px, Py, Pz, Qx, Qy, Qz, x, y, z;
-    rssringoccs_ThreeVector sum;
+    tmpl_ThreeVector cross;
 
     /*  Extract the x, y, and z components from P.                            */
-    Px = rssringoccs_ThreeVector_X(P);
-    Py = rssringoccs_ThreeVector_Y(P);
-    Pz = rssringoccs_ThreeVector_Z(P);
+    Px = tmpl_ThreeVector_X(P);
+    Py = tmpl_ThreeVector_Y(P);
+    Pz = tmpl_ThreeVector_Z(P);
 
     /*  Extract the x, y, and z components from Q.                            */
-    Qx = rssringoccs_ThreeVector_X(Q);
-    Qy = rssringoccs_ThreeVector_Y(Q);
-    Qz = rssringoccs_ThreeVector_Z(Q);
+    Qx = tmpl_ThreeVector_X(Q);
+    Qy = tmpl_ThreeVector_Y(Q);
+    Qz = tmpl_ThreeVector_Z(Q);
 
-    /*  The sum of two vectors simply adds their components together.         */
-    x = Px + Qx;
-    y = Py + Qy;
-    z = Pz + Qz;
+    /*  Compute the components of the cross product PxQ.                      */
+    x = Py*Qz - Pz*Qy;
+    y = Pz*Qx - Px*Qz;
+    z = Px*Qy - Py*Qx;
 
-    /*  Use rssringoccs_ThreeVector_Rect to create the output and return.     */
-    sum = rssringoccs_ThreeVector_Rect(x, y, z);
-    return sum;
+    /*  Use tmpl_ThreeVector_Rect to create the output and return.            */
+    cross = tmpl_ThreeVector_Rect(x, y, z);
+    return cross;
 }
-/*  End of rssringoccs_ThreeVector_Add.                                       */
+/*  End of tmpl_Cross_Product.                                                */
+
