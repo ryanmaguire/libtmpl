@@ -27,10 +27,7 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_integer.h:                                                       *
- *          Header file which provides fixed-width signed and unsigned        *
- *          integer data types for 16, 32, and 64 bits.                       *
- *  2.) tmpl_bool.h:                                                          *
+ *  1.) tmpl_bool.h:                                                          *
  *          Header file provided tmpl_Bool, tmpl_False, and tmpl_True.        *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
