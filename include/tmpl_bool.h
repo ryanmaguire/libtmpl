@@ -67,7 +67,7 @@
 
 /*  The C99, C11, and C18 standards require support for booleans, but it is   *
  *  not available in C89/C90. We've typedef'd Booleans as tmpl_Bool to avoid  *
- *  naming conflicts with C99 and higher Booleans. If you compiler            *
+ *  naming conflicts with C99 and higher Booleans. If your compiler           *
  *  supports Booleans, you should be able to use stdbools with libtmpl.       */
 
 /*  We prepend tmpl onto False, True, and Bool to avoid name conflicts.       */
