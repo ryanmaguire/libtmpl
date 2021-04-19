@@ -84,9 +84,6 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_knots.h>
 
-/*  Fixed-width integer data types typedef'd here.                            */
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  printf function found here.                                               */
 #include <stdio.h>
 
@@ -97,11 +94,11 @@
 void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
 {
     /*  Declare a variable for looping through the indices of the Gauss code. */
-    tmpl_uint64 ind;
+    unsigned long int ind;
 
     /*  The Gauss code length is twice the number of crossings. We'll store   *
      *  that value in this variable.                                          */
-    tmpl_uint64 gauss_code_length;
+    unsigned long int gauss_code_length;
 
     /*  And to improve readability, we'll extract a pointer to the nth        *
      *  element of the Gauss sequence and then parse the pointers values.     */

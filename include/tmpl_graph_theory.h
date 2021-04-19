@@ -40,7 +40,6 @@
 #define __TMPL_GRAPH_THEORY_H__
 
 #include <libtmpl/include/tmpl_bool.h>
-#include <libtmpl/include/tmpl_integer.h>
 
 /*  An edge is represented by an unordered pair of unsigned integers v0 and   *
  *  v1. We can represent the direction of an edge by whether or not we want   *
@@ -60,12 +59,12 @@ typedef struct tmpl_GraphEdge {
 
     /*  Vertices are represented by 32-bit unsigned integers. This means a    *
      *  graph can have, at a maximum, 2^32 = 4,294,967,296 vertices.          */
-    tmpl_uint32 v0;
-    tmpl_uint32 v1;
+    unsigned long int v0;
+    unsigned long int v1;
 
     /*  A 32-bit unsigned integer is used to represent multiplicity in a      *
      *  graph edge. If the multiplicity is 1, this is a simple edge.          */
-    tmpl_uint32 multiplicity;
+    unsigned long int multiplicity;
 
     /*  For each multiplicity we need a graph direction corresponding to      *
      *  this edge. We'll use a pointer to the tmpl_GraphEdgeDirection enum    *
@@ -94,7 +93,7 @@ typedef struct tmpl_Graph {
      *  the values 0, 1, 2, 3, 4. We could then ask if {0,3} is an edge in    *
      *  the graph. Asking about {2,7} or {1,5} is meaningless, since the      *
      *  values 5 and 7 do not correspond to vertices in the graph.            */
-    tmpl_uint32 vertex_number;
+    unsigned long int vertex_number;
 
     /*  The total number of edges possible is n*(n+1)/2+n, where n is the     *
      *  vertex number. This corresponds to the complete graph K_n with        *
@@ -105,7 +104,7 @@ typedef struct tmpl_Graph {
      *  with v0 <= v1, that exist as edges in the graph. Since the total      *
      *  number of vertices is bounded by a 32-bit number, a 64-bit number is  *
      *  large enough to store the maximum number of edges for any such graph. */
-    tmpl_uint64 edge_number;
+    unsigned long int edge_number;
 
     /*  We then use a pointer to the edge structure to record the edges.      */
     tmpl_GraphEdge *edges;
@@ -131,7 +130,7 @@ typedef struct tmpl_Graph {
 extern void tmpl_Sort_Graph_Edges(tmpl_Graph **G);
 
 extern tmpl_Graph *
-tmpl_Create_Complete_Bipartite_Graph(tmpl_uint32 m, tmpl_uint32 n);
+tmpl_Create_Complete_Bipartite_Graph(unsigned long int m, unsigned long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -151,13 +150,13 @@ tmpl_Create_Complete_Bipartite_Graph(tmpl_uint32 m, tmpl_uint32 n);
  *      fail. Trying to access a NULL pointer may crash the program.          *
  ******************************************************************************/
 extern tmpl_Graph *
-tmpl_Create_Complete_Graph(tmpl_uint32 N);
+tmpl_Create_Complete_Graph(unsigned long int N);
 
 extern tmpl_Bool
 tmpl_Is_Graph_Simple(tmpl_Graph *G);
 
-extern tmpl_uint32
-tmpl_Degree_of_Vertex(tmpl_uint32);
+extern unsigned long int
+tmpl_Degree_of_Vertex(unsigned long int);
 
 #endif
 /*  End of include guard.                                                     */

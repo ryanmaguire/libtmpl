@@ -3,7 +3,6 @@
 
 #include <libtmpl/include/tmpl_bool.h>
 
-
 typedef struct tmpl_DoubleVector {
     double *data;
     unsigned long length;

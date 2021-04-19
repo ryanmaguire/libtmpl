@@ -1,13 +1,12 @@
 
-#include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_graph_theory.h>
 #include <stdlib.h>
 
-tmpl_Graph * tmpl_Create_Complete_Graph(tmpl_uint32 N)
+tmpl_Graph *tmpl_Create_Complete_Graph(unsigned long int N)
 {
     tmpl_Graph *G;
-    tmpl_uint32 k0, k1;
-    tmpl_uint64 current_edge;
+    unsigned long int k0, k1;
+    unsigned long int current_edge;
     tmpl_GraphEdge *E;
 
     G = malloc(sizeof(*G));

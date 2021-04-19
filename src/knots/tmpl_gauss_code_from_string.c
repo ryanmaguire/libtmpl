@@ -9,7 +9,7 @@
  *  Gauss code of the knot.                                                   */
 tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
 {
-    tmpl_uint64 i, ind;
+    unsigned long int i, ind;
     tmpl_VirtualKnot *K;
 
     /*  Allocate memory for our virtual knot pointer.                         */
@@ -93,7 +93,8 @@ tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
                 ++k;
             }
 
-	        (K->gauss_code[ind]).crossing_number = (tmpl_uint64)atoi(str + i);
+	        (K->gauss_code[ind]).crossing_number =
+                (unsigned long int)atoi(str + i);
 	        i = k;
         }
         else
@@ -139,7 +140,7 @@ tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
     }
 
     K->gauss_code = realloc(K->gauss_code, sizeof(*K->gauss_code)*ind);
-    K->number_of_crossings = (tmpl_uint64) (ind / 2);
+    K->number_of_crossings = (unsigned long int) (ind / 2);
 
     if ((ind % 2) != 0)
     {
