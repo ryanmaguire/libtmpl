@@ -97,7 +97,7 @@ tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern tmpl_ComplexDouble *
+extern void
 tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
                                    tmpl_ComplexDouble *out,
                                    unsigned long N, tmpl_Bool inverse);
