@@ -17,7 +17,7 @@ extern tmpl_DoubleVector *
 tmpl_Create_Empty_DoubleVector(unsigned long length);
 
 extern tmpl_DoubleVector *
-rssringoccs_Create_Zero_DoubleVector(unsigned long length);
+tmpl_Create_Zero_DoubleVector(unsigned long length);
 
 extern void
 tmpl_Destroy_DoubleVector(tmpl_DoubleVector *v);

@@ -64,4 +64,4 @@ tmpl_LDouble_Five_Point_Derivative(long double (*f)(long double),
                                    long double x, long double h);
 
 #endif
-/*  End of include guard: #ifndef _RSS_RINGOCCS_NUMERICAL_H_                  */
+/*  End of include guard: #ifndef __TMPL_NUMERICAL_H__                        */

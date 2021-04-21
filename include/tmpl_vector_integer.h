@@ -17,7 +17,7 @@ extern tmpl_ULongVector *
 tmpl_Create_Empty_ULongVector(unsigned long length);
 
 extern tmpl_ULongVector *
-rssringoccs_Create_Zero_ULongVector(unsigned long length);
+tmpl_Create_Zero_ULongVector(unsigned long length);
 
 extern void
 tmpl_Destroy_ULongVector(tmpl_ULongVector **v);
