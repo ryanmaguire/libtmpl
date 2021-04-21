@@ -230,11 +230,6 @@
 #define tmpl_Rad_To_Deg   57.29577951308232087
 #define tmpl_Rad_To_Deg_L 57.29577951308232087679815481L
 
-/*  The speed of light in km/s.                                               */
-#define tmpl_Speed_Of_Light_KMS_F  299792.4580F
-#define tmpl_Speed_Of_Light_KMS    299792.4580
-#define tmpl_Speed_Of_Light_KMS_L  299792.4580L
-
 /*  Macros for the largest values of float, double, and long double,          *
  *  respectively, that will not return INFINITY when exp(x) is computed.      */
 #define tmpl_Max_Float_Base_E    (FLT_MAX_10_EXP  * tmpl_Natural_Log_Of_10_F)
