@@ -33,6 +33,8 @@
  *  Output:                                                                   *
  *      endianness (tmpl_Endian):                                             *
  *          An enum data-type whose value corresponds to the endianness.      *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Use a union data type between a char array with 4 elements and an     *
  *      unsigned integer data type that is 4 chars wide. This is usually a    *
@@ -49,10 +51,7 @@
  *  1.) tmpl_bytes.h:                                                         *
  *          Header where tmpl_Endian enum data type is defined, and           *
  *          where the function's prototype is given.                          *
- *  2.) tmpl_integer.h:                                                       *
- *          Header file containing fixed-width integer data types for 32-bit  *
- *          and 64-bit integers.                                              *
- *  3.) limits.h:                                                             *
+ *  2.) limits.h:                                                             *
  *          Standard C library header file containing the CHAR_BIT macro      *
  *          which tells us how many bits are in one char.                     *
  ******************************************************************************
@@ -86,6 +85,8 @@
  *  2021/04/10: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
  *      more changes to comments or code unless something breaks.             *
+ *  2021/04/26:                                                               *
+ *      Removed tmpl_integer.h from dependencies to improve portability.      *
  ******************************************************************************/
 
 /*  Standard library file containing the CHAR_BIT macro and more.             */
@@ -93,9 +94,7 @@
 
 /*  Where the function's prototype and tmpl_Endian are defined.               */
 #include <libtmpl/include/tmpl_bytes.h>
-
-/*  32-bit and 64-bit fixed-width integer data types defined here.            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <stdio.h>
 
 /******************************************************************************
  *                             The Basic Idea                                 *
@@ -129,55 +128,31 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  array. With this we can see if the zeroth value of the array is 01,   *
      *  02, 03, or 04. This will tell us if we have little-endian or          *
      *  big-endian, or the rarer mixed-endian.                                */
+    union {
+        unsigned long int n;
+        unsigned char arr[sizeof(unsigned long int)];
+    } e;
 
-    if (CHAR_BIT == 8)
+    unsigned long int n, pow;
+
+    if (sizeof(unsigned long int) == 1)
+        return tmpl_UnknownEndian;
+
+    e.n = 0UL;
+    pow = 1UL << CHAR_BIT;
+    
+    for (n = 1; n < sizeof(unsigned long int); ++n)
     {
-        union {
-            /*  For 8-bit char, we'll use the tmpl_uint32 data type, which is *
-             *  typedef'd in tmpl_integer.h, to guarantee a 32-bit unsigned   *
-             *  integer data type.                                            */
-            tmpl_uint32 i;
-            char c[4];
-        } e = { 0x01020304 };
-
-        /*  Check the value of the zeroth element of the char array. If it    *
-         *  is 1 then we know we have big-endian. If it is 4, we have         *
-         *  little-endian. 2 and 3 correspond to mixed-endian, and anything   *
-         *  else means we could not determine the endianness.                 */
-        if (e.c[0] == 0x01)
-            return tmpl_BigEndian;
-        else if (e.c[0] == 0x04)
-            return tmpl_LittleEndian;
-        else if ((e.c[0] == 0x02) || (e.c[0] = 0x03))
-            return tmpl_MixedEndian;
-        else
-            return tmpl_UnknownEndian;
-    }
-    else if (CHAR_BIT == 16)
-    {
-        union {
-            /*  For 16-bit char, we'll use the tmpl_uint64 data type, which   *
-             *  is typedef'd in tmpl_integer.h, to guarantee a 64-bit         *
-             *  unsigned integer data type.                                   */
-            tmpl_uint64 i;
-            char c[4];
-        } e = { 0x0001000200030004 };
-
-        /*  Check the value of the zeroth element of the char array. If it    *
-         *  is 1 then we know we have big-endian. If it is 4, we have         *
-         *  little-endian. 2 and 3 correspond to mixed-endian, and anything   *
-         *  else means we could not determine the endianness.                 */
-        if (e.c[0] == 0x0001)
-            return tmpl_BigEndian;
-        else if (e.c[0] == 0x0004)
-            return tmpl_LittleEndian;
-        else if ((e.c[0] == 0x0002) || (e.c[0] = 0x0003))
-            return tmpl_MixedEndian;
-        else
-            return tmpl_UnknownEndian;
+        e.n += n * pow;
+        pow  = pow << CHAR_BIT;
     }
 
-    /*  For all other CHAR_BIT values, return unknown.                        */
+    if (e.arr[0] == 0)
+        return tmpl_LittleEndian;
+    else if (e.arr[0] == sizeof(unsigned long int) - 1)
+        return tmpl_BigEndian;
+    else if ((0 < e.arr[0]) && (e.arr[0] < sizeof(unsigned long int) - 1))
+        return tmpl_MixedEndian;
     else
         return tmpl_UnknownEndian;
 }
