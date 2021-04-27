@@ -114,6 +114,11 @@ typedef struct _tmpl_VirtualKnot {
   char *error_message;
 } tmpl_VirtualKnot;
 
+typedef struct _tmpl_CrossingIndices {
+    unsigned long int zeroth;
+    unsigned long int first;
+} tmpl_CrossingIndices;
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Are_Gauss_Tuples_Identical                                       *
@@ -242,6 +247,18 @@ extern tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str);
  *      None (void).                                                          *
  ******************************************************************************/
 extern void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K);
+
+extern tmpl_Bool
+tmpl_Is_Gauss_Code_Valid(tmpl_VirtualKnot *K);
+
+extern tmpl_CrossingIndices *
+tmpl_Find_Crossing_Indices(tmpl_VirtualKnot *K);
+
+extern void
+tmpl_Reidemeister_One_Reduction(tmpl_VirtualKnot *K);
+
+unsigned long int
+tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K);
 
 #endif
 /*  End of include guard.                                                     */
