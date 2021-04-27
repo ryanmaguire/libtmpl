@@ -38,7 +38,7 @@ float tmpl_Float_LambertW(float x)
     else if (x<-tmpl_Rcpr_Euler_E_F)
         return tmpl_NaN;
     else
-        return tmpl_Infinity;
+        return tmpl_Infinity_F;
 }
 
 double tmpl_Double_LambertW(double x)
