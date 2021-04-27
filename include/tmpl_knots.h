@@ -115,8 +115,8 @@ typedef struct _tmpl_VirtualKnot {
 } tmpl_VirtualKnot;
 
 typedef struct _tmpl_CrossingIndices {
-    unsigned long int zeroth;
-    unsigned long int first;
+    unsigned long int under;
+    unsigned long int over;
 } tmpl_CrossingIndices;
 
 /******************************************************************************
