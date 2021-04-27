@@ -4,18 +4,37 @@
 
 int main(void)
 {
-	char str[] = "O0+U1+O2+U0+O1+U2+";
+	char str[] = "O4+O0+U1+O2+O3+U3+U0+O1+U2+U4+";
 	int to_delete = 0;
 	tmpl_VirtualKnot *K = tmpl_Gauss_Code_From_String(str);
 
-	printf("Before:\t");
+	printf("Input Gauss Code: ");
 	tmpl_Print_Gauss_Code(K);
+
+	if (tmpl_Is_Gauss_Code_Valid(K))
+		puts("This is a valid Gauss code.\n");
+	else
+		puts("This is an invalid Gauss code.\n");
+
+	puts("Performing Reidemeister I Reductions...");
+	tmpl_Reidemeister_One_Reduction(K);
+	printf("New Gauss Code: ");
+	tmpl_Print_Gauss_Code(K);
+
+        if (tmpl_Is_Gauss_Code_Valid(K))
+                puts("This is a valid Gauss code.\n");
+        else
+                puts("This is an invalid Gauss code.\n");
+
 
 	printf("Deleting Crossing: %d\n", to_delete);
 	tmpl_Delete_Virtual_Knot_Crossing(K, to_delete);
 
-	printf("After:\t");
+	printf("After: ");
 	tmpl_Print_Gauss_Code(K);
+        if (tmpl_Is_Gauss_Code_Valid(K))
+                puts("This is a valid Gauss code.");
+
 	tmpl_Destroy_Virtual_Knot_Pointer(&K);
 
 	return 0;
