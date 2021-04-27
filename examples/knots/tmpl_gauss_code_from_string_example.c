@@ -16,16 +16,17 @@ int main(void)
 	else
 		puts("This is an invalid Gauss code.\n");
 
-	puts("Performing Reidemeister I Reductions...");
+	puts("Performing Reidemeister I Reductions.");
 	tmpl_Reidemeister_One_Reduction(K);
 	printf("New Gauss Code: ");
 	tmpl_Print_Gauss_Code(K);
 
         if (tmpl_Is_Gauss_Code_Valid(K))
-                puts("This is a valid Gauss code.\n");
+                puts("This is a valid Gauss code.");
         else
-                puts("This is an invalid Gauss code.\n");
+                puts("This is an invalid Gauss code.");
 
+	printf("Genus: %lu\n\n", tmpl_Virtual_Knot_Genus(K));
 
 	printf("Deleting Crossing: %d\n", to_delete);
 	tmpl_Delete_Virtual_Knot_Crossing(K, to_delete);
@@ -35,6 +36,7 @@ int main(void)
         if (tmpl_Is_Gauss_Code_Valid(K))
                 puts("This is a valid Gauss code.");
 
+	printf("Genus: %lu\n", tmpl_Virtual_Knot_Genus(K));
 	tmpl_Destroy_Virtual_Knot_Pointer(&K);
 
 	return 0;

@@ -1,6 +1,5 @@
 
 
-#include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_knots.h>
 #include <stdlib.h>
 
@@ -8,8 +7,8 @@ tmpl_CrossingIndices *
 tmpl_Find_Crossing_Indices(tmpl_VirtualKnot *K)
 {
     tmpl_CrossingIndices *Indices;
+    tmpl_GaussTuple *T;
     unsigned long int n, ind;
-    tmpl_Bool *has_been_set;
 
     if (K == NULL)
         return NULL;
@@ -18,21 +17,16 @@ tmpl_Find_Crossing_Indices(tmpl_VirtualKnot *K)
         return NULL;
 
     Indices = malloc(sizeof(*Indices) * K->number_of_crossings);
-    has_been_set = calloc(sizeof(*has_been_set), K->number_of_crossings);
 
     for (n = 0; n < 2UL * K->number_of_crossings; ++n)
     {
-        ind = (K->gauss_code[n]).crossing_number;
+        T = &(K->gauss_code[n]);
+        ind = T->crossing_number;
 
-        if (has_been_set[ind])
-        {
-            Indices[ind].zeroth = n;
-            has_been_set[ind] = tmpl_True;
-        }
+        if (T->crossing_type == tmpl_OverCrossing)
+            Indices[ind].over = n;
         else
-        {
-            Indices[ind].first = n;
-        }
+            Indices[ind].under = n;
     }
     return Indices;
 }
