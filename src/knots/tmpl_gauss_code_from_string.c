@@ -85,7 +85,7 @@ tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
         }
         ++i;
 
-        if isdigit(str[i])
+        if (isdigit(str[i]))
         {
 	        size_t k = i;
             while (isdigit(str[k]))
