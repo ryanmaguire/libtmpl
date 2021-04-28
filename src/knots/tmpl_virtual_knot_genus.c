@@ -117,6 +117,7 @@ tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K)
     }
 
     free(have_visited);
+    tmpl_Destroy_Crossing_Indices(&Indices);
 
     faces = faces - 2UL;
     genus = (K->number_of_crossings - faces) / 2UL;

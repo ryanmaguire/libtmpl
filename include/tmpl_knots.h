@@ -61,6 +61,8 @@
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
+#include <libtmpl/include/tmpl_polynomial.h>
+
 /*  We'll store a knot in a computer via it's Gauss code. This is a sequence  *
  *  of ordered triples of the form (n, t, s) where n is an unsigned integer   *
  *  and t and s represent the crossing number and sign, respectively. We'll   *
@@ -118,6 +120,24 @@ typedef struct _tmpl_CrossingIndices {
     unsigned long int under;
     unsigned long int over;
 } tmpl_CrossingIndices;
+
+typedef struct _tmpl_KnotCrossingArcTuple {
+    unsigned long int arc_travelling_on;
+    unsigned long int arc_on_left;
+    unsigned long int arc_on_right;
+    unsigned long int crossing_number;
+} tmpl_KnotArcCrossingTuple;
+
+typedef struct _tmpl_KnotArcTuple {
+    tmpl_GaussTuple *start;
+    tmpl_GaussTuple *end;
+} tmpl_KnotArcTuple;
+
+typedef struct _tmpl_KnotArcs {
+    tmpl_KnotArcCrossingTuple *arc_crossings;
+    tmpl_KnotArcTuple *arcs;
+    unsigned long int number_of_crossings;
+} tmpl_KnotArcs;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -259,6 +279,15 @@ tmpl_Reidemeister_One_Reduction(tmpl_VirtualKnot *K);
 
 unsigned long int
 tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K);
+
+extern tmpl_PolynomialZ *
+tmpl_Alexander_Polynomial(tmpl_VirtualKnot *K);
+
+extern tmpl_KnotArcs *
+tmpl_Compute_Knot_Arcs(tmpl_VirtualKnot *K);
+
+extern void
+tmpl_Destroy_Crossing_Indices(tmpl_CrossingIndices **Indices);
 
 #endif
 /*  End of include guard.                                                     */
