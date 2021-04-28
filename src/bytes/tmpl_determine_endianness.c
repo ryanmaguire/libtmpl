@@ -36,15 +36,34 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use a union data type between a char array with 4 elements and an     *
- *      unsigned integer data type that is 4 chars wide. This is usually a    *
- *      32-bit unsigned int, but may vary depending on your platform. We'll   *
- *      check the size of char with the CHAR_BIT macro from limits.h. If      *
- *      this is 8 (which it probably is), we'll use a tmpl_uint32 which is a  *
- *      32-bit unsigned integer data type from tmpl_integer.h. If CHAR_BIT is *
- *      16, we'll use a tmpl_uint64 data type. If CHAR_BIT is neither 8 nor   *
- *      16 (which is incredibly rare), we give up and return                  *
- *      tmpl_UnknownEndian.                                                   *
+ *      Use a union data type between an unsigned long int and an unsigned    *
+ *      char array that has sizeof(unsigned long int) many elements. Set the  *
+ *      unsigned long int part to the number (n-1)...43210, where n is the    *
+ *      value of sizeof(unsigned long int). This value is written in base     *
+ *      2^CHAR_BIT, where CHAR_BIT is the number of bits in one byte, a       *
+ *      value defined in via the macro CHAR_BIT in limits.h. We then access   *
+ *      the char array part of the union and see which element is 0 and which *
+ *      element is n-1. This tells us the endianness. Explicitly, if we let   *
+ *      b = 2^CHAR_BIT, and if we set n = sizeof(unsigned long int), then we  *
+ *      want the number:                                                      *
+ *                                                                            *
+ *          x = (n-1) * N^(n-1) + (n-2) * N^(n-2) + ... + 2 * N^2 + 1 * N + 0 *
+ *                                                                            *
+ *      Since a union has all of its members share the same chunck of memory, *
+ *      the char array inside the union would then interpret this as:         *
+ *                                                                            *
+ *          -------------------------------                                   *
+ *          | n-1 | n-2 | ... |  1  |  0  |                                   *
+ *          -------------------------------                                   *
+ *                                                                            *
+ *      For big endian systems, and:                                          *
+ *                                                                            *
+ *          -------------------------------                                   *
+ *          |  0  |  1  | ... | n-1 | n-2 |                                   *
+ *          -------------------------------                                   *
+ *                                                                            *
+ *      For little endian systems. By checking the zeroth element of this     *
+ *      array, we can determine the endianness.                               *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -87,6 +106,9 @@
  *      more changes to comments or code unless something breaks.             *
  *  2021/04/26:                                                               *
  *      Removed tmpl_integer.h from dependencies to improve portability.      *
+ *      Using a char array that is sizeof(unsigned long int) in size, rather  *
+ *      than 4 or 8 elements wide, to improve portability. The only           *
+ *      assumption now is that sizeof(unsigned long int) > 1.                 *
  ******************************************************************************/
 
 /*  Standard library file containing the CHAR_BIT macro and more.             */
@@ -94,64 +116,94 @@
 
 /*  Where the function's prototype and tmpl_Endian are defined.               */
 #include <libtmpl/include/tmpl_bytes.h>
-#include <stdio.h>
-
-/******************************************************************************
- *                             The Basic Idea                                 *
- ******************************************************************************
- *  We'll use union to have an unsigned integer and a char array share the    *
- *  same memory. We'll then set the integer part to the hexidecimal number    *
- *  0x01020304 (for platforms with CHAR_BIT = 8). The char array will         *
- *  see this as follows for little-endian systems:                            *
- *                                                                            *
- *          -----------------------------                                     *
- *          |  04  |  03  |  02  |  01  |                                     *
- *          -----------------------------                                     *
- *                                                                            *
- *  Whereas on big-endian the char array will see:                            *
- *                                                                            *
- *          -----------------------------                                     *
- *          |  01  |  02  |  03  |  04  |                                     *
- *          -----------------------------                                     *
- *                                                                            *
- *  By checking the zeroth element of the array, we can determine endianness. *
- ******************************************************************************/
 
 /*  Function for determining the endianness of the system.                    */
 tmpl_Endian tmpl_Determine_Endianness(void)
 {
     /*  Use the union C-keyword to create a data-type that has an unsigned    *
-     *  integer and a char array consisting of four elements which share the  *
-     *  same address in memory. By setting the integer portion to 0x01020304  *
-     *  we can use the fact that the char array c is occupying the            *
-     *  same address as the unsigned integer and interpret the value as a char*
-     *  array. With this we can see if the zeroth value of the array is 01,   *
-     *  02, 03, or 04. This will tell us if we have little-endian or          *
-     *  big-endian, or the rarer mixed-endian.                                */
+     *  long int and an unsigned char array share the same address in memory. *
+     *  We'll then set the unsigned long int value to the number              *
+     *  (n-1)(n-2)...43210, written in base 2^CHAR_BIT, where n is the value  *
+     *  of sizeof(unsigned long int). Pretending we're in base-10 for the     *
+     *  moment, and sizeof(unsigned long int) = 8, we set the unsigned long   *
+     *  int portion of the union to the number 76543210, and then examine the *
+     *  the unsigned char array part of the union. Since the char array       *
+     *  shares the same memory as the unsigned long int, this will            *
+     *  interpreted as either:                                                *
+     *                                                                        *
+     *      ---------------------------------                                 *
+     *      | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |                                 *
+     *      ---------------------------------                                 *
+     *                                                                        *
+     *  For big endian systems, and:                                          *
+     *                                                                        *
+     *      ---------------------------------                                 *
+     *      | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |                                 *
+     *      ---------------------------------                                 *
+     *                                                                        *
+     *  For little endian systems. By checking the zeroth element of this     *
+     *  array, we can determine the endianness.                               */
     union {
-        unsigned long int n;
+        unsigned long int x;
         unsigned char arr[sizeof(unsigned long int)];
     } e;
 
-    unsigned long int n, pow;
+    /*  Letting n = sizeof(unsigned long int), we'll write (n-1)...43210 via  *
+     *  the sum:                                                              *
+     *      (n-1) * b^(n-1) + ... + 2 * b^2 + 1 * b + 0                       *
+     *  where b is the base, b = 2^CHAR_BIT. We'll need a variable for        *
+     *  indexing this sum and computing these powers. Declare these here. The *
+     *  ISO C90 standard forbids mixed-declarations with code, hence we place *
+     *  declarations at the top.                                              */
+    unsigned long int k, pow;
 
+    /*  There is one, extremely rare, exceptional case that needs to be       *
+     *  handled separately. If sizeof(unsigned long int) = 1, then the char   *
+     *  array will have one element, which is the same number as the unsigned *
+     *  long int value. Because of this we would be unable to determine the   *
+     *  endianness. If this is true, return tmpl_UnknownEndian. I know of no  *
+     *  systems where sizeof(unsigned long int) = 1, but the ISO C90 standard *
+     *  does NOT specify that this is impossible, so we do this for the sake  *
+     *  of portability.                                                       */
     if (sizeof(unsigned long int) == 1)
         return tmpl_UnknownEndian;
 
-    e.n = 0UL;
+    /*  Initialize the unsigned long int part of the union to 0. We'll        *
+     *  compute the number (n-1)...43210 (written in base 2^CHAR_BIT) using   *
+     *  a sum later. The suffix UL means unsigned long, which is the data     *
+     *  type of e.x.                                                          */
+    e.x = 0UL;
+
+    /*  To compute 2^CHAR_BIT we can either multiply by 2 CHAR_BIT many times *
+     *  or use a simple bit-wise trick. The number 2^CHAR_BIT is just         *
+     *  100...00, where there are CHAR_BIT many zeroes, when written in       *
+     *  binary. We can write this number using bit-shifting. The number       *
+     *  1 << N is the number 1 with N zeroes after it, in binary. So we can   *
+     *  write 2^CHAR_BIT via 1 << CHAR_BIT. The suffix UL means unsigned long *
+     *  which is the data type of pow.                                        */
     pow = 1UL << CHAR_BIT;
     
-    for (n = 1; n < sizeof(unsigned long int); ++n)
+    /*  Compute the sum (n-1)*b^(n-1) + ... + 2*b^2 + 1*b + 0 via a for loop. */
+    for (k = 1UL; k < sizeof(unsigned long int); ++k)
     {
-        e.n += n * pow;
+        e.x += k * pow;
+
+        /*  Given (2^CHAR_BIT)^k, we can get (2^CHAR_BIT)^(k+1) by taking     *
+         *  (2^CHAR_BIT)^k and bit-shifting it CHAR_BIT to the left. In       *
+         *  decimal, if we had 100, and wanted the next power of ten, we      *
+         *  simply add on another zero (or "shift" the one to the left)       *
+         *  giving us 1000. This is the base 2^CHAR_BIT equivalent.           */
         pow  = pow << CHAR_BIT;
     }
 
-    if (e.arr[0] == 0)
+    /*  Now that the unsigned int part of our union is set to the appropriate *
+     *  value, treat it as an unsigned char array by accessing this element   *
+     *  of the union. Check the zeroth element to determine the endianness.   */
+    if (e.arr[0] == 0U)
         return tmpl_LittleEndian;
-    else if (e.arr[0] == sizeof(unsigned long int) - 1)
+    else if (e.arr[0] == sizeof(unsigned long int) - 1U)
         return tmpl_BigEndian;
-    else if ((0 < e.arr[0]) && (e.arr[0] < sizeof(unsigned long int) - 1))
+    else if ((0U < e.arr[0]) && (e.arr[0] < sizeof(unsigned long int) - 1U))
         return tmpl_MixedEndian;
     else
         return tmpl_UnknownEndian;
