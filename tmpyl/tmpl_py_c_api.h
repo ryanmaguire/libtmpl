@@ -12,7 +12,7 @@ typedef struct _tmpl_Generic_Function_Obj {
     long double (*ldouble_func)(long double);
     tmpl_ComplexDouble (*cdouble_from_real_func)(double);
     tmpl_ComplexDouble(*cdouble_from_complex_func)(tmpl_ComplexDouble);
-    char *func_name;
+    const char *func_name;
 } tmpl_Generic_Function_Obj;
 
 /*  This function frees the memory allocated to a pointer by malloc when the  *

@@ -4,6 +4,7 @@
 #include "tmpl_py_c_api.h"
 #include "tmpl_npy_c_api.h"
 #include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_complex.h>
 #include <libtmpl/include/tmpl_math.h>
 
 #include <Python.h>
@@ -27,7 +28,8 @@ static PyObject *besselI0(PyObject *self, PyObject *args)
     c_funcs.double_func = tmpl_Double_Bessel_I0;
     c_funcs.ldouble_func = tmpl_LDouble_Bessel_I0;
     c_funcs.cdouble_from_real_func = NULL;
-    c_funcs.cdouble_from_complex_func = NULL;
+    c_funcs.cdouble_from_complex_func = tmpl_CDouble_Bessel_I0;
+    c_funcs.func_name = "BesselI0";
 
     return tmpl_Get_Py_Func_From_C(self, args, &c_funcs);
 }
