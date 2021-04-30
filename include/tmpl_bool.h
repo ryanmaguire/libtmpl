@@ -21,7 +21,7 @@
  *  Purpose:                                                                  *
  *      Define bool, false, and true for C89/C90 compilers. C89/C90 does      *
  *      not define such a data type. Booleans were first introduced in C99.   *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      This code is identical to the code I wrote for rss_ringoccs, only the *
  *      rssringoccs titles have been replaced with tmpl. rss_ringoccs is also *
  *      released under GPL3.                                                  *
