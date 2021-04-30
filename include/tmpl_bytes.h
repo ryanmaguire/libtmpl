@@ -79,9 +79,10 @@ typedef enum {
 } tmpl_Endian;
 
 /*  This part of libtmpl is used in the rss_ringoccs library for reading RSR  *
- *  binary files. For most functions, if a platform is neither little-endian  *
- *  nor big-endian, nothing can be done. That is, there's no attempts to mess *
- *  with mixed-endian systems. Personally, I've never come across such things.*/
+ *  binary files. To read those files requires your platform to be either     *
+ *  little-endian or big-endian. That is, there's no attempts to mess with    *
+ *  mixed-endian systems. All of the functions defined in this header file    *
+ *  should work on mixed-endian, but have not been tested on such platforms.  */
 
 /******************************************************************************
  *  Function:                                                                 *
