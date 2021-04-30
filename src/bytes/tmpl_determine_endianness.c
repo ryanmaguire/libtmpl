@@ -220,7 +220,9 @@ tmpl_Endian tmpl_Determine_Endianness(void)
         return tmpl_UnknownEndian;
 #endif
 /*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
+
     }
+    /* End of if (sizeof(unsigned long int) == 1).                            */
 
     /*  Initialize the unsigned long int part of the union to 0. We'll        *
      *  compute the number (n-1)...43210 (written in base 2^CHAR_BIT) using   *
