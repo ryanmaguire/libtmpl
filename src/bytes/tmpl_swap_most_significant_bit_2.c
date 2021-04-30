@@ -33,14 +33,16 @@
  *      files for the NASA Cassini mission which had big endianness, and read *
  *      them on little endian platforms.                                      *
  *  Arguments:                                                                *
- *      ptr1 (char *):                                                        *
+ *      ptr (char *):                                                         *
  *          A pointer to a char array containing two elements.                *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Use the same method as tmpl_Swap_Bytes, but for a pointer to an array *
  *      rather than two char pointers.                                        *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      It is assumed the char pointer has had its memory sufficiently        *
  *      allocated and initialized before being passed to this function.       *
  *      Failure to do so may result in a segmentation fault as the function   *
@@ -82,6 +84,9 @@
  *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/04/30: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  The function prototype is found here.                                     */
@@ -90,8 +95,7 @@
 /*  Function for swapping the values in a char array with two elements.       */
 void tmpl_Swap_Most_Significant_Bit_2(char *ptr)
 {
-    /*  We'll use a temporary variable for storing the zeroth element of the  *
-     *  array.                                                                */
+    /*  We'll use a temporary variable to store the zeroth element.           */
     char tmp;
 
     /*  Grab the zeroth element of ptr. As mentioned in the tmpl_Swap_Bytes   *

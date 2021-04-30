@@ -100,7 +100,7 @@ int main(void)
     printf("After: %lu\n", u.x);
 
 #else
-#error "CHAR_BIT is neither 8 nor 16. Aborting."
+    puts("CHAR_BIT is neither 8 nor 16. Aborting.");
 #endif
 
     return 0;

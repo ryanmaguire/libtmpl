@@ -22,21 +22,8 @@
  *      Provide tools for swapping bytes of char pointers and for determining *
  *      the endianness of your platform. This is useful for reading binary    *
  *      files, but also learning about how computers work and store numbers.  *
- *  NOTES:                                                                    *
- *      It is assumed a char is either 8 bits or 16 bits. This is probably    *
- *      the case for your computer. The only devices I know of where this may *
- *      not be true are hand-held calculators. So don't try to use            *
- *      libtmpl on those, I suppose. If CHAR_BITS (defined in limits.h)       *
- *      is neither of these, the tmpl_Determine_Endianness function will      *
- *      return tmpl_UnknownEndian. This part of the library is needed for use *
- *      of the ieee754 part of libtmpl. The ieee754 functions can be ignored  *
- *      by compiling without the ieee754 option set to false. If your device  *
- *      does have mixed-endian, or has CHAR_BITS not equal to 8 or 16, but    *
- *      you would still like to use libtmpl, raise an issue at:               *
- *        https://github.com/ryanmaguire/libtmpl/issues                       *
- *      I don't have such things, and will not meddle in emulation unless     *
- *      there's an actual need.                                               *
  *                                                                            *
+ *  Notes:                                                                    *
  *      This file is a fork of the bytes library I wrote for rss_ringoccs.    *
  *      rss_ringoccs is also released under the GPL 3.                        *
  ******************************************************************************
@@ -74,7 +61,7 @@
  *      Updated doc-strings for functions.                                    *
  *  2021/04/05: Ryan Maguire                                                  *
  *      Added source code and example code locations to comments.             *
- *  2021/04/08: Ryan Maguire                                                  *
+ *  2021/04/30: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
  *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
@@ -107,10 +94,14 @@ typedef enum {
  *      tmpl_Endian endianness:                                               *
  *          A tmpl_Endian data type whose value corresponds to the            *
  *          endianness of your system.                                        *
- *  NOTES:                                                                    *
- *      This function assumes CHAR_BITS (defined in limits.h) is either       *
- *      8 or 16. If this is not true, this function automatically             *
- *      returns tmpl_UnknownEndian.                                           *
+ *  Notes:                                                                    *
+ *      This code needs sizeof(unsigned long int) > 1, unless the C99         *
+ *      standard (or higher) is supported, in which case it is needed that    *
+ *      sizeof(unsigned long long int) > 1. This is almost always true. On    *
+ *      most unix-like platforms (GNU, Linux, FreeBSD, macOS)                 *
+ *      sizeof(unsigned long int) = 8, and on Microsoft Windows we find       *
+ *      sizeof(unsigned long int) = 4. If both long and long long have sizeof *
+ *      equal to 1, this function returns tmpl_UnknownEndian.                 *
  *  Source Code:                                                              *
  *      libtmpl/src/bytes/tmpl_determine_endianness.c                         *
  *  Examples:                                                                 *

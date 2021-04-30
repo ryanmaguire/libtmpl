@@ -41,10 +41,10 @@ int main(void)
      *  sizeof(type) = 2. This is usually a short int, but can vary on other  *
      *  platforms, and may not exist at all on some. If we can't find an      *
      *  integer data type with sizeof equal to 2, we'll print this out.       */
-    if (sizeof(unsigned short) == 2)
+    if (sizeof(unsigned short int) == 2)
     {
         union {
-            unsigned short x;
+            unsigned short int x;
             char c[2];
         } u = { 0xFF00 };
 
@@ -73,10 +73,10 @@ int main(void)
         /*  Print the result after the swap.                                  */
         printf("After: %u\n", u.x);
     }
-    else if (sizeof(unsigned long) == 2)
+    else if (sizeof(unsigned long int) == 2)
     {
         union {
-            unsigned long x;
+            unsigned long int x;
             char c[2];
         } u = { 0xFF00 };
 
@@ -94,7 +94,7 @@ int main(void)
      *  check for compliance with the C99 standard before trying to examine   *
      *  the long long data type, otherwise we may get a compiler error.       */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-    else if (sizeof(unsigned long long) == 2)
+    else if (sizeof(unsigned long long int) == 2)
     {
         union {
             unsigned long long x;

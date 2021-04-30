@@ -35,9 +35,11 @@
  *          Another pointer to a char.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Use a temporary char variable "tmp" to swap the two values.           *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      This code is a duplicate of the code I originally wrote for           *
  *      rss_ringoccs. That library is also released under GPL3.               *
  ******************************************************************************
@@ -74,6 +76,9 @@
  *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/04/30: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  Function prototype is declared here.                                      */
