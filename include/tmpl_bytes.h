@@ -92,7 +92,7 @@ typedef enum {
  *  Arguments:                                                                *
  *      None (void).                                                          *
  *  Output:                                                                   *
- *      tmpl_Endian endianness:                                               *
+ *    endianness (tmpl_Endian):                                               *
  *          A tmpl_Endian data type whose value corresponds to the            *
  *          endianness of your system.                                        *
  *  Notes:                                                                    *
@@ -116,9 +116,9 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *  Purpose:                                                                  *
  *      Swaps the values of two char pointers.                                *
  *  Arguments:                                                                *
- *      char *ptr1:                                                           *
+ *      ptr1 (char *):                                                        *
  *          The first pointer to a char.                                      *
- *      char *ptr2:                                                           *
+ *      ptr2 (char *):                                                        *
  *          The second pointer to a char.                                     *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -136,7 +136,7 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *      Changes the endianness of a data type that is two chars long. This    *
  *      is usually a "short". Similar functions are provided for 4 and 8.     *
  *  Arguments:                                                                *
- *      char *ptr:                                                            *
+ *      ptr (char *):                                                         *
  *          A pointer to a char array.                                        *
  *  Output:                                                                   *
  *      None (void).                                                          *
