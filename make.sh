@@ -17,16 +17,10 @@ USEOMP=1
 for arg in "$@"; do
     if [ "$arg" == "" ]; then
         break
-    elif [ "$arg" == "-cc=gcc" ]; then
-        CC=gcc
-    elif [ "$arg" == "-cc=tcc" ]; then
-        CC=tcc
-    elif [ "$arg" == "-cc=pcc" ]; then
-        CC=pcc
-    elif [ "$arg" == "-cc=clang" ]; then
-        CC=clang
-    elif [ "$arg" == "-std" ]; then
-        STDVER=$arg
+    elif [[ "$arg" == *"-cc"* ]]; then
+        CC=${arg#*=}
+    elif [[ "$arg" == *"-std"* ]]; then
+    	STDVER=$arg
     elif [ "$arg" == "-nomp" ]; then
         USEOMP=0
     else

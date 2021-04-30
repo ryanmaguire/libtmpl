@@ -172,7 +172,55 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  does NOT specify that this is impossible, so we do this for the sake  *
      *  of portability.                                                       */
     if (sizeof(unsigned long int) == 1)
+    {
+
+        /*  If your compiler support C99 or higher, we can try this scheme    *
+         *  with unsigned long long int, which should definitely have sizeof  *
+         *  greater than 1 (but again, is NOT required to). Check this with   *
+         *  the standard macro __STDC_VERSION__.                              */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+        /*  If sizeof unsigned long long int is also 1, then there's really   *
+         *  nothing that can be done. Return tmpl_UnknownEndian.              */
+        if (sizeof(unsigned long long int) == 1)
+            return tmpl_UnknownEndian;
+
+        /*  See the comments below for an explanation of this algorithm. This *
+         *  is an exact copy of the code after the preprocessor #if statement *
+         *  but with unsigned long long int instead of unsigned long int.     */
+        union {
+            unsigned long long int x;
+            unsigned char arr[sizeof(unsigned long long int)];
+        } ell;
+
+        unsigned long long int powll, kll;
+
+        ell.x = 0ULL;
+        powll = 1ULL << CHAR_BIT;
+
+        for (kll = 1ULL; k < sizeof(unsigned long long int); ++k)
+        {
+            ell.x = kll * powll;
+            pow = pow << CHAR_BIT;
+        }
+
+        if (ell.arr[0] == 0U)
+            return tmpl_LittleEndian;
+        else if (ell.arr[0] == sizeof(unsigned long long int) - 1U)
+            return tmpl_BigEndian;
+        else if (ell.arr[0] < sizeof(unsigned long long int) - 1U)
+            return tmpl_MixedEndian;
+        else
+            return tmpl_UnknownEndian;
+
+#else
+    /*  If we get here, sizeof(unsigned long int) = 1 and your compiler does  *
+     *  not support the C99, or higher, standard so unsigned long long int    *
+     *  may not be defined. Return tmpl_UnknownEndian.                        */
         return tmpl_UnknownEndian;
+#endif
+/*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
+    }
 
     /*  Initialize the unsigned long int part of the union to 0. We'll        *
      *  compute the number (n-1)...43210 (written in base 2^CHAR_BIT) using   *
