@@ -10,16 +10,34 @@
 
 #   Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
 #   on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
-if [ "$1" == "" ]; then
-    CC=gcc
-else
-    CC=$1
-fi
+CC=gcc
+STDVER="-std=c89"
+USEOMP=1
 
-if [ "$2" == "" ]; then
-    STDVER="-std=c89 -ansi"
-else
-    STDVER=$2
+for arg in "$@"; do
+    if [ "$arg" == "" ]; then
+        break
+    elif [ "$arg" == "-cc=gcc" ]; then
+        CC=gcc
+    elif [ "$arg" == "-cc=tcc" ]; then
+        CC=tcc
+    elif [ "$arg" == "-cc=pcc" ]; then
+        CC=pcc
+    elif [ "$arg" == "-cc=clang" ]; then
+        CC=clang
+    elif [ "$arg" == "-std" ]; then
+        STDVER=$arg
+    elif [ "$arg" == "-nomp" ]; then
+        USEOMP=0
+    else
+        echo "Invalid argument"
+        echo "$arg"
+        exit 0
+    fi
+done
+
+if [ $USEOMP == 1 ]; then
+    STDVER="$STDVER -fopenmp"
 fi
 
 # Name of the created Share Object file (.so).
@@ -35,7 +53,11 @@ SODIR="/usr/local/lib"
 # -lm means link against the standard math library.
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
-LinkerArgs="-O3 -I../ -flto -fopenmp -shared -o $SONAME -lm"
+if [ $USEOMP == 1 ]; then
+    LinkerArgs="-O3 -I../ -flto -fopenmp -shared -o $SONAME -lm"
+else
+    LinkerArgs="-O3 -I../ -flto -shared -o $SONAME -lm"
+fi
 
 # Location where the .h files will be stored.
 INCLUDE_TARGET=/usr/local/include/libtmpl
@@ -50,7 +72,7 @@ DET_END_FILE=./det_end.c
 DET_END_EXEC=det_end_out
 
 if [ $CC == "gcc" ]; then
-    CArgs1="$STDVER -fopenmp -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
     CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"

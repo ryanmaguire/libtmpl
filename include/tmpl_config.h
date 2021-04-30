@@ -58,6 +58,12 @@
 #ifndef __TMPL_CONFIG_H__
 #define __TMPL_CONFIG_H__
 
+#ifdef _OPENMP
+#define __TMPL_USING_OPENMP__ 1
+#else
+#define __TMPL_USING_OPENMP__ 0
+#endif
+
 /*  The C99 standard defines the header file stdint.h. It includes            *
  *  fixed-width integer data types, which is especially useful when writing   *
  *  code for IEEE754 floating point arithmetic. If your compiler supports the *
