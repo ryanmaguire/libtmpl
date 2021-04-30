@@ -41,13 +41,13 @@
  *      unsigned long int part to the number (n-1)...43210, where n is the    *
  *      value of sizeof(unsigned long int). This value is written in base     *
  *      2^CHAR_BIT, where CHAR_BIT is the number of bits in one byte, a       *
- *      value defined in via the macro CHAR_BIT in limits.h. We then access   *
+ *      value defined in the macro CHAR_BIT in limits.h. We then access       *
  *      the char array part of the union and see which element is 0 and which *
  *      element is n-1. This tells us the endianness. Explicitly, if we let   *
  *      b = 2^CHAR_BIT, and if we set n = sizeof(unsigned long int), then we  *
  *      want the number:                                                      *
  *                                                                            *
- *          x = (n-1) * N^(n-1) + (n-2) * N^(n-2) + ... + 2 * N^2 + 1 * N + 0 *
+ *          x = (n-1) * b^(n-1) + (n-2) * b^(n-2) + ... + 2 * b^2 + 1 * b + 0 *
  *                                                                            *
  *      Since a union has all of its members share the same chunck of memory, *
  *      the char array inside the union would then interpret this as:         *
@@ -64,6 +64,12 @@
  *                                                                            *
  *      For little endian systems. By checking the zeroth element of this     *
  *      array, we can determine the endianness.                               *
+ *  Notes:                                                                    *
+ *      In the extremely rare case where sizeof(unsigned long int) = 1, this  *
+ *      function cannot compute the endianness. sizeof(unsigned long int) = 1 *
+ *      is so rare, I know of no systems where this is true. The C standard   *
+ *      does not forbid this, however, so it's worth mentioning. In this case *
+ *      tmpl_UnknownEndian is returned.                                       *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -128,7 +134,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  moment, and sizeof(unsigned long int) = 8, we set the unsigned long   *
      *  int portion of the union to the number 76543210, and then examine the *
      *  the unsigned char array part of the union. Since the char array       *
-     *  shares the same memory as the unsigned long int, this will            *
+     *  shares the same memory as the unsigned long int, this will be         *
      *  interpreted as either:                                                *
      *                                                                        *
      *      ---------------------------------                                 *
@@ -191,9 +197,9 @@ tmpl_Endian tmpl_Determine_Endianness(void)
         /*  Given (2^CHAR_BIT)^k, we can get (2^CHAR_BIT)^(k+1) by taking     *
          *  (2^CHAR_BIT)^k and bit-shifting it CHAR_BIT to the left. In       *
          *  decimal, if we had 100, and wanted the next power of ten, we      *
-         *  simply add on another zero (or "shift" the one to the left)       *
+         *  simply add on another zero (or "shift" one to the left)           *
          *  giving us 1000. This is the base 2^CHAR_BIT equivalent.           */
-        pow  = pow << CHAR_BIT;
+        pow = pow << CHAR_BIT;
     }
 
     /*  Now that the unsigned int part of our union is set to the appropriate *

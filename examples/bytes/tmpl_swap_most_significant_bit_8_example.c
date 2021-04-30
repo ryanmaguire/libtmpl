@@ -87,7 +87,7 @@ int main(void)
     printf("After: %lu\n", u.x);
 
 #else
-#error "CHAR_BIT is not 8. Aborting."
+    puts("CHAR_BIT is not 8. Aborting.");
 #endif
 
     return 0;

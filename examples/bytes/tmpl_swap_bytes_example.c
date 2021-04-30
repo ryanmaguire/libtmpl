@@ -59,7 +59,7 @@
 /*  Function for testing the tmpl_Swap_Bytes function and showing basic use.  */
 int main(void)
 {
-    /*  Declare two char variables to test.                                   */
+    /*  Declare two unsigned char variables to test.                          */
     unsigned char c0, c1;
 
     /*  Set the char values to whatever you'd like.                           */

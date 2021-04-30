@@ -80,7 +80,8 @@ int main(void)
         char c[2];
     } u = { 0xFFFF0000 };
 #else
-#error "CHAR_BIT is neither 8 nor 16. Aborting."
+    puts("CHAR_BIT is neither 8 nor 16. Aborting.");
+    return 0;
 #endif
 
     /*  Print the result before the swap.                                     */

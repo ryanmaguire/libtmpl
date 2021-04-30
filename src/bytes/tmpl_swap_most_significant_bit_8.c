@@ -33,10 +33,12 @@
  *      files for the NASA Cassini mission which had big endianness, and read *
  *      them on little endian platforms.                                      *
  *  Arguments:                                                                *
- *      ptr1 (char *):                                                        *
+ *      ptr (char *):                                                         *
  *          A pointer to a char array containing eight elements.              *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      tmpl_Swap_Bytes (tmpl_bytes.h).                                       *
  *  Method:                                                                   *
  *      Use tmpl_Swap_Bytes four times on the elements. The input/output      *
  *      scheme is as follows:                                                 *
@@ -89,6 +91,9 @@
  *  2021/02/11: Ryan Maguire                                                  *
  *      Added comments and license.                                           *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/04/30: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
+ *      more changes to comments or code unless something breaks.             *
  ******************************************************************************/
 
 /*  The function prototype is found here.                                     */
