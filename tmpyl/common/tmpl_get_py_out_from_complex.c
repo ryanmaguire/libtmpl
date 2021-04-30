@@ -1,6 +1,6 @@
 
 #include <libtmpl/include/tmpl_complex.h>
-#include "tmpl_py_c_api.h"
+#include "tmpyl_common.h"
 #include <Python.h>
 
 PyObject *

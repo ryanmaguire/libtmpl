@@ -1,6 +1,5 @@
 
-#include "tmpl_py_c_api.h"
-#include <Python.h>
+#include "tmpyl_common.h"
 
 /*  This function frees the memory allocated to a pointer by malloc when the  *
  *  corresponding variable is destroyed at the Python level.                  */

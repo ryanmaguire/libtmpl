@@ -35,7 +35,7 @@ SODIR="/usr/local/lib"
 # -lm means link against the standard math library.
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
-LinkerArgs="-O3 -I../ -flto -shared -o $SONAME -lm"
+LinkerArgs="-O3 -I../ -flto -fopenmp -shared -o $SONAME -lm"
 
 # Location where the .h files will be stored.
 INCLUDE_TARGET=/usr/local/include/libtmpl
@@ -50,7 +50,7 @@ DET_END_FILE=./det_end.c
 DET_END_EXEC=det_end_out
 
 if [ $CC == "gcc" ]; then
-    CArgs1="$STDVER -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
+    CArgs1="$STDVER -fopenmp -pedantic -pedantic-errors -Wall -Wextra -Wpedantic"
     CArgs2="-Wmisleading-indentation -Wmissing-field-initializers -Wconversion"
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
