@@ -1,6 +1,6 @@
 
 #include <Python.h>
-#include "tmpl_py_c_api.h"
+#include "tmpyl_common.h"
 
 PyObject *
 tmpl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func)

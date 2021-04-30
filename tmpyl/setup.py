@@ -13,12 +13,24 @@ for filename in os.listdir("./"):
     else:
         continue
 
+for filename in os.listdir("./common/"):
+    if filename.endswith(".c"):
+        source_files.append("./common/%s" % filename)
+    else:
+        continue
+
+for filename in os.listdir("./special_functions/"):
+    if filename.endswith(".c"):
+        source_files.append("./special_functions/%s" % filename)
+    else:
+        continue
+
 setup(name='tmpyl',
       version='0.1',
       description='Common math and physics functions',
       author='Ryan Maguire',
       ext_modules=[
-          Extension('special_functions',
+          Extension('tmpyl',
                     source_files,
                     include_dirs=[numpy.get_include()],
                     library_dirs=['/usr/local/lib'],

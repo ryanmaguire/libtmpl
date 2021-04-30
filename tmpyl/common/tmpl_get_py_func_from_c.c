@@ -1,5 +1,12 @@
 
-#include "tmpl_npy_c_api.h"
+/*  To avoid compiler warnings about deprecated numpy stuff.                  */
+#define PY_SSIZE_T_CLEAN
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+
+#include "tmpyl_common.h"
+#include <numpy/ndarraytypes.h>
+#include <numpy/ufuncobject.h>
+#include <libtmpl/include/tmpl_void_pointer.h>
 
 PyObject *
 tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
@@ -226,3 +233,4 @@ FAILURE:
                  c_func->func_name);
     return NULL;
 }
+
