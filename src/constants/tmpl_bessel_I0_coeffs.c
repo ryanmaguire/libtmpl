@@ -1,6 +1,5 @@
 
 
-
 #include <libtmpl/include/tmpl_special_functions.h>
 
 float tmpl_Float_Bessel_I0_Taylor[17] = {
@@ -60,9 +59,12 @@ double tmpl_Double_Bessel_I0_Taylor[25] = {
 };
 
 double tmpl_Double_Bessel_I0_Asym[7] = {
-    1.0,                        0.1250,
-    0.07031250,                 0.07324218750,
-    0.1121520996093750,         0.2271080017089843750,
+    1.0,
+    0.1250,
+    0.07031250,
+    0.07324218750,
+    0.1121520996093750,
+    0.2271080017089843750,
     0.57250142097473144531250
 };
 
