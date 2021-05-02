@@ -59,7 +59,7 @@
  *      For big endian systems, and:                                          *
  *                                                                            *
  *          -------------------------------                                   *
- *          |  0  |  1  | ... | n-1 | n-2 |                                   *
+ *          |  0  |  1  | ... | n-2 | n-1 |                                   *
  *          -------------------------------                                   *
  *                                                                            *
  *      For little endian systems. By checking the zeroth element of this     *
@@ -69,7 +69,11 @@
  *      function cannot compute the endianness. sizeof(unsigned long int) = 1 *
  *      is so rare, I know of no systems where this is true. The C standard   *
  *      does not forbid this, however, so it's worth mentioning. In this case *
- *      tmpl_UnknownEndian is returned.                                       *
+ *      tmpl_UnknownEndian is returned, unless one has a compiler supporting  *
+ *      the C99 standard. In this case, the code will try to use the same     *
+ *      trick, but with a union of an unsigned long long int, and an unsigned *
+ *      char array. If sizeof(unsigned long long int) is also 1, the function *
+ *      returns tmpl_UnknownEndian.                                           *s
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -180,14 +184,10 @@ tmpl_Endian tmpl_Determine_Endianness(void)
          *  the standard macro __STDC_VERSION__.                              */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
-        /*  If sizeof unsigned long long int is also 1, then there's really   *
-         *  nothing that can be done. Return tmpl_UnknownEndian.              */
-        if (sizeof(unsigned long long int) == 1)
-            return tmpl_UnknownEndian;
-
         /*  See the comments below for an explanation of this algorithm. This *
          *  is an exact copy of the code after the preprocessor #if statement *
-         *  but with unsigned long long int instead of unsigned long int.     */
+         *  but with unsigned long long int instead of unsigned long int.     *
+         *  If sizeof unsigned long long int is also 1, nothing can be done.  */
         union {
             unsigned long long int x;
             unsigned char arr[sizeof(unsigned long long int)];
@@ -195,10 +195,14 @@ tmpl_Endian tmpl_Determine_Endianness(void)
 
         unsigned long long int powll, kll;
 
+        if (sizeof(unsigned long long int) == 1)
+            return tmpl_UnknownEndian;
+
+        /*  The ULL suffix means unsigned long long.                          */
         ell.x = 0ULL;
         powll = 1ULL << CHAR_BIT;
 
-        for (kll = 1ULL; k < sizeof(unsigned long long int); ++k)
+        for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
         {
             ell.x = kll * powll;
             pow = pow << CHAR_BIT;
@@ -214,6 +218,8 @@ tmpl_Endian tmpl_Determine_Endianness(void)
             return tmpl_UnknownEndian;
 
 #else
+/*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.    */
+
     /*  If we get here, sizeof(unsigned long int) = 1 and your compiler does  *
      *  not support the C99, or higher, standard so unsigned long long int    *
      *  may not be defined. Return tmpl_UnknownEndian.                        */
