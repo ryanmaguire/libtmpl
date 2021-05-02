@@ -88,137 +88,6 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_special_functions.h>
 
-/*  Taylor Expansion of Bessel J_0(x).                                        */
-static float taylorf[17] = {
-     1.0F,
-    -0.25F,
-     1.56250e-2F,
-    -4.340277777F,
-     6.781684027F,
-    -6.781684027F,
-     4.709502797F,
-    -2.402807549F,
-     9.385966990F,
-    -2.896903392F,
-     7.242258480F,
-    -1.496334396F,
-     2.597802772F,
-    -3.842903509F,
-     4.901662639F,
-    -5.446291821F,
-     5.318644356F
-};
-
-static double taylor[31] = {
-     1.0,
-    -0.25,
-     1.56250e-2,
-    -4.34027777777777777e-4,
-     6.78168402777777777e-6,
-    -6.78168402777777777e-8,
-     4.70950279706790123e-10,
-    -2.40280754952443940e-12,
-     9.38596699032984142e-15,
-    -2.89690339207711155e-17,
-     7.24225848019277887e-20,
-    -1.49633439673404522e-22,
-     2.59780277210771740e-25,
-    -3.84290350903508491e-28,
-     4.90166263907536340e-31,
-    -5.44629182119484823e-34,
-     5.31864435663559397e-37,
-    -4.60090342269515049e-40,
-     3.55007980146230748e-43,
-    -2.45850401763317692e-46,
-     1.53656501102073557e-49,
-    -8.71068600351890918e-53,
-     4.49932128280935391e-56,
-    -2.12633330945621640e-59,
-     9.22887721118149482e-63,
-    -3.69155088447259792e-66,
-     1.36521852236412645e-69,
-    -4.68181934967121554e-73,
-     1.49292708854311720e-76,
-    -4.43795210625183472e-80,
-     1.23276447395884297e-83
-};
-
-
-static long double taylorl[31] = {
-     1.0L,
-    -0.25L,
-     1.56250e-2L,
-    -4.34027777777777777777777777778e-4L,
-     6.78168402777777777777777777778e-6L,
-    -6.78168402777777777777777777778e-8L,
-     4.70950279706790123456790123457e-10L,
-    -2.40280754952443940539178634417e-12L,
-     9.38596699032984142731166540690e-15L,
-    -2.89690339207711155163940290337e-17L,
-     7.24225848019277887909850725841e-20L,
-    -1.49633439673404522295423703686e-22L,
-     2.59780277210771740096221707789e-25L,
-    -3.84290350903508491266600159451e-28L,
-     4.90166263907536340901275713585e-31L,
-    -5.44629182119484823223639681761e-34L,
-     5.31864435663559397679335626720e-37L,
-    -4.60090342269515049895619054256e-40L,
-     3.55007980146230748376249270259e-43L,
-    -2.45850401763317692781336059736e-46L,
-     1.53656501102073557988335037335e-49L,
-    -8.71068600351890918301219032512e-53L,
-     4.49932128280935391684513963074e-56L,
-    -2.12633330945621640682662553438e-59L,
-     9.22887721118149482129611777074e-63L,
-    -3.69155088447259792851844710830e-66L,
-     1.36521852236412645285445529153e-69L,
-    -4.68181934967121554476836519729e-73L,
-     1.49292708854311720177562665730e-76L,
-    -4.43795210625183472584906854132e-80L,
-     1.23276447395884297940251903925e-83L
-};
-
-/*  Asympotic Expansion of Bessel J_0(x).                                     */
-#define BESSEL_J0_ASYM_00_F  1.0F
-#define BESSEL_J0_ASYM_01_F  0.1250F
-#define BESSEL_J0_ASYM_02_F -0.07031250F
-#define BESSEL_J0_ASYM_03_F -0.07324218750F
-#define BESSEL_J0_ASYM_04_F  0.1121520996093750F
-#define BESSEL_J0_ASYM_05_F  0.2271080017089843750F
-#define BESSEL_J0_ASYM_06_F -0.57250142097473144531250F
-#define BESSEL_J0_ASYM_07_F -1.72772750258445739746093750F
-#define BESSEL_J0_ASYM_08_F  6.07404200127348303794860839844F
-#define BESSEL_J0_ASYM_09_F  24.3805296995560638606548309326F
-#define BESSEL_J0_ASYM_10_F -110.017140269246738171204924583F
-#define BESSEL_J0_ASYM_11_F -551.335896122020585607970133424F
-
-#define BESSEL_J0_ASYM_00  1.0
-#define BESSEL_J0_ASYM_01  0.1250
-#define BESSEL_J0_ASYM_02 -0.07031250
-#define BESSEL_J0_ASYM_03 -0.07324218750
-#define BESSEL_J0_ASYM_04  0.1121520996093750
-#define BESSEL_J0_ASYM_05  0.2271080017089843750
-#define BESSEL_J0_ASYM_06 -0.57250142097473144531250
-#define BESSEL_J0_ASYM_07 -1.72772750258445739746093750
-#define BESSEL_J0_ASYM_08  6.07404200127348303794860839844
-#define BESSEL_J0_ASYM_09  24.3805296995560638606548309326
-#define BESSEL_J0_ASYM_10 -110.017140269246738171204924583
-#define BESSEL_J0_ASYM_11 -551.335896122020585607970133424
-
-#define BESSEL_J0_ASYM_00_L  1.0L
-#define BESSEL_J0_ASYM_01_L  0.1250L
-#define BESSEL_J0_ASYM_02_L -0.07031250L
-#define BESSEL_J0_ASYM_03_L -0.07324218750L
-#define BESSEL_J0_ASYM_04_L  0.1121520996093750L
-#define BESSEL_J0_ASYM_05_L  0.2271080017089843750L
-#define BESSEL_J0_ASYM_06_L -0.57250142097473144531250L
-#define BESSEL_J0_ASYM_07_L -1.72772750258445739746093750L
-#define BESSEL_J0_ASYM_08_L  6.07404200127348303794860839844L
-#define BESSEL_J0_ASYM_09_L  24.3805296995560638606548309326L
-#define BESSEL_J0_ASYM_10_L -110.017140269246738171204924583L
-#define BESSEL_J0_ASYM_11_L -551.335896122020585607970133424L
-
-
 /*  Compute the Bessel J_0 function for a floating point number x.            */
 float tmpl_Float_Bessel_J0(float x)
 {
@@ -231,17 +100,17 @@ float tmpl_Float_Bessel_J0(float x)
 
     /*  For small arguments, use the Taylor series of J_0.                    */
     if (arg < 4.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(taylorf, 7U, arg);
+        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
+                                                10U, arg);
     else if (arg < 16.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(taylorf, 10U, arg);
+        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
+                                                12U, arg);
     else if (arg < 25.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(taylorf, 12U, arg);
+        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
+                                                14U, arg);
     else if (arg < 36.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(taylorf, 13U, arg);
-    else if (arg < 49.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(taylorf, 15U, arg);
-    else if (arg < 64.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(taylorf, 16U, arg);
+        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
+                                                16U, arg);
 
     /*  For large arguments use the asymptotic expansion.                     */
     else if (arg < 1.0e32F)
@@ -253,17 +122,20 @@ float tmpl_Float_Bessel_J0(float x)
         arg = 1.0F/arg;
 
         /*  Use Horner's method to compute the polynomial part.               */
-        sinarg  = arg * BESSEL_J0_ASYM_07_F + BESSEL_J0_ASYM_05_F;
-        sinarg  = arg * sinarg + BESSEL_J0_ASYM_03_F;
-        sinarg  = arg * sinarg + BESSEL_J0_ASYM_01_F;
+        sinarg = arg * tmpl_Float_Bessel_J0_Asym[7] +
+                       tmpl_Float_Bessel_J0_Asym[5];
+        sinarg = arg * sinarg + tmpl_Float_Bessel_J0_Asym[3];
+        sinarg = arg * sinarg + tmpl_Float_Bessel_J0_Asym[1];
 
         /*  Multiply the output by the coefficient factor.                    */
         sinarg *= tmpl_Float_Sin(x - tmpl_Pi_By_Four_F)/x;
 
         /*  Do the same as above for the Cosine portion.                      */
-        cosarg  = arg * BESSEL_J0_ASYM_06_F + BESSEL_J0_ASYM_04_F;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_02_F;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_00_F;
+        cosarg  = arg * tmpl_Float_Bessel_J0_Asym[8] +
+                        tmpl_Float_Bessel_J0_Asym[6];
+        cosarg  = arg * cosarg + tmpl_Float_Bessel_J0_Asym[4];
+        cosarg  = arg * cosarg + tmpl_Float_Bessel_J0_Asym[2];
+        cosarg  = arg * cosarg + tmpl_Float_Bessel_J0_Asym[0];
         cosarg *= tmpl_Float_Cos(x - tmpl_Pi_By_Four_F);
 
         /*  Multiply the result by the coefficient and return.                */
@@ -290,29 +162,38 @@ double tmpl_Double_Bessel_J0(double x)
 
     /*  For small arguments, use the Taylor series of J_0.                    */
     if (arg < 4.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 12U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 12U, arg);
     else if (arg < 16.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 16U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 16U, arg);
     else if (arg < 25.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 18U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 18U, arg);
     else if (arg < 36.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 19U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 19U, arg);
     else if (arg < 49.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 21U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 21U, arg);
     else if (arg < 64.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 23U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 23U, arg);
     else if (arg < 81.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 24U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 24U, arg);
     else if (arg < 100.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 26U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 26U, arg);
     else if (arg < 121.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 27U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 27U, arg);
     else if (arg < 144.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 29U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 29U, arg);
     else if (arg < 196.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 30U, arg);
-    else if (arg < 225.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(taylor, 31U, arg);
+        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
+                                                 30U, arg);
 
     /*  For large arguments use the asymptotic expansion.                     */
     else if (arg < 1.0e32)
@@ -324,17 +205,20 @@ double tmpl_Double_Bessel_J0(double x)
         arg = 1.0/arg;
 
         /*  Use Horner's method to compute the polynomial part.               */
-        sinarg  = arg * BESSEL_J0_ASYM_07 + BESSEL_J0_ASYM_05;
-        sinarg  = arg * sinarg + BESSEL_J0_ASYM_03;
-        sinarg  = arg * sinarg + BESSEL_J0_ASYM_01;
+        sinarg = arg * tmpl_Double_Bessel_J0_Asym[7] +
+                       tmpl_Double_Bessel_J0_Asym[5];
+        sinarg = arg * sinarg + tmpl_Double_Bessel_J0_Asym[3];
+        sinarg = arg * sinarg + tmpl_Double_Bessel_J0_Asym[1];
 
         /*  Multiply the output by the coefficient factor.                    */
         sinarg *= tmpl_Double_Sin(x - tmpl_Pi_By_Four)/x;
 
         /*  Do the same as above for the Cosine portion.                      */
-        cosarg  = arg * BESSEL_J0_ASYM_06 + BESSEL_J0_ASYM_04;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_02;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_00;
+        cosarg  = arg * tmpl_Double_Bessel_J0_Asym[8] +
+                        tmpl_Double_Bessel_J0_Asym[6];
+        cosarg  = arg * cosarg + tmpl_Double_Bessel_J0_Asym[4];
+        cosarg  = arg * cosarg + tmpl_Double_Bessel_J0_Asym[2];
+        cosarg  = arg * cosarg + tmpl_Double_Bessel_J0_Asym[0];
         cosarg *= tmpl_Double_Cos(x - tmpl_Pi_By_Four);
 
         /*  Multiply the result by the coefficient and return.                */
@@ -361,27 +245,38 @@ long double tmpl_LDouble_Bessel_J0(long double x)
 
     /*  For small arguments, use the Taylor series of J_0.                    */
     if (arg < 4.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 12U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 12U, arg);
     else if (arg < 16.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 16U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 16U, arg);
     else if (arg < 25.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 18U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 18U, arg);
     else if (arg < 36.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 19U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 19U, arg);
     else if (arg < 49.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 21U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 21U, arg);
     else if (arg < 64.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 23U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 23U, arg);
     else if (arg < 81.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 24U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 24U, arg);
     else if (arg < 100.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 26U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 26U, arg);
     else if (arg < 121.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 27U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 27U, arg);
     else if (arg < 144.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 29U, arg);
-    else if (arg < 169.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(taylorl, 30U, arg);
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 29U, arg);
+    else if (arg < 196.0L)
+        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
+                                                 30U, arg);
 
     /*  For large arguments use the asymptotic expansion.                     */
     else if (arg < 1.0e32L)
@@ -393,18 +288,20 @@ long double tmpl_LDouble_Bessel_J0(long double x)
         arg = 1.0L/arg;
 
         /*  Use Horner's method to compute the polynomial part.               */
-        sinarg  = arg * BESSEL_J0_ASYM_07_L + BESSEL_J0_ASYM_05_L;
-        sinarg  = arg * sinarg + BESSEL_J0_ASYM_03_L;
-        sinarg  = arg * sinarg + BESSEL_J0_ASYM_01_L;
+        sinarg  = arg * tmpl_LDouble_Bessel_J0_Asym[7] +
+                        tmpl_LDouble_Bessel_J0_Asym[5];
+        sinarg  = arg * sinarg + tmpl_LDouble_Bessel_J0_Asym[3];
+        sinarg  = arg * sinarg + tmpl_LDouble_Bessel_J0_Asym[1];
 
         /*  Multiply the output by the coefficient factor.                    */
         sinarg *= tmpl_LDouble_Sin(x - tmpl_Pi_By_Four_L)/x;
 
         /*  Do the same as above for the Cosine portion.                      */
-        cosarg  = arg * BESSEL_J0_ASYM_08_L + BESSEL_J0_ASYM_06_L;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_04_L;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_02_L;
-        cosarg  = arg * cosarg + BESSEL_J0_ASYM_00_L;
+        cosarg  = arg * tmpl_LDouble_Bessel_J0_Asym[8] +
+                        tmpl_LDouble_Bessel_J0_Asym[6];
+        cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[4];
+        cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[2];
+        cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[0];
         cosarg *= tmpl_LDouble_Cos(x - tmpl_Pi_By_Four_L);
 
         /*  For very large arguments, use the limit (which is zero).          */
