@@ -1,19 +1,50 @@
+
+#include <math.h>
 #include <stdio.h>
 #include <libtmpl/include/tmpl_math.h>
+#include <time.h>
+#include <stdlib.h>
 
 int main(void)
 {
-    double x, dx;
-    unsigned int N = 1024U;
+    double start, end, dx, *x, *y0, *y1, max, temp;
+    clock_t t1, t2;
+    unsigned int N = 1E8;
     unsigned int n;
+    start = -2000.0;
+    end   =  2000.0;
+    max   =  0.0;
 
-    dx = 1.0 / (double)N;
-    x = 0.0;
- 
+    x  = malloc(sizeof(*x)  * N);
+    y0 = malloc(sizeof(*y0) * N);
+    y1 = malloc(sizeof(*y1) * N);
+
+    for (n = 0U; n < N; ++n)
+        x[n] = start + (double)n * dx;
+
+    t1 = clock();
+    for (n = 0U; n < N; ++n)
+        y0[n] = tmpl_Double_Mod_2(x[n]);
+    t2 = clock();
+    printf("tmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
+
+    t1 = clock();
+    for (n = 0U; n < N; ++n)
+        y0[n] = tmpl_Double_Mod_2(x[n]);
+    t2 = clock();
+    printf("glibc: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
+
     for (n = 0U; n < N; ++n)
     {
-        printf("%f: %f\n", x, tmpl_Double_Sin(x));
-        x += dx;
+        temp = fabs(y1[n] - y0[n]);
+
+        if (temp > max)
+            max = temp;
     }
+
+    free(x);
+    free(y0);
+    free(y1);
+    printf("%.16f\n", max);
     return 0;
 }

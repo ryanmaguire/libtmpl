@@ -4,8 +4,6 @@
 
 #if __TMPL_USE_IEEE754_ALGORITHMS__ != 0
 
-#include <libtmpl/include/tmpl_math_private.h>
-
 float tmpl_Float_Sin(float x)
 {
     float arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
@@ -79,11 +77,11 @@ double tmpl_Double_Sin(double x)
     arg_100_int = (unsigned int)(100.0*arg);
     dx = arg - 0.01*arg_100_int;
 
-    sx  = tmpl_sin_lookup_table[arg_100_int];
-    sdx = tmpl_do_sin(dx);
+    sx  = tmpl_Double_Sin_Lookup_Table[arg_100_int];
+    sdx = tmpl_Double_Sin_Taylor(dx);
 
-    cx  = tmpl_cos_lookup_table[arg_100_int];
-    cdx = tmpl_do_cos(dx);
+    cx  = tmpl_Double_Cos_Lookup_Table[arg_100_int];
+    cdx = tmpl_Double_Cos_Taylor(dx);
 
     if (arg < tmpl_Pi_By_Four)
         return sgn_x*(sx*cdx + cx*sdx);
@@ -128,11 +126,11 @@ long double tmpl_LDouble_Sin(long double x)
     arg_100_int = (unsigned int)(100.0L*arg);
     dx = arg - 0.01L*arg_100_int;
 
-    sx  = tmpl_sinl_lookup_table[arg_100_int];
-    sdx = tmpl_do_sinl(dx);
+    sx  = tmpl_LDouble_Sin_Lookup_Table[arg_100_int];
+    sdx = tmpl_LDouble_Sin_Taylor(dx);
 
-    cx  = tmpl_cosl_lookup_table[arg_100_int];
-    cdx = tmpl_do_cosl(dx);
+    cx  = tmpl_LDouble_Cos_Lookup_Table[arg_100_int];
+    cdx = tmpl_LDouble_Cos_Taylor(dx);
 
     if (arg < tmpl_Pi_By_Four_L)
         return sgn_x*(sx*cdx + cx*sdx);
