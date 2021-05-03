@@ -206,7 +206,6 @@
  *  possible values and cos(y') and sin(y') are computed via lookup tables.   *
  *  dy is small and can be accurately computed via a Taylor series using very *
  *  few terms. Cosine is defined similarly.                                   */
-#define __TMPL_USE_TRIG_ALGORITHMS__ 0
 
 #endif
 /*  End of include guard.                                                     */
