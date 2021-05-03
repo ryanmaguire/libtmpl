@@ -30,7 +30,7 @@ int main(void)
 
     t1 = clock();
     for (n = 0U; n < N; ++n)
-        y0[n] = tmpl_Double_Mod_2(x[n]);
+        y1[n] = fmod(x[n], 2.0);
     t2 = clock();
     printf("glibc: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
