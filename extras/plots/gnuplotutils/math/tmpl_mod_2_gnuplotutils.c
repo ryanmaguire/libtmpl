@@ -26,10 +26,10 @@ int main(void)
 {
     FILE *fp = fopen("data.txt", "w");
 
-    double start =  -20.0;
-    double end   =   20.0;
+    double start =  -4.0;
+    double end   =   4.0;
 
-    unsigned int N = 1024U;
+    unsigned int N = 1E5;
     unsigned int n;
     double x, y, diff, dx;
 
@@ -48,4 +48,3 @@ int main(void)
     system("rm -f data.txt");
     return 0;
 }
-
