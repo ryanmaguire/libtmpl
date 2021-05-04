@@ -38,6 +38,19 @@
  *  Output:                                                                   *
  *      abs_z (float/double/long double):                                     *
  *          The absolute value of z.                                          *
+ *  Called Functions:                                                         *
+ *      tmpl_Float_Sqrt         (tmpl_math.h)                                 *
+ *      tmpl_Double_Sqrt        (tmpl_math.h)                                 *
+ *      tmpl_LDouble_Sqrt       (tmpl_math.h)                                 *
+ *          Computes the square root of a float/double/long double.           *
+ *      tmpl_CFloat_Real_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Real_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Real_Part (tmpl_complex.h)                              *
+ *          Returns the real part of a complex number.                        *
+ *      tmpl_CFloat_Imag_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Imag_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
+ *          Returns the imaginary part of a complex number.                   *
  *  Method:                                                                   *
  *      Extract the real and imaginary parts of z and return sqrt(x^2 + y^2). *
  *  NOTES:                                                                    *
