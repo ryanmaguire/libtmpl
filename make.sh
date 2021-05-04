@@ -157,12 +157,8 @@ for dir in ./src/*; do
 done
 
 echo -e "\nBuilding libtmpl Shared Object (.so file)"
-sharedobjectlist=""
-for filename in ./*.o; do
-    sharedobjectlist="$sharedobjectlist $filename"
-done
 
-$CC $sharedobjectlist $LinkerArgs
+$CC ./*.o $LinkerArgs
 
 echo "Moving to /usr/local/lib/libtmpl.so"
 sudo mv $SONAME $SODIR
