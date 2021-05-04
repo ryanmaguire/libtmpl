@@ -14,6 +14,7 @@ int main(void)
     start = -2000.0;
     end   =  2000.0;
     max   =  0.0;
+	dx    = (end - start) / (double)N;
 
     x  = malloc(sizeof(*x)  * N);
     y0 = malloc(sizeof(*y0) * N);
