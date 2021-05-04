@@ -19,7 +19,7 @@ double tmpl_Double_Mod_2(double x)
         return x;
 
     low = tmpl_Get_Low_Word64(w);
-    low = low << exp;
+    low = low << (exp - 1);
     low = low & 0x000FFFFFFFFFFFFF;
 
     out = (double)low * 4.44089209850062616169452667236328125E-16;
