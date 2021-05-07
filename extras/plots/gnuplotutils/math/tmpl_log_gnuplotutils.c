@@ -17,70 +17,54 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_math.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
-#include <time.h>
+#include <libtmpl/include/tmpl_math.h>
+
+static void write_val(FILE *fp, double x, double y)
+{
+    fwrite(&x, sizeof(x), 1, fp);
+    fwrite(&y, sizeof(y), 1, fp);
+}
 
 int main(void)
 {
-    double start, end, dx, max_abs, max_rel, temp;
-    double *x, *y0, *y1;
-    unsigned long int n, N;
-    clock_t t1, t2;
+    FILE *tmpl_fp, *glibc_fp, *diff_fp;
 
-    double (*f0)(double);
-    double (*f1)(double);
+    double start = 0.5;
+    double end   = 1.5;
 
-    f0 = tmpl_Double_Log;
-    f1 = log;
+    unsigned int N = 1e6;
+    unsigned int n;
+    double x, y0, y1, diff;
+    double dx = (end - start) / (long double)N;
 
-    start = 0.0;
-    end   = 100.0;
-    N     = 1E8;
-    dx    = (end - start) / (double)N;
+    tmpl_fp  = fopen("tmpl_logl_binary", "w");
+    glibc_fp = fopen("glibc_logl_binary", "w");
+    diff_fp  = fopen("diff_binary", "w");
 
-    x  = malloc(sizeof(*x)  * N);
-    y0 = malloc(sizeof(*y0) * N);
-    y1 = malloc(sizeof(*y1) * N);
-
-    x[0] = start;
-    for (n = 1UL; n < N; ++n)
-        x[n] = x[n-1] + dx;
-
-    t1 = clock();
-    for (n = 0UL; n < N; ++n)
-        y0[n] = f0(x[n]);
-    t2 = clock();
-
-    printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
-
-    t1 = clock();
-    for (n = 0UL; n < N; ++n)
-        y1[n] = f1(x[n]);
-    t2 = clock();
-
-    printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
-
-    max_abs = 0.0;
+    x = start;
     for (n = 0UL; n < N; ++n)
     {
-        temp = fabs(y0[n] - y1[n]);
-        if (max_abs < temp)
-            max_abs = temp;
+        y0 = tmpl_Double_Log(x);
+        write_val(tmpl_fp, x, y0);
 
-        temp = fabs((y0[n] - y1[n]) / y1[n]);
-        if (max_rel < temp)
-            max_rel = temp;
+        y1 = log(x);
+        write_val(glibc_fp, x, y1);
+
+        diff = y1 - y0;
+        write_val(diff_fp, x, diff);
+        x += dx;
     }
+    fclose(tmpl_fp);
+    fclose(glibc_fp);
+    fclose(diff_fp);
 
-    printf("Max Abs Error: %.24f\n", max_abs);
-    printf("Max Rel Error: %.24f\n", max_rel);
-
-    free(x);
-    free(y0);
-    free(y1);
+    system("graph -T ps -I d < tmpl_logl_binary glibc_logl_binary "
+           "-L \"logl\" --reposition 0.0 -0.8 1 diff_binary "
+           "-L \"Difference (tmpl vs glibc)\" > tmpl_logl_gnuplotutils.ps");
+    system("rm -f tmpl_logl_binary glibc_logl_binary diff_binary");
     return 0;
 }
 

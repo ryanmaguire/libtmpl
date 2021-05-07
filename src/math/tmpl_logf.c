@@ -5,17 +5,7 @@
 
 #if __TMPL_USE_IEEE754_ALGORITHMS__ != 0
 
-#include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_ieee754.h>
-
-static float __log_coeffs_f[6] = {
-    2.000000000F,
-    0.666666667F,
-    0.400000000F,
-    0.285714285F,
-    0.222222222F,
-    0.181818181F
-};
 
 float tmpl_Float_Log(float x)
 {
@@ -32,11 +22,23 @@ float tmpl_Float_Log(float x)
 
 	exponent = (float)tmpl_Get_Base_2_Exp32(w);
     mantissa = tmpl_Get_Mantissa32(w);
+
+    if (mantissa > 1.5F)
+    {
+        mantissa *= 0.5F;
+        exponent += 1.0F;
+    }
+
     A = (mantissa - 1.0F)/(mantissa + 1.0F);
     A_sq = A*A;
-    poly = tmpl_Real_Poly_Float_Coeffs(__log_coeffs_f, 5U, A_sq);
 
-	out = tmpl_Natural_Log_of_2_F*exponent + A*poly;
+    poly = 0.181818181F * A_sq + 0.222222222F;
+    poly =         poly * A_sq + 0.285714285F;
+    poly =         poly * A_sq + 0.400000000F;
+    poly =         poly * A_sq + 0.666666667F;
+    poly =         poly * A_sq + 2.000000000F;
+
+	out = tmpl_Natural_Log_of_Two_F*exponent + A*poly;
 	return out;
 }
 
@@ -51,13 +53,11 @@ float tmpl_Float_Log(float x)
 
 #else
 
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  C89 math.h does not have cosf or cosfl, so we'll need to provide these to  *
  *  make the code forward compatible. We'll do this in a very simple manner.  */
 float tmpl_Float_Log(float x)
 {
-    tmpl_uint32 exp;
+    unsigned long int exp;
     float mant, A, A_sq, log_x;
 
     if (x < 0.0F)

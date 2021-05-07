@@ -12,11 +12,9 @@ long double tmpl_LDouble_Log(long double x)
 
 #else
 
-#include <libtmpl/include/tmpl_integer.h>
-
 long double tmpl_LDouble_Log(long double x)
 {
-    tmpl_uint64 exp;
+    unsigned long int exp;
     long double mant, A, A_sq, log_x, factor;
 
     if (x < 0.0L)
