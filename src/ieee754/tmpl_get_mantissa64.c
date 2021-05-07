@@ -71,7 +71,7 @@ double tmpl_Get_Mantissa64(tmpl_IEEE754_Word64 w)
     /*  Use bitwise AND with 0x000FFFFFFFFFFFFF to extract the low word. Then *
      *  add 0x3FF0000000000000 which is the hexidecimal representation of 1.0.*
      *  This will give use 1.0 + 0.m = 1.m, which is what we want.            */
-    out.integer = (w.integer & 0x000FFFFFFFFFFFFF) + 0x3FF0000000000000;
+    out.integer = (w.integer & 0x000FFFFFFFFFFFFF) | 0x3FF0000000000000;
 
     /*  Return the double part from the IEEE 754 union data type.             */
     return out.real;

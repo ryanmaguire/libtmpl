@@ -70,7 +70,7 @@ float tmpl_Get_Mantissa32(tmpl_IEEE754_Word32 w)
     /*  Use bitwise AND with 0x007FFFFF to extract the low word. Then add     *
      *  0x3F800000 which is the hexidecimal representation of 1.0. This will  *
      *  give use 1.0 + 0.m = 1.m, which is what we want.                      */
-    out.integer = (w.integer & 0x007FFFFF) + 0x3F800000;
+    out.integer = (w.integer & 0x007FFFFF) | 0x3F800000;
 
     /*  Return the float part from the IEEE 754 union data type.              */
     return out.real;

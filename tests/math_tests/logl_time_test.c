@@ -25,21 +25,21 @@
 
 int main(void)
 {
-    double start, end, dx, max_abs, max_rel, temp;
-    double *x, *y0, *y1;
+    long double start, end, dx, max_abs, max_rel, temp;
+    long double *x, *y0, *y1;
     unsigned long int n, N;
     clock_t t1, t2;
 
-    double (*f0)(double);
-    double (*f1)(double);
+    long double (*f0)(long double);
+    long double (*f1)(long double);
 
-    f0 = tmpl_Double_Log;
-    f1 = log;
+    f0 = tmpl_LDouble_Log;
+    f1 = logl;
 
-    start = 0.0;
-    end   = 100.0;
+    start = 0.0L;
+    end   = 100.0L;
     N     = 1E8;
-    dx    = (end - start) / (double)N;
+    dx    = (end - start) / (long double)N;
 
     x  = malloc(sizeof(*x)  * N);
     y0 = malloc(sizeof(*y0) * N);
@@ -66,17 +66,17 @@ int main(void)
     max_abs = 0.0;
     for (n = 0UL; n < N; ++n)
     {
-        temp = fabs(y0[n] - y1[n]);
+        temp = fabsl(y0[n] - y1[n]);
         if (max_abs < temp)
             max_abs = temp;
 
-        temp = fabs((y0[n] - y1[n]) / y1[n]);
+        temp = fabsl((y0[n] - y1[n]) / y1[n]);
         if (max_rel < temp)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.24f\n", max_abs);
-    printf("Max Rel Error: %.24f\n", max_rel);
+    printf("Max Abs Error: %.32Lf\n", max_abs);
+    printf("Max Rel Error: %.32Lf\n", max_rel);
 
     free(x);
     free(y0);

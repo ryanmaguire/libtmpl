@@ -122,13 +122,6 @@
 /*  The __TMPL_USING_C99_MATH_H__ macro is found here.                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  It is not assumed you have C99 math.h, but rather the C89 math.h, which   *
- *  is also referred to as the ANSI C version. If you have C99 available,     *
- *  change __TMPL_USING_C99_MATH_H__ in tmpl_config.h to 1 and then rebuild   *
- *  libtmpl. Some implementations of the C99 standard don't define float/long *
- *  double versions of math functions and simply do something like            *
- *  sinf(x) = (float)sin((double)x), so there is no difference.               */
-
 /*  Check which version of C you are compiling with and set the macro         *
  *  __HAS_C99_MATH_H__ accordingly.                                           */
 #if __TMPL_USING_C99_MATH_H__ == 1
@@ -165,60 +158,89 @@
  *  values for your system.                                                   */
 #include <float.h>
 
-/* Define Miscellaneous Constants.                                            */
+/* Declare Miscellaneous Constants.                                           */
 
-/*  Single precision constants.                                               */
-#define tmpl_Sqrt_One_By_Two_Pi_F    0.398942280F
-#define tmpl_Sqrt_Pi_By_Eight_F      0.626657069F
-#define tmpl_Sqrt_Pi_By_Two_F        1.253314137F
-#define tmpl_Sqrt_One_By_Pi_F        0.564189584F
-#define tmpl_Sqrt_Two_By_Pi_F        0.797884561F
-#define tmpl_Two_By_Sqrt_Pi_F        1.128379167F
-#define tmpl_Pi_By_Two_F             1.570796327F
-#define tmpl_Three_Pi_By_Four_F      2.356194490F
-#define tmpl_Pi_By_Four_F            0.785398163F
-#define tmpl_One_Pi_F                3.141592654F
-#define tmpl_Two_Pi_F                6.283185307F
-#define tmpl_Sqrt_Two_F              1.414213562F
-#define tmpl_Rcpr_Euler_E_F          0.367879441F
-#define tmpl_Euler_E_F               2.718281828F
-#define tmpl_Natural_Log_of_2_F      0.693147181F
+/*  sqrt( 1 / (2pi) )                                                         */
+extern const float tmpl_Sqrt_One_By_Two_Pi_F;
+extern const double tmpl_Sqrt_One_By_Two_Pi;
+extern const long double tmpl_Sqrt_One_By_Two_Pi_L;
+
+/*  sqrt( pi / 8 )                                                            */
+extern const float tmpl_Sqrt_Pi_By_Eight_F;
+extern const double tmpl_Sqrt_Pi_By_Eight;
+extern const long double tmpl_Sqrt_Pi_By_Eight_L;
+
+/*  sqrt( pi / 2 )                                                            */
+extern const float tmpl_Sqrt_Pi_By_Two_F;
+extern const double tmpl_Sqrt_Pi_By_Two;
+extern const long double tmpl_Sqrt_Pi_By_Two_L;
+
+/*  sqrt( 1 / pi )                                                            */
+extern const float tmpl_Sqrt_One_By_Pi_F;
+extern const double tmpl_Sqrt_One_By_Pi;
+extern const long double tmpl_Sqrt_One_By_Pi_L;
+
+/*  sqrt( 2 / pi )                                                            */
+extern const float tmpl_Sqrt_Two_By_Pi_F;
+extern const double tmpl_Sqrt_Two_By_Pi;
+extern const long double tmpl_Sqrt_Two_By_Pi_L;
+
+/*  2 / sqrt( pi )                                                            */
+extern const float tmpl_Two_By_Sqrt_Pi_F;
+extern const double tmpl_Two_By_Sqrt_Pi;
+extern const long double tmpl_Two_By_Sqrt_Pi_L;
+
+/*  pi / 2                                                                    */
+extern const float tmpl_Pi_By_Two_F;
+extern const double tmpl_Pi_By_Two;
+extern const long double tmpl_Pi_By_Two_L;
+
+/*  3 pi / 4                                                                  */
+extern const float tmpl_Three_Pi_By_Four_F;
+extern const double tmpl_Three_Pi_By_Four;
+extern const long double tmpl_Three_Pi_By_Four_L;
+
+/*  pi / 4                                                                    */
+extern const float tmpl_Pi_By_Four_F;
+extern const double tmpl_Pi_By_Four;
+extern const long double tmpl_Pi_By_Four_L;
+
+/*  pi                                                                        */
+extern const float tmpl_One_Pi_F;
+extern const double tmpl_One_Pi;
+extern const long double tmpl_One_Pi_L;
+
+/*  2 pi                                                                      */
+extern const float tmpl_Two_Pi_F;
+extern const double tmpl_Two_Pi;
+extern const long double tmpl_Two_Pi_L;
+
+/*  sqrt( 2 )                                                                 */
+extern const float tmpl_Sqrt_Two_F;
+extern const double tmpl_Sqrt_Two;
+extern const long double tmpl_Sqrt_Two_L;
+
+/*  e = exp( 1 )                                                              */
+extern const float tmpl_Euler_E_F;
+extern const double tmpl_Euler_E;
+extern const long double tmpl_Euler_E_L;
+
+/*  1 / e = exp( -1 )                                                         */
+extern const float tmpl_Rcpr_Euler_E_F;
+extern const double tmpl_Rcpr_Euler_E;
+extern const long double tmpl_Euler_E_L;
+
+/*  log_e( 2 ) = ln( 2 )                                                      */
+extern const float tmpl_Natural_Log_of_Two_F;
+extern const double tmpl_Natural_Log_of_Two;
+extern const long double tmpl_Natural_Log_of_Two_L;
+
 #define tmpl_Natural_Log_Of_10_F     2.302585093F
 
 /*  Double precision constants.                                               */
-#define tmpl_Sqrt_One_By_Two_Pi      0.39894228040143267
-#define tmpl_Sqrt_Pi_By_Eight        0.62665706865775012
-#define tmpl_Sqrt_Pi_By_Two          1.25331413731550025
-#define tmpl_Sqrt_One_By_Pi          0.56418958354775628
-#define tmpl_Sqrt_Two_By_Pi          0.79788456080286535
-#define tmpl_Two_By_Sqrt_Pi          1.12837916709551257
-#define tmpl_Pi_By_Two               1.57079632679489661
-#define tmpl_Three_Pi_By_Four        2.35619449019234492
-#define tmpl_Pi_By_Four              0.78539816339744830
-#define tmpl_One_Pi                  3.14159265358979323
-#define tmpl_Two_Pi                  6.28318530717958647
-#define tmpl_Sqrt_Two                1.41421356237309504
-#define tmpl_Rcpr_Euler_E            0.36787944117144232
-#define tmpl_Euler_E                 2.71828182845904523
-#define tmpl_Natural_Log_of_2        0.69314718055994531
 #define tmpl_Natural_Log_Of_10       2.30258509299404568
 
 /*  Long double precision constants.                                          */
-#define tmpl_Sqrt_One_By_Two_Pi_L    0.3989422804014326779399461L
-#define tmpl_Sqrt_Pi_By_Eight_L      0.6266570686577501256039413L
-#define tmpl_Sqrt_Pi_By_Two_L        1.2533141373155002512078830L
-#define tmpl_Sqrt_One_By_Pi_L        0.5641895835477562869480795L
-#define tmpl_Sqrt_Two_By_Pi_L        0.7978845608028653558798921L
-#define tmpl_Two_By_Sqrt_Pi_L        1.1283791670955125738961590L
-#define tmpl_Pi_By_Two_L             1.5707963267948966192313220L
-#define tmpl_Three_Pi_By_Four_L      2.3561944901923449288469830L
-#define tmpl_Pi_By_Four_L            0.7853981633974483096156608L
-#define tmpl_One_Pi_L                3.1415926535897932384626430L
-#define tmpl_Two_Pi_L                6.2831853071795864769252870L
-#define tmpl_Sqrt_Two_L              1.4142135623730950488016890L
-#define tmpl_Rcpr_Euler_E_L          0.3678794411714423215955238L
-#define tmpl_Euler_E_L               2.7182818284590452353602875L
-#define tmpl_Natural_Log_of_2_L      0.6931471805599453094172321L
 #define tmpl_Natural_Log_Of_10_L     2.3025850929940456840179910L
 
 /*  Degrees to radians conversion, and vice-versa.                            */

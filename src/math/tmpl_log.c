@@ -3,29 +3,12 @@
 #include <libtmpl/include/tmpl_math.h>
 
 #if __TMPL_USE_IEEE754_ALGORITHMS__ != 0
-#include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_ieee754.h>
-
-static double __log_coeffs[11] = {
-    2.0000000000000000,
-    0.66666666666666667,
-    0.40000000000000000,
-    0.28571428571428571,
-    0.22222222222222222,
-    0.18181818181818182,
-    0.15384615384615385,
-    0.13333333333333333,
-    0.11764705882352941,
-    0.10526315789473684,
-    0.095238095238095238
-};
 
 double tmpl_Double_Log(double x)
 {
-	tmpl_IEEE754_Word64 w, frac;
-	tmpl_uint64 low;
-    tmpl_uint32 high;
-	double exponent, poly, A, A_sq;
+	tmpl_IEEE754_Word64 w;
+	double exponent, mantissa, poly, A, A_sq;
 	double out;
 
 	if (x < 0.0)
@@ -35,16 +18,30 @@ double tmpl_Double_Log(double x)
 	else
 		w.real = x;
 
-	low  = tmpl_Get_Low_Word64(w);
-	high = tmpl_Get_High_Word64(w);
+	exponent = (double)tmpl_Get_Base_2_Exp64(w);
+    mantissa = tmpl_Get_Mantissa64(w);
 
-	exponent = (double)high - 1023.0;
-	frac.integer = (0x3FFUL << 52) + low;
-    A = (frac.real-1.0)/(frac.real+1);
+    if (mantissa > 1.5)
+    {
+        mantissa *= 0.5;
+        exponent += 1.0;
+    }
+
+    A = (mantissa - 1.0) / (mantissa + 1);
     A_sq = A*A;
-    poly = tmpl_Real_Poly_Double_Coeffs(__log_coeffs, 10U, A_sq);
 
-	out = tmpl_Natural_Log_of_2*exponent + A*poly;
+    poly = 0.095238095238095238 * A_sq + 0.10526315789473684;
+    poly =                 poly * A_sq + 0.11764705882352941;
+    poly =                 poly * A_sq + 0.13333333333333333;
+    poly =                 poly * A_sq + 0.15384615384615385;
+    poly =                 poly * A_sq + 0.18181818181818182;
+    poly =                 poly * A_sq + 0.22222222222222222;
+    poly =                 poly * A_sq + 0.28571428571428571;
+    poly =                 poly * A_sq + 0.40000000000000000;
+    poly =                 poly * A_sq + 0.66666666666666667;
+    poly =                 poly * A_sq + 2.0000000000000000;
+
+	out = tmpl_Natural_Log_of_Two*exponent + A*poly;
 	return out;
 }
 
