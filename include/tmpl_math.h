@@ -521,7 +521,7 @@ extern const double tmpl_Double_Cos_Taylor_Coeffs[4];
 extern const long double tmpl_LDouble_Cos_Taylor_Coeffs[5];
 
 extern const float tmpl_Float_Cos_Lookup_Table[80];
-extern const double tmpl_Double_Cos_Lookup_Table[80];
+extern const double tmpl_Double_Cos_Lookup_Table[100];
 extern const long double tmpl_LDouble_Cos_Lookup_Table[80];
 
 extern float tmpl_Float_Sin_Taylor(float x);
@@ -533,7 +533,7 @@ extern const double tmpl_Double_Sin_Taylor_Coeffs[4];
 extern const long double tmpl_LDouble_Sin_Taylor_Coeffs[5];
 
 extern const float tmpl_Float_Sin_Lookup_Table[80];
-extern const double tmpl_Double_Sin_Lookup_Table[80];
+extern const double tmpl_Double_Sin_Lookup_Table[100];
 extern const long double tmpl_LDouble_Sin_Lookup_Table[80];
 
 #endif
