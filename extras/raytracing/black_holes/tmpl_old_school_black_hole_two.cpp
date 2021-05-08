@@ -17,10 +17,8 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Perform a simple raytracing of a black hole using classical physics,  *
- *      instead of relativity. Light is given an arbitrarily small mass and   *
- *      we use Newton's universal law of gravitation to see how a black hole  *
- *      would bend the light. This is a very rough estimate of black holes.   *
+ *      Perform a simple raytracing of a binary system of two black holes.    *
+ *      This naively uses Newtonian mechanics, and not relativity.            *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as a part of the libtmpl  *
  *      library. It is also written in C++, just to mix things up a bit.      *
@@ -60,6 +58,12 @@ struct tmpl_simple_vector {
         return tmpl_simple_vector(x + r.x, y + r.y, z + r.z);
     }
 
+    /*  This operator represents vector subtraction.                          */
+    tmpl_simple_vector operator - (tmpl_simple_vector r)
+    {
+        return tmpl_simple_vector(x - r.x, y - r.y, z - r.z);
+    }
+
     /*  And here we have scalar multiplication.                               */
     tmpl_simple_vector operator * (double r)
     {
@@ -87,57 +91,53 @@ struct tmpl_simple_vector {
 };
 /*  End of definition of tmpl_simple_vector.                                  */
 
+/*  Set the following vectors to represent the centers of the black holes.    */
+tmpl_simple_vector b1 = tmpl_simple_vector(-3.0, 0.0, 0.0);
+tmpl_simple_vector b2 = tmpl_simple_vector(+3.0, 0.0, 0.0);
+
 /*  The acceleration under the force of gravity is given by Newton's          *
  *  universal law of gravitation. This is the inverse square law.             */
 tmpl_simple_vector acc(tmpl_simple_vector p)
 {
-    /*  Given a vector p, Newton's universal law of gravitation says the      *
-     *  acceleration is proportional to p/||p||^3 = p_hat/||p||^2, where p_hat*
-     *  is the unit vector for p. We can compute p/||p||^3 in terms of the    *
-     *  norm of p and the square of the norm of p. We have:                   */
-    double factor = 1.0 / (p.normsq() * p.norm());
+    /*  We'll use the principle of superposition for the two black holes.     */
+    tmpl_simple_vector r1, r2;
+    tmpl_simple_vector f1, f2;
+    double factor1, factor2;
 
-    /*  The acceleration is the minus of p times this factor. The reason it   *
-     *  is minus p is because gravity pulls inward, so the acceleration is    *
-     *  towards the origin.                                                   */
-    return tmpl_simple_vector(-p.x*factor, -p.y*factor, -p.z*factor);
+    /*  The force from one black hole is -R / ||R||^3, where R is the         *
+     *  relative position vector from the point p to the center of the black  *
+     *  hole. Compute this expression for both black holes.                   */
+    r1 = b1 - p;
+    r2 = b2 - p;
+
+    factor1 = 1.0 / (r1.normsq() * r1.norm());
+    factor2 = 1.0 / (r2.normsq() * r2.norm());
+
+    f1 = r1 * factor1;
+    f2 = r2 * factor2;
+
+    /*  The net force is computed by the principle of superposition. Simply   *
+     *  sum the two individual forces and return.                             */
+    return f1 + f2;
 }
 
 /*  Function for computing the path of a light ray under the influence of     *
  *  the gravity of a black hole using Euler's method.                         */
 tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 {
-    /*  This function makes a very naive assumption. Newton's Second Law      *
-     *  states the F = ma, where a is the acceleration. So, for gravity, we   *
-     *  obtain the vector-valued differential equation:                       *
-     *      -GMm p / ||p||^3 = m d^2/dt^2 p                                   *
-     *  Where G is the universal gravitational constant, and M is the mass of *
-     *  the black hole (m being the mass of the object under consideration).  *
-     *  We can take G*M to be 1 for simplicity, since we never specified the  *
-     *  units we're in. Now, if m is any non-zero value we can cancel to get: *
-     *      p / ||p||^3 = d^2/dt^2 p                                          *
-     *  Solving this vector-valued differential equation results in the       *
-     *  trajectory of the object. The only problem is, it is generally        *
-     *  believed that photons, which are particles of light, have zero mass.  *
-     *  So let's pretend they have a mass that is so stupidly small, it would *
-     *  be impossible to measure, but not zero. If this were true, we could   *
-     *  apply Newtonian mechanics to get a rough idea as to what a black hole *
-     *  would look like.                                                      */
-
-    /* The black hole is of radius 1 at the origin, and our detector is the   *
-     * plane z = -10. Our source of light (defined in the main routine) is    *
-     * some plane z = positive-number. In other words, the light is coming    *
-     * down and heading towards our detector. We'll increment time using a    *
-     * small value dt, and we'll keep incrementing until the light either     *
-     * hits the detector, or is absorbed by the black hole.                   */
+    /*  After a finite number of iterations of Euler's method, we'll abort.   */
     unsigned int N = 0U;
 
-    while ((p.z > -10.0) && (N < 1E5))
+    /*  The light is coming from the plane z = -10 and coming towards our     *
+     *  eyes. We work backwards to see where an individual photon came from.  *
+     *  Once we work backwards to z = -10, we've hit our light source and can *
+     *  stop the computation. If the computation takes to long, it is trapped *
+     *  within this binary system and will never reach z = -10.               */
+    while ((p.z > -10.0) && (N < 1E6))
     {
-        /* If the light was absorbed by the black hole, abort the computation *
-         *  and return the zero vector.                                       */
-        if (p.norm() <= 1.0)
-            return tmpl_simple_vector(0.0, 0.0, 0.0);
+        /* If the light was absorbed by a black hole, abort the computation.  */
+        if (((b1 - p).norm() <= 1.0) || ((b2 - p).norm() <= 1.0))
+            return p;
 
         /*  We can solve d^2/dt^2 = F(p) numerical in two steps. First, we    *
          *  compute the velocity dp/dt, meaning we need to solve dv/dt = F(p).*
@@ -212,14 +212,14 @@ int main(void)
     end = 10.0;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 1024U;
+    size = 2048U;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
     factor = (end - start) / (double)size;
 
     /*  Open the file "black.ppm" and give it write permissions.              */
-    FILE *fp = fopen("black.ppm", "w");
+    FILE *fp = fopen("black_hole_two.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
     if (!fp)
