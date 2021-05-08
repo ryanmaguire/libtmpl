@@ -17,70 +17,33 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_math.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <time.h>
+#include <stdlib.h>
+#include <libtmpl/include/tmpl_math.h>
 
 int main(void)
 {
-    float start, end, dx, max_abs, max_rel, temp;
-    float *x, *y0, *y1;
-    unsigned long int n, N;
-    clock_t t1, t2;
+    FILE *fp = fopen("data.txt", "w");
 
-    float (*f0)(float);
-    float (*f1)(float);
+    float start = -4.0F;
+    float end   =  4.0F;
 
-    f0 = tmpl_Float_Sin;
-    f1 = sinf;
+    unsigned int N = 1E5;
+    unsigned int n;
+    float x, y, diff, dx;
 
-    start = -100.0F;
-    end   = 100.0F;
-    N     = 1E8;
-    dx    = (end - start) / (float)N;
+    dx = (end - start) / (float)N;
+    x = start;
 
-    x  = malloc(sizeof(*x)  * N);
-    y0 = malloc(sizeof(*y0) * N);
-    y1 = malloc(sizeof(*y1) * N);
-
-    x[0] = start;
-    for (n = 1UL; n < N; ++n)
-        x[n] = x[n-1] + dx;
-
-    t1 = clock();
-    for (n = 0UL; n < N; ++n)
-        y0[n] = f0(x[n]);
-    t2 = clock();
-
-    printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
-
-    t1 = clock();
-    for (n = 0UL; n < N; ++n)
-        y1[n] = f1(x[n]);
-    t2 = clock();
-
-    printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
-
-    max_abs = 0.0;
     for (n = 0UL; n < N; ++n)
     {
-        temp = fabsf(y0[n] - y1[n]);
-        if (max_abs < temp)
-            max_abs = temp;
-
-        temp = fabsf((y0[n] - y1[n]) / y1[n]);
-        if (max_rel < temp)
-            max_rel = temp;
+        y = tmpl_Float_Mod_2(x);
+        fprintf(fp, "%f %f\n", x, y);
+        x += dx;
     }
 
-    printf("Max Abs Error: %.16f\n", (double)max_abs);
-    printf("Max Rel Error: %.16f\n", (double)max_rel);
-
-    free(x);
-    free(y0);
-    free(y1);
+    fclose(fp);
+    system("graph -T ps data.txt > tmpl_floor_gnuplotutils.ps");
+    system("rm -f data.txt");
     return 0;
 }
-

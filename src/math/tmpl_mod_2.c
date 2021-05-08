@@ -1,32 +1,26 @@
 
-
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_integer.h>
-#include <libtmpl/include/tmpl_ieee754.h>
+#include <math.h>
 
 double tmpl_Double_Mod_2(double x)
+
 {
-    tmpl_IEEE754_Word64 w;
-    tmpl_int32 exp;
-    tmpl_uint64 low;
-    double out;
+    double abs_x, sgn_x, factor;
 
-    w.real = x;
-    exp = tmpl_Get_Base_2_Exp64(w);
-
-    if (exp < 1)
-        return x;
-
-    low = tmpl_Get_Low_Word64(w);
-    low = low << (exp - 1);
-    low = low & 0x000FFFFFFFFFFFFF;
-
-    out = (double)low * 4.44089209850062616169452667236328125E-16;
-
-    if (x >= 0.0)
-        return out;
+    if (x < 0.0)
+    {
+        sgn_x = -1.0;
+        abs_x = -x;
+    }
     else
-        return -out;
+    {
+        sgn_x = 1.0;
+        abs_x = x;
+    }
+
+    factor = floor(abs_x * 0.5);
+    abs_x -= factor * 2.0;
+
+    return sgn_x * abs_x;
 }
 
