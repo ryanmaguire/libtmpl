@@ -1,8 +1,4 @@
-/*  Header file which contains aliases for the function in the standard C     *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
-
-#if __TMPL_USE_IEEE754_ALGORITHMS__ != 0
 
 double tmpl_Double_Sin(double x)
 {
@@ -48,10 +44,4 @@ double tmpl_Double_Sin(double x)
 
     return sgn_x * (cdx*sx + cx*sdx);
 }
-#else
-double tmpl_Double_Sin(double x)
-{
-    return sin(x);
-}
-#endif
 

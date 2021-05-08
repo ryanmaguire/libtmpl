@@ -202,51 +202,11 @@ typedef union _tmpl_IEE754_Word32 {
     tmpl_uint32 integer;
 } tmpl_IEEE754_Word32;
 
-/*  Data type for a 64-bit floating point number. This is assumed to          *
- *  correspond to the double data type. We can think of a 64-bit data type as *
- *  two "words," each word being 32 bits long. This is often useful in        *
- *  computations and it is a good idea to separate the most-significant-word  *
- *  (MSW) and the least-significant-word (LSW). Which word is most            *
- *  significant (the zeroth or the first) depends on the endianness. Use the  *
- *  __TMPL_ENDIAN__ macro to correctly define our 64-bit union data type.     */
-#if defined(__TMPL_ENDIAN__) && __TMPL_ENDIAN__ == __TMPL_BIG_ENDIAN__
 
-/*  Big Endian has the MSW in the zeroth slot, followed by the LSW.           */
 typedef union _tmpl_IEEE754_Word64 {
     double real;
-    struct {
-        tmpl_int32 most_significant_word;
-        tmpl_int32 least_significant_word;
-    } parts;
-    struct {
-        tmpl_uint32 most_significant_word;
-        tmpl_uint32 least_significant_word;
-    } uparts;
 	  tmpl_uint64 integer;
 } tmpl_IEEE754_Word64;
-
-#elif defined(__TMPL_ENDIAN__) &&  __TMPL_ENDIAN__ == __TMPL_LITTLE_ENDIAN__
-
-/*  Little Endian has LSW follwed by MSW.                                     */
-typedef union _tmpl_IEEE754_Word64 {
-    double real;
-    struct {
-        tmpl_int32 least_significant_word;
-        tmpl_int32 most_significant_word;
-    } parts;
-    struct {
-        tmpl_uint32 least_significant_word;
-        tmpl_uint32 most_significant_word;
-    } uparts;
-	  tmpl_uint64 integer;
-} tmpl_IEEE754_Word64;
-
-#else
-
-/*  libtmpl does not support the rare mixed-endian.                           */
-#error "Unsupported endianness."
-
-#endif
 
 /******************************************************************************
  *  Function:                                                                 *

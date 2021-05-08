@@ -25,21 +25,21 @@
 
 int main(void)
 {
-    float start, end, dx, max_abs, max_rel, temp;
-    float *x, *y0, *y1;
+    double start, end, dx, max_abs, max_rel, temp;
+    double *x, *y0, *y1;
     unsigned long int n, N;
     clock_t t1, t2;
 
-    float (*f0)(float);
-    float (*f1)(float);
+    double (*f0)(double);
+    double (*f1)(double);
 
-    f0 = tmpl_Float_Sin;
-    f1 = sinf;
+    f0 = tmpl_Double_Arctan;
+    f1 = atan;
 
-    start = -100.0F;
-    end   = 100.0F;
+    start = 0.0;
+    end   = 100.0;
     N     = 1E8;
-    dx    = (end - start) / (float)N;
+    dx    = (end - start) / (double)N;
 
     x  = malloc(sizeof(*x)  * N);
     y0 = malloc(sizeof(*y0) * N);
@@ -66,17 +66,17 @@ int main(void)
     max_abs = 0.0;
     for (n = 0UL; n < N; ++n)
     {
-        temp = fabsf(y0[n] - y1[n]);
+        temp = fabs(y0[n] - y1[n]);
         if (max_abs < temp)
             max_abs = temp;
 
-        temp = fabsf((y0[n] - y1[n]) / y1[n]);
+        temp = fabs((y0[n] - y1[n]) / y1[n]);
         if (max_rel < temp)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.16f\n", (double)max_abs);
-    printf("Max Rel Error: %.16f\n", (double)max_rel);
+    printf("Max Abs Error: %.24f\n", max_abs);
+    printf("Max Rel Error: %.24f\n", max_rel);
 
     free(x);
     free(y0);

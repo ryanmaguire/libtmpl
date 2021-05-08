@@ -99,3 +99,4 @@ long double tmpl_LDouble_Log(long double x)
 
 #endif
 /*  End of #if __HAS_C99_MATH_H__ == 0                                        */
+

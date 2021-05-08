@@ -23,6 +23,11 @@
 #include <math.h>
 #include <time.h>
 
+static float mod2f(float x)
+{
+    return fmodf(x, 2.0F);
+}
+
 int main(void)
 {
     float start, end, dx, max_abs, max_rel, temp;
@@ -33,10 +38,10 @@ int main(void)
     float (*f0)(float);
     float (*f1)(float);
 
-    f0 = tmpl_Float_Sin;
-    f1 = sinf;
+    f0 = tmpl_Float_Mod_2;
+    f1 = mod2f;
 
-    start = -100.0F;
+    start = 0.0F;
     end   = 100.0F;
     N     = 1E8;
     dx    = (end - start) / (float)N;
