@@ -116,3 +116,13 @@ const float tmpl_Natural_Log_of_Two_F       = 0.693147181F;
 const double tmpl_Natural_Log_of_Two        = 0.69314718055994531;
 const long double tmpl_Natural_Log_of_Two_L = 0.6931471805599453094172321L;
 
+/*  log_e( 10 ) = ln( 10 )                                                    */
+const float tmpl_Natural_Log_of_Ten_F       = 2.302585093F;
+const double tmpl_Natural_Log_of_Ten        = 2.30258509299404568;
+const long double tmpl_Natural_Log_of_Ten_L = 2.3025850929940456840179910L;
+
+/*  pi / 180                                                                  */
+const float tmpl_Deg_to_Rad_F       = 1.745329251E-2F;
+const double tmpl_Deg_to_Rad        = 1.74532925199432957E-2;
+const long double tmpl_Deg_to_Rad_L = 1.74532925199432957692369076E-2L;
+
