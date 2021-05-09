@@ -206,40 +206,25 @@ extern const float tmpl_Deg_to_Rad_F;
 extern const double tmpl_Deg_to_Rad;
 extern const long double tmpl_Deg_to_Rad_L;
 
+/*  180 / pi                                                                  */
+extern const float tmpl_Rad_to_Deg_F;
+extern const double tmpl_Rad_to_Deg;
+extern const long double tmpl_Rad_to_Deg_L;
 
-#define tmpl_Rad_To_Deg_F 57.295779513F
-#define tmpl_Rad_To_Deg   57.29577951308232087
-#define tmpl_Rad_To_Deg_L 57.29577951308232087679815481L
+/*  Positive Infinity                                                         */
+extern const float tmpl_Infinity_F;
+extern const double tmpl_Infinity;
+extern const long double tmpl_Infinity_L;
 
-/*  Macros for the largest values of float, double, and long double,          *
- *  respectively, that will not return INFINITY when exp(x) is computed.      */
-#define tmpl_Max_Float_Base_E    (FLT_MAX_10_EXP  * tmpl_Natural_Log_Of_10_F)
-#define tmpl_Max_Double_Base_E   (DBL_MAX_10_EXP  * tmpl_Natural_Log_Of_10)
-#define tmpl_Max_LDouble_Base_E  (LDBL_MAX_10_EXP * tmpl_Natural_Log_Of_10_L)
+/*  Largest value such that exp(x) will not return inifinity.                 */
+extern const float tmpl_Max_Float_Base_E;
+extern const double tmpl_Max_Double_Base_E;
+extern const long double tmpl_Max_LDouble_Base_E;
 
-/*  Macros for the smallest values of float, double, and long double,         *
- *  respectively, that will not return 0 when exp(x) is computed.             */
-#define tmpl_Min_Float_Base_E    (FLT_MIN_10_EXP  * tmpl_Natural_Log_Of_10_F)
-#define tmpl_Min_Double_Base_E   (DBL_MIN_10_EXP  * tmpl_Natural_Log_Of_10)
-#define tmpl_Min_LDouble_Base_E  (LDBL_MIN_10_EXP * tmpl_Natural_Log_Of_10_L)
-
-/*  Set infinity to the HUGE_VAL macro that is specified in math.h. Most      *
- *  implementations already have an INFINITY macro, but it is not required.   */
-#define tmpl_Infinity (HUGE_VAL)
-
-/*  Float and long double version of HUGE_VAL may be provided, but are not    *
- *  required. Probe this with a preprocessor statement.                       */
-#ifdef HUGE_VALF
-#define tmpl_Infinity_F (HUGE_VALF)
-#else
-#define tmpl_Infinity_F ((float)(tmpl_Infinity))
-#endif
-
-#ifdef HUGE_VALL
-#define tmpl_Infinity_L (HUGE_VALL)
-#else
-#define tmpl_Infinity_L ((long double)(tmpl_Infinity))
-#endif
+/*  Smallest positive value such that exp(x) will not return zero.            */
+extern const float tmpl_Min_Float_Base_E;
+extern const double tmpl_Min_Double_Base_E;
+extern const long double tmpl_M_LDouble_Base_E;
 
 /*  We'll use the CPYTHON method of defining NAN, the source code of which is *
  *  contained in python/cpython/Include/pymath.h.                             */

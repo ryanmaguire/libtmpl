@@ -33,8 +33,8 @@ int main(void)
     double (*f0)(double);
     double (*f1)(double);
 
-    f0 = tmpl_Double_Sin;
-    f1 = sin;
+    f0 = tmpl_Double_Cos;
+    f1 = cos;
 
     start = -100.0;
     end   = 100.0;

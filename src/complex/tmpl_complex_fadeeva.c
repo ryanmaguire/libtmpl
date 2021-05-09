@@ -148,6 +148,7 @@
 
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
+#include <float.h>
 
 /******************************************************************************
  *  Precomputed table of expa2n2[n-1] = exp(-a2*n*n)                          *
@@ -377,7 +378,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
             c2=0.08254;
             c3=0.1421;
             c4=0.2023;
-            nu = floor(c0 + c1 / (c2*abs_x + c3*abs_y + c4));
+            nu = tmpl_Double_Floor(c0 + c1 / (c2*abs_x + c3*abs_y + c4));
             wr = xs;
             wi = abs_y;
             nu = 0.5 * (nu - 1);
@@ -471,8 +472,8 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
         /*  x > 5e-4, compute sum4 and sum5 separately.                       */
         else
         {
-            expx2 = exp(-abs_x*abs_x);
-            exp2ax = exp((2*a)*abs_x);
+            expx2 = tmpl_Double_Exp(-abs_x*abs_x);
+            exp2ax = tmpl_Double_Exp((2*a)*abs_x);
             expm2ax = 1 / exp2ax;
             for (n = 1; ; ++n)
             {
@@ -496,7 +497,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
         if (z_y > -6.0)
             expx2erfcxy = expx2*tmpl_Double_Erfcx(z_y);
         else
-            expx2erfcxy = 2*exp(z_y*z_y-abs_x*abs_x);
+            expx2erfcxy = 2.0*tmpl_Double_Exp(z_y*z_y-abs_x*abs_x);
 
         /*  Imaginary terms cancel.                                           */
         if (z_y > 5.0)
@@ -532,15 +533,15 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
 
         /*  |y| < 1e-10, so we only need exp(-x*x) term (round instead of     *
          *  ceil as in original paper; note that x/a > 1 here).               */
-        re_temp = exp(-z_x*z_x);
+        re_temp = tmpl_Double_Exp(-z_x*z_x);
         w = tmpl_CDouble_Rect(re_temp, 0.0);
 
         /*  sum in both directions, starting at n0.                           */
-        n0 = floor(abs_x/a + 0.5);
+        n0 = tmpl_Double_Floor(abs_x/a + 0.5);
         dx = a*n0 - abs_x;
-        sum3 = exp(-dx*dx) / (a2*(n0*n0) + z_y*z_y);
+        sum3 = tmpl_Double_Exp(-dx*dx) / (a2*(n0*n0) + z_y*z_y);
         sum5 = a*n0 * sum3;
-        exp1 = exp(4*a*dx);
+        exp1 = tmpl_Double_Exp(4*a*dx);
         exp1dn = 1.0;
 
         /*  Loop over n0-dn and n0+dn terms.                                  */
@@ -548,7 +549,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
         {
             np = n0 + dn;
             nm = n0 - dn;
-            tp = exp(-(a*dn+dx)*(a*dn+dx));
+            tp = tmpl_Double_Exp(-(a*dn+dx)*(a*dn+dx));
 
             /*  trick to get tm from tp.                                      */
             tm = tp * (exp1dn *= exp1);
@@ -563,7 +564,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
         while (1)
         {
             np = n0 + dn++;
-            tp = exp(-(a*dn+dx)*(a*dn+dx)) / (a2*(np*np) + z_y*z_y);
+            tp = tmpl_Double_Exp(-(a*dn+dx)*(a*dn+dx)) / (a2*(np*np) + z_y*z_y);
             sum3 += tp;
             sum5 += a * np * tp;
             if (a * np * tp < DBL_EPSILON * sum5)

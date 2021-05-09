@@ -126,3 +126,9 @@ const float tmpl_Deg_to_Rad_F       = 1.745329251E-2F;
 const double tmpl_Deg_to_Rad        = 1.74532925199432957E-2;
 const long double tmpl_Deg_to_Rad_L = 1.74532925199432957692369076E-2L;
 
+/*  180 / pi                                                                  */
+const float tmpl_Rad_to_Deg_F       = 57.295779513F;
+const double tmpl_Rad_to_Deg        = 57.29577951308232087;
+const long double tmpl_Rad_to_Deg_L = 57.29577951308232087679815481L;
+
+

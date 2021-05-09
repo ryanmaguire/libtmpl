@@ -93,6 +93,7 @@
 
 /*  Header file where the prototypes for these functions are defined.         */
 #include <libtmpl/include/tmpl_math.h>
+#include <math.h>
 
 /*  The "double" version of atan2 is defined in both C89 and C99 math.h so we *
  *  only need to alias this function.                                         */

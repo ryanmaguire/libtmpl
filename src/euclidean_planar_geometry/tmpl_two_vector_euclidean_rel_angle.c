@@ -49,6 +49,7 @@
 
 /*  tmpl_NaN defined here.                                                    */
 #include <libtmpl/include/tmpl_math.h>
+#include <math.h>
 
 /*  Function prototype and two-vector typedef found here.                     */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
