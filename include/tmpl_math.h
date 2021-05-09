@@ -119,45 +119,6 @@
 #ifndef __TMPL_MATH_H__
 #define __TMPL_MATH_H__
 
-/*  The __TMPL_USING_C99_MATH_H__ macro is found here.                        */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Check which version of C you are compiling with and set the macro         *
- *  __HAS_C99_MATH_H__ accordingly.                                           */
-#if __TMPL_USING_C99_MATH_H__ == 1
-
-/*  The __STDC_VERSION__ macro should be set to C99 or higher. Check this.    */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-
-/*  You've requested C99 math.h and have support for it, so set the           *
- *  __TMPL_HAS_C99_MATH_H__ macro to 1.                                       */
-#define __TMPL_HAS_C99_MATH_H__ 1
-
-#else
-/*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L     */
-
-/*  You requested C99 math.h but don't have it. Abort with error.             */
-#error "Requested C99 math.h but your compiler does not support it."
-
-#endif
-/*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L       */
-
-#else
-/*  Else statement for #if __TMPL_USING_C99_MATH_H__ == 1.                    */
-
-/*  You have not requested C99 math.h, so set __TMPL_HAS_C99_MATH_H__ to 0.   */
-#define __TMPL_HAS_C99_MATH_H__ 0
-
-#endif
-/*  End of #if __TMPL_USING_C99_MATH_H__ == 1.                                */
-
-/*  Include the standard library header math.h.                               */
-#include <math.h>
-
-/*  And this header file contains macros for the smallest and largest allowed *
- *  values for your system.                                                   */
-#include <float.h>
-
 /* Declare Miscellaneous Constants.                                           */
 
 /*  sqrt( 1 / (2pi) )                                                         */
@@ -235,18 +196,16 @@ extern const float tmpl_Natural_Log_of_Two_F;
 extern const double tmpl_Natural_Log_of_Two;
 extern const long double tmpl_Natural_Log_of_Two_L;
 
-#define tmpl_Natural_Log_Of_10_F     2.302585093F
+/*  log_e( 10 ) = ln( 10 )                                                    */
+extern const float tmpl_Natural_Log_of_Ten_F;
+extern const double tmpl_Natural_Log_of_Ten;
+extern const long double tmpl_Natural_Log_of_Ten_L;
 
-/*  Double precision constants.                                               */
-#define tmpl_Natural_Log_Of_10       2.30258509299404568
+/*  pi / 180                                                                  */
+extern const float tmpl_Deg_to_Rad_F;
+extern const double tmpl_Deg_to_Rad;
+extern const long double tmpl_Deg_to_Rad_L;
 
-/*  Long double precision constants.                                          */
-#define tmpl_Natural_Log_Of_10_L     2.3025850929940456840179910L
-
-/*  Degrees to radians conversion, and vice-versa.                            */
-#define tmpl_Deg_To_Rad_F 1.745329251e-2F
-#define tmpl_Deg_To_Rad   1.74532925199432957e-2
-#define tmpl_Deg_To_Rad_L 1.74532925199432957692369076e-2L
 
 #define tmpl_Rad_To_Deg_F 57.295779513F
 #define tmpl_Rad_To_Deg   57.29577951308232087
@@ -434,11 +393,6 @@ extern long double tmpl_LDouble_Log(long double x);
 extern float tmpl_Float_Floor(float x);
 extern double tmpl_Double_Floor(double x);
 extern long double tmpl_LDouble_Floor(long double x);
-
-/*  The following functions are not required in C89/C90 implementations of    *
- *  math.h. The algorithms for their computations are very straight-forward,  *
- *  reducing the definitions to computations using sin, cos, exp, etc. We     *
- *  provide them here for portability.                                        */
 
 extern float tmpl_Float_Sinc(float x);
 extern double tmpl_Double_Sinc(double x);
