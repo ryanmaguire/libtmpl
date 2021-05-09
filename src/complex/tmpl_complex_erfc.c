@@ -196,7 +196,7 @@ tmpl_ComplexDouble tmpl_CDouble_Erfc(tmpl_ComplexDouble z)
         /*  If exp(y^2) won't return infinity, use the definition of the      *
          *  Faddeeva function to compute the imaginary part of Erfc(z).       */
         else
-            w_y = -exp(z_y*z_y) * tmpl_Double_Faddeeva_Im(z_y);
+            w_y = -tmpl_Double_Exp(z_y*z_y) * tmpl_Double_Faddeeva_Im(z_y);
 
         /*  Create the output complex number using tmpl_CDouble_Rect.         */
         w = tmpl_CDouble_Rect(w_x, w_y);
@@ -234,11 +234,11 @@ tmpl_ComplexDouble tmpl_CDouble_Erfc(tmpl_ComplexDouble z)
         {
             /*  For positive x we can use erfc(x) = exp(-x^2) erfcx(x).       */
             if (z_x >= 0.0)
-                w_x = exp(-z_x*z_x) * tmpl_Double_Erfcx(z_x);
+                w_x = tmpl_Double_Exp(-z_x*z_x) * tmpl_Double_Erfcx(z_x);
 
             /*  And for negative we use the reflection formula for erfc.      */
             else
-                w_x = 2.0 - exp(-z_x*z_x) * tmpl_Double_Erfcx(z_x);
+                w_x = 2.0 - tmpl_Double_Exp(-z_x*z_x) * tmpl_Double_Erfcx(z_x);
         }
 
         /*  Create the output complex number using tmpl_CDouble_Rect.         */

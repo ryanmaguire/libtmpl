@@ -59,7 +59,7 @@ tmpl_CDouble_Square_Wave_Diffraction(double x, double W,
     double a, b, wave_start;
     tmpl_ComplexDouble T_hat, summand;
 
-    wave_start = floor(x/2.0*W);
+    wave_start = tmpl_Double_Floor(x/2.0*W);
     a = 2.0*W*wave_start - (double)N;
 
     if (a<0)

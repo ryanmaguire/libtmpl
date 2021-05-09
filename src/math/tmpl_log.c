@@ -46,7 +46,7 @@ double tmpl_Double_Log(double x)
 }
 
 #else
-
+#include <math.h>
 /*  The "double" version of cos is defined in both C89 and C99 math.h so we   *
  *  only need to alias this function.                                         */
 double tmpl_Double_Log(double x)

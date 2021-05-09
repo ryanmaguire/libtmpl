@@ -43,7 +43,7 @@ float tmpl_Float_Log(float x)
 }
 
 #elif __TMPL_HAS_C99_MATH_H__ == 1
-
+#include <math.h>
 /*  C99 provides float and long double support for their math functions, so   *
  *  simply use to these.                                                      */
 float tmpl_Float_Log(float x)
@@ -57,25 +57,25 @@ float tmpl_Float_Log(float x)
  *  make the code forward compatible. We'll do this in a very simple manner.  */
 float tmpl_Float_Log(float x)
 {
-    unsigned long int exp;
+    unsigned long int exponent;
     float mant, A, A_sq, log_x;
 
     if (x < 0.0F)
-        return tmpl_NaN;
+        return tmpl_NaN_F;
     else if (x == 0.0F)
-        return -tmpl_Infinity;
+        return -tmpl_Infinity_F;
 
     if (x < 1.0F)
         mant = 1.0F/x;
     else
         mant = x;
 
-    exp = 0U;
+    exponent = 0U;
 
     while (mant > 2.0F)
     {
         mant = 0.5F*mant;
-        ++exp;
+        ++exponent;
     }
 
     A = (mant - 1.0F)/(mant + 1.0F);
@@ -88,7 +88,7 @@ float tmpl_Float_Log(float x)
     log_x = log_x*A_sq + 2.000000000F;
     log_x = A*log_x;
 
-    log_x = log_x + 0.69314718056F * (float)exp;
+    log_x = log_x + 0.69314718056F * (float)exponent;
 
     if (x < 1.0F)
         return -log_x;

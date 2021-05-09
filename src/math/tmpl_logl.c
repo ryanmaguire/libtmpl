@@ -4,7 +4,7 @@
 
 
 #if __TMPL_HAS_C99_MATH_H__ == 1
-
+#include <math.h>
 long double tmpl_LDouble_Log(long double x)
 {
     return logl(x);
