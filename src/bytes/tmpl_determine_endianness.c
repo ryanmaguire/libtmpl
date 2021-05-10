@@ -205,7 +205,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
         for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
         {
             ell.x = kll * powll;
-            pow = pow << CHAR_BIT;
+            powll = powll << CHAR_BIT;
         }
 
         if (ell.arr[0] == 0U)
@@ -244,7 +244,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  write 2^CHAR_BIT via 1 << CHAR_BIT. The suffix UL means unsigned long *
      *  which is the data type of pow.                                        */
     pow = 1UL << CHAR_BIT;
-    
+
     /*  Compute the sum (n-1)*b^(n-1) + ... + 2*b^2 + 1*b + 0 via a for loop. */
     for (k = 1UL; k < sizeof(unsigned long int); ++k)
     {
