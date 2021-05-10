@@ -97,7 +97,7 @@ int main(void)
     else if (sizeof(unsigned long long int) == 2)
     {
         union {
-            unsigned long long x;
+            unsigned long long int x;
             char c[2];
         } u = { 0xFF00 };
 
