@@ -165,7 +165,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  indexing this sum and computing these powers. Declare these here. The *
      *  ISO C90 standard forbids mixed-declarations with code, hence we place *
      *  declarations at the top.                                              */
-    unsigned long int k, pow;
+    unsigned long int k, power;
 
     /*  There is one, extremely rare, exceptional case that needs to be       *
      *  handled separately. If sizeof(unsigned long int) = 1, then the char   *
@@ -177,8 +177,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  of portability.                                                       */
     if (sizeof(unsigned long int) == 1)
     {
-
-        /*  If your compiler support C99 or higher, we can try this scheme    *
+        /*  If your compiler supports C99 or higher, we can try this scheme   *
          *  with unsigned long long int, which should definitely have sizeof  *
          *  greater than 1 (but again, is NOT required to). Check this with   *
          *  the standard macro __STDC_VERSION__.                              */
@@ -193,19 +192,19 @@ tmpl_Endian tmpl_Determine_Endianness(void)
             unsigned char arr[sizeof(unsigned long long int)];
         } ell;
 
-        unsigned long long int powll, kll;
+        unsigned long long int powerll, kll;
 
         if (sizeof(unsigned long long int) == 1)
             return tmpl_UnknownEndian;
 
         /*  The ULL suffix means unsigned long long.                          */
         ell.x = 0ULL;
-        powll = 1ULL << CHAR_BIT;
+        powerll = 1ULL << CHAR_BIT;
 
         for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
         {
-            ell.x = kll * powll;
-            powll = powll << CHAR_BIT;
+            ell.x = kll * powerll;
+            powerll = powerll << CHAR_BIT;
         }
 
         if (ell.arr[0] == 0U)
@@ -242,20 +241,20 @@ tmpl_Endian tmpl_Determine_Endianness(void)
      *  binary. We can write this number using bit-shifting. The number       *
      *  1 << N is the number 1 with N zeroes after it, in binary. So we can   *
      *  write 2^CHAR_BIT via 1 << CHAR_BIT. The suffix UL means unsigned long *
-     *  which is the data type of pow.                                        */
-    pow = 1UL << CHAR_BIT;
+     *  which is the data type of power.                                      */
+    power = 1UL << CHAR_BIT;
 
     /*  Compute the sum (n-1)*b^(n-1) + ... + 2*b^2 + 1*b + 0 via a for loop. */
     for (k = 1UL; k < sizeof(unsigned long int); ++k)
     {
-        e.x += k * pow;
+        e.x += k * power;
 
         /*  Given (2^CHAR_BIT)^k, we can get (2^CHAR_BIT)^(k+1) by taking     *
          *  (2^CHAR_BIT)^k and bit-shifting it CHAR_BIT to the left. In       *
          *  decimal, if we had 100, and wanted the next power of ten, we      *
          *  simply add on another zero (or "shift" one to the left)           *
          *  giving us 1000. This is the base 2^CHAR_BIT equivalent.           */
-        pow = pow << CHAR_BIT;
+        power = power << CHAR_BIT;
     }
 
     /*  Now that the unsigned int part of our union is set to the appropriate *
