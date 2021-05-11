@@ -38,6 +38,15 @@
  *  Output:                                                                   *
  *      abs_sq_z (float/double/long double):                                  *
  *          The square of the absolute value of z.                            *
+ *  Called Functions:                                                         *
+ *      tmpl_CFloat_Real_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Real_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Real_Part (tmpl_complex.h)                              *
+ *          Returns the real part of a complex number.                        *
+ *      tmpl_CFloat_Imag_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Imag_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
+ *          Returns the imaginary part of a complex number.                   *
  *  Method:                                                                   *
  *      Extract the real and imaginary parts of z and return x^2 + y^2.       *
  ******************************************************************************
@@ -76,9 +85,12 @@
  *      Copied from rss_ringoccs.                                             *
  *      Edited to make it compatible with libtmpl.                            *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/05/11: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  ******************************************************************************/
 
-/*  Where the prototypes are declared and where complex types are defined.    */
+/*  Where the prototypes are given and where complex types are defined.       */
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Single precision abs squared function.                                    */

@@ -110,6 +110,11 @@ extern const tmpl_ComplexFloat tmpl_CFloat_Infinity;
 extern const tmpl_ComplexDouble tmpl_CDouble_Infinity;
 extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
 
+/*  Complex NaN, defined as NaN + i NaN.                                      */
+extern const tmpl_ComplexFloat tmpl_CFloat_NaN;
+extern const tmpl_ComplexDouble tmpl_CDouble_NaN;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
+
 /*  There used to be complex NaN data types, defined by NaN + i*NaN, where    *
  *  NaN is defined in tmpl_math.h as 0.0 * HUGE_VAL. This wasn't portable     *
  *  since these are not compile time constants, so we can't trust that the    *
