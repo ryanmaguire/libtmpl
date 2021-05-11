@@ -54,9 +54,13 @@ const tmpl_ComplexFloat tmpl_CFloat_Zero = {{0.0F, 0.0F}};
 const tmpl_ComplexFloat tmpl_CFloat_One  = {{1.0F, 0.0F}};
 #ifdef HUGE_VALF
 const tmpl_ComplexFloat tmpl_CFloat_Infinity = {{HUGE_VALF, HUGE_VALF}};
+const tmpl_ComplexFloat tmpl_CFloat_NaN = {{0.0F*HUGE_VALF, 0.0F*HUGE_VALF}};
 #else
 const tmpl_ComplexFloat
 tmpl_CFloat_Infinity = {{(float)HUGE_VAL, (float)HUGE_VAL}};
+
+const tmpl_ComplexFloat
+tmpl_CFloat_NaN = {{0.0F*(float)HUGE_VAL, 0.0F*(float)HUGE_VAL}};
 #endif
 
 /*  Double precision constants.                                               */
@@ -64,6 +68,7 @@ const tmpl_ComplexDouble tmpl_CDouble_I    = {{0.0, 1.0}};
 const tmpl_ComplexDouble tmpl_CDouble_Zero = {{0.0, 0.0}};
 const tmpl_ComplexDouble tmpl_CDouble_One  = {{1.0, 0.0}};
 const tmpl_ComplexDouble tmpl_CDouble_Infinity = {{HUGE_VAL, HUGE_VAL}};
+const tmpl_ComplexDouble tmpl_CDouble_NaN      = {{0.0*HUGE_VAL, 0.0*HUGE_VAL}};
 
 /*  Long double precision constants.                                          */
 const tmpl_ComplexLongDouble tmpl_CLDouble_I    = {{0.0L, 1.0L}};
@@ -71,8 +76,14 @@ const tmpl_ComplexLongDouble tmpl_CLDouble_Zero = {{0.0L, 0.0L}};
 const tmpl_ComplexLongDouble tmpl_CLDouble_One  = {{1.0L, 0.0L}};
 #ifdef HUGE_VALL
 const tmpl_ComplexLongDouble tmpl_LDouble_Infinity = {{HUGE_VALL, HUGE_VALL}};
+
+const tmpl_ComplexLongDouble
+tmpl_CLDouble_NaN = {{0.0L*HUGE_VALL, 0.0L*HUGE_VALL}};
 #else
 const tmpl_ComplexLongDouble
-tmpl_LDouble_Infinity = {{(long double)HUGE_VAL, (long double)HUGE_VAL}};
+tmpl_CLDouble_Infinity = {{(long double)HUGE_VAL, (long double)HUGE_VAL}};
+
+const tmpl_ComplexLongDouble
+tmpl_CLDouble_NaN = {{0.0L*(long double)HUGE_VAL, 0.0L*(long double)HUGE_VAL}};
 #endif
 

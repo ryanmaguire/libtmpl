@@ -40,6 +40,21 @@
  *  Output:                                                                   *
  *      sum (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):              *
  *          The sum of z and w.                                               *
+ *  Called Functions:                                                         *
+ *      tmpl_CFloat_Real_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Real_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Real_Part (tmpl_complex.h)                              *
+ *          Returns the real part of a complex number.                        *
+ *      tmpl_CFloat_Imag_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Imag_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
+ *          Returns the imaginary part of a complex number.                   *
+ *      tmpl_CFloat_Rect        (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Rect       (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Rect      (tmpl_complex.h)                              *
+ *          Creates a complex number from two real ones.                      *
+ *  Method:                                                                   *
+ *      Extract the real and imaginary parts and compute a component-wise sum.*
  *  NOTES:                                                                    *
  *      This file is a fork of the code I wrote for rss_ringoccs.             *
  *      librssringoccs is also released under GPL3.                           *
@@ -77,6 +92,9 @@
  *      Copied from rss_ringoccs.                                             *
  *      Edited to make compatibile with libtmpl.                              *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/05/11: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  ******************************************************************************/
 
 /*  Where the prototypes are declared and where complex types are defined.    */

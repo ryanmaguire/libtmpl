@@ -60,10 +60,7 @@
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
- *          This file provides compatibility between the two standard math.h  *
- *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
- *          provides aliases for the functions, and if C89 math.h is used     *
- *          it defines the functions missing in the earlier version.          *
+ *          Header file containing basic math functions.                      *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -101,13 +98,15 @@
  *      Soft freeze for alpha version of libtmpl.                             *
  *  2021/03/03: Ryan Maguire                                                  *
  *      Edited license.                                                       *
+ *  2021/05/11: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  ******************************************************************************/
 
-/*  Header file which contains aliases for the functions in the standard C    *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+/*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
+/*  Where the prototypes are gven and where complex types are defined.        */
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Single precision complex abs function (cabsf equivalent).                 */
