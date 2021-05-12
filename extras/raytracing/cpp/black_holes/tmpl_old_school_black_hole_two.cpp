@@ -30,10 +30,10 @@
  ******************************************************************************/
 
 /*  Needed for the FILE data type and fprintf function.                       */
-#include <stdio.h>
+#include <cstdio>
 
 /*  Square root function found here.                                          */
-#include <math.h>
+#include <cmath>
 
 /*  A simple structure for dealing with vectors. Vectors are treated as rays  *
  *  of light moving under the influence of the gravity of a black hole.       */
@@ -79,7 +79,7 @@ struct tmpl_simple_vector {
     /*  A method for computing the Euclidean norm of a vector.                */
     double norm(void)
     {
-        return sqrt(*this % *this);
+        return std::sqrt(*this % *this);
     }
 
     /*  A method for computing the square of the Euclidean norm of a vector.  *
@@ -97,7 +97,7 @@ tmpl_simple_vector b2 = tmpl_simple_vector(+3.0, 0.0, 0.0);
 
 /*  The acceleration under the force of gravity is given by Newton's          *
  *  universal law of gravitation. This is the inverse square law.             */
-tmpl_simple_vector acc(tmpl_simple_vector p)
+static tmpl_simple_vector acc(tmpl_simple_vector p)
 {
     /*  We'll use the principle of superposition for the two black holes.     */
     tmpl_simple_vector r1, r2;
@@ -123,7 +123,8 @@ tmpl_simple_vector acc(tmpl_simple_vector p)
 
 /*  Function for computing the path of a light ray under the influence of     *
  *  the gravity of a black hole using Euler's method.                         */
-tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
+static tmpl_simple_vector
+Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 {
     /*  After a finite number of iterations of Euler's method, we'll abort.   */
     unsigned int N = 0U;
@@ -158,7 +159,7 @@ tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 /*  End of Path function.                                                     */
 
 /*  Function for coloring a pixel red.                                        */
-void color_red(FILE *fp, tmpl_simple_vector p)
+static void color_red(FILE *fp, tmpl_simple_vector p)
 {
     /*  The amount of light entering a small area goes inversally with the    *
      *  square of the distance between this area and the light source. We     *
@@ -176,7 +177,7 @@ void color_red(FILE *fp, tmpl_simple_vector p)
 }
 
 /*  Same idea of coloring, but with a gray-to-white gradient.                 */
-void color_white(FILE *fp, tmpl_simple_vector p)
+static void color_white(FILE *fp, tmpl_simple_vector p)
 {
     double x = 25500.0/p.normsq();
     fputc(int(x), fp);
@@ -185,7 +186,7 @@ void color_white(FILE *fp, tmpl_simple_vector p)
 }
 
 /*  Black represents the black hole.                                          */
-void color_black(FILE *fp)
+static void color_black(FILE *fp)
 {
     fputc(0, fp);
     fputc(0, fp);
@@ -212,7 +213,7 @@ int main(void)
     end = 10.0;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 2048U;
+    size = 2U*2048U;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
@@ -261,6 +262,7 @@ int main(void)
 
         }
         /*  End of x for-loop.                                                */
+        std::printf("%u\n", y);
     }
     /*  End of y for-loop.                                                    */
 
