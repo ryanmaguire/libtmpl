@@ -32,10 +32,10 @@
  ******************************************************************************/
 
 /*  Needed for the FILE data type and fprintf function.                       */
-#include <stdio.h>
+#include <cstdio>
 
 /*  Square root function found here.                                          */
-#include <math.h>
+#include <cmath>
 
 /*  A simple structure for dealing with vectors. Vectors are treated as rays  *
  *  of light moving under the influence of the gravity of a black hole.       */
@@ -44,9 +44,14 @@ struct tmpl_simple_vector {
     /*  A vector will be defined by it's Euclidean components, x, y, z.       */
     double x, y, z;
 
+    /*  Empty constructor. Simply return.                                     */
+    tmpl_simple_vector(void)
+    {
+        return;
+    }
+
     /*  Simple method for creating a vector. Simply set the x, y, and z parts *
      *  to the values a, b, and c, respectively.                              */
-    tmpl_simple_vector(void){}
     tmpl_simple_vector(double a, double b, double c)
     {
         x = a;
@@ -75,7 +80,7 @@ struct tmpl_simple_vector {
     /*  A method for computing the Euclidean norm of a vector.                */
     double norm(void)
     {
-        return sqrt(*this % *this);
+        return std::sqrt(*this % *this);
     }
 
     /*  A method for computing the square of the Euclidean norm of a vector.  *
@@ -89,7 +94,7 @@ struct tmpl_simple_vector {
 
 /*  The acceleration under the force of gravity is given by Newton's          *
  *  universal law of gravitation. This is the inverse square law.             */
-tmpl_simple_vector acc(tmpl_simple_vector p)
+static tmpl_simple_vector acc(tmpl_simple_vector p)
 {
     /*  Given a vector p, Newton's universal law of gravitation says the      *
      *  acceleration is proportional to p/||p||^3 = p_hat/||p||^2, where p_hat*
@@ -99,13 +104,14 @@ tmpl_simple_vector acc(tmpl_simple_vector p)
 
     /*  The acceleration is the minus of p times this factor. The reason it   *
      *  is minus p is because gravity pulls inward, so the acceleration is    *
-     *  towards the origin.                                                   */
+     *  towards the black hole.                                               */
     return tmpl_simple_vector(-p.x*factor, -p.y*factor, -p.z*factor);
 }
 
 /*  Function for computing the path of a light ray under the influence of     *
  *  the gravity of a black hole using Euler's method.                         */
-tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
+static tmpl_simple_vector
+Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 {
     /*  This function makes a very naive assumption. Newton's Second Law      *
      *  states the F = ma, where a is the acceleration. So, for gravity, we   *
@@ -124,7 +130,7 @@ tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
      *  apply Newtonian mechanics to get a rough idea as to what a black hole *
      *  would look like.                                                      */
 
-    /* The black hole is of radius 1 at the origin, and our detector is the   *
+    /* The black hole is a point at the origin, and our detector is the       *
      * plane z = -10. Our source of light (defined in the main routine) is    *
      * some plane z = positive-number. In other words, the light is coming    *
      * down and heading towards our detector. We'll increment time using a    *
@@ -134,13 +140,13 @@ tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 
     while ((p.z > -10.0) && (N < 1E6))
     {
-        /*  We can solve d^2/dt^2 = F(p) numerical in two steps. First, we    *
+        /*  We numerically solve d^2/dt^2 p = F(p) in two steps. First, we    *
          *  compute the velocity dp/dt, meaning we need to solve dv/dt = F(p).*
          *  We solve numerically with Euler's method. Then we use this v to   *
          *  compute p via dp/dt = v, again solving numerically with Euler's   *
          *  method. So long as dt is small, the error should be small as well.*/
-        v = v + acc(p) * dt;
         p = p + v * dt;
+        v = v + acc(p) * dt;
 
         /*  It is possible that a photon was captured into orbit, but not     *
          *  absorbed into the black hole. To avoid an infinite loop, abort    *
@@ -153,38 +159,38 @@ tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 /*  End of Path function.                                                     */
 
 /*  Function for coloring a pixel red.                                        */
-void color_red(FILE *fp, tmpl_simple_vector p)
+static void color_red(FILE *fp, tmpl_simple_vector p)
 {
     /*  The amount of light entering a small area goes inversally with the    *
      *  square of the distance between this area and the light source. We     *
      *  illuminate the detector based on this idea to give a gradient of      *
      *  light-intensity to better understand which photons are coming from    *
      *  where. Since the detector is the plane z = -10, the max value of      *
-     *  1/||p||^2 is 100. RGB color takes values between 0 and 255, so we     *
+     *  1/||p||^2 is 1/100. RGB color takes values between 0 and 255, so we     *
      *  need to normalize 1/||p||^2 so that the max value is 255.             */
     double x = 25500.0/p.normsq();
 
     /*  RGB is Red-Green-Blue. Red is (255, 0, 0).                            */
-    fputc(int(x), fp);
-    fputc(0, fp);
-    fputc(0, fp);
+    std::fputc(int(x), fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
 }
 
 /*  Same idea of coloring, but with a gray-to-white gradient.                 */
-void color_white(FILE *fp, tmpl_simple_vector p)
+static void color_white(FILE *fp, tmpl_simple_vector p)
 {
     double x = 25500.0/p.normsq();
-    fputc(int(x), fp);
-    fputc(int(x), fp);
-    fputc(int(x), fp);
+    std::fputc(int(x), fp);
+    std::fputc(int(x), fp);
+    std::fputc(int(x), fp);
 }
 
 /*  Black represents the black hole.                                          */
-void color_black(FILE *fp)
+static void color_black(FILE *fp)
 {
-    fputc(0, fp);
-    fputc(0, fp);
-    fputc(0, fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
 }
 
 /*  Main function for performing the raytracing.                              */
@@ -199,27 +205,31 @@ int main(void)
     tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
     tmpl_simple_vector p;
     unsigned int x, y, size;
-    double factor, start, end;
+    double factor, start, end, dt;
 
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
     start = -10.0;
     end = 10.0;
+    
+    /*  Step size for our increment in time.                                  */
+    dt = 0.01;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 2048U;
+    size = 1024U;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
-    factor = (end - start) / (double)size;
+    factor = (end - start) / (double)(size - 1U);
 
-    /*  Open the file "black.ppm" and give it write permissions.              */
-    FILE *fp = fopen("black_hole_point_source.ppm", "w");
+    /*  Open the file "black_hole_point_source.ppm" and give it write         *
+     *  permissions.                                                          */
+    FILE *fp = std::fopen("black_hole_point_source.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
     if (!fp)
     {
-        puts("fopen failed and returned NULL. Aborting.");
+        std::puts("fopen failed and returned NULL. Aborting.");
         return -1;
     }
 
@@ -227,7 +237,7 @@ int main(void)
      *  three numbers. P6 means we're encoding an RGB image in binary format. *
      *  The first two numbers are the number of pixels in the x and y axes.   *
      *  The last number is the size of our color spectrum, which is 255.      */
-    fprintf(fp, "P6 %u %u 255\n", size, size);
+    std::fprintf(fp, "P6 %u %u\n255\n", size, size);
 
     /*  We can NOT do parallel processing with the creation of our PPM file   *
      *  since the order the values are computed is essential.                 */
@@ -239,7 +249,7 @@ int main(void)
             p = tmpl_simple_vector(start + factor*x, start + factor*y, 10.0);
 
             /*  Raytrace where the photon that hit p came from.               */
-            p = Path(p, v, 0.01);
+            p = Path(p, v, dt);
 
             /*  If the photon never made it to the detector, assume it was    *
              *  captured by the black hole and color the pixel black.         */
@@ -248,19 +258,18 @@ int main(void)
 
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
-            else if ((int)(ceil(p.x) + ceil(p.y)) & 1)
+            else if ((int)(std::ceil(p.x) + std::ceil(p.y)) & 1)
                 color_white(fp, p);
 
             else
                 color_red(fp, p);
-
         }
         /*  End of x for-loop.                                                */
     }
     /*  End of y for-loop.                                                    */
 
     /*  Close the file and return.                                            */
-    fclose(fp);
+    std::fclose(fp);
     return 0;
 }
 /*  End of main.                                                              */
