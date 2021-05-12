@@ -80,7 +80,7 @@ struct tmpl_simple_vector {
     /*  A method for computing the Euclidean norm of a vector.                */
     double norm(void)
     {
-        return sqrt(*this % *this);
+        return std::sqrt(*this % *this);
     }
 
     /*  A method for computing the square of the Euclidean norm of a vector.  *
@@ -94,7 +94,7 @@ struct tmpl_simple_vector {
 
 /*  The acceleration under the force of gravity is given by Newton's          *
  *  universal law of gravitation. This is the inverse square law.             */
-tmpl_simple_vector acc(tmpl_simple_vector p)
+static tmpl_simple_vector acc(tmpl_simple_vector p)
 {
     /*  Given a vector p, Newton's universal law of gravitation says the      *
      *  acceleration is proportional to p/||p||^3 = p_hat/||p||^2, where p_hat*
@@ -110,7 +110,8 @@ tmpl_simple_vector acc(tmpl_simple_vector p)
 
 /*  Function for computing the path of a light ray under the influence of     *
  *  the gravity of a black hole using Euler's method.                         */
-tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
+static tmpl_simple_vector
+Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 {
     /*  This function makes a very naive assumption. Newton's Second Law      *
      *  states the F = ma, where a is the acceleration. So, for gravity, we   *
@@ -162,7 +163,7 @@ tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 /*  End of Path function.                                                     */
 
 /*  Function for coloring a pixel red.                                        */
-void color_red(FILE *fp, tmpl_simple_vector p)
+static void color_red(FILE *fp, tmpl_simple_vector p)
 {
     /*  The amount of light entering a small area goes inversally with the    *
      *  square of the distance between this area and the light source. We     *
@@ -174,26 +175,26 @@ void color_red(FILE *fp, tmpl_simple_vector p)
     double x = 25500.0/p.normsq();
 
     /*  RGB is Red-Green-Blue. Red is (255, 0, 0).                            */
-    fputc(int(x), fp);
-    fputc(0, fp);
-    fputc(0, fp);
+    std::fputc(int(x), fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
 }
 
 /*  Same idea of coloring, but with a gray-to-white gradient.                 */
-void color_white(FILE *fp, tmpl_simple_vector p)
+static void color_white(FILE *fp, tmpl_simple_vector p)
 {
     double x = 25500.0/p.normsq();
-    fputc(int(x), fp);
-    fputc(int(x), fp);
-    fputc(int(x), fp);
+    std::fputc(int(x), fp);
+    std::fputc(int(x), fp);
+    std::fputc(int(x), fp);
 }
 
 /*  Black represents the black hole.                                          */
-void color_black(FILE *fp)
+static void color_black(FILE *fp)
 {
-    fputc(0, fp);
-    fputc(0, fp);
-    fputc(0, fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
 }
 
 /*  Main function for performing the raytracing.                              */
@@ -226,12 +227,12 @@ int main(void)
     factor = (end - start) / (double)(size - 1U);
 
     /*  Open the file "black_hole.ppm" and give it write permissions.         */
-    FILE *fp = fopen("black_hole.ppm", "w");
+    FILE *fp = std::fopen("black_hole.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
     if (!fp)
     {
-        puts("fopen failed and returned NULL. Aborting.");
+        std::puts("fopen failed and returned NULL. Aborting.");
         return -1;
     }
 
@@ -239,7 +240,7 @@ int main(void)
      *  three numbers. P6 means we're encoding an RGB image in binary format. *
      *  The first two numbers are the number of pixels in the x and y axes.   *
      *  The last number is the size of our color spectrum, which is 255.      */
-    fprintf(fp, "P6 %u %u\n255\n", size, size);
+    std::fprintf(fp, "P6 %u %u\n255\n", size, size);
 
     /*  We can NOT do parallel processing with the creation of our PPM file   *
      *  since the order the values are computed is essential. If we wanted to *
@@ -263,7 +264,7 @@ int main(void)
 
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
-            else if ((int)(ceil(p.x) + ceil(p.y)) & 1)
+            else if ((int)(std::ceil(p.x) + std::ceil(p.y)) & 1)
                 color_white(fp, p);
 
             else
@@ -275,7 +276,7 @@ int main(void)
     /*  End of y for-loop.                                                    */
 
     /*  Close the file and return.                                            */
-    fclose(fp);
+    std::fclose(fp);
     return 0;
 }
 /*  End of main.                                                              */
