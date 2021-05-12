@@ -39,9 +39,7 @@ struct vector {
     }
 };
 
-int G[9] = {
-    65024, 33345, 139841, 148041, 164437, 197219, 164417, 147968, 249728
-};
+int G[] = {247570, 280596, 280600, 249748, 18578, 18577, 231184, 16, 16};
 
 float R(void)
 {
@@ -50,19 +48,25 @@ float R(void)
 
 int T(vector o, vector d, float &t, vector &n)
 {
-    t=1e9;
-    int m=0;
-    float p=-o.z/d.z;
+    t = 1e9;
+    int m = 0;
+    float p = -o.z/d.z;
 
-    if(0.01 < p)
-        t = p, n = vector(0,0,1), m=1;
+    if (0.01 < p)
+    {
+        t = p;
+        n = vector(0,0,1);
+        m = 1;
+    }
 
     for(int k=19; k--;)
         for(int j=9; j--;)
             if(G[j]&1<<k)
             {
                     vector p = o + vector(-k,0,-j-4);
-                    float b = p%d, c=p%p-1, q=b*b-c;
+                    float b = p%d;
+                    float c=p%p-1;
+                    float q=b*b-c;
 
                     if(q > 0)
                     {
