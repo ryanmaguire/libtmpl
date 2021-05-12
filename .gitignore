@@ -1,6 +1,7 @@
 # This file is created by the make.sh script.
 include/tmpl_endianness.h
 
+*.ppm
 .DS_Store*
 *.pyc
 *.icloud
