@@ -21,9 +21,6 @@
  *      instead of relativity. Light is given an arbitrarily small mass and   *
  *      we use Newton's universal law of gravitation to see how a black hole  *
  *      would bend the light. This is a very rough estimate of black holes.   *
- *      In addition to the checkerboard pattern, a rainbow gradient is added  *
- *      to the image based on the direction of the photon of light as it      *
- *      hits the detector.                                                    *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as a part of the libtmpl  *
  *      library. It is also written in C++, just to mix things up a bit.      *
@@ -31,7 +28,7 @@
  *      C++11, and C++17 and recieved no warnings.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       May 12, 2021                                                  *
+ *  Date:       May 6, 2021                                                   *
  ******************************************************************************/
 
 /*  Needed for the FILE data type and fprintf function.                       */
@@ -95,109 +92,34 @@ struct tmpl_simple_vector {
 };
 /*  End of definition of tmpl_simple_vector.                                  */
 
-/*  Struct for working with RGB colors.                                       */
-struct tmpl_simple_color {
-
-    /*  A color in a computer is defined by its Red, Green, and Blue parts.   */
-    unsigned char red, green, blue;
+/*  6-dimensional vector used in Runge-Kutta computations.                    */
+struct tmpl_six_vector {
+    tmpl_simple_vector r, v;
 
     /*  Empty constructor. Simply return.                                     */
-    tmpl_simple_color(void)
+    tmpl_six_vector(void)
     {
         return;
     }
 
-    /*  Set the red, green, and blue components to the given inputs.          */
-    tmpl_simple_color(unsigned char r, unsigned char g, unsigned char b)
+    /*  Constructor from two 3-vectors.                                       */
+    tmpl_six_vector(tmpl_simple_vector a, tmpl_simple_vector b)
     {
-        red   = r;
-        green = g;
-        blue  = b;    
+        r = a;
+        v = b;
     }
 
-    /*  Operator for adding colors. We take the average of the components.    */
-    tmpl_simple_color operator + (tmpl_simple_color c)
+    tmpl_six_vector operator + (tmpl_six_vector u)
     {
-        /*  To avoid overflows, convert to double and perform the sum.        */
-        double x, y, z;
-        unsigned char r, g, b;
-
-        /*  Cast the values to doubles and take the average, component-wise.  */
-        x = 0.5 * ((double)red   + (double)c.red);
-        y = 0.5 * ((double)green + (double)c.green);
-        z = 0.5 * ((double)blue  + (double)c.blue);
-
-        /*  Cast the double back to unsigned char's and return.               */
-        r = (unsigned char)x;
-        g = (unsigned char)y;
-        b = (unsigned char)z;
-        return tmpl_simple_color(r, g, b);
+        return tmpl_six_vector(r + u.r, v + u.v);
     }
 
-    /*  Function for writing the color to a PPM file.                         */
-    void write(FILE *fp)
+    tmpl_six_vector operator * (double a)
     {
-        /*  The order we write this matters. PPM wants red-green-blue.        */
-        std::fputc(red, fp);
-        std::fputc(green, fp);
-        std::fputc(blue, fp);
+        return tmpl_six_vector(r*a, v*a);
     }
 };
-/*  End of tmpl_simple_color.                                                 */
-
-/*  Function for creating a rainbow-gradient based on the angle the velocity  *
- *  vector makes with the detector.                                           */ 
-static tmpl_simple_color color_gradient(tmpl_simple_vector v)
-{
-    /*  Declare unsigned char's for computing the output color.               */
-    unsigned char red, green, blue;
-
-    /*  And two doubles for dealing with the angle.                           */
-    double angle, scaled;
-
-    /*  We want the zenith angle of the velocity vector. This can be computed *
-     *  using the cylindrical coordinates of the vector.                      */
-    angle = std::atan2(std::fabs(v.z), std::sqrt(v.x*v.x + v.y*v.y));
-    
-    /*  Scale the angle so that it falls between 0 and 255.                   */
-    scaled = 255.0 * angle / M_PI_2;
-
-    /*  Use an RGB rainbow gradient to color the current pixel. We'll set     *
-     *  blue to correspond to the least value and red for the greatest, with  *
-     *  a continuous gradient in between.                                     */
-    if (scaled < 64)
-    {
-        red   = (unsigned char)0;
-        green = (unsigned char)(4.0*scaled);
-        blue  = (unsigned char)255;
-    }
-    else if (scaled < 128)
-    {
-        red   = (unsigned char)0;
-        green = (unsigned char)255;
-        blue  = (unsigned char)(255 - 4*(scaled - 64));
-    }
-    else if (scaled < 192)
-    {
-        red   = (unsigned char)(4.0*(scaled-128));
-        green = (unsigned char)255;
-        blue  = (unsigned char)0;
-    }
-    else if (scaled < 255)
-    {
-        red   = (unsigned char)255;
-        green = (unsigned char)(255 - 4*(scaled-192));
-        blue  = (unsigned char)0;
-    }
-    else
-    {
-        red   = (unsigned char)255;
-        green = (unsigned char)0;
-        blue  = (unsigned char)0;
-    }
-    
-    return tmpl_simple_color(red, green, blue);
-} 
+/*  End of definition of tmpl_six_vector.                                     */
 
 /*  The acceleration under the force of gravity is given by Newton's          *
  *  universal law of gravitation. This is the inverse square law.             */
@@ -216,9 +138,9 @@ static tmpl_simple_vector acc(tmpl_simple_vector p)
 }
 
 /*  Function for computing the path of a light ray under the influence of     *
- *  the gravity of a black hole using Euler's method.                         */
+ *  the gravity of a black hole using the Runge-Kutta method.                 */
 static tmpl_simple_vector
-Path(tmpl_simple_vector p, tmpl_simple_vector &v, double dt)
+Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 {
     /*  This function makes a very naive assumption. Newton's Second Law      *
      *  states the F = ma, where a is the acceleration. So, for gravity, we   *
@@ -237,7 +159,7 @@ Path(tmpl_simple_vector p, tmpl_simple_vector &v, double dt)
      *  apply Newtonian mechanics to get a rough idea as to what a black hole *
      *  would look like.                                                      */
 
-    /* The black hole is a point at the origin, and our detector is the       *
+    /* The black hole is of radius 1 at the origin, and our detector is the   *
      * plane z = -10. Our source of light (defined in the main routine) is    *
      * some plane z = positive-number. In other words, the light is coming    *
      * down and heading towards our detector. We'll increment time using a    *
@@ -245,15 +167,37 @@ Path(tmpl_simple_vector p, tmpl_simple_vector &v, double dt)
      * hits the detector, or is absorbed by the black hole.                   */
     unsigned int N = 0U;
 
+    /*  Factor for Runge-Kutta method.                                        */
+    tmpl_six_vector k1, k2, k3, k4, u;
+    double h0, h1;
+    h0 = 0.5 * dt;
+    h1 = dt * 0.1666666666666667;
+    k1 = tmpl_six_vector(v, acc(p));
+    k2 = tmpl_six_vector(v + k1.v * h0, acc(p + k1.r * h0));
+    k3 = tmpl_six_vector(v + k2.v * h0, acc(p + k2.r * h0));
+    k4 = tmpl_six_vector(v + k2.v * dt, acc(p + k2.r * dt));
+    u  = tmpl_six_vector(p, v);
+
     while ((p.z > -10.0) && (N < 1E5))
     {
+        /* If the light was absorbed by the black hole, abort the computation.*/
+        if (p.norm() <= 1.0)
+            return p;
+
         /*  We numerically solve d^2/dt^2 p = F(p) in two steps. First, we    *
          *  compute the velocity dp/dt, meaning we need to solve dv/dt = F(p).*
-         *  We solve numerically with Euler's method. Then we use this v to   *
-         *  compute p via dp/dt = v, again solving numerically with Euler's   *
+         *  We solve numerically with the Runge-Kutta method. We use this v to*
+         *  compute p via dp/dt = v, solving numerically with Runge-Kutta.    *
          *  method. So long as dt is small, the error should be small as well.*/
-        p = p + v * dt;
-        v = v + acc(p) * dt;
+        u = u + (k1 + k2*2.0 + k3*2.0 + k4) * h1;
+        p = u.r;
+        v = u.v;
+
+        /*  Update the Runge-Kutta factors.                                   */
+        k1 = tmpl_six_vector(v, acc(p));
+        k2 = tmpl_six_vector(v + k1.v * h0, acc(p + k1.r * h0));
+        k3 = tmpl_six_vector(v + k2.v * h0, acc(p + k2.r * h0));
+        k4 = tmpl_six_vector(v + k2.v * dt, acc(p + k2.r * dt));
 
         /*  It is possible that a photon was captured into orbit, but not     *
          *  absorbed into the black hole. To avoid an infinite loop, abort    *
@@ -265,6 +209,41 @@ Path(tmpl_simple_vector p, tmpl_simple_vector &v, double dt)
 }
 /*  End of Path function.                                                     */
 
+/*  Function for coloring a pixel red.                                        */
+static void color_red(FILE *fp, tmpl_simple_vector p)
+{
+    /*  The amount of light entering a small area goes inversally with the    *
+     *  square of the distance between this area and the light source. We     *
+     *  illuminate the detector based on this idea to give a gradient of      *
+     *  light-intensity to better understand which photons are coming from    *
+     *  where. Since the detector is the plane z = -10, the max value of      *
+     *  1/||p||^2 is 1/100. RGB color takes values between 0 and 255, so we   *
+     *  need to normalize 1/||p||^2 so that the max value is 255.             */
+    double x = 25500.0/p.normsq();
+
+    /*  RGB is Red-Green-Blue. Red is (255, 0, 0).                            */
+    std::fputc(int(x), fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
+}
+
+/*  Same idea of coloring, but with a gray-to-white gradient.                 */
+static void color_white(FILE *fp, tmpl_simple_vector p)
+{
+    double x = 25500.0/p.normsq();
+    std::fputc(int(x), fp);
+    std::fputc(int(x), fp);
+    std::fputc(int(x), fp);
+}
+
+/*  Black represents the black hole.                                          */
+static void color_black(FILE *fp)
+{
+    std::fputc(0, fp);
+    std::fputc(0, fp);
+    std::fputc(0, fp);
+}
+
 /*  Main function for performing the raytracing.                              */
 int main(void)
 {
@@ -274,27 +253,15 @@ int main(void)
      *  to be 1 for simplicity. Adjusting this value would be equivalent to   *
      *  adjusting the strength of Gravity. Smaller values mean stronger       *
      *  gravity, and larger values mean weaker gravity.                       */
-    tmpl_simple_vector v, v_start;
-    tmpl_simple_color white = tmpl_simple_color(255U, 255U, 255U);
-    tmpl_simple_color red   = tmpl_simple_color(255U, 0U, 0U);
-    tmpl_simple_color black = tmpl_simple_color(0U, 0U, 0U);
-    tmpl_simple_color color;
+    tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
     tmpl_simple_vector p;
     unsigned int x, y, size;
     double factor, start, end, dt;
 
-    /*  The velocity will change throughout the computation. This is against  *
-     *  relativistic physics, which says the speed of light is constant. It   *
-     *  will also be possible, in this model, for light to travel faster      *
-     *  than the speed of light since gravity will accelerate it. This is why *
-     *  our computation is a very rough estimate.                             */
-    v_start = tmpl_simple_vector(0.0, 0.0, -1.0);
-    v = v_start;
-
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
     start = -10.0;
-    end   = 10.0;
+    end = 10.0;
     
     /*  The step-size for our increment in time.                              */
     dt = 0.01;
@@ -306,8 +273,8 @@ int main(void)
      *  and the corresponding point on the detector.                          */
     factor = (end - start) / (double)(size - 1U);
 
-    /*  Open the file "black_hole_gradient.ppm" and give write permissions.   */
-    FILE *fp = std::fopen("black_hole_gradient.ppm", "w");
+    /*  Open the file "black_hole.ppm" and give it write permissions.         */
+    FILE *fp = std::fopen("black_hole.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
     if (!fp)
@@ -340,19 +307,15 @@ int main(void)
             /*  If the photon never made it to the detector, assume it was    *
              *  captured by the black hole and color the pixel black.         */
             if (p.norm() < 9.9)
-                color = black;
+                color_black(fp);
 
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
             else if ((int)(std::ceil(p.x) + std::ceil(p.y)) & 1)
-                color = white + color_gradient(v);
+                color_white(fp, p);
 
             else
-                color = red + color_gradient(v);
-
-            /*  Write the color to the PPM file and reset the velocity vector.*/
-            color.write(fp);
-            v = v_start;
+                color_red(fp, p);
 
         }
         /*  End of x for-loop.                                                */

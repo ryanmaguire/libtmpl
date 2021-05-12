@@ -19,6 +19,8 @@
  *  Purpose:                                                                  *
  *      Perform a simple raytracing of a binary system of two black holes.    *
  *      This naively uses Newtonian mechanics, and not relativity.            *
+ *      The center of the checkerboard plane is color blue to highlight how   *
+ *      light bends in the system.                                            *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as a part of the libtmpl  *
  *      library. It is also written in C++, just to mix things up a bit.      *
@@ -198,6 +200,14 @@ static void color_black(FILE *fp)
     fputc(0, fp);
 }
 
+/*  Blue represents the center of the checkerboard plane.                     */
+static void color_blue(FILE *fp)
+{
+    std::fputc(0, fp);
+    std::fputc(0, fp);
+    std::fputc(255U, fp);
+}
+
 /*  Main function for performing the raytracing.                              */
 int main(void)
 {
@@ -210,7 +220,7 @@ int main(void)
     tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
     tmpl_simple_vector p;
     unsigned int x, y, size;
-    double factor, start, end, dt;
+    double factor, start, end, dt, threshold;
 
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
@@ -218,10 +228,13 @@ int main(void)
     end = 10.0;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 4U*1024U;
+    size = 1024U;
     
     /*  The step-size we're incrementing in time.                             */
     dt = 0.01;
+
+    /*  Threshold radius for considering a point as the center of the plane.  */
+    threshold = 0.01;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
@@ -259,6 +272,10 @@ int main(void)
              *  captured by the black hole and color the pixel black.         */
             if (p.norm() < 9.9)
                 color_black(fp);
+
+            /*  Color the center of the checkerboard blue.                    */
+            else if ((p.x*p.x + p.y*p.y) < threshold)
+                color_blue(fp);
 
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
