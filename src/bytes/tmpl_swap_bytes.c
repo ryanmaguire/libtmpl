@@ -4,7 +4,7 @@
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  it under the terms of the GNU General Public License as published by      *
+ *  under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Swap_Bytes:                                                      *
+ *      tmpl_Swap_Bytes                                                       *
  *  Purpose:                                                                  *
  *      Swaps the value of two char pointers. Useful for dealing with binary  *
  *      data files with big vs. little endianness concerns.                   *

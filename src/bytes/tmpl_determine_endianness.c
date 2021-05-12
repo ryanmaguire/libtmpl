@@ -4,7 +4,7 @@
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  it under the terms of the GNU General Public License as published by      *
+ *  under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Determine_Endianness:                                            *
+ *      tmpl_Determine_Endianness                                             *
  *  Purpose:                                                                  *
  *      Determines the endianness of a platform. That is, whether the system  *
  *      is little-endian, big-endian, or mixed-endian.                        *
@@ -219,9 +219,9 @@ tmpl_Endian tmpl_Determine_Endianness(void)
 #else
 /*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.    */
 
-    /*  If we get here, sizeof(unsigned long int) = 1 and your compiler does  *
-     *  not support the C99, or higher, standard so unsigned long long int    *
-     *  may not be defined. Return tmpl_UnknownEndian.                        */
+        /*  If we get here, sizeof(unsigned long int) = 1 and your compiler   *
+         *  does not support the C99, or higher, standard so unsigned long    *
+         *  long int may not be defined. Return tmpl_UnknownEndian.           */
         return tmpl_UnknownEndian;
 #endif
 /*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */

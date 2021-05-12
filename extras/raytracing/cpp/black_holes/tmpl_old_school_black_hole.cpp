@@ -4,7 +4,7 @@
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  it under the terms of the GNU General Public License as published by      *
+ *  under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -32,10 +32,10 @@
  ******************************************************************************/
 
 /*  Needed for the FILE data type and fprintf function.                       */
-#include <stdio.h>
+#include <cstdio>
 
 /*  Square root function found here.                                          */
-#include <math.h>
+#include <cmath>
 
 /*  A simple structure for dealing with vectors. Vectors are treated as rays  *
  *  of light moving under the influence of the gravity of a black hole.       */
@@ -44,9 +44,14 @@ struct tmpl_simple_vector {
     /*  A vector will be defined by it's Euclidean components, x, y, z.       */
     double x, y, z;
 
+    /*  Empty constructor. Simply return.                                     */
+    tmpl_simple_vector(void)
+    {
+        return;
+    }
+
     /*  Simple method for creating a vector. Simply set the x, y, and z parts *
      *  to the values a, b, and c, respectively.                              */
-    tmpl_simple_vector(void){}
     tmpl_simple_vector(double a, double b, double c)
     {
         x = a;
@@ -99,7 +104,7 @@ tmpl_simple_vector acc(tmpl_simple_vector p)
 
     /*  The acceleration is the minus of p times this factor. The reason it   *
      *  is minus p is because gravity pulls inward, so the acceleration is    *
-     *  towards the origin.                                                   */
+     *  towards the blacks hole.                                              */
     return tmpl_simple_vector(-p.x*factor, -p.y*factor, -p.z*factor);
 }
 
@@ -134,12 +139,11 @@ tmpl_simple_vector Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 
     while ((p.z > -10.0) && (N < 1E5))
     {
-        /* If the light was absorbed by the black hole, abort the computation *
-         *  and return the zero vector.                                       */
+        /* If the light was absorbed by the black hole, abort the computation.*/
         if (p.norm() <= 1.0)
-            return tmpl_simple_vector(0.0, 0.0, 0.0);
+            return p;
 
-        /*  We can solve d^2/dt^2 = F(p) numerical in two steps. First, we    *
+        /*  We numerically solve d^2/dt^2 p = F(p) in two steps. First, we    *
          *  compute the velocity dp/dt, meaning we need to solve dv/dt = F(p).*
          *  We solve numerically with Euler's method. Then we use this v to   *
          *  compute p via dp/dt = v, again solving numerically with Euler's   *
@@ -165,7 +169,7 @@ void color_red(FILE *fp, tmpl_simple_vector p)
      *  illuminate the detector based on this idea to give a gradient of      *
      *  light-intensity to better understand which photons are coming from    *
      *  where. Since the detector is the plane z = -10, the max value of      *
-     *  1/||p||^2 is 100. RGB color takes values between 0 and 255, so we     *
+     *  1/||p||^2 is 1/100. RGB color takes values between 0 and 255, so we   *
      *  need to normalize 1/||p||^2 so that the max value is 255.             */
     double x = 25500.0/p.normsq();
 
@@ -204,21 +208,24 @@ int main(void)
     tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
     tmpl_simple_vector p;
     unsigned int x, y, size;
-    double factor, start, end;
+    double factor, start, end, dt;
 
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
     start = -10.0;
     end = 10.0;
+    
+    /*  The step-size for our increment in time.                              */
+    dt = 0.01;
 
     /*  Set the number of pixels in the detector.                             */
     size = 1024U;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
-    factor = (end - start) / (double)size;
+    factor = (end - start) / (double)(size - 1U);
 
-    /*  Open the file "black.ppm" and give it write permissions.              */
+    /*  Open the file "black_hole.ppm" and give it write permissions.         */
     FILE *fp = fopen("black_hole.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
@@ -232,19 +239,22 @@ int main(void)
      *  three numbers. P6 means we're encoding an RGB image in binary format. *
      *  The first two numbers are the number of pixels in the x and y axes.   *
      *  The last number is the size of our color spectrum, which is 255.      */
-    fprintf(fp, "P6 %u %u 255\n", size, size);
+    fprintf(fp, "P6 %u %u\n255\n", size, size);
 
     /*  We can NOT do parallel processing with the creation of our PPM file   *
-     *  since the order the values are computed is essential.                 */
-    for (y = 0U; y<size; ++y)
+     *  since the order the values are computed is essential. If we wanted to *
+     *  introduce parallel processing, we would need to store the colors in   *
+     *  an array, and then create the PPM from that array. For the simplicity *
+     *  of the code, this is not done.                                        */
+    for (y = 0U; y < size; ++y)
     {
-        for (x = 0U; x<size; ++x)
+        for (x = 0U; x < size; ++x)
         {
             /*  We're incrementing p across our detector.                     */
             p = tmpl_simple_vector(start + factor*x, start + factor*y, 10.0);
 
             /*  Raytrace where the photon that hit p came from.               */
-            p = Path(p, v, 0.01);
+            p = Path(p, v, dt);
 
             /*  If the photon never made it to the detector, assume it was    *
              *  captured by the black hole and color the pixel black.         */
