@@ -1,5 +1,5 @@
 
-#include <libtmpl/include/tmpl_vector_integer.h>
+#include <libtmpl/include/tmpl_vector.h>
 #include <stdlib.h>
 
 void tmpl_Destroy_ULongVector(tmpl_ULongVector **vec_ptr)
