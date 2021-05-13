@@ -23,7 +23,7 @@
  *  Date:   2021/04/19                                                        *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_vector_integer.h>
+#include <libtmpl/include/tmpl_vector.h>
 #include <libtmpl/include/tmpl_number_theory.h>
 #include <libtmpl/include/tmpl_bool.h>
 #include <stdlib.h>
