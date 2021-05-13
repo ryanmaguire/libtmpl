@@ -21,7 +21,6 @@
  *      instead of relativity. Light is given an arbitrarily small mass and   *
  *      we use Newton's universal law of gravitation to see how a black hole  *
  *      would bend the light. This is a very rough estimate of black holes.   *
- *      The center of the checkerboard is blue to highligh how light bends.   *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as a part of the libtmpl  *
  *      library. It is also written in C++, just to mix things up a bit.      *
@@ -142,7 +141,7 @@ Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
     while ((p.z > -10.0) && (N < 1E5))
     {
         /* If the light was absorbed by the black hole, abort the computation.*/
-        if (p.norm() <= 1.0)
+        if (p.normsq() <= 1.0)
             return p;
 
         /*  We numerically solve d^2/dt^2 p = F(p) in two steps. First, we    *
@@ -193,17 +192,9 @@ static void color_white(FILE *fp, tmpl_simple_vector p)
 /*  Black represents the black hole.                                          */
 static void color_black(FILE *fp)
 {
-    std::fputc(0U, fp);
-    std::fputc(0U, fp);
-    std::fputc(0U, fp);
-}
-
-/*  Blue represents the center of the checkerboard plane.                     */
-static void color_blue(FILE *fp)
-{
     std::fputc(0, fp);
     std::fputc(0, fp);
-    std::fputc(255U, fp);
+    std::fputc(0, fp);
 }
 
 /*  Main function for performing the raytracing.                              */
@@ -218,28 +209,28 @@ int main(void)
     tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
     tmpl_simple_vector p;
     unsigned int x, y, size;
-    double factor, start, end, dt, threshold;
+    double factor, start, end, dt, prog_factor;
 
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
     start = -10.0;
     end = 10.0;
-    
+
     /*  The step-size for our increment in time.                              */
     dt = 0.01;
-    
-    /*  Threshold radius for considering a point on the plane as the center.  */
-    threshold = 0.01;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 1024U;
+    size = 2048U;
+
+    /*  Factor used for a printing a progress report.                         */
+    prog_factor = 100.0 / (double)size;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
     factor = (end - start) / (double)(size - 1U);
 
-    /*  Open the file "black_hole_wcenter.ppm" and give it write permissions. */
-    FILE *fp = std::fopen("black_hole_wcenter.ppm", "w");
+    /*  Open the file "black_hole.ppm" and give it write permissions.         */
+    FILE *fp = std::fopen("black_hole.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
     if (!fp)
@@ -252,7 +243,7 @@ int main(void)
      *  three numbers. P6 means we're encoding an RGB image in binary format. *
      *  The first two numbers are the number of pixels in the x and y axes.   *
      *  The last number is the size of our color spectrum, which is 255.      */
-    std::fprintf(fp, "P6 %u %u\n255\n", size, size);
+    std::fprintf(fp, "P6\n%u %u\n255\n", size, size);
 
     /*  We can NOT do parallel processing with the creation of our PPM file   *
      *  since the order the values are computed is essential. If we wanted to *
@@ -274,10 +265,6 @@ int main(void)
             if (p.norm() < 9.9)
                 color_black(fp);
 
-            /*  If the center of the plane was hit, color blue.               */
-            else if ((p.x*p.x + p.y*p.y) < threshold)
-            color_blue(fp);
-
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
             else if ((int)(std::ceil(p.x) + std::ceil(p.y)) & 1)
@@ -285,11 +272,17 @@ int main(void)
 
             else
                 color_red(fp, p);
-
         }
         /*  End of x for-loop.                                                */
+
+        /*  Print a status update.                                            */
+        if ((y % 20U) == 0U)
+            std::fprintf(stderr, "Progress: %.4f%%  \r", prog_factor*(double)y);
     }
     /*  End of y for-loop.                                                    */
+
+    /*  Print a final progress report.                                        */
+    std::fprintf(stderr, "Progress: 100.0000%%\nDone\n");
 
     /*  Close the file and return.                                            */
     std::fclose(fp);
