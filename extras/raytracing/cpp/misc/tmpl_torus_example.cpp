@@ -4,7 +4,7 @@
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  it under the terms of the GNU General Public License as published by      *
+ *  iunder the terms of the GNU General Public License as published by        *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -99,7 +99,7 @@ tmpl_simple_color sky_color(double zenith)
 {
     tmpl_simple_color out;
     double factor;
-    if (zenith < 0.01745)
+    if (zenith < 0.1745)
     {
         out.red = 255U;
         out.green = 255U;
@@ -124,8 +124,8 @@ void color(tmpl_simple_color c, FILE *fp)
 
 static const double Inner_Radius = 1.0;
 static const double Outer_Radius = 2.0;
-static const unsigned int max_iters = 1E4;
-static const double threshold = 0.1;
+static const unsigned int max_iters = 1E5;
+static const double threshold = 0.01;
 
 double torus_implicit(tmpl_simple_vector p)
 {
@@ -152,21 +152,20 @@ tmpl_simple_color sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
     double rho;
     unsigned int iters = 0U;
 
-    while ((iters < max_iters) && (p.z > 0.0))
+    while ((iters < max_iters) && (p.z > -Inner_Radius))
     {
         if (fabs(torus_implicit(p)) < threshold)
         {
             grad_p = torus_gradient(p);
             grad_p = grad_p.unit_vector();
             v = v - (grad_p * 2.0*(v % grad_p));
+            p = p + v*(4.0*dt);
 
-            //out = sampler(p, v, dt);
-            //out.blue /= 2U;
-            //out.green /= 2U;
-            //out.red /= 2U;
-            out.red = 0U;
-            out.blue = 0U;
-            out.green = 0U;
+            out = sampler(p, v, dt);
+            out.red   = (unsigned char)(0.5 * out.red);
+            out.green = (unsigned char)(0.5 * out.green);
+            out.blue  = (unsigned char)(0.5 * out.blue);
+
             return out;
         }
         else
@@ -175,9 +174,9 @@ tmpl_simple_color sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
         ++iters;
     }
 
-    if (v.z < 0.0)
+    if (v.z <= 0.0)
     {
-        double t = -p.z / v.z;
+        double t = -(p.z - Inner_Radius) / v.z;
         tmpl_simple_vector intesect = p + v*t;
         if ((int)(ceil(intesect.x) + ceil(intesect.y)) & 1)
         {
@@ -195,7 +194,7 @@ tmpl_simple_color sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
     else
     {
         double rho = sqrt(v.x*v.x + v.y*v.y);
-        double zenith = atan(v.z / rho);
+        double zenith = M_PI_2 - atan(v.z / rho);
         out = sky_color(zenith);
     }
     return out;
@@ -210,18 +209,24 @@ int main(void)
      *  to be 1 for simplicity. Adjusting this value would be equivalent to   *
      *  adjusting the strength of Gravity. Smaller values mean stronger       *
      *  gravity, and larger values mean weaker gravity.                       */
-    tmpl_simple_vector v = tmpl_simple_vector(1.0, 1.0, -1.0);
-    tmpl_simple_vector p;
+    tmpl_simple_vector v  = tmpl_simple_vector(0.0, -1.0, -1.0);
+    tmpl_simple_vector u1 = tmpl_simple_vector(0.0,  1.0, -1.0);
+    tmpl_simple_vector u0 = tmpl_simple_vector(1.0,  0.0,  0.0);
+    tmpl_simple_vector p, dir, eye;
     unsigned int x, y, size;
     double factor, start, end;
+    eye = v*(-11.);
+
+    u0 = u0 * (1.0 / u0.norm());
+    v  = v  * (1.0 / v.norm());
 
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
-    start = -10.0;
-    end = 10.0;
+    start = -2.0;
+    end   =  2.0;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 512U;
+    size = 2048U;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
@@ -241,7 +246,7 @@ int main(void)
      *  three numbers. P6 means we're encoding an RGB image in binary format. *
      *  The first two numbers are the number of pixels in the x and y axes.   *
      *  The last number is the size of our color spectrum, which is 255.      */
-    fprintf(fp, "P6 %u %u 255\n", size, size);
+    fprintf(fp, "P6\n%u %u\n255\n", size, size);
 
     /*  We can NOT do parallel processing with the creation of our PPM file   *
      *  since the order the values are computed is essential.                 */
@@ -250,10 +255,12 @@ int main(void)
         for (x = 0U; x<size; ++x)
         {
             /*  We're incrementing p across our detector.                     */
-            p = tmpl_simple_vector(start + factor*x, start + factor*y, 20.0);
-
-            color(sampler(p, v, 0.01), fp);
+            p = u0*(start + x*factor) + u1*(start + y*factor) - v*10.0;
+            dir = p-eye;
+            color(sampler(p, dir * (1.0 / dir.norm()), 0.01), fp);
         }
+        if ((y % 20) == 0)
+            fprintf(stderr, "Progress: %.4f%%\r", 100.0*y / size);
     }
 
     fclose(fp);

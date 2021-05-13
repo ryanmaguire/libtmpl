@@ -21,6 +21,7 @@
  *      instead of relativity. Light is given an arbitrarily small mass and   *
  *      we use Newton's universal law of gravitation to see how a black hole  *
  *      would bend the light. This is a very rough estimate of black holes.   *
+ *      The center of the checkerboard is blue to highligh how light bends.   *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as a part of the libtmpl  *
  *      library. It is also written in C++, just to mix things up a bit.      *
@@ -192,9 +193,17 @@ static void color_white(FILE *fp, tmpl_simple_vector p)
 /*  Black represents the black hole.                                          */
 static void color_black(FILE *fp)
 {
+    std::fputc(0U, fp);
+    std::fputc(0U, fp);
+    std::fputc(0U, fp);
+}
+
+/*  Blue represents the center of the checkerboard plane.                     */
+static void color_blue(FILE *fp)
+{
     std::fputc(0, fp);
     std::fputc(0, fp);
-    std::fputc(0, fp);
+    std::fputc(255U, fp);
 }
 
 /*  Main function for performing the raytracing.                              */
@@ -209,15 +218,18 @@ int main(void)
     tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
     tmpl_simple_vector p;
     unsigned int x, y, size;
-    double factor, start, end, dt;
+    double factor, start, end, dt, threshold;
 
     /*  Set the values for the size of the detector. I've chosen the square   *
      *  [-10, 10]^2.                                                          */
     start = -10.0;
     end = 10.0;
-    
+
     /*  The step-size for our increment in time.                              */
     dt = 0.01;
+
+    /*  Threshold radius for considering a point on the plane as the center.  */
+    threshold = 0.01;
 
     /*  Set the number of pixels in the detector.                             */
     size = 1024U;
@@ -226,8 +238,8 @@ int main(void)
      *  and the corresponding point on the detector.                          */
     factor = (end - start) / (double)(size - 1U);
 
-    /*  Open the file "black_hole.ppm" and give it write permissions.         */
-    FILE *fp = std::fopen("black_hole.ppm", "w");
+    /*  Open the file "black_hole_wcenter.ppm" and give it write permissions. */
+    FILE *fp = std::fopen("black_hole_wcenter.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check that this didn't happen.        */
     if (!fp)
@@ -262,6 +274,10 @@ int main(void)
             if (p.norm() < 9.9)
                 color_black(fp);
 
+            /*  If the center of the plane was hit, color blue.               */
+            else if ((p.x*p.x + p.y*p.y) < threshold)
+            color_blue(fp);
+
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
             else if ((int)(std::ceil(p.x) + std::ceil(p.y)) & 1)
@@ -269,7 +285,6 @@ int main(void)
 
             else
                 color_red(fp, p);
-
         }
         /*  End of x for-loop.                                                */
     }
