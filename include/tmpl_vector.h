@@ -325,6 +325,10 @@ tmpl_Create_Zero_LongVector(unsigned long int length);
 extern tmpl_ULongVector *
 tmpl_Create_Zero_ULongVector(unsigned long int length);
 
+
+
+
+
 extern void
 tmpl_Destroy_DoubleVector(tmpl_DoubleVector *v);
 
