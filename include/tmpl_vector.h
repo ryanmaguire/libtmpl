@@ -270,7 +270,6 @@ tmpl_Create_Empty_LongVector(unsigned long int length);
 extern tmpl_ULongVector *
 tmpl_Create_Empty_ULongVector(unsigned long int length);
 
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Create_Zero_FloatVector                                          *
@@ -325,22 +324,90 @@ tmpl_Create_Zero_LongVector(unsigned long int length);
 extern tmpl_ULongVector *
 tmpl_Create_Zero_ULongVector(unsigned long int length);
 
-
-
-
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Destroy_FloatVector                                              *
+ *  Purpose:                                                                  *
+ *      Frees all memory allocated to a tmpl_FloatVector. It sets the data    *
+ *      pointer to NULL and then sets the pointer to the struct to NULL.      *
+ *  Arguments:                                                                *
+ *      vec (tmpl_FloatVector **):                                            *
+ *          A pointer to a pointer to a tmpl_FloatVector struct. Given a      *
+ *          tmpl_FloatVector pointer vec, pass it to this function with &vec. *
+ *  Output:                                                                   *
+ *    None (void):                                                            *
+ *  Called Functions:                                                         *
+ *      free      (stdlib.h)                                                  *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vector/tmpl_destroy_real_vector.c                         *
+ *      libtmpl/src/vector/tmpl_destroy_char_vector.c                         *
+ *      libtmpl/src/vector/tmpl_destroy_short_vector.c                        *
+ *      libtmpl/src/vector/tmpl_destroy_int_vector.c                          *
+ *      libtmpl/src/vector/tmpl_destroy_long_vector.c                         *
+ ******************************************************************************/
+extern void
+tmpl_Destroy_FloatVector(tmpl_FloatVector **v);
 
 extern void
-tmpl_Destroy_DoubleVector(tmpl_DoubleVector *v);
+tmpl_Destroy_DoubleVector(tmpl_DoubleVector **v);
+
+extern void
+tmpl_Destroy_LongDoubleVector(tmpl_LongDoubleVector **v);
+
+extern void
+tmpl_Destroy_CharVector(tmpl_CharVector **v);
+
+extern void
+tmpl_Destroy_UCharVector(tmpl_UCharVector **v);
+
+extern void
+tmpl_Destroy_IntVector(tmpl_IntVector **v);
+
+extern void
+tmpl_Destroy_UIntVector(tmpl_UIntVector **v);
+
+extern void
+tmpl_Destroy_LongVector(tmpl_LongVector **v);
+
+extern void
+tmpl_Destroy_ULongVector(tmpl_ULongVector **v);
+
+extern void
+tmpl_Destroy_ShortVector(tmpl_ShortVector **v);
+
+extern void
+tmpl_Destroy_UShortVector(tmpl_UShortVector **v);
 
 
-
-
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_FloatVector_Add                                                  *
+ *  Purpose:                                                                  *
+ *      Adds to FloatVectors and stores the result in sum.                    *
+ *  Arguments:                                                                *
+ *      v (tmpl_FloatVector *):                                               *
+ *          A pointer to a tmpl_FloatVector struct.                           *
+ *      u (tmpl_FloatVector *):                                               *
+ *          A pointer to a tmpl_FloatVector struct.                           *
+ *      sum (tmpl_FloatVector *):                                             *
+ *          A pointer to a tmpl_FloatVector struct with entries set to        *
+ *          sum[k] = v[k] + u[k].                                             *
+ *  Output:                                                                   *
+ *    None (void):                                                            *
+ *  Called Functions:                                                         *
+ *      tmpl_strdup   (tmpl_string.h)                                         *
+ ******************************************************************************/
+extern void
+tmpl_FloatVector_Add(tmpl_FloatVector *v,
+                     tmpl_FloatVector *u, tmpl_FloatVector *sum);
 
 extern void
 tmpl_DoubleVector_Add(tmpl_DoubleVector *v,
                       tmpl_DoubleVector *u, tmpl_DoubleVector *sum);
+
 extern void
-tmpl_Destroy_ULongVector(tmpl_ULongVector **v);
+tmpl_LDoubleVector_Add(tmpl_LongDoubleVector *v,
+                       tmpl_LongDoubleVector *u, tmpl_LongDoubleVector *sum);
 
 extern void
 tmpl_ULongVector_Add(tmpl_ULongVector *v,
