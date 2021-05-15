@@ -46,7 +46,7 @@ static struct pair random_pair(void)
 int main(void)
 {
     unsigned int size = 1000U;
-    unsigned int walk_size = 500000U;
+    unsigned int walk_size = 35000U;
     double xmin, xmax, ymin, ymax, xscale, yscale, val;
     struct pair *A = malloc(sizeof(*A) * walk_size);
     unsigned int n;
@@ -86,7 +86,7 @@ int main(void)
 
     for (n = 0U; n < walk_size - 1U; ++n)
     {
-        val = 1280.0*(double)n / (double)(walk_size - 1U);
+        val = 1024.0*(double)n / (double)(walk_size - 1U);
 
         if (val < 256.0)
         {
@@ -99,7 +99,7 @@ int main(void)
             val  -= 256.0;
             red   = (unsigned char)0;
             green = (unsigned char)255;
-            blue  = (unsigned char)(val);
+            blue  = (unsigned char)(256.0 - val);
         }
         else if (val < 768.0)
         {
@@ -108,17 +108,11 @@ int main(void)
             green = (unsigned char)255;
             blue  = (unsigned char)0;
         }
-        else if (val < 1024.0)
+        else
         {
             val  -= 768.0;
             red   = (unsigned char)255;
-            green = (unsigned char)(val);
-            blue  = (unsigned char)0;
-        }
-        else
-        {
-            red   = (unsigned char)255;
-            green = (unsigned char)0;
+            green = (unsigned char)(256.0 - val);
             blue  = (unsigned char)0;
         }
 
