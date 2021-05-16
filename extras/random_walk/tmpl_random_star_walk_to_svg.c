@@ -47,28 +47,28 @@ static struct pair random_pair(void)
     }
     else if (rint == 5)
     {
-        out.x = 0.951057*0.5;
-        out.y = 0.309017*0.5;
+        out.x = 0.404508;
+        out.y = 0.293893;
     }
     else if (rint == 6)
     {
-        out.x = 0.0;
-        out.y = 0.5;
+        out.x = -0.154508;
+        out.y = 0.475528;
     }
     else if (rint == 7)
     {
-        out.x = -0.951057*0.5;
-        out.y =  0.309017*0.5;
+        out.x = -0.5;
+        out.y =  0.0;
     }
     else if (rint == 8)
     {
-        out.x = -0.587785*0.5;
-        out.y = -0.809017*0.5;
+        out.x = -0.154508;
+        out.y = -0.475528;
     }
     else
     {
-        out.x =  0.587785*0.5;
-        out.y = -0.809017*0.5;
+        out.x =  0.404508;
+        out.y = -0.293893;
     }
     return out;
 }
@@ -76,12 +76,12 @@ static struct pair random_pair(void)
 int main(void)
 {
     unsigned int size = 1000U;
-    unsigned int walk_size = 100000U;
+    unsigned int walk_size = 10000U;
     double xmin, xmax, ymin, ymax, xscale, yscale, val;
     struct pair *A = malloc(sizeof(*A) * walk_size);
     unsigned int n;
     unsigned char red, green, blue;
-    FILE *fp = fopen("tmpl_random_walk_hexagonal.svg", "w");
+    FILE *fp = fopen("tmpl_random_walk_star.svg", "w");
     fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
                 "<!DOCTYPE svg PUBLIC "
                 "\"-//W3C//DTD SVG 1.1//EN\" "

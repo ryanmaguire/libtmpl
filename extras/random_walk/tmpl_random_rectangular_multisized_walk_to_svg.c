@@ -52,7 +52,7 @@ int main(void)
     struct pair *A = malloc(sizeof(*A) * walk_size);
     unsigned int n;
     unsigned char red, green, blue;
-    FILE *fp = fopen("tmpl_random_walk_rectangular.svg", "w");
+    FILE *fp = fopen("tmpl_random_walk_rectangular_multisized.svg", "w");
     fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
                 "<!DOCTYPE svg PUBLIC "
                 "\"-//W3C//DTD SVG 1.1//EN\" "
