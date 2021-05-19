@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Perform a random walk with steps in the unit circle.                  *
+ *      Perform a 1D random walk.                                             *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
  ******************************************************************************
@@ -30,12 +30,6 @@
 
 /*  malloc and free are here.                                                 */
 #include <stdlib.h>
-
-/*  And the trigonometric functions are here.                                 */
-#include <math.h>
-
-/*  Constant for the value 2 Pi.                                              */
-static const double two_pi = 6.2831853071795;
 
 /*  Struct to represent an ordered pair for points in the plane.              */
 struct pair {
@@ -64,7 +58,7 @@ static struct color rainbow_gradient(double val)
     struct color out;
 
     /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
-     *  and [768, 1023]. Create a blue-to-red rainbow gradient from this.     *
+     *  and [768, 1023]. Create a blue-to-red raindbow gradient from this.    *
      *  The first interval corresponds to blue to blue-green.                 */
     if (val < 256.0)
     {
@@ -178,20 +172,26 @@ static struct pair add_pairs(struct pair p, struct pair q)
 }
 /*  End of add_pairs.                                                         */
 
-/*  Function for computing a random point on the unit circle.                 */
+/*  Function for computing a random vertex of a hexagon.                      */
 static struct pair random_pair(void)
 {
-    /*  Get a pseudo-random number between 0 and 1 using some of the tools    *
-     *  from stdlib.h.                                                        */
+    /*  Get a random number between 0 and 5 using tools from stdlib.h         */
     double rreal = (double)rand() / (double)RAND_MAX;
-
-    /*  And declare a pair that is to be returned.                            */
+    int rint = (int)(2.0 * rreal);
     struct pair out;
 
-    /*  We can convert this random number between 0 and 1 to a random point   *
-     *  on the unit circle via (cos(2 pi t), sin(2 pi t)).                    */
-    out.x = cos(two_pi * rreal);
-    out.y = sin(two_pi * rreal);
+    /*  Precompute the values of the vertices of the hexagon, and return one  *
+     *  of these based on the random integer that was chosen.                 */
+    if (rint == 0)
+    {
+        out.x = 1.0;
+        out.y = 1.0;
+    }
+    else
+    {
+        out.x = 1.0;
+        out.y = -1.0;
+    }
     return out;
 }
 /*  End of random_pair.                                                       */
@@ -209,8 +209,7 @@ int main(void)
     const unsigned int walk_size = 50000U;
 
     /*  Various variables necessary for the computation.                      */
-    double xmin, xmax, ymin, ymax, xscale, yscale, scale, val, thickness;
-    double xshift, yshift;
+    double ymin, ymax, xscale, yscale, val, thickness;
 
     /*  We'll use this variable for coloring the path with a rainbow          *
      *  gradient. Blue will represent the start and red is the end.           */
@@ -229,7 +228,7 @@ int main(void)
     struct pair *A = malloc(sizeof(*A) * walk_size);
 
     /*  And open an SVG file so that we can write to it.                      */
-    FILE *fp = fopen("tmpl_random_walk_circular.svg", "w");
+    FILE *fp = fopen("tmpl_random_walk.svg", "w");
 
     /*  If malloc fails it returns NULL. Check that this didn't happen.       */
     if (A == NULL)
@@ -243,7 +242,7 @@ int main(void)
     {
         puts("fopen failed and returned NULL. Returning.");
 
-        /*  Make sure to free A since malloc was called.                       */
+        /*  Make sure to free A since malloc was called.                      */
         free(A);
         return -1;
     }
@@ -265,9 +264,7 @@ int main(void)
     /*  To draw the SVG file we'll need to rescale the plane so that it lies  *
      *  in the box [0, width] x [0, height]. To do this we need the maximum   *
      *  and minimum values in the x and y axes for our random walk.           */
-    xmin = 0.0;
-    xmax = 0.0;
-    ymin = 0.0;
+    ymin = 1.0;
     ymax = 0.0;
 
     /*  Set the thickness for the lines we're drawing.                        */
@@ -279,37 +276,23 @@ int main(void)
         A[n] = add_pairs(A[n-1], random_pair());
 
         /*  Update the minimum and maximum values for the walk.               */
-        if (A[n].x > xmax)
-            xmax = A[n].x;
-        if (A[n].x < xmin)
-            xmin = A[n].x;
-        if (A[n].y > ymax)
-            ymax = A[n].y;
         if (A[n].y < ymin)
             ymin = A[n].y;
+        if (A[n].y > ymax)
+            ymax = A[n].y;
     }
     /*  End of random walk.                                                   */
 
-    /*  Compute the shift and scale factors needed for drawing the SVG.       */
-    xshift = -xmin;
-    yshift = -ymin;
-    xscale = (double)width  / (xmax - xmin);
-    yscale = (double)height / (ymax - ymin);
-
-    /*  To have a 1:1 aspect ratio, we need the same scale for the x and y    *
-     *  axes. To ensure the drawing fits inside the picture, use the smaller  *
-     *  of the two scales.                                                    */
-    if (xscale < yscale)
-        scale = xscale;
-    else
-        scale = yscale;
+    /*  Compute the scale factors needed for drawing the SVG.                 */
+    xscale = (double)width / (double)walk_size; 
+    yscale = (double)height / (ymax-ymin);
 
     /*  Loop through the random walk and scale the points so they fit into    *
      *  the SVG's frame.                                                      */
     for (n = 0U; n < walk_size; ++n)
     {
-        A[n].x = scale * (A[n].x + xshift);
-        A[n].y = scale * (A[n].y + yshift);
+        A[n].x = xscale * A[n].x;
+        A[n].y = yscale * (A[n].y - ymin);
     }
 
     /*  Lastly, loop through and draw the random walk.                        */
