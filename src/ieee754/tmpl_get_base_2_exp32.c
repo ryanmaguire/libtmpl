@@ -104,9 +104,6 @@
  *      Soft freeze for alpha release of libtmpl.                             *
  ******************************************************************************/
 
-/*  tmpl_int32 and tmpl_uint32 are typedef'd here.                            */
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  Function prototype and tmpl_IEEE754_Word32 data type defined here.        */
 #include <libtmpl/include/tmpl_ieee754.h>
 

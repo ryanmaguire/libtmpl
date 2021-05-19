@@ -92,11 +92,46 @@
 #ifndef __TMPL_IEEE754_H__
 #define __TMPL_IEEE754_H__
 
-/*  32-bit and 64-bit integers are found here.                                */
-#include <libtmpl/include/tmpl_integer.h>
+/*  Macros for determining the size of integer data types found here.         */
+#include <limits.h>
 
-/*  Macros for the endianness of your computer are found here.                */
-#include <libtmpl/include/tmpl_endianness.h>
+/*  We'll use the macros defined in limits.h to see if your compiler supports *
+ *  a 32-bit integer. This is usually a regular int. The C standard requires  *
+ *  long int to be 'at least' 32-bits. In most implementations it is 64-bits, *
+ *  except with Microsoft's compiler which implements it as a 32-bit integer. */
+
+#if USHRT_MAX == 0xFFFFFFFF
+typedef short unsigned int tmpl_uint32;
+typedef short int tmpl_int32;
+#elif UINT_MAX == 0xFFFFFFFF
+typedef unsigned int tmpl_uint32;
+typedef int tmpl_int32;
+#elif ULONG_MAX == 0xFFFFFFFF
+typedef long unsigned int tmpl_uint32;
+typedef long int tmpl_int32;
+#elif define(ULLONG_MAX) && ULLONG_MAX == 0xFFFFFFFF
+typedef long long unsigned int tmpl_uint32;
+typedef long long int tmpl_int32;
+#else
+#error "libtmpl: No 32-bit integer type found."
+#endif
+
+/*  Lastly, try to find a 64-bit data type.                                   */
+#if USHRT_MAX == 0xFFFFFFFFFFFFFFFF
+typedef short unsigned int tmpl_uint64;
+typedef short int tmpl_int64;
+#elif UINT_MAX == 0xFFFFFFFFFFFFFFFF
+typedef unsigned int tmpl_uint64;
+typedef int tmpl_int64;
+#elif ULONG_MAX == 0xFFFFFFFFFFFFFFFF
+typedef long unsigned int tmpl_uint64;
+typedef long int tmpl_int64;
+#elif defined(ULLONG_MAX) && ULLONG_MAX == 0xFFFFFFFFFFFFFFFF
+typedef long long unsigned int tmpl_uint64;
+typedef long long int tmpl_int64;
+#else
+#error "libtmpl: No 64-bit integer type found."
+#endif
 
 /******************************************************************************
  *  For a non-negative integer that is less than 2^64, we can store the       *
