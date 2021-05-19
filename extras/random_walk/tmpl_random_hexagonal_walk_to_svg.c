@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Perform a random walk with steps at the vertices of a hexagon.        *
+ *      Perform a random walk with steps on a hexagon.                        *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
  ******************************************************************************
@@ -39,6 +39,15 @@ struct pair {
 /*  Struct for dealing with colors in RGB format.                             */
 struct color {
     unsigned char red, green, blue;
+};
+
+/*  Struct for creating the SVG file.                                         */
+struct canvas {
+    unsigned int width, height;
+    struct color background, outline;
+
+    /*  Opacity should be a real number between 0 and 1.                      */
+    double opacity;
 };
 
 /*  Function for creating a rainbow gradient for coloring the random walk.    *
@@ -94,7 +103,7 @@ static struct color rainbow_gradient(double val)
 /*  End of rainbow_gradient.                                                  */
 
 /*  Function for creating the preamble to an SVG file.                        */
-static void create_svg(FILE *fp, unsigned int width, unsigned int height)
+static void create_svg(FILE *fp, struct canvas *layout)
 {
     /*  If fp is a NULL pointer, trying to write to it will result in a       *
      *  segmentation fault. Check that this isn't the case.                   */
@@ -106,12 +115,24 @@ static void create_svg(FILE *fp, unsigned int width, unsigned int height)
     fprintf(fp, "standalone=\"no\"?>\n");
     fprintf(fp, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" ");
     fprintf(fp, "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
-    fprintf(fp, "<svg viewBox=\"0 0 %u %u\" ", width, height);
+
+    /*  This part specifies the size of the SVG file.                         */
+    fprintf(fp, "<svg viewBox=\"0 0 %u %u\" ", layout->width, layout->height);
     fprintf(fp, "xmlns=\"http://www.w3.org/2000/svg\" ");
     fprintf(fp, "xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-    fprintf(fp, "<rect fill=\"#000000\" stroke=\"#000\" x=\"0\" y=\"0\" ");
-    fprintf(fp, "width=\"%u\" height=\"%u\"/>\n", width, height);
-    fprintf(fp, "<g opacity=\"1.0\">\n");
+
+    /*  This part specifies the background color.                             */
+    fprintf(fp, "<rect fill=\"#%02x%02x%02x\" stroke=\"#%02x%02x%02x\" ",
+            layout->background.red,  layout->background.green,
+            layout->background.blue, layout->outline.red,
+            layout->outline.green,   layout->outline.blue);
+
+    /*  The size of the background should be the same as the size of the pic. */
+    fprintf(fp, "x=\"0\" y=\"0\" width=\"%u\" height=\"%u\"/>\n",
+            layout->width, layout->height);
+
+    /*  Finally, add the opacity.                                             */
+    fprintf(fp, "<g opacity=\"%f\">\n", layout->opacity);
 }
 /*  End of create_svg.                                                        */
 
@@ -215,6 +236,12 @@ int main(void)
      *  gradient. Blue will represent the start and red is the end.           */
     struct color line_color;
 
+    /*  The background will be black, which is (0, 0, 0).                     */
+    struct color black = {0U, 0U, 0U};
+
+    /*  The canvas details the layout of the SVG file.                        */
+    struct canvas layout;
+
     /*  Variable for indexing over the walk.                                  */
     unsigned int n;
 
@@ -222,7 +249,7 @@ int main(void)
     struct pair *A = malloc(sizeof(*A) * walk_size);
 
     /*  And open an SVG file so that we can write to it.                      */
-    FILE *fp = fopen("tmpl_random_walk_hexagon.svg", "w");
+    FILE *fp = fopen("tmpl_random_walk_hexagonal.svg", "w");
 
     /*  If malloc fails it returns NULL. Check that this didn't happen.       */
     if (A == NULL)
@@ -235,11 +262,21 @@ int main(void)
     if (fp == NULL)
     {
         puts("fopen failed and returned NULL. Returning.");
+
+        /*  Make sure to free A since malloc was called.                      */
+        free(A);
         return -1;
     }
 
+    /*  Store the necessary values in the layout.                             */
+    layout.width = width;
+    layout.height = height;
+    layout.background = black;
+    layout.outline = black;
+    layout.opacity = 1.0;
+
     /*  Write the preamble to the SVG file we're making.                      */
-    create_svg(fp, width, height);
+    create_svg(fp, &layout);
 
     /*  Set the starting point to the origin.                                 */
     A[0].x = 0.0;
