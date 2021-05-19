@@ -88,9 +88,6 @@
  *      Created file.                                                         *
  ******************************************************************************/
 
-/*  tmpl_int32 and tmpl_uint64 are typedef'd here.                            */
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  Function prototype and tmpl_IEEE754_Word64 data type defined here.        */
 #include <libtmpl/include/tmpl_ieee754.h>
 

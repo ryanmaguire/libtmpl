@@ -34,6 +34,9 @@
 /*  And the trigonometric functions are here.                                 */
 #include <math.h>
 
+/*  Constant for the value 2 Pi.                                              */
+static const double two_pi = 6.2831853071795;
+
 /*  Struct to represent an ordered pair for points in the plane.              */
 struct pair {
     double x, y;
@@ -51,9 +54,9 @@ static struct color rainbow_gradient(double val)
     /*  Declare an output struct for the color we're computing.               */
     struct color out;
 
-    /*  Split [0, 1023] into four parts, [0,255], [256, 511], [512, 767], and *
-     *  [768, 1023]. Create a blue-to-red raindbow gradient from this. The    *
-     *  first interval corresponds to blue to blue-green.                     */
+    /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
+     *  and [768, 1023]. Create a blue-to-red raindbow gradient from this.    *
+     *  The first interval corresponds to blue to blue-green.                 */
     if (val < 256.0)
     {
         out.red   = (unsigned char)0;
@@ -101,7 +104,7 @@ static void create_svg(FILE *fp, unsigned int width, unsigned int height)
 {
     /*  If fp is a NULL pointer, trying to write to it will result in a       *
      *  segmentation fault. Check that this isn't the case.                   */
-    if (!fp)
+    if (fp == NULL)
         return;
 
     /*  Write the preamble to the file.                                       */
@@ -123,7 +126,7 @@ static void close_svg(FILE *fp)
 {
     /*  If fp is a NULL pointer, trying to write to it will result in a       *
      *  segmentation fault. Check that this isn't the case.                   */
-    if (!fp)
+    if (fp == NULL)
         return;
 
     fprintf(fp, "</g>\n</svg>\n");
@@ -164,8 +167,8 @@ static struct pair random_pair(void)
 
     /*  We can convert this random number between 0 and 1 to a random point   *
      *  on the unit circle via (cos(2 pi t), sin(2 pi t)).                    */
-    out.x = cos(6.2831853071795 * rreal);
-    out.y = sin(6.2831853071795 * rreal);
+    out.x = cos(two_pi * rreal);
+    out.y = sin(two_pi * rreal);
     return out;
 }
 /*  End of random_pair.                                                       */
@@ -174,7 +177,7 @@ static struct pair random_pair(void)
 int main(void)
 {
     /*  Width of the SVG (x-axis).                                            */
-    const unsigned int width  = 1000U;
+    const unsigned int width = 1000U;
 
     /*  Height of the SVG (y-axis).                                           */
     const unsigned int height = 1000U;
@@ -183,7 +186,8 @@ int main(void)
     const unsigned int walk_size = 50000U;
 
     /*  Various variables necessary for the computation.                      */
-    double xmin, xmax, ymin, ymax, xscale, yscale, val, thickness;
+    double xmin, xmax, ymin, ymax, xscale, yscale, scale, val, thickness;
+    double xshift, yshift;
 
     /*  We'll use this variable for coloring the path with a rainbow          *
      *  gradient. Blue will represent the start and red is the end.           */
@@ -247,16 +251,26 @@ int main(void)
     }
     /*  End of random walk.                                                   */
 
-    /*  Compute the scale factors needed for drawing the SVG.                 */
+    /*  Compute the shift and scale factors needed for drawing the SVG.       */
+    xshift = -xmin;
+    yshift = -ymin;
     xscale = (double)width  / (xmax - xmin);
     yscale = (double)height / (ymax - ymin);
+
+    /*  To have a 1:1 aspect ratio, we need the same scale for the x and y    *
+     *  axes. To ensure the drawing fits inside the picture, use the smaller  *
+     *  of the two scales.                                                    */
+    if (xscale < yscale)
+        scale = xscale;
+    else
+        scale = yscale;
 
     /*  Loop through the random walk and scale the points so they fit into    *
      *  the SVG's frame.                                                      */
     for (n = 0U; n < walk_size; ++n)
     {
-        A[n].x = xscale * (A[n].x - xmin);
-        A[n].y = yscale * (A[n].y - ymin);
+        A[n].x = scale * (A[n].x + xshift);
+        A[n].y = scale * (A[n].y + yshift);
     }
 
     /*  Lastly, loop through and draw the random walk.                        */
