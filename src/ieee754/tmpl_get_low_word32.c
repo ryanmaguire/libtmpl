@@ -59,9 +59,6 @@
  *  Date:       January 22, 2021                                              *
  ******************************************************************************/
 
-/*  Fixed-width integer data types contained here.                            */
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  Definitions, typedefs, and prototypes found here.                         */
 #include <libtmpl/include/tmpl_ieee754.h>
 

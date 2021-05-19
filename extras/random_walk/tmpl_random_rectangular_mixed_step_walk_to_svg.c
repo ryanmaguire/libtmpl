@@ -55,7 +55,7 @@ static struct pair random_leftright(void)
 int main(void)
 {
     unsigned int size = 1000U;
-    unsigned int walk_size = 35000U;
+    unsigned int walk_size = 50000U;
     double xmin, xmax, ymin, ymax, xscale, yscale, val;
     struct pair *A = malloc(sizeof(*A) * walk_size);
     unsigned int n;
