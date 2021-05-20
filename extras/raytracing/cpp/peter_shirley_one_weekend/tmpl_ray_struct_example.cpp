@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -110,19 +110,19 @@ struct tmpl_simple_vector {
         y = b;
         z = c;
     }
-    
+
     /*  Define the basic operators for the vector. First is vector addition.  */
     tmpl_simple_vector operator + (tmpl_simple_vector r)
     {
         return tmpl_simple_vector(x + r.x, y + r.y, z + r.z);
     }
-    
+
     /*  Vector subtraction.                                                   */
     tmpl_simple_vector operator - (tmpl_simple_vector r)
     {
         return tmpl_simple_vector(x - r.x, y - r.y, z - r.z);
     }
-    
+
     /*  Vector negation.                                                      */
     tmpl_simple_vector operator - (void)
     {
@@ -134,7 +134,7 @@ struct tmpl_simple_vector {
     {
         return tmpl_simple_vector(a*x, a*y, a*z);
     }
-    
+
     /*  Scalar division.                                                      */
     tmpl_simple_vector operator / (double a)
     {
@@ -146,7 +146,7 @@ struct tmpl_simple_vector {
     {
         return std::sqrt(x*x + y*y + z*z);
     }
-    
+
     /*  Square of the Euclidean norm.                                         */
     double normsq(void)
     {
@@ -158,13 +158,13 @@ struct tmpl_simple_vector {
     {
         return r.x*x + r.y*y + r.z*z;
     }
-    
+
     /*  Euclidean cross product in three dimensions.                          */
     tmpl_simple_vector cross(tmpl_simple_vector r)
     {
         return tmpl_simple_vector(y*r.z - z*r.y, z*r.x - x*r.z, x*r.y - y*r.x);
     }
-    
+
     /*  Unit vector for the given vector.                                     */
     tmpl_simple_vector unit(void)
     {

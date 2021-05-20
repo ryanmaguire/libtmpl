@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -59,29 +59,33 @@ struct tmpl_simple_color {
     tmpl_simple_color operator + (tmpl_simple_color r)
     {
         /*  To avoid an arithmetic overflow with unsigned char's, compute     *
-         *  the sum using unsigned long's. Unsigned long's are usually, at the*
-         *  very least, twice the size of unsigned char. The C standard does  *
-         *  not require this. I'm unsure of the C++ standard.                 */
-        unsigned long x, y, z;
+         *  the sum using unsigned int's. Unsigned int's are required to be   *
+         *  least 16 bits in the C-standard, and I imagine the same would     *
+         *  apply in C++. Since our colors are represented by 8-bit numbers   *
+         *  (char can be larger than 8-bit, but is required to be at least 8  *
+         *  bits, and we only want values 0 to 255, which is 8-bit), if we    *
+         *  use unsigned int's to perform the addition, we are guaranteed to  *
+         *  NOT get an overflow, which is useful.                             */
+        unsigned int x, y, z;
         unsigned char out_red, out_green, out_blue;
         
-        /*  Cast to unsigned long's and compute the sum.                      */
-        x = (unsigned long)r.red + (unsigned long)red;
-        y = (unsigned long)r.green + (unsigned long)green;
-        z = (unsigned long)r.blue + (unsigned long)blue;
+        /*  Cast to unsigned int's and compute the sum.                       */
+        x = (unsigned int)r.red   + (unsigned int)red;
+        y = (unsigned int)r.green + (unsigned int)green;
+        z = (unsigned int)r.blue  + (unsigned int)blue;
         
         /*  If the values exceed 255, return 255. 255 is the max intensity.   */
-        if (x >= 255UL)
+        if (x >= 255U)
             out_red = 255U;
         else
             out_red = (unsigned char)x;
 
-        if (y >= 255UL)
+        if (y >= 255U)
             out_green = 255U;
         else
             out_green = (unsigned char)y;
 
-        if (z >= 255UL)
+        if (z >= 255U)
             out_blue = 255U;
         else
             out_blue = (unsigned char)z;
@@ -89,6 +93,7 @@ struct tmpl_simple_color {
         /*  Use the constructor to return the sum from the RGB values.        */
         return tmpl_simple_color(out_red, out_green, out_blue);
     }
+    /*  End of color addition.                                                */
 
     /*  Scaling a color by a real number.                                     */
     tmpl_simple_color operator * (double a)

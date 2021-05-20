@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -156,6 +156,7 @@ int main(void)
     s.print();
     std::printf("\n");
     
+    printf("p * q       = %f\n", p.dot(q));
     printf("(p x q) * p = %f\n", p.dot(s));
     printf("(p x q) * q = %f\n", q.dot(s));
     
@@ -165,7 +166,7 @@ int main(void)
     std::printf("\n");
 
     q = q.unit();
-    std::printf("p_hat       = ");
+    std::printf("q_hat       = ");
     q.print();
     std::printf("\n");
     
