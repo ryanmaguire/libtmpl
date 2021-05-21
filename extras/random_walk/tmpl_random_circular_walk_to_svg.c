@@ -235,6 +235,12 @@ int main(void)
     if (A == NULL)
     {
         puts("Malloc failed and returned NULL. Returning.");
+
+        /*  Since fopen was called, we should close the file if fopen was     *
+         *  successful. Check this.                                           */
+        if (fp)
+            fclose(fp);
+
         return -1;
     }
 

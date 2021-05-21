@@ -58,7 +58,7 @@ static struct color rainbow_gradient(double val)
     struct color out;
 
     /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
-     *  and [768, 1023]. Create a blue-to-red raindbow gradient from this.    *
+     *  and [768, 1023]. Create a blue-to-red rainbow gradient from this.     *
      *  The first interval corresponds to blue to blue-green.                 */
     if (val < 256.0)
     {
@@ -255,6 +255,12 @@ int main(void)
     if (A == NULL)
     {
         puts("Malloc failed and returned NULL. Returning.");
+
+        /*  Since fopen was called, we should close the file if fopen was     *
+         *  successful. Check this.                                           */
+        if (fp)
+            fclose(fp);
+
         return -1;
     }
 

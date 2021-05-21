@@ -58,7 +58,7 @@ static struct color rainbow_gradient(double val)
     struct color out;
 
     /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
-     *  and [768, 1023]. Create a blue-to-red raindbow gradient from this.    *
+     *  and [768, 1023]. Create a blue-to-red rainbow gradient from this.     *
      *  The first interval corresponds to blue to blue-green.                 */
     if (val < 256.0)
     {
@@ -172,16 +172,16 @@ static struct pair add_pairs(struct pair p, struct pair q)
 }
 /*  End of add_pairs.                                                         */
 
-/*  Function for computing a random vertex of a hexagon.                      */
+/*  Function for computing a random direction, North-East or South-East.      */
 static struct pair random_pair(void)
 {
-    /*  Get a random number between 0 and 5 using tools from stdlib.h         */
-    double rreal = (double)rand() / (double)RAND_MAX;
-    int rint = (int)(2.0 * rreal);
+    /*  Get a random integer, 0 or 1, using tools from stdlib.h               */
+    int rint = (int)(2.0 * (double)rand() / (double)RAND_MAX);
+
+    /*  Declare a struct for the output pair we're computing.                 */
     struct pair out;
 
-    /*  Precompute the values of the vertices of the hexagon, and return one  *
-     *  of these based on the random integer that was chosen.                 */
+    /*  Allowed steps are North-East and South-East. Return one of these.     */
     if (rint == 0)
     {
         out.x = 1.0;
@@ -189,7 +189,7 @@ static struct pair random_pair(void)
     }
     else
     {
-        out.x = 1.0;
+        out.x =  1.0;
         out.y = -1.0;
     }
     return out;
@@ -234,6 +234,12 @@ int main(void)
     if (A == NULL)
     {
         puts("Malloc failed and returned NULL. Returning.");
+
+        /*  Since fopen was called, we should close the file if fopen was     *
+         *  successful. Check this.                                           */
+        if (fp)
+            fclose(fp);
+
         return -1;
     }
 
