@@ -1,0 +1,70 @@
+(*	A normal circular torus. *)
+x0[u_] := 2 + Cos[u]
+y0[u_] :=     Sin[u]
+ParametricPlot3D[
+    {
+        x0[u]*Sin[v],
+        x0[u]*Cos[v], 
+        y0[u]
+    },
+    {u, 0, 2 Pi}, {v, 0, 2 Pi},
+    PlotPoints -> 200
+]
+
+(* A Diamond torus. *)
+x1[u_] := 2 + Cos[u]
+y1[u_] :=     Sign[Sin[u]]*(1 - Abs[Cos[u]])
+ParametricPlot3D[
+    {
+        x1[u]*Sin[v],
+        x1[u]*Cos[v], 
+        y1[u]
+    },
+    {u, 0, 2 Pi}, {v, 0, 2 Pi},
+    PlotPoints -> 200
+]
+
+(* And now we twist the diamond around as we revolve the torus. *)
+x2[u_]    := Cos[u]
+y2[u_]    := Sign[Sin[u]]*(1 - Abs[Cos[u]])
+x3[u_,v_] := 2 + x2[u]*Cos[v] - y2[u]*Sin[v]
+y3[u_,v_] :=     x2[u]*Sin[v] + y2[u]*Cos[v]
+ParametricPlot3D[
+    {
+        x3[u,v]*Sin[v],
+        x3[u,v]*Cos[v], 
+        y3[u,v]
+    },
+    {u, 0, 2 Pi}, {v, 0, 2 Pi},
+    PlotPoints -> 200
+]
+
+(* And now we make a "trefoil" torus. *)
+r[u_]     := (Sin[3*u] + 3)/4
+x4[u_]    := 2+r[u]*Cos[u]
+y4[u_]    :=   r[u]*Sin[u]
+ParametricPlot3D[
+    {
+        x4[u]*Sin[v],
+        x4[u]*Cos[v], 
+        y4[u]
+    },
+    {u, 0, 2 Pi}, {v, 0, 2 Pi},
+    PlotPoints -> 200
+]
+
+(* And then spin the trefoil around. *)
+r[u_]     := (Sin[3*u] + 3)/4
+x5[u_]    := r[u]*Cos[u]
+y5[u_]    := r[u]*Sin[u]
+x6[u_,v_] := 2 + x5[u]*Cos[v] - y5[u]*Sin[v]
+y6[u_,v_] :=     x5[u]*Sin[v] + y5[u]*Cos[v]
+ParametricPlot3D[
+    {
+        x6[u,v]*Sin[v],
+        x6[u,v]*Cos[v], 
+        y6[u,v]
+    },
+    {u, 0, 2 Pi}, {v, 0, 2 Pi},
+    PlotPoints -> 200
+]
