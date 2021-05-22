@@ -18,7 +18,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Perform a random walk with steps in {North, South, East, West}, while *
- *      walking along a flat torus.                                           *
+ *      walking along the real projective plane.                              *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
  ******************************************************************************
@@ -239,7 +239,7 @@ int main(void)
     struct pair A, B, edge;
 
     /*  And open an SVG file so that we can write to it.                      */
-    FILE *fp = fopen("tmpl_random_walk_rectangular_on_torus.svg", "w");
+    FILE *fp = fopen("tmpl_random_walk_rectangular_on_RP2.svg", "w");
 
     /*  If fopen fails it also returns NULL. Check for this.                  */
     if (fp == NULL)
@@ -277,19 +277,21 @@ int main(void)
         /*  Get the next point on the random walk.                            */
         B = add_pairs(A, random_pair());
 
-        /*  Draw the line onto the SVG. Since we're drawing onto a torus, if  *
-         *  we hit negative values we need to wrap around to the other side.  *
-         *  Similarly if we go beyond the width of the square representing    *
-         *  the torus. If this happens, draw a line to the edge and then wrap *
-         *  back around to the other edge and continue the line to the final  *
-         *  point.                                                            */
+        /*  Draw the line onto the SVG. Since we're drawing onto the real     *
+         *  projective plane, if we hit negative values we need to wrap       *
+         *  around to the other side. Similarly if we go beyond the width of  *
+         *  the square representing RP^2. If this happens, draw a line to     *
+         *  the edge, and then wrap back around to the other edge and         *
+         *  continue the line to the final point.                             */
         if (B.x < 0.0)
         {
             edge.x = 0.0;
             edge.y = B.y;
             draw_line(fp, A, edge, line_color, thickness);
+            B.x   += (double)width;
+            B.y    = (double)height - edge.y;
             edge.x = (double)width;
-            B.x += (double)width;
+            edge.y = B.y;
             draw_line(fp, edge, B, line_color, thickness);
         }
         else if (B.x > (double)width)
@@ -297,8 +299,10 @@ int main(void)
             edge.x = (double)width;
             edge.y = B.y;
             draw_line(fp, A, edge, line_color, thickness);
+            B.x   -= (double)width;
+            B.y    = (double)height - edge.y;
             edge.x = 0.0;
-            B.x -= (double)width;
+            edge.y = B.y;
             draw_line(fp, edge, B, line_color, thickness);
         }
         else if (B.y < 0.0)
@@ -306,8 +310,10 @@ int main(void)
             edge.x = B.x;
             edge.y = 0.0;
             draw_line(fp, A, edge, line_color, thickness);
-            edge.y = (double)height;
+            B.x  = (double)width - edge.x;
             B.y += (double)height;
+            edge.x = B.x;
+            edge.y = (double)height;
             draw_line(fp, edge, B, line_color, thickness);
         }
         else if (B.y > (double)height)
@@ -315,13 +321,15 @@ int main(void)
             edge.x = B.x;
             edge.y = (double)height;
             draw_line(fp, A, edge, line_color, thickness);
-            edge.y = 0.0;
+            B.x  = (double)width - edge.x;
             B.y -= (double)width;
+            edge.x = B.x;
+            edge.y = 0.0;
             draw_line(fp, edge, B, line_color, thickness);
         }
 
         /*  In this case, both the start and end points lie entirely in the   *
-         *  torus without wrapping around. We can proceed normally here.      */
+         *  real projective plane  without wrapping around. Proceed normally. */
         else
             draw_line(fp, A, B, line_color, thickness);
 
