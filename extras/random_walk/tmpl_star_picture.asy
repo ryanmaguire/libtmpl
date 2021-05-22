@@ -18,44 +18,24 @@
  ******************************************************************************/
 
 import settings;
-import palette;
 
 if (settings.render < 0)
     settings.render = 8;
 
 settings.outformat = "pdf";
-size(1024, 1024);
+size(512, 512);
 
-/*  Variable for indexing the random walk.                                    */
 int n;
+pair A, B;
 
-/*  Size of the random walk. 32765 is the total number of distinct colors in  *
- *  asymptotes rainbow pen.                                                   */
-int max = 32765;
-
-/*  The random walk starts at the origin.                                     */
-pair A = (0.0, 0.0);
-pair B = (0.0, 0.0);
-
-/*  Pen for coloring with a rainbow gradient.                                 */
-pen[] mypen = Rainbow(max);
-
-/*  Function for returning a random point on the unit circle.                 */
-pair Rpair()
+for (n = 0; n < 10; ++n)
 {
-    real x = (real)(rand()/randMax);
-    return (cos(x*2.0*pi), sin(x*2.0*pi));
+    if ((n % 2) == 0)
+    	A = expi(2*pi*n / 5.0);
+    else
+    	A = expi(2*pi*(n+1) / 5.0);
+
+    B = 0.5*expi((2*n+1)*pi / 5.0);
+    draw(A--B);
 }
-
-/*  Perform the random walk.                                                  */
-for (n=0; n<max; ++n)
-{
-    B = A + Rpair();
-    draw(A--B, mypen[n]);
-    A = B;
-}
-
-/*  Color the background black.                                               */
-shipout(bbox(currentpicture, Black, Fill));
-
 
