@@ -1,27 +1,45 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is free software: you can redistribute it and/or modify it      *
- *  it under the terms of the GNU General Public License as published by      *
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  This is distributed in the hope that it will be useful,                   *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Draw the plane, marking pixels (x, y) such that GCD(x, y) = 1 white,  *
+ *      and pixels with GCD(x, y) != 1 black. The number of white pixels      *
+ *      divided by the number of total pixels is computed, which gradually    *
+ *      converges to 6/pi^2. This is related to the problem of the            *
+ *      probability that two random integers are coprime.                     *
+ *  Notes:                                                                    *
+ *      This file is an "extra" and is not compiled as part of libtmpl.       *
+ ******************************************************************************
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       May 22, 2021                                                  *
  ******************************************************************************/
 
+/*  Needed for creating the PPM file.                                         */
 #include <stdio.h>
 
 /*  Simple routine for computing the GCD of non-negative numbers.             */
-long GCD(long n0, long n1)
+static unsigned int GCD(unsigned int n0, unsigned int n1)
 {
     /*  Special case. The while loop can be infinite if one of the entries is *
      *  zero. GCD(n, 0) = n, so use this.                                     */
-    if (n0 == 0)
+    if (n0 == 0U)
         return n1;
-    else if (n1 == 0)
+    else if (n1 == 0U)
         return n0;
 
     while(n0 != n1)
@@ -38,14 +56,14 @@ long GCD(long n0, long n1)
 /*  Function for computing the "area" of the blocks with GCD(x, y) = 1. This  *
  *  simply sums over the square [0, n] x [0, n] for which entries have GCD 1, *
  *  and then divides by N^2.                                                  */
-double test(unsigned int N)
+static double test(unsigned int N)
 {
     unsigned int x, y;
     unsigned long counter = 0UL;
 
-    for (x=0; x<N; ++x)
-        for (y=0; y<N; ++y)
-            if (GCD(x, y) == 1)
+    for (x = 0U; x < N; ++x)
+        for (y = 0U; y < N; ++y)
+            if (GCD(x, y) == 1U)
                 ++counter;
 
     return (double)counter / (double)(N*N);
@@ -59,20 +77,29 @@ int main(void)
     unsigned int x, y, z_x, z_y;
     unsigned N = 1024U;
     unsigned int n;
-    unsigned char black = 0U;
-    unsigned char white = 255U;
+    unsigned char black = 0x00U;
+    unsigned char white = 0xFFU;
 
     /*  I only want to draw the block [0, 63] x [0, 63], but a 64x64 PGM file *
      *  will be really-really small and zooming in makes it blurry. Use this  *
      *  scale factor to draw the [0, 63] x [0, 63] region in a 1024x1024 PGM. */
-    double scale = 64.0 / N;
+    double scale = 64.0 / (double)N;
 
     /*  And a variable for writing to a file.                                 */
     FILE *fp, *ftxt;
 
-    /*  Open the PGM file and write the preamble to it.                       */
-    fp = fopen("gcd_plot.pgm", "w");
-    fprintf(fp, "P5\n%d %d\n255\n", N, N);
+    /*  Open the PGM file using fopen and give write permissions.             */
+    fp = fopen("tmpl_gcd_plot.pgm", "w");
+
+    /*  If fopen fails it returns NULL. Check that this didn't happen.        */
+    if (!fp)
+    {
+        puts("fopen failed and returned NULL for PGM file. Returning.");
+        return -1;
+    }
+
+    /*  Print the preamble to the PGM file.                                   */
+    fprintf(fp, "P5\n%u %u\n255\n", N, N);
 
     /*  Loop through each pixel.                                              */
     for (y=0; y<N; ++y)
@@ -104,17 +131,21 @@ int main(void)
 
     /*  We'll write the output to a text file so we can make neater plots     *
      *  using either GNU plotutils or matplotlib in Python.                   */
-    ftxt = fopen("gcd_test.txt", "w");
+    ftxt = fopen("tmpl_gcd_test.txt", "w");
 
-    /*  n = 0 is rather pointless, so start at n = 1.                         */
-    for (n=1; n<=N; ++n)
+    /*  Check that fopen didn't fail.                                         */
+    if (!fp)
+    {
+        puts("fopen failed and returned NULL for text file. Returning.");
+        return -1;
+    }
+
+    /*  Compute the values for the table.                                     */
+    for (n = 0U; n < N; ++n)
         fprintf(fp, "%.16f\n", test(n));
 
     /*  Close the file.                                                       */
     fclose(ftxt);
-
-    /*  And lastly, let's test a bigger value.                                */
-    printf("%.16f\n", test(2E4));
     return 0;
 }
 /*  End of main.                                                              */
