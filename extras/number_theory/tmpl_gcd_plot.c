@@ -54,18 +54,24 @@ static unsigned int GCD(unsigned int n0, unsigned int n1)
 /*  End of GCD.                                                               */
 
 /*  Function for computing the "area" of the blocks with GCD(x, y) = 1. This  *
- *  simply sums over the square [0, n] x [0, n] for which entries have GCD 1, *
+ *  simply sums over the square [0, N] x [0, N] for which entries have GCD 1, *
  *  and then divides by N^2.                                                  */
 static double test(unsigned int N)
 {
+    /*  Declare necessary variables.                                          */
     unsigned int x, y;
     unsigned long counter = 0UL;
 
+    /*  Loop over all points in the grid [0, N] x [0, N].                     */
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
+
+            /*  We're counting coprime pairs, which means GCD(x, y) = 1.      */
             if (GCD(x, y) == 1U)
                 ++counter;
 
+    /*  The probability is the number of coprime pairs divided by the total,  *
+     *  which is N^2. Return this.                                            */
     return (double)counter / (double)(N*N);
 }
 /*  End of "test" function.                                                   */
@@ -74,18 +80,22 @@ static double test(unsigned int N)
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
-    unsigned int x, y, z_x, z_y;
-    unsigned N = 1024U;
-    unsigned int n;
-    unsigned char black = 0x00U;
-    unsigned char white = 0xFFU;
+    const unsigned int plot_size = 1024U;
+    const unsigned int file_size = 1000U;
 
     /*  I only want to draw the block [0, 63] x [0, 63], but a 64x64 PGM file *
      *  will be really-really small and zooming in makes it blurry. Use this  *
      *  scale factor to draw the [0, 63] x [0, 63] region in a 1024x1024 PGM. */
-    double scale = 64.0 / (double)N;
+    const double scale = 64.0 / (double)plot_size;
 
-    /*  And a variable for writing to a file.                                 */
+    /*  In a PGM file, black is zero and white is 255. Save these values.     */
+    const unsigned char black = 0x00U;
+    const unsigned char white = 0xFFU;
+
+    /*  Variables for indexing and looping over the lattice.                  */
+    unsigned int n, x, y, z_x, z_y;
+
+    /*  And variables for writing to files.                                   */
     FILE *fp, *ftxt;
 
     /*  Open the PGM file using fopen and give write permissions.             */
@@ -99,17 +109,17 @@ int main(void)
     }
 
     /*  Print the preamble to the PGM file.                                   */
-    fprintf(fp, "P5\n%u %u\n255\n", N, N);
+    fprintf(fp, "P5\n%u %u\n255\n", plot_size, plot_size);
 
     /*  Loop through each pixel.                                              */
-    for (y=0; y<N; ++y)
+    for (y = 0U; y < plot_size; ++y)
     {
         /*  PGMs plot top-to-bottom, whereas mathematicians think in a        *
          *  bottom-to-top style. Plot with the z_y variable to fix this.      */
-        z_y = (unsigned int)(scale*(N - y));
+        z_y = (unsigned int)(scale*((double)plot_size - y));
 
         /*  Loop over every x pixel as well.                                  */
-        for (x=0; x<N; ++x)
+        for (x = 0U; x < plot_size; ++x)
         {
             z_x = (unsigned int)(scale*x);
 
@@ -126,22 +136,19 @@ int main(void)
     /*  Close the file.                                                       */
     fclose(fp);
 
-    /*  Run the test function on various sizes.                               */
-    N = 1000;
-
     /*  We'll write the output to a text file so we can make neater plots     *
      *  using either GNU plotutils or matplotlib in Python.                   */
     ftxt = fopen("tmpl_gcd_test.txt", "w");
 
     /*  Check that fopen didn't fail.                                         */
-    if (!fp)
+    if (!ftxt)
     {
         puts("fopen failed and returned NULL for text file. Returning.");
         return -1;
     }
 
     /*  Compute the values for the table.                                     */
-    for (n = 0U; n < N; ++n)
+    for (n = 0U; n < file_size; ++n)
         fprintf(fp, "%.16f\n", test(n));
 
     /*  Close the file.                                                       */
