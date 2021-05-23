@@ -9,6 +9,20 @@ typedef struct root_struct {
     unsigned int n_roots;
 } root_struct;
 
+struct color {
+    unsigned char red, green, blue;
+};
+
+static struct color
+create_color(unsigned char red, unsigned char green, unsigned char blue)
+{
+    struct color out;
+    out.red = red;
+    out.green = green;
+    out.blue = blue;
+    return out;
+}
+
 /******************************************************************************
  ******************************************************************************
  *                          Begin User Input                                  *
@@ -42,97 +56,6 @@ complex double coeffs[deg+1] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1};
 #define N_COLORS 14
 const double PI = 3.14159265358979323846264338327950288419716;
 
-/*  Function for setting colors that can be used in a drawing.                */
-static unsigned char **get_colors(void)
-{
-    unsigned int n;
-    unsigned char **colors = malloc(sizeof(*colors) * N_COLORS);
-
-    for (n=0; n<N_COLORS; ++n)
-        colors[n] = malloc(sizeof(*colors[n]) * 3);
-
-    /*  Red.    */
-    colors[0][0] = (unsigned char)255;
-    colors[0][1] = (unsigned char)0;
-    colors[0][2] = (unsigned char)30;
-
-    /*  Green.  */
-    colors[1][0] = (unsigned char)0;
-    colors[1][1] = (unsigned char)255;
-    colors[1][2] = (unsigned char)30;
-
-    /*  Blue.   */
-    colors[2][0] = (unsigned char)0;
-    colors[2][1] = (unsigned char)30;
-    colors[2][2] = (unsigned char)255;
-
-    /*  Yellow. */
-    colors[3][0] = (unsigned char)255;
-    colors[3][1] = (unsigned char)255;
-    colors[3][2] = (unsigned char)51;
-
-    /*  Light Blue. */
-    colors[4][0] = (unsigned char)128;
-    colors[4][1] = (unsigned char)212;
-    colors[4][2] = (unsigned char)255;
-
-    /*  Magenta.    */
-    colors[5][0] = (unsigned char)255;
-    colors[5][1] = (unsigned char)29;
-    colors[5][2] = (unsigned char)206;
-
-    /*  Teal.   */
-    colors[6][0] = (unsigned char)0;
-    colors[6][1] = (unsigned char)128;
-    colors[6][2] = (unsigned char)128;
-
-    /*  Purple. */
-    colors[7][0] = (unsigned char)255;
-    colors[7][1] = (unsigned char)0;
-    colors[7][2] = (unsigned char)255;
-
-    /*  Orange. */
-    colors[8][0] = (unsigned char)255;
-    colors[8][1] = (unsigned char)85;
-    colors[8][2] = (unsigned char)0;
-
-    /*  Turquoise.  */
-    colors[9][0] = (unsigned char)77;
-    colors[9][1] = (unsigned char)255;
-    colors[9][2] = (unsigned char)195;
-
-    /*  Pine.   */
-    colors[10][0] = (unsigned char)0;
-    colors[10][1] = (unsigned char)128;
-    colors[10][2] = (unsigned char)106;
-
-    /*  Melon.  */
-    colors[11][0] = (unsigned char)255;
-    colors[11][1] = (unsigned char)191;
-    colors[11][2] = (unsigned char)179;
-
-    /*  Mauve.  */
-    colors[12][0] = (unsigned char)255;
-    colors[12][1] = (unsigned char)179;
-    colors[12][2] = (unsigned char)230;
-
-    /*  Midnight Blue.  */
-    colors[13][0] = (unsigned char)102;
-    colors[13][1] = (unsigned char)51;
-    colors[13][2] = (unsigned char)102;
-
-    return colors;
-}
-
-static void destroy_colors(unsigned char **colors)
-{
-    unsigned int n;
-    for (n=0; n<N_COLORS; ++n)
-        free(colors[n]);
-
-    free(colors);
-}
-
 /*  Define the polynomial based on the user provided coefficients. Compute    *
  *  this via Horner's method for speed.                                       */
 static complex double f(complex double z)
@@ -165,7 +88,7 @@ static complex double f_2prime(complex double z)
     int n;
 
     out = deg*(deg-1)*coeffs[0];
-    for (n=1; n<deg-1; ++n)
+    for (n = 1; n < deg-1; ++n)
         out = z*out + deg*(deg-1)*coeffs[n];
 
     return out;
@@ -266,11 +189,20 @@ static void destroy_roots(root_struct *the_roots)
     free(the_roots);
 }
 
-void color(char red, char green, char blue, FILE *fp)
+static void write_color(FILE *fp, struct color c)
 {
-    fputc(red,   fp);
-    fputc(green, fp);
-    fputc(blue,  fp);
+    fputc(c.red,   fp);
+    fputc(c.green, fp);
+    fputc(c.blue,  fp);
+}
+
+static struct color scale_color(struct color c, double t)
+{
+    struct color out;
+    out.red   = (unsigned char)(t * (double)c.red);
+    out.green = (unsigned char)(t * (double)c.green);
+    out.blue  = (unsigned char)(t * (double)c.blue);
+    return out;
 }
 
 int main(void)
@@ -285,9 +217,6 @@ int main(void)
     complex double f_z, df_z, d2f_z;
     unsigned int n_roots = roots_of_f->n_roots;
     complex double *roots = roots_of_f->roots;
-
-    /*  The colors for the drawing.                                           */
-    unsigned char **colors = get_colors();
 
     /*  Values for the min and max of the x and y axes.                       */
     const double x_min = -1.0;
@@ -310,6 +239,25 @@ int main(void)
 
     /*  Colors for the roots (Red, Green, Blue).                              */
     unsigned char brightness[3];
+
+    struct color current_color;
+    const struct color black = {0x00U, 0x00U, 0x00U};
+    struct color colors[14];
+
+    colors[0]  = create_color(0xFFU, 0x00U, 0x1FU);  /*  Red.           */
+    colors[1]  = create_color(0x00U, 0xFFU, 0x1FU);  /*  Green.         */
+    colors[2]  = create_color(0x00U, 0x1FU, 0xFFU);  /*  Blue.          */
+    colors[3]  = create_color(0xFFU, 0xFFU, 0x33U);  /*  Yellow.        */
+    colors[4]  = create_color(0x80U, 0xD4U, 0xFFU);  /*  Light Blue.    */
+    colors[5]  = create_color(0xFFU, 0x1DU, 0xCCU);  /*  Magenta.       */
+    colors[6]  = create_color(0x00U, 0x80U, 0x80U);  /*  Teal.          */
+    colors[7]  = create_color(0xFFU, 0x00U, 0xFFU);  /*  Purple.        */
+    colors[8]  = create_color(0xFFU, 0x55U, 0x00U);  /*  Orange.        */
+    colors[9]  = create_color(0x4DU, 0xFFU, 0xC3U);  /*  Turquoise.     */
+    colors[10] = create_color(0x00U, 0x80U, 0x6AU);  /*  Pine.          */
+    colors[11] = create_color(0xFFU, 0xBFU, 0xB3U);  /*  Melon.         */
+    colors[12] = create_color(0xFFU, 0xB3U, 0xE6U);  /*  Mauve.         */
+    colors[13] = create_color(0x66U, 0x43U, 0x66U);  /*  Midnight blue. */
 
     for (y=0; y<size; ++y)
     {
@@ -352,22 +300,17 @@ int main(void)
             }
 
             if (min > 0.1)
-                color((char)0, (char)0, (char)0, fp);
+                current_color = black;
             else
             {
                 scale = (255.0-factor*iters)/255.0;
-                for (n=0; n<3; ++n)
-                    brightness[n] =
-                        (unsigned char)(scale * colors[ind][n]);
-
-                /*  Color the current pixel.                                  */
-                color(brightness[0], brightness[1], brightness[2], fp);
+                current_color = scale_color(colors[ind], scale);
             }
+            write_color(fp, current_color);
         }
     }
 
     /*  Free the memory allocated to colors before returning.                 */
-    destroy_colors(colors);
     destroy_roots(roots_of_f);
     return 0;
 }
