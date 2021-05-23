@@ -55,9 +55,9 @@ static struct color scale_color(struct color c, double t)
     struct color out;
 
     /*  Scale all of the components of the input color by t.                  */
-    out.red   = (unsigned char)((double)c.red * t);
-    out.green = (unsigned char)((double)c.green * t);
-    out.blue  = (unsigned char)((double)c.blue * t);
+    out.red   = (unsigned char)(t * (double)c.red);
+    out.green = (unsigned char)(t * (double)c.green);
+    out.blue  = (unsigned char)(t * (double)c.blue);
     return out;
 }
 /*  End of scale_color.                                                       */
@@ -168,6 +168,9 @@ int main(void)
         /*  End of for-loop for the x-coordinate.                             */
     }
     /*  End of for-loop for the y-coordinate.                                 */
+
+    /*  Close the file and return.                                            */
+    fclose(fp);
     return 0;
 }
 /*  End of main.                                                              */

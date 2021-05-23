@@ -20,17 +20,21 @@
  *      Draw the Halley fractal for the polynomial z^3 - 1.                   *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
- *      This file uses C99 features (complex.h).                              *
+ *      This file only uses features available in C89. Something interesting  *
+ *      to note, GCC ran this file more than twice as fast as the C99         *
+ *      equivalent that is also in this directory. That file uses complex.h   *
+ *      features from the C99 standard. Clang ran this file about 1.5 times   *
+ *      as fast as the C99 version.                                           *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       May 22, 2021                                                  *
+ *  Date:       May 23, 2021                                                  *
  ******************************************************************************/
 
 /*  The fprintf and FILE data type are found here.                            */
 #include <stdio.h>
 
-/*  Complex data types and complex functions found here.                      */
-#include <complex.h>
+/*  Needed for the square root function.                                      */
+#include <math.h>
 
 /*  Struct for dealing with colors in RGB format.                             */
 struct color {
@@ -60,38 +64,150 @@ static void write_color(FILE *fp, struct color c)
 }
 /*  End of write_color.                                                       */
 
-/*  The Halley fractal we're drawing has the polynomial z^3 - 1.              */
-static complex double f(complex double z)
+/*  Struct for working with complex numbers.                                  */
+struct complex_number {
+    double real, imag;
+};
+
+/*  Function for subtracting two complex numbers.                             */
+static struct complex_number
+complex_subtract(struct complex_number z, struct complex_number w)
 {
-    return z*z*z - 1.0;
+    /*  Declare a variable for the sum.                                       */
+    struct complex_number out;
+
+    /*  Complex subtraction is done component-wise.                           */
+    out.real = z.real - w.real;
+    out.imag = z.imag - w.imag;
+    return out;
+}
+/*  End of complex_subtract.                                                  */
+
+/*  Function for multiplying two complex numbers.                             */
+static struct complex_number
+complex_multiply(struct complex_number z, struct complex_number w)
+{
+    /*  Declare a variable for the product.                                   */
+    struct complex_number prod;
+
+    /*  Compute the product using the rule i^2 = -1.                          */
+    prod.real = z.real*w.real - z.imag*w.imag;
+    prod.imag = z.real*w.imag + z.imag*w.real;
+    return prod;
+}
+/*  End of complex_multiply.                                                  */
+
+/*  Function for dividing complex numbers.                                    */
+static struct complex_number
+complex_divide(struct complex_number z, struct complex_number w)
+{
+    /*  Declare a variable for the quotient.                                  */
+    struct complex_number quot;
+
+    /*  The quotient z/w can be written as z * (1/w). Use this.               */
+    double denom = 1.0 / (w.real*w.real + w.imag*w.imag);
+
+    quot.real = (z.real*w.real + z.imag*w.imag)*denom;
+    quot.imag = (z.imag*w.real - z.real*w.imag)*denom;
+    return quot;
+}
+/*  End of complex_division.                                                  */
+
+/*  Function for squaring a complex number.                                   */
+static struct complex_number complex_square(struct complex_number z)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number z_sq;
+
+    /*  Compute z*w with z = w.                                               */
+    z_sq.real = z.real*z.real - z.imag*z.imag;
+    z_sq.imag = 2.0*z.real*z.imag;
+    return z_sq;
+}
+/*  End of complex_square.                                                    */
+
+/*  Function for computing the distance between two complex numbers.          */
+static double complex_dist(struct complex_number z, struct complex_number w)
+{
+    /*  Declare necessary variables.                                          */
+    double dx, dy;
+
+    /*  Use the Pythagorean formula to compute the distance.                  */
+    dx = z.real - w.real;
+    dy = z.imag - w.imag;
+    return sqrt(dx*dx + dy*dy);
+}
+/*  End of complex_dist.                                                      */
+
+/*  Function for computing the absolute value of a complex number.            */
+static double complex_abs(struct complex_number z)
+{
+    /*  Use the Pythagorean formula and return.                               */
+    return sqrt(z.real*z.real + z.imag*z.imag);
+}
+/*  End of complex_abs.                                                       */
+
+/*  The Halley fractal we're drawing has the polynomial z^3 - 1.              */
+static struct complex_number f(struct complex_number z)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Compute z^3, and then subtract 1 from the real part.                  */
+    out.real = z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag - 1.0;
+    out.imag = 3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag;
+    return out;
 }
 
 /*  The derivative of z^3 - 1 is 3z^2.                                        */
-static complex double f_prime(complex double z)
+static struct complex_number f_prime(struct complex_number z)
 {
-    return 3.0*z*z;
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Compute the square z^3, and multiply real and imaginary part by 3.    */
+    out.real = 3.0*(z.real*z.real - z.imag*z.imag);
+    out.imag = 6.0*z.real*z.imag;
+    return out;
 }
 
 /*  And the second derivative of z^3 - 1 is 6z.                               */
-static complex double f_double_prime(complex double z)
+static struct complex_number f_double_prime(struct complex_number z)
 {
-    return 6.0*z;
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Multiply the real and imaginary parts by 6 and return.                */
+    out.real = 6.0*z.real;
+    out.imag = 6.0*z.imag;
+    return out;
 }
 
 /*  Function for computing the factor used in Halley's method.                */
-static complex double halley_factor(complex double z)
+static struct complex_number halley_factor(struct complex_number z)
 {
     /*  Declare necessary variables.                                          */
-    complex double denom, numer, f_of_z, f_prime_of_z, f_double_prime_of_z;
+    struct complex_number denom, numer, f_of_z, f_prime_of_z;
+    struct complex_number f_double_prime_of_z, denom_a, denom_b;
 
     /*  Compute the factors and return the quotient.                          */
     f_of_z              = f(z);
     f_prime_of_z        = f_prime(z);
     f_double_prime_of_z = f_double_prime(z);
 
-    numer = 2.0*f_of_z*f_prime_of_z;
-    denom = 2.0*f_prime_of_z*f_prime_of_z - f_of_z*f_double_prime_of_z;
-    return numer / denom;
+    /*  The numerator is 2f(z)f'(z).                                          */
+    numer = complex_multiply(f_of_z, f_prime_of_z);
+    numer.real *= 2.0;
+    numer.imag *= 2.0;
+
+    /*  The denominator is 2f'(z)^2 - f(z)f''(z).                             */
+    denom_a = complex_square(f_prime_of_z);
+    denom_a.real *= 2.0;
+    denom_a.imag *= 2.0;
+    denom_b = complex_multiply(f_of_z, f_double_prime_of_z);
+
+    denom = complex_subtract(denom_a, denom_b);
+    return complex_divide(numer, denom);
 }
 /*  End of halley_factor.                                                     */
 
@@ -99,9 +215,9 @@ static complex double halley_factor(complex double z)
 int main(void)
 {
     /*  Declare variables for z (point in the plane) and f(z).                */
-    complex double z, f_of_z;
+    struct complex_number z, f_of_z;
 
-    /*  Two doubles for the real and imaginary parts of the complex number z. */
+    /*  Variables for the real and imaginary parts of z.                      */
     double z_x, z_y;
 
     /*  The allowed error when searching for a root to z^3 - 1. This is the   *
@@ -152,9 +268,9 @@ int main(void)
 
     /*  Precompute the three roots of z^3 - 1 for later. These are the three  *
      *  cubic roots of unity.                                                 */
-    const complex double root0 =  1.0;
-    const complex double root1 = -0.5 + 0.866025403784*(complex double)I;
-    const complex double root2 = -0.5 - 0.866025403784*(complex double)I;
+    const struct complex_number root0 = {1.0, 0.0};
+    const struct complex_number root1 = {-0.5,  0.866025403784};
+    const struct complex_number root2 = {-0.5, -0.866025403784};
 
     /*  Declare a variable for creating a gradient in color. The gradient     *
      *  indicates how many iterations it takes to converge. Darker values     *
@@ -171,7 +287,7 @@ int main(void)
     struct color current_color;
 
     /*  Open a PPM file and give it write permissions.                        */
-    FILE *fp = fopen("tmpl_halley_fractal_z3_minus_1_c99.ppm", "w");
+    FILE *fp = fopen("tmpl_halley_fractal_z3_minus_1_c89.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check for this.                       */
     if (!fp)
@@ -195,8 +311,9 @@ int main(void)
             /*  Compute the current x-coordinate.                             */
             z_x = x_min + (double)x * x_factor;
 
-            /*  Compute the complex number x + iy from the two real numbers.  */
-            z = z_x + z_y*(complex double)I;
+            /*  Compute z from the real and imaginary parts.                  */
+            z.real = z_x;
+            z.imag = z_y;
 
             /*  Reset the number of iterations to zero.                       */
             iters = 0x00U;
@@ -207,10 +324,10 @@ int main(void)
 
             /*  Perform Halley's method until we are close to a root, or      *
              *  perform too many iterations.                                  */
-            while((cabs(f_of_z) > EPS) && (iters < max_iters))
+            while((complex_abs(f_of_z) > EPS) && (iters < max_iters))
             {
                 /*  Compute the next iteration of Halley's method.            */
-                z = z - halley_factor(z);
+                z = complex_subtract(z, halley_factor(z));
 
                 /*  Update f(z) and the number of iterations used.            */
                 f_of_z = f(z);
@@ -223,11 +340,11 @@ int main(void)
             color_factor = 1.0 - (double)iters * rcpr_max_iters;
 
             /*  Color the pixel based on which root the result is closest to. */
-            if (cabs(z - root0) < toler)
+            if (complex_dist(z, root0) < toler)
                 current_color = scale_color(blue, color_factor);
-            else if (cabs(z - root1) < toler)
+            else if (complex_dist(z, root1) < toler)
                 current_color = scale_color(green, color_factor);
-            else if (cabs(z - root2) < toler)
+            else if (complex_dist(z, root2) < toler)
                 current_color = scale_color(red, color_factor);
 
             /*  And if we didn't converge to a root, color the pixel black.   */
