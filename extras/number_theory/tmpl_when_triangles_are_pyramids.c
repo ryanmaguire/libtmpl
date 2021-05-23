@@ -43,7 +43,7 @@
  *  proof of this follows from induction. Use this to quickly compute the sum.*/
 static unsigned long int fcube(unsigned long int n)
 {
-    return n * (n + 1UL)*(2UL*n + 1UL) / 6UL;
+    return n*(n + 1UL)*(2UL*n + 1UL) / 6UL;
 }
 
 /*  The sum 1 + 2 + 3 + ... + n can be precomputed as n(n+1)/2. The proof     *
@@ -63,7 +63,7 @@ int main(void)
     unsigned long int m;
 
     /*  Maximum bound we'll search up to.                                     */
-    unsigned long int max = 1000000UL;
+    const unsigned long int max = 1000000UL;
 
     /*  Values for storing the sum of integers and the sum of squares.        */
     unsigned long int valx, valy;
