@@ -20,7 +20,7 @@
  *      Provides an example of using the absolute value function.             *
  *      We can compile this with:                                             *
  *                                                                            *
- *          gcc tmpl_complex_abs_example.c.c -o test -ltmpl                   *
+ *          gcc tmpl_complex_abs_example.c -o test -ltmpl                     *
  *                                                                            *
  *      If libtmpl is not in /usr/local/lib/ (this is the default location it *
  *      is placed in when built via make.sh), change the -L option to the     *
@@ -28,7 +28,7 @@
  *      -I option as follows:                                                 *
  *                                                                            *
  *          gcc -I/usr/local/include/ -L/usr/local/lib/                       *
- *              tmpl_complex_abs_example.c.c -o test -ltmpl                   *
+ *              tmpl_complex_abs_example.c -o test -ltmpl                     *
  *                                                                            *
  *      Note, this should all be one line. This outputs an executable "test". *
  *      Running the executable with ./test, this outputs:                     *
@@ -40,8 +40,8 @@
  *          |nan + inan| = nan                                                *
  *          |inf + iinf| = inf                                                *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       December 19, 2020                                             *
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       May 24, 2021                                                  *
  ******************************************************************************/
 
 /*  Complex functions defined here.                                           */
@@ -62,7 +62,7 @@ int main(void)
     double re_z, im_z;
 
     /*  And declare a variable for indexing.                                  */
-    int n;
+    unsigned int n;
 
     /*  Set the test values in the array z.                                   */
     z[0] = tmpl_CDouble_Zero;
@@ -74,7 +74,7 @@ int main(void)
     z[6] = tmpl_CDouble_Infinity;
 
     /*  Loop over the results and print them.                                 */
-    for (n=0; n<7; ++n)
+    for (n = 0U; n < 7U; ++n)
     {
         /*  Compute |z| of the nth value.                                     */
         w[n] = tmpl_CDouble_Abs(z[n]);
