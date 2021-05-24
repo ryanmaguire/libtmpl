@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -67,11 +67,11 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_BYTES_H__
-#define __TMPL_BYTES_H__
+#ifndef TMPL_BYTES_H
+#define TMPL_BYTES_H
 
 /*  Data type for determining the endianness of your platform.                */
-typedef enum {
+typedef enum _tmpl_Endian {
     tmpl_UnknownEndian,
     tmpl_LittleEndian,
     tmpl_MixedEndian,

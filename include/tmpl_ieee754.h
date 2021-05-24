@@ -51,15 +51,9 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_integer.h:                                                       *
- *          Header file which provides fixed-width signed and unsigned        *
- *          integer data types for 16, 32, and 64 bits.                       *
- *  2.) tmpl_endianness.h:                                                    *
- *          Header file that is created during the install of libtmpl. This   *
- *          header contains the macro __TMPL__ENDIAN__ which specifies        *
- *          the endianness of your platform. This code only works on little   *
- *          and big endian platforms. Since mixed-endian computers are        *
- *          essentially extinct, this shouldn't cause problems.               *
+ *  1.) limits.h:                                                             *
+ *          Standard C library header file containing the macros for how      *
+ *          large various integer data types are.                             *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -89,8 +83,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_IEEE754_H__
-#define __TMPL_IEEE754_H__
+#ifndef TMPL_IEEE754_H
+#define TMPL_IEEE754_H
 
 /*  Macros for determining the size of integer data types found here.         */
 #include <limits.h>

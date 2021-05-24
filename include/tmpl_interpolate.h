@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_INTERPOLATE_H__
-#define __TMPL_INTERPOLATE_H__
+#ifndef TMPL_INTERPOLATE_H
+#define TMPL_INTERPOLATE_H
 
 /******************************************************************************
  *  Function:                                                                 *

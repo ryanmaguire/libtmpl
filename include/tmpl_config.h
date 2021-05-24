@@ -55,8 +55,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_CONFIG_H__
-#define __TMPL_CONFIG_H__
+#ifndef TMPL_CONFIG_H
+#define TMPL_CONFIG_H
 
 #ifdef _OPENMP
 #define __TMPL_USING_OPENMP__ 1

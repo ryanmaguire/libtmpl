@@ -55,8 +55,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_EUCLIDEAN_PLANAR_GEOMETRY_H__
-#define __TMPL_EUCLIDEAN_PLANAR_GEOMETRY_H__
+#ifndef TMPL_EUCLIDEAN_PLANAR_GEOMETRY_H
+#define TMPL_EUCLIDEAN_PLANAR_GEOMETRY_H
 
 #include <libtmpl/include/tmpl_bool.h>
 

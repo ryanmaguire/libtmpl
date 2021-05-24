@@ -1,5 +1,5 @@
-#ifndef __TMPL_SPECIAL_FUNCTIONS_H__
-#define __TMPL_SPECIAL_FUNCTIONS_H__
+#ifndef TMPL_SPECIAL_FUNCTIONS_H
+#define TMPL_SPECIAL_FUNCTIONS_H
 
 /*  Boolean data type defined here.                                           */
 #include <libtmpl/include/tmpl_bool.h>

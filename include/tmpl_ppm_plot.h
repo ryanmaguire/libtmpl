@@ -1,6 +1,6 @@
 /*  Include guard for this file to prevent including this twice.              */
-#ifndef __TMPL_PPMPLOT_H__
-#define __TMPL_PPMPLOT_H__
+#ifndef TMPL_PPMPLOT_H
+#define TMPL_PPMPLOT_H
 
 #include <stdio.h>
 #include <libtmpl/include/tmpl_complex.h>

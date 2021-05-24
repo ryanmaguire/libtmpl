@@ -61,8 +61,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_COMPLEX_H__
-#define __TMPL_COMPLEX_H__
+#ifndef TMPL_COMPLEX_H
+#define TMPL_COMPLEX_H
 
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>

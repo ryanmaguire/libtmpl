@@ -45,8 +45,8 @@
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
-#ifndef __TMPL_VECTOR_H__
-#define __TMPL_VECTOR_H__
+#ifndef TMPL_VECTOR_H
+#define TMPL_VECTOR_H
 
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -58,7 +58,7 @@
 typedef struct _tmpl_FloatVector {
     float *data;
     unsigned long int length;
-  
+
     /*  In the event of an error, this Boolean is set to true and a string    *
      *  detailing the error is stored in the error_message pointer.           */
     tmpl_Bool error_occurred;
@@ -69,7 +69,7 @@ typedef struct _tmpl_FloatVector {
 typedef struct _tmpl_DoubleVector {
     double *data;
     unsigned long int length;
-  
+
     /*  In the event of an error, this Boolean is set to true and a string    *
      *  detailing the error is stored in the error_message pointer.           */
     tmpl_Bool error_occurred;
@@ -80,7 +80,7 @@ typedef struct _tmpl_DoubleVector {
 typedef struct _tmpl_LongDoubleVector {
     long double *data;
     unsigned long int length;
-  
+
     /*  In the event of an error, this Boolean is set to true and a string    *
      *  detailing the error is stored in the error_message pointer.           */
     tmpl_Bool error_occurred;

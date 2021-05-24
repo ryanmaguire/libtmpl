@@ -27,8 +27,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_MATRIX_COMPLEX_H__
-#define __TMPL_MATRIX_COMPLEX_H__
+#ifndef TMPL_MATRIX_COMPLEX_H
+#define TMPL_MATRIX_COMPLEX_H
 
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_complex.h>

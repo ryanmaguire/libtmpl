@@ -1,7 +1,7 @@
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_POLYNOMIAL_H__
-#define __TMPL_POLYNOMIAL_H__
+#ifndef TMPL_POLYNOMIAL_H
+#define TMPL_POLYNOMIAL_H
 
 #include <libtmpl/include/tmpl_rational.h>
 

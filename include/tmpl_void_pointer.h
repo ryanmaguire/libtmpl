@@ -1,6 +1,6 @@
 
-#ifndef __TMPL_VOID_POINTER_H__
-#define __TMPL_VOID_POINTER_H__
+#ifndef TMPL_VOID_POINTER_H
+#define TMPL_VOID_POINTER_H
 
 #include <libtmpl/include/tmpl_complex.h>
 

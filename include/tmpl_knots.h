@@ -55,8 +55,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_KNOTS_H__
-#define __TMPL_KNOTS_H__
+#ifndef TMPL_KNOTS_H
+#define TMPL_KNOTS_H
 
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
