@@ -1,29 +1,33 @@
 # libtmpl
 
-## Installation
-Simply run the Makefile with:
-```
-make
-```
-Note, this requires sudo privileges. This has been tested on various GNU/Linux
-distributions, macOS, and FreeBSD. I tried to make an nmake file for Windows
-users, but gave up. I may return to this eventually.
-
-There is also `make.sh` which is a shell script written in bash that has the
-same functionality as `Makefile` except that various pedantic compiler options
-are passed to the compiler. This is to ensure as best as possible that the code
-is written in strictly compliant C89/C90 code. This has been tested with several
-compilers, including GCC (GNU), Clang (LLVM), TCC (Tiny C Compiler), and
-PCC (Portable C Compiler).
-
 ## The Mathematicians Programming Library
 This project is a collection of code written in C89/C90 (commonly called ANSI C)
 for mathematicians and physicists to use on various types of projects. It
 started with rss_ringoccs, a suite of tools written for processing the Cassini
 radio science data, which is written mostly in C (but also Python), but
-eventually grew beyond the scope of just astronomy. **This project is still in
-its infancy** and is updated regularly. The current goal is have the following
-sublibraries included in libtmpl:
+eventually grew beyond the scope of just astronomy. **This project is still in**
+**its infancy** and is updated regularly.
+
+**There are no dependencies other than a C compiler and the C standard**
+**library.** The library is written entirely in ISO C89/C90 compliant code,
+and no C99/C11 or GCC extensions are used. It compiles with C99 and C11/C18
+compilers, so it is more fitting to say it is written in the intersection of
+these standards. That being said, the ``extras/`` folder contains a plethora of
+code for recreational purposes (random walks, fractals, raytracing, and more).
+These files are **not** a part of libtmpl and are not compiled via the Makefile
+or the ``make.sh`` script, leaving me the freedom to write in whichever language
+I please. Still, most of the files in ``extras/`` are in C, but some are in C++,
+Python, Sage, and the rare Mathematica file may appear, and some files use C99
+tools just to mix it up.
+
+The ``examples/`` folder contains examples of all of the functions in the
+library and shows basic usage of these tools. The ``tests/`` folder contains
+time tests and accuracy tests of ``libtmpl`` versus other libraries. To run
+these tests will require these libraries being available. Running these tests
+is **not** required, and they are mostly for internal use and to verify the
+algorithms implemented in libtmpl.
+
+The library is split into the following sublibraries:
 
 ## math
 A collection of functions for running day-to-day math routines, including the
@@ -44,6 +48,11 @@ included in C89/C90. This sublibrary provides all of the functions in C99 but
 for the C89 user. The code is forward compatible and compiles on C99 and C11
 compilers.
 
+## bytes
+Tools for working with endianness and reading binary files. This code
+originated out of the need to read the RSR data files from the Cassini Radio
+Science mission, which had big-endianness, on little-endian machines.
+
 ## special_functions
 A plethora of special functions that arise in physics and mathematics, from
 Bessel functions, to Lambert's W function, and more. Real and complex versions
@@ -55,6 +64,14 @@ Basic 2D and 3D Euclidean geometry.
 
 ## matrix
 Basic matrix tools and typedef's.
+
+## knots
+Tools for working with knot theory, including computing knot invariants, and
+working with virtual knots and virtual links.
+
+## graphs
+Currently a limited library that allows one to create bipartite and complete
+graphs. This will grow over time.
 
 ## vector
 Tools for working with vectors, including vector arithmetic, and basic vector
@@ -82,10 +99,26 @@ Tukey-Cooley and Bluestein FFT algorithms for real and complex inputs.
 Convolutions are also provided.
 
 ## Wish List
-Graph theory, abstract algebra (groups), topology, knot theory.
+Abstract algebra (groups), topology.
 
 # NOTE:
 **This library is still being ported over from rss_ringoccs and others.** The
 code was scattered across several projects of mine, and this is an attempt to
 centralize all of it.
+
+## Installation
+Simply run the Makefile with:
+```
+make
+```
+Note, this requires sudo privileges. This has been tested on various GNU/Linux
+distributions, macOS, and FreeBSD. I tried to make an nmake file for Windows
+users, but gave up. I may return to this eventually.
+
+There is also `make.sh` which is a shell script written in bash that has the
+same functionality as `Makefile` except that various pedantic compiler options
+are passed to the compiler. This is to ensure as best as possible that the code
+is written in strictly compliant C89/C90 code. This has been tested with several
+compilers, including GCC (GNU), Clang (LLVM), TCC (Tiny C Compiler), and
+PCC (Portable C Compiler).
 
