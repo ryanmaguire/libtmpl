@@ -23,28 +23,21 @@
 #include <stdio.h>
 #include <time.h>
 
-static double complex_abs_squared(complex double z)
-{
-    double x = creal(z);
-    double y = cimag(z);
-    return x*x + y*y;
-}
-
-/*  Routine for testing tmpl_CDouble_Abs_Squared.                             */
+/*  Routine for testing rssringoccs_CFloat_Abs_Squared.                       */
 int main(void)
 {
-    double **y0, **y1;
-    tmpl_ComplexDouble **z0;
-    complex double **z1;
+    float **y0, **y1;
+    tmpl_ComplexFloat **z0;
+    complex float **z1;
 
     unsigned int N = 10000U;
     unsigned int x, y;
     clock_t t1, t2;
 
-    double start = -100.0;
-    double end   =  100.0;
-    double ds    = (end - start) / (double)(N - 1U);
-    double z_x, z_y, max_rel, max_abs, temp;
+    float start = -100.0F;
+    float end   =  100.0F;
+    float ds    = (end - start) / (float)(N - 1U);
+    float z_x, z_y, max_rel, max_abs, temp;
 
     y0 = malloc(sizeof(*y0) * N);
     y1 = malloc(sizeof(*y1) * N);
@@ -63,43 +56,43 @@ int main(void)
     {
         for (y = 0U; y < N; ++y)
         {
-            z_x = (double)x*ds + start;
-            z_y = (double)y*ds + start;
-            z0[x][y] = tmpl_CDouble_Rect(z_x, z_y);
-            z1[x][y] = z_x + (complex double)_Complex_I*z_y;
+            z_x = (float)x*ds + start;
+            z_y = (float)y*ds + start;
+            z0[x][y] = tmpl_CFloat_Rect(z_x, z_y);
+            z1[x][y] = z_x + _Complex_I*z_y;
         }
     }
 
-    printf("Functions: tmpl_CDouble_Abs_Squared vs complex_abs_squared\n");
+    printf("Functions: tmpl_CFloat_Abs vs cabsf\n");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y0[x][y] = tmpl_CDouble_Abs_Squared(z0[x][y]);
+            y0[x][y] = tmpl_CFloat_Abs(z0[x][y]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y1[x][y] = complex_abs_squared(z1[x][y]);
+            y1[x][y] = cabsf(z1[x][y]);
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
-    max_rel = 0.0;
+    max_abs = 0.0F;
+    max_rel = 0.0F;
     for (x = 0U; x < N; ++x)
     {
         for (y = 0U; y < N; ++y)
         {
             temp = y0[x][y] - y1[x][y];
-            if (temp < 0.0)
+            if (temp < 0.0F)
                 temp = -temp;
 
             if (max_abs < temp)
                 max_abs = temp;
 
             temp = (y0[x][y] - y1[x][y])/y1[x][y];
-            if (temp < 0.0)
+            if (temp < 0.0F)
                 temp = -temp;
 
             if (max_rel < temp)
