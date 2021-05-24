@@ -89,7 +89,7 @@ int main(void)
     /*  We're printing the results to include/tmpl_endianness.h, so we'll     *
      *  need a char array to store the string.                                */
     char end_str[48];
-    
+
     /*  And lastly, open the file include/tmpl_endianness.h using fopen and   *
      *  give the file write permissions.                                      */
     FILE *fp = fopen("./include/tmpl_endianness.h", "w");
@@ -116,7 +116,7 @@ int main(void)
      *  value, the array will be 0 up to that number. We'll start by          *
      *  initializing the unsigned long int part of the union to 0.            */
     e.n = 0UL;
-    
+
     /*  We need to set pow to 2^(number of bits in a byte). This number is    *
      *  found in limits.h as CHAR_BIT. We're going to write out number as     *
      *  7 * pow^7 + 6 * pow^6 + ... + 2 * pow^2 + pow + 0. If we somehow had  *
@@ -134,7 +134,7 @@ int main(void)
     for (n = 1; n < sizeof(unsigned long int); ++n)
     {
         e.n += n * pow;
-        
+
         /*  From pow^k we can get pow^(k+1) by shifting the "decimal" point   *
          *  CHAR_BIT to the right. In decimal, if we had 100 and want 1000,   *
          *  we'd write 100.00, shift the decimal to the right, and get 1000.0.*
@@ -188,13 +188,13 @@ int main(void)
     fprintf(fp, " *      __TMPL_ENDIANNESS__ which is used in various functions where the code *\n");
     fprintf(fp, " *      is endian specific.                                                   *\n");
     fprintf(fp, " ******************************************************************************/\n");
-    fprintf(fp, "#ifndef __TMPL_ENDIANNESS_H__\n");
-    fprintf(fp, "#define __TMPL_ENDIANNESS_H__\n\n");
-    fprintf(fp, "#define __TMPL_BIG_ENDIAN__ 0\n");
-    fprintf(fp, "#define __TMPL_LITTLE_ENDIAN__ 1\n");
-    fprintf(fp, "#define __TMPL_MIXED_ENDIAN__ 2\n");
-    fprintf(fp, "#define __TMPL_UNKNOWN_ENDIAN__ 3\n\n");
-    fprintf(fp, "#define __TMPL_ENDIAN__ %s\n\n", end_str);
+    fprintf(fp, "#ifndef TMPL_ENDIANNESS_H\n");
+    fprintf(fp, "#define TMPL_ENDIANNESS_H\n\n");
+    fprintf(fp, "#define TMPL_BIG_ENDIAN 0\n");
+    fprintf(fp, "#define TMPL_LITTLE_ENDIAN 1\n");
+    fprintf(fp, "#define TMPL_MIXED_ENDIAN 2\n");
+    fprintf(fp, "#define TMPL_UNKNOWN_ENDIAN 3\n\n");
+    fprintf(fp, "#define TMPL_ENDIAN %s\n\n", end_str);
     fprintf(fp, "#endif\n");
     return 0;
 }

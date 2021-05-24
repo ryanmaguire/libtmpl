@@ -275,7 +275,7 @@ long double tmpl_LDouble_Fresnel_Cos(long double x)
     /* For small x use the Taylor expansion to compute C(x). For larger x,  *
      * use the asymptotic expansion. For values near 3.076, accuracy of 5   *
      * decimals is guaranteed. Higher precicion outside this region.        */
-    if (arg < 16.24)
+    if (arg < 16.24L)
     {
         arg *= arg;
         cx = arg * (long double)FRESNEL_COSINE_TAYLOR_26 + (long double)FRESNEL_COSINE_TAYLOR_25;
@@ -306,12 +306,12 @@ long double tmpl_LDouble_Fresnel_Cos(long double x)
         cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_00;
         cx = cx*x;
     }
-    else if (arg < 1.0e16)
+    else if (arg < 1.0e16L)
     {
         cos_x_squared = tmpl_LDouble_Cos(arg);
         sin_x_squared = tmpl_LDouble_Sin(arg);
 
-        arg = 1.0/arg;
+        arg = 1.0L/arg;
         sin_x_squared *= arg;
         arg *= arg;
         cos_x_squared *= arg;
@@ -334,12 +334,12 @@ long double tmpl_LDouble_Fresnel_Cos(long double x)
         /*  (x > 0) - (x < 0) is a quick way to return sign(x) and avoids an  *
          *  expensive if-then statement. Output for the asymptotic expansion  *
          *  is f(|x|) + sign(x) * sqrt(pi/8). Error goes like 1/x^15.         */
-        cx = cx + ((x > 0) - (x < 0))*tmpl_Sqrt_Pi_By_Eight;
+        cx = cx + ((x > 0.0L) - (x < 0.0L))*tmpl_Sqrt_Pi_By_Eight;
     }
 
     /* For large values, return the limit of S(x) as x -> +/- infinity.       */
     else
-        cx = ((x > 0) - (x < 0))*tmpl_Sqrt_Pi_By_Eight;
+        cx = ((x > 0.0L) - (x < 0.0L))*tmpl_Sqrt_Pi_By_Eight;
 
     return cx;
 }

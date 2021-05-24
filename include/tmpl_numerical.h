@@ -18,8 +18,8 @@
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including this twice.              */
-#ifndef __TMPL_NUMERICAL_H__
-#define __TMPL_NUMERICAL_H__
+#ifndef TMPL_NUMERICAL_H
+#define TMPL_NUMERICAL_H
 
 extern float
 tmpl_Newton_Raphson_Float(float x, float (*f)(float), float (*f_prime)(float),

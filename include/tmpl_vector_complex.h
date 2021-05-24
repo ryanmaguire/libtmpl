@@ -1,5 +1,5 @@
-#ifndef __TMPL_COMPLEX_VECTOR_H__
-#define __TMPL_COMPLEX_VECTOR_H__
+#ifndef TMPL_COMPLEX_VECTOR_H
+#define TMPL_COMPLEX_VECTOR_H
 
 #include <libtmpl/include/tmpl_complex.h>
 

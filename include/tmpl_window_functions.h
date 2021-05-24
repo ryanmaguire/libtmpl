@@ -1,5 +1,5 @@
-#ifndef __TMPL_WINDOW_FUNCTIONS_H__
-#define __TMPL_WINDOW_FUNCTIONS_H__
+#ifndef TMPL_WINDOW_FUNCTIONS_H
+#define TMPL_WINDOW_FUNCTIONS_H
 
 #define RectNormEQ 1.0
 #define CossNormEQ 1.5
@@ -30,7 +30,7 @@ tmpl_Float_Kaiser_Bessel_2_0(float x, float W);
 extern double
 tmpl_Double_Kaiser_Bessel_2_0(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Kaiser_Bessel_2_0(long double x, long double W);
 
 extern float
@@ -39,7 +39,7 @@ tmpl_Float_Kaiser_Bessel_2_5(float x, float W);
 extern double
 tmpl_Double_Kaiser_Bessel_2_5(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Kaiser_Bessel_2_5(long double x, long double W);
 
 
@@ -49,7 +49,7 @@ tmpl_Float_Kaiser_Bessel_3_5(float x, float W);
 extern double
 tmpl_Double_Kaiser_Bessel_3_5(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Kaiser_Bessel_3_5(long double x, long double W);
 
 extern float
@@ -58,7 +58,7 @@ tmpl_Float_Modified_Kaiser_Bessel_2_0(float x, float W);
 extern double
 tmpl_Double_Modified_Kaiser_Bessel_2_0(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Modified_Kaiser_Bessel_2_0(long double x, long double W);
 
 extern float
@@ -67,7 +67,7 @@ tmpl_Float_Modified_Kaiser_Bessel_2_5(float x, float W);
 extern double
 tmpl_Double_Modified_Kaiser_Bessel_2_5(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Modified_Kaiser_Bessel_2_5(long double x, long double W);
 
 extern float
@@ -76,7 +76,7 @@ tmpl_Float_Modified_Kaiser_Bessel_3_5(float x, float W);
 extern double
 tmpl_Double_Modified_Kaiser_Bessel_3_5(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Modified_Kaiser_Bessel_3_5(long double x, long double W);
 
 extern float
@@ -85,7 +85,7 @@ tmpl_Float_Rect_Window(float x, float W);
 extern double
 tmpl_Double_Rect_Window(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Rect_Window(long double x, long double W);
 
 extern float
@@ -94,25 +94,25 @@ tmpl_Float_Coss_Window(float x, float W);
 extern double
 tmpl_Double_Coss_Window(double x, double W);
 
-extern long double                                                             
+extern long double
 tmpl_LDouble_Coss_Window(long double x, long double W);
 
 extern float
-tmpl_Float_Kaiser_Bessel(float x, float W, float alpha);   
+tmpl_Float_Kaiser_Bessel(float x, float W, float alpha);
 
 extern double
 tmpl_Double_Kaiser_Bessel(double x, double W, double alpha);
 
-extern long double            
+extern long double
 tmpl_LDouble_Kaiser_Bessel(long double x, long double W, long double alpha);
 
 extern float
-tmpl_Float_Modified_Kaiser_Bessel(float x, float W, float alpha);   
+tmpl_Float_Modified_Kaiser_Bessel(float x, float W, float alpha);
 
 extern double
 tmpl_Double_Modified_Kaiser_Bessel(double x, double W, double alpha);
 
-extern long double            
+extern long double
 tmpl_LDouble_Modified_Kaiser_Bessel(long double x, long double W,
                                     long double alpha);
 

@@ -36,8 +36,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_GRAPH_THEORY_H__
-#define __TMPL_GRAPH_THEORY_H__
+#ifndef TMPL_GRAPH_THEORY_H
+#define TMPL_GRAPH_THEORY_H
 
 #include <libtmpl/include/tmpl_bool.h>
 

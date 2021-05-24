@@ -1,6 +1,6 @@
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H__
-#define __TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H__
+#ifndef TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H
+#define TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H
 
 /*  Data types for three dimensional points and transformations, respectively.*/
 typedef struct tmpl_ThreeVector {

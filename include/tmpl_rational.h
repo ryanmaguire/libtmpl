@@ -1,7 +1,7 @@
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_RATIONAL_H__
-#define __TMPL_RATIONAL_H__
+#ifndef TMPL_RATIONAL_H
+#define TMPL_RATIONAL_H
 
 #include <libtmpl/include/tmpl_bool.h>
 

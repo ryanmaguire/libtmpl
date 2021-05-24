@@ -62,8 +62,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_BOOL_H__
-#define __TMPL_BOOL_H__
+#ifndef TMPL_BOOL_H
+#define TMPL_BOOL_H
 
 /*  The C99, C11, and C18 standards require support for booleans, but it is   *
  *  not available in C89/C90. We've typedef'd Booleans as tmpl_Bool to avoid  *
@@ -71,7 +71,7 @@
  *  supports Booleans, you should be able to use stdbools with libtmpl.       */
 
 /*  We prepend tmpl onto False, True, and Bool to avoid name conflicts.       */
-typedef enum tmpl_Bool {tmpl_False, tmpl_True} tmpl_Bool;
+typedef enum _tmpl_Bool {tmpl_False, tmpl_True} tmpl_Bool;
 
 #endif
 /*  End of include guard.                                                     */

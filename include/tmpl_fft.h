@@ -34,8 +34,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_FFT_H__
-#define __TMPL_FFT_H__
+#ifndef TMPL_FFT_H
+#define TMPL_FFT_H
 
 /*  Booleans defined here. Needed for the FFT routines.                       */
 #include <libtmpl/include/tmpl_bool.h>

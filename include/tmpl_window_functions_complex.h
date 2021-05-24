@@ -1,6 +1,6 @@
 
-#ifndef __TMPL_WINDOW_FUNCTIONS_COMPLEX_H__
-#define __TMPL_WINDOW_FUNCTIONS_COMPLEX_H__
+#ifndef TMPL_WINDOW_FUNCTIONS_COMPLEX_H
+#define TMPL_WINDOW_FUNCTIONS_COMPLEX_H
 
 /*  complex data types are defined here.                                      */
 #include <libtmpl/include/tmpl_complex.h>

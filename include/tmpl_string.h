@@ -48,8 +48,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef __TMPL_STRING_H__
-#define __TMPL_STRING_H__
+#ifndef TMPL_STRING_H
+#define TMPL_STRING_H
 
 /******************************************************************************
  *  Function:                                                                 *

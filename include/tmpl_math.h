@@ -116,8 +116,8 @@
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
-#ifndef __TMPL_MATH_H__
-#define __TMPL_MATH_H__
+#ifndef TMPL_MATH_H
+#define TMPL_MATH_H
 
 /* Declare Miscellaneous Constants.                                           */
 

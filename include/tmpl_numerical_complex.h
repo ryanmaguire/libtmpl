@@ -18,8 +18,8 @@
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including this twice.              */
-#ifndef __TMPL_NUMERICAL_COMPLEX_H__
-#define __TMPL_NUMERICAL_COMPLEX_H__
+#ifndef TMPL_NUMERICAL_COMPLEX_H
+#define TMPL_NUMERICAL_COMPLEX_H
 
 #include <libtmpl/include/tmpl_complex.h>
 

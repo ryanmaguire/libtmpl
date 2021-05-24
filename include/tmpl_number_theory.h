@@ -1,5 +1,5 @@
-#ifndef __TMPL_NUMBER_THEORY_H__
-#define __TMPL_NUMBER_THEORY_H__
+#ifndef TMPL_NUMBER_THEORY_H
+#define TMPL_NUMBER_THEORY_H
 
 #include <libtmpl/include/tmpl_vector.h>
 
