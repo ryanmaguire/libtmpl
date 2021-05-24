@@ -23,13 +23,6 @@
 #include <stdio.h>
 #include <time.h>
 
-static double complex_abs_squared(complex double z)
-{
-    double x = creal(z);
-    double y = cimag(z);
-    return x*x + y*y;
-}
-
 /*  Routine for testing tmpl_CDouble_Abs_Squared.                             */
 int main(void)
 {
@@ -70,18 +63,18 @@ int main(void)
         }
     }
 
-    printf("Functions: tmpl_CDouble_Abs_Squared vs complex_abs_squared\n");
+    printf("Functions: tmpl_CDouble_Abs vs cabs\n");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y0[x][y] = tmpl_CDouble_Abs_Squared(z0[x][y]);
+            y0[x][y] = tmpl_CDouble_Abs(z0[x][y]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y1[x][y] = complex_abs_squared(z1[x][y]);
+            y1[x][y] = cabs(z1[x][y]);
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 

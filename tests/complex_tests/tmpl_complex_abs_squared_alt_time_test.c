@@ -77,6 +77,7 @@ int main(void)
         }
     }
 
+    printf("Functions: tmpl_complex_abs_squared vs complex_abs_squared\n");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
