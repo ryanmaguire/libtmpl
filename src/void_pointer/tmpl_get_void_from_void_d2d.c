@@ -1,5 +1,4 @@
 
-#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_void_pointer.h>
 
 void
@@ -10,7 +9,7 @@ tmpl_get_void_from_void_d2d(void *in, void *out,
     unsigned long int n;
     double *out_data = out;
 
-#if __TMPL_USING_OPENMP__ == 1
+#ifdef _OPENMP
 #pragma omp parallel for
 #endif
     for (n = 0UL; n < dim; ++n)

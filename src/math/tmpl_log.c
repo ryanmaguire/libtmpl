@@ -2,7 +2,7 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 
-#if __TMPL_USE_IEEE754_ALGORITHMS__ != 0
+#if defined(__STDC_IEC_559__)
 #include <libtmpl/include/tmpl_ieee754.h>
 
 double tmpl_Double_Log(double x)

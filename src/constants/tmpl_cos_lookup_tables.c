@@ -1,4 +1,4 @@
-#include <libtmpl/include/tmpl_config.h>
+#include <libtmpl/include/tmpl_math.h>
 
 const float tmpl_Float_Cos_Lookup_Table[100] = {
     1.000000000000000000000000F, 0.9995065603657315570006908F,

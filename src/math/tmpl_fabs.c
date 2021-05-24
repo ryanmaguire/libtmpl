@@ -112,7 +112,7 @@
 
 /*  If your compiler supports the IEEE 754 format, we can use a single        *
  *  bit-wise AND statement to compute the absolute value function.            */
-#if __TMPL_USE_IEEE754_ALGORITHMS__ == 1
+#if defined(__STDC_IEC_559__)
 
 /*  IEEE754 union data types and functions are found here.                    */
 #include <libtmpl/include/tmpl_ieee754.h>

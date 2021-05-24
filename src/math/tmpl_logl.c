@@ -3,7 +3,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 
-#if __TMPL_HAS_C99_MATH_H__ == 1
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #include <math.h>
 long double tmpl_LDouble_Log(long double x)
 {
