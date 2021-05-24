@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -106,7 +106,7 @@
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Where the prototypes are gven and where complex types are defined.        */
+/*  Where the prototypes are given and where complex types are defined.       */
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Single precision complex abs function (cabsf equivalent).                 */
