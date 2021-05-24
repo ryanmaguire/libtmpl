@@ -1,8 +1,7 @@
-#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <math.h>
 
-#if __TMPL_HAS_C99_MATH_H__ != 0
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 long double tmpl_LDouble_Cos(long double x)
 {
     return cosl(x);

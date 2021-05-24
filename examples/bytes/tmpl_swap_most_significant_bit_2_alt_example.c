@@ -102,13 +102,13 @@ int main(void)
         } u = { 0xFF00 };
 
         /*  Print the result before the swap.                                 */
-        printf("Before: %Lu\n", u.x);
+        printf("Before: %llu\n", u.x);
 
         /*  Swap the most significant bit using the char array in the union.  */
         tmpl_Swap_Most_Significant_Bit_2(u.c);
 
         /*  Print the result after the swap.                                  */
-        printf("After: %Lu\n", u.x);
+        printf("After: %llu\n", u.x);
     }
 #endif
 
