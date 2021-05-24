@@ -203,7 +203,7 @@ tmpl_Endian tmpl_Determine_Endianness(void)
 
         for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
         {
-            ell.x = kll * powerll;
+            ell.x += kll * powerll;
             powerll = powerll << CHAR_BIT;
         }
 

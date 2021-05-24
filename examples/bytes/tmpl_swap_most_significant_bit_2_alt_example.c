@@ -115,7 +115,7 @@ int main(void)
     /*  If we get here, there is no integer data type that is 2 char's wide.  *
      *  Print this and exit the function.                                     */
     else
-        puts("Your implementation does not provide an integer with sizeof = 2");
+        puts("Could not find integer type with sizeof = 4");
 
     return 0;
 }
