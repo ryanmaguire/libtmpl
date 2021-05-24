@@ -20,7 +20,7 @@
  *      Provides an example of using the square of the absolute value         *
  *      function. We can compile this with:                                   *
  *                                                                            *
- *          gcc tmpl_complex_absl_square_example.c.c -o test -ltmpl           *
+ *          gcc tmpl_complex_absl_squared_example.c -o test -ltmpl            *
  *                                                                            *
  *      If libtmpl is not in /usr/local/lib/ (this is the default location it *
  *      is placed in when built via make.sh), change the -L option to the     *
@@ -28,7 +28,7 @@
  *      -I option as follows:                                                 *
  *                                                                            *
  *          gcc -I/usr/local/include/ -L/usr/local/lib/                       *
- *              tmpl_complex_absl_square_example.c.c -o test -ltmpl           *
+ *              tmpl_complex_absl_squared_example.c -o test -ltmpl            *
  *                                                                            *
  *      Note, this should all be one line. This outputs an executable "test". *
  *      Running the executable with ./test, this outputs:                     *
@@ -40,8 +40,8 @@
  *          |nan + inan|^2 = nan                                              *
  *          |inf + iinf|^2 = inf                                              *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       December 19, 2020                                             *
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       May 24, 2021                                                  *
  ******************************************************************************/
 
 /*  Complex functions defined here.                                           */
