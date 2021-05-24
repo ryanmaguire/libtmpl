@@ -49,7 +49,7 @@
  *      OUT |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |                 *
  *          -------------------------------------------------                 *
  *                                                                            *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      It is assumed the char pointer has had its memory sufficiently        *
  *      allocated and initialized before being passed to this function.       *
  *      Failure to do so may result in a segmentation fault as the function   *

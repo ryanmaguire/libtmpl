@@ -63,8 +63,8 @@ int main(void)
     unsigned char c0, c1;
 
     /*  Set the char values to whatever you'd like.                           */
-    c0 = 0x1F;
-    c1 = 0xEE;
+    c0 = 0x1FU;
+    c1 = 0xEEU;
 
     /*  Print the result before the swap.                                     */
     printf("Before:\n\tc0 = %u\n\tc1 = %u\n", c0, c1);

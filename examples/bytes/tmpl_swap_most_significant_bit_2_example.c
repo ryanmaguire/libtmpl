@@ -53,36 +53,44 @@
 /*  tmpl_Swap_Most_Significant_Bit_2 is declared here.                        */
 #include <libtmpl/include/tmpl_bytes.h>
 
-/*  16-bit and 32-bit fixed-width integer data types typedef'd here.          */
-#include <libtmpl/include/tmpl_integer.h>
-
 /*  We'll need the macro CHAR_BIT from limits.h to see how big a char is.     *
  *  This is almost universally always 8 bits, but it can be 16 bits on        *
  *  handheld calculators, and 12-bits on other strange devices. For           *
  *  portability it never hurts to check.                                      */
 #include <limits.h>
 
+/*  Probe the macros in limits.h to find an integer data type that is two     *
+ *  bytes. The C standard does not guarantee this must exist, so abort        *
+ *  to compiling process if none is found.                                    */
+#if CHAR_BIT == 8
+#if USHRT_MAX == 0xFFFF
+typedef short unsigned int two_byte_integer;
+#elif UINT_MAX == 0xFFFF
+typedef unsigned int two_byte_integer;
+#else
+#error "No 16-bit integer type found."
+#endif
+#elif CHAR_BIT == 16
+#if USHRT_MAX == 0xFFFFFFFF
+typedef short unsigned int two_byte_integer;
+#elif UINT_MAX == 0xFFFFFFFF
+typedef unsigned int two_byte_integer;
+#else
+#error "No 32-bit integer type found."
+#endif
+#endif
+
 /*  Function for testing the tmpl_Swap_Most_Significant_Bit_2 function and    *
  *  showing basic use.                                                        */
 int main(void)
 {
-    /*  Based on the size of a char, create a union with a char array and     *
-     *  either a 16-bit integer, or a 32-bit integer. If CHAR_BIT is neither  *
-     *  8 nor 16, abort the program.                                          */
-#if CHAR_BIT == 8
+    /*  Create a union with a two-byte-wide integer and a char array with     *
+     *  two elements. We can swap the endianness of this integer using the    *
+     *  tmpl_Swap_Most_Significant_Bit_2 function.                            */
     union {
-        tmpl_uint16 x;
+        two_byte_integer x;
         char c[2];
     } u = { 0xFF00 };
-#elif CHAR_BIT == 16
-    union {
-        tmpl_uint32 x;
-        char c[2];
-    } u = { 0xFFFF0000 };
-#else
-    puts("CHAR_BIT is neither 8 nor 16. Aborting.");
-    return 0;
-#endif
 
     /*  Print the result before the swap.                                     */
     printf("Before: %u\n", u.x);
@@ -92,7 +100,6 @@ int main(void)
 
     /*  Print the result after the swap.                                      */
     printf("After: %u\n", u.x);
-
     return 0;
 }
 /*  End of main.                                                              */

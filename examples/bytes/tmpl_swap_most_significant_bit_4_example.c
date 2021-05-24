@@ -53,55 +53,73 @@
 /*  tmpl_Swap_Most_Significant_Bit_4 is declared here.                        */
 #include <libtmpl/include/tmpl_bytes.h>
 
-/*  32-bit and 64-bit fixed-width integer data types typedef'd here.          */
-#include <libtmpl/include/tmpl_integer.h>
-
-/*  We'll need the macro CHAR_BIT from limits.h to see how big a char is.     *
- *  This is almost universally always 8 bits, but it can be 16 bits on        *
- *  handheld calculators, and 12-bits on other strange devices. For           *
- *  portability it never hurts to check.                                      */
-#include <limits.h>
-
 /*  Function for testing the tmpl_Swap_Most_Significant_Bit_4 function and    *
  *  showing basic use.                                                        */
 int main(void)
 {
-    /*  Based on the size of a char, create a union with a char array and     *
-     *  either a 32-bit integer, or a 64-bit integer. If CHAR_BIT is neither  *
-     *  8 nor 16, abort the program.                                          */
-#if CHAR_BIT == 8
-    union {
-        tmpl_uint32 x;
-        char c[4];
-    } u = { 0xFF000000 };
+    /*  We need to probe the various data types and try and find one that has *
+     *  sizeof(type) = 4. This is usually an int, but can vary on other       *
+     *  platforms, and may not exist at all on some. If we can't find an      *
+     *  integer data type with sizeof equal to 4, we'll print this out.       */
+    if (sizeof(unsigned int) == 4)
+    {
+        union {
+            unsigned int x;
+            char c[4];
+        } u = { 0xFF000000 };
 
-    /*  Print the result before the swap.                                     */
-    printf("Before: %u\n", u.x);
+        /*  Print the result before the swap.                                 */
+        printf("Before: %u\n", u.x);
 
-    /*  Swap the most significant bit using the char array inside the union.  */
-    tmpl_Swap_Most_Significant_Bit_4(u.c);
+        /*  Swap the most significant bit using the char array in the union.  */
+        tmpl_Swap_Most_Significant_Bit_4(u.c);
 
-    /*  Print the result after the swap.                                      */
-    printf("After: %u\n", u.x);
+        /*  Print the result after the swap.                                  */
+        printf("After: %u\n", u.x);
+    }
+    else if (sizeof(unsigned long int) == 4)
+    {
+        union {
+            unsigned long int x;
+            char c[4];
+        } u = { 0xFF000000 };
 
-#elif CHAR_BIT == 16
-    union {
-        tmpl_uint64 x;
-        char c[4];
-    } u = { 0xFFFF000000000000 };
+        /*  Print the result before the swap.                                 */
+        printf("Before: %lu\n", u.x);
 
-    /*  Print the result before the swap.                                     */
-    printf("Before: %lu\n", u.x);
+        /*  Swap the most significant bit using the char array in the union.  */
+        tmpl_Swap_Most_Significant_Bit_4(u.c);
 
-    /*  Swap the most significant bit using the char array inside the union.  */
-    tmpl_Swap_Most_Significant_Bit_4(u.c);
+        /*  Print the result after the swap.                                  */
+        printf("After: %lu\n", u.x);
+    }
 
-    /*  Print the result after the swap.                                      */
-    printf("After: %lu\n", u.x);
+    /*  The long long data type is only defined in C99 and higher. We should  *
+     *  check for compliance with the C99 standard before trying to examine   *
+     *  the long long data type, otherwise we may get a compiler error.       */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+    else if (sizeof(unsigned long long int) == 4)
+    {
+        union {
+            unsigned long long int x;
+            char c[4];
+        } u = { 0xFF000000 };
 
-#else
-    puts("CHAR_BIT is neither 8 nor 16. Aborting.");
+        /*  Print the result before the swap.                                 */
+        printf("Before: %Lu\n", u.x);
+
+        /*  Swap the most significant bit using the char array in the union.  */
+        tmpl_Swap_Most_Significant_Bit_4(u.c);
+
+        /*  Print the result after the swap.                                  */
+        printf("After: %Lu\n", u.x);
+    }
 #endif
+
+    /*  If we get here, there is no integer data type that is 4 char's wide.  *
+     *  Print this and exit the function.                                     */
+    else
+        puts("Could not find integer type with sizeof = 4");
 
     return 0;
 }
