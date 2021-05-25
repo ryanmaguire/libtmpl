@@ -30,6 +30,16 @@
  *  Date:       May 23, 2021                                                  *
  ******************************************************************************/
 
+/*  Microsoft "deprecated" the fopen function in favor of the fopen_s         *
+ *  function. The actual working group for the C language has not deprecated  *
+ *  fopen, and fopen_s was only introduced in the C11 standard, so I will     *
+ *  still use fopen. To avoid a "deprecated" warning on Microsoft's MSVC,     *
+ *  first check that the user is running windows, then define this macro.     *
+ *  Unix-based (GNU, Linux, macOS, FreeBSD, etc) platforms yield no warnings. */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
 /*  The fprintf and FILE data type are found here.                            */
 #include <stdio.h>
 
