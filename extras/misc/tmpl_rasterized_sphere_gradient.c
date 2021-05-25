@@ -136,16 +136,16 @@ int main(void)
     fprintf(fp, "P6\n%u %u\n255\n", size, size);
 
     /*  Loop through each y-pixel.                                            */
-    for(y = 0; y < size; y++)
+    for(y = 0U; y < size; y++)
     {
         /*  Get the current y-coordinate.                                     */
-        point.y = (y - size_by_two) * scale_factor;
+        point.y = (size_by_two - (double)y) * scale_factor;
 
         /*  Loop over the x-coordinates.                                      */
-        for(x = 0; x < size; x++)
+        for(x = 0U; x < size; x++)
         {
             /*  Calculate the x-coordinate.                                   */
-            point.x = (x - size_by_two) * scale_factor;
+            point.x = ((double)x - size_by_two) * scale_factor;
 
             /*  Compute the square of the distance from point to center.      */
             distsq = dist_squared(point, center);
