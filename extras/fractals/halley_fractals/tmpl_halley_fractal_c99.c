@@ -13,104 +13,68 @@ struct color {
     unsigned char red, green, blue;
 };
 
-static struct color
-create_color(unsigned char red, unsigned char green, unsigned char blue)
-{
-    struct color out;
-    out.red = red;
-    out.green = green;
-    out.blue = blue;
-    return out;
-}
+static const double PI = 3.14159265358979323846264338327950288419716;
 
-/******************************************************************************
- ******************************************************************************
- *                          Begin User Input                                  *
- ******************************************************************************
- ******************************************************************************/
-
-/*  The number of pixels in the x and y axes.                                 */
-const int size = 2*1024;
-
-/*  Maximum number of iterations for the Newton-Raphson method. This must be  *
- *  less than 255, otherwise we'll run out of colors.                         */
-const unsigned int MaxIters = 32;
-
-/*  Maximum number of iterations allowed before giving up on the root finding *
- *  algorithm. If no roots are found, the computation aborts.                 */
-const unsigned int root_finder_max_iter = 200;
-
-/*  The degree of the polynomial.                                             */
-#define deg 10
-
-/*  The coefficients of the polynomial. The zeroth coefficient is for z^deg   *
- *  and the last coefficient is the constant term.                            */
-complex double coeffs[deg+1] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1};
-
-/******************************************************************************
- ******************************************************************************
- *                            End User Input                                  *
- ******************************************************************************
- ******************************************************************************/
-
-#define N_COLORS 14
-const double PI = 3.14159265358979323846264338327950288419716;
-
-/*  Define the polynomial based on the user provided coefficients. Compute    *
- *  this via Horner's method for speed.                                       */
-static complex double f(complex double z)
+static complex double f(complex double z, complex double *arr, unsigned int deg)
 {
     complex double out;
-    int n;
+    unsigned int n;
 
-    out = coeffs[0];
-    for (n=1; n<=deg; ++n)
-        out = z*out + coeffs[n];
+    out = arr[0];
+    for (n = 1U; n <= deg; ++n)
+        out = z*out + arr[n];
 
     return out;
 }
 
-static complex double f_prime(complex double z)
+static complex double
+f_prime(complex double z, complex double *arr, unsigned int deg)
 {
     complex double out;
-    int n;
+    unsigned int n;
 
-    out = deg*coeffs[0];
-    for (n=1; n<deg; ++n)
-        out = z*out + deg*coeffs[n];
+    out = (double)deg*arr[0];
+    for (n = 1U; n < deg; ++n)
+        out = z*out + (double)deg*arr[n];
 
     return out;
 }
 
-static complex double f_2prime(complex double z)
+static complex double
+f_2prime(complex double z, complex double *arr, unsigned int deg)
 {
     complex double out;
-    int n;
+    double factor = (double)deg * ((double)deg - 1.0);
+    unsigned int n;
 
-    out = deg*(deg-1)*coeffs[0];
+    out = factor*arr[0];
     for (n = 1; n < deg-1; ++n)
-        out = z*out + deg*(deg-1)*coeffs[n];
+        out = z*out + factor*arr[n];
 
     return out;
 }
 
-static root_struct *get_roots(void)
+static struct root_struct *get_roots(complex double *arr, unsigned int deg,
+                                     unsigned int max_iters)
 {
     root_struct *out = malloc(sizeof(*out));
     complex double p, root, f_p, df_p, d2f_p;
     unsigned int m, n, ell, iter, s, N, n_roots;
-    double r, theta, factor_1, factor_2, min, temp;
+    double r, theta, factor_1, factor_2, min, temp, s_double, N_double;
 
     out->roots = malloc(sizeof(*out->roots) * deg);
 
-    s = (int)ceil(0.26632*log(deg));
-    N = (int)ceil(8.32547*deg*log(deg));
+    s_double = ceil(0.26632*log((double)deg));
+    N_double = ceil(8.32547*deg*log((double)deg));
+
+    s = (unsigned int)s_double;
+    N = (unsigned int)N_double;
     n_roots = 0;
 
     factor_1 = 1.0+sqrt(2);
     factor_2 = (deg-1.0)/deg;
 
-
+    root = 0.0;
     for (m=0; m<s; ++m)
     {
         if (n_roots >= deg)
@@ -124,21 +88,21 @@ static root_struct *get_roots(void)
                 break;
 
             theta = 2*PI*n/N;
-            p = r * (cos(theta) + _Complex_I*sin(theta));
+            p = r * (cos(theta) + (complex double)_Complex_I*sin(theta));
 
-            for (iter=0; iter<root_finder_max_iter; ++iter)
+            for (iter=0; iter < max_iters; ++iter)
             {
-                f_p = f(p);
-                df_p = f_prime(p);
-                d2f_p = f_2prime(p);
+                f_p = f(p, arr, deg);
+                df_p = f_prime(p, arr, deg);
+                d2f_p = f_2prime(p, arr, deg);
                 root = p - 2*f_p * df_p / (2*df_p*df_p - f_p * d2f_p);
-                if (cabs(f(root)) < 1.0e-10)
+                if (cabs(f(root, arr, deg)) < 1.0e-10)
                     break;
 
                 p = root;
             }
 
-            if (cabs(f(root)) < 1.0e-8)
+            if (cabs(f(root, arr, deg)) < 1.0e-8)
             {
                 if (n_roots == 0)
                 {
@@ -183,12 +147,6 @@ static root_struct *get_roots(void)
     return out;
 }
 
-static void destroy_roots(root_struct *the_roots)
-{
-    free(the_roots->roots);
-    free(the_roots);
-}
-
 static void write_color(FILE *fp, struct color c)
 {
     fputc(c.red,   fp);
@@ -211,8 +169,14 @@ int main(void)
     FILE *fp;
     fp = fopen("halley_fractal.ppm", "w");
 
+    const unsigned int size = 1024U;
+    const unsigned int MaxIters = 32;
+    const unsigned int root_finder_max_iter = 200;
+    #define deg 10U
+    complex double coeffs[deg+1] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1};
+
     /*  Struct for the roots.                                                 */
-    root_struct *roots_of_f = get_roots();
+    root_struct *roots_of_f = get_roots(coeffs, deg, root_finder_max_iter);
 
     complex double f_z, df_z, d2f_z;
     unsigned int n_roots = roots_of_f->n_roots;
@@ -231,33 +195,30 @@ int main(void)
     unsigned int iters, ind, n;
 
     /*  More dummy variables to loop over.                                    */
-    int x, y;
+    unsigned int x, y;
     double z_x, z_y, min, temp, scale;
     complex double z, root;
 
     fprintf(fp, "P6\n%d %d\n255\n", size, size);
 
-    /*  Colors for the roots (Red, Green, Blue).                              */
-    unsigned char brightness[3];
-
     struct color current_color;
     const struct color black = {0x00U, 0x00U, 0x00U};
-    struct color colors[14];
-
-    colors[0]  = create_color(0xFFU, 0x00U, 0x1FU);  /*  Red.           */
-    colors[1]  = create_color(0x00U, 0xFFU, 0x1FU);  /*  Green.         */
-    colors[2]  = create_color(0x00U, 0x1FU, 0xFFU);  /*  Blue.          */
-    colors[3]  = create_color(0xFFU, 0xFFU, 0x33U);  /*  Yellow.        */
-    colors[4]  = create_color(0x80U, 0xD4U, 0xFFU);  /*  Light Blue.    */
-    colors[5]  = create_color(0xFFU, 0x1DU, 0xCCU);  /*  Magenta.       */
-    colors[6]  = create_color(0x00U, 0x80U, 0x80U);  /*  Teal.          */
-    colors[7]  = create_color(0xFFU, 0x00U, 0xFFU);  /*  Purple.        */
-    colors[8]  = create_color(0xFFU, 0x55U, 0x00U);  /*  Orange.        */
-    colors[9]  = create_color(0x4DU, 0xFFU, 0xC3U);  /*  Turquoise.     */
-    colors[10] = create_color(0x00U, 0x80U, 0x6AU);  /*  Pine.          */
-    colors[11] = create_color(0xFFU, 0xBFU, 0xB3U);  /*  Melon.         */
-    colors[12] = create_color(0xFFU, 0xB3U, 0xE6U);  /*  Mauve.         */
-    colors[13] = create_color(0x66U, 0x43U, 0x66U);  /*  Midnight blue. */
+    struct color colors[14] = {
+        {0xFFU, 0x00U, 0x1FU},  /*  Red.           */
+        {0x00U, 0xFFU, 0x1FU},  /*  Green.         */
+        {0x00U, 0x1FU, 0xFFU},  /*  Blue.          */
+        {0xFFU, 0xFFU, 0x33U},  /*  Yellow.        */
+        {0x80U, 0xD4U, 0xFFU},  /*  Light Blue.    */
+        {0xFFU, 0x1DU, 0xCCU},  /*  Magenta.       */
+        {0x00U, 0x80U, 0x80U},  /*  Teal.          */
+        {0xFFU, 0x00U, 0xFFU},  /*  Purple.        */
+        {0xFFU, 0x55U, 0x00U},  /*  Orange.        */
+        {0x4DU, 0xFFU, 0xC3U},  /*  Turquoise.     */
+        {0x00U, 0x80U, 0x6AU},  /*  Pine.          */
+        {0xFFU, 0xBFU, 0xB3U},  /*  Melon.         */
+        {0xFFU, 0xB3U, 0xE6U},  /*  Mauve.         */
+        {0x66U, 0x43U, 0x66U}   /*  Midnight blue. */
+    };
 
     for (y=0; y<size; ++y)
     {
@@ -267,15 +228,15 @@ int main(void)
         for (x=0; x<size; ++x)
         {
             z_x = x * (x_max - x_min)/(size - 1) + x_min;
-            z = z_x + _Complex_I*z_y;
+            z = z_x + (complex double)_Complex_I*z_y;
 
             /*  Allow MaxIters number of iterations of Newton-Raphson.        */
             for (iters=0; iters<MaxIters; ++iters)
             {
                 /*  Perfrom Halley's Method on the polynomial f.              */
-                f_z = f(z);
-                df_z = f_prime(z);
-                d2f_z = f_2prime(z);
+                f_z = f(z, coeffs, deg);
+                df_z = f_prime(z, coeffs, deg);
+                d2f_z = f_2prime(z, coeffs, deg);
                 root = z - 2*f_z * df_z / (2*df_z*df_z - f_z * d2f_z);
 
                 /*  Checks for convergence.                                   */
@@ -311,6 +272,7 @@ int main(void)
     }
 
     /*  Free the memory allocated to colors before returning.                 */
-    destroy_roots(roots_of_f);
+    free(roots_of_f->roots);
+    free(roots_of_f);
     return 0;
 }
