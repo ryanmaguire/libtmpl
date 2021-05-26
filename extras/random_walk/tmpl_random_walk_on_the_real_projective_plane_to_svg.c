@@ -217,7 +217,7 @@ int main(void)
     const unsigned int height = 1000U;
 
     /*  Number of steps being performed in the random walk.                   */
-    const unsigned int walk_size = 500000U;
+    const unsigned int walk_size = 900000U;
 
     /*  Various variables necessary for the computation.                      */
     double val, thickness;
