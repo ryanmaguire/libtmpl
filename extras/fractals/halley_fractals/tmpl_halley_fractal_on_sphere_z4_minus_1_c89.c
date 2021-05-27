@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Draw the Halley fractal for the polynomial z^3 - 1, and wrap the      *
+ *      Draw the Halley fractal for the polynomial z^4 - 1, and wrap the      *
  *      entire plane up onto a sphere. To do this we use inverse orthographic *
  *      projection to go from a point on the plane (which is a pixel in our   *
  *      drawing) to the unit sphere. We then use stereographic projection to  *
@@ -363,39 +363,42 @@ static struct complex_number stereographic_projection(struct vector3D p)
 }
 /*  End of stereographic_projection.                                          */
 
-/*  The Halley fractal we're drawing has the polynomial z^3 - 1.              */
+/*  The Halley fractal we're drawing has the polynomial z^4 - 1.              */
 static struct complex_number f(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
+    const double x_sq = z.real*z.real;
+    const double y_sq = z.imag*z.imag;
 
-    /*  Compute z^3, and then subtract 1 from the real part.                  */
-    out.real = z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag - 1.0;
-    out.imag = 3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag;
+    /*  Compute z^4, and then subtract 1 from the real part.                  */
+    out.real = x_sq*x_sq + y_sq*y_sq - 6.0*x_sq*y_sq - 1.0;
+    out.imag = 4.0*(x_sq*z.real*z.imag - z.real*y_sq*z.imag);
     return out;
 }
 
-/*  The derivative of z^3 - 1 is 3z^2.                                        */
+/*  The derivative of z^4 - 1 is 4z^3.                                        */
 static struct complex_number f_prime(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Compute the square z, and multiply real and imaginary part by 3.      */
-    out.real = 3.0*(z.real*z.real - z.imag*z.imag);
-    out.imag = 6.0*z.real*z.imag;
+    /*  Compute z^4, and then subtract 1 from the real part.                  */
+    out.real = 4.0*(z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag);
+    out.imag = 4.0*(3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag);
     return out;
 }
 
-/*  And the second derivative of z^3 - 1 is 6z.                               */
+
+/*  And the second derivative of z^4 - 1 is 12z^2.                            */
 static struct complex_number f_double_prime(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
     /*  Multiply the real and imaginary parts by 6 and return.                */
-    out.real = 6.0*z.real;
-    out.imag = 6.0*z.imag;
+    out.real = 12.0*(z.real*z.real - z.imag*z.imag);
+    out.imag = 24.0*z.real*z.imag;
     return out;
 }
 
@@ -425,7 +428,7 @@ static struct complex_number halley_factor(struct complex_number z)
 }
 /*  End of halley_factor.                                                     */
 
-/*  Function for drawing the Halley fractal for z^3 - 1.                      */
+/*  Function for drawing the Halley fractal for z^4 - 1.                      */
 int main(void)
 {
     /*  Declare variables for z (point in the plane) and f(z).                */
@@ -440,7 +443,7 @@ int main(void)
     /*  Variables for the real and imaginary parts of z.                      */
     double z_x, z_y;
 
-    /*  The allowed error when searching for a root to z^3 - 1. This is the   *
+    /*  The allowed error when searching for a root to z^4 - 1. This is the   *
      *  maximum value |f(z)| < EPS such that f(z) will be considered zero.    */
     const double EPS = 1.0E-8;
 
@@ -476,21 +479,23 @@ int main(void)
     const double x_factor = (x_max - x_min) / (double)(width - 1U);
     const double y_factor = (y_max - y_min) / (double)(height - 1U);
 
-    /*  z^3 - 1 has three roots, so declare 3 colors to distinguish which     *
+    /*  z^4 - 1 has four roots, so declare 4 colors to distinguish which      *
      *  root occurred as a result of Halley's method.                         */
-    const struct color red   = {0xFFU, 0x00U, 0x00U};
-    const struct color green = {0x00U, 0xFFU, 0x00U};
-    const struct color blue  = {0x00U, 0x00U, 0xFFU};
+    const struct color red    = {0xFFU, 0x00U, 0x00U};
+    const struct color green  = {0x00U, 0xFFU, 0x00U};
+    const struct color blue   = {0x00U, 0x00U, 0xFFU};
+    const struct color yellow = {0xFFU, 0xFFU, 0x00U};
 
-    /*  The Julia set of z^3 - 1 are points that don't converge. Draw these   *
+    /*  The Julia set of z^4 - 1 are points that don't converge. Draw these   *
      *  points black.                                                         */
     const struct color black = {0x00U, 0x00U, 0x00U};
 
-    /*  Precompute the three roots of z^3 - 1 for later. These are the three  *
-     *  cubic roots of unity.                                                 */
-    const struct complex_number root0 = {1.0, 0.0};
-    const struct complex_number root1 = {-0.5,  0.866025403784};
-    const struct complex_number root2 = {-0.5, -0.866025403784};
+    /*  Precompute the four roots of z^4 - 1 for later. These are the four    *
+     *  fourth roots of unity.                                                */
+    const struct complex_number root0 = { 1.0,  0.0};
+    const struct complex_number root1 = { 0.0,  1.0};
+    const struct complex_number root2 = {-1.0,  0.0};
+    const struct complex_number root3 = { 0.0, -1.0};
 
     /*  Declare a variable for creating a gradient in color. The gradient     *
      *  indicates how many iterations it takes to converge. Darker values     *
@@ -507,7 +512,7 @@ int main(void)
     struct color current_color;
 
     /*  Open a PPM file and give it write permissions.                        */
-    FILE *fp = fopen("tmpl_halley_fractal_on_sphere_z3_minus_1_c89.ppm", "w");
+    FILE *fp = fopen("tmpl_halley_fractal_on_sphere_z4_minus_1_c89.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check for this.                       */
     if (!fp)
@@ -582,6 +587,8 @@ int main(void)
                 current_color = scale_color(green, color_factor);
             else if (complex_dist(z, root2) < toler)
                 current_color = scale_color(red, color_factor);
+            else if (complex_dist(z, root3) < toler)
+                current_color = scale_color(yellow, color_factor);
 
             /*  And if we didn't converge to a root, color the pixel black.   */
             else

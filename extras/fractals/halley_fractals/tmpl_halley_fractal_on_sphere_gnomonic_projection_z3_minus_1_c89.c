@@ -23,7 +23,7 @@
  *      drawing) to the unit sphere. We then use gnomonic projection to       *
  *      go from the sphere back to the plane. We compute Halley's method at   *
  *      this point, and color the corresponding pixel based on which root     *
- *      (if any) the process converged to.                                    *
+ *      (if any) the process converges to.                                    *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
  ******************************************************************************
@@ -47,7 +47,7 @@
 /*  Needed for the square root function.                                      */
 #include <math.h>
 
-/*  Needed for testing if a floating point is zero.                           */
+/*  Needed for testing if a floating point is epsilon small.                  */
 #include <float.h>
 
 /*  Struct for working with vectors in three dimensions.                      */
@@ -71,16 +71,15 @@ static double norm3D_squared(struct vector3D p)
 }
 /*  End of norm3D_squared.                                                    */
 
-
 /*  Function for normalizing a vector.                                        */
 static struct vector3D normalize_vector(struct vector3D p)
 {
     /*  Declare necessary variables.                                          */
-    double norm_p, rcpr_norm_p;
+    double rcpr_norm_p;
     struct vector3D out;
 
     /*  Compute the norm, or magnitude, of the vector.                        */
-    norm_p = norm3D(p);
+    const double norm_p = norm3D(p);
 
     /*  If the input vector is the zero vector, we can't normalize it.        */
     if (norm_p < DBL_MIN)
@@ -100,8 +99,10 @@ static struct vector3D get_orthogonal_vector(struct vector3D p)
 {
     /*  Declare necessary variables.                                          */
     struct vector3D out;
-    const double norm_p = sqrt(p.x*p.x + p.y*p.y + p.z*p.z);
     double normalize_out;
+
+    /*  Compute the norm, or magnitude, of the vector.                        */
+    const double norm_p = norm3D(p);
 
     /*  If the x component of the input is non-zero, we can return an         *
      *  orthogonal vector lying entirely in the xy plane.                     */
@@ -305,9 +306,9 @@ inverse_orthographic_projection(struct complex_number z, struct vector3D dir)
 {
     /*  Declare necessary variables.                                          */
     struct vector3D u, v, out;
-    double factor, norm_dir_sq, abs_z_sq;
-    abs_z_sq = complex_abs_squared(z);
-    norm_dir_sq = norm3D_squared(dir);
+    double factor;
+    const double abs_z_sq    = complex_abs_squared(z);
+    const double norm_dir_sq = norm3D_squared(dir);
 
     /*  The orthgraphic projection is done with respect to the sphere of      *
      *  radius equal to the length of dir. If |z| is greater than this value  *
@@ -347,10 +348,11 @@ static struct complex_number gnomonic_projection(struct vector3D p)
     double factor, z;
     struct complex_number out;
 
-    /*  We need the absolute value of z to get a projection of the soutern    *
+    /*  We need the absolute value of z to get a projection of the southern   *
      *  hemisphere as well.                                                   */
     z = fabs(p.z);
 
+    /*  The equator is projected to infinity in the gnomonic projection.      */
     if (z < DBL_MIN)
     {
         out.real = HUGE_VAL;
@@ -384,7 +386,7 @@ static struct complex_number f_prime(struct complex_number z)
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Compute the square z, and multiply real and imaginary part by 3.      */
+    /*  Compute the square z, and multiply real and imaginary parts by 3.     */
     out.real = 3.0*(z.real*z.real - z.imag*z.imag);
     out.imag = 6.0*z.real*z.imag;
     return out;
@@ -414,16 +416,14 @@ static struct complex_number halley_factor(struct complex_number z)
     f_prime_of_z        = f_prime(z);
     f_double_prime_of_z = f_double_prime(z);
 
-    /*  The numerator is 2f(z)f'(z).                                          */
+    /*  The numerator is f(z)f'(z).                                          */
     numer = complex_multiply(f_of_z, f_prime_of_z);
-    numer.real *= 2.0;
-    numer.imag *= 2.0;
 
-    /*  The denominator is 2f'(z)^2 - f(z)f''(z).                             */
+    /*  The denominator is f'(z)^2 - 0.5f(z)f''(z).                           */
     denom_a = complex_square(f_prime_of_z);
-    denom_a.real *= 2.0;
-    denom_a.imag *= 2.0;
     denom_b = complex_multiply(f_of_z, f_double_prime_of_z);
+    denom_b.real *= 0.5;
+    denom_b.imag *= 0.5;
 
     denom = complex_subtract(denom_a, denom_b);
     return complex_divide(numer, denom);
@@ -438,6 +438,8 @@ int main(void)
 
     /*  The camera direction.                                                 */
     struct vector3D dir = {1.0, 1.0, -1.0};
+
+    /*  Variable for looping over the sphere.                                 */
     struct vector3D p;
 
     /*  Variables for the real and imaginary parts of z.                      */
@@ -510,7 +512,7 @@ int main(void)
     struct color current_color;
 
     /*  Open a PPM file and give it write permissions.                        */
-    FILE *fp = fopen("tmpl_halley_fractal_z3_minus_1_c89.ppm", "w");
+    FILE *fp = fopen("tmpl_halley_fractal_gnomonic_z3_minus_1_c89.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check for this.                       */
     if (!fp)
@@ -549,7 +551,7 @@ int main(void)
             }
 
             /*  Otherwise, compute the inverse orthographic projection of z,  *
-             *  and then the forward stereographic projection of the result.  */
+             *  and then the forward gnomonic projection of the result.       */
             p = inverse_orthographic_projection(z, dir);
             z = gnomonic_projection(p);
 
