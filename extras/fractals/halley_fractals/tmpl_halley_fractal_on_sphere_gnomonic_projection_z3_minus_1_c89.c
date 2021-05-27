@@ -20,7 +20,7 @@
  *      Draw the Halley fractal for the polynomial z^3 - 1, and wrap the      *
  *      entire plane up onto a sphere. To do this we use inverse orthographic *
  *      projection to go from a point on the plane (which is a pixel in our   *
- *      drawing) to the unit sphere. We then use stereographic projection to  *
+ *      drawing) to the unit sphere. We then use gnomonic projection to       *
  *      go from the sphere back to the plane. We compute Halley's method at   *
  *      this point, and color the corresponding pixel based on which root     *
  *      (if any) the process converged to.                                    *
@@ -63,32 +63,35 @@ static double norm3D(struct vector3D p)
 }
 /*  End of norm3D.                                                            */
 
-/*  Function for normalizing a vector, given a pointer to it.                 */
-static void normalize_vector(struct vector3D *p)
+/*  The square of the magnitude, or length, of a vector.                      */
+static double norm3D_squared(struct vector3D p)
+{
+    /*  Use the Pythagorean formula and return.                               */
+    return p.x*p.x + p.y*p.y + p.z*p.z;
+}
+/*  End of norm3D_squared.                                                    */
+
+
+/*  Function for normalizing a vector.                                        */
+static struct vector3D normalize_vector(struct vector3D p)
 {
     /*  Declare necessary variables.                                          */
-    double norm_p;
-    double rcpr_norm_p;
+    double norm_p, rcpr_norm_p;
+    struct vector3D out;
 
-    /*  If the input pointer is NULL, abort the computation.                  */
-    if (!p)
-        return;
-
-    /*  Otherwise, compute the norm of the vector being pointed to.           */
-    norm_p = norm3D(*p);
+    /*  Compute the norm, or magnitude, of the vector.                        */
+    norm_p = norm3D(p);
 
     /*  If the input vector is the zero vector, we can't normalize it.        */
     if (norm_p < DBL_MIN)
-        return;
+        return p;
 
     /*  Since we don't have the zero vector, normalize each of the components.*/
-    else
-    {
-        rcpr_norm_p = 1.0 / norm_p;
-        (*p).x *= rcpr_norm_p;
-        (*p).y *= rcpr_norm_p;
-        (*p).z *= rcpr_norm_p;
-    }
+    rcpr_norm_p = 1.0 / norm_p;
+    out.x = p.x*rcpr_norm_p;
+    out.y = p.y*rcpr_norm_p;
+    out.z = p.z*rcpr_norm_p;
+    return out;
 }
 /*  End of normalize_vector.                                                  */
 
@@ -302,12 +305,14 @@ inverse_orthographic_projection(struct complex_number z, struct vector3D dir)
 {
     /*  Declare necessary variables.                                          */
     struct vector3D u, v, out;
-    double factor;
+    double factor, norm_dir_sq, abs_z_sq;
+    abs_z_sq = complex_abs_squared(z);
+    norm_dir_sq = norm3D_squared(dir);
 
     /*  The orthgraphic projection is done with respect to the sphere of      *
      *  radius equal to the length of dir. If |z| is greater than this value  *
      *  it is not included in the orthographic projection. Return NaN.        */
-    if (complex_abs(z) > norm3D(dir))
+    if (abs_z_sq > norm_dir_sq)
     {
         /*  0.0 * HUGE_VAL should evaluate to 0*infinity, which is NaN        *
          *  (Not-A-Number). HUGE_VAL is defined in math.h.                    */
@@ -317,9 +322,16 @@ inverse_orthographic_projection(struct complex_number z, struct vector3D dir)
     }
     else
     {
-        factor = sqrt(1.0 - complex_abs_squared(z));
+        /*  since x^2+y^2+z^2=r^2, given x and y we can solve for the z       *
+         *  value in the northern hemisphere by sqrt(r^2 - x^2 - y^2).        */
+        factor = sqrt(norm_dir_sq - abs_z_sq);
+
+        /*  We need a basis for R^3. One basis vector is dir, so we need a    *
+         *  basis for the orthogonal complement.                              */
         u = get_orthogonal_vector(dir);
         v = cross_product(u, dir);
+
+        /*  Compute the inverse orthographic projection, component-wise.      */
         out.x = z.real*u.x + z.imag*v.x + factor*dir.x;
         out.y = z.real*u.y + z.imag*v.y + factor*dir.y;
         out.z = z.real*u.z + z.imag*v.z + factor*dir.z;
@@ -348,7 +360,7 @@ static struct complex_number gnomonic_projection(struct vector3D p)
     {
         factor = 1.0 / z;
         out.real = factor * p.x;
-        out.imag = factor * p.y; 
+        out.imag = factor * p.y;
     }
     return out;
 }
@@ -508,7 +520,7 @@ int main(void)
     }
 
     /*  Normalize the camera position.                                        */
-    normalize_vector(&dir);
+    dir = normalize_vector(dir);
 
     /*  Print the preamble of the PPM to the file.                            */
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
@@ -529,12 +541,15 @@ int main(void)
             z.real = z_x;
             z.imag = z_y;
 
+            /*  If |z| is outside the sphere, color the pixel black.          */
             if (complex_abs(z) > norm3D(dir))
             {
                 write_color(fp, black);
                 continue;
             }
 
+            /*  Otherwise, compute the inverse orthographic projection of z,  *
+             *  and then the forward stereographic projection of the result.  */
             p = inverse_orthographic_projection(z, dir);
             z = gnomonic_projection(p);
 
