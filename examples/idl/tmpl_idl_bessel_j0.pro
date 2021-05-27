@@ -44,7 +44,7 @@ FUNCTION BESSEL_J0, x
                        x, n, result)
 
     ; The output has been stored in result, so return this.
-   RETURN, result
+    RETURN, result
 END
 
 ; A little test for comparing the libtmpl Bessel J0 with
