@@ -7,7 +7,7 @@ struct complex_number {
 
 static const unsigned int deg = 4U;
 static const double arr[5] = {1.0, 0.0, 0.0, 0.0, -1.0};
-static const unsigned int order = 1U;
+static const unsigned int order = 10U;
 static const struct complex_number root0 = {1.0, 0.0};
 static const struct complex_number root1 = {0.0, 1.0};
 static const struct complex_number root2 = {-1.0, 0.0};
@@ -201,8 +201,8 @@ int main(void)
     FILE *fp = fopen("test.ppm", "w");
     unsigned int x, y;
     struct complex_number z, f_z;
-    unsigned int width = 256U;
-    unsigned int height = 256U;
+    unsigned int width = 1028U;
+    unsigned int height = 1028U;
     double z_x, z_y;
     double xmin = -4.0;
     double xmax =  4.0;
