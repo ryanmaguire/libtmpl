@@ -1,29 +1,43 @@
 #include <stdio.h>
 #include <math.h>
-#ifndef M_PI
-#define M_PI 3.1415926
+
+#ifndef PI
+#define PI 3.141592653589793
 #endif
 
+#ifndef TWO_BY_PI
+#define TWO_BY_PI 0.6366197723675814
+#endif
+
+/*  1023 / 2 pi.                                                              */
+#define GRADIENT_FACTOR 162.81550678300894
+
+/*  Struct for dealing with complex numbers.                                  */
 struct complex_number {
     double real, imag;
 };
 
+/*  Struct for dealing with colors in RGB format.                             */
 struct color {
     unsigned char red, green, blue;
 };
 
-static void write_color(struct color c, FILE *fp)
+/*  Function for writing a color to a PPM file.                               */
+static void write_color(FILE *fp, struct color c)
 {
     fputc(c.red, fp);
     fputc(c.green, fp);
     fputc(c.blue, fp);
 }
+/*  End of write_color.                                                       */
 
+/*  Function for computing the argument of a complex number.                  */
 static double complex_arg(struct complex_number z)
 {
     return atan2(z.imag, z.real);
 }
 
+/*  Function for computing the modulus, or magnitude, of a complex number.    */
 static double complex_abs(struct complex_number z)
 {
     return sqrt(z.real*z.real + z.imag*z.imag);
@@ -45,11 +59,26 @@ complex_divide(struct complex_number z, struct complex_number w)
 }
 /*  End of complex_division.                                                  */
 
-static struct color rainbow_gradient(double val)
+/*  Function for scaling the intensity of a color by a real number.           */
+static struct color scale_color(struct color c, double t)
+{
+    struct color out;
+    out.red   = (unsigned char)(t * (double)c.red);
+    out.green = (unsigned char)(t * (double)c.green);
+    out.blue  = (unsigned char)(t * (double)c.blue);
+    return out;
+}
+/*  End of scale_color.                                                       */
+
+/*  Function for creating a continuous gradient of color in the RGB spectrum. */
+static struct color get_color(struct complex_number z)
 {
     /*  Declare an output struct for the color we're computing.               */
     struct color out;
-    val = (val + M_PI)*1023.0/(2.0*M_PI);
+    const double arg = complex_arg(z);
+    const double abs = complex_abs(z);
+    const double t   = TWO_BY_PI * atan(5.0*abs);
+    double val = (arg + PI)*GRADIENT_FACTOR;
 
     /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
      *  and [768, 1023]. Create a blue-to-red rainbow gradient from this.     *
@@ -92,28 +121,9 @@ static struct color rainbow_gradient(double val)
         out.blue  = (unsigned char)0;
     }
 
-    return out;
+    return scale_color(out, t);
 }
 /*  End of rainbow_gradient.                                                  */
-
-static struct color scale_color(struct color c, double t)
-{
-    struct color out;
-    out.red   = (unsigned char)(t * (double)c.red);
-    out.green = (unsigned char)(t * (double)c.green);
-    out.blue  = (unsigned char)(t * (double)c.blue);
-    return out;
-}
-
-static struct color get_color(struct complex_number z)
-{
-    double arg = complex_arg(z);
-    double abs = complex_abs(z);
-    double t = 2.0/M_PI * atan(5.0*abs);
-    struct color out = rainbow_gradient(arg);
-    out = scale_color(out, t);
-    return out;
-}
 
 static struct complex_number f(struct complex_number z)
 {
@@ -137,6 +147,7 @@ int main(void)
     const double xmax =  2.0;
     const double ymin = -2.0;
     const double ymax =  2.0;
+    double _X = 0.0;
     unsigned int x, y;
     struct complex_number z;
     struct color current_color;
@@ -145,6 +156,7 @@ int main(void)
     FILE *fp = fopen("complex_plot_z3_minus_1_over_3z2.ppm", "w");
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
 
+    printf("%f\n", _X);
     for (y = 0U; y < height; ++y)
     {
         z.imag = ymax - (double)y * yfactor;
@@ -152,7 +164,7 @@ int main(void)
         {
             z.real = xmin + (double)x * xfactor;
             current_color = get_color(f(z));
-            write_color(current_color, fp);
+            write_color(fp, current_color);
         }
     }
     fclose(fp);
