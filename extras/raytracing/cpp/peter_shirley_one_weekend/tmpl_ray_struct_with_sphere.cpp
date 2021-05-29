@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -61,7 +61,7 @@ struct tmpl_simple_color {
         /*  Two colors are added by averaging their components.               */
         unsigned char out_red, out_green, out_blue;
 
-        /*  Cast to unsigned long's and compute the sum.                      */
+        /*  Cast to doubles and compute the sum.                              */
         out_red   = (unsigned char)(0.5*((double)r.red   + (double)red));
         out_green = (unsigned char)(0.5*((double)r.green + (double)green));
         out_blue  = (unsigned char)(0.5*((double)r.blue  + (double)blue));
@@ -181,6 +181,7 @@ struct tmpl_simple_vector {
 
 /*  Struct for rays, which are Affine subspaces of R^3, L = {A+tB, t real}.   */
 struct tmpl_simple_ray {
+
     /*  A ray is the set of all points of the form p + tv, where p and v are  *
      *  vectors and t is a real number.                                       */
     tmpl_simple_vector p, v;
@@ -215,8 +216,10 @@ struct tmpl_simple_ray {
 };
 /*  End of tmpl_simple_ray definition.                                        */
 
-/*  Struct for dealing with sphere.                                           */
+/*  Struct for dealing with spheres.                                          */
 struct tmpl_simple_sphere {
+
+    /*  A sphere is defined by its radius and its center.                     */
     double radius;
     tmpl_simple_vector center;
 
@@ -235,6 +238,9 @@ struct tmpl_simple_sphere {
 };
 /*  End of definition of tmpl_simple_sphere.                                  */
 
+/*  Since a sphere satisfies (x-x0)^2 + (y-y0)^2 + (z-z0)^2 = r^2, given a    *
+ *  ray L(t) = p + tv, solving for which values of t satisfy the sphere's     *
+ *  equation amounts to solving a quadratic equation.                         */
 bool sphere_is_hit(tmpl_simple_ray r, tmpl_simple_sphere s)
 {
     tmpl_simple_vector oc = r.p - s.center;
@@ -253,18 +259,22 @@ bool sphere_is_hit(tmpl_simple_ray r, tmpl_simple_sphere s)
     else
         return false;
 }
+/*  End of sphere_is_hit.                                                     */
 
 /*  Function for coloring the background with a gradient.                     */
 static tmpl_simple_color sky_gradient(tmpl_simple_ray r)
 {
     tmpl_simple_vector v = (r.v).unit();
     double t = 0.5 * (v.y + 1.0);
+
+    /*  Create a gradient from sky blue to white.                             */
     tmpl_simple_color sky_blue = tmpl_simple_color(128U, 180U, 255U);
     tmpl_simple_color white    = tmpl_simple_color(255U, 255U, 255U);
     return (white*(1.0 - t) + sky_blue*t)*2.0;
 }
 /*  End of sky_gradient.                                                      */
 
+/*  Function for drawing a sky with a red ball in it.                         */
 int main(void)
 {
     unsigned int m, n;
