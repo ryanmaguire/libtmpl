@@ -232,12 +232,12 @@ struct color {
 };
 
 /*  For reasons completely beyond me, fputc doesn't seem to work correctly on *
- *  Windows 10. It may be the virtual machine I was using, or it may be       *
- *  problems with Microsoft's standard library. I suspect the latter. The     *
- *  rendered PPM file is completely corrupted and looks horrible. If the user *
- *  is running Windows, use fprintf instead of fputc, and use the text-based  *
- *  PPM format instead of the binary based. The text-based format ends up     *
- *  being around 4x larger than the binary format, but renders properly.      */
+ *  Windows 10. The problem seems to arise when too many colors are present   *
+ *  in the PPM file. The rendered PPM file is completely corrupted and looks  *
+ *  horrible. If the user is running Windows, use fprintf instead of fputc,   *
+ *  and use the text-based PPM format instead of the binary based. The        *
+ *  text-based format ends up being around 4x larger than the binary format,  *
+ *  but renders properly.                                                     */
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
 
 /*  Function for writing a color to a PPM file.                               */
