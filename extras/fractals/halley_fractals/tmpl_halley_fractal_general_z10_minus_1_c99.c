@@ -28,7 +28,11 @@
 
 /*  The fopen, fprintf, and FILE data type are here.                          */
 #include <stdio.h>
+
+/*  Square root and other basic math functions.                               */
 #include <math.h>
+
+/*  Complex variables and basic complex functions.                            */
 #include <complex.h>
 
 /*  Struct for dealing with colors in RGB format.                             */
@@ -148,10 +152,10 @@ int main(void)
     /*  Maximum number of iterations allowed in Halley's method and the       *
      *  maximum number of iterations allowed in the                           *
      *  Hubbard-Schleicher-Sutherland algorithm for finding the roots.        */
-    const unsigned char MaxIters = 0x10U;
+    const unsigned char MaxIters = 0x20U;
 
     /*  The coefficients of the polynomial we're using. This is z^10 - 1.     */
-    complex double arr[11] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1};
+    complex double arr[15] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1};
 
     /*  Variable for the roots of this polynomial. The fundamental theorem of *
      *  algebra tells us there are at most 10 since the polynomial is degree  *
@@ -161,7 +165,7 @@ int main(void)
     /*  Variable for the degree of the polynomial.                            */
     const unsigned int deg = sizeof(roots) / sizeof(roots[0]);
 
-    /*  Variables used in Halley's method.                                    */
+    /*  Variable used in Halley's method.                                     */
     complex double f_z;
 
     /*  Values for the min and max of the x and y axes.                       */
@@ -170,7 +174,8 @@ int main(void)
     const double y_min = -1.0;
     const double y_max =  1.0;
 
-    /*  Factor used in the root-finding algorithm.                            */
+    /*  Factor used in the root-finding algorithm. See the paper by           *
+     *  Hubbard, Schleicher, and Sutherland for a description of these values.*/
     const double s_double = ceil(0.26632*log((double)deg));
     const double N_double = ceil(8.32547*(double)deg*log((double)deg));
 
@@ -180,8 +185,8 @@ int main(void)
     /*  These three factors occur in the root-finding algorithm.              */
     const double factor_1     = 2.4142135623730951;
     const double factor_2     = ((double)deg - 1.0) / (double)deg;
-    const double theta_factor = 6.283185307179586 / (double)N;
-    const double r_factor     = 0.25 / (double)s;
+    const double theta_factor = 6.283185307179586 / N_double;
+    const double r_factor     = 0.25 / s_double;
 
     /*  Factor for converting from pixel to point in the plane.               */
     const double factor_x = (x_max - x_min)/(double)width;
@@ -205,11 +210,22 @@ int main(void)
     /*  Scale factor for giving a gradient to the image.                      */
     double scale;
 
-    unsigned int m, n, ell, n_roots;
+    /*  Variable for indexing.                                                */
+    unsigned int ell;
+
+    /*  Variable for storing the number of roots found via the algorithm.     */
+    unsigned int n_roots = 0U;
+
+    /*  More variables needed for the algorithm.                              */
     double r, theta, min, temp;
 
+    /*  Variable for computing the color of a given pixel.                    */
     struct color current_color;
+
+    /*  Points that don't converge are colored black.                         */
     const struct color black = {0x00U, 0x00U, 0x00U};
+
+    /*  Various colors for up to 14 roots.                                    */
     const struct color colors[14] = {
         {0xFFU, 0x00U, 0x1FU},  /*  Red.           */
         {0x00U, 0xFFU, 0x1FU},  /*  Green.         */
@@ -237,25 +253,36 @@ int main(void)
         return -1;
     }
 
-    n_roots = 0;
-    for (m = 0U; m < s; ++m)
+    /*  Perform the Hubbard-Schleicher-Sutherland algorithm. First, loop      *
+     *  over all circles in the algorithm.                                    */
+    for (x = 0U; x < s; ++x)
     {
+        /*  There are at most deg roots. If we found this many, we can quit   *
+         *  the algorithm.                                                    */
         if (n_roots >= deg)
             break;
 
-        r = factor_1 + pow(factor_2, (2.0*m + 1.0) * r_factor);
+        /*  The radius of the circle we're inspecting.                        */
+        r = factor_1 + pow(factor_2, (2.0*(double)x + 1.0) * r_factor);
 
-        for (n = 0U; n < N; ++n)
+        /*  Loop over the angles on this circle.                              */
+        for (y = 0U; y < N; ++y)
         {
+            /*  Again, quit if we found deg many roots.                       */
             if (n_roots >= deg)
                 break;
 
-            theta = theta_factor * (double)n;
+            /*  Compute the angle.                                            */
+            theta = theta_factor * (double)y;
+
+            /*  Get the complex number r exp(i theta).                        */
             z   = r * (cos(theta) + (complex double)_Complex_I*sin(theta));
+
+            /*  Compute f(z) and set the number of iterations back to zero.   */
             f_z = poly_eval(z, arr, deg);
             iters = 0x00U;
 
-            /*  Allow MaxIters number of iterations of Newton-Raphson.        */
+            /*  Allow MaxIters number of iterations of Halley's Method.       */
             while ((cabs(f_z) > EPS) && (iters < MaxIters))
             {
                 /*  Perfrom Halley's Method on the polynomial f.              */
@@ -265,16 +292,25 @@ int main(void)
                 f_z = poly_eval(z, arr, deg);
                 ++iters;
             }
+            /*  End of Halley's method.                                       */
 
+            /*  If |f(z)| < EPS, we found a root. Check if we already found   *
+             *  this one.                                                     */
             if (cabs(f_z) < EPS)
             {
-                if (n_roots == 0)
+                /*  If we haven't found a root yet, add this to our list.     */
+                if (n_roots == 0U)
                 {
                     n_roots += 1;
                     roots[0] = z;
                 }
+
+                /*  If we've already found a root, check that this isn't a    *
+                 *  duplicate before adding to our list.                      */
                 else
                 {
+                    /*  Compute the distances from this newly found point to  *
+                     *  the roots we've already found.                        */
                     min = cabs(z - roots[0]);
                     for (ell = 1U; ell < n_roots; ++ell)
                     {
@@ -282,40 +318,55 @@ int main(void)
                         if (temp < min)
                             min = temp;
                     }
+
+                    /*  If this new point is more than toler away from all    *
+                     *  the others, it's a new root. Add it to the list.      */
                     if (min >= toler)
                     {
                         roots[n_roots] = z;
                         n_roots += 1;
                     }
                 }
+                /*  End of if (n_roots == 0U).                                */
             }
+            /*  End of if (cabs(f_z) < EPS).                                  */
         }
+        /*  End of y for-loop.                                                */
     }
+    /*  End of x for-loop.                                                    */
 
+    /*  If there's a bug in the code, we may have found 0 roots. Abort the    *
+     *  computation if this happened.                                         */
     if (n_roots == 0)
     {
         puts("Failed to find the roots. Aborting.");
+        fclose(fp);
         return -1;
     }
 
-    printf("Number of roots: %d\n", n_roots);
-    for (n = 0U; n < n_roots; ++n)
-        printf("\troot %d: %f + i%f\n", n, creal(roots[n]), cimag(roots[n]));
-
+    /*  Write the preamble to the PPM file.                                   */
     fprintf(fp, "P6\n%d %d\n255\n", width, height);
 
+    /*  Loop over the y pixels.                                               */
     for (y = 0U; y < height; ++y)
     {
+        /*  Compute the y-coordinate in the plane corresponding to this pixel.*/
         z_y = y_max - (double)y * factor_y;
 
+        /*  Loop over the x pixels.                                           */
         for (x = 0U; x < width; ++x)
         {
+            /*  Compute the x coordinate.                                     */
             z_x = x_min + (double)x * factor_x;
+
+            /*  Set z to x + iy.                                              */
             z = z_x + (complex double)_Complex_I*z_y;
+
+            /*  Evaluate the polynomial at z and reset iters to zero.         */
             f_z = poly_eval(z, arr, deg);
             iters = 0x00U;
 
-            /*  Allow MaxIters number of iterations of Newton-Raphson.        */
+            /*  Allow MaxIters number of iterations of Halley's method.       */
             while ((cabs(f_z) > EPS) && (iters < MaxIters))
             {
                 /*  Perfrom Halley's Method on the polynomial f.              */
@@ -330,18 +381,22 @@ int main(void)
             min = cabs(z-roots[0]);
             ind = 0;
 
-            for (n=1; n<n_roots; ++n)
+            /*  Find if we converge to a root or not.                         */
+            for (ell = 1U; ell < n_roots; ++ell)
             {
-                temp = cabs(z - roots[n]);
+                temp = cabs(z - roots[ell]);
                 if (temp < min)
                 {
                     min = temp;
-                    ind = n;
+                    ind = ell;
                 }
             }
 
-            if (min > 0.1)
+            /*  If we didn't converge to a root, color the pixel black.       */
+            if (min > toler)
                 current_color = black;
+
+            /*  Otherwise, color the pixel corresponding to the root.         */
             else
             {
                 scale = 1.0 - factor*(double)iters;
