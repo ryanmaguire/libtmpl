@@ -25,8 +25,18 @@
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       May 26, 2021                                                  *
+ *  Date:       May 29, 2021                                                  *
  ******************************************************************************/
+
+/*  Microsoft "deprecated" the fopen function in favor of the fopen_s         *
+ *  function. The actual working group for the C language has not deprecated  *
+ *  fopen, and fopen_s was only introduced in the C11 standard, so I will     *
+ *  still use fopen. To avoid a "deprecated" warning on Microsoft's MSVC,     *
+ *  first check that the user is running windows, then define this macro.     *
+ *  Unix-based (GNU, Linux, macOS, FreeBSD, etc.) platforms yield no warnings.*/
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
 
 /*  The fopen, fprintf, and FILE data type are here.                          */
 #include <stdio.h>
@@ -34,21 +44,123 @@
 /*  Square root and other basic math functions.                               */
 #include <math.h>
 
-/*  Complex variables and basic complex functions.                            */
-#include <complex.h>
-
-/*  Struct for dealing with colors in RGB format.                             */
-struct color {
-    unsigned char red, green, blue;
+/*  Struct for working with complex numbers.                                  */
+struct complex_number {
+    double real, imag;
 };
+
+/*  Function for computing the absolute value of a complex number.            */
+static double complex_abs(struct complex_number z)
+{
+    /*  Use the Pythagorean formula and return.                               */
+    return sqrt(z.real*z.real + z.imag*z.imag);
+}
+/*  End of complex_abs.                                                       */
+
+/*  Function for computing the distance between two complex numbers.          */
+static double complex_dist(struct complex_number z, struct complex_number w)
+{
+    /*  Declare necessary variables.                                          */
+    const double dx = z.real - w.real;
+    const double dy = z.imag - w.imag;
+
+    /*  Use the Pythagorean formula and return.                               */
+    return sqrt(dx*dx + dy*dy);
+}
+/*  End of complex_dist.                                                      */
+
+/*  Function for adding complex numbers.                                      */
+static struct complex_number
+complex_add(struct complex_number z, struct complex_number w)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Complex addition is done component-wise.                              */
+    out.real = z.real + w.real;
+    out.imag = z.imag + w.imag;
+    return out;
+}
+/*  End of complex_add.                                                       */
+
+/*  Function for subtracting complex numbers.                                 */
+static struct complex_number
+complex_subtract(struct complex_number z, struct complex_number w)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Complex subtraction is done component-wise.                           */
+    out.real = z.real - w.real;
+    out.imag = z.imag - w.imag;
+    return out;
+}
+/*  End of complex_subtraction.                                               */
+
+/*  Function for multiplying complex number.                                  */
+static struct complex_number
+complex_multiply(struct complex_number z, struct complex_number w)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Compute the product using the rule i^2 = -1.                          */
+    out.real = z.real*w.real - z.imag*w.imag;
+    out.imag = z.real*w.imag + z.imag*w.real;
+    return out;
+}
+/*  End of complex_multiply.                                                  */
+
+/*  Function for squaring a complex number.                                   */
+static struct complex_number complex_square(struct complex_number z)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Compute z*w with z = w.                                               */
+    out.real = z.real*z.real - z.imag*z.imag;
+    out.imag = 2.0*z.real*z.imag;
+    return out;
+}
+/*  End of complex_square.                                                    */
+
+/*  Function for dividing complex numbers.                                    */
+static struct complex_number
+complex_divide(struct complex_number z, struct complex_number w)
+{
+    /*  Declare a variable for the quotient.                                  */
+    struct complex_number out;
+
+    /*  Compute using z / w = z * (1/w), and use the formula for the          *
+     *  reciprocal of a complex number.                                       */
+    const double denom = 1.0 / (w.real*w.real + w.imag*w.imag);
+    out.real = (z.real*w.real + z.imag*w.imag)*denom;
+    out.imag = (z.imag*w.real - z.real*w.imag)*denom;
+    return out;
+}
+/*  End of complex_divide.                                                    */
+
+/*  Function for scaling a complex number a real one.                         */
+static struct complex_number
+complex_scale(struct complex_number z, double a)
+{
+    /*  Declare a variable for the output.                                    */
+    struct complex_number out;
+
+    /*  Multiply the real and imaginary parts by a and return.                */
+    out.real = a*z.real;
+    out.imag = a*z.imag;
+    return out;
+}
+/*  End of complex_scale.                                                     */
 
 /*  Function for evaluating a polynomial at a complex number z given the      *
  *  coefficients of the polynomial. This uses Horner's method.                */
-static complex double
-poly_eval(complex double z, complex double *arr, unsigned int deg)
+static struct complex_number
+poly_eval(struct complex_number z, struct complex_number *arr, unsigned int deg)
 {
     /*  Declare necessary variables.                                          */
-    complex double out;
+    struct complex_number out;
     unsigned int n;
 
     /*  Initialize out to the coefficient of z^deg.                           */
@@ -56,7 +168,7 @@ poly_eval(complex double z, complex double *arr, unsigned int deg)
 
     /*  Loop over the coefficients and apply Horner's method.                 */
     for (n = 1U; n <= deg; ++n)
-        out = z*out + arr[n];
+        out = complex_add(complex_multiply(z, out), arr[n]);
 
     return out;
 }
@@ -64,45 +176,60 @@ poly_eval(complex double z, complex double *arr, unsigned int deg)
 
 /*  Function for computing the derivative of a polynomial using               *
  *  Horner's method.                                                          */
-static complex double
-poly_deriv_eval(complex double z, complex double *arr, unsigned int deg)
+static struct complex_number
+poly_deriv_eval(struct complex_number z,
+                struct complex_number *arr,
+                unsigned int deg)
 {
     /*  Declare necessary variables.                                          */
-    complex double out;
+    struct complex_number out;
     const double factor = (double)deg;
     unsigned int n;
 
     /*  Intialize the output to the coefficient of z^deg times deg. This is   *
      *  because the derivative of z^deg is deg*z^(deg-1).                     */
-    out = factor*arr[0];
+    out = complex_scale(arr[0], factor);
 
     /*  Loop over the coefficients and perform Horner's method.               */
     for (n = 1U; n < deg; ++n)
-        out = z*out + factor*arr[n];
+    {
+        out = complex_multiply(z, out);
+        out = complex_add(out, complex_scale(arr[n], factor));
+    }
 
     return out;
 }
 /*  End of poly_deriv_eval.                                                   */
 
 /*  Compute the second derivative of a polynomial using Horner's method.      */
-static complex double
-poly_deriv2_eval(complex double z, complex double *arr, unsigned int deg)
+static struct complex_number
+poly_deriv2_eval(struct complex_number z,
+                 struct complex_number *arr,
+                 unsigned int deg)
 {
     /*  Declare necessary variables.                                          */
-    complex double out;
-    const double factor = (double)deg * ((double)deg - 1.0);
+    struct complex_number out;
+    const double factor = (double)deg * (double)(deg - 1U);
     unsigned int n;
 
     /*  Initialize the output.                                                */
-    out = factor*arr[0];
+    out = complex_scale(arr[0], factor);
 
     /*  Loop over the coefficients and perform Horner's method.               */
-    for (n = 1; n < deg-1; ++n)
-        out = z*out + factor*arr[n];
+    for (n = 1U; n < deg - 1U; ++n)
+    {
+        out = complex_multiply(z, out);
+        out = complex_add(out, complex_scale(arr[n], factor));
+    }
 
     return out;
 }
 /*  End of poly_deriv2_eval.                                                  */
+
+/*  Struct for dealing with colors in RGB format.                             */
+struct color {
+    unsigned char red, green, blue;
+};
 
 /*  Function for writing a color to a PPM file.                               */
 static void write_color(FILE *fp, struct color c)
@@ -125,20 +252,24 @@ static struct color scale_color(struct color c, double t)
 /*  End of scale_color.                                                       */
 
 /*  Function for computing the factor that occurs in Halley's method.         */
-static complex double
-halley_factor(complex double z, complex double *arr, unsigned int deg)
+static struct complex_number
+halley_factor(struct complex_number z,
+              struct complex_number *arr,
+              unsigned int deg)
 {
     /*  Declare necessary variables.                                          */
-    const complex double f_of_z              = poly_eval(z, arr, deg);
-    const complex double f_prime_of_z        = poly_deriv_eval(z, arr, deg);
-    const complex double f_double_prime_of_z = poly_deriv2_eval(z, arr, deg);
-    complex double numer, denom;
+    const struct complex_number f_z         = poly_eval(z, arr, deg);
+    const struct complex_number f_deriv_z   = poly_deriv_eval(z, arr, deg);
+    const struct complex_number f_deriv2_z  = poly_deriv2_eval(z, arr, deg);
+    struct complex_number numer, denom, denoma, denomb;
 
     /*  The numerator is f(z)f'(z) and the denominator is                     *
      *  f'(z)^2 - 0.5 f(z)f''(z). Compute this.                               */
-    numer = f_of_z * f_prime_of_z;
-    denom = f_prime_of_z*f_prime_of_z - 0.5*f_of_z*f_double_prime_of_z;
-    return numer / denom;
+    numer  = complex_multiply(f_z, f_deriv_z);
+    denoma = complex_square(f_deriv_z);
+    denomb = complex_scale(complex_multiply(f_z, f_deriv2_z), 0.5);
+    denom  = complex_subtract(denoma, denomb);
+    return complex_divide(numer, denom);
 }
 /*  End of halley_factor.                                                     */
 
@@ -157,20 +288,30 @@ int main(void)
     const unsigned char MaxIters = 0x20U;
 
     /*  The coefficients of the polynomial we're using. This is z^10 - 1.     */
-    complex double arr[11] = {
-        1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0
+    struct complex_number arr[11] = {
+        { 1.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        { 0.0, 0.0},
+        {-1.0, 0.0}
     };
 
     /*  Variable for the roots of this polynomial. The fundamental theorem of *
      *  algebra tells us there are at most 10 since the polynomial is degree  *
      *  10. For z^10 - 1, there are exactly 10.                               */
-    complex double roots[sizeof(arr)/sizeof(arr[0]) - 1U];
+    struct complex_number roots[sizeof(arr)/sizeof(arr[0]) - 1U];
 
     /*  Variable for the degree of the polynomial.                            */
     const unsigned int deg = sizeof(roots) / sizeof(roots[0]);
 
     /*  Variable for storing f(z) as we loop over points in the plane.        */
-    complex double f_z;
+    struct complex_number f_z;
 
     /*  Values for the min and max of the x and y axes. The rectangular       *
      *  region [x_min, x_max] x [y_min, y_max] will be plotted.               */
@@ -199,7 +340,7 @@ int main(void)
 
     /*  Factor for giving the image a gradient in color. The darker colors    *
      *  will represent points that required more iterations to converge.      */
-    double color_scale = 1.0 / (double)MaxIters;
+    double color_factor = 1.0 / (double)MaxIters;
 
     /* Dummy variables to loop over.                                          */
     unsigned char iters;
@@ -211,7 +352,7 @@ int main(void)
 
     /*  Variables for the real and imaginary parts of a complex number.       */
     double z_x, z_y;
-    complex double z;
+    struct complex_number z;
 
     /*  Scale factor for giving a gradient to the image.                      */
     double scale;
@@ -279,17 +420,18 @@ int main(void)
             theta = theta_factor * (double)y;
 
             /*  Get the complex number r exp(i theta).                        */
-            z = r * (cos(theta) + (complex double)_Complex_I*sin(theta));
+            z.real = r*cos(theta);
+            z.imag = r*sin(theta);
 
             /*  Compute f(z) and set the number of iterations back to zero.   */
             f_z = poly_eval(z, arr, deg);
             iters = 0x00U;
 
             /*  Allow MaxIters number of iterations of Halley's Method.       */
-            while ((cabs(f_z) > EPS) && (iters < MaxIters))
+            while ((complex_abs(f_z) > EPS) && (iters < MaxIters))
             {
                 /*  Perfrom Halley's Method on the polynomial.                */
-                z = z - halley_factor(z, arr, deg);
+                z = complex_subtract(z, halley_factor(z, arr, deg));
 
                 /*  Update f_z and increment iters.                           */
                 f_z = poly_eval(z, arr, deg);
@@ -299,7 +441,7 @@ int main(void)
 
             /*  If |f(z)| < EPS, we found a root. Check if we already found   *
              *  this one.                                                     */
-            if (cabs(f_z) < EPS)
+            if (complex_abs(f_z) < EPS)
             {
                 /*  If we haven't found a root yet, add this to our list.     */
                 if (n_roots == 0U)
@@ -314,10 +456,10 @@ int main(void)
                 {
                     /*  Compute the distances from this newly found point to  *
                      *  the roots we've already found.                        */
-                    min = cabs(z - roots[0]);
+                    min = complex_dist(z, roots[0]);
                     for (ell = 1U; ell < n_roots; ++ell)
                     {
-                        temp = cabs(z - roots[ell]);
+                        temp = complex_dist(z, roots[ell]);
                         if (temp < min)
                             min = temp;
                     }
@@ -332,7 +474,7 @@ int main(void)
                 }
                 /*  End of if (n_roots == 0U).                                */
             }
-            /*  End of if (cabs(f_z) < EPS).                                  */
+            /*  End of if (complex_abs(f_z) < EPS).                           */
         }
         /*  End of y for-loop.                                                */
     }
@@ -364,31 +506,33 @@ int main(void)
             z_x = x_min + (double)x * factor_x;
 
             /*  Set z to x + iy.                                              */
-            z = z_x + (complex double)_Complex_I*z_y;
+            z.real = z_x;
+            z.imag = z_y;
 
             /*  Evaluate the polynomial at z and reset iters to zero.         */
             f_z = poly_eval(z, arr, deg);
             iters = 0x00U;
 
             /*  Allow MaxIters number of iterations of Halley's method.       */
-            while ((cabs(f_z) > EPS) && (iters < MaxIters))
+            while ((complex_abs(f_z) > EPS) && (iters < MaxIters))
             {
                 /*  Perfrom Halley's Method on the polynomial f.              */
-                z = z - halley_factor(z, arr, deg);
+                z = complex_subtract(z, halley_factor(z, arr, deg));
 
                 /*  Update f_z and increment iters.                           */
                 f_z = poly_eval(z, arr, deg);
                 ++iters;
             }
+            /*  End of Halley's Method.                                       */
 
             /*  Find which roots the final iteration is closest too.          */
-            min = cabs(z-roots[0]);
-            ind = 0;
+            min = complex_dist(z, roots[0]);
+            ind = 0U;
 
             /*  Find if we converge to a root or not.                         */
             for (ell = 1U; ell < n_roots; ++ell)
             {
-                temp = cabs(z - roots[ell]);
+                temp = complex_dist(z, roots[ell]);
                 if (temp < min)
                 {
                     min = temp;
@@ -403,7 +547,7 @@ int main(void)
             /*  Otherwise, color the pixel corresponding to the root.         */
             else
             {
-                scale = 1.0 - color_scale*(double)iters;
+                scale = 1.0 - color_factor*(double)iters;
                 current_color = scale_color(colors[ind], scale);
             }
 
