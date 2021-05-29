@@ -68,9 +68,9 @@ static struct color scale_color(struct color c, double t)
 /*  Function for adding a color to a PPM file.                                */
 static void write_color(FILE *fp, struct color c)
 {
-    fputc(c.red, fp);
+    fputc(c.red,   fp);
     fputc(c.green, fp);
-    fputc(c.blue, fp);
+    fputc(c.blue,  fp);
 }
 /*  End of write_color.                                                       */
 

@@ -231,6 +231,25 @@ struct color {
     unsigned char red, green, blue;
 };
 
+/*  For reasons completely beyond me, fputc doesn't seem to work correctly on *
+ *  Windows 10. It may be the virtual machine I was using, or it may be       *
+ *  problems with Microsoft's standard library. I suspect the latter. The     *
+ *  rendered PPM file is completely corrupted and looks horrible. If the user *
+ *  is running Windows, use fprintf instead of fputc, and use the text-based  *
+ *  PPM format instead of the binary based. The text-based format ends up     *
+ *  being around 4x larger than the binary format, but renders properly.      */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+
+/*  Function for writing a color to a PPM file.                               */
+static void write_color(FILE *fp, struct color c)
+{
+    fprintf(fp, "%u %u %u\n", c.red, c.green, c.blue);
+}
+/*  End of write_color.                                                       */
+
+#else
+/*  Everyone else (GNU, Linux, macOS, FreeBSD, etc.).                         */
+
 /*  Function for writing a color to a PPM file.                               */
 static void write_color(FILE *fp, struct color c)
 {
@@ -239,6 +258,7 @@ static void write_color(FILE *fp, struct color c)
     fputc(c.blue,  fp);
 }
 /*  End of write_color.                                                       */
+#endif
 
 /*  Function for scaling the intensitity of a color by a real number.         */
 static struct color scale_color(struct color c, double t)
@@ -277,10 +297,10 @@ halley_factor(struct complex_number z,
 int main(void)
 {
     /*  Variable for the width of the PPM file.                               */
-    const unsigned int width = 2048U;
+    const unsigned int width = 1024U;
 
     /*  And a variable for the height of the PPM.                             */
-    const unsigned int height = 2048U;
+    const unsigned int height = 1024U;
 
     /*  Maximum number of iterations allowed in Halley's method and the       *
      *  maximum number of iterations allowed in the                           *
@@ -490,8 +510,13 @@ int main(void)
         return -1;
     }
 
-    /*  Write the preamble to the PPM file.                                   */
+    /*  Write the preamble to the PPM file. For Windows users we'll use text  *
+     *  based PPM, and for everyone else we'll use binary format.             */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    fprintf(fp, "P3\n%u %u\n255\n", width, height);
+#else
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
+#endif
 
     /*  Loop over the y pixels.                                               */
     for (y = 0U; y < height; ++y)
