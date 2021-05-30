@@ -23,6 +23,11 @@
  *      polynomial of degree less than or equal to 14.                        *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
+ *      This file uses C99 extensions (complex.h) and DOES NOT compile using  *
+ *      Microsoft's C library (MSVC is NOT C99 compliant). There is a C89     *
+ *      version of this file that has successfully been tested on Windows 10  *
+ *      using both MSVC and Clang. GNU's C library, and Apple's, handle this  *
+ *      file just fine.                                                       *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       May 26, 2021                                                  *
@@ -97,7 +102,7 @@ poly_deriv2_eval(complex double z, complex double *arr, unsigned int deg)
     out = factor*arr[0];
 
     /*  Loop over the coefficients and perform Horner's method.               */
-    for (n = 1; n < deg-1; ++n)
+    for (n = 1U; n < deg - 1U; ++n)
         out = z*out + factor*arr[n];
 
     return out;
@@ -288,7 +293,7 @@ int main(void)
             /*  Allow MaxIters number of iterations of Halley's Method.       */
             while ((cabs(f_z) > EPS) && (iters < MaxIters))
             {
-                /*  Perfrom Halley's Method on the polynomial.                */
+                /*  Perform Halley's Method on the polynomial.                */
                 z = z - halley_factor(z, arr, deg);
 
                 /*  Update f_z and increment iters.                           */
@@ -341,7 +346,7 @@ int main(void)
     /*  If we didn't allow for enough iterations of Halley's method, or if    *
      *  there is a bug, it is possible that we didn't find any roots. Abort   *
      *  the computation if this is the case.                                  */
-    if (n_roots == 0)
+    if (n_roots == 0U)
     {
         puts("Failed to find the roots. Aborting.");
         fclose(fp);
@@ -373,17 +378,18 @@ int main(void)
             /*  Allow MaxIters number of iterations of Halley's method.       */
             while ((cabs(f_z) > EPS) && (iters < MaxIters))
             {
-                /*  Perfrom Halley's Method on the polynomial f.              */
+                /*  Perform Halley's Method on the polynomial f.              */
                 z = z - halley_factor(z, arr, deg);
 
                 /*  Update f_z and increment iters.                           */
                 f_z = poly_eval(z, arr, deg);
                 ++iters;
             }
+            /*  End of Halley's method.                                       */
 
             /*  Find which roots the final iteration is closest too.          */
-            min = cabs(z-roots[0]);
-            ind = 0;
+            min = cabs(z - roots[0]);
+            ind = 0U;
 
             /*  Find if we converge to a root or not.                         */
             for (ell = 1U; ell < n_roots; ++ell)
