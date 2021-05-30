@@ -5,25 +5,25 @@
 #include <stdlib.h>
 
 /*  Complex numbers and routines here.                                        */
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_math.h>
 
 /*  2D and 3D vectors are defined here, as well as the stereographic and      *
  *  inverse orthographic projections.                                         */
-#include <rss_ringoccs/include/rss_ringoccs_geometry.h>
+#include <libtmpl/include/tmpl_spherical_geometry.h>
 
 /*  Routines for creating the PPM figure found here.                          */
-#include <rss_ringoccs/include/rss_ringoccs_ppm_plot.h>
+#include <libtmpl/include/tmpl_ppm.h>
 
-static rssringoccs_ComplexDouble
-glynn_func(rssringoccs_ComplexDouble z, rssringoccs_ComplexDouble e,
-           rssringoccs_ComplexDouble mu)
+static tmpl_ComplexDouble
+glynn_func(tmpl_ComplexDouble z, tmpl_ComplexDouble e,
+           tmpl_ComplexDouble mu)
 {
-    rssringoccs_ComplexDouble out;
+    tmpl_ComplexDouble out;
 
 
-    out = rssringoccs_CDouble_Pow(z, e);
-    out = rssringoccs_CDouble_Add(out, mu);
+    out = tmpl_CDouble_Pow(z, e);
+    out = tmpl_CDouble_Add(out, mu);
     return out;
 }
 
@@ -32,12 +32,12 @@ glynn_func(rssringoccs_ComplexDouble z, rssringoccs_ComplexDouble e,
  *  that this variable will be normalize so u and lambda*u will result in the *
  *  same drawing for all positive lambda. u and -u will produce drawings of   *
  *  the opposite side of the sphere.                                          */
-static const rssringoccs_ThreeVector camera_pos = {{-0.05, -0.1, -1.0}};
+static const tmpl_ThreeVector camera_pos = {{-0.05, -0.1, -1.0}};
 
 /*  The number of pixels in the x and y axes. If you want a higher resolution *
  *  for the output fractal, increase this number. It is best to make n*1024   *
  *  where n is some positive integer.                                         */
-static const unsigned int size = 4*1024;
+static const unsigned int size = 2048U;
 
 static const unsigned int max_iters = 256;
 
@@ -50,27 +50,27 @@ static const double y_max =  1.0;
 int main(void)
 {
     /*  Declare some necessary variables for the geometry.                    */
-    rssringoccs_TwoVector proj_P, planar_Z;
-    rssringoccs_ThreeVector P, u;
+    tmpl_TwoVector proj_P, planar_Z;
+    tmpl_ThreeVector P, u;
 
     /*  More dummy variables to loop over.                                    */
     unsigned int x, y, n;
     double z_x, z_y, Pz, norm, red, green, blue;
     unsigned char r, g, b;
-    rssringoccs_ComplexDouble z, e, mu;
+    tmpl_ComplexDouble z, e, mu;
     double rcp_factor = 1.0 / (size-1.0);
 
     double radius = 4.0;
 
-    e  = rssringoccs_CDouble_Rect(1.5, 0.0);
-    mu = rssringoccs_CDouble_Rect(-0.2, 0.0);
-
     /*  Declare a variable for the output.                                    */
     FILE *fp;
 
+    e  = tmpl_CDouble_Rect(1.5, 0.0);
+    mu = tmpl_CDouble_Rect(-0.2, 0.0);
+
     /*  Normalize the camera vector and set this to u. First check that the   *
      *  user didn't provide the zero vector since this will cause an error.   */
-    norm = rssringoccs_ThreeVector_Euclidean_Norm(camera_pos);
+    norm = tmpl_ThreeVector_Euclidean_Norm(camera_pos);
 
     if (norm == 0.0)
     {
@@ -82,7 +82,7 @@ int main(void)
         exit(0);
     }
     else
-        u = rssringoccs_ThreeVector_Normalize(camera_pos);
+        u = tmpl_ThreeVector_Normalize(camera_pos);
 
     /* Open and name the file and give it write permission.                   */
     fp = fopen("glynn_fractal_on_sphere.ppm", "w");
@@ -104,24 +104,24 @@ int main(void)
             z_x = x * (x_max - x_min) * rcp_factor + x_min;
 
             if ((z_x*z_x + z_y*z_y >= 1.0))
-                rssringoccs_Color(0, 0, 0, fp);
+                tmpl_Write_PPM_Color_From_Values(0x00U, 0x00U, 0x00U, fp);
             else
             {
-                planar_Z = rssringoccs_TwoVector_Rect(z_x, z_y);
-                P = rssringoccs_Inverse_Orthographic_Projection(planar_Z, u);
-                Pz = rssringoccs_ThreeVector_Z(P);
+                planar_Z = tmpl_TwoVector_Rect(z_x, z_y);
+                P = tmpl_Inverse_Orthographic_Projection(planar_Z, u);
+                Pz = tmpl_ThreeVector_Z(P);
 
                 if (Pz > 0.999999)
-                    rssringoccs_Color(128, 128, 128, fp);
+                    tmpl_Write_PPM_Color_From_Values(0x80U, 0x80U, 0x80U, fp);
                 else
                 {
-                    proj_P = rssringoccs_Stereographic_Projection(P);
+                    proj_P = tmpl_Stereographic_Projection(P);
 
-                    /*  rssringoccs_ComplexDouble and rssringoccs_TwoVector   *
+                    /*  tmpl_ComplexDouble and tmpl_TwoVector   *
                      *  define identical structures, so we can just cast      *
-                     *  proj_P to a rssringoccs_ComplexDouble pointer and     *
+                     *  proj_P to a tmpl_ComplexDouble pointer and     *
                      *  perform Newton-Raphson with that.                     */
-                    z = *(rssringoccs_ComplexDouble *)(&proj_P);
+                    z = *(tmpl_ComplexDouble *)(&proj_P);
 
                     /*  Use the Newton-Raphson function to compute a root.    */
                     for(n = 0; n < max_iters; ++n)
@@ -131,25 +131,25 @@ int main(void)
                         z = glynn_func(z, e, mu);
 
                         /*  Check for divergence.                             */
-                        norm = rssringoccs_CDouble_Abs(z);
+                        norm = tmpl_CDouble_Abs(z);
 
                         if(norm > radius)
                             break;
                     }
-                    red = rssringoccs_Double_Sin(0.1*n);
+                    red = tmpl_Double_Sin(0.1*n);
                     red = red*red;
 
-                    green = rssringoccs_Double_Sin(0.2*n - 0.78);
+                    green = tmpl_Double_Sin(0.2*n - 0.78);
                     green = green*green;
 
-                    blue = rssringoccs_Double_Sin(0.03*n - 1.78);
+                    blue = tmpl_Double_Sin(0.03*n - 1.78);
                     blue = blue*blue;
 
                     r = (unsigned char)(255*red);
                     g = (unsigned char)(255*green);
                     b = (unsigned char)(255*blue);
 
-                    rssringoccs_Color(r, g, b, fp);
+                    tmpl_Write_PPM_Color_From_Values(r, g, b, fp);
                 }
             }
         }

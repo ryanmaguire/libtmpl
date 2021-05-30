@@ -1,17 +1,17 @@
 #include <stdio.h>
-#include <rss_ringoccs/include/rss_ringoccs_math.h>
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
-#include <rss_ringoccs/include/rss_ringoccs_ppm_plot.h>
+#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_ppm.h>
 
-static rssringoccs_ComplexDouble
-glynn_func(rssringoccs_ComplexDouble z, rssringoccs_ComplexDouble e,
-           rssringoccs_ComplexDouble mu)
+static tmpl_ComplexDouble
+glynn_func(tmpl_ComplexDouble z, tmpl_ComplexDouble e,
+           tmpl_ComplexDouble mu)
 {
-    rssringoccs_ComplexDouble out;
+    tmpl_ComplexDouble out;
 
 
-    out = rssringoccs_CDouble_Pow(z, e);
-    out = rssringoccs_CDouble_Add(out, mu);
+    out = tmpl_CDouble_Pow(z, e);
+    out = tmpl_CDouble_Add(out, mu);
     return out;
 }
 
@@ -23,9 +23,9 @@ int main(void)
     double z_x, z_y, norm;
     double rcp_factor;
     unsigned int maxIterations = 256;
-    rssringoccs_ComplexDouble z, e, mu;
+    tmpl_ComplexDouble z, e, mu;
 
-    unsigned int size = 4*1024;
+    const unsigned int size = 4*2048U;
     double red, green, blue;
     unsigned char r, g, b;
 
@@ -36,8 +36,8 @@ int main(void)
 
     double radius = 4.0;
 
-    e  = rssringoccs_CDouble_Rect(1.5, 0.0);
-    mu = rssringoccs_CDouble_Rect(-0.2, 0.0);
+    e  = tmpl_CDouble_Rect(1.5, 0.0);
+    mu = tmpl_CDouble_Rect(-0.2, 0.0);
 
     fp = fopen("glynn_fractal_periodic_palette.ppm", "w");
     fprintf(fp, "P6\n%d %d\n255\n", size, size);
@@ -57,7 +57,7 @@ int main(void)
             z_x = x * (x_max - x_min) * rcp_factor + x_min;
 
             /*  Compute the complex number z_x + i z_y.                       */
-            z = rssringoccs_CDouble_Rect(z_x, z_y);
+            z = tmpl_CDouble_Rect(z_x, z_y);
 
             /*  Start the iteration process.                                  */
             for(n = 0; n < maxIterations; ++n)
@@ -67,26 +67,26 @@ int main(void)
                 z = glynn_func(z, e, mu);
 
                 /*  Check for divergence.                                     */
-                norm = rssringoccs_CDouble_Abs(z);
+                norm = tmpl_CDouble_Abs(z);
 
                 if(norm > radius)
                     break;
             }
 
-            red = rssringoccs_Double_Sin(0.1*n);
+            red = tmpl_Double_Sin(0.1*n);
             red = red*red;
 
-            green = rssringoccs_Double_Sin(0.2*n - 0.78);
+            green = tmpl_Double_Sin(0.2*n - 0.78);
             green = green*green;
 
-            blue = rssringoccs_Double_Sin(0.03*n - 1.78);
+            blue = tmpl_Double_Sin(0.03*n - 1.78);
             blue = blue*blue;
 
             r = (unsigned char)(255*red);
             g = (unsigned char)(255*green);
             b = (unsigned char)(255*blue);
 
-            rssringoccs_Color(r, g, b, fp);
+            tmpl_Write_PPM_Color_From_Values(r, g, b, fp);
         }
     }
     return 0;

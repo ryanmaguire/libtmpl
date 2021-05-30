@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_ppm_plot.h>
+#include <libtmpl/include/tmpl_ppm.h>
 
 /*  We'll use these macros for drawing the figure in a pgm file later.        */
 #define BLACK (unsigned char)0
