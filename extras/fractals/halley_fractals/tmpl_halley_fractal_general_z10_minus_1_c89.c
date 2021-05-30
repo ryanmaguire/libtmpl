@@ -95,9 +95,9 @@ complex_subtract(struct complex_number z, struct complex_number w)
     out.imag = z.imag - w.imag;
     return out;
 }
-/*  End of complex_subtraction.                                               */
+/*  End of complex_subtract.                                                  */
 
-/*  Function for multiplying complex number.                                  */
+/*  Function for multiplying complex numbers.                                 */
 static struct complex_number
 complex_multiply(struct complex_number z, struct complex_number w)
 {
@@ -235,7 +235,7 @@ struct color {
  *  Windows 10. The problem seems to arise when too many colors are present   *
  *  in the PPM file. The rendered PPM file is completely corrupted and looks  *
  *  horrible. If the user is running Windows, use fprintf instead of fputc,   *
- *  and use the text-based PPM format instead of the binary based. The        *
+ *  and use the text-based PPM format instead of the binary based one. The    *
  *  text-based format ends up being around 4x larger than the binary format,  *
  *  but renders properly.                                                     */
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
@@ -258,7 +258,9 @@ static void write_color(FILE *fp, struct color c)
     fputc(c.blue,  fp);
 }
 /*  End of write_color.                                                       */
+
 #endif
+/*  End of #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER).       */
 
 /*  Function for scaling the intensitity of a color by a real number.         */
 static struct color scale_color(struct color c, double t)
@@ -278,9 +280,9 @@ halley_factor(struct complex_number z,
               unsigned int deg)
 {
     /*  Declare necessary variables.                                          */
-    const struct complex_number f_z         = poly_eval(z, arr, deg);
-    const struct complex_number f_deriv_z   = poly_deriv_eval(z, arr, deg);
-    const struct complex_number f_deriv2_z  = poly_deriv2_eval(z, arr, deg);
+    const struct complex_number f_z        = poly_eval(z, arr, deg);
+    const struct complex_number f_deriv_z  = poly_deriv_eval(z, arr, deg);
+    const struct complex_number f_deriv2_z = poly_deriv2_eval(z, arr, deg);
     struct complex_number numer, denom, denoma, denomb;
 
     /*  The numerator is f(z)f'(z) and the denominator is                     *
@@ -367,7 +369,7 @@ int main(void)
     unsigned int ind, x, y, ell;
 
     /*  Variables for the tolerance of finding a root.                        */
-    const double toler = 1.0E-4;
+    const double toler = 1.0E-2;
     const double EPS   = 1.0E-8;
 
     /*  Variables for the real and imaginary parts of a complex number.       */
@@ -450,7 +452,7 @@ int main(void)
             /*  Allow MaxIters number of iterations of Halley's Method.       */
             while ((complex_abs(f_z) > EPS) && (iters < MaxIters))
             {
-                /*  Perfrom Halley's Method on the polynomial.                */
+                /*  Perform Halley's Method on the polynomial.                */
                 z = complex_subtract(z, halley_factor(z, arr, deg));
 
                 /*  Update f_z and increment iters.                           */
@@ -541,7 +543,7 @@ int main(void)
             /*  Allow MaxIters number of iterations of Halley's method.       */
             while ((complex_abs(f_z) > EPS) && (iters < MaxIters))
             {
-                /*  Perfrom Halley's Method on the polynomial f.              */
+                /*  Perform Halley's Method on the polynomial f.              */
                 z = complex_subtract(z, halley_factor(z, arr, deg));
 
                 /*  Update f_z and increment iters.                           */
