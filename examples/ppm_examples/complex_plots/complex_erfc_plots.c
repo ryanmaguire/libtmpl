@@ -20,8 +20,8 @@
 /*  This program plots the real and imaginary parts of the comple exponential *
  *  function using a color gradient to represent the values.                  */
 
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
-#include <rss_ringoccs/include/rss_ringoccs_ppm_plot.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_ppm.h>
 
 int main(void)
 {
@@ -35,8 +35,8 @@ int main(void)
     const double y_max =  4.0;
 
     /*  Use rssringoccs_Easy_Complex_Plots to produce the plots.              */
-    rssringoccs_Easy_Complex_Plots("complex_erfc", rssringoccs_Complex_Erfc,
-                                   size, size, x_min, x_max, y_min, y_max);
+    tmpl_Easy_Complex_Plots("complex_erfc", tmpl_CDouble_Erfc,
+                            size, size, x_min, x_max, y_min, y_max);
     return 0;
 }
 

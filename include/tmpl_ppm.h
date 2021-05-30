@@ -5,16 +5,29 @@
 #include <stdio.h>
 #include <libtmpl/include/tmpl_complex.h>
 
+typedef struct _tmpl_PPM_Color {
+    unsigned char red, green, blue;
+} tmpl_PPM_Color;
+
+extern void tmpl_Write_PPM_Color(FILE *fp, tmpl_PPM_Color color);
+
+extern tmpl_PPM_Color
+tmpl_Scale_PPM_Color(tmpl_PPM_Color color, double t);
+
+extern tmpl_PPM_Color
+tmpl_Create_PPM_Color(unsigned char red,
+                      unsigned char green,
+                      unsigned char blue);
 
 extern void
-tmpl_Color(unsigned char red, unsigned char green,
-           unsigned char blue, FILE *fp);
+tmpl_Write_PPM_Color_From_Values(unsigned char red,unsigned char green,
+                                 unsigned char blue, FILE *fp);
 
-extern void
-tmpl_RGB_Scaled_Gradient(double val, FILE *fp);
+extern tmpl_PPM_Color
+tmpl_RGB_Scaled_Gradient(double val);
 
-extern void
-tmpl_RGB_Linear_Gradient(double val, double min, double max, FILE *fp);
+extern tmpl_PPM_Color
+tmpl_RGB_Linear_Gradient(double val, double min, double max);
 
 extern void
 tmpl_Easy_Complex_Plots(const char *func_name,
