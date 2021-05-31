@@ -406,7 +406,7 @@ static struct complex_number f_prime(struct complex_number z)
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Compute z^3, and then subtract 1 from the real part.                  */
+    /*  Compute z^3, subtract 1 from the real part, and multiply by 4.        */
     out.real = 4.0*(z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag);
     out.imag = 4.0*(3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag);
     return out;
