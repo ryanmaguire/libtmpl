@@ -599,7 +599,7 @@ int main(void)
 
             /*  Perform Halley's method until we are close to a root, or      *
              *  perform too many iterations.                                  */
-            while((complex_abs(f_of_z) > EPS) && (iters < max_iters))
+            while ((complex_abs(f_of_z) > EPS) && (iters < max_iters))
             {
                 /*  Compute the next iteration of Halley's method.            */
                 z = complex_subtract(z, halley_factor(z));
