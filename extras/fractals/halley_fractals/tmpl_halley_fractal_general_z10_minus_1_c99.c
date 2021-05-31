@@ -252,7 +252,7 @@ int main(void)
     };
 
     /*  Declare a variable for the output file and give it write permission.  */
-    FILE *fp = fopen("tmpl_halley_fractal_general_z10_minus_1.ppm", "w");
+    FILE *fp = fopen("tmpl_halley_fractal_general_z10_minus_1_c99.ppm", "w");
 
     /*  Check if fopen failed.                                                */
     if (!fp)
