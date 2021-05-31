@@ -65,7 +65,26 @@ static struct color scale_color(struct color c, double t)
 }
 /*  End of scale_color.                                                       */
 
-/*  Function for adding a color to a PPM file.                                */
+/*  For reasons completely beyond me, fputc doesn't seem to work correctly on *
+ *  Windows 10. The problem seems to arise when too many colors are present   *
+ *  in the PPM file. The rendered PPM file is completely corrupted and looks  *
+ *  horrible. If the user is running Windows, use fprintf instead of fputc,   *
+ *  and use the text-based PPM format instead of the binary based one. The    *
+ *  text-based format ends up being around 4x larger than the binary format,  *
+ *  but renders properly.                                                     */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+
+/*  Function for writing a color to a PPM file.                               */
+static void write_color(FILE *fp, struct color c)
+{
+    fprintf(fp, "%u %u %u\n", c.red, c.green, c.blue);
+}
+/*  End of write_color.                                                       */
+
+#else
+/*  Everyone else (GNU, Linux, macOS, FreeBSD, etc.).                         */
+
+/*  Function for writing a color to a PPM file.                               */
 static void write_color(FILE *fp, struct color c)
 {
     fputc(c.red,   fp);
@@ -73,6 +92,9 @@ static void write_color(FILE *fp, struct color c)
     fputc(c.blue,  fp);
 }
 /*  End of write_color.                                                       */
+
+#endif
+/*  End of #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER).       */
 
 /*  Struct for working with complex numbers.                                  */
 struct complex_number {
@@ -175,7 +197,7 @@ static struct complex_number f_prime(struct complex_number z)
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Compute the square z, and multiply real and imaginary part by 3.      */
+    /*  Compute the square of z, and multiply real and imaginary part by 3.   */
     out.real = 3.0*(z.real*z.real - z.imag*z.imag);
     out.imag = 6.0*z.real*z.imag;
     return out;
@@ -205,16 +227,14 @@ static struct complex_number halley_factor(struct complex_number z)
     f_prime_of_z        = f_prime(z);
     f_double_prime_of_z = f_double_prime(z);
 
-    /*  The numerator is 2f(z)f'(z).                                          */
+    /*  The numerator is f(z)f'(z).                                           */
     numer = complex_multiply(f_of_z, f_prime_of_z);
-    numer.real *= 2.0;
-    numer.imag *= 2.0;
 
-    /*  The denominator is 2f'(z)^2 - f(z)f''(z).                             */
+    /*  The denominator is f'(z)^2 - 0.5*f(z)f''(z).                          */
     denom_a = complex_square(f_prime_of_z);
-    denom_a.real *= 2.0;
-    denom_a.imag *= 2.0;
     denom_b = complex_multiply(f_of_z, f_double_prime_of_z);
+    denom_b.real *= 0.5;
+    denom_b.imag *= 0.5;
 
     denom = complex_subtract(denom_a, denom_b);
     return complex_divide(numer, denom);
@@ -306,8 +326,13 @@ int main(void)
         return -1;
     }
 
-    /*  Print the preamble of the PPM to the file.                            */
+    /*  Write the preamble to the PPM file. For Windows users we'll use text  *
+     *  based PPM, and for everyone else we'll use binary format.             */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    fprintf(fp, "P3\n%u %u\n255\n", width, height);
+#else
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
+#endif
 
     /*  Loop over all of the y-pixels.                                        */
     for (y = 0U; y < height; ++y)
@@ -334,7 +359,7 @@ int main(void)
 
             /*  Perform Halley's method until we are close to a root, or      *
              *  perform too many iterations.                                  */
-            while((complex_abs(f_of_z) > EPS) && (iters < max_iters))
+            while ((complex_abs(f_of_z) > EPS) && (iters < max_iters))
             {
                 /*  Compute the next iteration of Halley's method.            */
                 z = complex_subtract(z, halley_factor(z));
