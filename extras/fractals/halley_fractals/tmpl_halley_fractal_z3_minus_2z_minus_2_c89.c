@@ -17,13 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Draw the Halley fractal for the polynomial z^3 - 1.                   *
+ *      Draw the Halley fractal for the polynomial z^3 - 2z - 2.              *
  *  Notes:                                                                    *
  *      This file is an "extra" and is not compiled as part of libtmpl.       *
- *      This file only uses features available in C89. Something interesting  *
- *      to note, GCC ran this file more than twice as fast as the C99         *
- *      equivalent that is also in this directory. That file uses complex.h   *
- *      features from the C99 standard. Clang ran this file about 1.5 times   *
  *      as fast as the C99 version.                                           *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
@@ -179,31 +175,36 @@ static double complex_abs(struct complex_number z)
 }
 /*  End of complex_abs.                                                       */
 
-/*  The Halley fractal we're drawing has the polynomial z^3 - 1.              */
+/*  The Halley fractal we're drawing has the polynomial z^3 - 2z - 2.         */
 static struct complex_number f(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
+    const double x_sq = z.real*z.real;
+    const double y_sq = z.imag*z.imag;
 
-    /*  Compute z^3, and then subtract 1 from the real part.                  */
-    out.real = z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag - 1.0;
-    out.imag = 3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag;
+    /*  Compute z^3 - 2z, and then subtract 2 from the real part.             */
+    out.real = z.real*x_sq - 3.0*z.real*y_sq - 2.0*z.real - 2.0;
+    out.imag = 3.0*x_sq*z.imag - y_sq*z.imag - 2.0*z.imag;
     return out;
 }
+/*  End of f.                                                                 */
 
-/*  The derivative of z^3 - 1 is 3z^2.                                        */
+/*  The derivative of z^3 - 2z - 2 is 3z^2 - 2.                               */
 static struct complex_number f_prime(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Compute the square of z, and multiply real and imaginary part by 3.   */
-    out.real = 3.0*(z.real*z.real - z.imag*z.imag);
+    /*  Compute the square of z, and multiply real and imaginary part by 3.   *
+     *  Then subtract 2 from the real part.                                   */
+    out.real = 3.0*(z.real*z.real - z.imag*z.imag) - 2.0;
     out.imag = 6.0*z.real*z.imag;
     return out;
 }
+/*  End of f_prime.                                                           */
 
-/*  And the second derivative of z^3 - 1 is 6z.                               */
+/*  And the second derivative of z^3 - 2z - 2 is 6z.                          */
 static struct complex_number f_double_prime(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
@@ -214,6 +215,7 @@ static struct complex_number f_double_prime(struct complex_number z)
     out.imag = 6.0*z.imag;
     return out;
 }
+/*  End of f_double_prime.                                                    */
 
 /*  Function for computing the factor used in Halley's method.                */
 static struct complex_number halley_factor(struct complex_number z)
@@ -241,7 +243,7 @@ static struct complex_number halley_factor(struct complex_number z)
 }
 /*  End of halley_factor.                                                     */
 
-/*  Function for drawing the Halley fractal for z^3 - 1.                      */
+/*  Function for drawing the Halley fractal for z^3 - 2z - 2.                 */
 int main(void)
 {
     /*  Declare variables for z (point in the plane) and f(z).                */
@@ -250,8 +252,8 @@ int main(void)
     /*  Variables for the real and imaginary parts of z.                      */
     double z_x, z_y;
 
-    /*  The allowed error when searching for a root to z^3 - 1. This is the   *
-     *  maximum value |f(z)| < EPS such that f(z) will be considered zero.    */
+    /*  The allowed error when searching for a root to z^2 - 2z - 2. This is  *
+     *  the maximum value |f(z)| < EPS such that f(z) will be considered zero.*/
     const double EPS = 1.0E-6;
 
     /*  The allowed tolerance for a root. This is the maximum value |z-z0|,   *
@@ -286,21 +288,19 @@ int main(void)
     const double x_factor = (x_max - x_min) / (double)(width - 1U);
     const double y_factor = (y_max - y_min) / (double)(height - 1U);
 
-    /*  z^3 - 1 has three roots, so declare 3 colors to distinguish which     *
-     *  root occurred as a result of Halley's method.                         */
+    /*  z^3 - 2z - 2 has three roots, so declare 3 colors to distinguish      *
+     *  which root occurred as a result of Halley's method.                   */
     const struct color red   = {0xFFU, 0x00U, 0x00U};
     const struct color green = {0x00U, 0xFFU, 0x00U};
     const struct color blue  = {0x00U, 0x00U, 0xFFU};
 
-    /*  The Julia set of z^3 - 1 are points that don't converge. Draw these   *
-     *  points black.                                                         */
+    /*  The Julia set are points that don't converge. Draw these black.       */
     const struct color black = {0x00U, 0x00U, 0x00U};
 
-    /*  Precompute the three roots of z^3 - 1 for later. These are the three  *
-     *  cubic roots of unity.                                                 */
-    const struct complex_number root0 = {1.0, 0.0};
-    const struct complex_number root1 = {-0.5,  0.866025403784};
-    const struct complex_number root2 = {-0.5, -0.866025403784};
+    /*  Precompute the three roots of z^3 - 2z - 2 for later.                 */
+    const struct complex_number root0 = { 1.76929235423863,  0.0};
+    const struct complex_number root1 = {-0.88464617711931,  0.589742805022206};
+    const struct complex_number root2 = {-0.88464617711931, -0.589742805022206};
 
     /*  Declare a variable for creating a gradient in color. The gradient     *
      *  indicates how many iterations it takes to converge. Darker values     *
@@ -317,7 +317,7 @@ int main(void)
     struct color current_color;
 
     /*  Open a PPM file and give it write permissions.                        */
-    FILE *fp = fopen("tmpl_halley_fractal_z3_minus_1_c89.ppm", "w");
+    FILE *fp = fopen("tmpl_halley_fractal_z3_minus_2z_minus_2_c89.ppm", "w");
 
     /*  If fopen fails it returns NULL. Check for this.                       */
     if (!fp)

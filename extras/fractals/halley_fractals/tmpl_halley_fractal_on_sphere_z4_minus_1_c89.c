@@ -47,7 +47,7 @@
 /*  Needed for the square root function.                                      */
 #include <math.h>
 
-/*  Needed for testing if a floating point is zero.                           */
+/*  Needed for testing if a floating point is epsilon small.                  */
 #include <float.h>
 
 /*  Struct for working with vectors in three dimensions.                      */
@@ -196,14 +196,36 @@ static struct color scale_color(struct color c, double t)
 }
 /*  End of scale_color.                                                       */
 
-/*  Function for adding a color to a PPM file.                                */
+/*  For reasons completely beyond me, fputc doesn't seem to work correctly on *
+ *  Windows 10. The problem seems to arise when too many colors are present   *
+ *  in the PPM file. The rendered PPM file is completely corrupted and looks  *
+ *  horrible. If the user is running Windows, use fprintf instead of fputc,   *
+ *  and use the text-based PPM format instead of the binary based one. The    *
+ *  text-based format ends up being around 4x larger than the binary format,  *
+ *  but renders properly.                                                     */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+
+/*  Function for writing a color to a PPM file.                               */
 static void write_color(FILE *fp, struct color c)
 {
-    fputc(c.red, fp);
-    fputc(c.green, fp);
-    fputc(c.blue, fp);
+    fprintf(fp, "%u %u %u\n", c.red, c.green, c.blue);
 }
 /*  End of write_color.                                                       */
+
+#else
+/*  Everyone else (GNU, Linux, macOS, FreeBSD, etc.).                         */
+
+/*  Function for writing a color to a PPM file.                               */
+static void write_color(FILE *fp, struct color c)
+{
+    fputc(c.red,   fp);
+    fputc(c.green, fp);
+    fputc(c.blue,  fp);
+}
+/*  End of write_color.                                                       */
+
+#endif
+/*  End of #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER).       */
 
 /*  Struct for working with complex numbers.                                  */
 struct complex_number {
@@ -357,7 +379,7 @@ static struct complex_number stereographic_projection(struct vector3D p)
     {
         factor = 1.0 / (norm_p - p.z);
         out.real = factor * p.x;
-        out.imag = factor * p.y; 
+        out.imag = factor * p.y;
     }
     return out;
 }
@@ -376,6 +398,7 @@ static struct complex_number f(struct complex_number z)
     out.imag = 4.0*(x_sq*z.real*z.imag - z.real*y_sq*z.imag);
     return out;
 }
+/*  End of f.                                                                 */
 
 /*  The derivative of z^4 - 1 is 4z^3.                                        */
 static struct complex_number f_prime(struct complex_number z)
@@ -383,12 +406,12 @@ static struct complex_number f_prime(struct complex_number z)
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Compute z^4, and then subtract 1 from the real part.                  */
+    /*  Compute z^3, subtract 1 from the real part, and multiply by 4.        */
     out.real = 4.0*(z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag);
     out.imag = 4.0*(3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag);
     return out;
 }
-
+/*  End of f_prime.                                                           */
 
 /*  And the second derivative of z^4 - 1 is 12z^2.                            */
 static struct complex_number f_double_prime(struct complex_number z)
@@ -396,11 +419,12 @@ static struct complex_number f_double_prime(struct complex_number z)
     /*  Declare a variable for the output.                                    */
     struct complex_number out;
 
-    /*  Multiply the real and imaginary parts by 6 and return.                */
+    /*  Multiply the real and imaginary parts by 12 and return.               */
     out.real = 12.0*(z.real*z.real - z.imag*z.imag);
     out.imag = 24.0*z.real*z.imag;
     return out;
 }
+/*  End of f_double_prime.                                                    */
 
 /*  Function for computing the factor used in Halley's method.                */
 static struct complex_number halley_factor(struct complex_number z)
@@ -524,8 +548,13 @@ int main(void)
     /*  Normalize the camera position.                                        */
     dir = normalize_vector(dir);
 
-    /*  Print the preamble of the PPM to the file.                            */
+    /*  Write the preamble to the PPM file. For Windows users we'll use text  *
+     *  based PPM, and for everyone else we'll use binary format.             */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    fprintf(fp, "P3\n%u %u\n255\n", width, height);
+#else
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
+#endif
 
     /*  Loop over all of the y-pixels.                                        */
     for (y = 0U; y < height; ++y)
@@ -544,7 +573,7 @@ int main(void)
             z.imag = z_y;
 
             /*  If the point lies outside the sphere, color it black.         */
-            if (complex_abs(z) > norm3D(dir))
+            if (complex_abs_squared(z) > norm3D_squared(dir))
             {
                 write_color(fp, black);
                 continue;
@@ -565,7 +594,7 @@ int main(void)
 
             /*  Perform Halley's method until we are close to a root, or      *
              *  perform too many iterations.                                  */
-            while((complex_abs(f_of_z) > EPS) && (iters < max_iters))
+            while ((complex_abs(f_of_z) > EPS) && (iters < max_iters))
             {
                 /*  Compute the next iteration of Halley's method.            */
                 z = complex_subtract(z, halley_factor(z));
