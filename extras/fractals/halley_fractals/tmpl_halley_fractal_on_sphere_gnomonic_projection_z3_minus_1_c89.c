@@ -347,7 +347,7 @@ inverse_orthographic_projection(struct complex_number z, struct vector3D dir)
     /*  Otherwise, z can be projected upwards onto the sphere.                */
     else
     {
-        /*  since x^2+y^2+z^2=r^2, given x and y we can solve for the z       *
+        /*  Since x^2+y^2+z^2=r^2, given x and y we can solve for the z       *
          *  value in the northern hemisphere by sqrt(r^2 - x^2 - y^2).        */
         factor = sqrt(norm_dir_sq - abs_z_sq);
 
@@ -599,7 +599,7 @@ int main(void)
 
             /*  Perform Halley's method until we are close to a root, or      *
              *  perform too many iterations.                                  */
-            while((complex_abs(f_of_z) > EPS) && (iters < max_iters))
+            while ((complex_abs(f_of_z) > EPS) && (iters < max_iters))
             {
                 /*  Compute the next iteration of Halley's method.            */
                 z = complex_subtract(z, halley_factor(z));

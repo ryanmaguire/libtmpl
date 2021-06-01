@@ -207,7 +207,7 @@ int main(void)
 
             /*  Perform Halley's method until we are close to a root, or      *
              *  perform too many iterations.                                  */
-            while((cabs(f_of_z) > EPS) && (iters < max_iters))
+            while ((cabs(f_of_z) > EPS) && (iters < max_iters))
             {
                 /*  Compute the next iteration of Halley's method.            */
                 z = z - halley_factor(z);
