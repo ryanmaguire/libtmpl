@@ -94,7 +94,7 @@ int main(void)
                 blue = (unsigned char)(255.0 * pow(val, 3.0));
             }
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
-            fprintf("%u %u %u\n", red, green, blue);
+            fprintf(fp, "%u %u %u\n", red, green, blue);
 #else
             fputc(red, fp);
             fputc(green, fp);
