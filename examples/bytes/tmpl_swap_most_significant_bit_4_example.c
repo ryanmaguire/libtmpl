@@ -26,7 +26,7 @@
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
  *          tmpl_swap_most_significant_bit_4_example.c -o test -ltmpl         *
- *  We can the run the executable via:                                        *
+ *  We can then run the executable via:                                       *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
  *      Before: 4278190080                                                    *

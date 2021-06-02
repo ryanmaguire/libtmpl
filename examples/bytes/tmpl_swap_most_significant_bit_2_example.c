@@ -26,7 +26,7 @@
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
  *          tmpl_swap_most_significant_bit_2_example.c -o test -ltmpl         *
- *  We can the run the executable via:                                        *
+ *  We can then run the executable via:                                       *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
  *      Before: 65280                                                         *
@@ -75,6 +75,8 @@ typedef unsigned int two_byte_integer;
 typedef short unsigned int two_byte_integer;
 #elif UINT_MAX == 0xFFFFFFFF
 typedef unsigned int two_byte_integer;
+#elif ULONG_MAX == 0xFFFFFFFF
+typedef unsigned long int two_byte_integer;
 #else
 #error "No 32-bit integer type found."
 #endif
