@@ -1,4 +1,14 @@
 
+/*  Microsoft "deprecated" the fopen function in favor of the fopen_s         *
+ *  function. The actual working group for the C language has not deprecated  *
+ *  fopen, and fopen_s was only introduced in the C11 standard, so I will     *
+ *  still use fopen. To avoid a "deprecated" warning on Microsoft's MSVC,     *
+ *  first check that the user is running windows, then define this macro.     *
+ *  Unix-based (GNU, Linux, macOS, FreeBSD, etc.) platforms yield no warnings.*/
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
 #include <stdio.h>
 #include <math.h>
 
@@ -24,6 +34,7 @@ int main(void)
     const double y_factor = (y_max - y_min) / ((double)height - 1.0);
 
     unsigned int x, y, iters;
+    unsigned char red, green, blue;
     double c_x, c_y, backgnd, val, exp_x;
     struct complex_number z, c;
 
@@ -35,7 +46,11 @@ int main(void)
         return -1;
     }
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    fprintf(fp, "P3\n%u %u\n255\n", width, height);
+#else
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
+#endif
 
     for (y = 0U; y < height; ++y)
     {
@@ -68,16 +83,23 @@ int main(void)
 
             if (backgnd <= 1.0)
             {
-                fputc((unsigned char)(255.0 * pow(val, 4.0)), fp);
-                fputc((unsigned char)(255.0 * pow(val, 2.5)), fp);
-                fputc((unsigned char)(255.0 * val), fp);
+                red = (unsigned char)(255.0 * pow(val, 4.0));
+                green = (unsigned char)(255.0 * pow(val, 2.5));
+                blue = (unsigned char)(unsigned char)(255.0 * val);
             }
             else
             {
-                fputc((unsigned char)(255.0 * val), fp);
-                fputc((unsigned char)(255.0 * pow(val, 1.5)), fp);
-                fputc((unsigned char)(255.0 * pow(val, 3.0)), fp);
+                red = (unsigned char)(255.0 * val);
+                green = (unsigned char)(255.0 * pow(val, 1.5));
+                blue = (unsigned char)(255.0 * pow(val, 3.0));
             }
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+            fprintf("%u %u %u\n", red, green, blue);
+#else
+            fputc(red, fp);
+            fputc(green, fp);
+            fputc(blue, fp);
+#endif
         }
     }
 
