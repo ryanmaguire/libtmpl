@@ -1,7 +1,7 @@
 import math, cmath;
 
 width = 1200;
-height = 960
+height = 960;
 imax = 100;
 zmax = 150;
 x_min = -6.6;
@@ -20,11 +20,12 @@ for y in range(height):
         z_x = x_min + x_factor*x;
         c = complex(z_x, z_y);
         z = 0.0;
-        backgnd = 0;
+        backgnd = 0.0;
         for its in range(imax):
             z = 0.5*math.pi * (cmath.exp(z) - z) + c;
             if abs(z.real) >= zmax:
-                backgnd = math.log(its - math.log(math.log(abs(z.real) + 1)) / 3) / 3.25;
+                backgnd = math.log(math.log(abs(z.real) + 1.0) * 0.33333333333);
+                backgnd = math.log(abs(its - backgnd)) * 0.3076923076923077;
                 break;
 
         val = max(0.0, 1.0 - abs(1.0 - backgnd));
@@ -39,3 +40,4 @@ for y in range(height):
 
         fp.write("%u %u %u\n" % (r, g, b));
 fp.close();
+                 
