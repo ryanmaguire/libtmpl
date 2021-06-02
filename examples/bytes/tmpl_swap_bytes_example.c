@@ -25,7 +25,7 @@
  *  clang, and this worked as expected, with the exception that PCC did NOT   *
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/ tmpl_swap_bytes_example.c -o test -ltmpl    *
- *  We can the run the executable via:                                        *
+ *  We can then run the executable via:                                       *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
  *      Before:                                                               *

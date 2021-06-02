@@ -26,7 +26,7 @@
  *  have /usr/local/include/ in the path, so we need to add this via -I:      *
  *      pcc -I/usr/local/include/                                             *
  *          tmpl_swap_most_significant_bit_8_example.c -o test -ltmpl         *
- *  We can the run the executable via:                                        *
+ *  We can then run the executable via:                                       *
  *      ./test                                                                *
  *  Which yielded the following results:                                      *
  *      Before: 18374686479671623680                                          *
@@ -58,7 +58,7 @@
 int main(void)
 {
     /*  We need to probe the various data types and try and find one that has *
-     *  sizeof(type) = 8. This is usually an int, but can vary on other       *
+     *  sizeof(type) = 8. This is usually long int, but can vary on other     *
      *  platforms, and may not exist at all on some. If we can't find an      *
      *  integer data type with sizeof equal to 8, we'll print this out.       */
     if (sizeof(unsigned long int) == 8)
