@@ -30,7 +30,7 @@ int main(void)
     tmpl_ComplexLongDouble **z0;
     complex long double **z1;
 
-    const unsigned int N = 10000U;
+    const unsigned int N = 1000U;
     const long double start = -100.0L;
     const long double end = 100.0L;
     const long double ds = (end - start) / (long double)(N - 1U);
@@ -63,7 +63,7 @@ int main(void)
         }
     }
 
-    puts("Functions: tmpl_CLDouble_Abs vs cabs");
+    puts("Functions: tmpl_CLDouble_Abs vs cabsl");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)

@@ -44,13 +44,13 @@ int main(void)
     tmpl_ComplexDouble **z0;
     complex double **z1;
 
-    unsigned int N = 10000U;
+    const unsigned int N = 10000U;
+    const double start = -100.0;
+    const double end = 100.0;
+    const double ds = (end - start) / (double)(N - 1U);
+
     unsigned int x, y;
     clock_t t1, t2;
-
-    double start = -100.0;
-    double end   =  100.0;
-    double ds    = (end - start) / (double)(N - 1U);
     double z_x, z_y, max_rel, max_abs, temp;
 
     y0 = malloc(sizeof(*y0) * N);
@@ -77,7 +77,7 @@ int main(void)
         }
     }
 
-    printf("Functions: tmpl_complex_abs_squared vs complex_abs_squared\n");
+    puts("Functions: tmpl_complex_abs_squared vs complex_abs_squared");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
@@ -114,8 +114,8 @@ int main(void)
         }
     }
 
-    printf("Max Abs Error: %f\n", (double)max_abs);
-    printf("Max Rel Error: %f\n", (double)max_rel);
+    printf("Max Abs Error: %.16f\n", (double)max_abs);
+    printf("Max Rel Error: %.16f\n", (double)max_rel);
 
     for (x = 0U; x < N; ++x)
     {
