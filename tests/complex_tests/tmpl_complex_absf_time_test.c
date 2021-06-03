@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <time.h>
 
-/*  Routine for testing rssringoccs_CFloat_Abs_Squared.                       */
+/*  Routine for testing tmpl_CFloat_Abs.                                      */
 int main(void)
 {
     float **y0, **y1;
