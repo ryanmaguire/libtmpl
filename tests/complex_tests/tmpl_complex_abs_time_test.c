@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -30,14 +30,14 @@ int main(void)
     tmpl_ComplexDouble **z0;
     complex double **z1;
 
-    unsigned int N = 10000U;
+    const unsigned int N = 10000U;
+    const double start = -100.0;
+    const double end = 100.0;
+    const double ds = (end - start) / (double)(N - 1U);
+
+    double z_x, z_y, max_rel, max_abs, temp;
     unsigned int x, y;
     clock_t t1, t2;
-
-    double start = -100.0;
-    double end   =  100.0;
-    double ds    = (end - start) / (double)(N - 1U);
-    double z_x, z_y, max_rel, max_abs, temp;
 
     y0 = malloc(sizeof(*y0) * N);
     y1 = malloc(sizeof(*y1) * N);
@@ -63,7 +63,7 @@ int main(void)
         }
     }
 
-    printf("Functions: tmpl_CDouble_Abs vs cabs\n");
+    puts("Functions: tmpl_CDouble_Abs vs cabs");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
@@ -100,8 +100,8 @@ int main(void)
         }
     }
 
-    printf("Max Abs Error: %f\n", (double)max_abs);
-    printf("Max Rel Error: %f\n", (double)max_rel);
+    printf("Max Abs Error: %.16f\n", max_abs);
+    printf("Max Rel Error: %.16f\n", max_rel);
 
     for (x = 0U; x < N; ++x)
     {
@@ -115,7 +115,6 @@ int main(void)
     free(y1);
     free(z0);
     free(z1);
-
     return 0;
 }
 /*  End of main.                                                              */
