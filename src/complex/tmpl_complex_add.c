@@ -55,7 +55,7 @@
  *          Creates a complex number from two real ones.                      *
  *  Method:                                                                   *
  *      Extract the real and imaginary parts and compute a component-wise sum.*
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      This file is a fork of the code I wrote for rss_ringoccs.             *
  *      librssringoccs is also released under GPL3.                           *
  ******************************************************************************

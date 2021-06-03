@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -40,6 +40,24 @@
  *  Output:                                                                   *
  *      w (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          The sum of z and iy.                                              *
+ *  Called Functions:                                                         *
+ *      tmpl_CFloat_Real_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Real_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Real_Part (tmpl_complex.h)                              *
+ *          Returns the real part of a complex number.                        *
+ *      tmpl_CFloat_Imag_Part   (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Imag_Part  (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
+ *          Returns the imaginary part of a complex number.                   *
+ *      tmpl_CFloat_Rect        (tmpl_complex.h)                              *
+ *      tmpl_CDouble_Rect       (tmpl_complex.h)                              *
+ *      tmpl_CLDouble_Rect      (tmpl_complex.h)                              *
+ *          Creates a complex number from two real ones.                      *
+ *  Method:                                                                   *
+ *      Extract the real and imaginary parts and compute a component-wise sum.*
+ *  Notes:                                                                    *
+ *      This file is a fork of the code I wrote for rss_ringoccs.             *
+ *      librssringoccs is also released under GPL3.                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -74,6 +92,9 @@
  *      Copied from rss_ringoccs.                                             *
  *      Made compatible with libtmpl.                                         *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/06/03: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  ******************************************************************************/
 
 /*  Where the prototypes are declared and where complex types are defined.    */
