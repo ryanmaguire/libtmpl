@@ -53,7 +53,7 @@
  *          Returns the imaginary part of a complex number.                   *
  *  Method:                                                                   *
  *      Extract the real and imaginary parts of z and return sqrt(x^2 + y^2). *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      This code is a fork of the code I wrote for rss_ringoccs.             *
  *      librssringoccs is also released under GPL3.                           *
  ******************************************************************************
