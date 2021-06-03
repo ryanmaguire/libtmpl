@@ -40,8 +40,8 @@
  *          |nan + inan| = nan                                                *
  *          |inf + iinf| = inf                                                *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       December 19, 2020                                             *
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       June 03, 2020                                                 *
  ******************************************************************************/
 
 /*  Complex functions defined here.                                           */
