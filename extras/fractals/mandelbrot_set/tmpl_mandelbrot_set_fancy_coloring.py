@@ -17,10 +17,7 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Draw the "SwipeCat fractal." This a variant of the Mandelbrot set      #
-#       posted by user SwipeCat on Reddit that I decided to take a crack at.   #
-#       This code uses very little of the Python standard library, and runs    #
-#       with both Python 2 and Python 3. The output is a PPM file.             #
+#       Draw the mandelbrot set.                                               #
 #   Notes:                                                                     #
 #       This file is an extra and is not compiled as part of libtmpl.          #
 ################################################################################
@@ -30,9 +27,6 @@
 
 # The natural logarithm function is found here.
 import math;
-
-# And complex exponentiation is found here.
-import cmath;
 
 # The width and height of the PPM file.
 width = 1200;
@@ -45,10 +39,10 @@ imax = 100;
 zmax = 150;
 
 # The values of the rectangle that will be drawn.
-x_min = -6.6;
-x_max = -0.4;
-y_min = -3.095;
-y_max = 3.105;
+x_min = -3.0;
+x_max = 1.0;
+y_min = -2.0;
+y_max = 2.0;
 
 # Factors for transforming a pixel to the corresponding point in the plane.
 x_factor = (x_max - x_min)/(width - 1.0);
@@ -69,7 +63,7 @@ for y in range(height):
         z = 0.0;
         backgnd = 0.0;
         for its in range(imax):
-            z = 0.5*math.pi * (cmath.exp(z) - z) + c;
+            z = z*z + c;
             if abs(z.real) >= zmax:
                 backgnd = math.log(math.log(abs(z.real) + 1.0) * 0.33333333333);
                 backgnd = math.log(abs(its - backgnd)) * 0.3076923076923077;
