@@ -107,8 +107,8 @@ int main(void)
         }
     }
 
-    printf("Max Abs Error: %.16f\n", (double)max_abs);
-    printf("Max Rel Error: %.16f\n", (double)max_rel);
+    printf("Max Abs Error: %.16f\n", max_abs);
+    printf("Max Rel Error: %.16f\n", max_rel);
 
     for (x = 0U; x < N; ++x)
     {
