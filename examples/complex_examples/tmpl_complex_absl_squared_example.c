@@ -86,7 +86,7 @@ int main(void)
         /*  And finally, print the result to the screen.                      */
         printf("|%Lf + i%Lf|^2 = %Lf\n", re_z, im_z, w[n]);
     }
-    /*  End of for loop computing |z|.                                        */
+    /*  End of for loop computing |z|^2.                                      */
 
     return 0;
 }
