@@ -72,7 +72,7 @@ int main(void)
     {
         for (y = 0U; y < N; ++y)
         {
-            theta = tmpl_Two_Pi*rand() / (long double)RAND_MAX;
+            theta = tmpl_Two_Pi_L*rand() / (long double)RAND_MAX;
             r = rand();
             z_x = r*cosl(theta);
             z_y = r*sinl(theta);
@@ -96,8 +96,8 @@ int main(void)
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
-    max_rel = 0.0;
+    max_abs = 0.0L;
+    max_rel = 0.0L;
     for (x = 0U; x < N; ++x)
     {
         for (y = 0U; y < N; ++y)
