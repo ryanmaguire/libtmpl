@@ -235,6 +235,22 @@ extern const long double tmpl_M_LDouble_Base_E;
 #define tmpl_Is_Inf(x) ((x) == ((x)+1))
 #define tmpl_Is_NaN(x) ((x) != (x))
 
+/*  Various polynomial data types.                                            */
+typedef struct _tmpl_Float_Polynomial {
+    unsigned int degree;
+    float *coeffs;
+} tmpl_Float_Polynomial;
+
+typedef struct _tmpl_Double_Polynomial {
+    unsigned int degree;
+    double *coeffs;
+} tmpl_Double_Polynomial;
+
+typedef struct _tmpl_LDouble_Polynomial {
+    unsigned int degree;
+    long double *coeffs;
+} tmpl_LDouble_Polynomial;
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Abs                                                       *
