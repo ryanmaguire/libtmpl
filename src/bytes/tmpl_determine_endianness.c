@@ -73,7 +73,7 @@
  *      the C99 standard. In this case, the code will try to use the same     *
  *      trick, but with a union of an unsigned long long int, and an unsigned *
  *      char array. If sizeof(unsigned long long int) is also 1, the function *
- *      returns tmpl_UnknownEndian.                                           *s
+ *      returns tmpl_UnknownEndian.                                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
