@@ -50,10 +50,10 @@ tmpl_TwoByTwoMatrix_Scale(double r, tmpl_TwoByTwoMatrix A)
     tmpl_TwoByTwoMatrix out;
     double a00, a01, a10, a11;
 
-    a00 = tmpl_TwoByTwoMatrix_Component(A, 0, 0);
-    a01 = tmpl_TwoByTwoMatrix_Component(A, 0, 1);
-    a10 = tmpl_TwoByTwoMatrix_Component(A, 1, 0);
-    a11 = tmpl_TwoByTwoMatrix_Component(A, 1, 1);
+    a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
 
     out = tmpl_TwoByTwoMatrix_New(r*a00, r*a01, r*a10, r*a11);
     return out;

@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,10 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_two_by_two_matrix_determinant                      *
+ *                             tmpl_svg_colors                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the determinant of a 2x2 matrix.                             *
+ *      Provide a predefined colors for working with SVG files.               *
+ ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_svg.h:                                                           *
+ *          Header file where tmpl_SVG_Color is defined.                      *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -37,24 +42,16 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       September 28, 2020                                            *
+ *  Date:       June 19 2021                                                  *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
+/*  tmpl_SVG_Color data type is defined here.                                 */
+#include <libtmpl/include/tmpl_svg.h>
 
-/*  Computes the determinant of a 2x2 matrix.                                 */
-double tmpl_TwoByTwoMatrix_Determinant(tmpl_TwoByTwoMatrix A)
-{
-    double a00, a01, a10, a11, det;
-
-    a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
-    a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
-    a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
-    a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
-
-    det = a00*a11 - a01*a10;
-    return det;
-}
-/*  End of tmpl_TwoByTwoMatrix_Determinant.                                   */
-
+/*  Useful colors to have predefined.                                         */
+const tmpl_SVG_Color tmpl_SVG_Black = {0x00U, 0x00U, 0x00U, 0.0};
+const tmpl_SVG_Color tmpl_SVG_White = {0xFFU, 0xFFU, 0xFFU, 0.0};
+const tmpl_SVG_Color tmpl_SVG_Red = {0xFFU, 0x00U, 0x00U, 0.0};
+const tmpl_SVG_Color tmpl_SVG_Green = {0x00U, 0xFFU, 0x00U, 0.0};
+const tmpl_SVG_Color tmpl_SVG_Blue = {0x00U, 0x00U, 0xFFU, 0.0};
+const tmpl_SVG_Color tmpl_SVG_Yellow = {0xFFU, 0xFFU, 0x00U, 0.0};

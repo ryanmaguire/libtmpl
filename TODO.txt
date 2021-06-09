@@ -26,3 +26,12 @@ More functions for complex library:
 
 	Various powers of small exponent:
 		square, cube, fourth power, etc.
+
+
+Add these bacK;
+extern tmpl_ComplexDouble
+tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z, tmpl_ComplexDouble w);
+
+extern tmpl_ComplexDouble
+tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
+										tmpl_ComplexDouble w);
