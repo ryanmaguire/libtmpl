@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -82,6 +82,26 @@ typedef struct tmpl_Circle2D {
     double radius;
     tmpl_Bool is_line;
 } tmpl_Circle2D;
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_GET_2x2_MATRIX_COMPONENT                                         *
+ *  Purpose:                                                                  *
+ *      Returns the (m,n) element of a 2x2 matrix.                            *
+ *  Arguments:                                                                *
+ *      tmpl_TwoByTwoMatrix A:                                                *
+ *          A 2x2 matrix.                                                     *
+ *      int m:                                                                *
+ *          The first index of the element.                                   *
+ *      int n:                                                                *
+ *          The second index of the element.                                  *
+ *  Outputs:                                                                  *
+ *      double out:                                                           *
+ *          The (m,n) component of the tmpl_TwoByTwoMatrix                    *
+ *  Note:                                                                     *
+ *      This is not a function, but rather a preprocessor macro.              *
+ ******************************************************************************/
+#define tmpl_GET_2x2_MATRIX_COMPONENT(A, m, n) (A.dat[m][n])
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -424,6 +444,13 @@ extern double
 tmpl_TwoVector_Euclidean_Rel_Angle(tmpl_TwoVector O, tmpl_TwoVector P,
                                    tmpl_TwoVector Q);
 
+extern tmpl_Bool
+tmpl_TwoVector_Euclidean_Is_Collinear(tmpl_TwoVector A,
+                                      tmpl_TwoVector B,
+                                      tmpl_TwoVector C);
+
+extern double
+tmpl_TwoVector_Euclidean_Distance(tmpl_TwoVector A, tmpl_TwoVector B);
+
 #endif
 /*  End of include guard.                                                     */
-

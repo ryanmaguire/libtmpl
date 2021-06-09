@@ -52,12 +52,11 @@ tmpl_TwoByTwoMatrix tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A)
     double a, b, c, d, det, det_rcp;
     double ainv, binv, cinv, dinv;
 
-    a = tmpl_TwoByTwoMatrix_Component(A, 0, 0);
-    b = tmpl_TwoByTwoMatrix_Component(A, 0, 1);
-    c = tmpl_TwoByTwoMatrix_Component(A, 1, 0);
-    d = tmpl_TwoByTwoMatrix_Component(A, 1, 1);
-
-    det = tmpl_TwoByTwoMatrix_Determinant(A);
+    a = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    b = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    c = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    d = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+    det = a*c - b*d;
 
     if (det == 0)
     {

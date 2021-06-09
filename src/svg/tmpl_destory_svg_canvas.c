@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,10 +16,17 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_two_by_two_matrix_determinant                      *
+ *                          tmpl_destroy_svg_canvas                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the determinant of a 2x2 matrix.                             *
+ *      Destroy an SVG canvas.                                                *
+ ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_svg.h:                                                           *
+ *          Header file where tmpl_SVG_Color is defined.                      *
+ *  2.) stdlib.h:                                                             *
+ *          Standard C header file containing free.                           *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -37,24 +44,30 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       September 28, 2020                                            *
+ *  Date:       June 19 2021                                                  *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
+#include <stdlib.h>
+#include <libtmpl/include/tmpl_svg.h>
 
-/*  Computes the determinant of a 2x2 matrix.                                 */
-double tmpl_TwoByTwoMatrix_Determinant(tmpl_TwoByTwoMatrix A)
+/*  Function for freeing the memory in a tmpl_SVG_Canvas.                     */
+void tmpl_Destroy_SVG_Canvas(tmpl_SVG_Canvas **canvas_ptr)
 {
-    double a00, a01, a10, a11, det;
+    /*  If the input pointer is NULL, simply return.                          */
+    if (canvas_ptr == NULL)
+        return;
 
-    a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
-    a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
-    a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
-    a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+    /*  If the pointer being pointed to by canvas_ptr is also NULL, it is     *
+     *  likely this canvas has already been destroyed. Return.                */
+    if (*canvas_ptr == NULL)
+        return;
 
-    det = a00*a11 - a01*a10;
-    return det;
+    /*  Otherwise, since the canvas data type does not contain pointers, we   *
+     *  need only free the pointer to the canvas.                             */
+    free(*canvas_ptr);
+
+    /*  Set the pointer to the canvas to NULL to prevent accidentally trying  *
+     *  to destroy this canvas twice later on.                                */
+    *canvas_ptr = NULL;
 }
-/*  End of tmpl_TwoByTwoMatrix_Determinant.                                   */
-
+/*  End of tmpl_Destroy_SVG_Canvas.                                           */
