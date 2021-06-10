@@ -81,6 +81,8 @@ typedef struct tmpl_Circle2D {
     } data;
     double radius;
     tmpl_Bool is_line;
+    tmpl_Bool error_occurred;
+    char *error_message;
 } tmpl_Circle2D;
 
 /******************************************************************************
