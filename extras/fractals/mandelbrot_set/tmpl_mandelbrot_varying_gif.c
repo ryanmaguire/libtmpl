@@ -788,12 +788,28 @@ struct complex_number {
     double real, imag;
 };
 
-static struct complex_number
-mandel_func(struct complex_number z, struct complex_number c)
+struct complex_number complex_pow(struct complex_number z, double exponent)
 {
+    double abs_z = sqrt(z.real*z.real + z.imag*z.imag);
+    double arg = atan2(z.imag, z.real);
+    double x = exponent * log(abs_z);
+    double y = exponent * arg;
+
+    double exp_val = exp(x);
+    double real_part = exp_val * cos(y);
+    double imag_part = exp_val * sin(y);
     struct complex_number out;
-    out.real = z.real*z.real - z.imag*z.imag + c.real;
-    out.imag = 2.0*z.real*z.imag + c.imag;
+    out.real = real_part;
+    out.imag = imag_part;
+    return out;
+}
+
+static struct complex_number
+mandel_func(struct complex_number z, struct complex_number c, double r)
+{
+    struct complex_number out = complex_pow(z, r);
+    out.real += c.real;
+    out.imag += c.imag;
     return out;
 }
 
@@ -801,18 +817,20 @@ int main(void)
 {
     const unsigned int imax = 255U;
     const double zmax = 4.0;
-    const double center_x = 0.001643721971153;
-    const double center_y = -0.822467633298876;
-    double ds = 3.0;
+    const double center_x = -1.0;
+    const double center_y = 0.0;
+    double ds = 2.0;
     const unsigned int width = 256U;
     const unsigned int height = 256U;
-    const unsigned int nframes = 100U;
+    const unsigned int nframes = 500U;
     uint8_t image[width*height*4];
 
     unsigned int x, y, iters, frame;
     unsigned char red, green, blue;
     double c_x, c_y, backgnd, val, exp_x;
     struct complex_number z, c;
+    double r = 0.0;
+    double dr = 10.0 / (double)nframes;
 
     const char* filename = "swipecat_fractal.gif";
     GifWriter writer;
@@ -840,7 +858,7 @@ int main(void)
                 backgnd = 0.0;
                 for (iters = 0U; iters < imax; ++iters)
                 {
-                    z = mandel_func(z, c);
+                    z = mandel_func(z, c, r);
                     if (fabs(z.real) >= zmax)
                     {
                         backgnd = log(log(fabs(z.real) + 1.0) * 0.33333333333);
@@ -874,9 +892,9 @@ int main(void)
             }
         }
 
+        r += dr;
         printf( "Writing frame %d...\n", frame);
         GifWriteFrame(&writer, image, width, height, 2, 8, true);
-        ds *= 0.95;
     }
     GifEnd(&writer);
     return 0;
