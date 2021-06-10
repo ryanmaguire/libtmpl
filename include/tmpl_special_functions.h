@@ -69,82 +69,15 @@ tmpl_LDouble_Fresnel_Sin(long double x);
 
 
 extern void
-tmpl_Legendre_Polynomials(double *legendre_p, double x, int order);
+tmpl_Legendre_Polynomials(double *legendre_p, double x, unsigned int order);
 
 extern void
-tmpl_Alt_Legendre_Polynomials(double *poly, double *legendre_p, int order);
+tmpl_Alt_Legendre_Polynomials(double *poly, double *legendre_p, unsigned int order);
 
 extern void
 tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
                                  double *alt_legendre_p,
-                                 double Legendre_Coeff, int order);
-
-extern float
-tmpl_Max_Float(float *arr, long n_elements);
-
-extern double
-tmpl_Max_Double(double *arr, long n_elements);
-
-extern long double
-tmpl_Max_LDouble(long double *arr, long n_elements);
-
-extern char
-tmpl_Max_Char(char *arr, long n_elements);
-
-extern unsigned char
-tmpl_Max_UChar(unsigned char *arr, long n_elements);
-
-extern short
-tmpl_Max_Short(short *arr, long n_elements);
-
-extern unsigned short
-tmpl_Max_UShort(unsigned short *arr, long n_elements);
-
-extern int
-tmpl_Max_Int(int *arr, long n_elements);
-
-extern unsigned int
-tmpl_Max_UInt(unsigned int *arr, long n_elements);
-
-extern long
-tmpl_Max_Long(long *arr, long n_elements);
-
-extern unsigned long
-tmpl_Max_ULong(unsigned long *arr, long n_elements);
-
-extern float
-tmpl_Min_Float(float *arr, long n_elements);
-
-extern double
-tmpl_Min_Double(double *arr, long n_elements);
-
-extern long double
-tmpl_Min_LDouble(long double *arr, long n_elements);
-
-extern char
-tmpl_Min_Char(char *arr, long n_elements);
-
-extern unsigned char
-tmpl_Min_UChar(unsigned char *arr, long n_elements);
-
-extern short
-tmpl_Min_Short(short *arr, long n_elements);
-
-extern unsigned short
-tmpl_Min_UShort(unsigned short *arr, long n_elements);
-
-extern int
-tmpl_Min_Int(int *arr, long n_elements);
-
-extern unsigned int
-tmpl_Min_UInt(unsigned int *arr, long n_elements);
-
-extern long
-tmpl_Min_Long(long *arr, long n_elements);
-
-extern unsigned long
-tmpl_Min_ULong(unsigned long *arr, long n_elements);
-
+                                 double Legendre_Coeff, unsigned int order);
 
 extern unsigned long **
 tmpl_Where_Lesser_Char(char *data, unsigned long dim, double threshold);
