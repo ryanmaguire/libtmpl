@@ -31,7 +31,9 @@ int GifIAbs(int i) { return i<0?-i:i; }
 // Takes as in/out parameters the current best color and its error -
 // only changes them if it finds a better color in its subtree.
 // this is the major hotspot in the code at the moment.
-void GifGetClosestPaletteColor( GifPalette* pPal, int r, int g, int b, int* bestInd, int* bestDiff, int treeRoot )
+static void
+GifGetClosestPaletteColor(GifPalette* pPal, int r, int g, int b, int* bestInd,
+                          int* bestDiff, int treeRoot)
 {
     // base case, reached the bottom of the tree
     if(treeRoot > (1<<pPal->bitDepth)-1)
@@ -817,11 +819,11 @@ int main(void)
 {
     const unsigned int imax = 255U;
     const double zmax = 4.0;
-    const double center_x = -1.0;
+    const double center_x = 0.0;
     const double center_y = 0.0;
-    double ds = 2.0;
-    const unsigned int width = 256U;
-    const unsigned int height = 256U;
+    const double ds = 2.0;
+    const unsigned int width = 2U*512U;
+    const unsigned int height = 2U*512U;
     const unsigned int nframes = 500U;
     uint8_t image[width*height*4];
 
@@ -829,7 +831,7 @@ int main(void)
     unsigned char red, green, blue;
     double c_x, c_y, backgnd, val, exp_x;
     struct complex_number z, c;
-    double r = 0.0;
+    double r = 1.0;
     double dr = 10.0 / (double)nframes;
 
     const char* filename = "swipecat_fractal.gif";
