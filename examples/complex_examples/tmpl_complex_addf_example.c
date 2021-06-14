@@ -32,13 +32,13 @@
  *                                                                            *
  *      Note, this should all be one line. This outputs an executable "test". *
  *      Running the executable with ./test, this outputs:                     *
- *      (0.000000 + i0.000000) + (1.000000 + i1.000000) = 1.000000 +i1.000000 *
- *      (1.000000 + i0.000000) + (2.000000 + i0.000000) = 3.000000 +i0.000000 *
- *      (1.000000 + i1.000000) + (1.000000 + i3.000000) = 2.000000 +i4.000000 *
- *      (nan + i0.000000) + (1.000000 + i4.000000) = nan +i4.000000           *
- *      (inf + i0.000000) + (1.000000 + i0.000000) = inf +i0.000000           *
- *      (nan + inan) + (1.000000 + i8.000000) = nan +inan                     *
- *      (inf + iinf) + (1.000000 + i1.000000) = inf +iinf                     *
+ *          (0.0000 + i0.0000) + (1.0000 + i1.0000) = 1.0000 + i1.0000        *
+ *          (1.0000 + i0.0000) + (2.0000 + i0.0000) = 3.0000 + i0.0000        *
+ *          (1.0000 + i1.0000) + (1.0000 + i3.0000) = 2.0000 + i4.0000        *
+ *          (-nan + i0.0000) + (1.0000 + i4.0000) = -nan + i4.0000            *
+ *          (inf + i0.0000) + (1.0000 + i0.0000) = inf + i0.0000              *
+ *          (nan + inan) + (1.0000 + i8.0000) = nan + inan                    *
+ *          (inf + iinf) + (1.0000 + i1.0000) = inf + iinf                    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       June 3, 2021                                                  *
@@ -100,7 +100,7 @@ int main(void)
         im_w = tmpl_CFloat_Imag_Part(w[n]);
 
         /*  And finally, print the result to the screen.                      */
-        printf("(%f + i%f) + (%f + i%f) = %f +i%f\n",
+        printf("(%.4f + i%.4f) + (%.4f + i%.4f) = %.4f + i%.4f\n",
                (double)re_z0, (double)im_z0, (double)re_z1,
                (double)im_z1, (double)re_w, (double)im_w);
     }
@@ -109,4 +109,3 @@ int main(void)
     return 0;
 }
 /*  End of main.                                                              */
-

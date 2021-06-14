@@ -32,13 +32,13 @@
  *                                                                            *
  *      Note, this should all be one line. This outputs an executable "test". *
  *      Running the executable with ./test, this outputs:                     *
- *          (0.000000 + i0.000000) + iinf = 0.000000 +iinf                    *
- *          (1.000000 + i0.000000) + inan = 1.000000 +inan                    *
- *          (1.000000 + i1.000000) + i-4.000000 = 1.000000 +i-3.000000        *
- *          (nan + i0.000000) + i1.000000 = nan +i1.000000                    *
- *          (inf + i0.000000) + i2.000000 = inf +i2.000000                    *
- *          (nan + inan) + i1.000000 = nan +inan                              *
- *          (inf + iinf) + i-inf = inf +inan                                  *
+ *          (0.000000 + i0.000000) + iinf = 0.000000 + iinf                   *
+ *          (1.000000 + i0.000000) + inan = 1.000000 + inan                   *
+ *          (1.000000 + i1.000000) + i-4.000000 = 1.000000 + i-3.000000       *
+ *          (nan + i0.000000) + i1.000000 = nan + i1.000000                   *
+ *          (inf + i0.000000) + i2.000000 = inf + i2.000000                   *
+ *          (nan + inan) + i1.000000 = nan + inan                             *
+ *          (inf + iinf) + i-inf = inf + inan                                 *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       June 03, 2021                                                 *
@@ -97,7 +97,7 @@ int main(void)
         im_w = tmpl_CFloat_Imag_Part(w[n]);
 
         /*  And finally, print the result to the screen.                      */
-        printf("(%f + i%f) + i%f = %f +i%f\n", (double)re_z, (double)im_z,
+        printf("(%f + i%f) + i%f = %f + i%f\n", (double)re_z, (double)im_z,
                (double)y[n], (double)re_w, (double)im_w);
     }
     /*  End of for loop z + iy.                                               */
