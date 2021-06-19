@@ -16,42 +16,37 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_create_zero_polynomial_z                       *
+ *                        tmpl_multiply_polynomials_z                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a degree N polynomial in Z[x] with all coefficients *
- *      set to zero. Mathematically this is the same thing as the zero        *
- *      polynomial, but computer-wise the coefficients array will have more   *
- *      memory allocated to it.                                               *
+ *      Code for multiplying two polynomials in Z[x].                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Zero_PolynomialZ                                          *
+ *      tmpl_PolynomialZ_Multiply                                             *
  *  Purpose:                                                                  *
- *      Creates a polynomial in Z[x] with all coefficients set to zero.       *
+ *      Multiply two polynomials in Z[x].                                     *
  *  Arguments:                                                                *
- *      degree (unsigned long int):                                           *
- *          The degree of the polynomial. The array of coefficients will have *
- *          degree + 1 many elements allocated to it, and set to zero.        *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to the first polynomial.                                *
+ *      Q (tmpl_PolynomialZ *):                                               *
+ *          A pointer to the second polynomial.                               *
+ *      prod (tmpl_PolynomialZ *):                                            *
+ *          A pointer to the resulting product of P and Q.                    *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialZ *):                                            *
- *          The polynomial 0 + 0 x + ... + 0 x^degree.                        *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      malloc (stdlib.h):                                                    *
  *          Standard library function for allocating memory.                  *
- *      calloc (stdlib.h):                                                    *
- *          Standard library function for allocating memory and initializing  *
- *          all of the elements to zero.                                      *
+ *      realloc (stdlib.h):                                                   *
+ *          Standard library function for re-allocating memory.               *
  *  Method:                                                                   *
- *      Allocate memory for the polynomial pointer with malloc, and allocate  *
- *      and initialize to zero memory for the pointer to the coefficients     *
- *      array using calloc.                                                   *
+ *      Use the Cauchy product formula to multiply the polynomials.           *
  *  Notes:                                                                    *
- *      If malloc fails, a NULL pointer is returned. If malloc succeeds, but  *
- *      calloc fails, the error_occurred Boolean is set to true and an        *
- *      error message is stored in the struct. Check these before using       *
- *      the polynomial.                                                       *
+ *      It is assumed none of the three polynomial pointers are NULL. If they *
+ *      are, nothing is done. If malloc fails, the error_occurred Boolean is  *
+ *      set to true. Similarly with realloc.                                  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -98,17 +93,19 @@
 /*  malloc and calloc are found here.                                         */
 #include <stdlib.h>
 
-/*  Function for creating a polynomial with all coefficients set to zero.     */
+/*  Function for multiplying two polynomials.                                 */
 void
 tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
                           tmpl_PolynomialZ *Q,
                           tmpl_PolynomialZ *prod)
 {
-    /*  Declare a variable for indexing.                                      */
+    /*  Declare variables for indexing.                                       */
     unsigned long int n, k;
 
     /*  Two polynomial pointers for ordering the inputs in terms of degree.   */
     tmpl_PolynomialZ *first, *second;
+    signed long int *first_coeffs, *second_coeffs;
+    unsigned long int first_deg, second_deg;
 
     /*  Temporary variable used in case realloc is needed.                    */
     signed long int *tmp;
@@ -159,7 +156,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
     if (prod->coeffs == NULL)
     {
         prod->degree = P->degree + Q->degree;
-        prod->coeffs = malloc(sizeof(*prod->coeffs) * prod->degree + 1UL);
+        prod->coeffs = malloc(sizeof(*prod->coeffs) * (prod->degree + 1UL));
 
         /*  Check if malloc failed.                                           */
         if (prod->coeffs == NULL)
@@ -179,7 +176,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
     else if (prod->degree != (P->degree + Q->degree))
     {
         prod->degree = P->degree + Q->degree;
-        tmp = realloc(prod->coeffs, sizeof(*prod->coeffs) * prod->degree + 1UL);
+        tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->degree + 1UL));
 
         /*  Check if realloc failed.                                          */
         if (tmp == NULL)
@@ -195,6 +192,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
         prod->coeffs = tmp;
     }
 
+    /*  Order the polynomials by degree.                                      */
     if (P->degree <= Q->degree)
     {
         first = P;
@@ -206,26 +204,147 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
         second = P;
     }
 
-    /*  Perform the Cauchy product on P and Q.                                */
-    for (n = 0UL; n < first->degree; ++n)
+    /*  Copy the data from first and second, rather than using them directly. *
+     *  If either P or Q are also the same as the prod pointer, their coeffs  *
+     *  pointers will be changed as the Cauchy sum is performed. This will    *
+     *  result in the wrong values for the product polynomial. To prevent P   *
+     *  and Q from being changed in transit, make copies of their data and    *
+     *  work with that.                                                       */
+    first_deg = first->degree;
+    first_coeffs = malloc(sizeof(*first_coeffs) * (first_deg + 1UL));
+
+    /*  Check if malloc failed.                                               */
+    if (first_coeffs == NULL)
     {
-        prod->coeffs[n] = first->coeffs[n] * second->coeffs[0];
+        prod->error_occurred = tmpl_True;
+        prod->error_message = tmpl_strdup(
+            "Error Encountered: libtmpl\n"
+            "\r\ttmpl_PolynomialZ_Multiply\n\n"
+            "realloc failed to allocate memory for first_coeffs.\n"
+        );
+        return;
+    }
+
+    /*  If malloc was successful, copy the data from first.                   */
+    for (n = 0UL; n <= first->degree; ++n)
+        first_coeffs[n] = P->coeffs[n];
+
+    second_deg = second->degree;
+    second_coeffs = malloc(sizeof(*second_coeffs) * (second_deg + 1UL));
+
+    /*  Check if malloc failed.                                               */
+    if (second_coeffs == NULL)
+    {
+        prod->error_occurred = tmpl_True;
+        prod->error_message = tmpl_strdup(
+            "Error Encountered: libtmpl\n"
+            "\r\ttmpl_PolynomialZ_Multiply\n\n"
+            "realloc failed to allocate memory for second_coeffs.\n"
+        );
+
+        /*  Free the memory allocated to first_coeffs, since malloc was       *
+         *  successful for that one.                                          */
+        free(first_coeffs);
+        return;
+    }
+
+    /*  Otherwise, copy the data.                                             */
+    for (n = 0UL; n <= second->degree; ++n)
+        second_coeffs[n] = second->coeffs[n];
+
+    /*  Perform the first part of the Cauchy product. We arrange coefficients *
+     *  P_m, Q_n in a rectangular array. Suppose P->degree = 5 and            *
+     *  Q->degree = 4, we get the following:                                  *
+     *      P0*Q0 P0*Q1 P0*Q2 P0*Q3                                           *
+     *      P1*Q0 P1*Q1 P1*Q2 P1*Q3                                           *
+     *      P2*Q0 P2*Q1 P2*Q2 P2*Q3                                           *
+     *      P3*Q0 P3*Q1 P3*Q2 P3*Q3                                           *
+     *      P4*Q0 P4*Q1 P4*Q2 P4*Q3                                           *
+     *      P5*Q0 P5*Q1 P5*Q2 P5*Q3                                           *
+     *  The Cauchy sum for infinite products is defined by:                   *
+     *      /  infty     \ /   infty    \     infty                           *
+     *      |  -----     | |  -----     |     -----                           *
+     *      |  \         | |  \         |     \                               *
+     *      |  /     a_m | |  /     b_n |  =  /     c_n                       *
+     *      |  -----     | |  -----     |     -----                           *
+     *      \  m = 0     / \   n = 0    /     n = 0                           *
+     *  Where:                                                                *
+     *              n                                                         *
+     *            -----                                                       *
+     *            \                                                           *
+     *      c_n = /    a_k * b_{n-k}                                          *
+     *            -----                                                       *
+     *            k = 0                                                       *
+     *  To make this well defined for finite sums we need to limit the range  *
+     *  of the sum for c_n. The first leg of this is going to be:             *
+     *        00   02   02   03                                               *
+     *                                                                        *
+     *        10   11   12   13                                               *
+     *      -----                                                             *
+     *      | 20 | 21   22   23                                               *
+     *      |     ----                                                        *
+     *      | 30   31 | 32   33                                               *
+     *      |          ----                                                   *
+     *      | 40   41   42 | 43                                               *
+     *      |               ----                                              *
+     *      | 50   51   52   53 |                                             *
+     *      --------------------                                              *
+     *  Perform this part of the sum.                                         */
+    for (n = 0UL; n < first_deg; ++n)
+    {
+        prod->coeffs[n] = first_coeffs[n] * second_coeffs[0];
         for (k = 1UL; k <= n; ++k)
-            prod->coeffs[n] += first->coeffs[n-k] * second->coeffs[k];
+            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
     }
 
-    for (n = first->degree; n < second->degree; ++n)
+    /*  In the next part, the sum can't start at zero since Q does not have   *
+     *  a fifth coefficient. We can pretend it does by adding 0 x^4, or we    *
+     *  start the sum at 1, and then the next one starts at 2, and so on.     *
+     *  This leg of the sum is the following:                                 *
+     *       ----                                                             *
+     *      | 00 | 01   02   03                                               *
+     *      |     ----                                                        *
+     *      | 10   11 | 12   13                                               *
+     *      -----      ----                                                   *
+     *        20 | 21   22 | 23                                               *
+     *            ----      ----                                              *
+     *        30   31 | 32   33 |                                             *
+     *                 ----     |                                             *
+     *        40   41   42 | 43 |                                             *
+     *                      ----                                              *
+     *        50   51   52   53                                               *
+     *  Perform this part of the sum.                                         */
+    for (n = first_deg; n < second_deg; ++n)
     {
         prod->coeffs[n] = 0UL;
-        for (k = n - first->degree; k <= n; ++k)
-            prod->coeffs[n] += first->coeffs[n-k] * second->coeffs[k];
+        for (k = n - first_deg; k <= n; ++k)
+            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
     }
 
-    for (n = second->degree; n <= prod->degree; ++n)
+    /*  In the last part, the sum can't go too high since P may not have the  *
+     *  corresponding coefficient. Here we compute the following portion:     *
+     *          --------------                                                *
+     *      00 | 01   02   03 |                                               *
+     *          ----          |                                               *
+     *      10   11 | 12   13 |                                               *
+     *               ----     |                                               *
+     *      20   21   22 | 23 |                                               *
+     *                    ----                                                *
+     *      30   31   32   33                                                 *
+     *                                                                        *
+     *      40   41   42   43                                                 *
+     *                                                                        *
+     *      50   51   52   53                                                 *
+     *  Perform this part of the sum.                                         */
+    for (n = second_deg; n <= prod->degree; ++n)
     {
         prod->coeffs[n] = 0UL;
-        for (k = n - first->degree; k <= second->degree; ++k)
-            prod->coeffs[n] += first->coeffs[n-k] * second->coeffs[k];
+        for (k = n - first_deg; k <= second_deg; ++k)
+            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
     }
+
+    /*  Free the memory allocated to first and second.                        */
+    free(first_coeffs);
+    free(second_coeffs);
 }
 /*  End of tmpl_Create_Zero_PolynomialZ.                                      */

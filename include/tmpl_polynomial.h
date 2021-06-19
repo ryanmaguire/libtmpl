@@ -148,8 +148,6 @@ typedef struct _tmpl_PolynomialQMatrix {
  *      pointer has the error_occurred Boolean set to True.                   *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_create_zero_polynomial_z.c                *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern tmpl_PolynomialZ *
 tmpl_Create_Zero_PolynomialZ(unsigned long int degree);
@@ -169,8 +167,6 @@ tmpl_Create_Zero_PolynomialZ(unsigned long int degree);
  *      If malloc fails this function returns NULL.                           *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_create_empty_polynomial_z.c               *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern tmpl_PolynomialZ *
 tmpl_Create_Empty_PolynomialZ(void);
@@ -193,8 +189,6 @@ tmpl_Create_Empty_PolynomialZ(void);
  *      to avoid memory leaks.                                                *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_destroy_polynomial_z.c                    *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern void
 tmpl_Destroy_PolynomialZ(tmpl_PolynomialZ **poly_ptr);
@@ -299,6 +293,9 @@ tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
  *  Examples:                                                                 *
  *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_001.c       *
  *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_002.c       *
+ *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_003.c       *
+ *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_004.c       *
+ *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_005.c       *
  ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
