@@ -99,59 +99,133 @@
 #include <stdlib.h>
 
 /*  Function for creating a polynomial with all coefficients set to zero.     */
-tmpl_PolynomialZ *tmpl_Create_Zero_PolynomialZ(unsigned long int degree)
+void
+tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
+                          tmpl_PolynomialZ *Q,
+                          tmpl_PolynomialZ *prod)
 {
-    /*  Declare necessary variables. The ISO C89/C90 standard forbids mixed   *
-     *  code with declarations, so declare everything at the top.             */
-    tmpl_PolynomialZ *poly;
+    /*  Declare a variable for indexing.                                      */
+    unsigned long int n, k;
 
-    /*  Allocate memory with malloc. Per every coding standard one can find,  *
-     *  the result of malloc is not cast. Malloc returns a void pointer which *
-     *  is safely promoted to the type of poly.                               */
-    poly = malloc(sizeof(*poly));
+    /*  Two polynomial pointers for ordering the inputs in terms of degree.   */
+    tmpl_PolynomialZ *first, *second;
 
-    /*  Check if malloc failed. It returns NULL if it does.                   */
-    if (poly == NULL)
-        return NULL;
+    /*  Temporary variable used in case realloc is needed.                    */
+    signed long int *tmp;
 
-    /*  Otherwise, allocate memory for the coefficients pointer.              */
-    poly->coeffs = calloc(sizeof(*poly->coeffs), degree + 1UL);
+    /*  If prod is NULL, nothing can be done.                                 */
+    if (prod == NULL)
+        return;
 
-    /*  Check if calloc failed.                                               */
-    if (poly->coeffs == NULL)
+    /*  If either P or Q are NULL, nothing can be done. Store an error        *
+     *  message in prod.                                                      */
+    if ((P == NULL) || (Q == NULL))
     {
-        /*  Set the error occured Boolean to True indicating an error.        */
-        poly->error_occurred = tmpl_True;
-
-        /*  Set an error message indicating what went wrong.                  */
-        poly->error_message = tmpl_strdup(
+        prod->error_occurred = tmpl_True;
+        prod->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\r\ttmpl_Create_Zero_PolynomialZ\n\n"
-            "\rcalloc failed to allocate memory for the coefficients pointer\n"
-            "\rand returned NULL. Returning with error.\n"
+            "\r\ttmpl_PolynomialZ_Multiply\n\n"
+            "One of the input polynomials is NULL. Aborting.\n"
         );
-
-        /*  Set the degree to zero since the coefficients pointer is NULL.    */
-        poly->degree = 0UL;
+        return;
     }
 
-    /*  If calloc succeeded, set the remaining values in the polynomial.      */
+    /*  If either P or Q has a NULL coeffs pointer, nothing can be done.      */
+    if ((P->coeffs == NULL) || (Q->coeffs == NULL))
+    {
+        prod->error_occurred = tmpl_True;
+        prod->error_message = tmpl_strdup(
+            "Error Encountered: libtmpl\n"
+            "\r\ttmpl_PolynomialZ_Multiply\n\n"
+            "One of the inputs has a NULL coeffs pointer. Aborting.\n"
+        );
+        return;
+    }
+
+    /*  Lastly, if one of the inputs has error_occurred set to true it may    *
+     *  not be safe to proceed. Check for this.                               */
+    if ((P->error_occurred) || (Q->error_occurred))
+    {
+        prod->error_occurred = tmpl_True;
+        prod->error_message = tmpl_strdup(
+            "Error Encountered: libtmpl\n"
+            "\r\ttmpl_PolynomialZ_Multiply\n\n"
+            "One of the inputs has its error_occurred Boolean set to true.\n"
+        );
+        return;   
+    }
+
+    /*  If the prod coeffs pointer is NULL, allocate memory for it.           */
+    if (prod->coeffs == NULL)
+    {
+        prod->degree = P->degree + Q->degree;
+        prod->coeffs = malloc(sizeof(*prod->coeffs) * prod->degree + 1UL);
+
+        /*  Check if malloc failed.                                           */
+        if (prod->coeffs == NULL)
+        {
+            prod->error_occurred = tmpl_True;
+            prod->error_message = tmpl_strdup(
+                "Error Encountered: libtmpl\n"
+                "\r\ttmpl_PolynomialZ_Multiply\n\n"
+                "malloc failed to allocate memory for prod->coeffs.\n"
+            );
+            return;  
+        }
+    }
+
+    /*  If prod does not have the correct size for it's degree, reallocate    *
+     *  the coeffs pointer to be the sum of the two others.                   */
+    else if (prod->degree != (P->degree + Q->degree))
+    {
+        prod->degree = P->degree + Q->degree;
+        tmp = realloc(prod->coeffs, sizeof(*prod->coeffs) * prod->degree + 1UL);
+
+        /*  Check if realloc failed.                                          */
+        if (tmp == NULL)
+        {
+            prod->error_occurred = tmpl_True;
+            prod->error_message = tmpl_strdup(
+                "Error Encountered: libtmpl\n"
+                "\r\ttmpl_PolynomialZ_Multiply\n\n"
+                "realloc failed to allocate memory for prod->coeffs.\n"
+            );
+            return;
+        }
+        prod->coeffs = tmp;
+    }
+
+    if (P->degree <= Q->degree)
+    {
+        first = P;
+        second = Q;
+    }
     else
     {
-        /*  No error occurred, so set to false.                               */
-        poly->error_occurred = tmpl_False;
-
-        /*  Set the error message pointer to NULL. This is important. When    *
-         *  trying to free all of the memory in a polynomial pointer other    *
-         *  functions will check if this pointer is NULL before attempting    *
-         *  to free it. free'ing a non-malloced pointer will crash the        *
-         *  program.                                                          */
-        poly->error_message = NULL;
-
-        /*  Lastly, set the degree.                                           */
-        poly->degree = degree;
+        first = Q;
+        second = P;
     }
 
-    return poly;
+    /*  Perform the Cauchy product on P and Q.                                */
+    for (n = 0UL; n < first->degree; ++n)
+    {
+        prod->coeffs[n] = first->coeffs[n] * second->coeffs[0];
+        for (k = 1UL; k <= n; ++k)
+            prod->coeffs[n] += first->coeffs[n-k] * second->coeffs[k];
+    }
+
+    for (n = first->degree; n < second->degree; ++n)
+    {
+        prod->coeffs[n] = 0UL;
+        for (k = n - first->degree; k <= n; ++k)
+            prod->coeffs[n] += first->coeffs[n-k] * second->coeffs[k];
+    }
+
+    for (n = second->degree; n <= prod->degree; ++n)
+    {
+        prod->coeffs[n] = 0UL;
+        for (k = n - first->degree; k <= second->degree; ++k)
+            prod->coeffs[n] += first->coeffs[n-k] * second->coeffs[k];
+    }
 }
 /*  End of tmpl_Create_Zero_PolynomialZ.                                      */

@@ -30,6 +30,8 @@
  *          numbers.                                                          *
  *  3.) tmpl_complex.h:                                                       *
  *          Header file containing complex data types.                        *
+ *  4.) stdio.h:                                                              *
+ *          Standard C header file containing the FILE data type.             *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -63,6 +65,9 @@
 /*  And lastly, complex numbers are here.                                     */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  The FILE data type is found here.                                         */
+#include <stdio.h>
+
 /*  Data type for working with elements of Z[x]. That is, polynomials with    *
  *  integer coefficients.                                                     */
 typedef struct _tmpl_PolynomialZ {
@@ -80,6 +85,27 @@ typedef struct _tmpl_PolynomialZ {
     /*  And an error message in case an error does occur.                     */
     char *error_message;
 } tmpl_PolynomialZ;
+
+/*  Data type for working with elements of Z[x] that are of a high degree     *
+ *  where most of the coefficients are zero. This method saves on memory.     */
+typedef struct _tmpl_SparsePolynomialZ {
+    /*  A pointer to all of the terms. The degree of the terms is stored in   *
+     *  the next pointer.                                                     */
+    signed long int *terms;
+
+    /*  A pointer for the degrees of all of the terms.                        */
+    unsigned long int *degrees_of_terms;
+
+    /*  The degree of the polynomial. This is the maximum of the elements     *
+     *  in the degrees_of_terms array.                                        */
+    unsigned long int degree;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_SparsePolynomialZ;
 
 typedef struct _tmpl_PolynomialQ {
     tmpl_RationalNumber *coeffs;
@@ -104,13 +130,151 @@ typedef struct _tmpl_PolynomialQMatrix {
     char *error_message;
 } tmpl_PolynomialQMatrix;
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Create_Zero_PolynomialZ                                          *
+ *  Purpose:                                                                  *
+ *      Creates a polynomial in Z[x] with the coefficients set to zero.       *
+ *  Arguments:                                                                *
+ *      degree (unsigned long int).                                           *
+ *          The degree of the polynomial. Mathematically, since all of the    *
+ *          coefficients are zero, the degree is zero. But computer-wise      *
+ *          the coeffs pointer will have degree + 1 elements allocated to it. *
+ *  Output:                                                                   *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial with all coefficients set to zero.      *
+ *  Notes:                                                                    *
+ *      If malloc fails this function returns NULL. If calloc fails, the      *
+ *      pointer has the error_occurred Boolean set to True.                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_create_zero_polynomial_z.c                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
 extern tmpl_PolynomialZ *
 tmpl_Create_Zero_PolynomialZ(unsigned long int degree);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Create_Empty_PolynomialZ                                         *
+ *  Purpose:                                                                  *
+ *      Creates an empty polynomial in Z[x]. The coeffs pointer is NULL and   *
+ *      the degree is set to zero.                                            *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial with coefficiets set to NULL.           *
+ *  Notes:                                                                    *
+ *      If malloc fails this function returns NULL.                           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_create_empty_polynomial_z.c               *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern tmpl_PolynomialZ *
+tmpl_Create_Empty_PolynomialZ(void);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Destroy_PolynomialZ                                              *
+ *  Purpose:                                                                  *
+ *      Free all of the memory in a tmpl_PolynomialZ pointer and set the      *
+ *      the pointers inside the struct to NULL.                               *
+ *  Arguments:                                                                *
+ *      poly_ptr (tmpl_PolynomialZ **)                                        *
+ *          A pointer a tmpl_PolynomialZ pointer whose memory needs to be     *
+ *          freed. Given a tmpl_Polynomial pointer poly, pass it to this      *
+ *          function by grabbing the address &poly.                           *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      This function should always be called when done with a polynomial     *
+ *      to avoid memory leaks.                                                *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_destroy_polynomial_z.c                    *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern void
+tmpl_Destroy_PolynomialZ(tmpl_PolynomialZ **poly_ptr);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Multiply                                             *
+ *  Purpose:                                                                  *
+ *      Multiplies two elements of Z[x].                                      *
+ *  Arguments:                                                                *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to a polynomial.                                        *
+ *      Q (tmpl_PolynomialZ *):                                               *
+ *          Another pointer to a polynomial.                                  *
+ *      prod (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial, the value P*Q will be stored in it.    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      It is assumed none of the three input polynomials are NULL. If        *
+ *      prod has it's degree not equal the sum of the two degrees of P and Q, *
+ *      realloc will be called on the coeffs pointer.                         *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_multiply_polynomial_z.c                   *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
                           tmpl_PolynomialZ *Q,
                           tmpl_PolynomialZ *prod);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Get_String                                           *
+ *  Purpose:                                                                  *
+ *      Represents a polynomial as a string. Coefficients that are zero will  *
+ *      not be printed, unless the polynomial is the zero polynomial.         *
+ *  Arguments:                                                                *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to a polynomial.                                        *
+ *  Output:                                                                   *
+ *      str (char *):                                                         *
+ *          A pointer to a char array representing the polynomial as a string.*
+ *  Notes:                                                                    *
+ *      If poly->error_occurred is true, or if poly->coeffs = NULL, or if     *
+ *      poly = NULL, a NULL pointer is returned. Otherwise, malloc will be    *
+ *      called. If malloc fails, a NULL pointer is returned. It is worth      *
+ *      checking if the output is NULL before using it. If the output is not  *
+ *      NULL, it needs to be free'd when done with.                           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_get_string.c                 *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern char *
+tmpl_PolynomialZ_Get_String(tmpl_PolynomialZ *poly);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Print_String                                         *
+ *  Purpose:                                                                  *
+ *      Prints the contents of a polynomial to a file.                        *
+ *  Arguments:                                                                *
+ *      fp (FILE *):                                                          *
+ *          A pointer to a FILE, the file the polynomial is printed to.       *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial.                                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      If poly->error_occurred is true, or if poly->coeffs = NULL, or if     *
+ *      poly = NULL, nothing is printed.                                      *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_print_string.c               *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern void
+tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
 
 extern void
 tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
