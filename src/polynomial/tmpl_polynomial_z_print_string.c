@@ -37,6 +37,17 @@ void tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly)
         else
             fprintf(fp, "%ldx", poly->coeffs[least_term]);
     }
+    else
+    {
+        if (poly->coeffs[least_term] == 1L)
+            fprintf(fp, "x^%ld", least_term);
+        else if (poly->coeffs[least_term] == -1L)
+            fprintf(fp, "-x^%ld", least_term);
+        else if (poly->coeffs[least_term] > 0L)
+            fprintf(fp, "%ldx^%ld", poly->coeffs[least_term], least_term);
+        else
+            fprintf(fp, "-%ldx^%ld", -poly->coeffs[least_term], least_term);
+    }
 
     for (n = least_term + 1UL; n <= poly->degree; ++n)
     {

@@ -19,10 +19,9 @@
  *                       tmpl_create_empty_polynomial_z                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a degree N polynomial in Z[x] with all coefficients *
- *      set to zero. Mathematically this is the same thing as the zero        *
- *      polynomial, but computer-wise the coefficients array will have more   *
- *      memory allocated to it.                                               *
+ *      Code for creating a polynomial in Z[x] with it's coeffs pointer set   *
+ *      to NULL, and it's error_occurred and error_message attributes         *
+ *      initialized to false and NULL, respectively. degree is set to zero.   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -54,7 +53,7 @@
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
  *  3.) stdlib.h:                                                             *
- *          C Standard library header file containing malloc and calloc.      *
+ *          C Standard library header file containing malloc.                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -81,7 +80,7 @@
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
-/*  malloc and calloc are found here.                                         */
+/*  malloc found here.                                                        */
 #include <stdlib.h>
 
 /*  Function for creating a polynomial with coeffs set to NULL.               */

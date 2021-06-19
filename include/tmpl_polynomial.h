@@ -276,6 +276,30 @@ tmpl_PolynomialZ_Get_String(tmpl_PolynomialZ *poly);
 extern void
 tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Add                                                  *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x].                                            *
+ *  Arguments:                                                                *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to a polynomial.                                        *
+ *      Q (tmpl_PolynomialZ *):                                               *
+ *          Another pointer to a polynomial.                                  *
+ *      sum (tmpl_PolynomialZ *):                                             *
+ *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      It is assumed none of the three input polynomials are NULL. If        *
+ *      sum has it's degree not equal the max of the two degrees of P and Q,  *
+ *      realloc will be called on the coeffs pointer.                         *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_add_polynomial_z.c                        *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_001.c       *
+ *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_002.c       *
+ ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
                      tmpl_PolynomialZ *Q,
