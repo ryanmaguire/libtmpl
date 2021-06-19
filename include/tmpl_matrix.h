@@ -31,6 +31,7 @@
 #define TMPL_MATRIX_H
 
 #include <libtmpl/include/tmpl_bool.h>
+#include <libtmpl/include/tmpl_complex.h>
 
 typedef struct tmpl_DoubleMatrix {
     double **data;
@@ -39,6 +40,14 @@ typedef struct tmpl_DoubleMatrix {
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_DoubleMatrix;
+
+typedef struct tmpl_ComplexDoubleMatrix {
+    tmpl_ComplexDouble **data;
+    unsigned long row_length;
+    unsigned long column_length;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_ComplexDoubleMatrix;
 
 #endif
 /*  End of include guard.                                                     */
