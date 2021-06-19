@@ -90,7 +90,7 @@
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
-/*  malloc and calloc are found here.                                         */
+/*  malloc and realloc are found here.                                        */
 #include <stdlib.h>
 
 /*  Function for multiplying two polynomials.                                 */
@@ -155,6 +155,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
     /*  If the prod coeffs pointer is NULL, allocate memory for it.           */
     if (prod->coeffs == NULL)
     {
+        /*  The degree of a product is the sum of the degrees.                */
         prod->degree = P->degree + Q->degree;
         prod->coeffs = malloc(sizeof(*prod->coeffs) * (prod->degree + 1UL));
 
@@ -175,6 +176,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
      *  the coeffs pointer to be the sum of the two others.                   */
     else if (prod->degree != (P->degree + Q->degree))
     {
+        /*  The degree of a product is the sum of the degrees.                */
         prod->degree = P->degree + Q->degree;
         tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->degree + 1UL));
 
@@ -189,6 +191,8 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
             );
             return;
         }
+
+        /*  If realloc was successful, set prof->coeffs to the result.        */
         prod->coeffs = tmp;
     }
 
@@ -220,15 +224,16 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
         prod->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\r\ttmpl_PolynomialZ_Multiply\n\n"
-            "realloc failed to allocate memory for first_coeffs.\n"
+            "malloc failed to allocate memory for first_coeffs.\n"
         );
         return;
     }
 
     /*  If malloc was successful, copy the data from first.                   */
     for (n = 0UL; n <= first->degree; ++n)
-        first_coeffs[n] = P->coeffs[n];
+        first_coeffs[n] = first->coeffs[n];
 
+    /*  Do the same thing with the second pointer.                            */
     second_deg = second->degree;
     second_coeffs = malloc(sizeof(*second_coeffs) * (second_deg + 1UL));
 
@@ -254,7 +259,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
 
     /*  Perform the first part of the Cauchy product. We arrange coefficients *
      *  P_m, Q_n in a rectangular array. Suppose P->degree = 5 and            *
-     *  Q->degree = 4, we get the following:                                  *
+     *  Q->degree = 3, we get the following:                                  *
      *      P0*Q0 P0*Q1 P0*Q2 P0*Q3                                           *
      *      P1*Q0 P1*Q1 P1*Q2 P1*Q3                                           *
      *      P2*Q0 P2*Q1 P2*Q2 P2*Q3                                           *
@@ -277,7 +282,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
      *            k = 0                                                       *
      *  To make this well defined for finite sums we need to limit the range  *
      *  of the sum for c_n. The first leg of this is going to be:             *
-     *        00   02   02   03                                               *
+     *        00   01   02   03                                               *
      *                                                                        *
      *        10   11   12   13                                               *
      *      -----                                                             *
@@ -346,5 +351,6 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
     /*  Free the memory allocated to first and second.                        */
     free(first_coeffs);
     free(second_coeffs);
+    return;
 }
 /*  End of tmpl_Create_Zero_PolynomialZ.                                      */
