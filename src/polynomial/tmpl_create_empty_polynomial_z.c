@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_create_zero_polynomial_z                       *
+ *                       tmpl_create_empty_polynomial_z                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Code for creating a degree N polynomial in Z[x] with all coefficients *
@@ -27,44 +27,33 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Zero_PolynomialZ                                          *
+ *      tmpl_Create_Empty_PolynomialZ                                         *
  *  Purpose:                                                                  *
- *      Creates a polynomial in Z[x] with all coefficients set to zero.       *
+ *      Creates a pointer to a polynomial in Z[x] with coeffs set to NULL,    *
+ *      error_occurred set to false, error_message set to NULL, and           *
+ *      degree set to 0.                                                      *
  *  Arguments:                                                                *
- *      degree (unsigned long int):                                           *
- *          The degree of the polynomial. The array of coefficients will have *
- *          degree + 1 many elements allocated to it, and set to zero.        *
+ *      None (void).                                                          *
  *  Output:                                                                   *
  *      poly (tmpl_PolynomialZ *):                                            *
- *          The polynomial 0 + 0 x + ... + 0 x^degree.                        *
+ *          A polynomial with its coeffs pointer set to NULL.                 *
  *  Called Functions:                                                         *
  *      malloc (stdlib.h):                                                    *
  *          Standard library function for allocating memory.                  *
- *      calloc (stdlib.h):                                                    *
- *          Standard library function for allocating memory and initializing  *
- *          all of the elements to zero.                                      *
  *  Method:                                                                   *
- *      Allocate memory for the polynomial pointer with malloc, and allocate  *
- *      and initialize to zero memory for the pointer to the coefficients     *
- *      array using calloc.                                                   *
+ *      Allocate memory for the polynomial pointer with malloc, and then      *
+ *      set the rest of the values of the polynomial struct to defaults.      *
  *  Notes:                                                                    *
- *      If malloc fails, a NULL pointer is returned. If malloc succeeds, but  *
- *      calloc fails, the error_occurred Boolean is set to true and an        *
- *      error message is stored in the struct. Check these before using       *
- *      the polynomial.                                                       *
+ *      If malloc fails, a NULL pointer is returned.                          *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- *  2.) tmpl_string.h:                                                        *
- *          Header file where the tmpl_strdup function is declared. This is   *
- *          a clone of the strdup function, which is part of the POSIX        *
- *          standard library, but not the C standard library.                 *
- *  3.) tmpl_polynomial.h:                                                    *
+ *  2.) tmpl_polynomial.h:                                                    *
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
- *  4.) stdlib.h:                                                             *
+ *  3.) stdlib.h:                                                             *
  *          C Standard library header file containing malloc and calloc.      *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -89,17 +78,14 @@
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_stdup function declared here.                                        */
-#include <libtmpl/include/tmpl_string.h>
-
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
 /*  malloc and calloc are found here.                                         */
 #include <stdlib.h>
 
-/*  Function for creating a polynomial with all coefficients set to zero.     */
-tmpl_PolynomialZ *tmpl_Create_Zero_PolynomialZ(unsigned long int degree)
+/*  Function for creating a polynomial with coeffs set to NULL.               */
+tmpl_PolynomialZ *tmpl_Create_Empty_PolynomialZ(void)
 {
     /*  Declare necessary variables. The ISO C89/C90 standard forbids mixed   *
      *  code with declarations, so declare everything at the top.             */
@@ -114,44 +100,11 @@ tmpl_PolynomialZ *tmpl_Create_Zero_PolynomialZ(unsigned long int degree)
     if (poly == NULL)
         return NULL;
 
-    /*  Otherwise, allocate memory for the coefficients pointer.              */
-    poly->coeffs = calloc(sizeof(*poly->coeffs), degree + 1UL);
-
-    /*  Check if calloc failed.                                               */
-    if (poly->coeffs == NULL)
-    {
-        /*  Set the error occured Boolean to True indicating an error.        */
-        poly->error_occurred = tmpl_True;
-
-        /*  Set an error message indicating what went wrong.                  */
-        poly->error_message = tmpl_strdup(
-            "Error Encountered: libtmpl\n"
-            "\r\ttmpl_Create_Zero_PolynomialZ\n\n"
-            "\rcalloc failed to allocate memory for the coefficients pointer\n"
-            "\rand returned NULL. Returning with error.\n"
-        );
-
-        /*  Set the degree to zero since the coefficients pointer is NULL.    */
-        poly->degree = 0UL;
-    }
-
-    /*  If calloc succeeded, set the remaining values in the polynomial.      */
-    else
-    {
-        /*  No error occurred, so set to false.                               */
-        poly->error_occurred = tmpl_False;
-
-        /*  Set the error message pointer to NULL. This is important. When    *
-         *  trying to free all of the memory in a polynomial pointer other    *
-         *  functions will check if this pointer is NULL before attempting    *
-         *  to free it. free'ing a non-malloced pointer will crash the        *
-         *  program.                                                          */
-        poly->error_message = NULL;
-
-        /*  Lastly, set the degree.                                           */
-        poly->degree = degree;
-    }
-
+    /*  Otherwise, set the default values for the polynomial.                 */
+    poly->coeffs = NULL;
+    poly->error_occurred = tmpl_False;
+    poly->error_message = NULL;
+    poly->degree = 0UL;
     return poly;
 }
-/*  End of tmpl_Create_Zero_PolynomialZ.                                      */
+/*  End of tmpl_Create_Empty_PolynomialZ.                                     */

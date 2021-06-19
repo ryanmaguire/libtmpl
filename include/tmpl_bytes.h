@@ -92,7 +92,7 @@ typedef enum _tmpl_Endian {
  *  Arguments:                                                                *
  *      None (void).                                                          *
  *  Output:                                                                   *
- *    endianness (tmpl_Endian):                                               *
+ *      endianness (tmpl_Endian):                                             *
  *          A tmpl_Endian data type whose value corresponds to the            *
  *          endianness of your system.                                        *
  *  Notes:                                                                    *
