@@ -97,7 +97,7 @@ elif [ $CC == "pcc" ]; then
     CArgs3="-Wmissing-prototypes -Wold-style-definition -Winit-self"
     CArgs4="-Wmissing-declarations -Wnull-dereference -Wwrite-strings"
     CArgs5="-Wdouble-promotion -Wfloat-conversion -Wstrict-prototypes"
-    CArgs6="-DNDEBUG -g -fPIC -O3 -flto -c"
+    CArgs6="-I/usr/local/include/ -DNDEBUG -g -fPIC -O3 -flto -c"
     CompilerArgs="$CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5 $CArgs6"
 elif [ $CC == "cc" ]; then
     CArgs1="$STDVER -pedantic -Wall -Wextra -Wpedantic"

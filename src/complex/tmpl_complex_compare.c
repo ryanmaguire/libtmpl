@@ -49,6 +49,10 @@
  *          Header where complex types and function prototypes are defined.   *
  *  2.) tmpl_bool.h:                                                          *
  *          Header containing Boolean typedef.                                *
+ *  3.) float.h:                                                              *
+ *          Standard C header file containing the values of machine-precision.*
+ *          This will be used to test if two complex-numbers are              *
+ *          epsilon-close to each other.                                      *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -85,6 +89,9 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  Header file containing the values of machine-precision.                   */
+#include <float.h>
+
 /*  C does not allow structures to be compared, so we need to compare the     *
  *  members of the two complex structs.                                       */
 
@@ -92,17 +99,15 @@
 tmpl_Bool tmpl_CFloat_Compare(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    float z0_real, z0_imag, z1_real, z1_imag;
+    float dist;
 
-    /*  Extract the real and imaginary parts from z0 and z1.                  */
-    z0_real = tmpl_CFloat_Real_Part(z0);
-    z0_imag = tmpl_CFloat_Imag_Part(z0);
-    z1_real = tmpl_CFloat_Real_Part(z1);
-    z1_imag = tmpl_CFloat_Imag_Part(z1);
+    /*  Compute the distance between z0 and z1. We'll then check if this      *
+     *  value is epsilon-small or not.                                        */
+    dist = tmpl_CFloat_Dist_Squared(z0, z1);
 
     /*  Two complex numbers are equal if and only if their real and imaginary *
      *  parts are both equal, so check this.                                  */
-    if ((z0_real == z1_real) && (z0_imag == z1_imag))
+    if (dist <= FLT_MIN)
         return tmpl_True;
     else
         return tmpl_False;
@@ -113,17 +118,15 @@ tmpl_Bool tmpl_CFloat_Compare(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
 tmpl_Bool tmpl_CDouble_Compare(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double z0_real, z0_imag, z1_real, z1_imag;
+    double dist;
 
-    /*  Extract the real and imaginary parts from z0 and z1.                  */
-    z0_real = tmpl_CDouble_Real_Part(z0);
-    z0_imag = tmpl_CDouble_Imag_Part(z0);
-    z1_real = tmpl_CDouble_Real_Part(z1);
-    z1_imag = tmpl_CDouble_Imag_Part(z1);
+    /*  Compute the distance between z0 and z1. We'll then check if this      *
+     *  value is epsilon-small or not.                                        */
+    dist = tmpl_CDouble_Dist_Squared(z0, z1);
 
     /*  Two complex numbers are equal if and only if their real and imaginary *
      *  parts are both equal, so check this.                                  */
-    if ((z0_real == z1_real) && (z0_imag == z1_imag))
+    if (dist <= DBL_MIN)
         return tmpl_True;
     else
         return tmpl_False;
@@ -135,17 +138,15 @@ tmpl_Bool
 tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    long double z0_real, z0_imag, z1_real, z1_imag;
+    long double dist;
 
-    /*  Extract the real and imaginary parts from z and w.                    */
-    z0_real = tmpl_CLDouble_Real_Part(z0);
-    z0_imag = tmpl_CLDouble_Imag_Part(z0);
-    z1_real = tmpl_CLDouble_Real_Part(z1);
-    z1_imag = tmpl_CLDouble_Imag_Part(z1);
+    /*  Compute the distance between z0 and z1. We'll then check if this      *
+     *  value is epsilon-small or not.                                        */
+    dist = tmpl_CLDouble_Dist_Squared(z0, z1);
 
     /*  Two complex numbers are equal if and only if their real and imaginary *
      *  parts are both equal, so check this.                                  */
-    if ((z0_real == z1_real) && (z0_imag == z1_imag))
+    if (dist <= LDBL_MIN)
         return tmpl_True;
     else
         return tmpl_False;

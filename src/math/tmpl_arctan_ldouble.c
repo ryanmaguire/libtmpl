@@ -79,7 +79,7 @@ long double tmpl_LDouble_Arctan(long double x)
     else
     {
         arg = -1.0L / arg;
-        return sgn_x * (tmpl_Pi_By_Two + __arctan_small_vals(arg));
+        return sgn_x * (tmpl_Pi_By_Two_L + __arctan_small_vals(arg));
     }
 }
 

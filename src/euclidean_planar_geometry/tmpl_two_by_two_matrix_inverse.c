@@ -46,6 +46,9 @@
 /*  Function prototype and two-vector typedef found here.                     */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
+/*  Machine precision found here.                                             */
+#include <float.h>
+
 /*  Function for computing the inverse of a 2x2 matrix.                       */
 tmpl_TwoByTwoMatrix tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A)
 {
@@ -58,7 +61,7 @@ tmpl_TwoByTwoMatrix tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A)
     d = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
     det = a*c - b*d;
 
-    if (det == 0)
+    if ((det <= DBL_MIN) && (det >= -DBL_MIN))
     {
         ainv = tmpl_NaN;
         binv = tmpl_NaN;
