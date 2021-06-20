@@ -39,6 +39,7 @@
  *  Date:       May 7, 2021                                                   *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_math.h>
 #include <math.h>
 
 const double tmpl_Infinity = HUGE_VAL;

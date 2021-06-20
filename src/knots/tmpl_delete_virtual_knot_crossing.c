@@ -10,7 +10,8 @@ tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K,
                                   unsigned long int crossing)
 {
     unsigned long int ind;
-    unsigned long int pos0, pos1;
+    unsigned long int pos0 = 0UL;
+    unsigned long int pos1 = 0UL;
     tmpl_Bool found_pos0;
     unsigned long int gauss_code_length;
 

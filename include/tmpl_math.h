@@ -189,7 +189,7 @@ extern const long double tmpl_Euler_E_L;
 /*  1 / e = exp( -1 )                                                         */
 extern const float tmpl_Rcpr_Euler_E_F;
 extern const double tmpl_Rcpr_Euler_E;
-extern const long double tmpl_Euler_E_L;
+extern const long double tmpl_Rcpr_Euler_E_L;
 
 /*  log_e( 2 ) = ln( 2 )                                                      */
 extern const float tmpl_Natural_Log_of_Two_F;
@@ -224,7 +224,7 @@ extern const long double tmpl_Max_LDouble_Base_E;
 /*  Smallest positive value such that exp(x) will not return zero.            */
 extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
-extern const long double tmpl_M_LDouble_Base_E;
+extern const long double tmpl_Min_LDouble_Base_E;
 
 /*  We'll use the CPYTHON method of defining NAN, the source code of which is *
  *  contained in python/cpython/Include/pymath.h.                             */
