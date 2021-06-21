@@ -112,6 +112,10 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
     if (sum == NULL)
         return;
 
+    /*  Similarly if the sum pointer has error_occurred set to true, abort    */
+    if (sum->error_occurred)
+        return;
+
     /*  If either P or Q are NULL, nothing can be done. Store an error        *
      *  message in sum.                                                       */
     if ((P == NULL) || (Q == NULL))
@@ -150,10 +154,6 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
         return;   
     }
 
-    /*  Similarly if the sum pointer has error_occurred set to true, abort    */
-    if (sum->error_occurred)
-        return;
-
     /*  Order the polynomials in terms of their degree.                       */
     if (P->degree <= Q->degree)
     {
@@ -188,7 +188,7 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
     }
 
     /*  If sum does not have the correct size for it's degree, reallocate     *
-     *  the coeffs pointer to be the sum of the two others.                   */
+     *  the coeffs pointer to be the max of the two others.                   */
     else if (sum->degree != second->degree)
     {
         sum->degree = second->degree;

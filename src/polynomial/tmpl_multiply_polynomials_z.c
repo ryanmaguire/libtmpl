@@ -114,6 +114,10 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
     if (prod == NULL)
         return;
 
+    /*  Similarly if the error_occurred Boolean is true.                      */
+    if (prod->error_occurred)
+        return;
+
     /*  If either P or Q are NULL, nothing can be done. Store an error        *
      *  message in prod.                                                      */
     if ((P == NULL) || (Q == NULL))
@@ -192,7 +196,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
             return;
         }
 
-        /*  If realloc was successful, set prof->coeffs to the result.        */
+        /*  If realloc was successful, set prod->coeffs to the result.        */
         prod->coeffs = tmp;
     }
 
@@ -266,7 +270,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
      *      P3*Q0 P3*Q1 P3*Q2 P3*Q3                                           *
      *      P4*Q0 P4*Q1 P4*Q2 P4*Q3                                           *
      *      P5*Q0 P5*Q1 P5*Q2 P5*Q3                                           *
-     *  The Cauchy sum for infinite products is defined by:                   *
+     *  The Cauchy product for infinite sums is defined by:                   *
      *      /  infty     \ /   infty    \     infty                           *
      *      |  -----     | |  -----     |     -----                           *
      *      |  \         | |  \         |     \                               *
