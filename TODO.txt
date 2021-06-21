@@ -1,12 +1,4 @@
 Add polynomial library.
-	Have a polynomial be a struct with an unsigned integer pointer
-	and an unsigned int. The int is the degree, the pointer is the
-	coefficients. Similarly for double and complex pointers.
-
-	Implement root finding algorithm for polynomial from that MIT paper.
-
-	Implement eval function for polynomials.
-
 	For Z[x]:
 		Polynomial subtraction.
 		Function for if a polynomial divides another.
@@ -35,12 +27,16 @@ Add polynomial library.
 		Set term
 		Extract term
 
+	For C[z]:
+		Implement root finding algorithm
+		for polynomial from that MIT paper.
+
+
 	For Mat[Q[x], N]:
 		Smith-Normal Form.
 		Determinant.
 
 More functions for complex library:
-
 	complex_sqrt_real
 		sqrt of real number, allowing negative real numbers.
 
@@ -60,10 +56,11 @@ More functions for complex library:
 		square, cube, fourth power, etc.
 
 
-Add these bacK;
+Add these back;
 extern tmpl_ComplexDouble
-tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z, tmpl_ComplexDouble w);
+tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z,
+                                 tmpl_ComplexDouble w);
 
 extern tmpl_ComplexDouble
 tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
-										tmpl_ComplexDouble w);
+                                        tmpl_ComplexDouble w);
