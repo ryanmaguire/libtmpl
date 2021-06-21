@@ -7,6 +7,38 @@ Add polynomial library.
 
 	Implement eval function for polynomials.
 
+	For Z[x]:
+		Polynomial subtraction.
+		Function for if a polynomial divides another.
+		Polynomial equality.
+		Polynomial comparison.
+		Derivative.
+		Polynomial eval.
+		Set term
+		extract term
+
+	For Q[x]:
+		Polynomial add
+		polynomial subtract
+		polynomial multiply
+		equality
+		Derivative
+		polynomial eval
+		GCD function.
+		Bezout function: ap + bq = GCD(p,q)
+		quotient and remainder: a = qb + r
+		print
+		get string
+		Destroy
+		Create zero
+		Create empty
+		Set term
+		Extract term
+
+	For Mat[Q[x], N]:
+		Smith-Normal Form.
+		Determinant.
+
 More functions for complex library:
 
 	complex_sqrt_real
