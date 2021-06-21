@@ -241,8 +241,6 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
  *      NULL, it needs to be free'd when done with.                           *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_get_string.c                 *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern char *
 tmpl_PolynomialZ_Get_String(tmpl_PolynomialZ *poly);
@@ -264,8 +262,6 @@ tmpl_PolynomialZ_Get_String(tmpl_PolynomialZ *poly);
  *      poly = NULL, nothing is printed.                                      *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_print_string.c               *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
