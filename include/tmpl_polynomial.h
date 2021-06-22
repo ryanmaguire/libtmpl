@@ -377,6 +377,25 @@ tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term);
 extern void
 tmpl_PolynomialZ_Shrink(tmpl_PolynomialZ *poly);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Deriv                                                *
+ *  Purpose:                                                                  *
+ *      Computes the derivative of a polynomial in Z[x].                      *
+ *  Arguments:                                                                *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial.                                        *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial, the derivative will be stored in it.   *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_deriv.c                      *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/polynomial/tmpl_deriv_polynomial_z_example_001.c     *
+ *      libtmpl/examples/polynomial/tmpl_deriv_polynomial_z_example_002.c     *
+ *      libtmpl/examples/polynomial/tmpl_deriv_polynomial_z_example_003.c     *
+ ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv);
 
