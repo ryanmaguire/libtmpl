@@ -1,13 +1,11 @@
 Add polynomial library.
 	For Z[x]:
-		Polynomial subtraction.
 		Function for if a polynomial divides another.
 		Polynomial equality.
 		Polynomial comparison.
 		Derivative.
 		Polynomial eval.
-		Set term
-		extract term
+		scalar multiply
 
 	For Q[x]:
 		Polynomial add
