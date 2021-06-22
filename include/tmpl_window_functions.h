@@ -1,6 +1,13 @@
 #ifndef TMPL_WINDOW_FUNCTIONS_H
 #define TMPL_WINDOW_FUNCTIONS_H
 
+/*  complex data types are defined here.                                      */
+#include <libtmpl/include/tmpl_complex.h>
+
+extern double
+tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,
+                                  long dim, double dx, double f_scale);
+
 #define RectNormEQ 1.0
 #define CossNormEQ 1.5
 #define KB20NormEQ 1.49634231

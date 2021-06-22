@@ -1,28 +1,30 @@
-
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_numerical_complex.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_numerical.h>
+#include <libtmpl/include/tmpl_bool.h>
 
 tmpl_ComplexDouble
-tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
-                            tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
-                            tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
-                            unsigned int max_iters, double eps)
+tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z, double *coeffs,
+                                      unsigned int degree,
+                                      unsigned int max_iters, double eps)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ComplexDouble dz, w, w_prime;
+    tmpl_ComplexDouble dz, w, wp;
+    tmpl_Bool comp;
     unsigned int n;
 
     /*  Evaluate the perturbation term, then compute the next iteration.      */
-    w = (*f)(z);
-    w_prime = (*f_prime)(z);
+    w = tmpl_CDouble_Poly_Real_Coeffs(coeffs, degree, z);
+    wp = tmpl_CDouble_Poly_Deriv_Real_Coeffs(coeffs, degree, 1, z);
 
     /*  If the derivative is zero at your initial guess, Newton-Raphson       *
      *  fails. Return Not-a-Number in this case.                              */
-    if (tmpl_CDouble_Compare(w_prime, tmpl_CDouble_Zero))
+    comp = tmpl_CDouble_Compare(wp, tmpl_CDouble_Zero);
+    if (comp)
         return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
     /*  Compute the first iteration of Newton-Raphson.                        */
-    dz = tmpl_CDouble_Divide(w, w_prime);
+    dz = tmpl_CDouble_Divide(w, wp);
     z  = tmpl_CDouble_Subtract(z, dz);
 
     /*  The first iteration has been computed above, so set n to 1.           */
@@ -31,13 +33,16 @@ tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
     /*  Continuing this computation until the error is below the threshold.   */
     while(tmpl_CDouble_Abs(dz) > eps)
     {
-        w = (*f)(z);
-        w_prime = (*f_prime)(z);
+        w = tmpl_CDouble_Poly_Real_Coeffs(coeffs, degree, z);
+        wp = tmpl_CDouble_Poly_Deriv_Real_Coeffs(coeffs, degree,
+                                                              1, z);
 
-        if (tmpl_CDouble_Compare(w_prime, tmpl_CDouble_Zero))
+        comp = tmpl_CDouble_Compare(wp, tmpl_CDouble_Zero);
+
+        if (comp)
             return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
-        dz = tmpl_CDouble_Divide(w, w_prime);
+        dz = tmpl_CDouble_Divide(w, wp);
         z  = tmpl_CDouble_Subtract(z, dz);
         ++n;
 
@@ -48,3 +53,4 @@ tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
 
     return z;
 }
+

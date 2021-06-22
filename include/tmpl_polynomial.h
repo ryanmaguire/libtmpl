@@ -422,6 +422,28 @@ tmpl_PolynomialZ_Shrink(tmpl_PolynomialZ *poly);
 extern void
 tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Scale                                                *
+ *  Purpose:                                                                  *
+ *      Multiply a polynomial by an integer.                                  *
+ *  Arguments:                                                                *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial.                                        *
+ *      scale (signed long int):                                              *
+ *          The integer the polynomial is multiplied with.                    *
+ *      prod (tmpl_PolynomialZ *):                                            *
+ *          The product of poly and scale.                                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
+ ******************************************************************************/
+extern void
+tmpl_PolynomialZ_Scale(tmpl_PolynomialZ *poly,
+                       signed long int scale,
+                       tmpl_PolynomialZ *prod);
+
 extern void
 tmpl_PolynomialQ_Add(tmpl_PolynomialQ *P,
                      tmpl_PolynomialQ *Q,

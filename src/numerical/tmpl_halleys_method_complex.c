@@ -1,6 +1,6 @@
 
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_numerical_complex.h>
+#include <libtmpl/include/tmpl_numerical.h>
 
 tmpl_ComplexDouble
 tmpl_Halleys_Method_Complex(tmpl_ComplexDouble z,
