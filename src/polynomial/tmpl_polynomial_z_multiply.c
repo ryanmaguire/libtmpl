@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_multiply_polynomials_z                         *
+ *                        tmpl_polynomial_z_multiply                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Code for multiplying two polynomials in Z[x].                         *
@@ -156,50 +156,6 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
         return;   
     }
 
-    /*  If the prod coeffs pointer is NULL, allocate memory for it.           */
-    if (prod->coeffs == NULL)
-    {
-        /*  The degree of a product is the sum of the degrees.                */
-        prod->degree = P->degree + Q->degree;
-        prod->coeffs = malloc(sizeof(*prod->coeffs) * (prod->degree + 1UL));
-
-        /*  Check if malloc failed.                                           */
-        if (prod->coeffs == NULL)
-        {
-            prod->error_occurred = tmpl_True;
-            prod->error_message = tmpl_strdup(
-                "Error Encountered: libtmpl\n"
-                "\r\ttmpl_PolynomialZ_Multiply\n\n"
-                "malloc failed to allocate memory for prod->coeffs.\n"
-            );
-            return;  
-        }
-    }
-
-    /*  If prod does not have the correct size for it's degree, reallocate    *
-     *  the coeffs pointer to be the sum of the two others.                   */
-    else if (prod->degree != (P->degree + Q->degree))
-    {
-        /*  The degree of a product is the sum of the degrees.                */
-        prod->degree = P->degree + Q->degree;
-        tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->degree + 1UL));
-
-        /*  Check if realloc failed.                                          */
-        if (tmp == NULL)
-        {
-            prod->error_occurred = tmpl_True;
-            prod->error_message = tmpl_strdup(
-                "Error Encountered: libtmpl\n"
-                "\r\ttmpl_PolynomialZ_Multiply\n\n"
-                "realloc failed to allocate memory for prod->coeffs.\n"
-            );
-            return;
-        }
-
-        /*  If realloc was successful, set prod->coeffs to the result.        */
-        prod->coeffs = tmp;
-    }
-
     /*  Order the polynomials by degree.                                      */
     if (P->degree <= Q->degree)
     {
@@ -261,6 +217,50 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
     for (n = 0UL; n <= second->degree; ++n)
         second_coeffs[n] = second->coeffs[n];
 
+    /*  If the prod coeffs pointer is NULL, allocate memory for it.           */
+    if (prod->coeffs == NULL)
+    {
+        /*  The degree of a product is the sum of the degrees.                */
+        prod->degree = first_deg + second_deg;
+        prod->coeffs = malloc(sizeof(*prod->coeffs) * (prod->degree + 1UL));
+
+        /*  Check if malloc failed.                                           */
+        if (prod->coeffs == NULL)
+        {
+            prod->error_occurred = tmpl_True;
+            prod->error_message = tmpl_strdup(
+                "Error Encountered: libtmpl\n"
+                "\r\ttmpl_PolynomialZ_Multiply\n\n"
+                "malloc failed to allocate memory for prod->coeffs.\n"
+            );
+            return;  
+        }
+    }
+
+    /*  If prod does not have the correct size for it's degree, reallocate    *
+     *  the coeffs pointer to be the sum of the two others.                   */
+    else if (prod->degree != (first_deg + second_deg))
+    {
+        /*  The degree of a product is the sum of the degrees.                */
+        prod->degree = first_deg + second_deg;
+        tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->degree + 1UL));
+
+        /*  Check if realloc failed.                                          */
+        if (tmp == NULL)
+        {
+            prod->error_occurred = tmpl_True;
+            prod->error_message = tmpl_strdup(
+                "Error Encountered: libtmpl\n"
+                "\r\ttmpl_PolynomialZ_Multiply\n\n"
+                "realloc failed to allocate memory for prod->coeffs.\n"
+            );
+            return;
+        }
+
+        /*  If realloc was successful, set prod->coeffs to the result.        */
+        prod->coeffs = tmp;
+    }
+
     /*  Perform the first part of the Cauchy product. We arrange coefficients *
      *  P_m, Q_n in a rectangular array. Suppose P->degree = 5 and            *
      *  Q->degree = 3, we get the following:                                  *
@@ -271,7 +271,7 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
      *      P4*Q0 P4*Q1 P4*Q2 P4*Q3                                           *
      *      P5*Q0 P5*Q1 P5*Q2 P5*Q3                                           *
      *  The Cauchy product for infinite sums is defined by:                   *
-     *      /  infty     \ /   infty    \     infty                           *
+     *      /  infty     \ /  infty     \     infty                           *
      *      |  -----     | |  -----     |     -----                           *
      *      |  \         | |  \         |     \                               *
      *      |  /     a_m | |  /     b_n |  =  /     c_n                       *

@@ -111,7 +111,9 @@ char *tmpl_PolynomialZ_Get_String(tmpl_PolynomialZ *poly)
      *  The largest string possible for 64-bit coefficients and 64-bit        *
      *  degrees is 19 + 19 + 3 + 2 + 1 = 44. 19 is the number of digits in    *
      *  the largest 64 bit number, 3 is for " + " or " - ", 2 is for "x^",    *
-     *  and the 1 is for the null terminator.                                 */ 
+     *  and the 1 is for the null terminator. If you have larger than 64-bit  *
+     *  integers, and somehow have enough memory to store a polynomial with   *
+     *  more than 2^64 coefficients, change this value.                       */
     char buffer[48];
 
     /*  Integer for testing if sprintf succeeds.                              */
