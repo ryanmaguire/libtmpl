@@ -289,8 +289,8 @@ tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      It is assumed none of the three input polynomials are NULL. If        *
- *      sum has it's degree not equal the max of the two degrees of P and Q,  *
- *      realloc will be called on the coeffs pointer.                         *
+ *      sum has it's degree not equal to the max of the two degrees of P and  *
+ *      Q realloc will be called on the coeffs pointer.                       *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_add.c                        *
  *  Examples:                                                                 *
@@ -321,8 +321,8 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      It is assumed none of the three input polynomials are NULL. If        *
- *      sum has it's degree not equal the max of the two degrees of P and Q,  *
- *      realloc will be called on the coeffs pointer.                         *
+ *      sum has it's degree not equal to the max of the two degrees of P and  *
+ *      Q realloc will be called on the coeffs pointer.                       *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_subtract_polynomial_z.c                   *
  *  Examples:                                                                 *
