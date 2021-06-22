@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_subtract_polynomials_z                          *
+ *                        tmpl_polynomial_z_subtract                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Code for subtracting two elements of Z[x].                            *
@@ -227,6 +227,11 @@ tmpl_PolynomialZ_Subtract(tmpl_PolynomialZ *P,
      *  coefficients of the larger degree polynomial.                         */
     for (n = first->degree + 1UL; n <= second->degree; ++n)
         diff->coeffs[n] = factor*second->coeffs[n];
+
+    /*  If P and Q have the same degree and the last coefficients are equal,  *
+     *  diff->degree will be less than max(P->degree, Q->degree). Check this. */
+    if (diff->coeffs[diff->degree] == 0L)
+        tmpl_PolynomialZ_Shrink(diff);
 
     return;
 }

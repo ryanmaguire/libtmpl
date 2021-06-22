@@ -339,7 +339,7 @@ tmpl_PolynomialZ_Subtract(tmpl_PolynomialZ *P,
  *  Purpose:                                                                  *
  *      Set the coefficient of a given term to the given value.               *
  *  Arguments:                                                                *
- *      P (tmpl_PolynomialZ *):                                               *
+ *      poly (tmpl_PolynomialZ *):                                            *
  *          A pointer to a polynomial.                                        *
  *      term (unsigned long int):                                             *
  *          The term to be set.                                               *
@@ -347,6 +347,10 @@ tmpl_PolynomialZ_Subtract(tmpl_PolynomialZ *P,
  *          The value to be set for the term.                                 *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      If term is greater than poly->degree, the poly->coeffs pointer is     *
+ *      realloced, the values between poly->degree and term are set to zero,  *
+ *      and the last value is set to the given coefficient.                   *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_set_term.c                   *
  ******************************************************************************/
@@ -377,6 +381,22 @@ tmpl_PolynomialZ_Set_Term(tmpl_PolynomialZ *poly,
 extern signed long int
 tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Shrink                                               *
+ *  Purpose:                                                                  *
+ *      Removes all non-zero terms with after the last non-zero term. This    *
+ *      effectively "shrinks" the size of the coefficients array.             *
+ *  Arguments:                                                                *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial.                                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      If realloc fails, the error_occurred Boolean is set to true.          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_shrink.c                     *
+ ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Shrink(tmpl_PolynomialZ *poly);
 
