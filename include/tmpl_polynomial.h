@@ -25,7 +25,7 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- *  2.) tmpl_Rational.h:                                                      *
+ *  2.) tmpl_rational.h:                                                      *
  *          Header file containing a data type for working with rational      *
  *          numbers.                                                          *
  *  3.) tmpl_complex.h:                                                       *
@@ -94,11 +94,10 @@ typedef struct _tmpl_SparsePolynomialZ {
     signed long int *terms;
 
     /*  A pointer for the degrees of all of the terms.                        */
-    unsigned long int *degrees_of_terms;
+    unsigned long int *degree_of_term;
 
-    /*  The degree of the polynomial. This is the maximum of the elements     *
-     *  in the degrees_of_terms array.                                        */
-    unsigned long int degree;
+    /*  The number of non-zero terms.                                         */
+    unsigned long int size;
 
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
@@ -107,20 +106,28 @@ typedef struct _tmpl_SparsePolynomialZ {
     char *error_message;
 } tmpl_SparsePolynomialZ;
 
+/*  Data type for matrices of polynomials in Z[x].                            */
+typedef struct _tmpl_PolynomialZMatrix {
+    /*  An array of polynomials, representing the matrix.                     */
+    tmpl_PolynomialZ **data;
+
+    /*  The number of rows and columns, respectively.                         */
+    unsigned long int number_of_rows;
+    unsigned long int number_of_columns;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_PolynomialZMatrix;
+
 typedef struct _tmpl_PolynomialQ {
     tmpl_RationalNumber *coeffs;
     unsigned long int degree;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_PolynomialQ;
-
-typedef struct _tmpl_PolynomialZMatrix {
-    tmpl_PolynomialZ **data;
-    unsigned long int number_of_rows;
-    unsigned long int number_of_columns;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_PolynomialZMatrix;
 
 typedef struct _tmpl_PolynomialQMatrix {
     tmpl_PolynomialQ **data;
@@ -285,7 +292,7 @@ tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
  *      sum has it's degree not equal the max of the two degrees of P and Q,  *
  *      realloc will be called on the coeffs pointer.                         *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_add_polynomial_z.c                        *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_add.c                        *
  *  Examples:                                                                 *
  *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_001.c       *
  *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_002.c       *

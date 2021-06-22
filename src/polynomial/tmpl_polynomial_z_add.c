@@ -200,7 +200,7 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
             sum->error_occurred = tmpl_True;
             sum->error_message = tmpl_strdup(
                 "Error Encountered: libtmpl\n"
-                "\r\ttmpl_PolynomialZ_Multiply\n\n"
+                "\r\ttmpl_PolynomialZ_Add\n\n"
                 "realloc failed to allocate memory for sum->coeffs.\n"
             );
             return;
