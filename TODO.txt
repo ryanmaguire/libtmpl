@@ -3,7 +3,6 @@ Add polynomial library.
 		Function for if a polynomial divides another.
 		Polynomial equality.
 		Polynomial comparison.
-		Derivative.
 		Polynomial eval.
 		scalar multiply
 
