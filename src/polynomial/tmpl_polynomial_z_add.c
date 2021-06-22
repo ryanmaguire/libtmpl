@@ -221,6 +221,11 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
     for (n = first->degree + 1UL; n <= second->degree; ++n)
         sum->coeffs[n] = second->coeffs[n];
 
+    /*  If P and Q have the same degree and the last coefficients are opposite*
+     *  diff->degree will be less than max(P->degree, Q->degree). Check this. */
+    if (sum->coeffs[sum->degree] == 0L)
+        tmpl_PolynomialZ_Shrink(sum);
+
     return;
 }
 /*  End of tmpl_PolynomialZ_Add.                                              */

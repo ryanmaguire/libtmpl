@@ -24,12 +24,12 @@
  *      it's always best to check for errors. This compiles with GCC, TCC,    *
  *      clang, and PCC, with all pedantic compiler warnings enabled. The      *
  *      result is:                                                            *
- *          (-1 + x^8) - (1 + x^4) = -2 - x^4 + x^8                           *
+ *          (1 + x) - (1 + x) = 0                                             *
  *                                                                            *
  *          Trying out tmpl_PolynomialZ_Print_String:                         *
- *          P = -1 + x^8                                                      *
- *          Q = 1 + x^4                                                       *
- *          P - Q = -2 - x^4 + x^8                                            *
+ *          P = 1 + x                                                         *
+ *          Q = 1 + x                                                         *
+ *          P - Q = 0                                                         *
  *                                                                            *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
@@ -53,8 +53,8 @@ int main(void)
     char *Pstr, *Qstr, *sumstr;
 
     /*  Create polynomials for P and Q with all coefficients set to zero.     */
-    P = tmpl_Create_Zero_PolynomialZ(8);
-    Q = tmpl_Create_Zero_PolynomialZ(4);
+    P = tmpl_Create_Zero_PolynomialZ(1);
+    Q = tmpl_Create_Zero_PolynomialZ(1);
 
     /*  Check if either failed.                                               */
     if ((P == NULL) || (Q == NULL))
@@ -83,13 +83,13 @@ int main(void)
         return -1;
     }
 
-    /*  We'll set P to the polynomial x^8 - 1.                                */
-    P->coeffs[0] = -1L;
-    P->coeffs[8] = 1L;
+    /*  We'll set P to the polynomial x + 1.                                  */
+    P->coeffs[0] = 1L;
+    P->coeffs[1] = 1L;
 
-    /*  We'll set Q to the polynomial x^4 + 1.                                */
+    /*  We'll set Q to the polynomial x + 1.                                  */
     Q->coeffs[0] = 1L;
-    Q->coeffs[4] = 1L;
+    Q->coeffs[1] = 1L;
 
     /*  Create an empty polynomial to store the difference in.                */
     diff = tmpl_Create_Empty_PolynomialZ();
