@@ -319,16 +319,59 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_subtract_polynomial_z.c                   *
  *  Examples:                                                                 *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_001.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_002.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_003.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_004.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_005.c       *
+ *      libtmpl/examples/polynomial/tmpl_subtract_polynomial_z_example_001.c  *
  ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Subtract(tmpl_PolynomialZ *P,
                           tmpl_PolynomialZ *Q,
                           tmpl_PolynomialZ *diff);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Set_Term                                             *
+ *  Purpose:                                                                  *
+ *      Set the coefficient of a given term to the given value.               *
+ *  Arguments:                                                                *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to a polynomial.                                        *
+ *      term (unsigned long int):                                             *
+ *          The term to be set.                                               *
+ *      coefficient (signed long int):                                        *
+ *          The value to be set for the term.                                 *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_set_term.c                   *
+ ******************************************************************************/
+extern void
+tmpl_PolynomialZ_Set_Term(tmpl_PolynomialZ *poly,
+                          unsigned long int term,
+                          signed long int coefficient);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_Extract_Term                                         *
+ *  Purpose:                                                                  *
+ *      Extract the coefficient of a given term.                              *
+ *  Arguments:                                                                *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to a polynomial.                                        *
+ *      term (unsigned long int):                                             *
+ *          The term to be extracted.                                         *
+ *  Output:                                                                   *
+ *      coefficients (signed lont int):                                       *
+ *          The value of the given term.                                      *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_extract_term.c               *
+ ******************************************************************************/
+extern signed long int
+tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term);
+
+extern void
+tmpl_PolynomialZ_Shrink(tmpl_PolynomialZ *poly);
+
+extern void
+tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv);
 
 extern void
 tmpl_PolynomialQ_Add(tmpl_PolynomialQ *P,
