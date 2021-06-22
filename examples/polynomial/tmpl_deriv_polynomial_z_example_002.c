@@ -36,7 +36,7 @@
 int main(void)
 {
     /*  Declare pointers to polynomials, and char pointers for strings.       */
-    tmpl_PolynomialZ *P, *Pprime;
+    tmpl_PolynomialZ *P;
     char *Pstr, *Pprimestr;
 
     /*  Create polynomials for P with all coefficients set to zero.           */
@@ -53,15 +53,14 @@ int main(void)
     P->coeffs[7] = 1L;
     P->coeffs[8] = 1L;
 
-    /*  Create an empty polynomial to store the derivative in.                */
-    Pprime = tmpl_Create_Empty_PolynomialZ();
-    
-    /*  Compute the derivative of P and store it in Pprime.                   */
-    tmpl_PolynomialZ_Deriv(P, Pprime);
-
-    /*  Get the string form of the polynomials.                               */
+    /*  Get the string form of P.                                             */
     Pstr = tmpl_PolynomialZ_Get_String(P);
-    Pprimestr = tmpl_PolynomialZ_Get_String(Pprime);
+
+    /*  Compute the derivative of P and store it in P.                        */
+    tmpl_PolynomialZ_Deriv(P, P);
+
+    /*  Get the string form of the derivative.                                */
+    Pprimestr = tmpl_PolynomialZ_Get_String(P);
 
     /*  Print the result.                                                     */
     fprintf(stderr, "P = %s\n", Pstr);
@@ -71,7 +70,6 @@ int main(void)
     free(Pprimestr);
     free(Pstr);
     tmpl_Destroy_PolynomialZ(&P);
-    tmpl_Destroy_PolynomialZ(&Pprime);
     return 0;
 }
 /*  End of main.                                                              */

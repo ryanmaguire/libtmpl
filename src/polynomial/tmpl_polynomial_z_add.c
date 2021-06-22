@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_add_polynomials_z                            *
+ *                          tmpl_polynomials_z_add                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Code for adding two elements of Z[x].                                 *

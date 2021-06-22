@@ -53,8 +53,8 @@ int main(void)
     P->coeffs[7] = 1L;
     P->coeffs[8] = 1L;
 
-    /*  Create an empty polynomial to store the derivative in.                */
-    Pprime = tmpl_Create_Empty_PolynomialZ();
+    /*  Create a degree 7 polynomial with coefficients set to zero.           */
+    Pprime = tmpl_Create_Zero_PolynomialZ(7);
     
     /*  Compute the derivative of P and store it in Pprime.                   */
     tmpl_PolynomialZ_Deriv(P, Pprime);
