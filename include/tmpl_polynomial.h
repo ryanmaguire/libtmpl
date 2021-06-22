@@ -361,13 +361,16 @@ tmpl_PolynomialZ_Set_Term(tmpl_PolynomialZ *poly,
  *  Purpose:                                                                  *
  *      Extract the coefficient of a given term.                              *
  *  Arguments:                                                                *
- *      P (tmpl_PolynomialZ *):                                               *
+ *      poly (tmpl_PolynomialZ *):                                            *
  *          A pointer to a polynomial.                                        *
  *      term (unsigned long int):                                             *
  *          The term to be extracted.                                         *
  *  Output:                                                                   *
- *      coefficients (signed lont int):                                       *
+ *      coefficient (signed lont int):                                        *
  *          The value of the given term.                                      *
+ *  Notes:                                                                    *
+ *      If poly is NULL, poly->error_occurred is true, poly->degree < term,   *
+ *      or if poly->coeffs = NULL, the value 0 is returned.                   *
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_extract_term.c               *
  ******************************************************************************/

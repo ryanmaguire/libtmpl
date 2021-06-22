@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_PolynomialZ_Deriv                                                *
  *  Purpose:                                                                  *
- *      Add two polynomials in Z[x].                                          *
+ *      Computes the derivative of a polynomial in Z[x].                      *
  *  Arguments:                                                                *
  *      poly (tmpl_PolynomialZ *):                                            *
  *          A pointer to the polynomial.                                      *
@@ -157,11 +157,10 @@ void tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv)
     /*  If poly is a zero degree polynomial, the derivative is zero.          */
     if (poly->degree == 0UL)
     {
-        deriv->degree = 0UL;
-
         /*  If the coeffs pointer is NULL, allocate memory for it.            */
         if (deriv->coeffs == NULL)
         {
+            deriv->degree = 0UL;
             deriv->coeffs = malloc(sizeof(*deriv->coeffs));
 
             /*  Check if malloc failed.                                       */
@@ -178,8 +177,9 @@ void tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv)
         }
 
         /*  Otherwise, reallocate memory for the coeffs pointer.              */
-        else
+        else if (deriv->degree != 0UL)
         {
+            deriv->degree = 0UL;
             tmp = realloc(deriv->coeffs, sizeof(*deriv->coeffs));
 
             /*  Check if realloc failed.                                      */
@@ -206,8 +206,7 @@ void tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv)
     /*  Otherwise, use the power rule and linearity to compute.               */
     else
     {
-        /*  Set the value of last before realloc is called to avoid losing    *
-         *  this value.                                                       */
+        /*  Set the value of last before calling realloc to avoid losing it.  */
         last = poly->coeffs[poly->degree];
 
         /*  If the coeffs pointer is NULL, allocate memory for it.            */
@@ -236,7 +235,7 @@ void tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv)
         {
             deriv->degree = poly->degree - 1UL;
 
-            /*  Reallocate memory with tmp.                                   */
+            /*  Reallocate memory with realloc.                               */
             tmp = realloc(deriv->coeffs,
                           sizeof(*deriv->coeffs)*(deriv->degree+1UL));
 
