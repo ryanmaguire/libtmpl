@@ -3,7 +3,6 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_special_functions.h>
-#include <libtmpl/include/tmpl_special_functions_complex.h>
 
 /*  Compute the Bessel I_0 function for a complex value z. This               *
  *  returns double precision, maximum error ~1.e-9.                           */

@@ -1,7 +1,7 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
-#include <libtmpl/include/tmpl_window_functions_complex.h>
+#include <libtmpl/include/tmpl_window_functions.h>
 
 double
 tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,

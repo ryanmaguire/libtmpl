@@ -5,7 +5,7 @@
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Prototypes for these functions declared here.                             */
-#include <libtmpl/include/tmpl_special_functions_complex.h>
+#include <libtmpl/include/tmpl_special_functions.h>
 
 /* Coefficients for up to 8 significant digits. */
 #define FRESNEL_HEALD_RATIONAL_EPS_8_A00 1.0

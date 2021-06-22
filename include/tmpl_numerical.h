@@ -21,6 +21,26 @@
 #ifndef TMPL_NUMERICAL_H
 #define TMPL_NUMERICAL_H
 
+#include <libtmpl/include/tmpl_complex.h>
+
+extern tmpl_ComplexDouble
+tmpl_Halleys_Method_Complex(tmpl_ComplexDouble z,
+                            tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
+                            tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
+                            tmpl_ComplexDouble (*f_2prime)(tmpl_ComplexDouble),
+                            unsigned int max_iters, double eps);
+
+extern tmpl_ComplexDouble
+tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
+                            tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
+                            tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
+                            unsigned int max_iters, double eps);
+
+extern tmpl_ComplexDouble
+tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z,
+                                      double *coeffs, unsigned int degree,
+                                      unsigned int max_iters, double eps);
+
 extern float
 tmpl_Newton_Raphson_Float(float x, float (*f)(float), float (*f_prime)(float),
                           unsigned int max_iters, float eps);

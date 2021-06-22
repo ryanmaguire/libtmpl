@@ -4,7 +4,6 @@ Add polynomial library.
 		Polynomial equality.
 		Polynomial comparison.
 		Polynomial eval.
-		scalar multiply
 
 	For Q[x]:
 		Polynomial add
