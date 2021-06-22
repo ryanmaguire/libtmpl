@@ -24,12 +24,12 @@
  *      it's always best to check for errors. This compiles with GCC, TCC,    *
  *      clang, and PCC, with all pedantic compiler warnings enabled. The      *
  *      result is:                                                            *
- *          (-1 + x^8) + (1 + x^4) = x^4 + x^8                                *
+ *          (-1 + x^8) + (0) = -1 + x^8                                       *
  *                                                                            *
  *          Trying out tmpl_PolynomialZ_Print_String:                         *
  *          P = -1 + x^8                                                      *
- *          Q = 1 + x^4                                                       *
- *          P + Q = x^4 + x^8                                                 *
+ *          Q = 0                                                             *
+ *          P + Q = -1 + x^8                                                  *
  *                                                                            *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
@@ -83,7 +83,7 @@ int main(void)
         return -1;
     }
 
-    /*  We'll set P to the polynomial x^8 - 1.                                */
+    /*  We'll set P to the polynomial x^8 - 1. Q will remain zero.            */
     P->coeffs[0] = -1L;
     P->coeffs[8] = 1L;
 

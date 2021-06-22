@@ -33,15 +33,31 @@
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_complex.h>
 
-typedef struct tmpl_DoubleMatrix {
+typedef struct _tmpl_FloatMatrix {
+    float **data;
+    unsigned long int row_length;
+    unsigned long int column_length;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_FloatMatrix;
+
+typedef struct _tmpl_DoubleMatrix {
     double **data;
-    unsigned long row_length;
-    unsigned long column_length;
+    unsigned long int row_length;
+    unsigned long int column_length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_DoubleMatrix;
 
-typedef struct tmpl_ComplexDoubleMatrix {
+typedef struct _tmpl_LongDoubleMatrix {
+    long double **data;
+    unsigned long int row_length;
+    unsigned long int column_length;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_LongDoubleMatrix;
+
+typedef struct _tmpl_ComplexDoubleMatrix {
     tmpl_ComplexDouble **data;
     unsigned long row_length;
     unsigned long column_length;
