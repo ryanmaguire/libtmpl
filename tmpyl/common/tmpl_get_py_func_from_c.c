@@ -173,7 +173,6 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
         case NPY_CDOUBLE:
             if (c_func->cdouble_from_complex_func == NULL)
                 goto FAILURE;
-
             out = malloc(sizeof(long double) * dim);
                 tmpl_get_void_from_void_c2c(data, out, dim,
                                             c_func->cdouble_from_complex_func);
@@ -227,7 +226,7 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
 
 FAILURE:
     PyErr_Format(PyExc_RuntimeError,
-                 "\n\rError Encountered: rss_ringoccs\n"
+                 "\n\rError Encountered: tmpyl\n"
                  "\r\t%s\n\n"
                  "\rCould not parse inputs.\n",
                  c_func->func_name);

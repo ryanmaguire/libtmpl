@@ -5,7 +5,6 @@
 #include <Python.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_special_functions.h>
-#include <libtmpl/include/tmpl_special_functions_complex.h>
 #include "../common/tmpyl_common.h"
 
 /*---------------------------DEFINE PYTHON FUNCTIONS--------------------------*

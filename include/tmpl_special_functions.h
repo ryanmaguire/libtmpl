@@ -25,15 +25,6 @@ tmpl_CDouble_Fresnel_Cos(tmpl_ComplexDouble z);
 extern tmpl_ComplexDouble
 tmpl_CDouble_Fresnel_Sin(tmpl_ComplexDouble z);
 
-extern float tmpl_Float_Bessel_I0_Taylor[17];
-extern float tmpl_Float_Bessel_I0_Asym[5];
-
-extern double tmpl_Double_Bessel_I0_Taylor[25];
-extern double tmpl_Double_Bessel_I0_Asym[7];
-
-extern long double tmpl_LDouble_Bessel_I0_Taylor[29];
-extern long double tmpl_LDouble_Bessel_I0_Asym[9];
-
 extern float
 tmpl_Float_Bessel_I0(float x);
 
