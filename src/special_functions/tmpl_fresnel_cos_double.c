@@ -92,14 +92,6 @@
 #define FRESNEL_COSINE_TAYLOR_20    1.51310794954121709805375306783e-50
 #define FRESNEL_COSINE_TAYLOR_21   -8.37341968387228154282667202938e-54
 #define FRESNEL_COSINE_TAYLOR_22    4.22678975419355257583834431490e-57
-#define FRESNEL_COSINE_TAYLOR_23   -1.95410258232417110409647625591e-60
-#define FRESNEL_COSINE_TAYLOR_24    8.30461450592911058167783010711e-64
-#define FRESNEL_COSINE_TAYLOR_25   -3.25539546201302778914022841136e-67
-#define FRESNEL_COSINE_TAYLOR_26    1.18076183891157008799527066561e-70
-#define FRESNEL_COSINE_TAYLOR_27   -3.97425272266506578576293667383e-74
-#define FRESNEL_COSINE_TAYLOR_28    1.24466597738907071212550309576e-77
-#define FRESNEL_COSINE_TAYLOR_29   -3.63615636540051474579195169158e-81
-#define FRESNEL_COSINE_TAYLOR_30    9.93207019544894768776342036501e-85
 
 /* Define Coefficients for the Fresnel Cosine Asymptotic Expansion.           */
 #define FRESNEL_COSINE_ASYM_00     0.50
@@ -112,79 +104,6 @@
 #define FRESNEL_COSINE_ASYM_07     527.871093750
 #define FRESNEL_COSINE_ASYM_08     3959.0332031250
 #define FRESNEL_COSINE_ASYM_09    -33651.78222656250
-#define FRESNEL_COSINE_ASYM_10    -319691.931152343750
-#define FRESNEL_COSINE_ASYM_11     3356765.2770996093750
-#define FRESNEL_COSINE_ASYM_12     38602800.68664550781250
-#define FRESNEL_COSINE_ASYM_13    -482535008.583068847656250
-#define FRESNEL_COSINE_ASYM_14    -6514222615.8714294433593750
-
-float tmpl_Float_Fresnel_Cos(float x)
-{
-    /* Variables for C(x) and powers of x, respectively.                      */
-    float cx, arg;
-    float sinarg, cosarg, cos_x_squared, sin_x_squared;
-    arg = x*x;
-
-    /* For small x use the Taylor expansion to compute C(x). For larger x,  *
-     * use the asymptotic expansion. For values near 3.076, accuracy of 5   *
-     * decimals is guaranteed. Higher precicion outside this region.        */
-    if (arg < 9.0F)
-    {
-        arg *= arg;
-        cx = arg * (float)FRESNEL_COSINE_TAYLOR_15 + (float)FRESNEL_COSINE_TAYLOR_14;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_13;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_12;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_11;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_10;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_09;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_08;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_07;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_06;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_05;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_04;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_03;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_02;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_01;
-        cx = arg * cx + (float)FRESNEL_COSINE_TAYLOR_00;
-        cx = cx*x;
-    }
-    else if (arg < 1.0e16F)
-    {
-        cos_x_squared = tmpl_Float_Cos(arg);
-        sin_x_squared = tmpl_Float_Sin(arg);
-
-        arg = 1.0F/arg;
-        sin_x_squared *= arg;
-        arg *= arg;
-        cos_x_squared *= arg;
-
-        sinarg  = arg * (float)(FRESNEL_COSINE_ASYM_08 + FRESNEL_COSINE_ASYM_06);
-        sinarg  = arg * sinarg + (float)FRESNEL_COSINE_ASYM_04;
-        sinarg  = arg * sinarg + (float)FRESNEL_COSINE_ASYM_02;
-        sinarg  = arg * sinarg + (float)FRESNEL_COSINE_ASYM_00;
-        sinarg *= sin_x_squared;
-
-        cosarg  = arg * (float)(FRESNEL_COSINE_ASYM_09 + FRESNEL_COSINE_ASYM_07);
-        cosarg  = arg * cosarg + (float)FRESNEL_COSINE_ASYM_05;
-        cosarg  = arg * cosarg + (float)FRESNEL_COSINE_ASYM_03;
-        cosarg  = arg * cosarg + (float)FRESNEL_COSINE_ASYM_01;
-        cosarg *= cos_x_squared;
-
-        cx = cosarg + sinarg;
-        cx *= x;
-
-        /*  (x > 0) - (x < 0) is a quick way to return sign(x) and avoids an  *
-         *  expensive if-then statement. Output for the asymptotic expansion  *
-         *  is f(|x|) + sign(x) * sqrt(pi/8). Error goes like 1/x^15.         */
-        cx = cx + (float)((x > 0.0F) - (x < 0.0F))*tmpl_Sqrt_Pi_By_Eight_F;
-    }
-
-    /* For large values, return the limit of S(x) as x -> +/- infinity.       */
-    else
-        cx = (float)((x > 0.0F) - (x < 0.0F))*tmpl_Sqrt_Pi_By_Eight_F;
-
-    return cx;
-}
 
 double tmpl_Double_Fresnel_Cos(double x)
 {
@@ -250,96 +169,20 @@ double tmpl_Double_Fresnel_Cos(double x)
         cx = cosarg + sinarg;
         cx *= x;
 
-        /*  (x > 0) - (x < 0) is a quick way to return sign(x) and avoids an  *
-         *  expensive if-then statement. Output for the asymptotic expansion  *
-         *  is f(|x|) + sign(x) * sqrt(pi/8). Error goes like 1/x^15.         */
-        cx = cx + ((x > 0) - (x < 0))*tmpl_Sqrt_Pi_By_Eight;
+        if (x > 0.0)
+            cx += tmpl_Sqrt_Pi_By_Eight;
+        else
+            cx -= tmpl_Sqrt_Pi_By_Eight;
     }
 
     /* For large values, return the limit of S(x) as x -> +/- infinity.       */
     else
-        cx = ((x > 0) - (x < 0))*tmpl_Sqrt_Pi_By_Eight;
-
-    return cx;
-}
-
-long double tmpl_LDouble_Fresnel_Cos(long double x)
-{
-    /* Variables for C(x) and powers of x, respectively.                      */
-    long double cx, arg;
-
-    /*  Variables for the asymptotic expansion of C(x).                       */
-    long double sinarg, cosarg, cos_x_squared, sin_x_squared;
-    arg = x*x;
-
-    /* For small x use the Taylor expansion to compute C(x). For larger x,  *
-     * use the asymptotic expansion. For values near 3.076, accuracy of 5   *
-     * decimals is guaranteed. Higher precicion outside this region.        */
-    if (arg < 16.24L)
     {
-        arg *= arg;
-        cx = arg * (long double)FRESNEL_COSINE_TAYLOR_26 + (long double)FRESNEL_COSINE_TAYLOR_25;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_24;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_23;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_22;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_21;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_20;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_19;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_18;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_17;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_16;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_15;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_14;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_13;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_12;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_11;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_10;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_09;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_08;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_07;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_06;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_05;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_04;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_03;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_02;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_01;
-        cx = arg * cx + (long double)FRESNEL_COSINE_TAYLOR_00;
-        cx = cx*x;
+        if (x > 0.0)
+            return tmpl_Sqrt_Pi_By_Eight;
+        else
+            return -tmpl_Sqrt_Pi_By_Eight;
     }
-    else if (arg < 1.0e16L)
-    {
-        cos_x_squared = tmpl_LDouble_Cos(arg);
-        sin_x_squared = tmpl_LDouble_Sin(arg);
-
-        arg = 1.0L/arg;
-        sin_x_squared *= arg;
-        arg *= arg;
-        cos_x_squared *= arg;
-
-        sinarg  = arg * FRESNEL_COSINE_ASYM_08 + FRESNEL_COSINE_ASYM_06;
-        sinarg  = arg * sinarg + FRESNEL_COSINE_ASYM_04;
-        sinarg  = arg * sinarg + FRESNEL_COSINE_ASYM_02;
-        sinarg  = arg * sinarg + FRESNEL_COSINE_ASYM_00;
-        sinarg *= sin_x_squared;
-
-        cosarg  = arg * FRESNEL_COSINE_ASYM_09 + FRESNEL_COSINE_ASYM_07;
-        cosarg  = arg * cosarg + FRESNEL_COSINE_ASYM_05;
-        cosarg  = arg * cosarg + FRESNEL_COSINE_ASYM_03;
-        cosarg  = arg * cosarg + FRESNEL_COSINE_ASYM_01;
-        cosarg *= cos_x_squared;
-
-        cx = cosarg + sinarg;
-        cx *= x;
-
-        /*  (x > 0) - (x < 0) is a quick way to return sign(x) and avoids an  *
-         *  expensive if-then statement. Output for the asymptotic expansion  *
-         *  is f(|x|) + sign(x) * sqrt(pi/8). Error goes like 1/x^15.         */
-        cx = cx + ((x > 0.0L) - (x < 0.0L))*tmpl_Sqrt_Pi_By_Eight;
-    }
-
-    /* For large values, return the limit of S(x) as x -> +/- infinity.       */
-    else
-        cx = ((x > 0.0L) - (x < 0.0L))*tmpl_Sqrt_Pi_By_Eight;
 
     return cx;
 }
