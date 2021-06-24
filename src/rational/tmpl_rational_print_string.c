@@ -16,36 +16,39 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_rational_create                            *
+ *                          tmpl_rational_are_equal                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating rational numbers.                                   *
+ *      Code for checking if two rationals are equal.                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Create                                            *
+ *      tmpl_RationalNumber_Are_Equal                                         *
  *  Purpose:                                                                  *
- *      Creates a rational number from two requested signed integers, the     *
- *      numerator and the denominator.                                        *
+ *      Checks if two rational numbers are equal.                             *
  *  Arguments:                                                                *
- *      numer (signed long int):                                              *
- *          The numerator of the rational number.                             *
- *      denom (signed long int):                                              *
- *          The denominator of the rational number.                           *
- *  Output:                                                                   *
+ *      p (tmpl_RationalNumber):                                              *
+ *          A rational number.                                                *
  *      q (tmpl_RationalNumber):                                              *
- *          The number numer/denom.                                           *
+ *          Another rational number.                                          *
+ *  Output:                                                                   *
+ *      are_equal (tmpl_Bool):                                                *
+ *          A Boolean checking if p == q.                                     *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Set the numerator and denominator of a rational number to the         *
- *      requested values.                                                     *
+ *      Given a/b and c/d, check if ad = bc.                                  *
+ *  Notes:                                                                    *
+ *      No error check is performed to see if either of the denominators are  *
+ *      zero.                                                                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_rational.h:                                                      *
  *          Function prototype found here.                                    *
+ *  2.) stdio.h:                                                              *
+ *          FILE data type found here.                                        *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -66,17 +69,21 @@
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
-/*  Function prototype declared here.                                         */
+/*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for creating rational numbers.                                   */
-tmpl_RationalNumber
-tmpl_RationalNumber_Create(signed long int numer, signed long int denom)
+/*  FILE data type found here.                                                */
+#include <stdio.h>
+
+/*  Function for printing a rational number to a file.                        */
+void
+tmpl_RationalNumber_Print_String(FILE *fp, tmpl_RationalNumber p)
 {
-    /*  Declare a rational number, set its attributes, and return.            */
-    tmpl_RationalNumber q;
-    q.numerator = numer;
-    q.denominator = denom;
-    return q;
+    if (p.denominator >= 0L)
+        fprintf(fp, "%ld/%ld", p.numerator, p.denominator);
+    else if (p.numerator >= 0L)
+        fprintf(fp, "-%ld/%ld", p.numerator, -p.denominator);
+    else
+        fprintf(fp, "%ld/%ld", -p.numerator, -p.denominator);
 }
-/*  End of tmpl_RationalNumber_Create.                                        */
+/*  End of tmpl_RationalNumber_Print_String.                                  */

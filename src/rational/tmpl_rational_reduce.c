@@ -16,31 +16,28 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_rational_create                            *
+ *                            tmpl_rational_reduce                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating rational numbers.                                   *
+ *      Code for reducing a rational number so that the numerator and         *
+ *      denominator are coprime.                                              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Create                                            *
+ *      tmpl_RationalNumber_Reduce                                            *
  *  Purpose:                                                                  *
- *      Creates a rational number from two requested signed integers, the     *
- *      numerator and the denominator.                                        *
+ *      Reduces a rational number to coprime values.                          *
  *  Arguments:                                                                *
- *      numer (signed long int):                                              *
- *          The numerator of the rational number.                             *
- *      denom (signed long int):                                              *
- *          The denominator of the rational number.                           *
+ *      p (tmpl_RationalNumber):                                              *
+ *          A rational number.                                                *
  *  Output:                                                                   *
  *      q (tmpl_RationalNumber):                                              *
- *          The number numer/denom.                                           *
+ *          The number p in reduced form.                                     *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Set the numerator and denominator of a rational number to the         *
- *      requested values.                                                     *
+ *      Find the GCD of the numerator and denominator and divide by this.     *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -66,17 +63,58 @@
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
-/*  Function prototype declared here.                                         */
+/*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for creating rational numbers.                                   */
+/*  Function for reducing a rational number.                                  */
 tmpl_RationalNumber
-tmpl_RationalNumber_Create(signed long int numer, signed long int denom)
+tmpl_RationalNumber_Reduce(tmpl_RationalNumber p)
 {
-    /*  Declare a rational number, set its attributes, and return.            */
-    tmpl_RationalNumber q;
-    q.numerator = numer;
-    q.denominator = denom;
-    return q;
+    /*  Declare variables for the reduction.                                  */
+    signed long int reduced_numer, reduced_denom;
+
+    /*  And a variable for the GCD, and absolute values of the numerator      *
+     *  and denominator of the input rational number.                         */
+    signed long int GCD, abs_numer, abs_denom;
+
+    /*  If the denominator is zero, return.                                   */
+    if (p.denominator == 0L)
+        return p;
+
+    /*  If the numerator is zero, reduce to (0, 1).                           */
+    else if (p.numerator == 0L)
+        return tmpl_RationalNumber_Create(0L, 1L);
+
+    /*  If not, get the absolute values of the numerator and denominator.     */
+    if (p.numerator >= 0L)
+        abs_numer = p.numerator;
+    else
+        abs_numer = -p.numerator;
+
+    if (p.denominator >= 0L)
+        abs_denom = p.denominator;
+    else
+        abs_denom = -p.denominator;
+
+    /*  Get the GCD.                                                          */
+    while(abs_numer != abs_denom)
+    {
+        if(abs_numer > abs_denom)
+            abs_numer -= abs_denom;
+        else
+            abs_denom -= abs_numer;
+    }
+
+    GCD = abs_numer;
+
+    /*  Compute the reduction of p.                                           */
+    reduced_numer = p.numerator / GCD;
+    reduced_denom = p.denominator / GCD;
+
+    /*  Have the numerator be signed, and the denominator unsigned.           */
+    if (p.denominator >= 0L)
+        return tmpl_RationalNumber_Create(reduced_numer, reduced_denom);
+    else
+        return tmpl_RationalNumber_Create(-reduced_numer, -reduced_denom);
 }
-/*  End of tmpl_RationalNumber_Create.                                        */
+/*  End of tmpl_RationalNumber_Reduce.                                        */
