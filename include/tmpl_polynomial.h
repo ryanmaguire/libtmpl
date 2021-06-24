@@ -305,6 +305,11 @@ tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
                      tmpl_PolynomialZ *Q,
                      tmpl_PolynomialZ *sum);
 
+extern void
+tmpl_PolynomialQ_Add(tmpl_PolynomialQ *P,
+                     tmpl_PolynomialQ *Q,
+                     tmpl_PolynomialQ *sum);
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_PolynomialZ_Subtract                                             *
@@ -399,6 +404,9 @@ tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term);
  ******************************************************************************/
 extern void
 tmpl_PolynomialZ_Shrink(tmpl_PolynomialZ *poly);
+
+extern void
+tmpl_PolynomialQ_Shrink(tmpl_PolynomialQ *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
