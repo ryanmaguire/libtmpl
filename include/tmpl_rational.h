@@ -106,10 +106,27 @@ tmpl_RationalNumber_Create(signed long int numer, signed long int denom);
  *      are_equal (tmpl_Bool):                                                *
  *          A Boolean for if p and q are equal.                               *
  *  Source Code:                                                              *
- *      libtmpl/src/rational/tmpl_rational_are_equal.c                          *
+ *      libtmpl/src/rational/tmpl_rational_are_equal.c                        *
  ******************************************************************************/
 extern tmpl_Bool
 tmpl_RationalNumber_Are_Equal(tmpl_RationalNumber p, tmpl_RationalNumber q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RationalNumber_Is_Zero                                           *
+ *  Purpose:                                                                  *
+ *      Checks if a rational number is zero.                                  *
+ *  Arguments:                                                                *
+ *      p (tmpl_RationalNumber):                                              *
+ *          A rational number.                                                *
+ *  Output:                                                                   *
+ *      is_zero (tmpl_Bool):                                                  *
+ *          A Boolean for if p is zero.                                       *
+ *  Source Code:                                                              *
+ *      libtmpl/src/rational/tmpl_rational_is_zero.c                          *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_RationalNumber_Is_Zero(tmpl_RationalNumber p);
 
 /******************************************************************************
  *  Function:                                                                 *
