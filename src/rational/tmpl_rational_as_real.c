@@ -16,28 +16,29 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_rational_reduce                            *
+ *                          tmpl_rational_as_real                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for reducing a rational number so that the numerator and         *
- *      denominator are coprime.                                              *
+ *      Code for converting a rational number to a real one.                  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Reduce                                            *
+ *      tmpl_RationalNumber_As_Float                                          *
+ *      tmpl_RationalNumber_As_Double                                         *
+ *      tmpl_RationalNumber_As_LDouble                                        *
  *  Purpose:                                                                  *
- *      Reduces a rational number to coprime values.                          *
+ *      Converts a rational number into a floating-point one.                 *
  *  Arguments:                                                                *
  *      p (tmpl_RationalNumber):                                              *
  *          A rational number.                                                *
  *  Output:                                                                   *
- *      q (tmpl_RationalNumber):                                              *
- *          The number p in reduced form.                                     *
+ *      r (float/double/long double):                                         *
+ *          The number p as a floating-point.                                 *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Find the GCD of the numerator and denominator and divide by this.     *
+ *      Cast to floating point and return the quotient.                       *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -66,54 +67,35 @@
 /*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for reducing a rational number.                                  */
-tmpl_RationalNumber
-tmpl_RationalNumber_Reduce(tmpl_RationalNumber p)
+/*  Function for converting a rational number to a float.                     */
+float tmpl_RationalNumber_As_Float(tmpl_RationalNumber p)
 {
-    /*  Declare variables for the reduction.                                  */
-    signed long int reduced_numer, reduced_denom;
-
-    /*  And a variable for the GCD, and absolute values of the numerator      *
-     *  and denominator of the input rational number.                         */
-    signed long int GCD, abs_numer, abs_denom;
-
-    /*  If the denominator is zero, return.                                   */
-    if (p.denominator == 0L)
-        return p;
-
-    /*  If the numerator is zero, reduce to (0, 1).                           */
-    else if (p.numerator == 0L)
-        return tmpl_RationalNumber_Create(0L, 1L);
-
-    /*  If not, get the absolute values of the numerator and denominator.     */
-    if (p.numerator >= 0L)
-        abs_numer = p.numerator;
-    else
-        abs_numer = -p.numerator;
-
-    if (p.denominator >= 0L)
-        abs_denom = p.denominator;
-    else
-        abs_denom = -p.denominator;
-
-    /*  Get the GCD.                                                          */
-    while(abs_numer != abs_denom)
-    {
-        if (abs_numer > abs_denom)
-            abs_numer -= abs_denom;
-        else
-            abs_denom -= abs_numer;
-    }
-    GCD = abs_numer;
-
-    /*  Compute the reduction of p.                                           */
-    reduced_numer = p.numerator / GCD;
-    reduced_denom = p.denominator / GCD;
-
-    /*  Have the numerator be signed, and the denominator unsigned.           */
-    if (p.denominator >= 0L)
-        return tmpl_RationalNumber_Create(reduced_numer, reduced_denom);
-    else
-        return tmpl_RationalNumber_Create(-reduced_numer, -reduced_denom);
+    /*  Convert the numerator and denominator into floats and return          *
+     *  the quotient of the two.                                              */
+    float numer = (float)p.numerator;
+    float denom = (float)p.denominator;
+    return numer/denom;
 }
-/*  End of tmpl_RationalNumber_Reduce.                                        */
+/*  End of tmpl_RationalNumber_As_Float.                                      */
+
+/*  Function for converting a rational number to a double.                    */
+double tmpl_RationalNumber_As_Double(tmpl_RationalNumber p)
+{
+    /*  Convert the numerator and denominator into doubles and return         *
+     *  the quotient of the two.                                              */
+    double numer = (double)p.numerator;
+    double denom = (double)p.denominator;
+    return numer/denom;
+}
+/*  End of tmpl_RationalNumber_As_Double.                                     */
+
+/*  Function for converting a rational number to a long double.               */
+long double tmpl_RationalNumber_As_LDouble(tmpl_RationalNumber p)
+{
+    /*  Convert the numerator and denominator into long doubles and return    *
+     *  the quotient of the two.                                              */
+    long double numer = (long double)p.numerator;
+    long double denom = (long double)p.denominator;
+    return numer/denom;
+}
+/*  End of tmpl_RationalNumber_As_LDouble.                                    */

@@ -222,5 +222,29 @@ tmpl_RationalNumber_Subtract(tmpl_RationalNumber p, tmpl_RationalNumber q);
 extern void
 tmpl_RationalNumber_Print_String(FILE *fp, tmpl_RationalNumber p);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RationalNumber_As_Float                                          *
+ *  Purpose:                                                                  *
+ *      Converts a rational number to a floating point one. Similar           *
+ *      functions are provided for double and long double.                    *
+ *  Arguments:                                                                *
+ *      p (tmpl_RationalNumber):                                              *
+ *          A rational number.                                                *
+ *  Output:                                                                   *
+ *      r (float):                                                            *
+ *          The number p interpreted as a float.                              *
+ *  Source Code:                                                              *
+ *      libtmpl/src/rational/tmpl_rational_as_real.c                          *
+ ******************************************************************************/
+extern float
+tmpl_RationalNumber_As_Float(tmpl_RationalNumber p);
+
+extern double
+tmpl_RationalNumber_As_Double(tmpl_RationalNumber p);
+
+extern long double
+tmpl_RationalNumber_As_LDouble(tmpl_RationalNumber p);
+
 #endif
 /*  End of include guard.                                                     */
