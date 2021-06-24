@@ -16,29 +16,29 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_rational_multiply                            *
+ *                          tmpl_rational_divide                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for multiplying rational numbers.                                *
+ *      Code for dividing rational numbers.                                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Multiply                                          *
+ *      tmpl_RationalNumber_Divide                                            *
  *  Purpose:                                                                  *
- *      Multiplies two rational numbers.                                      *
+ *      Divides two rational numbers.                                         *
  *  Arguments:                                                                *
  *      p (tmpl_RationalNumber):                                              *
  *          A rational number.                                                *
  *      q (tmpl_RationalNumber):                                              *
  *          Another rational number.                                          *
  *  Output:                                                                   *
- *      prod (tmpl_RationalNumber):                                           *
- *          The product of p and q.                                           *
+ *      quot (tmpl_RationalNumber):                                           *
+ *          The quotient of p and q.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Multiply numerators and denominators.                                 *
+ *      Multiply numerators with denominators.                                *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -67,16 +67,16 @@
 /*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for multiplying rational numbers.                                */
+/*  Function for dividing rational numbers.                                   */
 tmpl_RationalNumber
-tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Divide(tmpl_RationalNumber p, tmpl_RationalNumber q)
 {
     /*  Declare necessary variables.                                          */
-    tmpl_RationalNumber prod;
+    tmpl_RationalNumber quot;
 
-    /*  Multiply numerator with numerator, and denominator with denominator.  */
-    prod.numerator = p.numerator * q.numerator;
-    prod.denominator = p.denominator * q.denominator;
-    return prod;
+    /*  Multiply numerator with denominator, and denominator with numerator.  */
+    quot.numerator = p.numerator * q.denominator;
+    quot.denominator = p.denominator * q.numerator;
+    return quot;
 }
-/*  End of tmpl_RationalNumber_Multiply.                                      */
+/*  End of tmpl_RationalNumber_Divide.                                        */

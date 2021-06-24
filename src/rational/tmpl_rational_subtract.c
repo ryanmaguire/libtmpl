@@ -16,29 +16,29 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_rational_multiply                            *
+ *                           tmpl_rational_subtract                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for multiplying rational numbers.                                *
+ *      Code for subtracting rational numbers.                                *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Multiply                                          *
+ *      tmpl_RationalNumber_Subtract                                          *
  *  Purpose:                                                                  *
- *      Multiplies two rational numbers.                                      *
+ *      Subtracts two rational numbers.                                       *
  *  Arguments:                                                                *
  *      p (tmpl_RationalNumber):                                              *
  *          A rational number.                                                *
  *      q (tmpl_RationalNumber):                                              *
  *          Another rational number.                                          *
  *  Output:                                                                   *
- *      prod (tmpl_RationalNumber):                                           *
- *          The product of p and q.                                           *
+ *      diff (tmpl_RationalNumber):                                           *
+ *          The difference of p and q.                                        *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Multiply numerators and denominators.                                 *
+ *      Use the "cross-multiply" rule to subtract the two numbers.            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -67,16 +67,20 @@
 /*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for multiplying rational numbers.                                */
+/*  Function for subtracting two rational numbers.                            */
 tmpl_RationalNumber
-tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Subtract(tmpl_RationalNumber p, tmpl_RationalNumber q)
 {
-    /*  Declare necessary variables.                                          */
-    tmpl_RationalNumber prod;
+    /*  Declare a variable for the difference.                                */
+    tmpl_RationalNumber diff;
 
-    /*  Multiply numerator with numerator, and denominator with denominator.  */
-    prod.numerator = p.numerator * q.numerator;
-    prod.denominator = p.denominator * q.denominator;
-    return prod;
+    /*  We add a/b - c/d via the following:                                   *
+     *      a     c     ad     cb     ad - cb                                 *
+     *      -  -  -  =  --  -  --  =  -------                                 *
+     *      b     d     bd     bd       bd                                    *
+     *  This is the so-called "cross-multiply" rule.                          */
+    diff.numerator = p.denominator * q.numerator - p.numerator * q.denominator;
+    diff.denominator = p.denominator * q.denominator;
+    return diff;
 }
-/*  End of tmpl_RationalNumber_Multiply.                                      */
+/*  End of tmpl_RationalNumber_Subtract.                                      */
