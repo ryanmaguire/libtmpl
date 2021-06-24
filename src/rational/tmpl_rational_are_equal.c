@@ -16,29 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_rational_multiply                            *
+ *                          tmpl_rational_are_equal                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for multiplying rational numbers.                                *
+ *      Code for checking if two rationals are equal.                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Multiply                                          *
+ *      tmpl_RationalNumber_Are_Equal                                         *
  *  Purpose:                                                                  *
- *      Multiplies two rational numbers.                                      *
+ *      Checks if two rational numbers are equal.                             *
  *  Arguments:                                                                *
  *      p (tmpl_RationalNumber):                                              *
  *          A rational number.                                                *
  *      q (tmpl_RationalNumber):                                              *
  *          Another rational number.                                          *
  *  Output:                                                                   *
- *      prod (tmpl_RationalNumber):                                           *
- *          The product of p and q.                                           *
+ *      are_equal (tmpl_Bool):                                                *
+ *          A Boolean checking if p == q.                                     *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Multiply numerators and denominators.                                 *
+ *      Given a/b and c/d, check if ad = bc.                                  *
+ *  Notes:                                                                    *
+ *      No error check is performed to see if either of the denominators are  *
+ *      zero.                                                                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -64,19 +67,19 @@
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
+/*  Booleans found here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
+
 /*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for multiplying rational numbers.                                */
-tmpl_RationalNumber
-tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q)
+/*  Function for checking if two rational numbers are equal.                  */
+tmpl_Bool
+tmpl_RationalNumber_Are_Equal(tmpl_RationalNumber p, tmpl_RationalNumber q)
 {
-    /*  Declare necessary variables.                                          */
-    tmpl_RationalNumber prod;
-
-    /*  Multiply numerator with numerator, and denominator with denominator.  */
-    prod.numerator = p.numerator * q.numerator;
-    prod.denominator = p.denominator * q.denominator;
-    return prod;
+    if (p.numerator * q.denominator == p.denominator * q.numerator)
+        return tmpl_True;
+    else
+        return tmpl_False;
 }
-/*  End of tmpl_RationalNumber_Multiply.                                      */
+/*  End of tmpl_RationalNumber_Are_Equal.                                     */

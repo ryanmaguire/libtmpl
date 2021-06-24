@@ -16,29 +16,31 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_rational_multiply                            *
+ *                            tmpl_rational_create                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for multiplying rational numbers.                                *
+ *      Code for creating rational numbers.                                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RationalNumber_Multiply                                          *
+ *      tmpl_Create_RationalNumber                                            *
  *  Purpose:                                                                  *
- *      Multiplies two rational numbers.                                      *
+ *      Creates a rational number from two requested signed integers, the     *
+ *      numerator and the denominator.                                        *
  *  Arguments:                                                                *
- *      p (tmpl_RationalNumber):                                              *
- *          A rational number.                                                *
- *      q (tmpl_RationalNumber):                                              *
- *          Another rational number.                                          *
+ *      numer (signed long int):                                              *
+ *          The numerator of the rational number.                             *
+ *      denom (signed long int):                                              *
+ *          The denominator of the rational number.                           *
  *  Output:                                                                   *
- *      prod (tmpl_RationalNumber):                                           *
- *          The product of p and q.                                           *
+ *      q (tmpl_RationalNumber):                                              *
+ *          The number numer/denom.                                           *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Multiply numerators and denominators.                                 *
+ *      Set the numerator and denominator of a rational number to the         *
+ *      requested values.                                                     *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -64,19 +66,17 @@
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
-/*  Rational numbers and function prototype found here.                       */
+/*  Function prototype declared here.                                         */
 #include <libtmpl/include/tmpl_rational.h>
 
-/*  Function for multiplying rational numbers.                                */
+/*  Function for creating rational numbers.                                   */
 tmpl_RationalNumber
-tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_Create_RationalNumber(signed long int numer, signed long int denom)
 {
-    /*  Declare necessary variables.                                          */
-    tmpl_RationalNumber prod;
-
-    /*  Multiply numerator with numerator, and denominator with denominator.  */
-    prod.numerator = p.numerator * q.numerator;
-    prod.denominator = p.denominator * q.denominator;
-    return prod;
+    /*  Declare a rational number, set its attributes, and return.            */
+    tmpl_RationalNumber q;
+    q.numerator = numer;
+    q.denominator = denom;
+    return q;
 }
-/*  End of tmpl_RationalNumber_Multiply.                                      */
+/*  End of tmpl_Create_RationalNumber.                                        */
