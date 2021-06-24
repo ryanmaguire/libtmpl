@@ -25,6 +25,8 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
+ *  2.) stdio.h:                                                              *
+ *          C Standard header file containing FILE type.                      *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -52,6 +54,9 @@
 /*  Booleans are found here.                                                  */
 #include <libtmpl/include/tmpl_bool.h>
 
+/*  FILE data type found here.                                                */
+#include <stdio.h>
+
 /*  Note:                                                                     *
  *      The data type defined below does not define arbitrary-precision       *
  *      rational numbers. On UNIX-like systems it will define 128-bit         *
@@ -70,7 +75,7 @@ extern const tmpl_RationalNumber tmpl_Rational_One;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Create_RationalNumber                                            *
+ *      tmpl_RationalNumber_Create                                            *
  *  Purpose:                                                                  *
  *      Creates a rational number for two integers.                           *
  *  Arguments:                                                                *
@@ -85,7 +90,7 @@ extern const tmpl_RationalNumber tmpl_Rational_One;
  *      libtmpl/src/rational/tmpl_rational_create.c                           *
  ******************************************************************************/
 extern tmpl_RationalNumber
-tmpl_Create_RationalNumber(signed long int numer, signed long int denom);
+tmpl_RationalNumber_Create(signed long int numer, signed long int denom);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -165,6 +170,23 @@ tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_RationalNumber_Reduce                                            *
+ *  Purpose:                                                                  *
+ *      Reduces a rational number to the form a/b where a and b are coprime.  *
+ *  Arguments:                                                                *
+ *      p (tmpl_RationalNumber):                                              *
+ *          A rational number.                                                *
+ *  Output:                                                                   *
+ *      q (tmpl_RationalNumber):                                              *
+ *          The number p in reduced form.                                     *
+ *  Source Code:                                                              *
+ *      libtmpl/src/rational/tmpl_rational_reduce.c                           *
+ ******************************************************************************/
+extern tmpl_RationalNumber
+tmpl_RationalNumber_Reduce(tmpl_RationalNumber p);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_RationalNumber_Subtract                                          *
  *  Purpose:                                                                  *
  *      Subtracts two rational numbers.                                       *
@@ -181,6 +203,24 @@ tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q);
  ******************************************************************************/
 extern tmpl_RationalNumber
 tmpl_RationalNumber_Subtract(tmpl_RationalNumber p, tmpl_RationalNumber q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RationalNumber_Print_String                                      *
+ *  Purpose:                                                                  *
+ *      Subtracts two rational numbers.                                       *
+ *  Arguments:                                                                *
+ *      fp (FILE *fp):                                                        *
+ *          A pointer to the file to be printed to.                           *
+ *      p (tmpl_RationalNumber):                                              *
+ *          A rational number.                                                *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/rational/tmpl_rational_print_string.c                     *
+ ******************************************************************************/
+extern void
+tmpl_RationalNumber_Print_String(FILE *fp, tmpl_RationalNumber p);
 
 #endif
 /*  End of include guard.                                                     */
