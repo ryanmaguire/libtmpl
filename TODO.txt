@@ -1,4 +1,5 @@
 Add polynomial library.
+	Fast multiply (Strassen algorithm)
 	For Z[x]:
 		Function for if a polynomial divides another.
 		Polynomial equality.
@@ -16,9 +17,6 @@ Add polynomial library.
 		quotient and remainder: a = qb + r
 		print
 		get string
-		Destroy
-		Create zero
-		Create empty
 		Set term
 		Extract term
 

@@ -88,67 +88,97 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_special_functions.h>
 
-/*  Compute the Bessel J_0 function for a floating point number x.            */
-float tmpl_Float_Bessel_J0(float x)
-{
-    /*  Declare necessary variables. C89 requires declaring these at the top. */
-    float bessel_J0, arg;
-    float sinarg, cosarg;
+static double tmpl_Double_Bessel_J0_Taylor[31] = {
+     1.0,
+    -0.25,
+     1.56250e-2,
+    -4.34027777777777777e-4,
+     6.78168402777777777e-6,
+    -6.78168402777777777e-8,
+     4.70950279706790123e-10,
+    -2.40280754952443940e-12,
+     9.38596699032984142e-15,
+    -2.89690339207711155e-17,
+     7.24225848019277887e-20,
+    -1.49633439673404522e-22,
+     2.59780277210771740e-25,
+    -3.84290350903508491e-28,
+     4.90166263907536340e-31,
+    -5.44629182119484823e-34,
+     5.31864435663559397e-37,
+    -4.60090342269515049e-40,
+     3.55007980146230748e-43,
+    -2.45850401763317692e-46,
+     1.53656501102073557e-49,
+    -8.71068600351890918e-53,
+     4.49932128280935391e-56,
+    -2.12633330945621640e-59,
+     9.22887721118149482e-63,
+    -3.69155088447259792e-66,
+     1.36521852236412645e-69,
+    -4.68181934967121554e-73,
+     1.49292708854311720e-76,
+    -4.43795210625183472e-80,
+     1.23276447395884297e-83
+};
 
-    /*  Bessel J0 is even and in terms of the square of x, so compute this.   */
-    arg = x*x;
+static double tmpl_Double_Bessel_J0_Asym[9] = {
+     1.0,
+     0.1250,
+    -0.07031250,
+    -0.07324218750,
+     0.1121520996093750,
+     0.2271080017089843750,
+    -0.57250142097473144531250,
+    -1.72772750258445739746093750,
+    6.074042001273483037948608398
+};
 
-    /*  For small arguments, use the Taylor series of J_0.                    */
-    if (arg < 4.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
-                                                10U, arg);
-    else if (arg < 16.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
-                                                12U, arg);
-    else if (arg < 25.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
-                                                14U, arg);
-    else if (arg < 36.0F)
-        bessel_J0 = tmpl_Real_Poly_Float_Coeffs(tmpl_Float_Bessel_J0_Taylor,
-                                                16U, arg);
+static long double tmpl_LDouble_Bessel_J0_Taylor[31] = {
+     1.0L,
+    -0.25L,
+     1.56250e-2L,
+    -4.34027777777777777777777777778e-4L,
+     6.78168402777777777777777777778e-6L,
+    -6.78168402777777777777777777778e-8L,
+     4.70950279706790123456790123457e-10L,
+    -2.40280754952443940539178634417e-12L,
+     9.38596699032984142731166540690e-15L,
+    -2.89690339207711155163940290337e-17L,
+     7.24225848019277887909850725841e-20L,
+    -1.49633439673404522295423703686e-22L,
+     2.59780277210771740096221707789e-25L,
+    -3.84290350903508491266600159451e-28L,
+     4.90166263907536340901275713585e-31L,
+    -5.44629182119484823223639681761e-34L,
+     5.31864435663559397679335626720e-37L,
+    -4.60090342269515049895619054256e-40L,
+     3.55007980146230748376249270259e-43L,
+    -2.45850401763317692781336059736e-46L,
+     1.53656501102073557988335037335e-49L,
+    -8.71068600351890918301219032512e-53L,
+     4.49932128280935391684513963074e-56L,
+    -2.12633330945621640682662553438e-59L,
+     9.22887721118149482129611777074e-63L,
+    -3.69155088447259792851844710830e-66L,
+     1.36521852236412645285445529153e-69L,
+    -4.68181934967121554476836519729e-73L,
+     1.49292708854311720177562665730e-76L,
+    -4.43795210625183472584906854132e-80L,
+     1.23276447395884297940251903925e-83L
+};
 
-    /*  For large arguments use the asymptotic expansion.                     */
-    else if (arg < 1.0e32F)
-    {
-        /*  J_0 is an even function so use the absolute value of x.           */
-        x = tmpl_Float_Abs(x);
-
-        /*  The argument for the asymptotic expansion is 1/x^2.               */
-        arg = 1.0F/arg;
-
-        /*  Use Horner's method to compute the polynomial part.               */
-        sinarg = arg * tmpl_Float_Bessel_J0_Asym[7] +
-                       tmpl_Float_Bessel_J0_Asym[5];
-        sinarg = arg * sinarg + tmpl_Float_Bessel_J0_Asym[3];
-        sinarg = arg * sinarg + tmpl_Float_Bessel_J0_Asym[1];
-
-        /*  Multiply the output by the coefficient factor.                    */
-        sinarg *= tmpl_Float_Sin(x - tmpl_Pi_By_Four_F)/x;
-
-        /*  Do the same as above for the Cosine portion.                      */
-        cosarg  = arg * tmpl_Float_Bessel_J0_Asym[8] +
-                        tmpl_Float_Bessel_J0_Asym[6];
-        cosarg  = arg * cosarg + tmpl_Float_Bessel_J0_Asym[4];
-        cosarg  = arg * cosarg + tmpl_Float_Bessel_J0_Asym[2];
-        cosarg  = arg * cosarg + tmpl_Float_Bessel_J0_Asym[0];
-        cosarg *= tmpl_Float_Cos(x - tmpl_Pi_By_Four_F);
-
-        /*  Multiply the result by the coefficient and return.                */
-        bessel_J0 = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi_F;
-        bessel_J0 = bessel_J0 / tmpl_Float_Sqrt(x);
-    }
-
-    /*  For very large arguments, use the limit (which is zero).              */
-    else
-        bessel_J0 = 0.0F;
-
-    return bessel_J0;
-}
+static long double tmpl_LDouble_Bessel_J0_Asym[9] = {
+     1.0L,
+     0.1250L,
+    -0.07031250L,
+    -0.07324218750L,
+    0.1121520996093750L,
+     0.2271080017089843750L,
+    -0.57250142097473144531250L,
+    -1.72772750258445739746093750L,
+     6.07404200127348303794860839844L
+};
 
 /*  Compute the Bessel J_0 function for a double precision number x.          */
 double tmpl_Double_Bessel_J0(double x)
