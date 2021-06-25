@@ -6,7 +6,6 @@ Add polynomial library.
 		Polynomial eval.
 
 	For Q[x]:
-		Polynomial add
 		polynomial subtract
 		polynomial multiply
 		equality
@@ -60,3 +59,10 @@ tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z,
 extern tmpl_ComplexDouble
 tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
                                         tmpl_ComplexDouble w);
+
+Abelian Groups
+Knot Floer Homology
+Khovanov Homology
+Alexander Polynomial
+Jones Polynomial
+HOMFLY Polynomial
