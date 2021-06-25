@@ -70,8 +70,8 @@ typedef struct _tmpl_RationalNumber {
 } tmpl_RationalNumber;
 
 /*  Commonly used rational numbers.                                           */
-extern const tmpl_RationalNumber tmpl_Rational_Zero;
-extern const tmpl_RationalNumber tmpl_Rational_One;
+extern const tmpl_RationalNumber tmpl_RationalNumber_Zero;
+extern const tmpl_RationalNumber tmpl_RationalNumber_One;
 
 /******************************************************************************
  *  Function:                                                                 *

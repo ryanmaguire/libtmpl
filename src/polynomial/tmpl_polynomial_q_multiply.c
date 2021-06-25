@@ -330,7 +330,7 @@ tmpl_PolynomialQ_Multiply(tmpl_PolynomialQ *P,
      *  Perform this part of the sum.                                         */
     for (n = first_deg; n < second_deg; ++n)
     {
-        prod->coeffs[n] = tmpl_Rational_Zero;
+        prod->coeffs[n] = tmpl_RationalNumber_Zero;
         for (k = n - first_deg; k <= n; ++k)
             prod->coeffs[n] = tmpl_RationalNumber_Add(
                 prod->coeffs[n],
@@ -356,7 +356,7 @@ tmpl_PolynomialQ_Multiply(tmpl_PolynomialQ *P,
      *  Perform this part of the sum.                                         */
     for (n = second_deg; n <= prod->degree; ++n)
     {
-        prod->coeffs[n] = tmpl_Rational_Zero;
+        prod->coeffs[n] = tmpl_RationalNumber_Zero;
         for (k = n - first_deg; k <= second_deg; ++k)
             prod->coeffs[n] = tmpl_RationalNumber_Add(
                 prod->coeffs[n],

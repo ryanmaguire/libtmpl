@@ -141,7 +141,7 @@ tmpl_PolynomialQ *tmpl_Create_Zero_PolynomialQ(unsigned long int degree)
     {
         /*  Initialize all elements to zero.                                  */
         for (n = 0UL; n <= degree; ++n)
-            poly->coeffs[n] = tmpl_Rational_Zero;
+            poly->coeffs[n] = tmpl_RationalNumber_Zero;
 
         /*  No error occurred, so set to false.                               */
         poly->error_occurred = tmpl_False;
