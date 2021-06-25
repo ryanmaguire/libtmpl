@@ -269,6 +269,11 @@ tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
                           tmpl_PolynomialZ *Q,
                           tmpl_PolynomialZ *prod);
 
+extern void
+tmpl_PolynomialQ_Multiply(tmpl_PolynomialQ *P,
+                          tmpl_PolynomialQ *Q,
+                          tmpl_PolynomialQ *prod);
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_PolynomialZ_Get_String                                           *
@@ -492,15 +497,5 @@ extern void
 tmpl_PolynomialZ_Scale(tmpl_PolynomialZ *poly,
                        signed long int scale,
                        tmpl_PolynomialZ *prod);
-
-extern void
-tmpl_PolynomialQ_Add(tmpl_PolynomialQ *P,
-                     tmpl_PolynomialQ *Q,
-                     tmpl_PolynomialQ *sum);
-
-extern void
-tmpl_PolynomialQ_Multiply(tmpl_PolynomialQ *P,
-                          tmpl_PolynomialQ *Q,
-                          tmpl_PolynomialQ *prod);
 
 #endif
