@@ -34,15 +34,6 @@ tmpl_Double_Bessel_I0(double x);
 extern long double
 tmpl_LDouble_Bessel_I0(long double x);
 
-extern float tmpl_Float_Bessel_J0_Taylor[17];
-extern float tmpl_Float_Bessel_J0_Asym[9];
-
-extern double tmpl_Double_Bessel_J0_Taylor[31];
-extern double tmpl_Double_Bessel_J0_Asym[9];
-
-extern long double tmpl_LDouble_Bessel_J0_Taylor[31];
-extern long double tmpl_LDouble_Bessel_J0_Asym[9];
-
 extern float
 tmpl_Float_Bessel_J0(float x);
 
