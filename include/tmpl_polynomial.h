@@ -137,6 +137,20 @@ typedef struct _tmpl_PolynomialQMatrix {
     char *error_message;
 } tmpl_PolynomialQMatrix;
 
+typedef struct _tmpl_PolynomialR {
+    double *coeffs;
+    unsigned long int degree;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_PolynomialR;
+
+typedef struct _tmpl_PolynomialC {
+    tmpl_ComplexDouble *coeffs;
+    unsigned long int degree;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_PolynomialC;
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Create_Zero_PolynomialZ                                          *
@@ -159,6 +173,15 @@ typedef struct _tmpl_PolynomialQMatrix {
 extern tmpl_PolynomialZ *
 tmpl_Create_Zero_PolynomialZ(unsigned long int degree);
 
+extern tmpl_PolynomialQ *
+tmpl_Create_Zero_PolynomialQ(unsigned long int degree);
+
+extern tmpl_PolynomialR *
+tmpl_Create_Zero_PolynomialR(unsigned long int degree);
+
+extern tmpl_PolynomialC *
+tmpl_Create_Zero_PolynomialC(unsigned long int degree);
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Create_Empty_PolynomialZ                                         *
@@ -177,6 +200,15 @@ tmpl_Create_Zero_PolynomialZ(unsigned long int degree);
  ******************************************************************************/
 extern tmpl_PolynomialZ *
 tmpl_Create_Empty_PolynomialZ(void);
+
+extern tmpl_PolynomialQ *
+tmpl_Create_Empty_PolynomialQ(void);
+
+extern tmpl_PolynomialR *
+tmpl_Create_Empty_PolynomialR(void);
+
+extern tmpl_PolynomialC *
+tmpl_Create_Empty_PolynomialC(void);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -199,6 +231,15 @@ tmpl_Create_Empty_PolynomialZ(void);
  ******************************************************************************/
 extern void
 tmpl_Destroy_PolynomialZ(tmpl_PolynomialZ **poly_ptr);
+
+extern void
+tmpl_Destroy_PolynomialQ(tmpl_PolynomialQ **poly_ptr);
+
+extern void
+tmpl_Destroy_PolynomialR(tmpl_PolynomialR **poly_ptr);
+
+extern void
+tmpl_Destroy_PolynomialC(tmpl_PolynomialC **poly_ptr);
 
 /******************************************************************************
  *  Function:                                                                 *
