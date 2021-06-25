@@ -49,5 +49,5 @@
 #include <libtmpl/include/tmpl_rational.h>
 
 /*  One and zero, as rational numbers.                                        */
-const tmpl_RationalNumber tmpl_Rational_Zero = {0L, 1L};
-const tmpl_RationalNumber tmpl_Rational_One = {1L, 1L};
+const tmpl_RationalNumber tmpl_RationalNumber_Zero = {0L, 1L};
+const tmpl_RationalNumber tmpl_RationalNumber_One = {1L, 1L};
