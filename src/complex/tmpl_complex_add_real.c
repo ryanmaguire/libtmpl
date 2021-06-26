@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -74,6 +74,9 @@
  *      Copied from rss_ringoccs.                                             *
  *      Made compatible with libtmpl.                                         *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/06/26: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  ******************************************************************************/
 
 /*  Where the prototypes are declared and where complex types are defined.    */
@@ -144,4 +147,3 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z)
     return sum;
 }
 /*  End of tmpl_CLDouble_Add_Real.                                            */
-
