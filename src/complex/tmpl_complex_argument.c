@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -55,10 +55,7 @@
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
- *          This file provides compatibility between the two standard math.h  *
- *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
- *          provides aliases for the functions, and if C89 math.h is used     *
- *          it defines the functions missing in the earlier version.          *
+ *          Header file containing 2D arctan.                                 *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -90,6 +87,9 @@
  *      Copied from rss_ringoccs.                                             *
  *      Made compatible with the rest of libtmpl.                             *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/06/26: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  ******************************************************************************/
 
 /*  Header file which contains aliases for the functions in the standard C    *
@@ -146,4 +146,3 @@ long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z)
     return theta;
 }
 /*  End of tmpl_CLDouble_Argument.                                            */
-
