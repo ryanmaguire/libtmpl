@@ -23,21 +23,21 @@
 #include <stdio.h>
 #include <time.h>
 
-/*  Routine for testing tmpl_CDouble_Abs.                                     */
+/*  Routine for testing tmpl_CFloat_Argument.                                 */
 int main(void)
 {
-    double **y0, **y1;
-    tmpl_ComplexDouble **z0;
-    complex double **z1;
+    float **y0, **y1;
+    tmpl_ComplexFloat **z0;
+    complex float **z1;
 
     const unsigned int N = 10000U;
-    const double start = -100.0;
-    const double end = 100.0;
-    const double ds = (end - start) / (double)(N - 1U);
+    const float start = -100.0F;
+    const float end = 100.0F;
+    const float ds = (end - start) / (float)(N - 1U);
 
-    double z_x, z_y, max_rel, max_abs, temp;
     unsigned int x, y;
     clock_t t1, t2;
+    float z_x, z_y, max_rel, max_abs, temp;
 
     y0 = malloc(sizeof(*y0) * N);
     y1 = malloc(sizeof(*y1) * N);
@@ -56,43 +56,43 @@ int main(void)
     {
         for (y = 0U; y < N; ++y)
         {
-            z_x = (double)x*ds + start;
-            z_y = (double)y*ds + start;
-            z0[x][y] = tmpl_CDouble_Rect(z_x, z_y);
-            z1[x][y] = z_x + (complex double)_Complex_I*z_y;
+            z_x = (float)x*ds + start;
+            z_y = (float)y*ds + start;
+            z0[x][y] = tmpl_CFloat_Rect(z_x, z_y);
+            z1[x][y] = z_x + _Complex_I*z_y;
         }
     }
 
-    puts("Functions: tmpl_CDouble_Abs vs cabs");
+    puts("Functions: tmpl_CFloat_Argument vs cargf");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y0[x][y] = tmpl_CDouble_Abs(z0[x][y]);
+            y0[x][y] = tmpl_CFloat_Argument(z0[x][y]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y1[x][y] = cabs(z1[x][y]);
+            y1[x][y] = cargf(z1[x][y]);
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
-    max_rel = 0.0;
+    max_abs = 0.0F;
+    max_rel = 0.0F;
     for (x = 0U; x < N; ++x)
     {
         for (y = 0U; y < N; ++y)
         {
             temp = y0[x][y] - y1[x][y];
-            if (temp < 0.0)
+            if (temp < 0.0F)
                 temp = -temp;
 
             if (max_abs < temp)
                 max_abs = temp;
 
             temp = (y0[x][y] - y1[x][y])/y1[x][y];
-            if (temp < 0.0)
+            if (temp < 0.0F)
                 temp = -temp;
 
             if (max_rel < temp)
@@ -100,8 +100,8 @@ int main(void)
         }
     }
 
-    printf("Max Abs Error: %.16f\n", max_abs);
-    printf("Max Rel Error: %.16f\n", max_rel);
+    printf("Max Abs Error: %.8f\n", (double)max_abs);
+    printf("Max Rel Error: %.8f\n", (double)max_rel);
 
     for (x = 0U; x < N; ++x)
     {

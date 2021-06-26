@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <time.h>
 
-/*  Routine for testing tmpl_CDouble_Abs.                                     */
+/*  Routine for testing tmpl_CDouble_Argument.                                */
 int main(void)
 {
     double **y0, **y1;
@@ -63,18 +63,18 @@ int main(void)
         }
     }
 
-    puts("Functions: tmpl_CDouble_Abs vs cabs");
+    puts("Functions: tmpl_CDouble_Argument vs carg");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y0[x][y] = tmpl_CDouble_Abs(z0[x][y]);
+            y0[x][y] = tmpl_CDouble_Argument(z0[x][y]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            y1[x][y] = cabs(z1[x][y]);
+            y1[x][y] = carg(z1[x][y]);
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 

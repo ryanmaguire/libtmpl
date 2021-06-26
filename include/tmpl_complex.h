@@ -137,6 +137,16 @@ extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
  *      double abs_z:                                                         *
  *          The absolute value of z, computed by the Pythagorean formula. If  *
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/complex/tmpl_complex_abs.c                                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/complex_examples/tmpl_complex_absf_example.c         *
+ *      libtmpl/examples/complex_examples/tmpl_complex_abs_example.c          *
+ *      libtmpl/examples/complex_examples/tmpl_complex_absl_example.c         *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/complex_tests/tmpl_complex_absf_time_test.c             *
+ *      libtmpl/tests/complex_tests/tmpl_complex_abs_time_test.c              *
+ *      libtmpl/tests/complex_tests/tmpl_complex_absl_time_test.c             *
  ******************************************************************************/
 extern float
 tmpl_CFloat_Abs(tmpl_ComplexFloat z);
@@ -161,6 +171,16 @@ tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
  *  Output:                                                                   *
  *      double abs_sq:                                                        *
  *          The square of the absolute value of z, |z|^2.                     *
+ *  Source Code:                                                              *
+ *      libtmpl/src/complex/tmpl_complex_abs_squared.c                        *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/complex_examples/tmpl_complex_absf_squared_example.c *
+ *      libtmpl/examples/complex_examples/tmpl_complex_abs_squared_example.c  *
+ *      libtmpl/examples/complex_examples/tmpl_complex_absl_squared_example.c *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/complex_tests/tmpl_complex_absf_squared_time_test.c     *
+ *      libtmpl/tests/complex_tests/tmpl_complex_abs_squared_time_test.c      *
+ *      libtmpl/tests/complex_tests/tmpl_complex_absl_squared_time_test.c     *
  ******************************************************************************/
 extern float
 tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
@@ -189,6 +209,16 @@ tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
  *      z0 and double _Complex z1, you can just do z0 + z1. In C89 we use     *
  *      structs to define complex numbers. Structs cannot be added, so we     *
  *      need a function for computing the sum of two complex values.          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/complex/tmpl_complex_add.c                                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/complex_examples/tmpl_complex_addf_example.c         *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_example.c          *
+ *      libtmpl/examples/complex_examples/tmpl_complex_addl_example.c         *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/complex_tests/tmpl_complex_addf_time_test.c             *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_time_test.c              *
+ *      libtmpl/tests/complex_tests/tmpl_complex_addl_time_test.c             *
  ******************************************************************************/
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
@@ -212,6 +242,17 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *  Output:                                                                   *
  *      tmpl_ComplexDouble sum:                                               *
  *          The sum of iy and z.                                              *
+ *  Source Code:                                                              *
+ *      libtmpl/src/complex/tmpl_complex_add_imag.c                           *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_imagf_example.c    *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_imag_example.c     *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_imagl_example.c    *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_imagf_time_test.c        *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_imag_time_test.c         *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_imagl_time_test.c        *
+ ******************************************************************************/
  ******************************************************************************/
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
@@ -240,6 +281,16 @@ tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
  *      to convert a real number to a complex number and then use             *
  *      tmpl_CDouble_Add to add the two complex numbers, so this              *
  *      function can be used to skip the intermediate step.                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/complex/tmpl_complex_add_real.c                           *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_realf_example.c    *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_real_example.c     *
+ *      libtmpl/examples/complex_examples/tmpl_complex_add_reall_example.c    *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_realf_time_test.c        *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_real_time_test.c         *
+ *      libtmpl/tests/complex_tests/tmpl_complex_add_reall_time_test.c        *
  ******************************************************************************/
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z);

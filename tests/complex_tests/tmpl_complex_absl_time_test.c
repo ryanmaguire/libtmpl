@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <time.h>
 
-/*  Routine for testing tmpl_CLDouble_Abs_Squared.                            */
+/*  Routine for testing tmpl_CLDouble_Abs.                                    */
 int main(void)
 {
     long double **y0, **y1;
