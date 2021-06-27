@@ -38,6 +38,9 @@
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/06/26: Ryan Maguire                                                  *
+ *      Changed NaN variables to compile with TinyC Compiler. Still works     *
+ *      with PCC, GCC, anc LLVM's clang.                                      *
  ******************************************************************************/
 
 /*  Header file which contains aliases for the function in the standard C     *
@@ -48,42 +51,38 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  Previously this code followed the style of Python setting infinity to     *
+ *  HUGE_VAL and NaN to 0 * HUGE_VAL. This worked on PCC, clang, and GCC, but *
+ *  TCC yields a compiler error. Using 0.0 / 0.0 works on all 4 compilers, so *
+ *  for the sake of greater portability this is used instead.                 */
+
 /*  Single precision constants.                                               */
-const tmpl_ComplexFloat tmpl_CFloat_I    = {{0.0F, 1.0F}};
+const tmpl_ComplexFloat tmpl_CFloat_I = {{0.0F, 1.0F}};
 const tmpl_ComplexFloat tmpl_CFloat_Zero = {{0.0F, 0.0F}};
-const tmpl_ComplexFloat tmpl_CFloat_One  = {{1.0F, 0.0F}};
+const tmpl_ComplexFloat tmpl_CFloat_One = {{1.0F, 0.0F}};
+const tmpl_ComplexFloat tmpl_CFloat_NaN = {{0.0F / 0.0F, 0.0F / 0.0F}};
 #ifdef HUGE_VALF
 const tmpl_ComplexFloat tmpl_CFloat_Infinity = {{HUGE_VALF, HUGE_VALF}};
-const tmpl_ComplexFloat tmpl_CFloat_NaN = {{0.0F*HUGE_VALF, 0.0F*HUGE_VALF}};
 #else
 const tmpl_ComplexFloat
 tmpl_CFloat_Infinity = {{(float)HUGE_VAL, (float)HUGE_VAL}};
-
-const tmpl_ComplexFloat
-tmpl_CFloat_NaN = {{0.0F*(float)HUGE_VAL, 0.0F*(float)HUGE_VAL}};
 #endif
 
 /*  Double precision constants.                                               */
-const tmpl_ComplexDouble tmpl_CDouble_I    = {{0.0, 1.0}};
+const tmpl_ComplexDouble tmpl_CDouble_I = {{0.0, 1.0}};
 const tmpl_ComplexDouble tmpl_CDouble_Zero = {{0.0, 0.0}};
-const tmpl_ComplexDouble tmpl_CDouble_One  = {{1.0, 0.0}};
+const tmpl_ComplexDouble tmpl_CDouble_One = {{1.0, 0.0}};
+const tmpl_ComplexDouble tmpl_CDouble_NaN = {{0.0 / 0.0, 0.0 / 0.0}};
 const tmpl_ComplexDouble tmpl_CDouble_Infinity = {{HUGE_VAL, HUGE_VAL}};
-const tmpl_ComplexDouble tmpl_CDouble_NaN      = {{0.0*HUGE_VAL, 0.0*HUGE_VAL}};
 
 /*  Long double precision constants.                                          */
-const tmpl_ComplexLongDouble tmpl_CLDouble_I    = {{0.0L, 1.0L}};
+const tmpl_ComplexLongDouble tmpl_CLDouble_I = {{0.0L, 1.0L}};
 const tmpl_ComplexLongDouble tmpl_CLDouble_Zero = {{0.0L, 0.0L}};
-const tmpl_ComplexLongDouble tmpl_CLDouble_One  = {{1.0L, 0.0L}};
+const tmpl_ComplexLongDouble tmpl_CLDouble_One = {{1.0L, 0.0L}};
+const tmpl_ComplexLongDouble tmpl_CLDouble_NaN = {{0.0L / 0.0L, 0.0L / 0.0L}};
 #ifdef HUGE_VALL
-const tmpl_ComplexLongDouble tmpl_LDouble_Infinity = {{HUGE_VALL, HUGE_VALL}};
-
-const tmpl_ComplexLongDouble
-tmpl_CLDouble_NaN = {{0.0L*HUGE_VALL, 0.0L*HUGE_VALL}};
+const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity = {{HUGE_VALL, HUGE_VALL}};
 #else
 const tmpl_ComplexLongDouble
 tmpl_CLDouble_Infinity = {{(long double)HUGE_VAL, (long double)HUGE_VAL}};
-
-const tmpl_ComplexLongDouble
-tmpl_CLDouble_NaN = {{0.0L*(long double)HUGE_VAL, 0.0L*(long double)HUGE_VAL}};
 #endif
-

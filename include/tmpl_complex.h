@@ -253,7 +253,6 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      libtmpl/tests/complex_tests/tmpl_complex_add_imag_time_test.c         *
  *      libtmpl/tests/complex_tests/tmpl_complex_add_imagl_time_test.c        *
  ******************************************************************************/
- ******************************************************************************/
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
 
