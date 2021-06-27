@@ -160,4 +160,6 @@ clang-cl .\*.obj -O2 -flto -shared -o -libtmpl.dll
 
 # Remove old stuff.
 del *.exe *.obj
-'''
+```
+This creates libtmpl.dll directly in the top directory of libtmpl. You can
+move this to the `System32` directory, or add this directory to your path.
