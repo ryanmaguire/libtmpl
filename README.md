@@ -106,14 +106,13 @@ Abstract algebra (groups), topology.
 code was scattered across several projects of mine, and this is an attempt to
 centralize all of it.
 
-## Installation
+## Installation (GNU, Linux, FreeBSD, macOS)
 Simply run the Makefile with:
 ```
 make
 ```
 Note, this requires sudo privileges. This has been tested on various GNU/Linux
-distributions, macOS, and FreeBSD. I tried to make an nmake file for Windows
-users, but gave up. I may return to this eventually.
+distributions, macOS, and FreeBSD.
 
 There is also `make.sh` which is a shell script written in bash that has the
 same functionality as `Makefile` except that various pedantic compiler options
@@ -122,3 +121,42 @@ is written in strictly compliant C89/C90 code. This has been tested with several
 compilers, including GCC (GNU), Clang (LLVM), TCC (Tiny C Compiler), and
 PCC (Portable C Compiler).
 
+## Installation (Windows)
+Step 1: Remove Windows and install a nice Linux distribution. I recommend
+Debian for the more tech-savvy, and Pop!_OS for those who never want to
+use a terminal.
+
+Step 2: If you insist on using windows, try the following. I ran this in a
+virtual machine and it worked. I tried writing a powershell script, but after
+many failed attempts I realized I don't care that much. This works, so here ya
+go. You can use LLVM's clang with clang-cl or Microsoft's MSVC.
+
+```
+# Remove old files.
+del *.exe *.obj *.o *.so *.dll
+
+# Create the tmpl_endianness.h header file. Using MSVC
+cl det_end.c /link /out:det.exe
+
+# Using clang
+clang-cl det_end.c -o det.exe
+
+# Run the executable.
+det.exe
+del det.exe
+
+# Create the rest of the library. Using Microsoft's C Compiler:
+for /D %d in (.\src\*) do cl /I../ /O2 /c .\src\%d\*.c
+
+# Using LLVM's clang
+for /D %d in (.\src\*) do clang-cl -O2 -I../ -c .\src\%d\*.c
+
+# Link and create a .dll file. Using MSVC:
+cl .\*.obj /LD /O2 /out:libtmpl.dll
+
+# Using clang
+clang-cl .\*.obj -O2 -flto -shared -o -libtmpl.dll
+
+# Remove old stuff.
+del *.exe *.obj
+'''
