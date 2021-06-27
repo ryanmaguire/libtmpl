@@ -126,10 +126,11 @@ Step 1: Remove Windows and install a nice Linux distribution. I recommend
 Debian for the more tech-savvy, and Pop!_OS for those who never want to
 use a terminal.
 
-Step 2: If you insist on using windows, try the following. I ran this in a
+Step 2: If you insist on using Windows, try the following. I ran this in a
 virtual machine and it worked. I tried writing a powershell script, but after
-many failed attempts I realized I don't care that much. This works, so here ya
-go. You can use LLVM's clang with clang-cl or Microsoft's MSVC.
+many failed attempts I gave up. This works, so here ya go.
+You can use LLVM's clang with clang-cl or Microsoft's MSVC. I also had some
+success using Cygwin to emulate Unix-like commands in Windows.
 
 ```
 # Remove old files.
