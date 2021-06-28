@@ -446,6 +446,23 @@ extern double
 tmpl_TwoVector_Euclidean_Rel_Angle(tmpl_TwoVector O, tmpl_TwoVector P,
                                    tmpl_TwoVector Q);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoVector_Euclidean_Is_Collinear                                 *
+ *  Purpose:                                                                  *
+ *      Determine if three tmpl_TwoVector's are collinear.                    *
+ *  Arguments:                                                                *
+ *      tmpl_TwoVector A:                                                     *
+ *          A kissvg_TwoVector.                                               *
+ *      tmpl_TwoVector B:                                                     *
+ *          Another vector.                                                   *
+ *      tmpl_TwoVector C:                                                     *
+ *          A third vector.                                                   *
+ *  Outputs:                                                                  *
+ *      tmpl_Bool is_collinear:                                               *
+ *          A Boolean that is true if A, B, and C are collinear, and false    *
+ *          otherwise.                                                        *
+ ******************************************************************************/
 extern tmpl_Bool
 tmpl_TwoVector_Euclidean_Is_Collinear(tmpl_TwoVector A,
                                       tmpl_TwoVector B,
