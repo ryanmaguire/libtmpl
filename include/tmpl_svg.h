@@ -104,13 +104,21 @@ typedef enum {
 
 /*  Struct for adding text and labelling things in the drawing.               */
 typedef struct _tmpl_SVG_Label {
-    char *string;
+    char *content;
     tmpl_TwoVector anchor;
     tmpl_TwoVector shift;
     unsigned int fontsize;
     tmpl_Bool is_italic;
     tmpl_Bool is_bold;
 } tmpl_SVG_Label;
+
+/*  Macros for working with SVG labels.                                       */
+#define tmpl_SVG_LABEL_FONTSIZE(label) ((label)->font_size)
+#define tmpl_SVG_LABEL_ANCHOR(label) ((label)->anchor)
+#define tmpl_SVG_LABEL_SHIFT(label) ((label)->shift)
+#define tmpl_SVG_LABEL_CONTENT(label) ((label)->content)
+#define tmpl_SVG_LABEL_IS_BOLD(label) ((label)->is_bold)
+#define tmpl_SVG_LABEL_IS_ITALIC(label) ((label)->is_italic)
 
 /*  Simple struct for working with colors. Stores the RGB value of the color, *
  *  and allows for opacity with values between 0 and 1.                       */
@@ -204,6 +212,22 @@ typedef struct _tmpl_SVG_Arrow {
     double arrow_size;
 } tmpl_SVG_Arrow;
 
+/*  Arrows are stored in the palette for drawing later. These macros are for  *
+ *  accessing the data an arrow contains.                                     */
+#define tmpl_SVG_ARROW_TYPE(arrow) ((arrow)->arrow_type)
+#define tmpl_SVG_ARROW_POSITION(arrow) ((arrow)->arrow_pos)
+#define tmpl_SVG_ARROW_SIZE(arrow) ((arrow)->arrow_size)
+#define tmpl_SVG_ARROW_COLOR(arrow) ((arrow)->line_pen)
+#define tmpl_SVG_ARROW_FILL(arrow) ((arrow)->fill_pen)
+
+/*  Various defaults for things like line width and arrow sizes.              */
+#define tmpl_DEFAULT_ARROW_SIZE 0.1
+#define tmpl_DEFAULT_ARROW_LINEWIDTH 0.05
+#define tmpl_DEFAULT_TICK_SIZE 0.2
+#define tmpl_DEFAULT_TICK_DIST 1.0
+#define tmpl_DEFAULT_TICK_HEIGHT 0.1
+#define tmpl_DEFAULT_LABEL_FONT_SIZE 10
+
 /*  This struct is required for most routines and is included as an attribute *
  *  of several data types. It is used to convert between the geometry of the  *
  *  actual output file and the coordinates we use for computations.           */
@@ -239,6 +263,17 @@ struct _tmpl_SVG_Canvas {
     tmpl_SVG_Canvas_Transform Y_Transform;
 };
 /*  End of _tmpl_SVG_Canvas definition.                                       */
+
+/*  Use these macros to access the data in a pointer to tmpl_SVG_Canvas.      */
+#define tmpl_SVG_CANVAS_X_INCHES(canvas) ((canvas)->x_inches)
+#define tmpl_SVG_CANVAS_Y_INCHES(canvas) ((canvas)->y_inches)
+#define tmpl_SVG_CANVAS_X_SCALE(canvas) ((canvas)->x_scale)
+#define tmpl_SVG_CANVAS_Y_SCALE(canvas) ((canvas)->y_scale)
+#define tmpl_SVG_CANVAS_X_SHIFT(canvas) ((canvas)->x_shift)
+#define tmpl_SVG_CANVAS_Y_SHIFT(canvas) ((canvas)->y_shift)
+#define tmpl_SVG_CANVAS_X_TRANSFORM(canvas) ((canvas)->X_Transform)
+#define tmpl_SVG_CANVAS_Y_TRANSFORM(canvas) ((canvas)->Y_Transform)
+#define tmpl_SVG_CANVAS_FILETYPE(canvas) ((canvas)->filetype)
 
 /*  Struct stored in paths and circles containing all of the info on how to   *
  *  draw the object.                                                          */
@@ -332,6 +367,19 @@ typedef struct _tmpl_SVG_Palette {
     tmpl_SVG_Canvas *canvas;
 } tmpl_SVG_Palette;
 
+/*  These macros are for accessing data inside the actual palette.            */
+#define tmpl_SVG_PALETTE_HAS_TICKS(palette) ((palette)->has_ticks)
+#define tmpl_SVG_PALETTE_HAS_UPTICKS(palette) ((palette)->up_ticks)
+#define tmpl_SVG_PALETTE_HAS_DOWNTICKS(palette) ((palette)->down_ticks)
+#define tmpl_SVG_PALETTE_TICK_PEN(palette) ((palette)->tick_pen)
+#define tmpl_SVG_PALETTE_TICK_START(palette) ((palette)->tick_start)
+#define tmpl_SVG_PALETTE_TICK_FINISH(palette) ((palette)->tick_finish)
+#define tmpl_SVG_PALETTE_TICK_DISTANCE(palette) ((palette)->tick_dx)
+#define tmpl_SVG_PALETTE_TICK_HEIGHT(palette) ((palette)->tick_height)
+#define tmpl_SVG_PALETTE_TICK_SEMIHEIGHT(palette) ((palette)->tick_semi_height)
+#define tmpl_SVG_PALETTE_TICK_SEMISEMIHEIGHT(palette) \
+    ((palette)->tick_semi_semi_height)
+
 typedef struct _tmpl_SVG {
     FILE *fp;
     tmpl_SVG_Canvas *canvas;
@@ -359,6 +407,9 @@ typedef struct _tmpl_SVG_Path2D {
     /*  Data for how to draw the path and the geometry of the page.           */
     tmpl_SVG_Palette *palette;
 } tmpl_SVG_Path2D;
+
+#define tmpl_SVG_PATH_Data(path) ((path)->data)
+#define tmpl_SVG_PATH_NUMBER_OF_POINTS(path) ((path)->N_Pts)
 
 /*  This is the primary structure for working with and drawing circles. It    *
  *  contains geometric data as well as visual data for how to draw it.        */
@@ -566,6 +617,101 @@ tmpl_SVG_Pen_Change_Linewidth(tmpl_SVG_Pen *pen, double linewidth);
 
 extern void
 tmpl_SVG_Pen_Change_Transparency(tmpl_SVG_Pen *pen, double alpha);
+
+extern tmpl_SVG_Palette *
+tmpl_SVG_Create_Palette(tmpl_SVG_Pen *line_pen, tmpl_SVG_Canvas *canvas);
+
+extern void
+tmpl_SVG_Palette_Set_Fill_Pen(tmpl_SVG_Palette *palette, tmpl_SVG_Pen *fpen);
+
+extern void
+tmpl_SVG_Palette_Add_Arrow(tmpl_SVG_Palette *palette,
+                           double pos,
+                           double arrow_size,
+                           tmpl_SVG_Pen *fill_pen,
+                           tmpl_SVG_Pen *line_pen,
+                           tmpl_SVG_ArrowType type);
+
+extern void tmpl_SVG_Palette_Add_Ticks(tmpl_SVG_Palette *palette,
+                                       double tick_start,
+                                       double tick_end,
+                                       tmpl_SVG_Pen *tick_pen,
+                                       double tick_dist,
+                                       double tick_height,
+                                       double tick_semi_height,
+                                       double tick_semi_semi_height);
+
+extern void
+tmpl_SVG_Palette_Use_Up_Ticks(tmpl_SVG_Palette *palette);
+
+extern void
+tmpl_SVG_Palette_Use_Down_Ticks(tmpl_SVG_Palette *palette);
+
+extern void
+tmpl_SVG_Destroy_Palette(tmpl_SVG_Palette *palette);
+
+extern tmpl_SVG_Label *
+tmpl_Create_SVG_Label(const char *label_content,
+                      tmpl_TwoVector anchor,
+                      tmpl_SVG_Canvas *canvas);
+
+extern void
+tmpl_Destroy_SVG_Label(tmpl_SVG_Label *label);
+
+extern void
+tmpl_Reset_SVG_Label_Content(tmpl_SVG_Label *label, const char *content);
+
+extern void
+tmpl_Set_SVG_Label_Anchor(tmpl_SVG_Label *label, tmpl_TwoVector anchor);
+
+extern void
+tmpl_Set_SVG_Label_Shift(tmpl_SVG_Label *label, tmpl_TwoVector shift);
+
+extern void
+tmpl_Set_SVG_Label_FontSize(tmpl_SVG_Label *label, unsigned int font_size);
+
+
+extern void
+tmpl_Draw_SVG_Label(tmpl_SVG *svg, tmpl_SVG_Label *label);
+
+extern tmpl_SVG_Path2D *
+tmpl_Create_SVG_Path(tmpl_TwoVector start, tmpl_SVG_Palette *canvas);
+
+extern void tmpl_Append_Path2D(tmpl_SVG_Path2D *path, tmpl_TwoVector P);
+extern void tmpl_Close_Path2D(tmpl_SVG_Path2D *path);
+extern void tmpl_Destroy_Path2D(tmpl_SVG_Path2D **path_pointer);
+
+extern tmpl_SVG_Line *
+ttmpl_CreateLineFromTwoPoints(tmpl_TwoVector P,
+                              tmpl_TwoVector Q,
+                              tmpl_SVG_Palette *palette);
+
+extern tmpl_SVG_Line *
+tmpl_CreateLineFromPointAndTangent(tmpl_TwoVector P,
+                                   tmpl_TwoVector V,
+                                   tmpl_SVG_Palette *palette);
+
+extern void
+tmpl_Destroy_Line(tmpl_SVG_Line *L);
+
+extern void
+tmpl_DrawPolygon2D(tmpl_SVG *svg, tmpl_SVG_Path2D *path);
+
+extern void
+tmpl_FillDrawPolygon2D(tmpl_SVG *svg, tmpl_SVG_Path2D *path);
+
+extern void
+tmpl_DrawCircle2D(tmpl_SVG *svg, tmpl_SVG_Circle *circle);
+
+extern void
+tmpl_FillDrawCircle2D(tmpl_SVG *svg, tmpl_SVG_Circle *circle);
+
+extern void
+tmpl_DrawLine2D(tmpl_SVG *cr, tmpl_SVG_Line *line, double t0, double t1);
+
+extern void
+tmpl_GenerateFile(char *filename, void (*instruction)(tmpl_SVG *),
+                  double x_inches, double y_inches);
 
 #endif
 /*  End of include guard.                                                     */
