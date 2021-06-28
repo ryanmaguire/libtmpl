@@ -20,6 +20,37 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide tools for creating SVG files.                                 *
+ *  Data Types:                                                               *
+ *      tmpl_TwoVector:                                                       *
+ *          Primary tool for two-dimensional/planar geometry and drawing. It  *
+ *          is a data type used to represent the ordered pair (x, y).         *
+ *      tmpl_TwoByTwoMatrix:                                                  *
+ *          A data type representing a 2x2 matrix. Used for applying linear   *
+ *          transformations to a tmpl_TwoVector.                              *
+ *      tmpl_Canvas:                                                          *
+ *          A struct which contains all of the necessary data to transform    *
+ *          the intrinsic geometry of the output file (.ps, .svg, or whatever *
+ *          is being produced) to the coordinate geometry of the user.        *
+ *      tmpl_Path2D:                                                          *
+ *          A struct containing a pointer to a tmpl_TwoVector, as well as     *
+ *          data for the drawing like color, line width, etc.                 *
+ *      tmpl_Pen:                                                             *
+ *          A struct containing red, green, and blue values (r g, b). The     *
+ *          values use real numbers between 0 and 1, and not chars between 0  *
+ *          and 255. It contains information about the transparency of the    *
+ *          object and it's linewidth.                                        *
+ *      tmpl_SVG_Palette:                                                     *
+ *          A struct with lots of data about how to draw an object. This      *
+ *          includes line pens, fill pens, tick marks, labels, arrows, etc.   *
+ *      tmpl_ArrowType:                                                       *
+ *          An integer corresponding to various arrow styles.                 *
+ *      tmpl_Arrow:                                                           *
+ *          A struct containing data pertaining to arrows stored in paths.    *
+ *          This includes size, color, fill color, and more.                  *
+ *      tmpl_Circle:                                                          *
+ *          Data structure for circles, including a tmpl_TwoVector for the    *
+ *          center and a double for the radius. In addition it contains data  *
+ *          for drawing the circle.                                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -88,6 +119,14 @@ typedef struct _tmpl_SVG_Color {
     double opacity;
 } tmpl_SVG_Color;
 
+/*  Useful colors to have predefined.                                         */
+extern const tmpl_SVG_Color tmpl_SVG_Black;
+extern const tmpl_SVG_Color tmpl_SVG_White;
+extern const tmpl_SVG_Color tmpl_SVG_Red;
+extern const tmpl_SVG_Color tmpl_SVG_Green;
+extern const tmpl_SVG_Color tmpl_SVG_Blue;
+extern const tmpl_SVG_Color tmpl_SVG_Yellow;
+
 /*  This is the primary structure for using colors in drawings. It contains a *
  *  color, which allows for opacity (see above), a linewidth, and a string    *
  *  for optional dashed lines.                                                */
@@ -96,6 +135,48 @@ typedef struct _tmpl_SVG_Pen {
     double linewidth;
     char *dash_array;
 } tmpl_SVG_Pen;
+
+/*  Macros for working with pens.                                             */
+#define tmpl_SVG_AXES_PEN 1.0
+#define tmpl_SVG_THIN_PEN 0.2
+#define tmpl_SVG_THICK_PEN 0.8
+#define tmpl_SVG_DEFAULT_PEN 0.4
+#define tmpl_SVG_PEN_RED(pen) (((pen)->color).red)
+#define tmpl_SVG_PEN_GREEN(pen) (((pen)->color).green)
+#define tmpl_SVG_PEN_BLUE(pen) (((pen)->color).blue)
+#define tmpl_SVG_PEN_OPACITY(pen) (((pen)->color).opacity)
+#define tmpl_SVG_PEN_LINEWIDTH(pen) ((pen)->linewidth)
+
+/*  Common pens.                                                              */
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Blue;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Green;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Red;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Black;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_White;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkGray;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Gray;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_LightGray;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Aqua;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Purple;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Violet;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Pink;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Yellow;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Crimson;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkGreen;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Orange;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_LightBlue;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Teal;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkBlue;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Lavender;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Magenta;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DeepPink;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Marine;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Lime;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Carrot;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Brown;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Azure;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Silver;
+extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Sand;
 
 /*  Struct containing all of the information for arrows.                      */
 typedef struct _tmpl_SVG_Arrow {
@@ -256,13 +337,78 @@ typedef struct _tmpl_SVG {
     tmpl_SVG_Canvas *canvas;
 } tmpl_SVG;
 
-/*  Useful colors to have predefined.                                         */
-extern const tmpl_SVG_Color tmpl_SVG_Black;
-extern const tmpl_SVG_Color tmpl_SVG_White;
-extern const tmpl_SVG_Color tmpl_SVG_Red;
-extern const tmpl_SVG_Color tmpl_SVG_Green;
-extern const tmpl_SVG_Color tmpl_SVG_Blue;
-extern const tmpl_SVG_Color tmpl_SVG_Yellow;
+/*  This is the primary data type used for drawing 2 dimensional figures.     */
+typedef struct _tmpl_SVG_Path2D {
+
+    /*  This pointer contains all of the points of the path.                  */
+    tmpl_TwoVector *data;
+
+    /*  The number of points in the data pointer.                             */
+    unsigned long int N_Pts;
+
+    /*  Boolean for determining if an error occured.                          */
+    tmpl_Bool error_occured;
+
+    /*  An error message which is set by various functions if an error occurs.*/
+    char *error_message;
+
+    /*  Boolean for determining if the object is meant to be closed or not.   *
+     *  If you wish to use fill draw with the object, this must be true.      */
+    tmpl_Bool is_closed;
+
+    /*  Data for how to draw the path and the geometry of the page.           */
+    tmpl_SVG_Palette *palette;
+} tmpl_SVG_Path2D;
+
+/*  This is the primary structure for working with and drawing circles. It    *
+ *  contains geometric data as well as visual data for how to draw it.        */
+typedef struct _tmpl_SVG_Circle {
+
+    /*  The geometrical data of the circle. We need the center and the radius.*/
+    tmpl_Circle2D *data;
+
+    /*  Data for how to draw the path and the geometry of the page.           */
+    tmpl_SVG_Palette *palette;
+} tmpl_SVG_Circle;
+
+/*  Macros for SVG circles.                                                   */
+#define tmpl_SVG_CIRCLE_CENTER(circle) (((circle)->data).center)
+#define tmpl_SVG_CIRCLE_RADIUS(circle) ((circle)->radius)
+#define tmpl_SVG_CIRCLE_IS_LINE(circle) ((circle)->is_line)
+#define tmpl_SVG_CIRCLE_POINT(circle) (((circle)->data).line.P)
+#define tmpl_SVG_CIRCLE_TANGENT(circle) (((circle)->data).line.V)
+
+/*  A data type for conviently dealing with lines.                            */
+typedef struct _tmpl_SVG_Line {
+
+    /*  A point that lies on the line.                                        */
+    tmpl_TwoVector P;
+
+    /*  The tangent/velocity vector of the line. That is, the direction the   *
+     *  line points in.                                                       */
+    tmpl_TwoVector V;
+
+    /*  Boolean for determining if an error occured.                          */
+    tmpl_Bool error_occured;
+
+    /*  An error message which is set by various functions if an error occurs.*/
+    char *error_message;
+
+    /*  Data for how to draw the path and the geometry of the page.           */
+    tmpl_SVG_Palette *palette;
+} tmpl_SVG_Line;
+
+/*  Macros for working with SVG lines.                                        */
+#define tmpl_SVG_LINE_POINT(L) ((L)->P)
+#define tmpl_SVG_LINE_TANGENT(L) ((L)->V)
+
+/*  The following macros are universal all of the data types where the        *
+ *  attribute applies.                                                        */
+#define tmpl_HAS_ERROR(obj) ((obj)->error_occured)
+#define tmpl_GET_PALETTE(obj) ((obj)->palette)
+#define tmpl_SET_PALETTE(obj, palette) ((obj)->palette = palette)
+#define tmpl_SET_ERROR(obj, error) ((obj)->error_occured = error)
+#define tmpl_ERROR_MESSAGE(obj) ((obj)->error_message)
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -346,6 +492,80 @@ tmpl_SVG_Set_Arrow_Size(tmpl_SVG_Arrow *arrow, double size);
 extern tmpl_SVG_Arrow *
 tmpl_SVG_Create_Arrow(double pos, double arrow_size, tmpl_SVG_Color *fill_color,
                       tmpl_SVG_Pen *line_pen, tmpl_SVG_ArrowType type);
+
+extern tmpl_SVG_Circle *
+tmpl_Create_SVG_Circle(tmpl_TwoVector P, double r, tmpl_SVG_Palette *palette);
+
+extern void
+tmpl_Circle2D_As_Line(tmpl_Circle2D *circle,
+                      tmpl_TwoVector P, tmpl_TwoVector V);
+
+extern void
+tmpl_Reset_Circle2D(tmpl_Circle2D *circle, tmpl_TwoVector P, double r);
+
+extern void
+tmpl_Destroy_Circle2D(tmpl_Circle2D **circle);
+
+extern tmpl_SVG_Line *
+tmpl_Create_SVG_Line_From_Two_Points(tmpl_TwoVector P, tmpl_TwoVector Q,
+                                     tmpl_SVG_Palette *palette);
+
+extern tmpl_SVG_Line *
+tmpl_Create_SVG_Line_From_Point_And_Tangent(tmpl_TwoVector P,
+                                            tmpl_TwoVector V,
+                                            tmpl_SVG_Palette *palette);
+
+extern void
+tmpl_Destroy_SVG_Line(tmpl_SVG_Line **line_pointer);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Create_Pen                                                       *
+ *  Purpose:                                                                  *
+ *      Create a tmpl_Color from three doubles.                               *
+ *  Arguments:                                                                *
+ *      double red:                                                           *
+ *          The amount of red in the color.                                   *
+ *      double green:                                                         *
+ *          The amount of green in the color.                                 *
+ *      double blue:                                                          *
+ *          The amount of blue in the color.                                  *
+ *  Outputs:                                                                  *
+ *      tmpl_Color color:                                                     *
+ *          The color with rgb value (red, green, blue).                      *
+ *  Location:                                                                 *
+ *      The source code is contained in src/kissvg.c                          *
+ *  NOTE:                                                                     *
+ *      Malloc is used in this file to allocate the appropriate memory. You   *
+ *      must called kissvg_DestroyColor when you are done with the color.     *
+ ******************************************************************************/
+extern tmpl_SVG_Pen *
+tmpl_Create_SVG_Pen(unsigned char red, unsigned char green, unsigned char blue,
+                    double linewidth, tmpl_Bool transparent, double opacity);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      kissvg_DestroyColor                                                   *
+ *  Purpose:                                                                  *
+ *      Destroy a kissvg_Color and free its memory.                           *
+ *  Arguments:                                                                *
+ *      kissvg_Color color:                                                   *
+ *          The color to be destroyed.                                        *
+ *  Outputs:                                                                  *
+ *      None, this is a void function.                                        *
+ *  Location:                                                                 *
+ *      The source code is contained in src/kissvg.c                          *
+ *  NOTE:                                                                     *
+ *      This function must be called if kissvg_CreateColor was used.          *
+ ******************************************************************************/
+extern void
+tmpl_Destroy_SVG_Pen(tmpl_SVG_Pen **color_pointer);
+
+extern void
+tmpl_SVG_Pen_Change_Linewidth(tmpl_SVG_Pen *pen, double linewidth);
+
+extern void
+tmpl_SVG_Pen_Change_Transparency(tmpl_SVG_Pen *pen, double alpha);
 
 #endif
 /*  End of include guard.                                                     */
