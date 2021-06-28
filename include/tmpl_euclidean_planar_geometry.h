@@ -74,7 +74,7 @@ typedef struct tmpl_Line2D {
     tmpl_TwoVector V;
 } tmpl_Line2D;
 
-typedef struct tmpl_Circle2D {
+typedef struct _tmpl_Circle2D {
     union Data {
         tmpl_TwoVector center;
         tmpl_Line2D line;
