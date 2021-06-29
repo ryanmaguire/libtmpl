@@ -87,6 +87,21 @@ typedef struct _tmpl_Circle2D {
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Euclidean_Orthogonal_Vector_2D                                   *
+ *  Purpose:                                                                  *
+ *      Compute a vector which is orthogonal to the input.                    *
+ *  Arguments:                                                                *
+ *      tmpl_TwoVector v:                                                     *
+ *          A 2D vector.                                                      *
+ *  Outputs:                                                                  *
+ *      tmpl_TwoVector orth:                                                  *
+ *          A vector orthogonal to v.                                         *
+ ******************************************************************************/
+extern tmpl_TwoVector
+tmpl_Euclidean_Orthogonal_Vector_2D(tmpl_TwoVector v);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_GET_2x2_MATRIX_COMPONENT                                         *
  *  Purpose:                                                                  *
  *      Returns the (m,n) element of a 2x2 matrix.                            *
