@@ -7,23 +7,6 @@
 
 /******************************************************************************
  *  Function:                                                                 *
- *      kissvg_Euclidean_Orthogonal_Vector_2D                                 *
- *  Purpose:                                                                  *
- *      Compute a vector which is orthogonal to the input.                    *
- *  Arguments:                                                                *
- *      kissvg_TwoVector V:                                                   *
- *          A kissvg_TwoVector.                                               *
- *  Outputs:                                                                  *
- *      kissvg_TwoVector orth:                                                *
- *          A vector orthogonal to V.                                         *
- *  Location:                                                                 *
- *      The source code is contained in src/kissvg.c                          *
- ******************************************************************************/
-extern kissvg_TwoVector
-kissvg_Euclidean_Orthogonal_Vector_2D(kissvg_TwoVector V);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      kissvg_EuclideanFindCenter2D                                          *
  *  Purpose:                                                                  *
  *      Find the center of three kissvg_TwoVector's. If the points are        *
