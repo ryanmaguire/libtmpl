@@ -77,7 +77,7 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 19 2021                                                  *
+ *  Date:       June 19, 2021                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -408,7 +408,7 @@ typedef struct _tmpl_SVG_Path2D {
     tmpl_SVG_Palette *palette;
 } tmpl_SVG_Path2D;
 
-#define tmpl_SVG_PATH_Data(path) ((path)->data)
+#define tmpl_SVG_PATH_DATA(path) ((path)->data)
 #define tmpl_SVG_PATH_NUMBER_OF_POINTS(path) ((path)->N_Pts)
 
 /*  This is the primary structure for working with and drawing circles. It    *
