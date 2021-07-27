@@ -20,37 +20,6 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide tools for creating SVG files.                                 *
- *  Data Types:                                                               *
- *      tmpl_TwoVector:                                                       *
- *          Primary tool for two-dimensional/planar geometry and drawing. It  *
- *          is a data type used to represent the ordered pair (x, y).         *
- *      tmpl_TwoByTwoMatrix:                                                  *
- *          A data type representing a 2x2 matrix. Used for applying linear   *
- *          transformations to a tmpl_TwoVector.                              *
- *      tmpl_Canvas:                                                          *
- *          A struct which contains all of the necessary data to transform    *
- *          the intrinsic geometry of the output file (.ps, .svg, or whatever *
- *          is being produced) to the coordinate geometry of the user.        *
- *      tmpl_Path2D:                                                          *
- *          A struct containing a pointer to a tmpl_TwoVector, as well as     *
- *          data for the drawing like color, line width, etc.                 *
- *      tmpl_Pen:                                                             *
- *          A struct containing red, green, and blue values (r g, b). The     *
- *          values use real numbers between 0 and 1, and not chars between 0  *
- *          and 255. It contains information about the transparency of the    *
- *          object and it's linewidth.                                        *
- *      tmpl_SVG_Palette:                                                     *
- *          A struct with lots of data about how to draw an object. This      *
- *          includes line pens, fill pens, tick marks, labels, arrows, etc.   *
- *      tmpl_ArrowType:                                                       *
- *          An integer corresponding to various arrow styles.                 *
- *      tmpl_Arrow:                                                           *
- *          A struct containing data pertaining to arrows stored in paths.    *
- *          This includes size, color, fill color, and more.                  *
- *      tmpl_Circle:                                                          *
- *          Data structure for circles, including a tmpl_TwoVector for the    *
- *          center and a double for the radius. In addition it contains data  *
- *          for drawing the circle.                                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -84,8 +53,13 @@
 #ifndef TMPL_SVG_H
 #define TMPL_SVG_H
 
+/*  Standard library header containing the FILE data type.                    */
 #include <stdio.h>
+
+/*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
+
+/*  2D vectors found here.                                                    */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Enumerated list of arrow types. Currently only three are provided, which  *
@@ -113,7 +87,7 @@ typedef struct _tmpl_SVG_Label {
 } tmpl_SVG_Label;
 
 /*  Macros for working with SVG labels.                                       */
-#define tmpl_SVG_LABEL_FONTSIZE(label) ((label)->font_size)
+#define tmpl_SVG_LABEL_FONTSIZE(label) ((label)->fontsize)
 #define tmpl_SVG_LABEL_ANCHOR(label) ((label)->anchor)
 #define tmpl_SVG_LABEL_SHIFT(label) ((label)->shift)
 #define tmpl_SVG_LABEL_CONTENT(label) ((label)->content)
@@ -133,7 +107,9 @@ extern const tmpl_SVG_Color tmpl_SVG_White;
 extern const tmpl_SVG_Color tmpl_SVG_Red;
 extern const tmpl_SVG_Color tmpl_SVG_Green;
 extern const tmpl_SVG_Color tmpl_SVG_Blue;
+extern const tmpl_SVG_Color tmpl_SVG_Cyan;
 extern const tmpl_SVG_Color tmpl_SVG_Yellow;
+extern const tmpl_SVG_Color tmpl_SVG_Magenta;
 
 /*  This is the primary structure for using colors in drawings. It contains a *
  *  color, which allows for opacity (see above), a linewidth, and a string    *
@@ -154,6 +130,7 @@ typedef struct _tmpl_SVG_Pen {
 #define tmpl_SVG_PEN_BLUE(pen) (((pen)->color).blue)
 #define tmpl_SVG_PEN_OPACITY(pen) (((pen)->color).opacity)
 #define tmpl_SVG_PEN_LINEWIDTH(pen) ((pen)->linewidth)
+#define tmpl_SVG_DASH_ARRAY(pen) ((pen)->dash_array)
 
 /*  Common pens.                                                              */
 extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Blue;
@@ -240,6 +217,7 @@ typedef double (*tmpl_SVG_Canvas_Transform)(tmpl_SVG_Canvas *, double);
 
 /*  Actual definition of _tmpl_SVG_Canvas struct.                             */
 struct _tmpl_SVG_Canvas {
+
     /*  The size of the SVG, in pixels.                                       */
     unsigned int width, height;
 
@@ -265,15 +243,16 @@ struct _tmpl_SVG_Canvas {
 /*  End of _tmpl_SVG_Canvas definition.                                       */
 
 /*  Use these macros to access the data in a pointer to tmpl_SVG_Canvas.      */
-#define tmpl_SVG_CANVAS_X_INCHES(canvas) ((canvas)->x_inches)
-#define tmpl_SVG_CANVAS_Y_INCHES(canvas) ((canvas)->y_inches)
+#define tmpl_SVG_CANVAS_WIDTH(canvas) ((canvas)->width)
+#define tmpl_SVG_CANVAS_HEIGHT(canvas) ((canvas)->height)
 #define tmpl_SVG_CANVAS_X_SCALE(canvas) ((canvas)->x_scale)
 #define tmpl_SVG_CANVAS_Y_SCALE(canvas) ((canvas)->y_scale)
 #define tmpl_SVG_CANVAS_X_SHIFT(canvas) ((canvas)->x_shift)
 #define tmpl_SVG_CANVAS_Y_SHIFT(canvas) ((canvas)->y_shift)
 #define tmpl_SVG_CANVAS_X_TRANSFORM(canvas) ((canvas)->X_Transform)
 #define tmpl_SVG_CANVAS_Y_TRANSFORM(canvas) ((canvas)->Y_Transform)
-#define tmpl_SVG_CANVAS_FILETYPE(canvas) ((canvas)->filetype)
+#define tmpl_SVG_CANVAS_BACKGROUND(canvas) ((canvas)->background)
+#define tmpl_SVG_CANVAS_OUTLINE(canvas) ((canvas)->outline)
 
 /*  Struct stored in paths and circles containing all of the info on how to   *
  *  draw the object.                                                          */
@@ -368,6 +347,16 @@ typedef struct _tmpl_SVG_Palette {
 } tmpl_SVG_Palette;
 
 /*  These macros are for accessing data inside the actual palette.            */
+#define tmpl_SVG_PALETTE_ARROWS(palette) ((palette)->arrows)
+#define tmpl_SVG_PALETTE_CANVAS(palette) ((palette)->canvas)
+#define tmpl_SVG_PALETTE_FILL_PEN(palette) ((palette)->fill_pen)
+#define tmpl_SVG_PALETTE_LINE_PEN(palette) ((palette)->line_pen)
+#define tmpl_SVG_PALETTE_LABELS(palette) ((palette)->labels)
+#define tmpl_SVG_PALETTE_NUMBER_OF_ARROWS(palette) ((palette)->N_Arrows)
+#define tmpl_SVG_PALETTE_NUMBER_OF_LABELS(palette) ((palette)->N_Labels)
+#define tmpl_SVG_PALETTE_HAS_FILL_DRAW(palette) ((palette)->has_fill_draw)
+#define tmpl_SVG_PALETTE_HAS_ARROWS(palette) ((palette)->has_arrows)
+#define tmpl_SVG_PALETTE_HAS_LABELS(palette) ((palette)->has_labels)
 #define tmpl_SVG_PALETTE_HAS_TICKS(palette) ((palette)->has_ticks)
 #define tmpl_SVG_PALETTE_HAS_UPTICKS(palette) ((palette)->up_ticks)
 #define tmpl_SVG_PALETTE_HAS_DOWNTICKS(palette) ((palette)->down_ticks)
@@ -380,6 +369,7 @@ typedef struct _tmpl_SVG_Palette {
 #define tmpl_SVG_PALETTE_TICK_SEMISEMIHEIGHT(palette) \
     ((palette)->tick_semi_semi_height)
 
+/*  Struct for working with SVG files.                                        */
 typedef struct _tmpl_SVG {
     FILE *fp;
     tmpl_SVG_Canvas *canvas;
@@ -423,21 +413,14 @@ typedef struct _tmpl_SVG_Circle {
 } tmpl_SVG_Circle;
 
 /*  Macros for SVG circles.                                                   */
-#define tmpl_SVG_CIRCLE_CENTER(circle) (((circle)->data).center)
-#define tmpl_SVG_CIRCLE_RADIUS(circle) ((circle)->radius)
-#define tmpl_SVG_CIRCLE_IS_LINE(circle) ((circle)->is_line)
-#define tmpl_SVG_CIRCLE_POINT(circle) (((circle)->data).line.P)
-#define tmpl_SVG_CIRCLE_TANGENT(circle) (((circle)->data).line.V)
+#define tmpl_SVG_CIRCLE_DATA(circle) ((circle)->data)
+#define tmpl_SVG_CIRCLE_PALETTE(circle) ((circle)->palette)
 
 /*  A data type for conviently dealing with lines.                            */
 typedef struct _tmpl_SVG_Line {
 
-    /*  A point that lies on the line.                                        */
-    tmpl_TwoVector P;
-
-    /*  The tangent/velocity vector of the line. That is, the direction the   *
-     *  line points in.                                                       */
-    tmpl_TwoVector V;
+    /*  The data for the line.                                                */
+    tmpl_Line2D *data;
 
     /*  Boolean for determining if an error occured.                          */
     tmpl_Bool error_occured;
@@ -450,10 +433,10 @@ typedef struct _tmpl_SVG_Line {
 } tmpl_SVG_Line;
 
 /*  Macros for working with SVG lines.                                        */
-#define tmpl_SVG_LINE_POINT(L) ((L)->P)
-#define tmpl_SVG_LINE_TANGENT(L) ((L)->V)
+#define tmpl_SVG_LINE_DATA(line) ((line)->data)
+#define tmpl_SVG_LINE_PALETTE(line) ((line)->palette)
 
-/*  The following macros are universal all of the data types where the        *
+/*  The following macros are universal for all of the data types where the    *
  *  attribute applies.                                                        */
 #define tmpl_HAS_ERROR(obj) ((obj)->error_occured)
 #define tmpl_GET_PALETTE(obj) ((obj)->palette)
