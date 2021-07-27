@@ -1,3 +1,21 @@
+Finish Proofreading:
+	Complex
+		complex_sqrt_real
+			sqrt of real number, allowing negative real numbers.
+		complex_log10
+		complex_logb
+			complex log in different bases.
+		complex_sec/complex_csc/complex_cot.
+			Additional complex trig functions.
+		Also add inverse trig functions.
+		Hyperbolic trig functions for complex arguments.
+		Inverse hyperbolic trig functions as well.
+		Various powers of small exponent:
+			square, cube, fourth power, etc.
+	Math
+	Special Functions
+
+
 Add polynomial library.
 	Fast multiply (Strassen algorithm)
 	For Z[x]:
@@ -29,25 +47,30 @@ Add polynomial library.
 		Smith-Normal Form.
 		Determinant.
 
-More functions for complex library:
-	complex_sqrt_real
-		sqrt of real number, allowing negative real numbers.
+Quad-Precision
+	Quad-precision complex as well.
 
-	complex_log10
-	complex_logb
-		complex log in different bases.
+Finalize knot theory library:
+	Knot Floer Homology
+	Khovanov Homology
+	Alexander Polynomial
+	Jones Polynomial
+	HOMFLY Polynomial
 
-	complex_sec/complex_csc/complex_cot.
-		Additional complex trig functions.
+Add linear algebra and matrix library.
+Abelian Groups
 
-		Also add inverse trig functions.
-
-	Hyperbolic trig functions for complex arguments.
-	Inverse hyperbolic trig functions as well.
-
-	Various powers of small exponent:
-		square, cube, fourth power, etc.
-
+Graph theory code:
+	Create Tait Graph from Gauss code.
+	Create Gauss code from signed graph using medial graph.
+	Function if two vertices are connected
+	Computing adjacency matrix.
+	Sorting graph edges by lexicographic ordering.
+	Determining if graph is planar.
+	Find Kuratowski subgraph of non-planar graph.
+	Compute degree of vertex.
+	Compute spanning tree.
+	Compute homology.
 
 Add these back;
 extern tmpl_ComplexDouble
@@ -57,10 +80,3 @@ tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z,
 extern tmpl_ComplexDouble
 tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
                                         tmpl_ComplexDouble w);
-
-Abelian Groups
-Knot Floer Homology
-Khovanov Homology
-Alexander Polynomial
-Jones Polynomial
-HOMFLY Polynomial
