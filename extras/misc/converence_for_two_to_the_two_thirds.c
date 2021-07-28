@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -130,11 +130,15 @@ void func(unsigned int n, double *arr)
 /*  Function for converting between Cartesian and SVG coordinates.            */
 struct pair Cart2SVG(struct pair P, struct canvas layout)
 {
+    /*  Declare variable for the output.                                      */
     struct pair out;
+
+    /*  Convert the Cartesian values to the SVG values.                       */
     out.x = layout.xscale*(P.x + layout.xshift);
     out.y = layout.yscale*(layout.ymax - layout.ymin - P.y - layout.yshift);
     return out;
 }
+/*  End of Cart2SVG.                                                          */
 
 /*  Function for showing the convergence of a_{n} to 2^(2/3).                 */
 int main(void)
@@ -256,6 +260,7 @@ int main(void)
                n, arr[n], val, val - arr[n]);
 	}
 
+    /*  Draw the curve in the SVG file.                                       */
     for (n = 0U; n < N-1U; ++n)
         draw_line(fp, A[n], A[n+1U], black, thickness);
 

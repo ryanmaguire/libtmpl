@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -27,7 +27,7 @@
  *  -lcairo when building.                                                    */
 #include <cairo.h>
 
-/*  Function for creating a "Hello, World" EPS file.                          */
+/*  Function for creating a "Hello, World" PNG file.                          */
 int main(void)
 {
     /*  Declare necessary variables.                                          */
@@ -53,7 +53,7 @@ int main(void)
     cairo_move_to(cr, 20.0, 50.0);
     cairo_show_text(cr, "Hello, world!");
 
-    /*  Destory the cr variable since we're done with it.                     */
+    /*  Destroy the cr variable since we're done with it.                     */
     cairo_destroy(cr);
 
     /*  Create the file.                                                      */
