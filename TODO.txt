@@ -13,8 +13,18 @@ Finish Proofreading:
 		Various powers of small exponent:
 			square, cube, fourth power, etc.
 	Math
-	Special Functions
+	Numerical
+		5 point 2, 3, and 4th derivatives using Lagrange.
+		Riemann sum
+		Trapezoid rule
+		Simpson's rule
 
+	Special Functions
+		Bessel J1
+		Airy
+		Add complex versions of current special functions.
+
+Add Airy diffraction.
 
 Add polynomial library.
 	Fast multiply (Strassen algorithm)
@@ -57,7 +67,15 @@ Finalize knot theory library:
 	Jones Polynomial
 	HOMFLY Polynomial
 
+Add interpolation:
+	Linear and cubic
+	Add savitzy-golay filter.
+
 Add linear algebra and matrix library.
+	LU and SVD decomposition.
+	Moore-Penrose pseudo-inverse.
+
+Add convolution to FFT folder.
 Abelian Groups
 
 Graph theory code:
