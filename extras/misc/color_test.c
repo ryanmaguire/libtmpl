@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -45,7 +45,7 @@ int main(void)
     puts(ANSI_COLOR_BLUE "And who doesn't love blue?");
     puts(ANSI_COLOR_MAGENTA "This is magenta.");
     puts(ANSI_COLOR_CYAN "And this is cyan." ANSI_COLOR_RESET);
-    puts("\nAnd now for some background color:\n");
+    puts("\nAnd now for some background color:");
     puts(ANSI_GREEN_BACKGROUND "\n\n\nIs This Green Enough For You?\n");
     puts(ANSI_COLOR_RESET"\n");
     return 0;
