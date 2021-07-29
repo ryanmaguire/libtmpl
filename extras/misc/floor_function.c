@@ -19,7 +19,7 @@
  *  This silly bit of code uses a binary search to compute floor(x) to 16     *
  *  decimals. This does NOT assume the IEEE 754 format is implemented, and is *
  *  portable. It is, however, 5-10 times SLOWER than glibc's floor function   *
- *  which does take advantage of the IEEE 754 format.
+ *  which does take advantage of the IEEE 754 format.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       July 28, 2021                                                 *
