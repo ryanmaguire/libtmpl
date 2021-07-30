@@ -135,7 +135,7 @@ typedef struct _tmpl_IntVector {
 } tmpl_IntVector;
 
 typedef struct _tmpl_UIntVector {
-    unsigned long int *data;
+    unsigned int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
