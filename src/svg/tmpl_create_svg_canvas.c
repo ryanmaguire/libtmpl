@@ -48,21 +48,22 @@
  ******************************************************************************/
 
 /*  tmpl_SVG_Color data type is defined here.                                 */
-#include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_svg.h>
+
+/*  malloc found here.                                                        */
 #include <stdlib.h>
 
 /*  Function for transforming user coordinates to the coordinate of the file. *
  *  That is, the user coordinates are of the form (x, y), a point in the      *
- *  Cartesian plane, whereas the file coordinates depend on the .svg/.ps/.pdf *
- *  file. This function transforms the x coordinate.                          */
+ *  Cartesian plane, whereas the file coordinates depend on the .svg file.    *
+ *  This function transforms the x coordinate.                                */
 static double tmpl_SVG_Canvas_X_Transform(tmpl_SVG_Canvas *canvas, double x)
 {
     /*  Compute the transformed x coordinate and return.                      */
     return canvas->x_shift + canvas->x_scale * x;
 }
 
-/*  Same as __kissvg_CanvasTransformX but for the y coordinate.               */
+/*  Same as tmpl_SVG_Canvas_X_Transform but for the y coordinate.             */
 static double tmpl_SVG_Canvas_Y_Transform(tmpl_SVG_Canvas *canvas, double y)
 {
     /*  Compute the transformed x coordinate and return.                      */
@@ -73,8 +74,7 @@ static double tmpl_SVG_Canvas_Y_Transform(tmpl_SVG_Canvas *canvas, double y)
 tmpl_SVG_Canvas *
 tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
                        double x_min, double x_max, double y_min, double y_max,
-                       tmpl_SVG_Color background, tmpl_SVG_Pen outline,
-                       tmpl_Bool use_one_to_one_aspect_ratio)
+                       tmpl_SVG_Color background, tmpl_SVG_Pen outline)
 {
     /*  Allocate memory for the canvas using malloc.                          */
     tmpl_SVG_Canvas *canvas = malloc(sizeof(*canvas));
@@ -92,18 +92,6 @@ tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
     /*  Compute the scale and shift factors and store them in the canvas.     */
     canvas->x_scale = (double)width/(x_max - x_min);
     canvas->y_scale = (double)height/(y_max - y_min);
-
-    /*  If 1-1 aspect ratio has been requested, choose the smaller of x_scale *
-     *  and y_scale and set both variables to this value. This ensures the    *
-     *  drawing does not fall outside of the bounds.                          */
-    if (use_one_to_one_aspect_ratio)
-    {
-        if (canvas->x_scale < canvas->y_scale)
-            canvas->y_scale = canvas->x_scale;
-        else
-            canvas->x_scale = canvas->y_scale;
-    }
-
     canvas->x_shift = 0.5 * ((double)width - (x_min + x_max)*canvas->x_scale);
     canvas->y_shift = 0.5 * ((double)height - (y_min + y_max)*canvas->y_scale);
 
@@ -113,3 +101,4 @@ tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
     return canvas;
 }
 /*  End of tmpl_Create_SVG_Canvas.                                            */
+

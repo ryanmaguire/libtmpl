@@ -466,8 +466,6 @@ typedef struct _tmpl_SVG_Line {
  *          The color of the background of the SVG.                           *
  *      outline (tmpl_SVG_Pen):                                               *
  *          The color of the outline of the SVG.                              *
- *      use_one_to_one_aspect_ratio (tmpl_Bool):                              *
- *          Boolean for determining if a 1:1 aspect ratio should be forced.   *
  *  Output:                                                                   *
  *      canvas (tmpl_SVG_Canvas *):                                           *
  *          A pointer to an SVG canvas.                                       *
@@ -482,14 +480,13 @@ typedef struct _tmpl_SVG_Line {
 extern tmpl_SVG_Canvas *
 tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
                        double x_min, double x_max, double y_min, double y_max,
-                       tmpl_SVG_Color background, tmpl_SVG_Pen outline,
-                       tmpl_Bool use_one_to_one_aspect_ratio);
+                       tmpl_SVG_Color background, tmpl_SVG_Pen outline);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Destory_SVG_Canvas                                               *
+ *      tmpl_Destroy_SVG_Canvas                                               *
  *  Purpose:                                                                  *
- *      Destory a canvas for an SVG file.                                     *
+ *      Destroy a canvas for an SVG file.                                     *
  *  Arguments:                                                                *
  *      canvas_ptr (tmpl_SVG_Canvas **):                                      *
  *          A pointer to a pointer to a tmpl_SVG_Canvas struct. This is the   *
@@ -498,8 +495,8 @@ tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      This function must be called when terminating an SVG program, or you  *
- *      may have a memory leak. In reality, your operating will free all      *
- *      memory allocated by the program once you are done, but still it's     *
+ *      may have a memory leak. In reality, your operating system will free   *
+ *      all memory allocated by the program once you are done, but still it's *
  *      better to be on the safe side.                                        *
  *  Source Code:                                                              *
  *      libtmpl/src/svg/tmpl_destroy_svg_canvas.c                             *
