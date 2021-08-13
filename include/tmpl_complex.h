@@ -25,6 +25,11 @@
  *      This file is a fork of the complex library I wrote for rss_ringoccs.  *
  *      rss_ringoccs is also released under GPL 3.                            *
  ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_bool.h:                                                          *
+ *      Header file containing Booleans.                                      *
+ ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
