@@ -9,7 +9,22 @@ double tmpl_Double_Sqrt(double x)
     return sqrt(x);
 }
 
-#if __TMPL_HAS_C99_MATH_H__ == 0
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+/*  C99 provides float and long double support for their math functions, so   *
+ *  simply use to these.                                                      */
+float tmpl_Float_Sqrt(float x)
+{
+    return sqrtf(x);
+}
+
+long double tmpl_LDouble_Sqrt(long double x)
+{
+    return sqrtl(x);
+}
+
+/*  Now have the functions declared in rss_ringoccs_math.h point to these.    */
+#else
 
 /*  C89 math.h does not have sinf or sinl, so we'll need to provide these to  *
  *  make the code forward compatible. We'll do this in a very simple manner.  */
@@ -23,19 +38,5 @@ long double tmpl_LDouble_Sqrt(long double x)
     return (long double)sqrt((double)x);
 }
 
-/*  Now have the functions declared in rss_ringoccs_math.h point to these.    */
-#else
-
-/*  C99 provides float and long double support for their math functions, so   *
- *  simply use to these.                                                      */
-float tmpl_Float_Sqrt(float x)
-{
-    return sqrtf(x);
-}
-
-long double tmpl_LDouble_Sqrt(long double x)
-{
-    return sqrtl(x);
-}
 #endif
 /*  End of #if __TMPL_HAS_C99_MATH_H__ == 0                                   */

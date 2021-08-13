@@ -42,7 +42,7 @@ float tmpl_Float_Log(float x)
 	return out;
 }
 
-#elif __TMPL_HAS_C99_MATH_H__ == 1
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #include <math.h>
 /*  C99 provides float and long double support for their math functions, so   *
  *  simply use to these.                                                      */

@@ -7,7 +7,20 @@ double tmpl_Double_Tan(double x)
     return tan(x);
 }
 
-#if __TMPL_HAS_C99_MATH_H__ == 0
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+float tmpl_Float_Tan(float x)
+{
+    return tanf(x);
+}
+
+long double tmpl_LDouble_Tan(long double x)
+{
+    return tanl(x);
+}
+
+/*  Now have the functions declared in rss_ringoccs_math.h point to these.    */
+#else
 
 float tmpl_Float_Tan(float x)
 {
@@ -19,17 +32,5 @@ long double tmpl_LDouble_Tan(long double x)
     return (long double)tan((double)x);
 }
 
-/*  Now have the functions declared in rss_ringoccs_math.h point to these.    */
-#else
-
-float tmpl_Float_Tan(float x)
-{
-    return tanf(x);
-}
-
-long double tmpl_LDouble_Tan(long double x)
-{
-    return tanl(x);
-}
 #endif
 /*  End of #if __TMPL_HAS_C99_MATH_H__ == 0                                   */
