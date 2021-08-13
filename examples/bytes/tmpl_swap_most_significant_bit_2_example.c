@@ -70,6 +70,8 @@ typedef unsigned int two_byte_integer;
 #else
 #error "No 16-bit integer type found."
 #endif
+/*  End of #if USHRT_MAX == 0xFFFF.                                           */
+
 #elif CHAR_BIT == 16
 #if USHRT_MAX == 0xFFFFFFFF
 typedef short unsigned int two_byte_integer;
@@ -80,7 +82,12 @@ typedef unsigned long int two_byte_integer;
 #else
 #error "No 32-bit integer type found."
 #endif
+/*  End of #if USHRT_MAX == 0xFFFFFFFF.                                       */
+
+#else
+#error "CHAR_BIT is neither 8 nor 16. Aborting."
 #endif
+/*  End of #if CHAR_BIT == 8.                                                 */
 
 /*  Function for testing the tmpl_Swap_Most_Significant_Bit_2 function and    *
  *  showing basic use.                                                        */
