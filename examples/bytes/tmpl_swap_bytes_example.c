@@ -71,7 +71,7 @@ int main(void)
 
     /*  Swap the bytes. tmpl_Swap_Bytes wants pointers to char values, so we  *
      *  need to grab the addresses of c0 and c1 via &c0 and &c1. Moreover, it *
-     *  wants pointers to SIGNED char values, so we need to perform a cast.   *
+     *  wants pointers to PLAIN char values, so we need to perform a cast.    *
      *  This is not necessary on most compilers, but with pedantic compiler   *
      *  warnings you may get something like -Wpointer-sign warnings.          *
      *  We cast the unsigned char pointer &c0 to a char pointer via           *
