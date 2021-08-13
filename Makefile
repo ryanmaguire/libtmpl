@@ -1,6 +1,6 @@
 #   Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
 #   on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
-CC = gcc
+CC = cc
 
 # Name of the created Share Object file (.so).
 SONAME = libtmpl.so
