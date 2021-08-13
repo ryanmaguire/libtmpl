@@ -20,25 +20,45 @@
 /*  Needed for malloc.                                                        */
 #include <stdlib.h>
 
-/*  Needed for strcpy.                                                        */
-#include <string.h>
-
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Function for duplicating a string into a char pointer.                    */
 char *tmpl_strdup(const char *str)
 {
-    /*  Create space for the output. The +1 is for the NULL terminator.       */
-    char *dst = malloc(strlen(str) + 1);
+    /*  Declare necessary variables.                                          */
+    char *out;
+    unsigned long int n, string_length;
 
-    /*  Check if malloc failed.                                               */
-    if (dst == NULL)
+    /*  Check if the input string is a NULL pointer. A segfault may occur if  *
+     *  we try to dereference a NULL pointer.                                 */
+    if (str == NULL)
         return NULL;
 
-    /*  Copy the input string into dst.                                       */
-    strcpy(dst, str);
-    return dst;
+    /*  Otherwise, compute the length of the input string.                    */
+    string_length = 0UL;
+
+    /*  Increment until we hit the NULL terminator of the string.             */
+    while(str[string_length])
+    {
+        ++string_length;
+    }
+
+    /*  Allocate memory for the output string. The +1 is for the NULL         *
+     *  terminator at the end of the string.                                  */
+    out = malloc(sizeof(*out) * (string_length + 1UL));
+
+    /*  Check if malloc failed.                                               */
+    if (out == NULL)
+        return NULL;
+
+    /*  If not, copy the input string into out.                               */
+    for (n = 0UL; n < string_length; ++n)
+        out[n] = str[n];
+
+    /*  Lastly, set the NULL terminator and return.                           */
+    out[string_length] = str[string_length];
+    return out;
 }
 /*  End of tmpl_strdup.                                                       */
 
