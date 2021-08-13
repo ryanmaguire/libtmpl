@@ -257,7 +257,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
      *            = exp(y^2) Erfc(y)                                          *
      *  And Erfc of a real number is again real. exp(y^2) Erfc(y) is the      *
      *  definition of the Erfcx function, so use this.                        */
-    if (z_x == 0.0)
+    if (tmpl_Double_Abs(z_x) <= DBL_MIN)
     {
         w_x = tmpl_Double_Erfcx(z_y);
         w_y = 0.0;
@@ -270,7 +270,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
      *  So we need the complementary function for a purely imaginary input.   *
      *  We can use the imaginary part of the Faddeeva function for this.      *
      *  tmpl_Double_Faddeeva_Im is defined in tmpl_math.h.                    */
-    else if (z_y == 0)
+    else if (tmpl_Double_Abs(z_y) <= DBL_MIN)
     {
         w_x = tmpl_Double_Exp(-z_x*z_x);
         w_y = tmpl_Double_Faddeeva_Im(z_x);
@@ -334,12 +334,12 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
                     w = tmpl_CDouble_Rect(w_x, w_y);
                 }
                 /*  Use the limiting behavior of w(x+iy) if y = inf.          */
-                else if (tmpl_Is_Inf(abs_y))
+                else if (tmpl_Double_Is_Inf(abs_y))
                 {
                     /*  Check if the x component is a NaN. If it is, or if    *
                      *  if the y component is negative infinity, return       *
                      *  complex NaN.                                          */
-                    if ((tmpl_Is_NaN(z_x)) || (z_y < 0.0))
+                    if ((tmpl_Double_Is_NaN(z_x)) || (z_y < 0.0))
                         w = tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
                     /*  In the limiting case with y = +infinity we get zero.  */
@@ -431,7 +431,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
         prod2ax = 1.0;
         prodm2ax = 1.0;
 
-        if (tmpl_Is_Inf(z_y))
+        if (tmpl_Double_Is_Inf(z_y))
         {
             w = tmpl_CDouble_Rect(z_y, z_y);
             return w;
@@ -528,7 +528,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
     /*  x large: only sum3 & sum5 contribute (see above note).                */
     else
     {
-        if ((tmpl_Is_NaN(abs_x)) || (tmpl_Is_NaN(z_y)))
+        if ((tmpl_Double_Is_NaN(abs_x)) || (tmpl_Double_Is_NaN(z_y)))
             w = tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
 
         /*  |y| < 1e-10, so we only need exp(-x*x) term (round instead of     *

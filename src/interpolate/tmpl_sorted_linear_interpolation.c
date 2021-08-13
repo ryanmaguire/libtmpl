@@ -101,6 +101,8 @@
 /*  And the function prototypes are found here.                               */
 #include <libtmpl/include/tmpl_interpolate.h>
 
+#include <float.h>
+
 /*  Single precision linear interpolation of sorted data.                     */
 void
 tmpl_Float_Sorted_Interp1d(float *x, float *y, unsigned long N,
@@ -123,11 +125,11 @@ tmpl_Float_Sorted_Interp1d(float *x, float *y, unsigned long N,
             y_new[m] = tmpl_NaN_F;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
-        else if (x_new[m] == x[N-1])
+        else if (tmpl_Float_Dist(x_new[m], x[N-1]) <= FLT_MIN)
             y_new[m] = y[N-1];
 
         /*  Handle the special case of x_new[m] = x[0].                       */
-        else if (x_new[m] == x[0])
+        else if (tmpl_Float_Dist(x_new[m], x[0]) <= FLT_MIN)
             y_new[m] = y[0];
 
         /*  And finally, handle the general case.                             */
@@ -168,11 +170,11 @@ tmpl_Double_Sorted_Interp1d(double *x, double *y, unsigned long N,
             y_new[m] = tmpl_NaN;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
-        else if (x_new[m] == x[N-1])
+        else if (tmpl_Double_Dist(x_new[m], x[N-1]) <= DBL_MIN)
             y_new[m] = y[N-1];
 
         /*  Handle the special case of x_new[m] = x[0].                       */
-        else if (x_new[m] == x[0])
+        else if (tmpl_Double_Dist(x_new[m], x[0]) <= DBL_MIN)
             y_new[m] = y[0];
 
         /*  And finally, handle the general case.                             */
@@ -214,11 +216,11 @@ tmpl_LDouble_Sorted_Interp1d(long double *x, long double *y, unsigned long N,
             y_new[m] = tmpl_NaN_L;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
-        else if (x_new[m] == x[N-1])
+        else if (tmpl_LDouble_Dist(x_new[m], x[N-1]) <= LDBL_MIN)
             y_new[m] = y[N-1];
 
         /*  Handle the special case of x_new[m] = x[0].                       */
-        else if (x_new[m] == x[0])
+        else if (tmpl_LDouble_Dist(x_new[m], x[0]) <= LDBL_MIN)
             y_new[m] = y[0];
 
         /*  And finally, handle the general case.                             */
