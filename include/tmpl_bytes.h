@@ -46,6 +46,11 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
+ *                                EXAMPLES                                    *
+ ******************************************************************************
+ *  Examples of all of the functions can be found in:                         *
+ *      libtmpl/examples/bytes/                                               *
+ ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
  *  Date:       February 1, 2021                                              *
  ******************************************************************************

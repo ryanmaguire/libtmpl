@@ -119,6 +119,8 @@
 #ifndef TMPL_MATH_H
 #define TMPL_MATH_H
 
+#include <libtmpl/include/tmpl_bool.h>
+
 /* Declare Miscellaneous Constants.                                           */
 
 /*  sqrt( 1 / (2pi) )                                                         */
@@ -232,8 +234,13 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #define tmpl_NaN_F ((float)(tmpl_NaN))
 #define tmpl_NaN_L ((long double)(tmpl_NaN))
 
-#define tmpl_Is_Inf(x) ((x) == ((x)+1))
-#define tmpl_Is_NaN(x) ((x) != (x))
+extern tmpl_Bool tmpl_Float_Is_Inf(float x);
+extern tmpl_Bool tmpl_Double_Is_Inf(double x);
+extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
+
+extern tmpl_Bool tmpl_Float_Is_NaN(float x);
+extern tmpl_Bool tmpl_Double_Is_NaN(double x);
+extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -409,6 +416,9 @@ extern long double tmpl_LDouble_Faddeeva_Im(long double x);
 
 extern unsigned long tmpl_Factorial(unsigned int n);
 
+extern float tmpl_Factor_As_Float(unsigned int n);
+extern double tmpl_Factorial_As_Double(unsigned int n);
+
 extern unsigned long
 tmpl_Falling_Factorial(unsigned int x, unsigned int N);
 
@@ -451,6 +461,10 @@ tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
 extern float tmpl_Float_Mod_2(float x);
 extern double tmpl_Double_Mod_2(double n);
 extern long double tmpl_LDouble_Mod_2(long double x);
+
+extern float tmpl_Float_Dist(float x, float y);
+extern double tmpl_Double_Dist(double x, double y);
+extern long double tmpl_LDouble_Dist(long double x, long double y);
 
 extern const float tmpl_Float_Cos_Lookup_Table[100];
 extern const double tmpl_Double_Cos_Lookup_Table[100];

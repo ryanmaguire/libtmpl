@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -74,9 +74,38 @@
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_strdup.c                                      *
  *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ *      libtmpl/examples/string/tmpl_strdup_example.c                         *
  ******************************************************************************/
 extern char *tmpl_strdup(const char *str);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_ASCII_Lower_Case                                                 *
+ *  Purpose:                                                                  *
+ *      Takes in a char which represents an ASCII character and returns the   *
+ *      lower-case of the character if it is a capital letter, and returns    *
+ *      the input otherwise.                                                  *
+ *  Arguments:                                                                *
+ *      c (char):                                                             *
+ *          The string that is to be duplicated.                              *
+ *  Output:                                                                   *
+ *      dup (char *):                                                         *
+ *          A pointer to a char array whose entries correspond to the input   *
+ *          string str.                                                       *
+ *  NOTES:                                                                    *
+ *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
+ *      This has been the case on all devices I've tested. If you're unsure,  *
+ *      use tmpl_Lower_Case. That function is about ~10x slower, but the      *
+ *      computational time is essentially negligible for both functions.      *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_strdup.c                                      *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern char tmpl_ASCII_Lower_Case(char c);
+
+extern char tmpl_Lower_Case(char c);
+
 extern void tmpl_Make_Lower(char *str);
 extern void tmpl_Remove_Spaces(char * str);
 
