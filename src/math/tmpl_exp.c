@@ -10,7 +10,21 @@ double tmpl_Double_Exp(double x)
     return exp(x);
 }
 
-#if __TMPL_HAS_C99_MATH_H__ == 0
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+/*  C99 provides float and long double support for their math functions, so   *
+ *  simply use to these.                                                      */
+float tmpl_Float_Exp(float x)
+{
+    return expf(x);
+}
+
+long double tmpl_LDouble_Exp(long double x)
+{
+    return expl(x);
+}
+
+#else
 
 /*  C89 math.h does not have cosf or cosfl, so we'll need to provide these to  *
  *  make the code forward compatible. We'll do this in a very simple manner.  */
@@ -24,20 +38,6 @@ long double tmpl_LDouble_Exp(long double x)
     return (long double)exp((double)x);
 }
 
-/*  Now have the functions declared in rss_ringoccs_math.h point to these.    */
-#else
-
-/*  C99 provides float and long double support for their math functions, so   *
- *  simply use to these.                                                      */
-float tmpl_Float_Exp(float x)
-{
-    return expf(x);
-}
-
-long double tmpl_LDouble_Exp(long double x)
-{
-    return expl(x);
-}
 #endif
 /*  End of #if __TMPL_HAS_C99_MATH_H__ == 0                                   */
 
