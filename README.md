@@ -114,12 +114,35 @@ make
 Note, this requires sudo privileges. This has been tested on various GNU/Linux
 distributions, macOS, and FreeBSD.
 
+To compile with OpenMP (which is highly recommended since it has huge
+computational benefits), run:
+```
+make omp
+```
+
+You'll of course need a compiler that supports OpenMP.
+
 There is also `make.sh` which is a shell script written in bash that has the
 same functionality as `Makefile` except that various pedantic compiler options
 are passed to the compiler. This is to ensure as best as possible that the code
 is written in strictly compliant C89/C90 code. This has been tested with several
 compilers, including GCC (GNU), Clang (LLVM), TCC (Tiny C Compiler), and
 PCC (Portable C Compiler).
+
+### Some Warnings
+On Debian GNU/Linux 10 (Buster), there are two problems with PCC and TCC.
+The version of TCC (the Tiny C Compiler) that ships with Debian 10 does not
+accept 0.0 * HUGE_VAL as a compiler-time constant. This value is used to
+represent Not-A-Number. On Debian 11 (Bullseye), the more up-to-date version of
+TCC correctly compiles libtmpl.
+
+On PCC (the Portable C Compiler), it fails to compile because it cannot
+handle glibc's math.h. In particular, it complains about certain typedef's
+in `bits/floatn.h`. In Debian 11 (Bullseye), the more recent version of PCC
+compiles libtmpl without error.
+
+In both cases, the problem does not seem to be with libtmpl, but with the
+particular versions of those compilers.
 
 ## Installation (Windows)
 Step 1: Remove Windows and install a nice Linux distribution. I recommend
