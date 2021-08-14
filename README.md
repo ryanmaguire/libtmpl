@@ -142,7 +142,8 @@ in `bits/floatn.h`. In Debian 11 (Bullseye), the more recent version of PCC
 compiles libtmpl without error.
 
 In both cases, the problem does not seem to be with libtmpl, but with the
-particular versions of those compilers.
+particular versions of those compilers. At any rate, clang and gcc compile
+without error, and without warnings :)
 
 ## Installation (Windows)
 Step 1: Remove Windows and install a nice Linux distribution. I recommend
