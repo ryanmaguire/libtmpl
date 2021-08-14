@@ -10,8 +10,8 @@ SODIR = /usr/local/lib
 
 #   Compiler arguments (works for GCC, Clang, TCC, and PCC).
 #   -O3 is optimization level 3
-#   -c means compiler without linking.
-#   -I/usr/local/include includes that directory in the path..
+#   -c means compile without linking.
+#   -I/usr/local/include includes that directory in the path.
 #   -flto is link time optimization.
 CARGS = -O3 -c -flto -I/usr/local/include
 
@@ -34,7 +34,7 @@ DET_END_FILE = ./det_end.c
 DET_END_EXEC = det_end_out
 
 #   Location of source files for all sub-libraries.
-SRCS =  ./src/**/*.c
+SRCS = ./src/**/*.c
 SRCS_LINK = ./*.o
 
 all: make
@@ -45,6 +45,16 @@ make:
 	make determine_endianness
 	make create_include_folder
 	make compile
+	make link
+	make clean
+
+# Same as make, but compiling with OpenMP support.
+omp:
+	make clean
+	make clean_old
+	make determine_endianness
+	make create_include_folder
+	make compile_omp
 	make link
 	make clean
 
@@ -68,6 +78,11 @@ determine_endianness:
 compile:
 	$(CC) $(CARGS) $(SRCS)
 
+# Same as compile, but with the OpenMP compiler argument.
+compile_omp:
+	$(CC) $(CARGS) -fopenmp $(SRCS)
+
 link:
 	$(CC) $(SRCS_LINK) $(LARGS)
 	sudo mv $(SONAME) $(SODIR)
+
