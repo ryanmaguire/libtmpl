@@ -19,7 +19,7 @@
  *                             tmpl_swap_bytes                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for swapping the values or two char pointers.           *
+ *      Contains code for swapping the values of two char pointers.           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -103,3 +103,4 @@ void tmpl_Swap_Bytes(char *ptr1, char *ptr2)
     return;
 }
 /*  End of tmpl_Swap_Bytes.                                                   */
+
