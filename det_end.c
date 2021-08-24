@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -32,9 +32,6 @@
  *  2.) stdio.h:                                                              *
  *          Standard C library header file containing the fprintf function    *
  *          which we'll use to create the file include/tmpl_endianness.h.     *
- *  3.) string.h:                                                             *
- *          Standard C library header file containing strcpy which allows us  *
- *          to copy strings into char arrays.                                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -58,6 +55,8 @@
  ******************************************************************************
  *  2021/04/26: Ryan Maguire                                                  *
  *      Made the code more portable by allowing CHAR_BIT to be any value.     *
+ *  2021/08/24: Ryan Maguire                                                  *
+ *      Removed string.h dependency and simplified a bit.                     *
  ******************************************************************************/
 
 /*  Macros for determining the size of integer data types found here. In      *
@@ -66,9 +65,6 @@
 
 /*  Needed for FILE data type and fprintf.                                    */
 #include <stdio.h>
-
-/*  Needed for strcpy.                                                        */
-#include <string.h>
 
 /*  Function for creating include/tmpl_endianness.h.                          */
 int main(void)
@@ -83,12 +79,8 @@ int main(void)
         unsigned char arr[sizeof(unsigned long int)];
     } e;
 
-    /*  n is for indexing and pow keeps track of the power of an integer.     */
-    unsigned long int n, pow;
-
-    /*  We're printing the results to include/tmpl_endianness.h, so we'll     *
-     *  need a char array to store the string.                                */
-    char end_str[48];
+    /*  n is for indexing and power keeps track of the power of an integer.   */
+    unsigned long int n, power;
 
     /*  And lastly, open the file include/tmpl_endianness.h using fopen and   *
      *  give the file write permissions.                                      */
@@ -117,50 +109,29 @@ int main(void)
      *  initializing the unsigned long int part of the union to 0.            */
     e.n = 0UL;
 
-    /*  We need to set pow to 2^(number of bits in a byte). This number is    *
-     *  found in limits.h as CHAR_BIT. We're going to write out number as     *
-     *  7 * pow^7 + 6 * pow^6 + ... + 2 * pow^2 + pow + 0. If we somehow had  *
-     *  a base-10 computer, this would be                                     *
+    /*  We need to set power to 2^(number of bits in a byte). This number is  *
+     *  found in limits.h as CHAR_BIT. We're going to write out the number as *
+     *  7 * power^7 + 6 * power^6 + ... + 2 * power^2 + power + 0. If we      *
+     *  somehow had a base-10 computer, this would be                         *
      *  7*10^7 + 6*10^6 + ... + 2*10^2 + 1*10 + 0 = 76543210.                 *
      *  We want this in base 2^CHAR_BIT. We can compute 2^CHAR_BIT quickly    *
      *  using bitwise operators. 1 << N is the number 1000...000 in binary    *
      *  with N 0's. This would be the number 2^N in decimal, which is what    *
      *  we want. We compute 2^CHAR_BIT via 1UL << CHAR_BIT. UL means unsigned *
-     *  long, which is the data type of pow.                                  */
-    pow = 1UL << CHAR_BIT;
+     *  long, which is the data type of power.                                */
+    power = 1UL << CHAR_BIT;
 
-    /*  Write out 76543210 in base 2^CHAR_BIT by adding. That is:             *
-     *  76543210 = 7*pow^7 + ... + 2*pow^2 + 1*pow + 0. Loop through and add. */
+    /*  Write out 76543210 in base 2^CHAR_BIT by adding.                      */
     for (n = 1; n < sizeof(unsigned long int); ++n)
     {
-        e.n += n * pow;
+        e.n += n * power;
 
-        /*  From pow^k we can get pow^(k+1) by shifting the "decimal" point   *
+        /*  From power^k we can get power^(k+1) by shifting the "decimal"     *
          *  CHAR_BIT to the right. In decimal, if we had 100 and want 1000,   *
          *  we'd write 100.00, shift the decimal to the right, and get 1000.0.*
          *  Writing pow = pow << CHAR_BIT is the base 2^CHAR_BIT equivalent.  */
-        pow = pow << CHAR_BIT;
+        power = power << CHAR_BIT;
     }
-
-    /*  We now have 76543210 in the array part of the union (or n-1...210 if  *
-     *  sizeof(unsigned long int) = n). If the zeroth entry of the array is   *
-     *  0, we have little endian. If it is n-1, we have big endian. Anything  *
-     *  between 0 and n-1 is mixed endian, and any other result is unknown.   *
-     *  There is one very rare case that needs to be handled. If              *
-     *  sizeof(unsigned long int) = 1, the we can't parse the array. If this  *
-     *  is true, your computer is very strange, and we'll return unknown. We  *
-     *  use the strcpy function from string.h to copy the string into our     *
-     *  end_str char array.                                                   */
-    if (sizeof(unsigned long int) == 1)
-        strcpy(end_str, "__TMPL_UNKNOWN_ENDIAN__");
-    else if (e.arr[0] == 0)
-        strcpy(end_str, "__TMPL_LITTLE_ENDIAN__");
-    else if (e.arr[0] == (sizeof(unsigned long int) - 1))
-        strcpy(end_str, "__TMPL_BIG_ENDIAN__");
-    else if ((0 < e.arr[0]) && (e.arr[0] < (sizeof(unsigned long int) - 1)))
-        strcpy(end_str, "__TMPL_MIXED_ENDIAN__");
-    else
-        strcpy(end_str, "__TMPL_UNKNOWN_ENDIAN__");
 
     /*  Create the file include/tmpl_endianness.h and return.                 */
     fprintf(fp, "/******************************************************************************\n");
@@ -185,7 +156,7 @@ int main(void)
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  Purpose:                                                                  *\n");
     fprintf(fp, " *      This file is created by the det_enc.c file. It provides the macro     *\n");
-    fprintf(fp, " *      __TMPL_ENDIANNESS__ which is used in various functions where the code *\n");
+    fprintf(fp, " *      TMPL_ENDIANNESS which is used in various functions where the code     *\n");
     fprintf(fp, " *      is endian specific.                                                   *\n");
     fprintf(fp, " ******************************************************************************/\n");
     fprintf(fp, "#ifndef TMPL_ENDIANNESS_H\n");
@@ -194,7 +165,26 @@ int main(void)
     fprintf(fp, "#define TMPL_LITTLE_ENDIAN 1\n");
     fprintf(fp, "#define TMPL_MIXED_ENDIAN 2\n");
     fprintf(fp, "#define TMPL_UNKNOWN_ENDIAN 3\n\n");
-    fprintf(fp, "#define TMPL_ENDIAN %s\n\n", end_str);
+
+    /*  We now have 76543210 in the array part of the union (or n-1...210 if  *
+     *  sizeof(unsigned long int) = n). If the zeroth entry of the array is   *
+     *  0, we have little endian. If it is n-1, we have big endian. Anything  *
+     *  between 0 and n-1 is mixed endian, and any other result is unknown.   *
+     *  There is one very rare case that needs to be handled. If              *
+     *  sizeof(unsigned long int) = 1, the we can't parse the array. If this  *
+     *  is true, your computer is very strange, and we'll return unknown.     */
+    if (sizeof(unsigned long int) == 1)
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n\n");
+    else if (e.arr[0] == 0)
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_LITTLE_ENDIAN\n\n");
+    else if (e.arr[0] == (sizeof(unsigned long int) - 1))
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_BIG_ENDIAN\n\n");
+    else if ((0 < e.arr[0]) && (e.arr[0] < (sizeof(unsigned long int) - 1)))
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_MIXED_ENDIAN\n\n");
+    else
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n\n");
+
+    /*  Print the end of the include guard.                                   */
     fprintf(fp, "#endif\n");
     return 0;
 }
