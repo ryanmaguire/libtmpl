@@ -103,7 +103,7 @@
 void tmpl_Swap_Most_Significant_Bit_4(char *ptr)
 {
     /*  Simply use tmpl_Swap_Bytes twice and return. tmpl_Swap_Bytes wants    *
-     *  two pointers to the the char values, but we just have a single        *
+     *  two pointers to the char values, but we just have a single            *
      *  pointer to a char array. To get a pointer to the zeroth value we      *
      *  first dereference with ptr[0] (we could also do *ptr, but ptr[0] is   *
      *  clearer in my opinion). We then grab the address with &. So in total  *
