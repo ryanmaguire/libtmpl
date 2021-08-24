@@ -79,18 +79,22 @@
  *  gsl_complex *w; you can safely cast via:                                  *
  *      z = (tmpl_ComplexDouble *)&w;                                         *
  *  And similarly we can do w = (gsl_complex *)&z;                            */
-typedef struct tmpl_ComplexDouble {
+typedef struct _tmpl_ComplexDouble {
     double dat[2];
 } tmpl_ComplexDouble;
 
 /*  Define single and long double precision equivalents.                      */
-typedef struct tmpl_ComplexFloat {
+typedef struct _tmpl_ComplexFloat {
     float dat[2];
 } tmpl_ComplexFloat;
 
-typedef struct tmpl_ComplexLongDouble {
+typedef struct _tmpl_ComplexLongDouble {
     long double dat[2];
 } tmpl_ComplexLongDouble;
+
+/*  For the sake of ease, tmpl_Complex is an alternative alias for double     *
+ *  precision complex. You can use this for cleaner declarations.             */
+typedef tmpl_ComplexDouble tmpl_Complex;
 
 /*  Useful constants used throughout computations.                            */
 
@@ -153,14 +157,9 @@ extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
  *      libtmpl/tests/complex_tests/tmpl_complex_abs_time_test.c              *
  *      libtmpl/tests/complex_tests/tmpl_complex_absl_time_test.c             *
  ******************************************************************************/
-extern float
-tmpl_CFloat_Abs(tmpl_ComplexFloat z);
-
-extern double
-tmpl_CDouble_Abs(tmpl_ComplexDouble z);
-
-extern long double
-tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -187,14 +186,9 @@ tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
  *      libtmpl/tests/complex_tests/tmpl_complex_abs_squared_time_test.c      *
  *      libtmpl/tests/complex_tests/tmpl_complex_absl_squared_time_test.c     *
  ******************************************************************************/
-extern float
-tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
-
-extern double
-tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
-
-extern long double
-tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
