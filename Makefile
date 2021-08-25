@@ -2,24 +2,29 @@
 #   on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
 CC = cc
 
-# Name of the created Share Object file (.so).
-SONAME = libtmpl.so
-
-# Location to store SONAME at the end of building.
-SODIR = /usr/local/lib
-
-#   Compiler arguments (works for GCC, Clang, TCC, and PCC).
-#   -O3 is optimization level 3
-#   -c means compile without linking.
-#   -I/usr/local/include includes that directory in the path.
-#   -flto is link time optimization.
-CARGS = -O3 -c -flto -I/usr/local/include
+# Compiler arguments (works for GCC, Clang, TCC, and PCC).
+# -O3 is optimization level 3
+# -c means compile without linking.
+# -I../ includes that directory in the path.
+# -flto is link time optimization.
+# -fopenmp uses OpenMP.
+CARGS = -O3 -c -flto -I/usr/local/include/
+CARGSOMP = -O3 -c -flto -fopenmp -I/usr/local/include/
+CARGSINPLACE = -O3 -c -flto -I../
+CARGSOMPINPLACE = -O3 -c -flto -fopenmp -I../
 
 # Linking arguments. -O3, -I, and -flto are the same as before.
 # -lm means link against the standard math library.
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
 LARGS = -O3 -I/usr/local/include -flto -shared -o $(SONAME) -lm
+LARGSINPLACE = -O3 -I../ -flto -shared -o $(SONAME) -lm
+
+# Name of the created Share Object file (.so).
+SONAME = libtmpl.so
+
+# Location to store SONAME at the end of building.
+SODIR = /usr/local/lib
 
 # Location where the .h files will be stored.
 INCLUDE_TARGET = /usr/local/include/libtmpl
@@ -48,6 +53,13 @@ make:
 	make link
 	make clean
 
+inplace:
+	make clean
+	make determine_endianness
+	make compile_inplace
+	make link_inplace
+	make clean_inplace
+
 # Same as make, but compiling with OpenMP support.
 omp:
 	make clean
@@ -58,8 +70,19 @@ omp:
 	make link
 	make clean
 
+# Same as inplace, but compiling with OpenMP support.
+omp_inplace:
+	make clean
+	make determine_endianness
+	make compile_omp_inplace
+	make link_inplace
+	make clean_inplace
+
 clean:
 	rm -f *.so *.o
+
+clean_inplace:
+	rm -f *.o
 
 clean_old:
 	sudo rm -f $(END_HEADER)
@@ -78,11 +101,19 @@ determine_endianness:
 compile:
 	$(CC) $(CARGS) $(SRCS)
 
-# Same as compile, but with the OpenMP compiler argument.
+compile_inplace:
+	$(CC) $(CARGSINPLACE) $(SRCS)
+
 compile_omp:
-	$(CC) $(CARGS) -fopenmp $(SRCS)
+	$(CC) $(CARGSOMP) $(SRCS)
+
+compile_omp_inplace:
+	$(CC) $(CARGSOMPINPLACE) $(SRCS)
 
 link:
 	$(CC) $(SRCS_LINK) $(LARGS)
 	sudo mv $(SONAME) $(SODIR)
+
+link_inplace:
+	$(CC) $(SRCS_LINK) $(LARGSINPLACE)
 
