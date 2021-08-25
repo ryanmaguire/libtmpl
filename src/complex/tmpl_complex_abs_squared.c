@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_abs_squared                          *
+ *                        tmpl_complex_abs_squared                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for f(z) = |z|^2.                            *
