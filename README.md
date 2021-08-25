@@ -122,6 +122,22 @@ make omp
 
 You'll of course need a compiler that supports OpenMP.
 
+If you do not have sudo privileges, use the inplace option:
+```
+make inplace
+```
+
+And for inplace with omp support
+```
+make omp_inplace
+```
+
+This will place libtmpl.so in this directory. You will NOT have
+the header files placed in /usr/local/include/ and you will therefore need to
+pass the -I and -L options to your compiler whenever you want to use libtmpl.
+You may also need to update the environment variable LD_LIBRARY_PATH. This
+needs to have the location of libtmpl.so in it.
+
 There is also `make.sh` which is a shell script written in bash that has the
 same functionality as `Makefile` except that various pedantic compiler options
 are passed to the compiler. This is to ensure as best as possible that the code
@@ -187,3 +203,7 @@ del *.exe *.obj
 ```
 This creates libtmpl.dll directly in the top directory of libtmpl. You can
 move this to the `System32` directory, or add this directory to your path.
+
+The other option is using the Linux Subsystem for Windows. I've not personally
+tried this, but a colleague has had some success with it.
+
