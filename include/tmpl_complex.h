@@ -21,7 +21,7 @@
  *  Purpose:                                                                  *
  *      Define complex data types and provide various functions for           *
  *      creating complex variables and performing complex arithmetic.         *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      This file is a fork of the complex library I wrote for rss_ringoccs.  *
  *      rss_ringoccs is also released under GPL 3.                            *
  ******************************************************************************
@@ -119,19 +119,20 @@ extern const tmpl_ComplexFloat tmpl_CFloat_Infinity;
 extern const tmpl_ComplexDouble tmpl_CDouble_Infinity;
 extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
 
+/*  WARNING:                                                                  *
+ *      On older versions of TCC (the Tiny C Compiler), it is essentially     *
+ *      impossible to portably declare NaN. There are three common ways of    *
+ *      doing it: 0.0 / 0.0, HUGE_VAL * 0.0, and HUGE_VAL - HUGE_VAL. All     *
+ *      three of these cause the compiling to halt on the version of TCC that *
+ *      ships with Debian GNU/Linux 10 (Buster). More recent versions, such   *
+ *      as the one that comes with Debian GNU/Linux 11 (Bullseye) can handle  *
+ *      these expressions. At any rate, LLVM's clang and GNU's GCC can both   *
+ *      compile these expressions, as can PCC (the Portable Compiler).        */ 
+
 /*  Complex NaN, defined as NaN + i NaN.                                      */
 extern const tmpl_ComplexFloat tmpl_CFloat_NaN;
 extern const tmpl_ComplexDouble tmpl_CDouble_NaN;
 extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
-
-/*  There used to be complex NaN data types, defined by NaN + i*NaN, where    *
- *  NaN is defined in tmpl_math.h as 0.0 * HUGE_VAL. This wasn't portable     *
- *  since these are not compile time constants, so we can't trust that the    *
- *  compiler will be able to handle it. It worked with GCC and LLVM's clang,  *
- *  but not on a few others (either tcc, or pcc, I can't recall which). For   *
- *  absolute portability, these have been removed, and instead when a complex *
- *  NaN is needed, it is created at runtime with tmpl_CDouble_Rect, or the    *
- *  float or long double equivalent.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
