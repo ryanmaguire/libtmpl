@@ -32,7 +32,7 @@
 /*  Time data types and functions here.                                       */
 #include <time.h>
 
-/*  Routine for testing tmpl_CFloat_Abs.                                      */
+/*  Routine for testing tmpl_CDouble_Abs.                                     */
 int main(void)
 {
     double *y0, *y1;
