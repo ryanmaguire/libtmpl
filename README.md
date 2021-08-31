@@ -1,3 +1,26 @@
+<!---
+
+    LICENSE
+
+    This file is part of libtmpl.
+
+    libtmpl is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    libtmpl is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.
+
+    AUTHOR
+        Ryan Maguire, Dartmouth College
+--->
+
 # Table of Contents
 1. [libtmpl](#libtmpl)
     1. [The Mathematicians Programming Library](#TheMathProgLib)
@@ -6,6 +29,7 @@
     
 2. [tmpyl](#tmpyl)
     1. [Installation](#InstallUnixtmpyl)
+3. [License](#license)
 
 # libtmpl
 
@@ -255,4 +279,18 @@ directory, placed in `libtmpl/tmpyl/build`, and there are two files:
 Where the `x.x` is determined by the Python version, and the `*` is determined
 by your computer architecture and operating system. To uninstall, simply remove
 these files and the entire `libtmpl/tmpyl/build` directory.
+
+# License
+    libtmpl is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    libtmpl is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.
 
