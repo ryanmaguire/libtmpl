@@ -183,21 +183,23 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
     else if (PyList_Check(x))
     {
         PyObject *nth_item;
+        PyObject *current_item;
         dim    = PyList_Size(x);
         output = PyList_New(dim);
 
         for (n = 0UL; n < dim; ++n)
         {
-            nth_item = PyList_GET_ITEM(x, n);
+            nth_item = PyList_GetItem(x, n);
+
             if (PyLong_Check(nth_item))
-                PyList_SET_ITEM(output, n,
-                                tmpl_Get_Py_Out_From_Int(x, c_func));
+                current_item = tmpl_Get_Py_Out_From_Int(nth_item, c_func);
+                
             else if (PyFloat_Check(nth_item))
-                PyList_SET_ITEM(output, n,
-                                tmpl_Get_Py_Out_From_Float(x, c_func));
+                current_item = tmpl_Get_Py_Out_From_Float(nth_item, c_func);
+
             else if (PyComplex_Check(nth_item))
-                PyList_SET_ITEM(output, n,
-                                tmpl_Get_Py_Out_From_Complex(x, c_func));
+                current_item = tmpl_Get_Py_Out_From_Complex(nth_item, c_func);
+
             else
             {
                 if (c_func->func_name == NULL)
@@ -215,7 +217,10 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
                                  c_func->func_name);
                 return NULL;
             }
+
+            PyList_SET_ITEM(output, n, current_item);
         }
+
         return output;
     }
 
