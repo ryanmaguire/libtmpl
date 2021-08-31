@@ -40,7 +40,9 @@ CARGSOMPINPLACE = -O3 -c -flto -fopenmp -I../
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
 LARGS = -O3 -I/usr/local/include -flto -shared -o $(SONAME) -lm
+LARGSOMP = -O3 -fopenmp -I/usr/local/include -flto -shared -o $(SONAME) -lm
 LARGSINPLACE = -O3 -I../ -flto -shared -o $(SONAME) -lm
+LARGSOMPINPLACE = -O3 -fopenmp -I../ -flto -shared -o $(SONAME) -lm
 
 # Name of the created Share Object file (.so).
 SONAME = libtmpl.so
@@ -89,7 +91,7 @@ omp:
 	make determine_endianness
 	make create_include_folder
 	make compile_omp
-	make link
+	make link_omp
 	make clean
 
 # Same as inplace, but compiling with OpenMP support.
@@ -97,7 +99,7 @@ omp_inplace:
 	make clean
 	make determine_endianness
 	make compile_omp_inplace
-	make link_inplace
+	make link_omp_inplace
 	make clean_inplace
 
 clean:
@@ -136,6 +138,13 @@ link:
 	$(CC) $(SRCS_LINK) $(LARGS)
 	sudo mv $(SONAME) $(SODIR)
 
+link_omp:
+	$(CC) $(SRCS_LINK) $(LARGSOMP)
+	sudo mv $(SONAME) $(SODIR)
+
 link_inplace:
 	$(CC) $(SRCS_LINK) $(LARGSINPLACE)
+
+link_omp_inplace:
+	$(CC) $(SRCS_LINK) $(LARGSOMPINPLACE)
 
