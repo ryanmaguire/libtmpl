@@ -1,3 +1,7 @@
+# Table of Contents
+1. [libtmpl](#libtmpl)
+2. [tmpyl](#tmpyl)
+
 # libtmpl
 
 ## The Mathematicians Programming Library
