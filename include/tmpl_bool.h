@@ -59,11 +59,19 @@
  *  2021/04/08: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
  *      more changes to comments or code unless something breaks.             *
+ *  2021/08/31: Ryan Maguire                                                  *
+ *      Added extern "C" statement for C++ support.                           *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BOOL_H
 #define TMPL_BOOL_H
+
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being using with __cplusplus.    */
+#ifdef __cplusplus 
+extern "C" {
+#endif
 
 /*  The C99, C11, and C18 standards require support for booleans, but it is   *
  *  not available in C89/C90. We've typedef'd Booleans as tmpl_Bool to avoid  *
@@ -72,6 +80,11 @@
 
 /*  We prepend tmpl onto False, True, and Bool to avoid name conflicts.       */
 typedef enum _tmpl_Bool {tmpl_False, tmpl_True} tmpl_Bool;
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
