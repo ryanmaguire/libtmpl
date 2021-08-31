@@ -33,13 +33,14 @@
 
 # libtmpl
 
+**This project is still in its infancy and is updated regularly.**
+
 ## The Mathematicians Programming Library <a name="TheMathProgLib"></a>
 This project is a collection of code written in C89/C90 (commonly called ANSI C)
 for mathematicians and physicists to use on various types of projects. It
 started with rss_ringoccs, a suite of tools written for processing the Cassini
 radio science data, which is written mostly in C (but also Python), but
-eventually grew beyond the scope of just astronomy. **This project is still in**
-**its infancy** and is updated regularly.
+eventually grew beyond the scope of just astronomy.
 
 **There are no dependencies other than a C compiler and the C standard**
 **library.** The library is written entirely in ISO C89/C90 compliant code,
@@ -137,7 +138,10 @@ Functions commonly used in geometric optics. There are also functions for
 working with Fourier optics, in particular Fraunhofer and Fresnel optics.
 
 ### polynomial
-Provides tools for working with polynomials over $\mathbb{Z}$
+Provides tools for working with polynomials over the integer (Z), the
+rationals (Q), the reals (R), and the complex numbers (C). Also provides tools
+for working with Laurent polynomials ("polynomials" with negative exponents
+allowed).
 
 ### special_functions
 A plethora of special functions that arise in physics and mathematics, from
@@ -145,13 +149,9 @@ Bessel functions, to Lambert's W function, and more. Real and complex versions
 are given. The algorithms are simple, but fast, usually relying on a combination
 of Taylor series for certain values and asymptotic expansions for others.
 
-## matrix
-Basic matrix tools and typedef's.
-
-
 ### vector
 Tools for working with vectors, including vector arithmetic, and basic vector
-functions.
+functions. Basic matrix tools and typedef's.
 
 ### linear_algebra
 Combines the matrix and vector sublibraries together with a bunch of other tools
