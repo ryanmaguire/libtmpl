@@ -207,3 +207,42 @@ move this to the `System32` directory, or add this directory to your path.
 The other option is using the Linux Subsystem for Windows. I've not personally
 tried this, but a colleague has had some success with it.
 
+# tmpyl
+`tmpyl` is a Python Extension module written using the Python-C API. It can be
+installed once libtmpl has been built. It is compatible with both Python 2 and
+Python 3. If numpy is available, tmpyl can be built with numpy support. This
+allows one to pass arrays to libtmpl functions. The `setup.py` script will
+determine this for you, and no extra effort is needed.
+
+The easiest way to install tmpyl is with pip.
+Navigate to the `tmpyl` directory of this repository and run:
+```
+pip install .
+```
+You can also use python itself. Using python 3:
+```
+python3 setup.py install
+```
+Using python 3:
+```
+python2 setup.py install
+```
+NOTE you may need sudo priviledges to run this. On macOS you can just run:
+```
+python setup.py install
+```
+pip is the preferred method since one can easily uninstall tmpyl with:
+```
+pip uninstall tmpyl
+```
+If installed with python, you'll need to manually remove the generated files.
+On Unix-like systems (GNU, Linux, FreeBSD, macOS), there is the `build/`
+directory, placed in `libtmpl/tmpyl/build`, and there are two files:
+```
+/usr/local/lib/pythonx.x/tmpyl.*.so
+/usr/local/lib/pythonx.x/dist-packages/tmpyl-*.egg-info
+```
+Where the `x.x` is determined by the Python version, and the `*` is determined
+by your computer architecture and operating system. To uninstall, simply remove
+these files and the entire `libtmpl/tmpyl/build` directory.
+
