@@ -5,6 +5,7 @@
     3. [Installation (Window)](#InstallWindows)
     
 2. [tmpyl](#tmpyl)
+    1. [Installation](#InstallUnixtmpyl)
 
 # libtmpl
 
@@ -222,6 +223,7 @@ Python 3. If numpy is available, tmpyl can be built with numpy support. This
 allows one to pass arrays to libtmpl functions. The `setup.py` script will
 determine this for you, and no extra effort is needed.
 
+## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnixtmpyl"></a>
 The easiest way to install tmpyl is with pip.
 Navigate to the `tmpyl` directory of this repository and run:
 ```
