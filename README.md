@@ -1,8 +1,8 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
-    1. [TheMathProgLib](The Mathematicians Programming Library)
-    2. [InstallUnix](Installation (Unix-Like)
-    3. [InstallWindows](Installation (Windows)
+    1. [The Mathematicians Programming Library](TheMathProgLib)
+    2. [Installation (Unix-Like)](InstallUnix)
+    3. [Installation (Window)](InstallWindows)
     
 2. [tmpyl](#tmpyl)
 
