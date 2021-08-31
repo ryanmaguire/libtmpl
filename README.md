@@ -60,7 +60,55 @@ these tests will require these libraries being available. Running these tests
 is **not** required, and they are mostly for internal use and to verify the
 algorithms implemented in libtmpl.
 
-The library is split into the following sublibraries:
+The library is split into the following sublibraries (ordered alphabetically):
+
+### bytes
+Tools for working with endianness and reading binary files. This code
+originated out of the need to read the RSR data files from the Cassini Radio
+Science mission, which had big-endianness, on little-endian machines.
+
+### complex
+Data types and functions for performing complex arithmetic are given. While
+complex.h was included in C99 (and made optional in C11 and C18), it is not
+included in C89/C90. This sublibrary provides all of the functions in C99 but
+for the C89 user. The code is forward compatible and compiles on C99 and C11
+compilers.
+
+### Euclidean planar geometry
+2D planar geometry routines. This include typedef's for 2D vectors and matrices.
+Linear algebra routines for working with 2x2 matrices are also provided. This
+sublibrary is used a lot in the `svg` sublibrary, which is useful for drawing
+mathematical figures.
+
+### Euclidean spatial geometry
+3D spatial geometry routines. This includes typedef's for 3D vectors and
+matrices. Linear algebra routines for working with 3x3 matrices are also
+provided. This sublibrary is used in combination with the spherical geometry
+routines to provide some non-Euclidean geometry tools.
+
+### fft
+Implementations of the standard Fast Fourier Transform algorithms. This includes
+the Tukey-Cooley algorithm for data sets that are a power of 2 in size, and the
+and Bluestein FFT algorithms for arbitrary sizes. Real and complex inputs are
+allowed, the output is always complex valued. Convolutions are also provided.
+
+### graph theory
+Currently a limited library that allows one to create bipartite and complete
+graphs. This will grow over time.
+
+### ieee754
+A library for working with the IEEE754 floating point format. Users most likely
+need not delve into these functions, unless they want to learn how the format
+works. If your compiler does not use the IEEE754 format, these functions are
+most likely useless.
+
+### interpolate
+Linear and cubic splining interpolation tools for working with data.
+
+### knots
+Tools for working with knot theory, including computing knot invariants, and
+working with virtual knots and virtual links. Knots are implemented in a C
+struct that represents extended Gauss code.
 
 ### math
 A collection of functions for running day-to-day math routines, including the
@@ -74,17 +122,22 @@ Apart from standard math functions, non-standard functions that are not
 included in the C89/C90 math.h header file are defined. Functions like the
 hyperbolic trig functions, error functions, and more are defined.
 
-### complex
-Data types and functions for performing complex arithmetic are given. While
-complex.h was included in C99 (and made optional in C11 and C18), it is not
-included in C89/C90. This sublibrary provides all of the functions in C99 but
-for the C89 user. The code is forward compatible and compiles on C99 and C11
-compilers.
+### number theory
+Basic functions for working with integers. This includes the binary
+GCD algorithms for efficient GCD computation, computation of Bezout
+coefficients, and tools for working with prime numbers.
 
-### bytes
-Tools for working with endianness and reading binary files. This code
-originated out of the need to read the RSR data files from the Cassini Radio
-Science mission, which had big-endianness, on little-endian machines.
+### numerical
+A bunch of numerical algorithms for differentiation and integration. This
+includes 5 point numerical derivatives, implementations of Halley's and
+Newton's method, and more.
+
+### optics
+Functions commonly used in geometric optics. There are also functions for
+working with Fourier optics, in particular Fraunhofer and Fresnel optics.
+
+### polynomial
+Provides tools for working with polynomials over $\mathbb{Z}$
 
 ### special_functions
 A plethora of special functions that arise in physics and mathematics, from
@@ -92,19 +145,9 @@ Bessel functions, to Lambert's W function, and more. Real and complex versions
 are given. The algorithms are simple, but fast, usually relying on a combination
 of Taylor series for certain values and asymptotic expansions for others.
 
-### geometry
-Basic 2D and 3D Euclidean geometry.
-
 ## matrix
 Basic matrix tools and typedef's.
 
-### knots
-Tools for working with knot theory, including computing knot invariants, and
-working with virtual knots and virtual links.
-
-### graphs
-Currently a limited library that allows one to create bipartite and complete
-graphs. This will grow over time.
 
 ### vector
 Tools for working with vectors, including vector arithmetic, and basic vector
@@ -116,20 +159,10 @@ to perform common operations from linear algebra. This include less common
 operations like Moore-Penrose pseudo inverses. Such tools are useful for filter
 applications, such as the Savitzky-Golay smoothing filter.
 
-### numerical
-A bunch of numerical algorithms for differentiation and integration.
-
-### interpolate
-Linear and cubic splining interpolation tools for working with data.
-
 ### string
 Provides basic string manipulations that are defined in the POSIX version of C,
 but are not part of the C standard. This includes the strdup function. The
 phrase "tmpl" is preprended to all functions to avoid name conflicts.
-
-### fft
-Tukey-Cooley and Bluestein FFT algorithms for real and complex inputs.
-Convolutions are also provided.
 
 ### Wish List
 Abstract algebra (groups), topology.
