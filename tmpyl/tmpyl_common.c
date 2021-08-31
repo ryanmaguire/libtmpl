@@ -1,12 +1,137 @@
 
 /*  To avoid compiler warnings about deprecated numpy stuff.                  */
-#define PY_SSIZE_T_CLEAN
+#if TMPYL_HAS_NUMPY == 1
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#endif
 
+#define PY_SSIZE_T_CLEAN
+
+#include <Python.h>
+#include <stdlib.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_void_pointer.h>
 #include "tmpyl_common.h"
+
+/*  If numpy is available, we'll need to include the numpy header files.      */
+#if TMPYL_HAS_NUMPY == 1
 #include <numpy/ndarraytypes.h>
 #include <numpy/ufuncobject.h>
-#include <libtmpl/include/tmpl_void_pointer.h>
+#endif
+
+/*  This function frees the memory allocated to a pointer by malloc when the  *
+ *  corresponding variable is destroyed at the Python level.                  */
+extern void capsule_cleanup(PyObject *capsule)
+{
+    void *memory = PyCapsule_GetPointer(capsule, NULL);
+    free(memory);
+}
+
+PyObject *
+tmpl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func)
+{
+    long x_int, y_int;
+    double x_val, y_val;
+    tmpl_ComplexDouble y_complex;
+
+    if (c_func->long_func != NULL)
+    {
+        x_int = PyLong_AsLong(x);
+        y_int = c_func->long_func(x_int);
+        return PyLong_FromLong(y_int);
+    }
+    else if (c_func->double_func != NULL)
+    {
+        x_val = PyLong_AsDouble(x);
+        y_val = c_func->double_func(x_val);
+        return PyFloat_FromDouble(y_val);
+    }
+    else if (c_func->cdouble_from_real_func != NULL)
+    {
+        x_val     = PyLong_AsDouble(x);
+        y_complex = c_func->cdouble_from_real_func(x_val);
+        x_val     = tmpl_CDouble_Real_Part(y_complex);
+        y_val     = tmpl_CDouble_Imag_Part(y_complex);
+        return PyComplex_FromDoubles(x_val, y_val);
+    }
+    else
+    {
+        if (c_func->func_name == NULL)
+            PyErr_Format(PyExc_RuntimeError,
+                         "\n\rError Encountered: libtmpl\n"
+                         "\r\tFunction Name: Unknown\n\n"
+                         "\rInteger input provided but this function does not\n"
+                         "\rexcept real valued (float or int) arguments.");
+        else
+            PyErr_Format(PyExc_RuntimeError,
+                         "\n\rError Encountered: libtmpl\n"
+                         "\r\tFunction Name: %s\n\n"
+                         "\rInteger input provided but this function does not\n"
+                         "\rexcept real valued (float or int) arguments.",
+                         c_func->func_name);
+
+        return NULL;
+    }
+}
+
+PyObject *
+tmpl_Get_Py_Out_From_Float(PyObject *x, tmpl_Generic_Function_Obj *c_func)
+{
+    double x_val, y_val;
+    tmpl_ComplexDouble y_complex;
+
+    if (c_func->double_func != NULL)
+    {
+        x_val = PyFloat_AsDouble(x);
+        y_val = c_func->double_func(x_val);
+        return PyFloat_FromDouble(y_val);
+    }
+    else if (c_func->cdouble_from_real_func != NULL)
+    {
+        x_val     = PyFloat_AsDouble(x);
+        y_complex = c_func->cdouble_from_real_func(x_val);
+        x_val = tmpl_CDouble_Real_Part(y_complex);
+        y_val = tmpl_CDouble_Imag_Part(y_complex);
+        return PyComplex_FromDoubles(x_val, y_val);
+    }
+    else
+    {
+        PyErr_Format(PyExc_RuntimeError,
+                    "\n\rError Encountered: rss_ringoccs\n"
+                    "\r\t%s\n\n"
+                    "\rFloat input provided but this function does not\n"
+                    "\rexcept real valued (float or int) arguments.",
+                    c_func->func_name);
+        return NULL;
+    }
+}
+
+PyObject *
+tmpl_Get_Py_Out_From_Complex(PyObject *x, tmpl_Generic_Function_Obj *c_func)
+{
+    double x_val, y_val;
+    tmpl_ComplexDouble x_complex, y_complex;
+
+    if (c_func->cdouble_from_complex_func != NULL)
+    {
+        x_val     = PyComplex_RealAsDouble(x);
+        y_val     = PyComplex_ImagAsDouble(x);
+        x_complex = tmpl_CDouble_Rect(x_val, y_val);
+        y_complex = c_func->cdouble_from_complex_func(x_complex);
+        x_val     = tmpl_CDouble_Real_Part(y_complex);
+        y_val     = tmpl_CDouble_Imag_Part(y_complex);
+        return PyComplex_FromDoubles(x_val, y_val);
+    }
+    else
+    {
+        PyErr_Format(PyExc_RuntimeError,
+                    "\n\rError Encountered: rss_ringoccs\n"
+                    "\r\t%s\n\n"
+                    "\rFloat input provided but this function does not\n"
+                    "\rexcept real valued (float or int) arguments.",
+                    c_func->func_name);
+        return NULL;
+    }
+}
 
 PyObject *
 tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
@@ -14,17 +139,19 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
 {
     /*  Declare necessary variables.                                          */
     PyObject *capsule, *output, *x;
-    PyArrayObject *x_as_arr;
     unsigned long int n, dim;
     long int signed_dim;
     void *data, *out;
     int typenum;
 
+#if TMPYL_HAS_NUMPY == 1
+    PyArrayObject *x_as_arr;
+
     if(PyArray_API == NULL)
     {
         import_array();
     }
-
+#endif
 
     if (c_func->func_name == NULL)
     {
@@ -91,6 +218,8 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
         }
         return output;
     }
+
+#if TMPYL_HAS_NUMPY == 1
     else if (!(PyArray_Check(x)))
     {
         if (c_func->func_name == NULL)
@@ -224,6 +353,10 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
     /*  Return the results to Python.                                     */
     return Py_BuildValue("N", output);
 
+#else
+    goto FAILURE;
+#endif
+
 FAILURE:
     PyErr_Format(PyExc_RuntimeError,
                  "\n\rError Encountered: tmpyl\n"
@@ -232,4 +365,3 @@ FAILURE:
                  c_func->func_name);
     return NULL;
 }
-

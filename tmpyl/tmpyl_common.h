@@ -1,5 +1,5 @@
-#ifndef __TMPL_PY_C_API_H__
-#define __TMPL_PY_C_API_H__
+#ifndef TMPL_PY_C_API_H
+#define TMPL_PY_C_API_H
 
 #include <Python.h>
 #include <libtmpl/include/tmpl_bool.h>

@@ -1,13 +1,81 @@
-/*  To avoid compiler warnings about deprecated numpy stuff.                  */
+/******************************************************************************
+ *                                 LICENSE                                    *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  under the terms of the GNU General Public License as published by         *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                                   tmpyl                                    *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      This file defines all of the function in the Python module tmpyl at   *
+ *      the C level. There is no actual Python code, but rather the Python-C  *
+ *      API is used to write python wrappers for libtmpl functions.           *
+ ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) libtmpl:                                                              *
+ *          libtmpl (the C library) must be built prior to building tmpyl.    *
+ *          The setup.py script attempts to link libtmpl.so to this.          *
+ *  2.) CPython:                                                              *
+ *          The file Python.h is required, which comes part of the CPython    *
+ *          implementation of the Python programming language.                *
+ *  3.) numpy:                                                                *
+ *          OPTIONAL. Macros are used to handle the case where numpy is not   *
+ *          available. The Numpy C API is used so that numpy arrays can be    *
+ *          used with the functions from libtmpl. If you do not have numpy,   *
+ *          you can still use libtmpl with lists, floats, and ints in Python. *
+ ******************************************************************************
+ *                            A NOTE ON COMMENTS                              *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Date:       August 31, 2021                                               *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2021/08/31: Ryan Maguire                                                  *
+ *      Added license and doc string.                                         *
+ ******************************************************************************/
+
+/*  To avoid compiler warnings about deprecated numpy stuff. This line is     *
+ *  recommended in the numpy documentation. If TMPYL_HAS_NUMPY is 0, numpy is *
+ *  not available so we don't need this macro.                                */
+#if TMPYL_HAS_NUMPY == 1
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#endif
 
-#include "common/tmpyl_common.h"
-#include "special_functions/tmpyl_special_functions_module.h"
-
+/*  The Python-C API is given here. The Python documentation recommends       *
+ *  including Python.h before anything (even standard library headers).       */
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
+
+/*  If numpy is available, we'll need to include the numpy header files.      */
+#if TMPYL_HAS_NUMPY == 1
 #include <numpy/ndarraytypes.h>
 #include <numpy/ufuncobject.h>
+#endif
 
+/*  All of the needed Python-to-C tools are defined in these header files.    */
+#include "tmpyl_common.h"
+#include "tmpyl_special_functions.h"
+
+/*  All of the methods of the tmpyl module are defined in this array.         */
 static PyMethodDef tmpyl_methods[] =
 {
     {
@@ -139,6 +207,8 @@ static PyMethodDef tmpyl_methods[] =
     {NULL, NULL, 0, NULL}
 };
 
+/*  The following code uses the Python 3 API. Check the version first.        */
+#if PY_VERSION_HEX >= 0x03000000
 static struct PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
     "tmpyl",
@@ -157,7 +227,23 @@ PyMODINIT_FUNC PyInit_tmpyl(void)
     if (!m)
         return NULL;
 
+    /*  This line is REQUIRED for numpy support. Without it, a segmentation   *
+     *  fault will occur crashing tmpyl.                                      */
+#if TMPYL_HAS_NUMPY == 1
     import_array();
+#endif
 
     return m;
 }
+
+#else
+PyMODINIT_FUNC inittmpyl(void)
+{
+    PyObject *m;
+
+    m = Py_InitModule("tmpyl", tmpyl_methods);
+    if (m == NULL)
+        return;
+}
+#endif
+

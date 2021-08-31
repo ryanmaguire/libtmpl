@@ -5,7 +5,7 @@
 #include <Python.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_special_functions.h>
-#include "../common/tmpyl_common.h"
+#include "tmpyl_common.h"
 
 /*---------------------------DEFINE PYTHON FUNCTIONS--------------------------*
  *  This contains the Numpy-C and Python-C API parts that allow for the above *
