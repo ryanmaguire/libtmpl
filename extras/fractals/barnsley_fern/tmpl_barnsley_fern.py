@@ -1,3 +1,4 @@
+"""
 ################################################################################
 #                                  LICENSE                                     #
 ################################################################################
@@ -25,47 +26,105 @@
 #   Author: Ryan Maguire                                                       #
 #   Date:   June 12, 2021.                                                     #
 ################################################################################
+#   2021/08/30: Ryan Maguire                                                   #
+#       Updated code to get rid of pylint warnings.                            #
+################################################################################
+"""
 
+# Needed for random() which gives us a random number between 0 and 1.
 import random
- 
-width = 720
-height = 720
-fp = open("tmpl_barnsley_fern.ppm", "w")
-fp.write("P3\n%u %u\n255\n" % (width, height))
-factor = 1.0
 
-pixels = [0] * (width * height)
-x, y = 0, 1
-grow = (1 - (factor - 1) ** 4) * 0.85
-    
-for n in range(60 * width * height):        
-    r = random.random() * 100
-    xn, yn = x, y
-    if r < 1:
-        x = 0
-        y = 0.16 * yn
-    elif r < 86:
-        x = grow * xn + 0.04 * yn
-        y = -0.04 * xn + 0.85 * yn + 1.6
-    elif r < 93:
-        x = 0.20 * xn - 0.26 * yn
-        y = 0.23 * xn + 0.22 * yn + 1.6
-    else:
-        x = -0.15 * xn + 0.28 * yn
-        y = 0.26 * xn + 0.24 * yn + 0.44
+# Width and height, in pixels, of the output PPM file.
+WIDTH = 720
+HEIGHT = 720
 
-    x_pix = int(width * (0.45 + 0.195 * x))
-    y_pix = int(height * (1 - 0.099 * y ))
-    pixels[x_pix + y_pix * width] += 1
+# Factors determining the growth and spread of the fern in the fractal.
+FACTOR = 0.5
+GROW = (1.0 - (FACTOR - 1.0) ** 4) * 0.85
 
-for y in range(height):
-    for x in range(width):
-        p = pixels[x + y*width]
-        grey = max(0, (256-p) / 256)
-        val = grey ** 6
-        red = 255*int(val)
-        green = 255*int(val)
-        blue = red
-        fp.write("%u %u %u\n" % (red, green, blue))
+# Total number of iterations to be run.
+TOTAL = WIDTH * HEIGHT * 50
 
-fp.close()
+# Number of iterations to be run before printing an update to the screen.
+UPDATE = 1000000
+
+# Function for computing the Barnsley fractal.
+def compute_fern(verbose=False):
+    """
+        Function Name:
+            compute_fern
+        Purpose:
+            Computes the values of the pixels for the Barnsley fern.
+        Arguments:
+            verbose:
+                Boolean for determining if updates should print.
+                Default is False (nothing will print).
+        Outputs:
+            data:
+                A list that is WIDTH * HEIGHT long whose elements correspond
+                to the intensity of the pixels of the image.
+    """
+    data = [0.0] * (WIDTH * HEIGHT)
+    x_val = 0.0
+    y_val = 1.0
+
+    for current_iteration in range(TOTAL):
+        random_value = random.random()*100.0
+        x_new = x_val
+        y_new = y_val
+
+        if random_value < 1.0:
+            x_val = 0.0
+            y_val = 0.16*y_new
+        elif random_value < 86.0:
+            x_val = GROW*x_new + 0.04*y_new
+            y_val = -0.04*x_new + 0.85*y_val + 1.6
+        elif random_value < 93.0:
+            x_val = 0.20*x_new - 0.26*y_new
+            y_val = 0.23*x_new + 0.22*y_new + 1.6
+        else:
+            x_val = -0.15*x_new + 0.28*y_new
+            y_val = 0.26*x_new + 0.24*y_new + 0.44
+
+        x_coordinate = int(WIDTH * (0.45 + 0.195*x_val))
+        y_coordinate = int(HEIGHT * (1.0 - 0.099*y_val))
+        data[x_coordinate + y_coordinate*WIDTH] += 1.0
+
+        if verbose:
+            if current_iteration % UPDATE == 0:
+                print("Current: %d Total: %d" % (current_iteration, TOTAL))
+
+    return data
+
+def write_file(data, filename):
+    """
+        Function Name:
+            write_file
+        Purpose:
+            Creates a PPM file corresponding to the input data.
+        Arguments:
+            data:
+                A list that has WIDTH * HEIGHT many elements. The values
+                correspond to the intensity of a given pixel.
+            filename:
+                A string corresponding to the created file. It should end with
+                .ppm since the function creates a PPM file.
+        Outputs:
+            None.
+    """
+
+    file = open(filename, "w")
+    file.write("P3\n%u %u\n255\n" % (WIDTH, HEIGHT))
+
+    for y_val in range(HEIGHT):
+        for x_val in range(WIDTH):
+            pixel = data[x_val + y_val*WIDTH]
+            grey = max(0.0, (256.0 - pixel) / 256.0)
+            val = 255*int(grey ** 6)
+            file.write("%u %u %u\n" % (val, val, val))
+
+    file.close()
+
+if __name__ == "__main__":
+    pixels = compute_fern(verbose=True)
+    write_file(pixels, "tmpl_barnsley_fern.ppm")
