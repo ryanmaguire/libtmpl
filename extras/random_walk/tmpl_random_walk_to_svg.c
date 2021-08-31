@@ -176,7 +176,7 @@ static struct pair add_pairs(struct pair p, struct pair q)
 static struct pair random_pair(void)
 {
     /*  Get a random integer, 0 or 1, using tools from stdlib.h               */
-    int rint = (int)(2.0 * (double)rand() / (double)RAND_MAX);
+    int rint = (int)(2.0 * rand() / (double)RAND_MAX);
 
     /*  Declare a struct for the output pair we're computing.                 */
     struct pair out;
