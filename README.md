@@ -223,7 +223,7 @@ You can also use python itself. Using python 3:
 ```
 python3 setup.py install
 ```
-Using python 3:
+Using python 2:
 ```
 python2 setup.py install
 ```
