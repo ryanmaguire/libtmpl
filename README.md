@@ -294,3 +294,6 @@ these files and the entire `libtmpl/tmpyl/build` directory.
     You should have received a copy of the GNU General Public License
     along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.
 
+    AUTHOR
+        Ryan Maguire, Dartmouth College
+
