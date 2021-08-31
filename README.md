@@ -1,5 +1,7 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
+    1. [The Mathematicians Programming Library](The Mathematicians Programming Library)
+    2. [Installation](Installation)
 2. [tmpyl](#tmpyl)
 
 # libtmpl
@@ -33,7 +35,7 @@ algorithms implemented in libtmpl.
 
 The library is split into the following sublibraries:
 
-## math
+### math
 A collection of functions for running day-to-day math routines, including the
 ones in the standard C math library. This is not to replace them, but rather to
 show how algorithms are implemented and for the sake of learning. For those with
@@ -45,67 +47,67 @@ Apart from standard math functions, non-standard functions that are not
 included in the C89/C90 math.h header file are defined. Functions like the
 hyperbolic trig functions, error functions, and more are defined.
 
-## complex
+### complex
 Data types and functions for performing complex arithmetic are given. While
 complex.h was included in C99 (and made optional in C11 and C18), it is not
 included in C89/C90. This sublibrary provides all of the functions in C99 but
 for the C89 user. The code is forward compatible and compiles on C99 and C11
 compilers.
 
-## bytes
+### bytes
 Tools for working with endianness and reading binary files. This code
 originated out of the need to read the RSR data files from the Cassini Radio
 Science mission, which had big-endianness, on little-endian machines.
 
-## special_functions
+### special_functions
 A plethora of special functions that arise in physics and mathematics, from
 Bessel functions, to Lambert's W function, and more. Real and complex versions
 are given. The algorithms are simple, but fast, usually relying on a combination
 of Taylor series for certain values and asymptotic expansions for others.
 
-## geometry
+### geometry
 Basic 2D and 3D Euclidean geometry.
 
 ## matrix
 Basic matrix tools and typedef's.
 
-## knots
+### knots
 Tools for working with knot theory, including computing knot invariants, and
 working with virtual knots and virtual links.
 
-## graphs
+### graphs
 Currently a limited library that allows one to create bipartite and complete
 graphs. This will grow over time.
 
-## vector
+### vector
 Tools for working with vectors, including vector arithmetic, and basic vector
 functions.
 
-## linear_algebra
+### linear_algebra
 Combines the matrix and vector sublibraries together with a bunch of other tools
 to perform common operations from linear algebra. This include less common 
 operations like Moore-Penrose pseudo inverses. Such tools are useful for filter
 applications, such as the Savitzky-Golay smoothing filter.
 
-## numerical
+### numerical
 A bunch of numerical algorithms for differentiation and integration.
 
-## interpolate
+### interpolate
 Linear and cubic splining interpolation tools for working with data.
 
-## string
+### string
 Provides basic string manipulations that are defined in the POSIX version of C,
 but are not part of the C standard. This includes the strdup function. The
 phrase "tmpl" is preprended to all functions to avoid name conflicts.
 
-## fft
+### fft
 Tukey-Cooley and Bluestein FFT algorithms for real and complex inputs.
 Convolutions are also provided.
 
-## Wish List
+### Wish List
 Abstract algebra (groups), topology.
 
-# NOTE:
+## NOTE:
 **This library is still being ported over from rss_ringoccs and others.** The
 code was scattered across several projects of mine, and this is an attempt to
 centralize all of it.
