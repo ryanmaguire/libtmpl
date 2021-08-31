@@ -236,6 +236,7 @@ PyMODINIT_FUNC PyInit_tmpyl(void)
     return m;
 }
 
+/*  Below works with Python 2.                                                */
 #else
 PyMODINIT_FUNC inittmpyl(void)
 {

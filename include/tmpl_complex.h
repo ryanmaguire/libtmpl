@@ -69,6 +69,12 @@
 #ifndef TMPL_COMPLEX_H
 #define TMPL_COMPLEX_H
 
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being using with __cplusplus.    */
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -1235,6 +1241,11 @@ tmpl_CDouble_Tan(tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Tan(tmpl_ComplexLongDouble z);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
