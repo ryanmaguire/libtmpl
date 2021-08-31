@@ -1,13 +1,14 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
-    1. [TheMathematiciansProgrammingLibrary](The Mathematicians Programming Library)
-    2. [Installation](Installation)
+    1. [TheMathProgLib](The Mathematicians Programming Library)
+    2. [InstallUnix](Installation (Unix-Like)
+    3. [InstallWindows](Installation (Windows)
     
 2. [tmpyl](#tmpyl)
 
 # libtmpl
 
-## The Mathematicians Programming Library
+## The Mathematicians Programming Library <a name="TheMathProgLib"></a>
 This project is a collection of code written in C89/C90 (commonly called ANSI C)
 for mathematicians and physicists to use on various types of projects. It
 started with rss_ringoccs, a suite of tools written for processing the Cassini
@@ -113,7 +114,7 @@ Abstract algebra (groups), topology.
 code was scattered across several projects of mine, and this is an attempt to
 centralize all of it.
 
-## Installation (GNU, Linux, FreeBSD, macOS)
+## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
 Simply run the Makefile with:
 ```
 make
@@ -168,7 +169,7 @@ In both cases, the problem does not seem to be with libtmpl, but with the
 particular versions of those compilers. At any rate, clang and gcc compile
 without error, and without warnings :)
 
-## Installation (Windows)
+## Installation (Windows) <a name="InstallWindows"></a>
 Step 1: Remove Windows and install a nice Linux distribution. I recommend
 Debian for the more tech-savvy, and Pop!_OS for those who never want to
 use a terminal.
