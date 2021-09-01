@@ -131,13 +131,13 @@ tmpyl_Get_Py_Out_From_Long(PyObject *x, tmpl_Generic_Function_Obj *c_func)
     /*  Lastly, check if there is a function that takes in a real value and   *
      *  returns a complex value. If there is, the output will be a complex    *
      *  Python object (i.e. complex number in Python).                        */
-    else if (c_func->cdouble_from_real_func != NULL)
+    else if (c_func->cdouble_from_double_func != NULL)
     {
         /*  Extract the data from the PyObject and convert it to a double.    */
         double x_in = PyLong_AsDouble(x);
 
         /*  Run the computation, creating a tmpl_ComplexDouble in the process.*/
-        tmpl_ComplexDouble z_out = c_func->cdouble_from_real_func(x_in);
+        tmpl_ComplexDouble z_out = c_func->cdouble_from_double_func(x_in);
 
         /*  Python will not accept a tmpl_ComplexDouble struct as a valid     *
          *  complex number. We can create a complex object from two doubles,  *
@@ -214,14 +214,14 @@ tmpyl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func)
     /*  Lastly, check if there is a function that takes in a real value and   *
      *  returns a complex value. If there is, the output will be a complex    *
      *  Python object (i.e. complex number in Python).                        */
-    else if (c_func->cdouble_from_real_func != NULL)
+    else if (c_func->cdouble_from_double_func != NULL)
     {
         /*  Extract the data from the PyObject and convert it to a double.    */
         long int x_int = PyInt_AsLong(x);
         double x_in = (double)x_int;
 
         /*  Run the computation, creating a tmpl_ComplexDouble in the process.*/
-        tmpl_ComplexDouble z_out = c_func->cdouble_from_real_func(x_in);
+        tmpl_ComplexDouble z_out = c_func->cdouble_from_double_func(x_in);
 
         /*  Python will not accept a tmpl_ComplexDouble struct as a valid     *
          *  complex number. We can create a complex object from two doubles,  *
@@ -282,13 +282,13 @@ tmpyl_Get_Py_Out_From_Float(PyObject *x, tmpl_Generic_Function_Obj *c_func)
     /*  Lastly, check if there is a function that takes in a real value and   *
      *  returns a complex value. If there is, the output will be a complex    *
      *  Python object (i.e. complex number in Python).                        */
-    else if (c_func->cdouble_from_real_func != NULL)
+    else if (c_func->cdouble_from_double_func != NULL)
     {
         /*  Extract the data from the PyObject and convert it to a double.    */
         double x_in = PyFloat_AsDouble(x);
 
         /*  Run the computation, creating a tmpl_ComplexDouble in the process.*/
-        tmpl_ComplexDouble z_out = c_func->cdouble_from_real_func(x_in);
+        tmpl_ComplexDouble z_out = c_func->cdouble_from_double_func(x_in);
 
         /*  Python will not accept a tmpl_ComplexDouble struct as a valid     *
          *  complex number. We can create a complex object from two doubles,  *
@@ -331,7 +331,7 @@ tmpyl_Get_Py_Out_From_Complex(PyObject *x, tmpl_Generic_Function_Obj *c_func)
 {
     /*  Check if there is a function that takes a complex number in and       *
      *  returns a complex number.                                             */
-    if (c_func->cdouble_from_complex_func)
+    if (c_func->cdouble_from_cdouble_func)
     {
         /*  Extract the real and imaginary parts from the complex number.     */
         double real_in = PyComplex_RealAsDouble(x);
@@ -341,7 +341,7 @@ tmpyl_Get_Py_Out_From_Complex(PyObject *x, tmpl_Generic_Function_Obj *c_func)
         tmpl_ComplexDouble z_in = tmpl_CDouble_Rect(real_in, imag_in);
 
         /*  Pass the data to the function.                                    */
-        tmpl_ComplexDouble z_out = c_func->cdouble_from_complex_func(z_in);
+        tmpl_ComplexDouble z_out = c_func->cdouble_from_cdouble_func(z_in);
 
         /*  Extract the real and imaginary parts from the output.             */
         double real_out = tmpl_CDouble_Real_Part(z_out);
@@ -393,7 +393,7 @@ tmpyl_Get_Py_Out_From_Complex(PyObject *x, tmpl_Generic_Function_Obj *c_func)
 }
 /*  End of tmpyl_Get_Py_Out_From_Complex.                                     */
 
-PyObject *
+static PyObject *
 tmpyl_Get_Py_Out_From_List(PyObject *x, tmpl_Generic_Function_Obj *c_func)
 {
     PyObject *nth_item;
@@ -447,56 +447,19 @@ tmpyl_Get_Py_Out_From_List(PyObject *x, tmpl_Generic_Function_Obj *c_func)
     return output;
 }
 
-PyObject *
-tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
-                        tmpl_Generic_Function_Obj *c_func)
+#if TMPYL_HAS_NUMPY == 1
+static PyObject *
+tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x, tmpl_Generic_Function_Obj *c_func)
 {
-    /*  Declare necessary variables.                                          */
-    PyObject *capsule, *output, *x;
     unsigned long int n, dim;
     long int signed_dim;
     void *data, *out;
     int typenum;
-
-#if TMPYL_HAS_NUMPY == 1
     PyArrayObject *x_as_arr;
+    PyObject *capsule, *output;
 
-    if(PyArray_API == NULL)
+    if (PyArray_API == NULL)
         import_array();
-#endif
-
-    /*  Parse the data from Python and try to convert it to a usable format.  */
-    if (!PyArg_ParseTuple(args, "O", &x))
-    {
-        PyErr_Format(PyExc_RuntimeError,
-                     "\n\rError Encountered: tmpyl\n"
-                     "\r\t%s\n\n"
-                     "\rCould not parse inputs.\n",
-                     c_func->func_name);
-        return NULL;
-    }
-
-    if (PyLong_Check(x))
-        return tmpyl_Get_Py_Out_From_Int(x, c_func);
-
-/*  Python 2 had the int data type. Python 3 combined int and long into 1     *
- *  data type. If PY_VERSION_HEX indicates Python 2, check for int.           */
-#if PY_VERSION_HEX < 0x03000000
-        else if (PyInt_Check(x))
-            return tmpyl_Get_Py_Out_From_Int(x, c_func);
-#endif
-/*  End of #if PY_VERSION_HEX >= 0x03000000                                   */
-
-    else if (PyFloat_Check(x))
-        return tmpyl_Get_Py_Out_From_Float(x, c_func);
-    else if (PyComplex_Check(x))
-        return tmpyl_Get_Py_Out_From_Complex(x, c_func);
-    else if (PyList_Check(x))
-        return tmpyl_Get_Py_Out_From_List(x, c_func);
-
-#if TMPYL_HAS_NUMPY == 1
-    else if (!(PyArray_Check(x)))
-        goto FAILURE;
 
     /*  If you get here, then the input is a numpy array. Grab some useful    *
      *  information about the data using numpy's API functions.               */
@@ -542,11 +505,11 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
                 tmpl_get_void_from_void_d2d(data, out, dim,
                                             c_func->double_func);
             }
-            else if (c_func->cdouble_from_real_func != NULL)
+            else if (c_func->cdouble_from_double_func != NULL)
             {
                 out = malloc(sizeof(tmpl_ComplexDouble) * dim);
                 tmpl_get_void_from_void_d2c(data, out, dim,
-                                            c_func->cdouble_from_real_func);
+                                            c_func->cdouble_from_double_func);
             }
             else
                 goto FAILURE;
@@ -562,11 +525,11 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
             break;
 
         case NPY_CDOUBLE:
-            if (c_func->cdouble_from_complex_func == NULL)
+            if (c_func->cdouble_from_cdouble_func == NULL)
                 goto FAILURE;
             out = malloc(sizeof(long double) * dim);
                 tmpl_get_void_from_void_c2c(data, out, dim,
-                                            c_func->cdouble_from_complex_func);
+                                            c_func->cdouble_from_cdouble_func);
 
             break;
         case NPY_LONG:
@@ -587,7 +550,7 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
                 free(temp);
                 typenum = NPY_DOUBLE;
             }
-            else if (c_func->cdouble_from_real_func != NULL)
+            else if (c_func->cdouble_from_double_func != NULL)
             {
                 double *temp = malloc(sizeof(*temp) * dim);
                 out = malloc(sizeof(double) * dim);
@@ -595,7 +558,7 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
                     temp[n] = (double)((long *)data)[n];
 
                 tmpl_get_void_from_void_d2c(temp, out, dim,
-                                            c_func->cdouble_from_real_func);
+                                            c_func->cdouble_from_double_func);
                 free(temp);
                 typenum = NPY_CDOUBLE;
             }
@@ -606,7 +569,7 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
     }
 
     signed_dim = (long int)dim;
-    output  = PyArray_SimpleNewFromData(1, &signed_dim, typenum, out);
+    output = PyArray_SimpleNewFromData(1, &signed_dim, typenum, out);
     capsule = PyCapsule_New(out, NULL, tmpyl_capsule_cleanup);
 
     /*  This frees the variable at the Python level once it's destroyed.  */
@@ -615,9 +578,67 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
     /*  Return the results to Python.                                     */
     return Py_BuildValue("N", output);
 
-#else
-    goto FAILURE;
+FAILURE:
+    if (c_func->func_name == NULL)
+        PyErr_Format(PyExc_RuntimeError,
+                     "\n\rError Encountered: tmpyl\n"
+                     "\r\tFunction Name: Unknown\n\n"
+                     "\rCould not parse inputs.\n");
+    else
+        PyErr_Format(PyExc_RuntimeError,
+                     "\n\rError Encountered: tmpyl\n"
+                     "\r\tFunction Name: %s\n\n"
+                     "\rCould not parse inputs.\n",
+                     c_func->func_name);
+    return NULL;
+}
 #endif
+
+PyObject *
+tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
+                        tmpl_Generic_Function_Obj *c_func)
+{
+    /*  Declare necessary variables.                                          */
+    PyObject *x;
+
+    if ((self == NULL) || (args == NULL) || (c_func == NULL))
+        return NULL;
+
+    /*  Parse the data from Python and try to convert it to a usable format.  */
+    if (!PyArg_ParseTuple(args, "O", &x))
+    {
+        PyErr_Format(PyExc_RuntimeError,
+                     "\n\rError Encountered: tmpyl\n"
+                     "\r\t%s\n\n"
+                     "\rCould not parse inputs.\n",
+                     c_func->func_name);
+        return NULL;
+    }
+
+    if (PyLong_Check(x))
+        return tmpyl_Get_Py_Out_From_Long(x, c_func);
+
+/*  Python 2 had the int data type. Python 3 combined int and long into 1     *
+ *  data type. If PY_VERSION_HEX indicates Python 2, check for int.           */
+#if PY_VERSION_HEX < 0x03000000
+        else if (PyInt_Check(x))
+            return tmpyl_Get_Py_Out_From_Int(x, c_func);
+#endif
+/*  End of #if PY_VERSION_HEX >= 0x03000000                                   */
+
+    else if (PyFloat_Check(x))
+        return tmpyl_Get_Py_Out_From_Float(x, c_func);
+    else if (PyComplex_Check(x))
+        return tmpyl_Get_Py_Out_From_Complex(x, c_func);
+    else if (PyList_Check(x))
+        return tmpyl_Get_Py_Out_From_List(x, c_func);
+
+#if TMPYL_HAS_NUMPY == 1
+    else if (PyArray_Check(x))
+        return tmpyl_Get_Py_Out_From_NumpyArray(x, c_func);
+#endif
+    else
+        goto FAILURE;
 
 FAILURE:
     if (c_func->func_name == NULL)

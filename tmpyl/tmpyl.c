@@ -79,46 +79,50 @@
 static PyMethodDef tmpyl_methods[] =
 {
     {
-        "besselJ0",
-        tmpyl_besselJ0,
-        METH_VARARGS,
-        "\r\t"
-        "Function:\n\r\t\t"
-        "special_functions.besselJ0\n\r\t"
-        "Purpose:\n\r\t\t"
-        "Compute the Zeroth Bessel Function of the First Kind (J0).\n\r\t"
-        "Arguments\n\r\t\t"
-        "x (numpy.ndarray):\n\r\t\t\t"
-        "A numpy array of real numbers. Independent variable for J_0(x)\n\r\t"
-        "Outputs:\n\r\t\t"
-        "J0\n\r\t\t\t"
-        "The Bessel Function J0 as a function of x.\n\r\t"
-        "Example:\n\r\t\t"
-        ">>> import numpy\n\r\t\t"
-        ">>> import special_functions\n\r\t\t"
-        ">>> x = numpy.arange(0,100,0.01)\n\r\t\t"
-        ">>> y = special_functions.besselJ0(x)"
-    },
-    {
         "besselI0",
         tmpyl_besselI0,
         METH_VARARGS,
         "\r\t"
         "Function:\n\r\t\t"
-        "special_functions.besselI0\n\r\t"
+        "tmpyl.besselI0\n\r\t"
         "Purpose:\n\r\t\t"
         "Compute the Zeroth Modified Bessel Function of the First Kind (I0)."
         "\n\r\tArguments\n\r\t\t"
         "x (numpy.ndarray):\n\r\t\t\t"
-        "A numpy array of real numbers. Independent variable for I_0(x)\n\r\t"
+        "Independent variable for I_0(x). Allowed inputs are int,\n\r\t\t\t"
+        "float, complex, list (of ints, floats, and complex),\n\r\t\t\t"
+        "and numpy arrays (if tmpyl was built with numpy support).\n\r\t"
         "Outputs:\n\r\t\t"
         "I0 (numpy.ndarray):\n\r\t\t\t"
         "The Bessel Function I0 as a function of x.\n\r\t"
         "Example:\n\r\t\t"
         ">>> import numpy\n\r\t\t"
-        ">>> import special_functions\n\r\t\t"
+        ">>> import tmpyl\n\r\t\t"
         ">>> x = numpy.arange(0,100,0.01)\n\r\t\t"
-        ">>> y = special_functions.besselI0(x)"
+        ">>> y = tmpyl.besselI0(x)"
+    },
+    {
+        "besselJ0",
+        tmpyl_besselJ0,
+        METH_VARARGS,
+        "\r\t"
+        "Function:\n\r\t\t"
+        "tmpyl.besselJ0\n\r\t"
+        "Purpose:\n\r\t\t"
+        "Compute the Zeroth Bessel Function of the First Kind (J0).\n\r\t"
+        "Arguments\n\r\t\t"
+        "x (numpy.ndarray):\n\r\t\t\t"
+        "Independent variable for J_0(x). Allowed inputs are\n\r\t\t\t"
+        "int, float, list (of ints and floats), and\n\r\t\t\t"
+        "numpy arrays (if tmpyl was built with numpy support).\n\r\t"
+        "Outputs:\n\r\t\t"
+        "J0\n\r\t\t\t"
+        "The Bessel Function J0 as a function of x.\n\r\t"
+        "Example:\n\r\t\t"
+        ">>> import numpy\n\r\t\t"
+        ">>> import tmpyl\n\r\t\t"
+        ">>> x = numpy.arange(0, 100, 0.01)\n\r\t\t"
+        ">>> y = tmpyl.besselJ0(x)"
     },
     {
         "fresnel_cos",
@@ -126,7 +130,7 @@ static PyMethodDef tmpyl_methods[] =
         METH_VARARGS,
         "\r\t"
         "Function:\n\r\t\t"
-        "special_functions.fresnel_cos\n\r\t"
+        "tmpyl.fresnel_cos\n\r\t"
         "Purpose:\n\r\t\t"
         "Compute the Fresnel cosine function."
         "\n\r\tArguments\n\r\t\t"
@@ -137,9 +141,9 @@ static PyMethodDef tmpyl_methods[] =
         "The fresnel sine function of x.\n\r\t"
         "Example:\n\r\t\t"
         ">>> import numpy\n\r\t\t"
-        ">>> import special_functions\n\r\t\t"
+        ">>> import tmpyl\n\r\t\t"
         ">>> x = numpy.arange(0, 10, 0.01)\n\r\t\t"
-        ">>> y = special_functions.fresnel_cos(x)"
+        ">>> y = tmpyl.fresnel_cos(x)"
     },
     {
         "fresnel_sin",
@@ -147,7 +151,7 @@ static PyMethodDef tmpyl_methods[] =
         METH_VARARGS,
         "\r\t"
         "Function:\n\r\t\t"
-        "special_functions.fresnel_sin\n\r\t"
+        "tmpyl.fresnel_sin\n\r\t"
         "Purpose:\n\r\t\t"
         "Compute the Fresnel sine function."
         "\n\r\tArguments\n\r\t\t"
@@ -158,9 +162,9 @@ static PyMethodDef tmpyl_methods[] =
         "The fresnel sine function of x.\n\r\t"
         "Example:\n\r\t\t"
         ">>> import numpy\n\r\t\t"
-        ">>> import special_functions\n\r\t\t"
+        ">>> import tmpyl\n\r\t\t"
         ">>> x = numpy.arange(0, 10, 0.01)\n\r\t\t"
-        ">>> y = special_functions.fresnel_sin(x)"
+        ">>> y = tmpyl.fresnel_sin(x)"
     },
     {
         "lambertw",
@@ -168,7 +172,7 @@ static PyMethodDef tmpyl_methods[] =
         METH_VARARGS,
         "\r\t"
         "Function:\n\r\t\t"
-        "special_functions.lambertw\n\r\t"
+        "tmpyl.lambertw\n\r\t"
         "Purpose:\n\r\t\t"
         "Compute the Lambert W function, inverse of x*exp(x)."
         "\n\r\tArguments\n\r\t\t"
@@ -179,9 +183,9 @@ static PyMethodDef tmpyl_methods[] =
         "The Lambert W function of x.\n\r\t"
         "Example:\n\r\t\t"
         ">>> import numpy\n\r\t\t"
-        ">>> import special_functions\n\r\t\t"
+        ">>> import tmpyl\n\r\t\t"
         ">>> x = numpy.arange(0,100,0.01)\n\r\t\t"
-        ">>> y = special_functions.lambertw(x)"
+        ">>> y = tmpyl.lambertw(x)"
     },
     {
         "sinc",
@@ -189,7 +193,7 @@ static PyMethodDef tmpyl_methods[] =
         METH_VARARGS,
         "\r\t"
         "Function:\n\r\t\t"
-        "special_functions.sinc\n\r\t"
+        "tmpyl.sinc\n\r\t"
         "Purpose:\n\r\t\t"
         "Compute the sinc function, sin(x)/x."
         "\n\r\tArguments\n\r\t\t"
@@ -200,9 +204,9 @@ static PyMethodDef tmpyl_methods[] =
         "The sinc function of x.\n\r\t"
         "Example:\n\r\t\t"
         ">>> import numpy\n\r\t\t"
-        ">>> import special_functions\n\r\t\t"
+        ">>> import tmpyl\n\r\t\t"
         ">>> x = numpy.arange(0,100,0.01)\n\r\t\t"
-        ">>> y = special_functions.sinc(x)"
+        ">>> y = tmpyl.sinc(x)"
     },
     {NULL, NULL, 0, NULL}
 };
