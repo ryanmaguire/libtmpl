@@ -9,6 +9,7 @@ PyObject *tmpyl_besselI0(PyObject *self, PyObject *args)
     c_funcs.float_func = tmpl_Float_Bessel_I0;
     c_funcs.double_func = tmpl_Double_Bessel_I0;
     c_funcs.ldouble_func = tmpl_LDouble_Bessel_I0;
+    c_funcs.double_from_cdouble_func = NULL;
     c_funcs.cdouble_from_real_func = NULL;
     c_funcs.cdouble_from_complex_func = tmpl_CDouble_Bessel_I0;
     c_funcs.func_name = "besselI0";
@@ -24,6 +25,7 @@ PyObject *tmpyl_besselJ0(PyObject *self, PyObject *args)
     c_funcs.float_func = tmpl_Float_Bessel_J0;
     c_funcs.double_func = tmpl_Double_Bessel_J0;
     c_funcs.ldouble_func = tmpl_LDouble_Bessel_J0;
+    c_funcs.double_from_cdouble_func = NULL;
     c_funcs.cdouble_from_real_func = NULL;
     c_funcs.cdouble_from_complex_func = NULL;
     c_funcs.func_name = "besselJ0";
@@ -39,6 +41,7 @@ PyObject *tmpyl_fresnel_cos(PyObject *self, PyObject *args)
     c_funcs.float_func = tmpl_Float_Fresnel_Cos;
     c_funcs.double_func = tmpl_Double_Fresnel_Cos;
     c_funcs.ldouble_func = tmpl_LDouble_Fresnel_Cos;
+    c_funcs.double_from_cdouble_func = NULL;
     c_funcs.cdouble_from_real_func = NULL;
     c_funcs.cdouble_from_complex_func = NULL;
     c_funcs.func_name = "fresnel_cos";
@@ -54,6 +57,7 @@ PyObject *tmpyl_fresnel_sin(PyObject *self, PyObject *args)
     c_funcs.float_func = tmpl_Float_Fresnel_Sin;
     c_funcs.double_func = tmpl_Double_Fresnel_Sin;
     c_funcs.ldouble_func = tmpl_LDouble_Fresnel_Sin;
+    c_funcs.double_from_cdouble_func = NULL;
     c_funcs.cdouble_from_real_func = NULL;
     c_funcs.cdouble_from_complex_func = NULL;
     c_funcs.func_name = "fresnel_sin";
@@ -69,6 +73,7 @@ PyObject *tmpyl_lambertw(PyObject *self, PyObject *args)
     c_funcs.float_func = tmpl_Float_LambertW;
     c_funcs.double_func = tmpl_Double_LambertW;
     c_funcs.ldouble_func = tmpl_LDouble_LambertW;
+    c_funcs.double_from_cdouble_func = NULL;
     c_funcs.cdouble_from_real_func = NULL;
     c_funcs.cdouble_from_complex_func = NULL;
     c_funcs.func_name = "lambertw";
@@ -84,6 +89,7 @@ PyObject *tmpyl_sinc(PyObject *self, PyObject *args)
     c_funcs.float_func = tmpl_Float_Sinc;
     c_funcs.double_func = tmpl_Double_Sinc;
     c_funcs.ldouble_func = tmpl_LDouble_Sinc;
+    c_funcs.double_from_cdouble_func = NULL;
     c_funcs.cdouble_from_real_func = NULL;
     c_funcs.cdouble_from_complex_func = NULL;
     c_funcs.func_name = "sinc";
