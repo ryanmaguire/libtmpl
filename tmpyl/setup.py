@@ -72,6 +72,12 @@ source_files = [
     "tmpyl_special_functions.c"
 ]
 
+# Optional arguments for the compiler.
+optional_args = [
+    "-Wall",
+    "-Wextra"
+]
+
 # Create the module.
 setup(name='tmpyl',
       version='0.1',
@@ -80,6 +86,7 @@ setup(name='tmpyl',
       ext_modules=[
           Extension('tmpyl',
                     source_files,
+                    extra_compile_args=optional_args,
                     define_macros=tmpyl_macros,
                     include_dirs=include,
                     library_dirs=['/usr/local/lib'],

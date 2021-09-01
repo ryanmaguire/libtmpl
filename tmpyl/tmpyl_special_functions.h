@@ -1,19 +1,9 @@
-#ifndef __TMPYL_SPECIAL_FUNCTIONS_MODULE_H__
-#define __TMPYL_SPECIAL_FUNCTIONS_MODULE_H__
-
+#ifndef TMPYL_SPECIAL_FUNCTIONS_MODULE_H
+#define TMPYL_SPECIAL_FUNCTIONS_MODULE_H
 
 #include <Python.h>
-#include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl.h>
 #include "tmpyl_common.h"
-
-/*---------------------------DEFINE PYTHON FUNCTIONS--------------------------*
- *  This contains the Numpy-C and Python-C API parts that allow for the above *
- *  functions to be called in Python. Numpy arrays, as well as floating point *
- *  and integer valued arguments may then be passed into these functions for  *
- *  improvement in performance, as opposed to the routines written purely in  *
- *  Python. Successful compiling requires the Numpy and Python header files.  *
- *----------------------------------------------------------------------------*/
 
 extern PyObject *tmpyl_besselI0(PyObject *self, PyObject *args);
 extern PyObject *tmpyl_besselJ0(PyObject *self, PyObject *args);
