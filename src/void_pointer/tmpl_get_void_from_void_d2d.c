@@ -7,12 +7,13 @@ tmpl_get_void_from_void_d2d(void *in, void *out,
                             double (*f)(double))
 {
     unsigned long int n;
-    double *out_data = out;
+    double *x = in;
+    double *y = out;
 
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
     for (n = 0UL; n < dim; ++n)
-        out_data[n] = f(((double *)in)[n]);
+        y[n] = f(x[n]);
 }
 

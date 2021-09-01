@@ -75,7 +75,8 @@ source_files = [
 # Optional arguments for the compiler.
 optional_args = [
     "-Wall",
-    "-Wextra"
+    "-Wextra",
+    "-Wconversion"
 ]
 
 # Create the module.

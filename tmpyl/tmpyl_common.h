@@ -4,7 +4,7 @@
 #include <Python.h>
 #include <libtmpl/include/tmpl.h>
 
-typedef struct _tmpl_Generic_Function_Obj {
+typedef struct _tmpyl_Generic_Function_Obj {
     /*  Integer valued functions.                                             */
     long (*long_func)(long);
 
@@ -30,11 +30,11 @@ typedef struct _tmpl_Generic_Function_Obj {
 
     /*  The name of the function.                                             */
     const char *func_name;
-} tmpl_Generic_Function_Obj;
+} tmpyl_Generic_Function_Obj;
 
 extern PyObject *
 tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
-                        tmpl_Generic_Function_Obj *c_func);
+                        tmpyl_Generic_Function_Obj *c_func);
 
 #endif
 

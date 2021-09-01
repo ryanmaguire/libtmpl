@@ -5,7 +5,7 @@
 PyObject *tmpyl_besselI0(PyObject *self, PyObject *args)
 {
     /*  Function object that will contain all of the function pointers.       */
-    tmpl_Generic_Function_Obj c_funcs;
+    tmpyl_Generic_Function_Obj c_funcs;
 
     /*  Integer valued functions.                                             */
     c_funcs.long_func = NULL;
@@ -41,7 +41,7 @@ PyObject *tmpyl_besselI0(PyObject *self, PyObject *args)
 PyObject *tmpyl_besselJ0(PyObject *self, PyObject *args)
 {
     /*  Function object that will contain all of the function pointers.       */
-    tmpl_Generic_Function_Obj c_funcs;
+    tmpyl_Generic_Function_Obj c_funcs;
 
     /*  Integer valued functions.                                             */
     c_funcs.long_func = NULL;
@@ -77,7 +77,7 @@ PyObject *tmpyl_besselJ0(PyObject *self, PyObject *args)
 PyObject *tmpyl_fresnel_cos(PyObject *self, PyObject *args)
 {
     /*  Function object that will contain all of the function pointers.       */
-    tmpl_Generic_Function_Obj c_funcs;
+    tmpyl_Generic_Function_Obj c_funcs;
 
     /*  Integer valued functions.                                             */
     c_funcs.long_func = NULL;
@@ -113,7 +113,7 @@ PyObject *tmpyl_fresnel_cos(PyObject *self, PyObject *args)
 PyObject *tmpyl_fresnel_sin(PyObject *self, PyObject *args)
 {
     /*  Function object that will contain all of the function pointers.       */
-    tmpl_Generic_Function_Obj c_funcs;
+    tmpyl_Generic_Function_Obj c_funcs;
 
     /*  Integer valued functions.                                             */
     c_funcs.long_func = NULL;
@@ -149,7 +149,7 @@ PyObject *tmpyl_fresnel_sin(PyObject *self, PyObject *args)
 PyObject *tmpyl_lambertw(PyObject *self, PyObject *args)
 {
     /*  Function object that will contain all of the function pointers.       */
-    tmpl_Generic_Function_Obj c_funcs;
+    tmpyl_Generic_Function_Obj c_funcs;
 
     /*  Integer valued functions.                                             */
     c_funcs.long_func = NULL;
@@ -185,7 +185,7 @@ PyObject *tmpyl_lambertw(PyObject *self, PyObject *args)
 PyObject *tmpyl_sinc(PyObject *self, PyObject *args)
 {
     /*  Function object that will contain all of the function pointers.       */
-    tmpl_Generic_Function_Obj c_funcs;
+    tmpyl_Generic_Function_Obj c_funcs;
 
     /*  Integer valued functions.                                             */
     c_funcs.long_func = NULL;
