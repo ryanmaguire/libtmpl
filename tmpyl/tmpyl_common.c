@@ -97,8 +97,8 @@ void tmpyl_capsule_cleanup(PyObject *capsule)
 /*  End of tmpyl_capsule_cleanup.                                             */
 
 /*  This function passes integer objects to C for computation.                */
-PyObject *
-tmpyl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func)
+static PyObject *
+tmpyl_Get_Py_Out_From_Long(PyObject *x, tmpl_Generic_Function_Obj *c_func)
 {
     /*  If the the tmpl_Generic_Function_Obj pointer contains an integer      *
      *  function (integer in, integer out), use this.                         */
@@ -172,7 +172,94 @@ tmpyl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func)
         return NULL;
     }
 }
+/*  End of tmpl_Get_Py_Out_From_Long.                                         */
+
+/*  Python 2 had the int data type. Python 3 combined int and long into 1     *
+ *  data type. If PY_VERSION_HEX indicates Python 2, create an int function.  */
+#if PY_VERSION_HEX < 0x03000000
+
+/*  This function passes integer objects to C for computation.                */
+static PyObject *
+tmpyl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func)
+{
+    /*  If the the tmpl_Generic_Function_Obj pointer contains an integer      *
+     *  function (integer in, integer out), use this.                         */
+    if (c_func->long_func != NULL)
+    {
+        /*  Extract the data from Python as a long int.                       */
+        long int x_int = PyInt_AsLong(x);
+
+        /*  Pass the input to the C function.                                 */
+        long int y_int = c_func->long_func(x_int);
+
+        /*  Convert the integer into a PyObject pointer with PyInt_FromLong.  */
+        return PyInt_FromLong(y_int);
+    }
+
+    /*  If there's no integer-to-integer function, try a double-to-double     *
+     *  function. The resulting PyObject will be a float object.              */
+    else if (c_func->double_func != NULL)
+    {
+        /*  Convert the integer object into a double.                         */
+        long int x_int = PyInt_AsLong(x);
+        double x_val = (double)x_int;
+
+        /*  Pass the data to the C function for computation.                  */
+        double y_val = c_func->double_func(x_val);
+
+        /*  Convert the double to a PyObject pointer for a float and return.  */
+        return PyFloat_FromDouble(y_val);
+    }
+
+    /*  Lastly, check if there is a function that takes in a real value and   *
+     *  returns a complex value. If there is, the output will be a complex    *
+     *  Python object (i.e. complex number in Python).                        */
+    else if (c_func->cdouble_from_real_func != NULL)
+    {
+        /*  Extract the data from the PyObject and convert it to a double.    */
+        long int x_int = PyInt_AsLong(x);
+        double x_in = (double)x_int;
+
+        /*  Run the computation, creating a tmpl_ComplexDouble in the process.*/
+        tmpl_ComplexDouble z_out = c_func->cdouble_from_real_func(x_in);
+
+        /*  Python will not accept a tmpl_ComplexDouble struct as a valid     *
+         *  complex number. We can create a complex object from two doubles,  *
+         *  however. Extract the real and imaginary parts from z.             */
+        double real = tmpl_CDouble_Real_Part(z_out);
+        double imag = tmpl_CDouble_Imag_Part(z_out);
+
+        /*  Create the complex object from two doubles and return.            */
+        return PyComplex_FromDoubles(real, imag);
+    }
+
+    /*  If there is no function that can handle the input, return with error. */
+    else
+    {
+        /*  If the function name pointer is NULL, print the following error.  */
+        if (c_func->func_name == NULL)
+            PyErr_Format(PyExc_RuntimeError,
+                         "\n\rError Encountered: tmpyl\n"
+                         "\r\tFunction Name: Unknown\n\n"
+                         "\rInteger input provided but this function does not\n"
+                         "\rexcept real valued (float or int) arguments.");
+
+        /*  Otherwise, print the error with the function name included.       */
+        else
+            PyErr_Format(PyExc_RuntimeError,
+                         "\n\rError Encountered: tmpyl\n"
+                         "\r\tFunction Name: %s\n\n"
+                         "\rInteger input provided but this function does not\n"
+                         "\rexcept real valued (float or int) arguments.",
+                         c_func->func_name);
+
+        return NULL;
+    }
+}
 /*  End of tmpl_Get_Py_Out_From_Int.                                          */
+
+#endif
+/*  End of #if PY_VERSION_HEX < 0x03000000.                                   */
 
 /*  Function for passing a float object to C for computation.                 */
 PyObject *
@@ -320,7 +407,15 @@ tmpyl_Get_Py_Out_From_List(PyObject *x, tmpl_Generic_Function_Obj *c_func)
         nth_item = PyList_GetItem(x, n);
 
         if (PyLong_Check(nth_item))
+            current_item = tmpyl_Get_Py_Out_From_Long(nth_item, c_func);
+
+/*  Python 2 had the int data type. Python 3 combined int and long into 1     *
+ *  data type. If PY_VERSION_HEX indicates Python 2, check for int.           */
+#if PY_VERSION_HEX < 0x03000000
+        else if (PyInt_Check(nth_item))
             current_item = tmpyl_Get_Py_Out_From_Int(nth_item, c_func);
+#endif
+/*  End of #if PY_VERSION_HEX >= 0x03000000                                   */
 
         else if (PyFloat_Check(nth_item))
             current_item = tmpyl_Get_Py_Out_From_Float(nth_item, c_func);
@@ -383,6 +478,15 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
 
     if (PyLong_Check(x))
         return tmpyl_Get_Py_Out_From_Int(x, c_func);
+
+/*  Python 2 had the int data type. Python 3 combined int and long into 1     *
+ *  data type. If PY_VERSION_HEX indicates Python 2, check for int.           */
+#if PY_VERSION_HEX < 0x03000000
+        else if (PyInt_Check(x))
+            return tmpyl_Get_Py_Out_From_Int(x, c_func);
+#endif
+/*  End of #if PY_VERSION_HEX >= 0x03000000                                   */
+
     else if (PyFloat_Check(x))
         return tmpyl_Get_Py_Out_From_Float(x, c_func);
     else if (PyComplex_Check(x))

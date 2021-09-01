@@ -16,18 +16,6 @@ typedef struct _tmpl_Generic_Function_Obj {
     const char *func_name;
 } tmpl_Generic_Function_Obj;
 
-extern PyObject *
-tmpyl_Get_Py_Out_From_Int(PyObject *x, tmpl_Generic_Function_Obj *c_func);
-
-extern PyObject *
-tmpyl_Get_Py_Out_From_Float(PyObject *x, tmpl_Generic_Function_Obj *c_func);
-
-extern PyObject *
-tmpyl_Get_Py_Out_From_Complex(PyObject *x, tmpl_Generic_Function_Obj *c_func);
-
-extern PyObject *
-tmpyl_Get_Py_Out_From_List(PyObject *x, tmpl_Generic_Function_Obj *c_func);
-
 /*  This function frees the memory allocated to a pointer by malloc when the  *
  *  corresponding variable is destroyed at the Python level.                  */
 extern void tmpyl_capsule_cleanup(PyObject *capsule);
