@@ -25,10 +25,9 @@
     1. [The Mathematicians Programming Library](#TheMathProgLib)
     2. [Installation (Unix-Like)](#InstallUnix)
     3. [Installation (Window)](#InstallWindows)
-    
+    4. [Loading libtmpl](#Loadinglibtmp)
 2. [tmpyl (Python Wrapper)](#tmpyl)
     1. [Installation](#InstallUnixtmpyl)
-    2. [Loading libtmpl](#Loadinglibtmp)
 3. [tmppl (C++ Wrapper)](#tmppl)
 4. [Acknowledgment](#Acknowledgment)
 5. [License](#license)
