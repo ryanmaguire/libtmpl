@@ -45,7 +45,7 @@
  ******************************************************************************
  *  This code relies on the Python-C API. Building this has been tested on    *
  *  Python 3.9 and Python 2.7. If you are running a different version and the *
- *  build fails, please raise report this to:                                 *
+ *  build fails, please report this to:                                       *
  *      https://github.com/ryanmaguire/libtmpl/issues                         *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
@@ -55,7 +55,7 @@
 /*  To avoid compiler warnings about deprecated numpy stuff. This is only     *
  *  needed if numpy is available. setup.py provides the TMPYL_HAS_NUMPY macro *
  *  and sets it to 1 if numpy is available, and 0 otherwise. Check this.      */
-#if TMPYL_HAS_NUMPY == 1
+#if defined(TMPYL_HAS_NUMPY) && TMPYL_HAS_NUMPY == 1
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #endif
 
@@ -78,7 +78,7 @@
 #include "tmpyl_common.h"
 
 /*  If numpy is available, we'll need to include the numpy header files.      */
-#if TMPYL_HAS_NUMPY == 1
+#if defined(TMPYL_HAS_NUMPY) && TMPYL_HAS_NUMPY == 1
 #include <numpy/ndarraytypes.h>
 #include <numpy/ufuncobject.h>
 
@@ -100,7 +100,8 @@ static void tmpyl_capsule_cleanup(PyObject *capsule)
 
 /*  This function handles numpy arrays.                                       */
 static PyObject *
-tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x, tmpyl_Generic_Function_Obj *c_func)
+tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
+                                 tmpyl_Generic_Function_Obj *c_func)
 {
     /*  Variable for indexing, and a variable for the length of the array.    */
     unsigned long int n, dim;
@@ -108,8 +109,14 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x, tmpyl_Generic_Function_Obj *c_func
 
     /*  One of the functions wants the address of a SIGNED long integer.      */
     long int signed_dim;
+
+    /*  The data in a numpy array is returned as a void pointer.              */
     void *data, *out;
+
+    /*  typenum for the data type the void pointer represents.                */
     int typenum;
+
+    /*  And pointers for handling the data.                                   */
     PyArrayObject *x_as_arr;
     PyObject *capsule, *output;
 
@@ -133,14 +140,20 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x, tmpyl_Generic_Function_Obj *c_func
     x_as_arr = (PyArrayObject *)x;
     
     /*  Check the input to make sure it is valid. tmpyl only accepts          *
-     *  1 dimensional numpy array.                                            */
+     *  1 dimensional numpy arrays.                                           */
     if (PyArray_NDIM(x_as_arr) != 1)
     {
-        PyErr_Format(PyExc_RuntimeError,
-                     "\n\rError Encountered: tmpyl\n"
-                     "\r\tspecial_functions.%s\n"
-                     "\n\rInput is not 1-dimensional.\n",
-                     c_func->func_name);
+        if (c_func->func_name == NULL)
+            PyErr_Format(PyExc_RuntimeError,
+                        "\n\rError Encountered: tmpyl\n"
+                        "\r\tFunction Name: Unknown\n"
+                        "\n\rInput is not 1-dimensional.\n");
+        else
+            PyErr_Format(PyExc_RuntimeError,
+                        "\n\rError Encountered: tmpyl\n"
+                        "\r\tFunction Name: %s\n\n"
+                        "\n\rInput is not 1-dimensional.\n",
+                        c_func->func_name);
         return NULL;
     }
 
@@ -157,11 +170,17 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x, tmpyl_Generic_Function_Obj *c_func
     /*  Check that the array is not empty.                                    */
     if (dim == 0)
     {
-        PyErr_Format(PyExc_RuntimeError,
-                     "\n\rError Encountered: tmpyl\n"
-                     "\r\tspecial_functions.%s"
-                     "\n\n\rInput numpy array is empty.\n",
-                     c_func->func_name);
+        if (c_func->func_name == NULL)
+            PyErr_Format(PyExc_RuntimeError,
+                        "\n\rError Encountered: tmpyl\n"
+                        "\r\tFunction Name: Unknown\n"
+                        "\n\n\rInput numpy array is empty.\n");
+        else
+            PyErr_Format(PyExc_RuntimeError,
+                        "\n\rError Encountered: tmpyl\n"
+                        "\r\tFunction Name: %s\n\n"
+                        "\n\n\rInput numpy array is empty.\n",
+                        c_func->func_name);
         return NULL;
     }
 
@@ -374,6 +393,7 @@ MALLOC_FAILURE:
 }
 
 #endif
+/*  End of #if defined(TMPYL_HAS_NUMPY) && TMPYL_HAS_NUMPY == 1.              */
 
 /*  This function passes integer objects to C for computation.                */
 static PyObject *
@@ -733,10 +753,10 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
     /*  Declare necessary variables.                                          */
     PyObject *x;
 
-    if ((self == NULL) || (args == NULL) || (c_func == NULL))
+    if ((args == NULL) || (c_func == NULL))
         goto FAILURE;
 
-#if TMPYL_HAS_NUMPY == 1
+#if defined(TMPYL_HAS_NUMPY) && TMPYL_HAS_NUMPY == 1
     if (PyArray_API == NULL)
             import_array();
 #endif
@@ -751,23 +771,23 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
 /*  Python 2 had the int data type. Python 3 combined int and long into 1     *
  *  data type. If PY_VERSION_HEX indicates Python 2, check for int.           */
 #if PY_VERSION_HEX < 0x03000000
-        else if (PyInt_Check(x))
-            return tmpyl_Get_Py_Out_From_Int(x, c_func);
+    else if (PyInt_Check(x))
+        return tmpyl_Get_Py_Out_From_Int(x, c_func);
 #endif
 /*  End of #if PY_VERSION_HEX >= 0x03000000                                   */
 
-    if (PyFloat_Check(x))
+    else if (PyFloat_Check(x))
         return tmpyl_Get_Py_Out_From_Float(x, c_func);
-    if (PyComplex_Check(x))
+    else if (PyComplex_Check(x))
         return tmpyl_Get_Py_Out_From_Complex(x, c_func);
-    if (PyList_Check(x))
+    else if (PyList_Check(x))
         return tmpyl_Get_Py_Out_From_List(x, c_func);
 
 #if TMPYL_HAS_NUMPY == 1
-    if (PyArray_Check(x))
+    else if (PyArray_Check(x))
         return tmpyl_Get_Py_Out_From_NumpyArray(x, c_func);
 #endif
-
+    puts("BOB");
     goto FAILURE;
 
 FAILURE:
