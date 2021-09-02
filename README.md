@@ -1,5 +1,4 @@
 <!---
-
     LICENSE
 
     This file is part of libtmpl.
@@ -27,13 +26,21 @@
     2. [Installation (Unix-Like)](#InstallUnix)
     3. [Installation (Window)](#InstallWindows)
     
-2. [tmpyl](#tmpyl)
+2. [tmpyl (Python Wrapper)](#tmpyl)
     1. [Installation](#InstallUnixtmpyl)
-3. [License](#license)
+    2. [Loading libtmpl](#Loadinglibtmp)
+3. [tmppl (C++ Wrapper)](#tmppl)
+4. [Acknowledgment](#Acknowledgment)
+5. [License](#license)
 
 # libtmpl
 
 **This project is still in its infancy and is updated regularly.**
+
+**This library is still being ported over from rss_ringoccs and others.**
+
+The code was scattered across several projects of mine, and this is an attempt
+to centralize all of it.
 
 ## The Mathematicians Programming Library <a name="TheMathProgLib"></a>
 This project is a collection of code written in C89/C90 (commonly called ANSI C)
@@ -46,22 +53,23 @@ eventually grew beyond the scope of just astronomy.
 **library.** The library is written entirely in ISO C89/C90 compliant code,
 and no C99/C11 or GCC extensions are used. It compiles with C99 and C11/C18
 compilers, so it is more fitting to say it is written in the intersection of
-these standards. That being said, the ``extras/`` folder contains a plethora of
-code for recreational purposes (random walks, fractals, raytracing, and more).
-These files are **not** a part of libtmpl and are not compiled via the Makefile
-or the ``make.sh`` script, leaving me the freedom to write in whichever language
-I please. Still, most of the files in ``extras/`` are in C, but some are in C++,
-Python, Sage, and the rare Mathematica file may appear, and some files use C99
-tools just to mix it up.
+these standards.
+
+The ``extras/`` folder contains a plethora of code for recreational purposes
+(random walks, fractals, raytracing, and more). These files are **not** part
+of libtmpl and are not compiled via the Makefile or the ``make.sh`` script.
+Most of the files in ``extras/`` are written in C, but some are in C++, Python,
+Sage, and the rare Mathematica file may appear, and some files use C99 tools.
 
 The ``examples/`` folder contains examples of all of the functions in the
-library and shows basic usage of these tools. The ``tests/`` folder contains
-time tests and accuracy tests of ``libtmpl`` versus other libraries. To run
-these tests will require these libraries being available. Running these tests
-is **not** required, and they are mostly for internal use and to verify the
-algorithms implemented in libtmpl.
+library and shows basic usage of these tools.
 
-The library is split into the following sublibraries (ordered alphabetically):
+The ``tests/`` folder contains time tests and accuracy tests of ``libtmpl``
+versus other libraries. To run these tests will require these libraries being
+available. Running these tests is **not** required, and they are mostly for
+internal use and to verify the algorithms implemented in libtmpl.
+
+The library is split into the following sublibraries:
 
 ### bytes
 Tools for working with endianness and reading binary files. This code
@@ -167,11 +175,6 @@ phrase "tmpl" is preprended to all functions to avoid name conflicts.
 ### Wish List
 Abstract algebra (groups), topology.
 
-## NOTE:
-**This library is still being ported over from rss_ringoccs and others.** The
-code was scattered across several projects of mine, and this is an attempt to
-centralize all of it.
-
 ## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
 Simply run the Makefile with:
 ```
@@ -187,8 +190,12 @@ make omp
 ```
 
 You'll of course need a compiler that supports OpenMP.
+**The default compiler on macOS does NOT support OpenMP.** Homebrew allows one
+to install alternative versions of LLVM's clang and GNU's gcc, but Apple's
+version of clang does not support the `-fopenmp` option at the time of this
+writing.
 
-If you do not have sudo privileges, use the inplace option:
+**If you do not have sudo privileges, use the in-place option:**
 ```
 make inplace
 ```
@@ -226,6 +233,27 @@ compiles libtmpl without error.
 In both cases, the problem does not seem to be with libtmpl, but with the
 particular versions of those compilers. At any rate, clang and gcc compile
 without error, and without warnings :)
+
+## Loading libtmpl <a name="Loadinglibtmp"></a>
+The `make.sh` script will check your `.bashrc` file for the the following.
+If libtmpl fails to load (ld warning) or if tmpyl (the Python extension) fails
+to import, try adding this. For macOS users, add this line to `.bash_profile`
+or whatever the zsh equivalent is.
+```
+# Needed for loading libtmpl.
+LD_LIBRARY_PATH=/usr/local/lib
+export LD_LIBRARY_PATH
+```
+
+**If you used the inplace install method, you will need to add libtmpl/ to**
+**your path**. For example, if libtmpl is located in
+`/home/username/Documents/libtmpl/`, add the following to `.bashrc`
+(or the equivalent of whatever shell you are using):
+```
+# Needed for loading libtmpl.
+LD_LIBRARY_PATH="/home/username/Documents/libtmpl/"
+export LD_LIBRARY_PATH
+```
 
 ## Installation (Windows) <a name="InstallWindows"></a>
 Step 1: Remove Windows and install a nice Linux distribution. I recommend
@@ -286,17 +314,11 @@ Navigate to the `tmpyl` directory of this repository and run:
 ```
 pip install .
 ```
-You can also use python itself. Using python 3:
+**If you installed libtmpl with the inplace methods, pip will not work.**
+You can use python itself. Replace `pythonx` with either `python2`,
+`python3`, or `python`, depending on what you have installed.
 ```
-python3 setup.py install
-```
-Using python 2:
-```
-python2 setup.py install
-```
-NOTE you may need sudo priviledges to run this. On macOS you can just run:
-```
-python setup.py install
+pythonx setup.py install
 ```
 pip is the preferred method since one can easily uninstall tmpyl with:
 ```
@@ -312,6 +334,17 @@ directory, placed in `libtmpl/tmpyl/build`, and there are two files:
 Where the `x.x` is determined by the Python version, and the `*` is determined
 by your computer architecture and operating system. To uninstall, simply remove
 these files and the entire `libtmpl/tmpyl/build` directory.
+
+# tmppl
+`tmppl` is the C++ wrapper for `libtmpl`. There is a Makefile in the
+`tmppl/` directory that builds it.
+
+# Acknowledgment
+Thanks must be paid to Peter Doyle and Vladimir Chernov (Dartmouth College) for
+many conversations about virtual knots and discussing how to implement
+algorithms. Richard French (Wellesley College) was instrumental in getting this
+project going and helped with a lot of the optics code. And James "Kiwi"
+Graham-Eagle (UMass Lowell) helped with the special-functions algorithms.
 
 # License
     libtmpl is free software: you can redistribute it and/or modify it
