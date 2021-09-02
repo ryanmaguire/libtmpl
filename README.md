@@ -190,7 +190,7 @@ libtmpl.
 ```
 make inplace
 ```
-And for inplace with omp support
+And for inplace with OpenMP support
 ```
 make omp_inplace
 ```
@@ -200,6 +200,10 @@ source ~/.bashrc
 ```
 
 ### Some Warnings
+Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option
+will result in an error. Homebrew has versions of clang and gcc that do support
+OpenMP.
+
 On Debian GNU/Linux 10 (Buster), there are two problems with PCC and TCC.
 The version of TCC (the Tiny C Compiler) that ships with Debian 10 does not
 accept 0.0 * HUGE_VAL as a compiler-time constant. This value is used to
