@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_complex_sin                                *
+ *                         tmpl_complex_sqrt_real                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the complex sine function.               *
+ *      Contains the source code for the square root function for all reals.  *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Sin:                                                      *
- *      tmpl_CDouble_Sin:                                                     *
- *      tmpl_CLDouble_Sin:                                                    *
+ *      tmpl_CFloat_Sqrt_Real:                                                *
+ *      tmpl_CDouble_Sqrt_Real:                                               *
+ *      tmpl_CLDouble_Sqrt_Real:                                              *
  *  Purpose:                                                                  *
- *      Computes the complex sine of a complex number.                        *
+ *      Computes the complex square root of a real number.                    *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
- *          A complex number.                                                 *
+ *      x (float/double/long double):                                         *
+ *          A real number.                                                    *
  *  Output:                                                                   *
- *      sin_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):            *
- *          The complex sine of z.                                            *
+ *      sqrt_x (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):           *
+ *          The complex square root of x.                                     *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -60,86 +60,80 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       February 18, 2021                                             *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/11/12: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/11/14: Ryan Maguire                                                  *
- *      Frozen for v1.3 of rss_ringoccs.                                      *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *  2021/02/18: Ryan Maguire                                                  *
- *      Added float and long double support.                                  *
+ *  Date:       September 2, 2021                                             *
  ******************************************************************************/
 
-/*  Header file which contains aliases for the function in the standard C     *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+/*  math functions found here.                                                */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Single precision complex sine (csinf equivalent).                         */
-tmpl_ComplexFloat tmpl_CFloat_Sin(tmpl_ComplexFloat z)
+/*  Sincle precision square root of a real number.                            */
+tmpl_ComplexFloat tmpl_CFloat_Sqrt_Real(float x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float x, y, real, imag;
-    tmpl_ComplexFloat sin_z;
+    float real, imag;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CFloat_Real_Part(z);
-    y = tmpl_CFloat_Imag_Part(z);
+    /*  If x >= 0, return sqrt(x). Otherwise, return i*sqrt(|x|).             */
+    if (x >= 0.0F)
+    {
+        real = tmpl_Float_Sqrt(x);
+        imag = 0.0F;
+    }
+    else
+    {
+        real = 0.0F;
+        imag = tmpl_Float_Sqrt(-x);
+    }
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_Float_Sin(x) * tmpl_Float_Cosh(y);
-    imag = tmpl_Float_Cos(x) * tmpl_Float_Sinh(y);
-
-    /*  Use tmpl_CFloat_Rect to create the output and return.                 */
-    sin_z = tmpl_CFloat_Rect(real, imag);
-    return sin_z;
+    /*  Create the complex number with tmpl_CFloat_Rect and return.           */
+    return tmpl_CFloat_Rect(real, imag);
 }
-/*  End of tmpl_CFloat_Sin.                                                   */
+/*  End of tmpl_CFloat_Sqrt_Real.                                             */
 
-/*  Double precision complex sine (csin equivalent).                          */
-tmpl_ComplexDouble tmpl_CDouble_Sin(tmpl_ComplexDouble z)
+/*  Double precision square root of a real number.                            */
+tmpl_ComplexDouble tmpl_CDouble_Sqrt_Real(double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double x, y, real, imag;
-    tmpl_ComplexDouble sin_z;
+    double real, imag;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CDouble_Real_Part(z);
-    y = tmpl_CDouble_Imag_Part(z);
+    /*  If x >= 0, return sqrt(x). Otherwise, return i*sqrt(|x|).             */
+    if (x >= 0.0)
+    {
+        real = tmpl_Double_Sqrt(x);
+        imag = 0.0;
+    }
+    else
+    {
+        real = 0.0;
+        imag = tmpl_Double_Sqrt(-x);
+    }
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_Double_Sin(x) * tmpl_Double_Cosh(y);
-    imag = tmpl_Double_Cos(x) * tmpl_Double_Sinh(y);
-
-    /*  Use tmpl_CDouble_Rect to create the output and return.                */
-    sin_z = tmpl_CDouble_Rect(real, imag);
-    return sin_z;
+    /*  Create the complex number with tmpl_CDouble_Rect and return.          */
+    return tmpl_CDouble_Rect(real, imag);
 }
-/*  End of tmpl_CDouble_Sin.                                                  */
+/*  End of tmpl_CDouble_Sqrt_Real.                                            */
 
-/*  Long double precision complex sine (csinl equivalent).                    */
-tmpl_ComplexLongDouble tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z)
+/*  Long double precision square root of a real number.                       */
+tmpl_ComplexLongDouble tmpl_CLDouble_Sqrt_Real(long double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double x, y, real, imag;
-    tmpl_ComplexLongDouble sin_z;
+    long double real, imag;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CLDouble_Real_Part(z);
-    y = tmpl_CLDouble_Imag_Part(z);
+    /*  If x >= 0, return sqrt(x). Otherwise, return i*sqrt(|x|).             */
+    if (x >= 0.0L)
+    {
+        real = tmpl_LDouble_Sqrt(x);
+        imag = 0.0L;
+    }
+    else
+    {
+        real = 0.0L;
+        imag = tmpl_LDouble_Sqrt(-x);
+    }
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_LDouble_Sin(x) * tmpl_LDouble_Cosh(y);
-    imag = tmpl_LDouble_Cos(x) * tmpl_LDouble_Sinh(y);
-
-    /*  Use tmpl_CLDouble_Rect to create the output and return.               */
-    sin_z = tmpl_CLDouble_Rect(real, imag);
-    return sin_z;
+    /*  Create the complex number with tmpl_CDouble_Rect and return.          */
+    return tmpl_CLDouble_Rect(real, imag);
 }
-/*  End of tmpl_CLDouble_Sin.                                                 */
+/*  End of tmpl_CLDouble_Sqrt_Real.                                           */

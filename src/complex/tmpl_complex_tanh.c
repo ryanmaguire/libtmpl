@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_complex_sin                                *
+ *                           tmpl_complex_tanh                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the complex sine function.               *
+ *      Contains the source code for the complex hyperbolic tangent function. *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Sin:                                                      *
- *      tmpl_CDouble_Sin:                                                     *
- *      tmpl_CLDouble_Sin:                                                    *
+ *      tmpl_CFloat_Tanh:                                                     *
+ *      tmpl_CDouble_Tanh:                                                    *
+ *      tmpl_CLDouble_Tanh:                                                   *
  *  Purpose:                                                                  *
- *      Computes the complex sine of a complex number.                        *
+ *      Computes the complex hyperbolic tangent of a complex number.          *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      sin_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):            *
- *          The complex sine of z.                                            *
+ *      tan_z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):            *
+ *          The complex hyperbolic tangent of z.                              *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -60,18 +60,7 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       February 18, 2021                                             *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/11/12: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/11/14: Ryan Maguire                                                  *
- *      Frozen for v1.3 of rss_ringoccs.                                      *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *  2021/02/18: Ryan Maguire                                                  *
- *      Added float and long double support.                                  *
+ *  Date:       September 2, 2021                                             *
  ******************************************************************************/
 
 /*  Header file which contains aliases for the function in the standard C     *
@@ -81,65 +70,62 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Single precision complex sine (csinf equivalent).                         */
-tmpl_ComplexFloat tmpl_CFloat_Sin(tmpl_ComplexFloat z)
+/*  Single precision complex hyperbolic tangent (ctanhf equivalent).          */
+tmpl_ComplexFloat tmpl_CFloat_Tanh(tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float x, y, real, imag;
-    tmpl_ComplexFloat sin_z;
+    tmpl_ComplexFloat exp_z, exp_minus_z, numer, denom, tanh_z;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CFloat_Real_Part(z);
-    y = tmpl_CFloat_Imag_Part(z);
+    /*  Compute exp(z) and exp(-z).                                           */
+    exp_z = tmpl_CFloat_Exp(z);
+    exp_minus_z = tmpl_CFloat_Reciprocal(z);
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_Float_Sin(x) * tmpl_Float_Cosh(y);
-    imag = tmpl_Float_Cos(x) * tmpl_Float_Sinh(y);
+    /*  The numerator is exp(z) - exp(-z). The denominator is the sum.        */
+    numer = tmpl_CFloat_Subtract(exp_z, exp_minus_z);
+    denom = tmpl_CFloat_Add(exp_z, exp_minus_z);
 
-    /*  Use tmpl_CFloat_Rect to create the output and return.                 */
-    sin_z = tmpl_CFloat_Rect(real, imag);
-    return sin_z;
+    /*  tanh(z) = sinh(z) / cosh(z). Compute this.                            */
+    tanh_z = tmpl_CFloat_Divide(numer, denom);
+    return tanh_z;
 }
-/*  End of tmpl_CFloat_Sin.                                                   */
+/*  End of tmpl_CFloat_Tanh.                                                  */
 
-/*  Double precision complex sine (csin equivalent).                          */
-tmpl_ComplexDouble tmpl_CDouble_Sin(tmpl_ComplexDouble z)
+/*  Double precision complex hyperbolic tangent (ctanh equivalent).           */
+tmpl_ComplexDouble tmpl_CDouble_Tanh(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double x, y, real, imag;
-    tmpl_ComplexDouble sin_z;
+    tmpl_ComplexDouble exp_z, exp_minus_z, numer, denom, tanh_z;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CDouble_Real_Part(z);
-    y = tmpl_CDouble_Imag_Part(z);
+    /*  Compute exp(z) and exp(-z).                                           */
+    exp_z = tmpl_CDouble_Exp(z);
+    exp_minus_z = tmpl_CDouble_Reciprocal(z);
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_Double_Sin(x) * tmpl_Double_Cosh(y);
-    imag = tmpl_Double_Cos(x) * tmpl_Double_Sinh(y);
+    /*  The numerator is exp(z) - exp(-z). The denominator is the sum.        */
+    numer = tmpl_CDouble_Subtract(exp_z, exp_minus_z);
+    denom = tmpl_CDouble_Add(exp_z, exp_minus_z);
 
-    /*  Use tmpl_CDouble_Rect to create the output and return.                */
-    sin_z = tmpl_CDouble_Rect(real, imag);
-    return sin_z;
+    /*  tanh(z) = sinh(z) / cosh(z). Compute this.                            */
+    tanh_z = tmpl_CDouble_Divide(numer, denom);
+    return tanh_z;
 }
-/*  End of tmpl_CDouble_Sin.                                                  */
+/*  End of tmpl_CDouble_Tanh.                                                 */
 
-/*  Long double precision complex sine (csinl equivalent).                    */
-tmpl_ComplexLongDouble tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z)
+/*  Long double precision complex hyperbolic tangent (ctanhl equivalent).     */
+tmpl_ComplexLongDouble tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double x, y, real, imag;
-    tmpl_ComplexLongDouble sin_z;
+    tmpl_ComplexLongDouble exp_z, exp_minus_z, numer, denom, tanh_z;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CLDouble_Real_Part(z);
-    y = tmpl_CLDouble_Imag_Part(z);
+    /*  Compute exp(z) and exp(-z).                                           */
+    exp_z = tmpl_CLDouble_Exp(z);
+    exp_minus_z = tmpl_CLDouble_Reciprocal(z);
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_LDouble_Sin(x) * tmpl_LDouble_Cosh(y);
-    imag = tmpl_LDouble_Cos(x) * tmpl_LDouble_Sinh(y);
+    /*  The numerator is exp(z) - exp(-z). The denominator is the sum.        */
+    numer = tmpl_CLDouble_Subtract(exp_z, exp_minus_z);
+    denom = tmpl_CLDouble_Add(exp_z, exp_minus_z);
 
-    /*  Use tmpl_CLDouble_Rect to create the output and return.               */
-    sin_z = tmpl_CLDouble_Rect(real, imag);
-    return sin_z;
+    /*  tanh(z) = sinh(z) / cosh(z). Compute this.                            */
+    tanh_z = tmpl_CLDouble_Divide(numer, denom);
+    return tanh_z;
 }
-/*  End of tmpl_CLDouble_Sin.                                                 */
+/*  End of tmpl_CLDouble_Tanh.                                                */
