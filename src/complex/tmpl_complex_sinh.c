@@ -81,65 +81,62 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Single precision complex sine (csinf equivalent).                         */
-tmpl_ComplexFloat tmpl_CFloat_Sin(tmpl_ComplexFloat z)
+/*  Single precision complex hyperbolic sine (csinh equivalent).              */
+tmpl_ComplexFloat tmpl_CFloat_Sinh(tmpl_ComplexFloat z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float x, y, real, imag;
-    tmpl_ComplexFloat sin_z;
+    tmpl_ComplexFloat exp_z, exp_minus_z, sinh_z;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CFloat_Real_Part(z);
-    y = tmpl_CFloat_Imag_Part(z);
+    /*  sinh(z) = (exp(z) - exp(-z))/2, so compute exp(z).                    */
+    exp_z = tmpl_CFloat_Exp(z);
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_Float_Sin(x) * tmpl_Float_Cosh(y);
-    imag = tmpl_Float_Cos(x) * tmpl_Float_Sinh(y);
+    /*  Since we have computed exp(z), exp(-z) = 1/exp(z). Division is much   *
+     *  faster than using the complex exponential, so simply divide.          */
+    exp_minus_z = tmpl_CFloat_Reciprocal(exp_z);
 
-    /*  Use tmpl_CFloat_Rect to create the output and return.                 */
-    sin_z = tmpl_CFloat_Rect(real, imag);
-    return sin_z;
+    /*  Compute the difference of exp(z) and exp(-z) and divide by 2.         */
+    sinh_z = tmpl_CFloat_Subtract(exp_z, exp_minus_z);
+    sinh_z = tmpl_CFloat_Multiply_Real(0.5, sinh_z);
+    return sinh_z;
 }
-/*  End of tmpl_CFloat_Sin.                                                   */
+/*  End of tmpl_CFloat_Sinh.                                                  */
 
-/*  Double precision complex sine (csin equivalent).                          */
-tmpl_ComplexDouble tmpl_CDouble_Sin(tmpl_ComplexDouble z)
+/*  Double precision complex hyperbolic sine (csinh equivalent).              */
+tmpl_ComplexDouble tmpl_CDouble_Sinh(tmpl_ComplexDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double x, y, real, imag;
-    tmpl_ComplexDouble sin_z;
+    tmpl_ComplexDouble exp_z, exp_minus_z, sinh_z;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CDouble_Real_Part(z);
-    y = tmpl_CDouble_Imag_Part(z);
+    /*  sinh(z) = (exp(z) - exp(-z))/2, so compute exp(z).                    */
+    exp_z = tmpl_CDouble_Exp(z);
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_Double_Sin(x) * tmpl_Double_Cosh(y);
-    imag = tmpl_Double_Cos(x) * tmpl_Double_Sinh(y);
+    /*  Since we have computed exp(z), exp(-z) = 1/exp(z). Division is much   *
+     *  faster than using the complex exponential, so simply divide.          */
+    exp_minus_z = tmpl_CDouble_Reciprocal(exp_z);
 
-    /*  Use tmpl_CDouble_Rect to create the output and return.                */
-    sin_z = tmpl_CDouble_Rect(real, imag);
-    return sin_z;
+    /*  Compute the difference of exp(z) and exp(-z) and divide by 2.         */
+    sinh_z = tmpl_CDouble_Subtract(exp_z, exp_minus_z);
+    sinh_z = tmpl_CDouble_Multiply_Real(0.5, sinh_z);
+    return sinh_z;
 }
-/*  End of tmpl_CDouble_Sin.                                                  */
+/*  End of tmpl_CDouble_Sinh.                                                 */
 
-/*  Long double precision complex sine (csinl equivalent).                    */
-tmpl_ComplexLongDouble tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z)
+/*  Long double precision complex hyperbolic sine (csinh equivalent).         */
+tmpl_ComplexLongDouble tmpl_CLDouble_Sinh(tmpl_ComplexLongDouble z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double x, y, real, imag;
-    tmpl_ComplexLongDouble sin_z;
+    tmpl_ComplexLongDouble exp_z, exp_minus_z, sinh_z;
 
-    /*  Extract the real and imaginary parts from z.                          */
-    x = tmpl_CLDouble_Real_Part(z);
-    y = tmpl_CLDouble_Imag_Part(z);
+    /*  sinh(z) = (exp(z) - exp(-z))/2, so compute exp(z).                    */
+    exp_z = tmpl_CLDouble_Exp(z);
 
-    /*  The real part is sin(x)cosh(y).                                       */
-    real = tmpl_LDouble_Sin(x) * tmpl_LDouble_Cosh(y);
-    imag = tmpl_LDouble_Cos(x) * tmpl_LDouble_Sinh(y);
+    /*  Since we have computed exp(z), exp(-z) = 1/exp(z). Division is much   *
+     *  faster than using the complex exponential, so simply divide.          */
+    exp_minus_z = tmpl_CLDouble_Reciprocal(exp_z);
 
-    /*  Use tmpl_CLDouble_Rect to create the output and return.               */
-    sin_z = tmpl_CLDouble_Rect(real, imag);
-    return sin_z;
+    /*  Compute the difference of exp(z) and exp(-z) and divide by 2.         */
+    sinh_z = tmpl_CLDouble_Subtract(exp_z, exp_minus_z);
+    sinh_z = tmpl_CLDouble_Multiply_Real(0.5, sinh_z);
+    return sinh_z;
 }
-/*  End of tmpl_CLDouble_Sin.                                                 */
+/*  End of tmpl_CLDouble_Sinh.                                                */

@@ -412,6 +412,27 @@ tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Cosh                                                     *
+ *  Purpose:                                                                  *
+ *      Compute the hyperbolic cosine of a complex number z.                  *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble cosh_z:                                            *
+ *          The hyperbolic cosine of z.                                       *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Cosh(tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Cosh(tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Cosh(tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_Dist                                                     *
  *  Purpose:                                                                  *
  *      Compute the distance between two points in the complex plane.         *
@@ -1104,6 +1125,27 @@ tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Sinh                                                     *
+ *  Purpose:                                                                  *
+ *      Compute the hyperbolic sine of a complex number z.                    *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble sinh_z:                                            *
+ *          The hyperbolic sine of z.                                         *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Sinh(tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Sinh(tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Sinh(tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_Sqrt                                                     *
  *  Purpose:                                                                  *
  *      Compute the principal square root of a complex number. This is        *
@@ -1131,6 +1173,29 @@ tmpl_CDouble_Sqrt(tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Sqrt(tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Sqrt_Real                                                *
+ *  Purpose:                                                                  *
+ *      Computes the square root of a real number, allowing negative numebrs. *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble sqrt_z:                                            *
+ *          The square root of z.                                             *
+ *  NOTE:                                                                     *
+ *      If x is non-negative, returns sqrt(x). Otherwise, isqrt(|x|).         *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Sqrt_Real(float x);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Sqrt_Real(double x);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Sqrt_Real(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1241,6 +1306,27 @@ tmpl_CDouble_Tan(tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Tan(tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Tanh                                                     *
+ *  Purpose:                                                                  *
+ *      Compute the hyperbolic tangent of a complex number z.                 *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble tanh_z:                                            *
+ *          The hyperbolic tangent of z.                                      *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Tanh(tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Tanh(tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

@@ -1,7 +1,5 @@
 Finish Proofreading:
 	Complex
-		complex_sqrt_real
-			sqrt of real number, allowing negative real numbers.
 		complex_log10
 		complex_logb
 			complex log in different bases.

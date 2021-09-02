@@ -149,4 +149,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Sqrt(tmpl_ComplexLongDouble z)
     return sqrt_z;
 }
 /*  End of tmpl_CLDouble_Sqrt.                                                */
-
