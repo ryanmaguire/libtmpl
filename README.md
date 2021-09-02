@@ -25,7 +25,6 @@
     1. [The Mathematicians Programming Library](#TheMathProgLib)
     2. [Installation (Unix-Like)](#InstallUnix)
     3. [Installation (Window)](#InstallWindows)
-    4. [Loading libtmpl](#Loadinglibtmp)
 2. [tmpyl (Python Wrapper)](#tmpyl)
     1. [Installation](#InstallUnixtmpyl)
 3. [tmppl (C++ Wrapper)](#tmppl)
@@ -175,47 +174,30 @@ phrase "tmpl" is preprended to all functions to avoid name conflicts.
 Abstract algebra (groups), topology.
 
 ## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
-Simply run the Makefile with:
+Run the Makefile with (requires sudo privileges):
 ```
 make
 ```
-Note, this requires sudo privileges. This has been tested on various GNU/Linux
-distributions, macOS, and FreeBSD.
-
-To compile with OpenMP (which is highly recommended since it has huge
-computational benefits), run:
+To compile with OpenMP (highly recommended) run:
 ```
 make omp
 ```
-
-You'll of course need a compiler that supports OpenMP.
-**The default compiler on macOS does NOT support OpenMP.** Homebrew allows one
-to install alternative versions of LLVM's clang and GNU's gcc, but Apple's
-version of clang does not support the `-fopenmp` option at the time of this
-writing.
-
-**If you do not have sudo privileges, use the in-place option:**
+**If you do not have sudo privileges, use the in-place option**
+The inplace method will place libtmpl.so in `libtmpl/`. You will NOT have
+the header files placed in `/usr/local/include/` and you will therefore need to
+pass the `-I` and `-L` options to your compiler whenever you want to use
+libtmpl.
 ```
 make inplace
 ```
-
 And for inplace with omp support
 ```
 make omp_inplace
 ```
-
-This will place libtmpl.so in this directory. You will NOT have
-the header files placed in /usr/local/include/ and you will therefore need to
-pass the -I and -L options to your compiler whenever you want to use libtmpl.
-You may also need to update the environment variable LD_LIBRARY_PATH. This
-needs to have the location of libtmpl.so in it.
-
-There is also `make.sh` which is a shell script written in bash that has the
-same functionality as `Makefile` except that various pedantic compiler options
-are passed to the compiler. This is to ensure as best as possible that the code
-is written in strictly compliant C89/C90 code. This has been tested with several
-compilers, including GCC (GNU), Clang (LLVM), TCC (Tiny C Compiler), and
-PCC (Portable C Compiler).
+**After running `make`, source your `.bashrc` file:**
+```
+source ~/.bashrc
+```
 
 ### Some Warnings
 On Debian GNU/Linux 10 (Buster), there are two problems with PCC and TCC.
@@ -232,27 +214,6 @@ compiles libtmpl without error.
 In both cases, the problem does not seem to be with libtmpl, but with the
 particular versions of those compilers. At any rate, clang and gcc compile
 without error, and without warnings :)
-
-## Loading libtmpl <a name="Loadinglibtmp"></a>
-The `make.sh` script will check your `.bashrc` file for the the following.
-If libtmpl fails to load (ld warning) or if tmpyl (the Python extension) fails
-to import, try adding this. For macOS users, add this line to `.bash_profile`
-or whatever the zsh equivalent is.
-```
-# Needed for loading libtmpl.
-LD_LIBRARY_PATH=/usr/local/lib
-export LD_LIBRARY_PATH
-```
-
-**If you used the inplace install method, you will need to add libtmpl/ to**
-**your path**. For example, if libtmpl is located in
-`/home/username/Documents/libtmpl/`, add the following to `.bashrc`
-(or the equivalent of whatever shell you are using):
-```
-# Needed for loading libtmpl.
-LD_LIBRARY_PATH="/home/username/Documents/libtmpl/"
-export LD_LIBRARY_PATH
-```
 
 ## Installation (Windows) <a name="InstallWindows"></a>
 Step 1: Remove Windows and install a nice Linux distribution. I recommend
@@ -307,7 +268,7 @@ Python 3. If numpy is available, tmpyl can be built with numpy support. This
 allows one to pass arrays to libtmpl functions. The `setup.py` script will
 determine this for you, and no extra effort is needed.
 
-## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnixtmpyl"></a>
+## Installation <a name="InstallUnixtmpyl"></a>
 The easiest way to install tmpyl is with pip.
 Navigate to the `tmpyl` directory of this repository and run:
 ```
@@ -317,22 +278,14 @@ pip install .
 You can use python itself. Replace `pythonx` with either `python2`,
 `python3`, or `python`, depending on what you have installed.
 ```
+sudo pythonx setup.py install
+```
+If you lack sudo privileges, run:
+```
 pythonx setup.py install
 ```
-pip is the preferred method since one can easily uninstall tmpyl with:
-```
-pip uninstall tmpyl
-```
-If installed with python, you'll need to manually remove the generated files.
-On Unix-like systems (GNU, Linux, FreeBSD, macOS), there is the `build/`
-directory, placed in `libtmpl/tmpyl/build`, and there are two files:
-```
-/usr/local/lib/pythonx.x/tmpyl.*.so
-/usr/local/lib/pythonx.x/dist-packages/tmpyl-*.egg-info
-```
-Where the `x.x` is determined by the Python version, and the `*` is determined
-by your computer architecture and operating system. To uninstall, simply remove
-these files and the entire `libtmpl/tmpyl/build` directory.
+The `.so` file will be placed in `tmpyl/build/lib/`. Move this file to wherever
+you wish, just make sure it is in your `PATH` in order to import `tmpyl`.
 
 # tmppl
 `tmppl` is the C++ wrapper for `libtmpl`. There is a Makefile in the

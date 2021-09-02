@@ -158,18 +158,15 @@ if [ $INPLACE == 0 ]; then
     sudo mv $SONAME $SODIR
 fi
 
-LDPATH=/usr/local/lib
-if [[ $LD_LIBRARY_PATH == "" ]]; then
-    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LDPATH"
+if [ $INPLACE == 0 ]; then
+    LDPATH="/usr/local/lib"
+else
+    LDPATH="$(pwd)"
+fi
+
+if [[ $LD_LIBRARY_PATH != *$LDPATH* ]]; then
     echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
-    echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
-    echo "export LD_LIBRARY_PATH" >> ~/.bashrc
-    source ~/.bashrc
-elif [[ $LD_LIBRARY_PATH != *"$LDPATH"* ]]; then
-    CREATE_NEW_LD_PATH="LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LDPATH"
-    echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
-    echo "$CREATE_NEW_LD_PATH" >> ~/.bashrc
-    echo "export LD_LIBRARY_PATH" >> ~/.bashrc
+    echo 'export LD_LIBRARY_PATH=$LDPATH:$LD_LIBRARY_PATH"' >> ~/.bashrc
     source ~/.bashrc
 fi
 
@@ -194,4 +191,3 @@ if [ $INPLACE == 1 ]; then
     echo -e "\tdirectories using the -I and -L option as follows:"
     echo -e "\t\tgcc -I$(pwd)/../ -L$(pwd)/ my_file.c -o my_output -ltmpl"
 fi
-

@@ -62,7 +62,7 @@ DET_END_FILE = ./det_end.c
 # Name of the executable create by DET_END_FILE.
 DET_END_EXEC = det_end_out
 
-#   Location of source files for all sub-libraries.
+# Location of source files for all sub-libraries.
 SRCS = ./src/**/*.c
 SRCS_LINK = ./*.o
 
@@ -76,6 +76,7 @@ make:
 	make compile
 	make link
 	make clean
+	make create_ld_var
 
 inplace:
 	make clean
@@ -83,6 +84,7 @@ inplace:
 	make compile_inplace
 	make link_inplace
 	make clean_inplace
+	make create_ld_var_inplace
 
 # Same as make, but compiling with OpenMP support.
 omp:
@@ -93,6 +95,7 @@ omp:
 	make compile_omp
 	make link_omp
 	make clean
+	make create_ld_var
 
 # Same as inplace, but compiling with OpenMP support.
 omp_inplace:
@@ -101,6 +104,7 @@ omp_inplace:
 	make compile_omp_inplace
 	make link_omp_inplace
 	make clean_inplace
+	make create_ld_var_inplace
 
 clean:
 	rm -f *.so *.o
@@ -153,3 +157,14 @@ uninstall:
 	sudo rm -f $(SODIR)/$(SONAME)
 	sudo rm -rf $(INCLUDE_TARGET)/
 
+create_ld_var:
+ifeq (,$(findstring /usr/local/lib,$(LD_LIBRARY_PATH)))
+	echo '\n# Needed for loading libtmpl.' >> ~/.bashrc
+	echo 'export LD_LIBRARY_PATH="LD_LIBRARY_PATH:/usr/local/lib"' >> ~/.bashrc
+endif
+
+create_ld_var_inplace:
+ifeq (,$(findstring $(pwd),$(LD_LIBRARY_PATH)))
+	echo '\n# Needed for loading libtmpl.' >> ~/.bashrc
+	echo 'export LD_LIBRARY_PATH="LD_LIBRARY_PATH:$(pwd)"' >> ~/.bashrc
+endif
