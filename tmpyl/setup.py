@@ -21,8 +21,8 @@
 #       This file builds tmpyl, the Python Extension module for libtmpl.       #
 #       tmpyl is built using the Python-C API and no python code is            #
 #       used, other than this setup.py file. Because of this I can only        #
-#       guarantee tmpyl will build with CPython. Thatis , I've never tested it #
-#       with PyPy or the other implementations of the Python language.         #
+#       guarantee tmpyl will build with CPython. That is, I've never tested    #
+#       it with PyPy or the other implementations of the Python language.      #
 #   Notes:                                                                     #
 #       tmpyl builds with both Python 2 and Python 3. There are macros inside  #
 #       the C source files to check which python version is being used. There  #
@@ -73,11 +73,7 @@ source_files = [
 ]
 
 # Optional arguments for the compiler.
-optional_args = [
-    "-Wall",
-    "-Wextra",
-    "-Wconversion"
-]
+optional_args = []
 
 # Create the module.
 setup(name='tmpyl',
