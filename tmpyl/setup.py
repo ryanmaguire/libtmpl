@@ -47,10 +47,10 @@ if sys.version_info[0] > 2 and sys.version_info[1] > 5:
     # TMPYL_HAS_NUMPY by setting it to zero.
     try:
         import numpy
-        include=[numpy.get_include()]
+        include=['../../', numpy.get_include()]
         tmpyl_macros=[("TMPYL_HAS_NUMPY", 1)]
     except ModuleNotFoundError:
-        include=[]
+        include=['../../']
         tmpyl_macros=[("TMPYL_HAS_NUMPY", 0)]
 
 # For older versions, use ImportError.
@@ -59,10 +59,10 @@ else:
     # Again, check if numpy is available.
     try:
         import numpy
-        include=[numpy.get_include()]
+        include=['../../', numpy.get_include()]
         tmpyl_macros=[("TMPYL_HAS_NUMPY", 1)]
     except ImportError:
-        include=[]
+        include=['../../']
         tmpyl_macros=[("TMPYL_HAS_NUMPY", 0)]
 
 # List of files to be compiled for tmpyl.
@@ -90,7 +90,7 @@ setup(name='tmpyl',
                     extra_compile_args=optional_args,
                     define_macros=tmpyl_macros,
                     include_dirs=include,
-                    library_dirs=['/usr/local/lib'],
+                    library_dirs=['/usr/local/lib', '../'],
                     libraries=['tmpl'])
           ]
      )
