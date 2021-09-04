@@ -16,18 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_get_low_word32                              *
+ *                           tmpl_get_high_word64                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains source code for getting the "low word" of an IEEE754         *
- *      single precision 32-bit floating point number. This is the            *
- *      fractional part of the number.                                        *
+ *      Contains source code for getting the "high word" of an IEEE754        *
+ *      double precision 64-bit floating point number. This is the            *
+ *      exponent part of the number and the sign.                             *
  *  Method:                                                                   *
- *      Get the 32-bit unsigned integer equivalent of the single-precision    *
- *      number and perform bitwise AND with the magic number                  *
- *      11111111111111111111111_2                                             *
- *          = 8388607                                                         *
- *          = 0x7FFFFF (in hexidecimal)                                       *
+ *      Get the unsigned integer equivalent of the double-precision number,   *
+ *      bit shift it over 52-binary digits.                                   *
  *  NOTES:                                                                    *
  *      While the code is written in ANSI C, this is NOT portable since it    *
  *      assumes various things. This part of the code makes the following     *
@@ -60,19 +57,27 @@
  ******************************************************************************/
 
 /*  Definitions, typedefs, and prototypes found here.                         */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
-/*  Computes the low word of a 32-bit floating-point number.                  */
-tmpl_uint32 tmpl_Get_Low_Word32(tmpl_IEEE754_Word32 x)
+/*  Computes the high word of a 64-bit floating-point number.                 */
+tmpl_uint32 tmpl_Get_High_Word64(tmpl_IEEE754_Word64 x)
 {
-    /*  x.real is a float. Use the union and look at x.integer. This will     *
+    /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *
-     *  a 32-bit unsigned integer.                                            */
-    tmpl_uint32 out = x.integer;
+     *  an unsigned long.                                                     */
+    tmpl_uint64 out = x.integer;
 
-    /*  Bit-wise AND can help us zero out the high-word.                      */
-    out = out & 0x7FFFFF;
-    return out;
+    /*  The first bit is the sign, the next 11 are the exponent, and the last *
+     *  52 are the fractional parts. We don't care about the fractional part  *
+     *  since we are trying to get the high-word. Shift the "decimal"         *
+     *  (i.e. the "point") over 52 digits. This is equivalent to dividing by  *
+     *  2^52 and looking at the integer part, but is a lot faster.            *
+     *                                                                        *
+     *  To put the problem into decimal, if asked to divide 1000 by 100, you  *
+     *  would not perform long division, but rather just shift the decimal    *
+     *  point over by 2, giving 10. This is the binary version of this.       */
+    out = out >> 52;
+    return (tmpl_uint32)out;
 }
-/*  End of tmpl_Get_Low_Word32.                                               */
+/*  End of tmpl_Get_High_Word64.                                              */
 

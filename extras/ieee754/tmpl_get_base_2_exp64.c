@@ -89,7 +89,7 @@
  ******************************************************************************/
 
 /*  Function prototype and tmpl_IEEE754_Word64 data type defined here.        */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
 /*  Function for extracting the exponent value of a 64-bit double.            */
 tmpl_int32 tmpl_Get_Base_2_Exp64(tmpl_IEEE754_Word64 w)

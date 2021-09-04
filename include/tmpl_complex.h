@@ -70,8 +70,8 @@
 #define TMPL_COMPLEX_H
 
 /*  If using with C++ (and not C) we need to wrap the entire header file in   *
- *  an extern "C" statement. Check if C++ is being using with __cplusplus.    */
-#ifdef __cplusplus 
+ *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -133,7 +133,7 @@ extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
  *      ships with Debian GNU/Linux 10 (Buster). More recent versions, such   *
  *      as the one that comes with Debian GNU/Linux 11 (Bullseye) can handle  *
  *      these expressions. At any rate, LLVM's clang and GNU's GCC can both   *
- *      compile these expressions, as can PCC (the Portable Compiler).        */ 
+ *      compile these expressions, as can PCC (the Portable Compiler).        */
 
 /*  Complex NaN, defined as NaN + i NaN.                                      */
 extern const tmpl_ComplexFloat tmpl_CFloat_NaN;

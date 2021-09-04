@@ -105,7 +105,7 @@
  ******************************************************************************/
 
 /*  Function prototype and tmpl_IEEE754_Word32 data type defined here.        */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
 /*  Function for extracting the exponent value of a 32-bit float.             */
 tmpl_int32 tmpl_Get_Base_2_Exp32(tmpl_IEEE754_Word32 w)

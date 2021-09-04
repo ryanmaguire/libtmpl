@@ -3,206 +3,74 @@
 #include <libtmpl/include/tmpl_math.h>
 
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#include <math.h>
+#define TMPL_LOGL_A00 2.00000000000000000000000000000000L
+#define TMPL_LOGL_A01 0.66666666666666666666666666666667L
+#define TMPL_LOGL_A02 0.40000000000000000000000000000000L
+#define TMPL_LOGL_A03 0.28571428571428571428571428571429L
+#define TMPL_LOGL_A04 0.22222222222222222222222222222222L
+#define TMPL_LOGL_A05 0.18181818181818181818181818181818L
+#define TMPL_LOGL_A06 0.15384615384615384615384615384615L
+#define TMPL_LOGL_A07 0.13333333333333333333333333333333L
+#define TMPL_LOGL_A08 0.11764705882352941176470588235294L
+#define TMPL_LOGL_A09 0.10526315789473684210526315789474L
+#define TMPL_LOGL_A10 0.095238095238095238095238095238095L
+#define TMPL_LOGL_A11 0.086956521739130434782608695652174L
+#define TMPL_LOGL_A12 0.080000000000000000000000000000000L
+
+/* 
+ * Not needed.
+ * #define TMPL_LOGL_A13 0.074074074074074074074074074074074L
+ * #define TMPL_LOGL_A14 0.068965517241379310344827586206897L
+ * #define TMPL_LOGL_A15 0.064516129032258064516129032258065L
+ */
+
 long double tmpl_LDouble_Log(long double x)
 {
-    return logl(x);
-}
-
-#else
-
-#include <float.h>
-
-long double tmpl_LDouble_Log(long double x)
-{
-    long double mant, A, A_sq, log_x, factor, expo;
+    long double mantissa, A, A_sq, poly;
+    signed long int exponent;
 
     if (x < 0.0L)
         return tmpl_NaN_L;
     else if (x == 0.0L)
         return -tmpl_Infinity_L;
 
-    if (x < 1.0L)
-        mant = 1.0L/x;
-    else
-        mant = x;
+    tmpl_LDouble_Base2_Exp_and_Mant(x, &mantissa, &exponent);
 
-    expo = 0.0L;
-
-#if LDBL_MAX_10_EXP >= 1024
-    while (mant >= 1.0E1024L)
+    if (mantissa > 1.5L)
     {
-        mant *= 1.0E-1024L;
-        expo += 1024.0L;
+        mantissa *= 0.5L;
+        exponent += 1L;
     }
 
-    if (mant >= 1.0E512L)
-    {
-        mant *= 1.0E-512L;
-        expo += 512.0L;
-    }
-
-    if (mant >= 1.0E256L)
-    {
-        mant *= 1.0E-256L;
-        expo += 256.0L;
-    }
-
-    if (mant >= 1.0E128L)
-    {
-        mant *= 1.0E-128L;
-        expo += 128.0L;
-    }
-
-    if (mant >= 1.0E64L)
-    {
-        mant *= 1.0E-64L;
-        expo += 64.0L;
-    }
-#elif LDBL_MAX_10_EXP >= 512
-    while (mant >= 1.0E512L)
-    {
-        mant *= 1.0E-512L;
-        expo += 512.0L;
-    }
-
-    if (mant >= 1.0E256L)
-    {
-        mant *= 1.0E-256L;
-        expo += 256.0L;
-    }
-
-    if (mant >= 1.0E128L)
-    {
-        mant *= 1.0E-128L;
-        expo += 128.0L;
-    }
-
-    if (mant >= 1.0E64L)
-    {
-        mant *= 1.0E-64L;
-        expo += 64.0L;
-    }
-#elif LDBL_MAX_10_EXP >= 256
-    while (mant >= 1.0E256L)
-    {
-        mant *= 1.0E-256L;
-        expo += 256.0L;
-    }
-
-    if (mant >= 1.0E128L)
-    {
-        mant *= 1.0E-128L;
-        expo += 128.0L;
-    }
-
-    if (mant >= 1.0E64L)
-    {
-        mant *= 1.0E-64L;
-        expo += 64.0L;
-    }
-#elif LDBL_MAX_10_EXP >= 128
-    while (mant >= 1.0E128L)
-    {
-        mant *= 1.0E-128L;
-        expo += 128.0L;
-    }
-
-    if (mant >= 1.0E64)
-    {
-        mant *= 1.0E-64L;
-        expo += 64.0L;
-    }
-#elif LDBL_MAX_10_EXP >= 64
-    while (mant >= 1.0E64L)
-    {
-        mant *= 1.0E-64L;
-        expo += 64.0L;
-    }
-#endif
-
-    if (mant >= 1.0E32L)
-    {
-        mant *= 1.0E-32L;
-        expo += 32.0L;
-    }
-
-    if (mant >= 1.0E16L)
-    {
-        mant *= 1.0E-16L;
-        expo += 16.0L;
-    }
-
-    if (mant >= 1.0E8L)
-    {
-        mant *= 1.0E-8L;
-        expo += 8.0L;
-    }
-
-    if (mant >= 1.0E4L)
-    {
-        mant *= 1.0E-4L;
-        expo += 4.0L;
-    }
-
-    if (mant >= 1.0E2L)
-    {
-        mant *= 1.0E-2L;
-        expo += 2.0L;
-    }
-
-    if (mant >= 1.0E1L)
-    {
-        mant *= 1.0E-1L;
-        expo += 1.0L;
-    }
-
-    factor = 2.3025850929940456840179914546844L * expo;
-
-    if (mant >= 8.0L)
-    {
-        mant *= 0.125L;
-        factor += 2.0794415416798359282516963643745L;
-    }
-    else if (mant >= 4.0L)
-    {
-        mant *= 0.25L;
-        factor += 1.3862943611198906188344642429164L;
-    }
-    else if (mant >= 2.0L)
-    {
-        mant *= 0.5L;
-        factor += 0.69314718055994530941723212145818L;
-    }    if (mant >= 1.5L)
-    {
-        mant = 0.666666666666666666666667L*mant;
-        factor = factor + 0.4054651081081643819780131L;
-    }
-
-    A = (mant - 1.0L)/(mant + 1.0L);
+    A = (mantissa - 1.0L) / (mantissa + 1.0L);
     A_sq = A*A;
 
-    log_x = 0.095238095238095238L*A_sq + 0.10526315789473684L;
-    log_x = log_x*A_sq + 0.117647058823529411764706L;
-    log_x = log_x*A_sq + 0.133333333333333333333333L;
-    log_x = log_x*A_sq + 0.153846153846153846153846L;
-    log_x = log_x*A_sq + 0.181818181818181818181818L;
-    log_x = log_x*A_sq + 0.222222222222222222222222L;
-    log_x = log_x*A_sq + 0.285714285714285714285714L;
-    log_x = log_x*A_sq + 0.400000000000000000000000L;
-    log_x = log_x*A_sq + 0.666666666666666666666667L;
-    log_x = log_x*A_sq + 2.000000000000000000000000L;
-    log_x = A*log_x;
+    poly = TMPL_LOGL_A12*A_sq + TMPL_LOGL_A11;
+    poly = poly * A_sq + TMPL_LOGL_A10;
+    poly = poly * A_sq + TMPL_LOGL_A09;
+    poly = poly * A_sq + TMPL_LOGL_A08;
+    poly = poly * A_sq + TMPL_LOGL_A07;
+    poly = poly * A_sq + TMPL_LOGL_A06;
+    poly = poly * A_sq + TMPL_LOGL_A05;
+    poly = poly * A_sq + TMPL_LOGL_A04;
+    poly = poly * A_sq + TMPL_LOGL_A03;
+    poly = poly * A_sq + TMPL_LOGL_A02;
+    poly = poly * A_sq + TMPL_LOGL_A01;
+    poly = poly * A_sq + TMPL_LOGL_A00;
 
-    log_x = log_x + factor;
-
-    if (x < 1.0L)
-        return -log_x;
-    else
-        return log_x;
+    return tmpl_Natural_Log_of_Two_L*(long double)exponent + A*poly;
 }
 
-#endif
-/*  End of #if __HAS_C99_MATH_H__ == 0                                        */
-
+#undef TMPL_LOGL_A00
+#undef TMPL_LOGL_A01
+#undef TMPL_LOGL_A02
+#undef TMPL_LOGL_A03
+#undef TMPL_LOGL_A04
+#undef TMPL_LOGL_A05
+#undef TMPL_LOGL_A06
+#undef TMPL_LOGL_A07
+#undef TMPL_LOGL_A08
+#undef TMPL_LOGL_A09
+#undef TMPL_LOGL_A10
+#undef TMPL_LOGL_A11
+#undef TMPL_LOGL_A12
