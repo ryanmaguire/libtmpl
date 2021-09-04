@@ -22,7 +22,9 @@
  *      This file is used in both the Makefile and make.sh shell script when  *
  *      libtmpl is built. It determines the endianness of your platform and   *
  *      creates the file include/tmpl_endianness.h in the process. This file  *
- *      is NOT directly part of libtmpl.                                      *
+ *      is not directly part of libtmpl, but you'll need to run it for        *
+ *      libtmpl to function properly. If your compiler gives you an error     *
+ *      that libtmpl/include/tmpl_endianness.h was not found, run this.       *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -57,6 +59,8 @@
  *      Made the code more portable by allowing CHAR_BIT to be any value.     *
  *  2021/08/24: Ryan Maguire                                                  *
  *      Removed string.h dependency and simplified a bit.                     *
+ *  2021/09/3:  Ryan Maguire:                                                 *
+ *      Added macro for floating-point endianness for IEEE-754 support.       *
  ******************************************************************************/
 
 /*  Macros for determining the size of integer data types found here. In      *
@@ -78,6 +82,74 @@ int main(void)
         unsigned long int n;
         unsigned char arr[sizeof(unsigned long int)];
     } e;
+
+    /*  libtmpl has many tools that can take advantage of the IEEE-754        *
+     *  floating point format, if your compiler supports it. The format does  *
+     *  not specify the endianness of floating point numbers, so this         *
+     *  function attempts to determine this. If your compiler does not        *
+     *  support IEEE-754 format at all (most do in modern times), the         *
+     *  endianness will be set to unknown and none of those tools will be     *
+     *  used in libtmpl.                                                      */
+#if defined(__STDC_IEC_559__)
+
+    /*  The IEEE-754 format specifies that a 64-bit float is comprised of a   *
+     *  sign bit (positive or negative), 11 bits for the exponent (the value  *
+     *  b in the expression x = 1.m * 2^b), and 52 bits for the mantissa (the *
+     *  value m in x = 1.m * 2^b). Big endian will have sign -> expo -> mant, *
+     *  whereas little endian will have mant -> expo -> sign. Use a union     *
+     *  with two structs and a double to determine which one, if either, is   *
+     *  implemented.                                                          */
+    union {
+
+        /*  Store the bits in a bit-field. This allows us to store an exact   *
+         *  number of bits (up to 16, per the standard) for a single variable *
+         *  inside the struct. Use this to have 1 bit for the sign, 11 bits   *
+         *  for the exponent, and 52 bits for the mantissa. Note, to avoid    *
+         *  padding (adding extra redundant bits), Ensure that the 4-bit      *
+         *  mantissa component is adjacent to the 11 bit exponent. This way   *
+         *  the sign, exponent, and smallest mantissa component will occupy a *
+         *  16 bit block and no padding will be needed.                       */
+        struct _big_bits {
+            unsigned int sign : 1;
+            unsigned int expo : 11;
+            unsigned int man0 : 4;
+            unsigned int man1 : 16;
+            unsigned int man2 : 16;
+            unsigned int man3 : 16;
+        } big_bits;
+
+        /*  Little endianness is the reverse of big endianness.               */
+        struct _little_bits {
+            unsigned int man3 : 16;
+            unsigned int man2 : 16;
+            unsigned int man1 : 16;
+            unsigned int man0 : 4;
+            unsigned int expo : 11;
+            unsigned int sign : 1;
+        } little_bits;
+
+        /*  And lastly, a double that the above structs are representing.     */
+        double r;
+    } d;
+
+    /*  Same this for single precision.                                       */
+    union {
+        struct _big_bitsf {
+            unsigned int sign : 1;
+            unsigned int expo : 8;
+            unsigned int man0 : 7;
+            unsigned int man1 : 16;
+        } big_bits;
+        struct _little_bitsf {
+            unsigned int man1 : 16;
+            unsigned int man0 : 7;
+            unsigned int expo : 8;
+            unsigned int sign : 1;
+        } little_bits;
+        float r;
+    } f;
+#endif
+/*  End of #if defined(__STDC_IEC_559__).                                     */
 
     /*  n is for indexing and power keeps track of the power of an integer.   */
     unsigned long int n, power;
@@ -122,7 +194,7 @@ int main(void)
     power = 1UL << CHAR_BIT;
 
     /*  Write out 76543210 in base 2^CHAR_BIT by adding.                      */
-    for (n = 1; n < sizeof(unsigned long int); ++n)
+    for (n = 1UL; n < sizeof(unsigned long int); ++n)
     {
         e.n += n * power;
 
@@ -139,7 +211,7 @@ int main(void)
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  This file is part of libtmpl.                                             *\n");
     fprintf(fp, " *                                                                            *\n");
-    fprintf(fp, " *  libtmpl is free software: you can redistribute it and/or modify it        *\n");
+    fprintf(fp, " *  libtmpl is free software: you can redistribute it and/or modify           *\n");
     fprintf(fp, " *  it under the terms of the GNU General Public License as published by      *\n");
     fprintf(fp, " *  the Free Software Foundation, either version 3 of the License, or         *\n");
     fprintf(fp, " *  (at your option) any later version.                                       *\n");
@@ -155,9 +227,9 @@ int main(void)
     fprintf(fp, " *                              tmpl_endianness                               *\n");
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  Purpose:                                                                  *\n");
-    fprintf(fp, " *      This file is created by the det_enc.c file. It provides the macro     *\n");
-    fprintf(fp, " *      TMPL_ENDIANNESS which is used in various functions where the code     *\n");
-    fprintf(fp, " *      is endian specific.                                                   *\n");
+    fprintf(fp, " *      This file is created by the det_enc.c file. It provides the macros    *\n");
+    fprintf(fp, " *      TMPL_ENDIANNESS, TMPL_FLOAT_ENDIANNESS, and TMPL_DOUBLE_ENDIANNESS    *\n");
+    fprintf(fp, " *      which are used functions where the code is endian specific.           *\n");
     fprintf(fp, " ******************************************************************************/\n");
     fprintf(fp, "#ifndef TMPL_ENDIANNESS_H\n");
     fprintf(fp, "#define TMPL_ENDIANNESS_H\n\n");
@@ -170,22 +242,143 @@ int main(void)
      *  sizeof(unsigned long int) = n). If the zeroth entry of the array is   *
      *  0, we have little endian. If it is n-1, we have big endian. Anything  *
      *  between 0 and n-1 is mixed endian, and any other result is unknown.   *
-     *  There is one very rare case that needs to be handled. If              *
-     *  sizeof(unsigned long int) = 1, the we can't parse the array. If this  *
-     *  is true, your computer is very strange, and we'll return unknown.     */
+     *  There is one, extremely rare, exceptional case that needs to be       *
+     *  handled separately. If sizeof(unsigned long int) = 1, then the char   *
+     *  array will have one element, which is the same number as the unsigned *
+     *  long int value. Because of this we would be unable to determine the   *
+     *  endianness. If this is true, return unknown endian. I know of no      *
+     *  systems where sizeof(unsigned long int) = 1, but the ISO C90 standard *
+     *  does NOT specify that this is impossible, so we do this for the sake  *
+     *  of portability.                                                       */
     if (sizeof(unsigned long int) == 1)
-        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n\n");
+    {
+        /*  If your compiler supports C99 or higher, we can try this scheme   *
+         *  with unsigned long long int, which should definitely have sizeof  *
+         *  greater than 1 (but again, is NOT required to). Check this with   *
+         *  the standard macro __STDC_VERSION__.                              */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+        /*  Omitting comments since this is the exact same as before.         */
+        union {
+            unsigned long long int x;
+            unsigned char arr[sizeof(unsigned long long int)];
+        } ell;
+
+        unsigned long long int powerll, kll;
+
+        /*  The ULL suffix means unsigned long long.                          */
+        ell.x = 0ULL;
+        powerll = 1ULL << CHAR_BIT;
+
+        for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
+        {
+            ell.x += kll * powerll;
+            powerll = powerll << CHAR_BIT;
+        }
+
+        if (sizeof(unsigned long long int) == 1)
+            fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+        else if (ell.arr[0] == 0U)
+            fprintf(fp, "#define TMPL_ENDIANNESS TMPL_LITTLE_ENDIAN\n");
+        else if (ell.arr[0] == sizeof(unsigned long long int) - 1U)
+            fprintf(fp, "#define TMPL_ENDIANNESS TMPL_BIG_ENDIAN\n");
+        else if (ell.arr[0] < sizeof(unsigned long long int) - 1U)
+            fprintf(fp, "#define TMPL_ENDIANNESS TMPL_MIXED_ENDIAN\n");
+        else
+            fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+
+#else
+/*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.    */
+
+        /*  If we get here, sizeof(unsigned long int) = 1 and your compiler   *
+         *  does not support the C99, or higher, standard so unsigned long    *
+         *  long int may not be defined. Return unknown.                      */
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+#endif
+/*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
+
+    }
+    /* End of if (sizeof(unsigned long int) == 1).                            */
+
     else if (e.arr[0] == 0)
-        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_LITTLE_ENDIAN\n\n");
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_LITTLE_ENDIAN\n");
     else if (e.arr[0] == (sizeof(unsigned long int) - 1))
-        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_BIG_ENDIAN\n\n");
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_BIG_ENDIAN\n");
     else if ((0 < e.arr[0]) && (e.arr[0] < (sizeof(unsigned long int) - 1)))
-        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_MIXED_ENDIAN\n\n");
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_MIXED_ENDIAN\n");
     else
-        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n\n");
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+
+    /*  Now that integer endianness has been determined, try floating point.  *
+     *  It is almost always the same as integer, but on certain ARM           *
+     *  processors it is different.                                           */
+#if defined(__STDC_IEC_559__)
+
+    /*  Set the bits in the struct to represent the number 1.0 using the      *
+     *  IEEE-754 format. If the endianness is flipped, we should get          *
+     *  gibberish, whereas if its correct we should get 1.0.                  */
+    f.little_bits.sign = 0x0U;
+    f.little_bits.expo = 0x7FU;
+    f.little_bits.man0 = 0x0U;
+    f.little_bits.man1 = 0x0U;
+
+    /*  If the float in the union is actual 1, we have IEEE-754 support and   *
+     *  we have little endianness for float.                                  */
+    if (f.r == 1.0F)
+        fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_LITTLE_ENDIAN\n");
+
+    /*  Otherwise, try big endianness.                                        */
+    else
+    {
+        f.big_bits.sign = 0x0U;
+        f.big_bits.expo = 0x7FU;
+        f.big_bits.man0 = 0x0U;
+        f.big_bits.man1 = 0x0U;
+
+        if (f.r == 1.0F)
+            fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_BIG_ENDIAN\n");
+        else
+            fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+    }
+
+    /*  Do the same with with double.                                         */
+    d.little_bits.sign = 0x0U;
+    d.little_bits.expo = 0x3FFU;
+    d.little_bits.man0 = 0x0U;
+    d.little_bits.man1 = 0x0U;
+    d.little_bits.man2 = 0x0U;
+    d.little_bits.man3 = 0x0U;
+
+    /*  If the double in the union is actual 1, we have IEEE-754 support and  *
+     *  we have big endianness for double.                                    */
+    if (d.r == 1.0)
+        fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_LITTLE_ENDIAN\n");
+
+    /*  Otherwise, try big endian.                                            */
+    else
+    {
+        d.big_bits.sign = 0x0U;
+        d.big_bits.expo = 0x3FFU;
+        d.big_bits.man0 = 0x0U;
+        d.big_bits.man1 = 0x0U;
+        d.big_bits.man2 = 0x0U;
+        d.big_bits.man3 = 0x0U;
+
+        if (d.r == 1.0)
+            fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_BIG_ENDIAN\n");
+        else
+            fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+    }
+#else
+
+    /*  Define the floating-point endianness macro.                           */
+    fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+    fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+
+#endif
 
     /*  Print the end of the include guard.                                   */
-    fprintf(fp, "#endif\n");
+    fprintf(fp, "\n#endif\n");
     return 0;
 }
 /*  End of main.                                                              */

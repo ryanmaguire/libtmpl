@@ -16,18 +16,18 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_get_mantissa64                              *
+ *                           tmpl_get_low_word32                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains source code for getting the mantissa of an IEEE754 double    *
- *      precision floating point number. Given the number 1.m * 2^b, this     *
- *      returns 1.m. The value "b" is the exponent.                           *
+ *      Contains source code for getting the "low word" of an IEEE754         *
+ *      single precision 32-bit floating point number. This is the            *
+ *      fractional part of the number.                                        *
  *  Method:                                                                   *
- *      Extract the low-word via bitwise AND with the magic number            *
- *      0x000FFFFFFFFFFFFF and then add 0x3FF0000000000000, which is the      *
- *      hexidecimal representation for 1.0 in IEEE754 for 64-bit double.      *
- *      Treat this integer as a double according to the IEEE754 format and    *
- *      return.                                                               *
+ *      Get the 32-bit unsigned integer equivalent of the single-precision    *
+ *      number and perform bitwise AND with the magic number                  *
+ *      11111111111111111111111_2                                             *
+ *          = 8388607                                                         *
+ *          = 0x7FFFFF (in hexidecimal)                                       *
  *  NOTES:                                                                    *
  *      While the code is written in ANSI C, this is NOT portable since it    *
  *      assumes various things. This part of the code makes the following     *
@@ -56,25 +56,23 @@
  *      Little Endian systems. Mixed-Endian is not supported.                 *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       April 7, 2021                                                 *
+ *  Date:       January 22, 2021                                              *
  ******************************************************************************/
 
 /*  Definitions, typedefs, and prototypes found here.                         */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
-/*  Function for extracting the mantissa from a 64-bit floating point number. */
-double tmpl_Get_Mantissa64(tmpl_IEEE754_Word64 w)
+/*  Computes the low word of a 32-bit floating-point number.                  */
+tmpl_uint32 tmpl_Get_Low_Word32(tmpl_IEEE754_Word32 x)
 {
-    /*  Use the IEEE 754 64-bit union to convert between double and binary.   */
-    tmpl_IEEE754_Word64 out;
+    /*  x.real is a float. Use the union and look at x.integer. This will     *
+     *  give us the actual binary value of x.real and we can pretend it is    *
+     *  a 32-bit unsigned integer.                                            */
+    tmpl_uint32 out = x.integer;
 
-    /*  Use bitwise AND with 0x000FFFFFFFFFFFFF to extract the low word. Then *
-     *  add 0x3FF0000000000000 which is the hexidecimal representation of 1.0.*
-     *  This will give use 1.0 + 0.m = 1.m, which is what we want.            */
-    out.integer = (w.integer & 0x000FFFFFFFFFFFFF) | 0x3FF0000000000000;
-
-    /*  Return the double part from the IEEE 754 union data type.             */
-    return out.real;
+    /*  Bit-wise AND can help us zero out the high-word.                      */
+    out = out & 0x7FFFFF;
+    return out;
 }
-/*  End of tmpl_Get_Mantissa64.                                               */
+/*  End of tmpl_Get_Low_Word32.                                               */
 

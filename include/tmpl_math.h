@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -19,83 +19,48 @@
  *                                tmpl_math                                   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      This header file is provided to improve the portability of            *
- *      libtmpl. The C99 math library is a superset of the C89/C90            *
- *      version and contains float and long double support for all of the     *
- *      standard functions. So if "func" is provided in C89/C90, C99 contains *
- *      func as well as:                                                      *
- *          funcf:                                                            *
- *              Float version of func.                                        *
- *          funcl:                                                            *
- *              Long double version of func.                                  *
- *      For example, sinf, sinl, fabsf, fabsl, etc. The older C89/C90 math.h  *
- *      do not provide these functions, and rather if a function recieves a   *
- *      non-double (like passing a float to cos), then an implicit type       *
- *      conversion occurs, which may be computationally expensive. The funcf  *
- *      and funcl versions are meant to rid of this conversion step.          *
- *      For float and long double functions libtmpl uses, if available,       *
- *      these functions. Aliases for the functions in math.h are provided here*
- *      depending on whether or not the __TMPL_USING_C99_MATH_H__ macro is    *
- *      defined (it's defined in tmpl_config.h).                              *
+ *      This file attempts to provide a portable, fast, and accurate          *
+ *      implementation of libm for anyone to study and use. To avoid naming   *
+ *      conflicts, it does not use the names from the C standard library, but *
+ *      instead prepends tmpl and the data type in front of names. For        *
+ *      example, sine at double precision is the function tmpl_Double_Sin.    *
  *                                                                            *
- *      If your compiler supports the IEEE 754 standard for floating-point    *
- *      arithmetic (most do), then tmpl_math.h can be combined with           *
- *      tmpl_ieee754.h to provide in-house routines for the standard math     *
- *      functions like log, sqrt, etc. This is not to replace the standard or *
- *      reinvent the wheel, but mostly for the sake of learning how computers *
- *      work, the mathematics behind it, and understanding the IEEE 754       *
- *      format. I will note that the in-house functions tested with similar   *
- *      speed and accuracy as the functions provided by glibc                 *
- *      (GNU's C library).                                                    *
+ *      If your compiler supports the IEEE-754 format, you'll find that the   *
+ *      functions provided here are about as fast and as accurate as the ones *
+ *      provided in other implementations, such as glibc or open libm. The    *
+ *      ideas used mostly come from standard algorithms found in textbooks,   *
+ *      and nothing too fancy is attempted. The main goal is readability. As  *
+ *      such, the algorithms are heavily commented.                           *
  *                                                                            *
- *      There are also new functions in the C99 version, such as the          *
- *      hyperbolic trig functions, the copysign function, and more. These are *
- *      provided here for C89/C90 users, and the algorithms for these         *
- *      functions can be found in the math/ subdirectory of src/.             *
+ *      This file also provides functions that are not part of libm, but are  *
+ *      frequently used nonetheless. It also provides many mathematical       *
+ *      constants at float, double, and long double precisions.               *
  *                                                                            *
- *      I do not assume you are using a C99 capable compiler and instead      *
- *      assume strict C89/C90 (also called ANSI C) compliance. The code still *
- *      compiles on C99 and C11 compliant compilers. Adjust tmpl_config.h as  *
- *      needed.                                                               *
- *                                                                            *
- *      This file also provides NaN and infinity macros if they are not set.  *
  *      NOTE:                                                                 *
- *          Infinity is set as the standard macro HUGE_VAL defined in math.h  *
- *          and for most implementations this should do. Indeed, this is the  *
- *          same manner the Py_HUGE_VAL is set. The python source code issues *
- *          the following warning (cpython/Include/pymath.h):                 *
- *              HUGE_VAL is supposed to expand to a positive double infinity. *
- *              Python uses Py_HUGE_VAL instead because some platforms are    *
- *              broken in this respect.  We used to embed code in pyport.h to *
- *              try to worm around that, but different platforms are broken   *
- *              in conflicting ways.  If you're on a platform where HUGE_VAL  *
- *              is defined incorrectly, fiddle your Python config to          *
- *              #define Py_HUGE_VAL to something that works on your platform. *
+ *          There is no real portable way to implement infinity in strictly   *
+ *          compliant ISO C. Compilers implementing the IEEE-754 have a means *
+ *          of supporting infinity, but compilers that don't may not. The     *
+ *          way glibc implements infinity for compiler lacking IEEE-754       *
+ *          support is via the number 1.0E10000, which is guaranteed to       *
+ *          overflow. This is undefined behavior, but in practice it works.   *
+ *          This implementation uses similar tactics.                         *
  *                                                                            *
- *          Similarly, NaN is defined as HUGE_VAL * 0, which should be        *
- *          infinity times zero, which is Not-A-Number. Python does this as   *
- *          well, issuing the following warning:                              *
- *              Py_NAN                                                        *
- *              A value that evaluates to a NaN. On IEEE 754 platforms INF*0  *
- *              or INF/INF works. Define Py_NO_NAN in pyconfig.h if your      *
- *              platform doesn't support NaNs.                                *
- *          If necessary, redefine NAN here to whatever your platform allows. *
- *      Lastly, this file provides a bunch of constants that are commonly     *
- *      used, like sqrt(2) and multiples of pi.                               *
+ *          A similar problems arises with NAN. IEEE-754 has a means of       *
+ *          defining NAN, but compilers lacking this may not. The standard    *
+ *          trick is to use 0.0 / 0.0, but this may also be undefined         *
+ *          behavior. Again, in practice this works fine.                     *
  *                                                                            *
  *      This file is a fork of the code I wrote for rss_ringoccs. That        *
  *      library is also released under GPL3.                                  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) math.h:                                                               *
- *      Standard library for mathematical functions like sin, cos, atan.      *
- *  2.) float.h:                                                              *
- *      Standard library which contains macros for the smallest and largest   *
- *      values allowed by your system.                                        *
- *  3.) tmpl_config.h:                                                        *
- *      Header file which contains the __TMPL_HAS_C99_MATH_H__ macro. This    *
- *      tells the compiler how to build libtmpl.                              *
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file containing Booleans.                                  *
+ *  2.) tmpl_endianness.h:                                                    *
+ *          Header file containing the endianness of your system. This file   *
+ *          is built with det_end.c in libtmpl/. The Makefile automatically   *
+ *          runs this, as does the make.sh script.                            *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -109,17 +74,255 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2020/09/12 (Ryan Maguire):                                                *
+ *  2020/09/12: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/02/16 (Ryan Maguire):                                                *
+ *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
+ *  2021/09/03: Ryan Maguire                                                  *
+ *      Rewriting to increase portability.                                    *
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
 #ifndef TMPL_MATH_H
 #define TMPL_MATH_H
 
+/*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
+
+/*  Endianness macros are here.                                               */
+#include <libtmpl/include/tmpl_endianness.h>
+
+/*  The following comment block explains the IEEE-754 format. Those who know  *
+ *  the format can skip it.                                                   */
+
+/******************************************************************************
+ *  For a non-negative integer that is less than 2^64, we can store the       *
+ *  number in a computer using binary. That is, 64 bits of zeroes and ones    *
+ *  which represent our original base-10 integer. With this we can store      *
+ *  every integer between 0 and 2^64-1.                                       *
+ *                                                                            *
+ *    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        *
+ *    ----------------------------------------------------------------        *
+ *                              Integer Part                                  *
+ *                                                                            *
+ *  If we want to represent a "signed" integer, one that can be negative or   *
+ *  positive, or zero, we require more information. The solution is to        *
+ *  sacrifice one of the 64 bits and reserve it as the "sign." In doing so we *
+ *  we can now store every integer between -(2^63-1) and +(2^63-1). Oddly     *
+ *  enough, the difference between these two numbers is 2^64-2, not 2^64-1.   *
+ *  In reserving a bit for the sign, we now have two zeroes. A "positive"     *
+ *  zero and a "negative" zero, These are called "signed zeroes." When using  *
+ *  these, compilers treat them nearly the same, and -0 == +0 returns true.   *
+ *                                                                            *
+ *    x xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx       *
+ *    - ---------------------------------------------------------------       *
+ *  Sign                        Integer Part                                  *
+ *                                                                            *
+ *  Note, the left-most bit does not need to be the signed bit. This will be  *
+ *  determined by the "endianness" or your system. To store a real number, or *
+ *  to at least approximate, one might guess that we simply insert a point    *
+ *  half-way and treat this as a decimal:                                     *
+ *                                                                            *
+ *    x xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx      *
+ *    - -------------------------------- -------------------------------      *
+ *  Sign         Integer Part                      Fractional Part            *
+ *                                                                            *
+ *  This turns out to be a very bad idea since we cannot represent very many  *
+ *  numbers with this. The largest number is now 2^32-1, or roughly 4 billion.*
+ *  Any larger number would be treated as infinity. On the other hand, we     *
+ *  only have about 9 significant digits past the decimal point (in decimal)  *
+ *  whereas many applications need up to 16. The solution is the IEEE754      *
+ *  Floating Point Format. It represents a real number as follows:            *
+ *                                                                            *
+ *    s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx      *
+ *    - ----------- ----------------------------------------------------      *
+ *  Sign  Exponent                     Fraction                               *
+ *                                                                            *
+ *  The idea is to use scientific notation in binary, writing a number as     *
+ *                                                                            *
+ *        y = s * 1.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_2    *
+ *              * 2^(eeeeeeeeeee_2 - 1111111111_2)                            *
+ *                                                                            *
+ *  Where _2 indicates this is all base 2. This "magic number" being          *
+ *  subtracted is 1111111111_2 = 2^10-1 = 1023.                               *
+ *                                                                            *
+ *  Since we know the first digit in scientific notation is always 1, we don't*
+ *  need to waste a bit and can store 53 bits worth of the fractional part    *
+ *  using just 52 bits. The eeeeeeeeeee - 1023 needs an explaination. We want *
+ *  to store fractional numbers between 0 and 1 and so we need negative       *
+ *  exponents. We could reserve a second bit for the sign of the exponent,    *
+ *  but the standard is to just subtract 2^10-1 from the exponent. The last   *
+ *  thing is to say that all zeroes, or all zeros plus the sign bit,          *
+ *  represents zero and not +/- 2^-1023.                                      *
+ *                                                                            *
+ *  Now for some examples:                                                    *
+ *    0 00000000001 0000000000000000000000000000000000000000000000000000      *
+ *      = 2^(1-1023)                                                          *
+ *      = 2^-1022                                                             *
+ *      ~ 10^-308                                                             *
+ *                                                                            *
+ *  This is the smallest positive number.                                     *
+ *                                                                            *
+ *    0 11111111111 0000000000000000000000000000000000000000000000000000      *
+ *      = 2^1023                                                              *
+ *      ~ 10^308                                                              *
+ *      = Infinity (according to the standard).                               *
+ *                                                                            *
+ *  Setting 2^1023 to infinity means we can reserve a number of               *
+ *  Not-a-Number (NaN) as follows:                                            *
+ *                                                                            *
+ *    0 11111111111 1111111111111111111111111111111111111111111111111111      *
+ *      = NaN                                                                 *
+ *                                                                            *
+ *  This is useful for log(-1) or sqrt(-1) or 0.0/0.0. As a final example,    *
+ *  the IEEE 754 64-bit representation of 1.0:                                *
+ *                                                                            *
+ *    0 01111111111 0000000000000000000000000000000000000000000000000000      *
+ *      = 2^(1023 - 1023)                                                     *
+ *      = 2^0                                                                 *
+ *      = 1                                                                   *
+ *                                                                            *
+ *  Single precision is represented with 32 bits:                             *
+ *                                                                            *
+ *      s  eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                                   *
+ *      -  -------- -----------------------                                   *
+ *    Sign Exponent        Fraction                                           *
+ *                                                                            *
+ ******************************************************************************/
+
+/*  Check if your compiler supports the IEEE-754 standard.                    */
+#if !defined(__STDC_IEC_559__)
+
+/*  If not, set these macros to zero. Functions will then know not to use     *
+ *  the IEEE-754 format in their algorithms.                                  */
+#define TMPL_HAS_IEEE754_FLOAT 0
+#define TMPL_HAS_IEEE754_DOUBLE 0
+
+#else
+/*  Else statement of #if !defined(__STDC_IEC_559__).                         */
+
+/*  Check if TMPL_FLOAT_ENDIANNESS was defined in tmpl_endianness.h. It       *
+ *  should be unless there was a problem when building libtmpl.               */
+#if !defined(TMPL_FLOAT_ENDIANNESS)
+
+/*  If not, there is a problem with libtmpl. Set this macro to zero to be on  *
+ *  the safe side. IEEE-754 support will not be assumed.                      */
+#define TMPL_HAS_IEEE754_FLOAT 0
+
+#elif TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN
+/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
+
+/*  Macro indicating support for IEEE-754 single precision.                   */
+#define TMPL_HAS_IEEE754_FLOAT 1
+
+/*  To access the binary representation of a floating point number, we use    *
+ *  unions. Unions allows us to have different data types share the same block*
+ *  of memory. If we have a union of a floating point and an integer, and then*
+ *  set the floating point part to some number, then when we try to access the*
+ *  integer part it will already have its bits set (They'll be set by the     *
+ *  floating point value). This is known as "type-punning."                   */
+typedef union _tmpl_IEEE754_Float {
+
+    /*  Use a bit-field for the binary representation of a float. A bit-field *
+     *  allows us to define variables with an exact number of bits (up to 16).*
+     *  We'll use this to a have 1-bit variable for the sign, 8-bit variable  *
+     *  for the exponent, and 2 variables adding up to 23 bits for the        *
+     *  mantissa.                                                             */
+    struct _float_bits {
+        unsigned int sign : 1;
+        unsigned int expo : 8;
+        unsigned int man0 : 7;
+        unsigned int man1 : 16;
+    } bits;
+    float r;
+} tmpl_IEEE754_Float;
+
+#elif TMPL_FLOAT_ENDIANNESS == TMPL_LITTLE_ENDIAN
+/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
+
+/*  Macro indicating support for IEEE-754 single precision.                   */
+#define TMPL_HAS_IEEE754_FLOAT 1
+
+/*  Same type of union as above, but for little endian.                       */
+typedef union _tmpl_IEEE754_Float {
+    struct _float_bits {
+        unsigned int man1 : 16;
+        unsigned int man0 : 7;
+        unsigned int expo : 8;
+        unsigned int sign : 1;
+    } bits;
+    float r;
+} tmpl_IEEE754_Float;
+
+#else
+/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
+
+/*  The macro TMPL_FLOAT_ENDIANNESS is likely set to unknown endian, meaning  *
+ *  we can't assume IEEE-754 support. Set TMPL_HAS_IEEE754_FLOAT to zero.     */
+#define TMPL_HAS_IEEE754_FLOAT 0
+
+#endif
+/*  End of #if !defined(TMPL_FLOAT_ENDIANNESS).                               */
+
+/*  Same thing for double precision.                                          */
+#if !defined(TMPL_DOUBLE_ENDIANNESS)
+
+/*  There is likely a problem with libtmpl. Set this macro to zero to be on   *
+ *  the safe side. IEEE-754 support will not be assumed.                      */
+#define TMPL_HAS_IEEE754_DOUBLE 0
+
+#elif TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
+
+#define TMPL_HAS_IEEE754_DOUBLE 1
+
+typedef union _tmpl_IEEE754_Double {
+    struct _big_bits {
+        unsigned int sign : 1;
+        unsigned int expo : 11;
+        unsigned int man0 : 4;
+        unsigned int man1 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
+    } bits;
+    double r;
+} tmpl_IEEE754_Double;
+
+#elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
+
+#define TMPL_HAS_IEEE754_DOUBLE 1
+
+typedef union _tmpl_IEEE754_Double {
+    struct _big_bits {
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 4;
+        unsigned int expo : 11;
+        unsigned int sign : 1;
+    } bits;
+    double r;
+} tmpl_IEEE754_Double;
+
+#else
+
+#define TMPL_HAS_IEEE754_DOUBLE 0
+
+#endif
+/*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
+
+#endif
+/*  End of #if !defined(__STDC_IEC_559__).                                    */
+
+extern void
+tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo);
+
+extern void
+tmpl_Float_Base2_Exp_and_Mant(float x, float *mant, signed int *expo);
+
+extern void
+tmpl_LDouble_Base2_Exp_and_Mant(long double x,
+                                long double *mant,
+                                signed long int *expo);
 
 /* Declare Miscellaneous Constants.                                           */
 
@@ -218,6 +421,11 @@ extern const float tmpl_Infinity_F;
 extern const double tmpl_Infinity;
 extern const long double tmpl_Infinity_L;
 
+/*  Not-A-Number.                                                             */
+#define tmpl_NaN_F (0.0F / 0.0F)
+#define tmpl_NaN (0.0 / 0.0)
+#define tmpl_NaN_L (0.0L / 0.0L)
+
 /*  Largest value such that exp(x) will not return inifinity.                 */
 extern const float tmpl_Max_Float_Base_E;
 extern const double tmpl_Max_Double_Base_E;
@@ -227,12 +435,6 @@ extern const long double tmpl_Max_LDouble_Base_E;
 extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
-
-/*  We'll use the CPYTHON method of defining NAN, the source code of which is *
- *  contained in python/cpython/Include/pymath.h.                             */
-#define tmpl_NaN (tmpl_Infinity * 0.0)
-#define tmpl_NaN_F ((float)(tmpl_NaN))
-#define tmpl_NaN_L ((long double)(tmpl_NaN))
 
 extern tmpl_Bool tmpl_Float_Is_Inf(float x);
 extern tmpl_Bool tmpl_Double_Is_Inf(double x);

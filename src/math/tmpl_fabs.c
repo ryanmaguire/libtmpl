@@ -112,62 +112,25 @@
 
 /*  If your compiler supports the IEEE 754 format, we can use a single        *
  *  bit-wise AND statement to compute the absolute value function.            */
-#if defined(__STDC_IEC_559__)
-
-/*  IEEE754 union data types and functions are found here.                    */
-#include <libtmpl/include/tmpl_ieee754.h>
+#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Word32 w;
+    tmpl_IEEE754_Float w;
 
     /*  Set the float part of the word to the input x.                        */
-    w.real = x;
+    w.r = x;
 
-    /*  Use bit-wise AND to set the first bit to zero. A 32 bit floating      *
-     *  point number is represented by:                                       *
-     *      s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                                *
-     *      - -------- -----------------------                                *
-     *    Sign  Exp           Fraction                                        *
-     *  We can use bit-wise AND to set the sign bit to zero. We need the      *
-     *  number that is 0 in the zeroth bit, and 1 in all of the others. In    *
-     *  hexidecimal, this is 7FFFFFFF, which we represent in the C            *
-     *  programming language via 0x7FFFFFFF. The bit-wise AND is represented  *
-     *  by a single ampersand, &.                                             */
-    w.integer = 0x7FFFFFFF & w.integer;
+    /*  Set the sign bit to zero, indicated positive.                         */
+    w.bits.sign = 0x0U;
 
-    /*  Now that we've set the integer part of our union to have its zeroth   *
-     *  bit set to zero, return the float part of the union.                  */
-    return w.real;
+    /*  Return the float part of the union.                                   */
+    return w.r;
 }
 /*  End of tmpl_Float_Abs.                                                    */
 
-/*  Single precision absolute value function (fabsf equivalent).              */
-double tmpl_Double_Abs(double x)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Word64 w;
-
-    /*  Set the double part of the word to the input x.                       */
-    w.real = x;
-
-    /*  Use bit-wise AND to set the first bit to zero. A 64 bit floating      *
-     *  point number is represented by:                                       *
-     *    s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  *
-     *    - ----------- ----------------------------------------------------  *
-     *  Sign  Exponent                     Fraction                           *
-     *  We can use bit-wise AND to set the sign bit to zero. We need the      *
-     *  number that is 0 in the zeroth bit, and 1 in all of the others. In    *
-     *  hexidecimal, this is 7FFFFFFFFFFFFFFF, which we represent in the C    *
-     *  programming language via 0x7FFFFFFFFFFFFFFF. The bit-wise AND is      *
-     *  represented by a single ampersand, &.                                 */
-    w.integer = 0x7FFFFFFFFFFFFFFF & w.integer;
-
-    return w.real;
-}
-/*  End of tmpl_Double_Abs.                                                   */
 
 #else
 /*  Else statement for #if __TMPL_USE_IEEE754_ALGORITHMS__ == 1.              */
@@ -188,6 +151,30 @@ float tmpl_Float_Abs(float x)
 }
 /*  End of tmpl_Float_Abs.                                                    */
 
+#endif
+/*  End of #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.*/
+
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+
+/*  Single precision absolute value function (fabsf equivalent).              */
+double tmpl_Double_Abs(double x)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEEE754_Double w;
+
+    /*  Set the double part of the word to the input x.                       */
+    w.r = x;
+
+    /*  Set the sign bit to zero, indicated positive.                         */
+    w.bits.sign = 0x0U;
+
+    /*  Return the double part of the union.                                  */
+    return w.r;
+}
+/*  End of tmpl_Double_Abs.                                                   */
+
+#else
+
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
 {
@@ -205,6 +192,7 @@ double tmpl_Double_Abs(double x)
 /*  End of tmpl_Double_Abs.                                                   */
 
 #endif
+/* End of #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1*/
 
 /*  libtmpl does not implement IEEE754 support for long double extended       *
  *  precision. This is because extended precision can be 80, 96, or 128 bit.  *

@@ -9,7 +9,6 @@
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 #include <libtmpl/include/tmpl_fft.h>
 #include <libtmpl/include/tmpl_graph_theory.h>
-#include <libtmpl/include/tmpl_ieee754.h>
 #include <libtmpl/include/tmpl_interpolate.h>
 #include <libtmpl/include/tmpl_inversive_geometry.h>
 #include <libtmpl/include/tmpl_knots.h>

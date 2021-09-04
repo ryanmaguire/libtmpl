@@ -16,15 +16,18 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_get_high_word64                             *
+ *                           tmpl_get_low_word64                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains source code for getting the "high word" of an IEEE754        *
+ *      Contains source code for getting the "low word" of an IEEE754         *
  *      double precision 64-bit floating point number. This is the            *
- *      exponent part of the number and the sign.                             *
+ *      fractional part of the number.                                        *
  *  Method:                                                                   *
- *      Get the unsigned integer equivalent of the double-precision number,   *
- *      bit shift it over 52-binary digits.                                   *
+ *      Get the unsigned integer equivalent of the double-precision number    *
+ *      and perform bitwise AND with the magic number                         *
+ *      11111111111111111111111111111111111111111111111111_2                  *
+ *          = 4503599627370495                                                *
+ *          = 0xFFFFFFFFFFFFF (in hexidecimal).                               *
  *  NOTES:                                                                    *
  *      While the code is written in ANSI C, this is NOT portable since it    *
  *      assumes various things. This part of the code makes the following     *
@@ -57,27 +60,28 @@
  ******************************************************************************/
 
 /*  Definitions, typedefs, and prototypes found here.                         */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
-/*  Computes the high word of a 64-bit floating-point number.                 */
-tmpl_uint32 tmpl_Get_High_Word64(tmpl_IEEE754_Word64 x)
+/*  Computes the low word of a 64-bit floating-point number.                  */
+tmpl_uint64 tmpl_Get_Low_Word64(tmpl_IEEE754_Word64 x)
 {
     /*  x.real is a double. Use the union and look at x.integer. This will    *
      *  give us the actual binary value of x.real and we can pretend it is    *
-     *  an unsigned long.                                                     */
+     *  an unsigned integer.                                                  */
     tmpl_uint64 out = x.integer;
 
-    /*  The first bit is the sign, the next 11 are the exponent, and the last *
-     *  52 are the fractional parts. We don't care about the fractional part  *
-     *  since we are trying to get the high-word. Shift the "decimal"         *
-     *  (i.e. the "point") over 52 digits. This is equivalent to dividing by  *
-     *  2^52 and looking at the integer part, but is a lot faster.            *
+    /*  Bit-wise AND can help us zero out the high-word. If we have:          *
+     *  s eeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx     *
+     *  - ---------- ----------------------------------------------------     *
      *                                                                        *
-     *  To put the problem into decimal, if asked to divide 1000 by 100, you  *
-     *  would not perform long division, but rather just shift the decimal    *
-     *  point over by 2, giving 10. This is the binary version of this.       */
-    out = out >> 52;
-    return (tmpl_uint32)out;
+     *  And then perform bitwise AND with 4503599627370495, we get:           *
+     *    s eeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   *
+     *  & 0 0000000000 1111111111111111111111111111111111111111111111111111   *
+     *  = 0 0000000000 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   *
+     *                                                                        *
+     *  In other words, we get the low-word.                                  */
+    out = out & 0xFFFFFFFFFFFFF;
+    return out;
 }
-/*  End of tmpl_Get_High_Word64.                                              */
+/*  End of tmpl_Get_Low_Word64.                                               */
 

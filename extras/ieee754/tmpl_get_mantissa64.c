@@ -16,15 +16,18 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_get_high_word32                             *
+ *                           tmpl_get_mantissa64                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains source code for getting the "high word" of an IEEE754        *
- *      single precision 32-bit floating point number. This is the            *
- *      exponent part of the number and the sign.                             *
+ *      Contains source code for getting the mantissa of an IEEE754 double    *
+ *      precision floating point number. Given the number 1.m * 2^b, this     *
+ *      returns 1.m. The value "b" is the exponent.                           *
  *  Method:                                                                   *
- *      Get the 32-bit unsigned integer equivalent of the single-precision    *
- *      number and bit shift it over 23-binary digits.                        *
+ *      Extract the low-word via bitwise AND with the magic number            *
+ *      0x000FFFFFFFFFFFFF and then add 0x3FF0000000000000, which is the      *
+ *      hexidecimal representation for 1.0 in IEEE754 for 64-bit double.      *
+ *      Treat this integer as a double according to the IEEE754 format and    *
+ *      return.                                                               *
  *  NOTES:                                                                    *
  *      While the code is written in ANSI C, this is NOT portable since it    *
  *      assumes various things. This part of the code makes the following     *
@@ -53,31 +56,25 @@
  *      Little Endian systems. Mixed-Endian is not supported.                 *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       January 22, 2021                                              *
+ *  Date:       April 7, 2021                                                 *
  ******************************************************************************/
 
 /*  Definitions, typedefs, and prototypes found here.                         */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
-/*  Function for extracting the high-word of a 32-bit floating-point number.  */
-tmpl_uint32 tmpl_Get_High_Word32(tmpl_IEEE754_Word32 x)
+/*  Function for extracting the mantissa from a 64-bit floating point number. */
+double tmpl_Get_Mantissa64(tmpl_IEEE754_Word64 w)
 {
-    /*  x.real is a float. Use the union and look at x.integer. This will     *
-     *  give us the actual binary value of x.real and we can pretend it is    *
-     *  a 32-bit unsigned integer.                                            */
-    tmpl_uint32 out = x.integer;
+    /*  Use the IEEE 754 64-bit union to convert between double and binary.   */
+    tmpl_IEEE754_Word64 out;
 
-    /*  The first bit is the sign, the next 8 are the exponent, and the last  *
-     *  23 are the fractional parts. We don't care about the fractional part  *
-     *  since we are trying to get the high-word. Shift the "decimal"         *
-     *  (i.e. the "point") over 23 digits. This is equivalent to dividing by  *
-     *  2^23 and looking at the integer part, but is a lot faster.            *
-     *                                                                        *
-     *  To put the problem into decimal, if asked to divide 1000 by 100, you  *
-     *  would not perform long division, but rather just shift the decimal    *
-     *  point over by 2, giving 10. This is the binary version of this.       */
-    out = out >> 23;
-    return out;
+    /*  Use bitwise AND with 0x000FFFFFFFFFFFFF to extract the low word. Then *
+     *  add 0x3FF0000000000000 which is the hexidecimal representation of 1.0.*
+     *  This will give use 1.0 + 0.m = 1.m, which is what we want.            */
+    out.integer = (w.integer & 0x000FFFFFFFFFFFFF) | 0x3FF0000000000000;
+
+    /*  Return the double part from the IEEE 754 union data type.             */
+    return out.real;
 }
-/*  End of tmpl_Get_High_Word32.                                              */
+/*  End of tmpl_Get_Mantissa64.                                               */
 

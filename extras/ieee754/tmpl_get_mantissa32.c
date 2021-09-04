@@ -59,7 +59,7 @@
  ******************************************************************************/
 
 /*  Definitions, typedefs, and prototypes found here.                         */
-#include <libtmpl/include/tmpl_ieee754.h>
+#include "tmpl_ieee754.h"
 
 /*  Function for extracting the mantissa from a 32-bit floating point number. */
 float tmpl_Get_Mantissa32(tmpl_IEEE754_Word32 w)
