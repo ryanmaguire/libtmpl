@@ -64,6 +64,7 @@ int main(void)
     printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     max_abs = 0.0;
+    max_rel = 0.0;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabs(y0[n] - y1[n]);
@@ -75,8 +76,8 @@ int main(void)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.24f\n", max_abs);
-    printf("Max Rel Error: %.24f\n", max_rel);
+    printf("Max Abs Error: %.24e\n", max_abs);
+    printf("Max Rel Error: %.24e\n", max_rel);
 
     free(x);
     free(y0);
