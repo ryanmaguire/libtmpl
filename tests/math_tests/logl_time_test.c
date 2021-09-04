@@ -22,26 +22,21 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
+#include <float.h>
 
 int main(void)
 {
-    long double start, end, dx, max_abs, max_rel, temp;
+    long double max_abs, max_rel, temp;
     long double *x, *y0, *y1;
-    unsigned long int n, N;
+    unsigned long int n;
     clock_t t1, t2;
 
-    long double (*f0)(long double);
-    long double (*f1)(long double);
+    const long double start = 0.0L;
+    const long double end = 100.0L;
+    const unsigned long int N = 1E8;
+    const long double dx = (end - start) / (long double)N;
 
-    f0 = tmpl_LDouble_Log;
-    f1 = logl;
-
-    start = 0.0L;
-    end   = 100.0L;
-    N     = 1E8;
-    dx    = (end - start) / (long double)N;
-
-    x  = malloc(sizeof(*x)  * N);
+    x = malloc(sizeof(*x) * N);
     y0 = malloc(sizeof(*y0) * N);
     y1 = malloc(sizeof(*y1) * N);
 
@@ -51,19 +46,20 @@ int main(void)
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y0[n] = f0(x[n]);
+        y0[n] = tmpl_LDouble_Log(x[n]);
     t2 = clock();
 
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y1[n] = f1(x[n]);
+        y1[n] = logl(x[n]);
     t2 = clock();
 
     printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
+    max_abs = 0.0L;
+    max_rel = 0.0L;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabsl(y0[n] - y1[n]);
@@ -75,8 +71,8 @@ int main(void)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.32Lf\n", max_abs);
-    printf("Max Rel Error: %.32Lf\n", max_rel);
+    printf("Max Abs Error: %.32Le\n", max_abs);
+    printf("Max Rel Error: %.32Le\n", max_rel);
 
     free(x);
     free(y0);
