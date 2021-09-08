@@ -68,10 +68,10 @@ int main(void)
     z[0] = tmpl_CDouble_Zero;
     z[1] = tmpl_CDouble_One;
     z[2] = tmpl_CDouble_Rect(1.0, 1.0);
-    z[3] = tmpl_CDouble_Rect(tmpl_NaN, 0.0);
-    z[4] = tmpl_CDouble_Rect(tmpl_Infinity, 0.0);
-    z[5] = tmpl_CDouble_NaN;
-    z[6] = tmpl_CDouble_Infinity;
+    z[3] = tmpl_CDouble_Rect(TMPL_NAN, 0.0);
+    z[4] = tmpl_CDouble_Rect(TMPL_INFINITY, 0.0);
+    z[5] = tmpl_Complex_NaN;
+    z[6] = tmpl_Complex_Infinity;
 
     /*  Loop over the results and print them.                                 */
     for (n = 0U; n < 7U; ++n)

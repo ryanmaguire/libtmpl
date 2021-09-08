@@ -13,8 +13,8 @@ tmpl_Stereographic_Projection_Torus(double u, double v, double r, double R)
 
     if (sin_u == 1.0)
     {
-        x = tmpl_Infinity;
-        y = tmpl_Infinity;
+        x = TMPL_INFINITY;
+        y = TMPL_INFINITY;
     }
     else
     {

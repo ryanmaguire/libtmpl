@@ -50,7 +50,7 @@ double tmpl_TwoByTwoMatrix_Component(tmpl_TwoByTwoMatrix A, unsigned int m,
                                      unsigned int n)
 {
     if ((m > 1) || (n > 1))
-        return tmpl_NaN;
+        return TMPL_NAN;
     else
         return A.dat[m][n];
 }

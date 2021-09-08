@@ -121,9 +121,9 @@ extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
 
 /*  Complex infinity, set to inf + i inf. This is the "north pole" on the     *
  *  Riemann sphere.                                                           */
-extern const tmpl_ComplexFloat tmpl_CFloat_Infinity;
-extern const tmpl_ComplexDouble tmpl_CDouble_Infinity;
-extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
+extern tmpl_ComplexFloat tmpl_CFloat_Infinity(void);
+extern tmpl_ComplexDouble tmpl_CDouble_Infinity(void);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Infinity(void);
 
 /*  WARNING:                                                                  *
  *      On older versions of TCC (the Tiny C Compiler), it is essentially     *
@@ -136,9 +136,17 @@ extern const tmpl_ComplexLongDouble tmpl_CLDouble_Infinity;
  *      compile these expressions, as can PCC (the Portable Compiler).        */
 
 /*  Complex NaN, defined as NaN + i NaN.                                      */
-extern const tmpl_ComplexFloat tmpl_CFloat_NaN;
-extern const tmpl_ComplexDouble tmpl_CDouble_NaN;
-extern const tmpl_ComplexLongDouble tmpl_CLDouble_NaN;
+extern tmpl_ComplexFloat tmpl_CFloat_NaN(void);
+extern tmpl_ComplexDouble tmpl_CDouble_NaN(void);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
+
+#define tmpl_Complex_Infinity_F (tmpl_CFloat_Infinity())
+#define tmpl_Complex_Infinity (tmpl_CDouble_Infinity())
+#define tmpl_Complex_Infinity_L (tmpl_CLDouble_Infinity())
+
+#define tmpl_Complex_NaN_F (tmpl_CFloat_NaN())
+#define tmpl_Complex_NaN (tmpl_CDouble_NaN())
+#define tmpl_Complex_NaN_L (tmpl_CLDouble_NaN())
 
 /******************************************************************************
  *  Function:                                                                 *

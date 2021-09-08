@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_infinity                                 *
+ *                                 tmpl_nan                                   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide a infinity for libtmpl.                                       *
+ *      Provide Not-A-Number for libtmpl.                                     *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -34,14 +34,14 @@
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
  *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       May 7, 2021                                                   *
+ *  Date:       September 8, 2021                                             *
  ******************************************************************************/
 
 #include <libtmpl/include/tmpl_endianness.h>
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Single-precision real positive infinity.                                  */
-float tmpl_Float_Infinity(void)
+/*  Single-precision Not-A-Number.                                            */
+float tmpl_Float_NaN(void)
 {
     /*  Check for IEEE-754. This is the easiest way to define infinity.       */
 #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
@@ -51,8 +51,8 @@ float tmpl_Float_Infinity(void)
     tmpl_IEEE754_Float x;
     x.bits.sign = 0x0U;
     x.bits.expo = 0xFFU;
-    x.bits.man0 = 0x0U;
-    x.bits.man1 = 0x0U;
+    x.bits.man0 = 0x40U;
+    x.bits.man1 = 0x1U;
     return x.r;
 #else
 /*  For #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
@@ -61,7 +61,7 @@ float tmpl_Float_Infinity(void)
      *  may result in compiler warnings, and may also result in undefined     *
      *  behavior, but this is guaranteed to overflow and for the most part    *
      *  it should work in practice.                                           */
-    float x = 1.0E10000F;
+    float x = 0.0F / 0.0F;
     return x;
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
@@ -69,7 +69,7 @@ float tmpl_Float_Infinity(void)
 /*  End of tmpl_Float_Infinity.                                               */
 
 /*  Double-precision real positive infinity.                                  */
-double tmpl_Double_Infinity(void)
+double tmpl_Double_NaN(void)
 {
     /*  Check for IEEE-754. This is the easiest way to define infinity.       */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
@@ -79,10 +79,10 @@ double tmpl_Double_Infinity(void)
     tmpl_IEEE754_Double x;
     x.bits.sign = 0x0U;
     x.bits.expo = 0x7FFU;
-    x.bits.man0 = 0x0U;
+    x.bits.man0 = 0x8U;
     x.bits.man1 = 0x0U;
     x.bits.man2 = 0x0U;
-    x.bits.man3 = 0x0U;
+    x.bits.man3 = 0x1U;
     return x.r;
 #else
 /*  For #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1  */
@@ -91,7 +91,7 @@ double tmpl_Double_Infinity(void)
      *  may result in compiler warnings, and may also result in undefined     *
      *  behavior, but this is guaranteed to overflow and for the most part    *
      *  it should work in practice.                                           */
-    double x = 1.0E10000;
+    double x = 0.0 / 0.0;
     return x;
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1  */
@@ -99,10 +99,10 @@ double tmpl_Double_Infinity(void)
 /*  End of tmpl_Double_Infinity.                                              */
 
 /*  Long double precision real positive infinity.                             */
-long double tmpl_LDouble_Infinity(void)
+long double tmpl_LDouble_NaN(void)
 {
     /*  Simply cast the double version and return.                            */
-    double x = tmpl_Double_Infinity();
+    double x = tmpl_Double_NaN();
     long double lx = (long double)x;
     return lx;
 }

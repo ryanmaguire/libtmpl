@@ -95,7 +95,7 @@
  *  Date:       December 30, 2020                                             *
  ******************************************************************************/
 
-/*  tmpl_NaN is defined here.                                                 */
+/*  TMPL_NAN is defined here.                                                 */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  And the function prototypes are found here.                               */
@@ -122,7 +122,7 @@ tmpl_Float_Sorted_Interp1d(float *x, float *y, unsigned long N,
 
         /*  If x_new[m] falls outside of the bounds of x, return NaN.         */
         if ((x_new[m] < x[0]) || (x_new[m] > x[N-1]))
-            y_new[m] = tmpl_NaN_F;
+            y_new[m] = TMPL_NANF;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
         else if (tmpl_Float_Dist(x_new[m], x[N-1]) <= FLT_MIN)
@@ -167,7 +167,7 @@ tmpl_Double_Sorted_Interp1d(double *x, double *y, unsigned long N,
 
         /*  If x_new[m] falls outside of the bounds of x, return NaN.         */
         if ((x_new[m] < x[0]) || (x_new[m] > x[N-1]))
-            y_new[m] = tmpl_NaN;
+            y_new[m] = TMPL_NAN;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
         else if (tmpl_Double_Dist(x_new[m], x[N-1]) <= DBL_MIN)
@@ -213,7 +213,7 @@ tmpl_LDouble_Sorted_Interp1d(long double *x, long double *y, unsigned long N,
 
         /*  If x_new[m] falls outside of the bounds of x, return NaN.         */
         if ((x_new[m] < x[0]) || (x_new[m] > x[N-1]))
-            y_new[m] = tmpl_NaN_L;
+            y_new[m] = TMPL_NANL;
 
         /*  Handle the case of x_new[m] = x[N-1].                             */
         else if (tmpl_LDouble_Dist(x_new[m], x[N-1]) <= LDBL_MIN)

@@ -47,7 +47,7 @@
  *      Edited file for use in libtmpl.                                       *
  ******************************************************************************/
 
-/* tmpl_NaN macro found here.                                                 */
+/* TMPL_NAN macro found here.                                                 */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype and two-vector typedef found here.                     */
@@ -63,8 +63,8 @@ tmpl_TwoVector tmpl_TwoVector_Normalize(tmpl_TwoVector P)
 
     if (norm == 0.0)
     {
-        x_hat = tmpl_NaN;
-        y_hat = tmpl_NaN;
+        x_hat = TMPL_NAN;
+        y_hat = TMPL_NAN;
     }
     else
     {

@@ -27,7 +27,7 @@ tmpl_Halleys_Method_Complex(tmpl_ComplexDouble z,
 
     /*  Check that the denominator is non-zero.                               */
     if (tmpl_CDouble_Compare(denom, tmpl_CDouble_Zero))
-        return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
+        return tmpl_CDouble_Rect(TMPL_NAN, TMPL_NAN);
 
     /*  Compute the first iteration of Newton-Raphson.                        */
     dz = tmpl_CDouble_Divide(
@@ -58,7 +58,7 @@ tmpl_Halleys_Method_Complex(tmpl_ComplexDouble z,
 
         /*  Check that the denominator is non-zero.                           */
         if (tmpl_CDouble_Compare(denom, tmpl_CDouble_Zero))
-            return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
+            return tmpl_CDouble_Rect(TMPL_NAN, TMPL_NAN);
 
         dz = tmpl_CDouble_Divide(
             tmpl_CDouble_Multiply_Real(

@@ -47,7 +47,7 @@
  *      Edited file for use in libtmpl.                                       *
  ******************************************************************************/
 
-/*  tmpl_NaN defined here.                                                    */
+/*  TMPL_NAN defined here.                                                    */
 #include <libtmpl/include/tmpl_math.h>
 #include <math.h>
 
@@ -84,7 +84,7 @@ double tmpl_TwoVector_Euclidean_Rel_Angle(tmpl_TwoVector O, tmpl_TwoVector P,
     /*  If norm(OP)norm(OQ) is zero, then one of these vectors is the zero    *
      *  vector, meaning the angle is undefined. We then return Not-A-Number.  */
     if (abs_prod == 0.0)
-        rel_angle = tmpl_NaN;
+        rel_angle = TMPL_NAN;
 
     /*  If norm(OP)norm(OQ) is non-zero, we may use the angle formula.        */
     else

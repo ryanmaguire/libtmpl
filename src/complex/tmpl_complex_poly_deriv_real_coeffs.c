@@ -1,9 +1,3 @@
-/*  Needed for puts.                                                          */
-#include <stdio.h>
-
-/*  Needed for exit and NULL.                                                 */
-#include <stdlib.h>
-
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */
@@ -21,14 +15,8 @@ tmpl_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs, unsigned int degree,
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_CDouble_Poly_Deriv_Real_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return tmpl_CDouble_Zero;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *

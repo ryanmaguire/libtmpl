@@ -68,19 +68,19 @@ int main(void)
     z[0] = tmpl_CDouble_Zero;
     z[1] = tmpl_CDouble_One;
     z[2] = tmpl_CDouble_Rect(1.0, 1.0);
-    z[3] = tmpl_CDouble_Rect(tmpl_NaN, 0.0);
-    z[4] = tmpl_CDouble_Rect(tmpl_Infinity, 0.0);
-    z[5] = tmpl_CDouble_NaN;
-    z[6] = tmpl_CDouble_Infinity;
+    z[3] = tmpl_CDouble_Rect(TMPL_NAN, 0.0);
+    z[4] = tmpl_CDouble_Rect(TMPL_INFINITY, 0.0);
+    z[5] = tmpl_Complex_NaN;
+    z[6] = tmpl_Complex_Infinity;
 
     /*  Set the test values for the array x.                                  */
-    x[0] = tmpl_Infinity;
-    x[1] = tmpl_NaN;
+    x[0] = TMPL_INFINITY;
+    x[1] = TMPL_NAN;
     x[2] = -4.0;
     x[3] = 1.0;
     x[4] = 2.0;
     x[5] = 1.0;
-    x[6] = -tmpl_Infinity;
+    x[6] = -TMPL_INFINITY;
 
     /*  Loop over the results and print them.                                 */
     for (n = 0U; n < 7U; ++n)

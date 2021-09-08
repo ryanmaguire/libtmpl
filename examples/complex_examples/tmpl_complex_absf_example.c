@@ -68,8 +68,8 @@ int main(void)
     z[0] = tmpl_CFloat_Zero;
     z[1] = tmpl_CFloat_One;
     z[2] = tmpl_CFloat_Rect(1.0F, 1.0F);
-    z[3] = tmpl_CFloat_Rect(tmpl_NaN_F, 0.0F);
-    z[4] = tmpl_CFloat_Rect(tmpl_Infinity_F, 0.0F);
+    z[3] = tmpl_CFloat_Rect(TMPL_NANF, 0.0F);
+    z[4] = tmpl_CFloat_Rect(TMPL_INFINITYF, 0.0F);
     z[5] = tmpl_CFloat_NaN;
     z[6] = tmpl_CFloat_Infinity;
 

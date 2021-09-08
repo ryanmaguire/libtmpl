@@ -67,8 +67,8 @@ int main(void)
     z0[0] = tmpl_CLDouble_Zero;
     z0[1] = tmpl_CLDouble_One;
     z0[2] = tmpl_CLDouble_Rect(1.0L, 1.0L);
-    z0[3] = tmpl_CLDouble_Rect(tmpl_NaN_L, 0.0L);
-    z0[4] = tmpl_CLDouble_Rect(tmpl_Infinity_L, 0.0L);
+    z0[3] = tmpl_CLDouble_Rect(TMPL_NANL, 0.0L);
+    z0[4] = tmpl_CLDouble_Rect(TMPL_INFINITYL, 0.0L);
     z0[5] = tmpl_CLDouble_NaN;
     z0[6] = tmpl_CLDouble_Infinity;
 

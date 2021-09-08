@@ -136,7 +136,7 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Cosh(tmpl_ComplexLongDouble z)
 
     /*  Compute the sum of exp(z) and exp(-z) and divide by 2.                */
     cosh_z = tmpl_CLDouble_Add(exp_z, exp_minus_z);
-    cosh_z = tmpl_CLDouble_Multiply_Real(0.5, cosh_z);
+    cosh_z = tmpl_CLDouble_Multiply_Real(0.5L, cosh_z);
     return cosh_z;
 }
 /*  End of tmpl_CLDouble_Cosh.                                                */

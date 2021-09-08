@@ -61,7 +61,7 @@ tmpl_Float_Two_Slit_Fraunhofer_Diffraction(float x, float z, float a,
 
     /*  If norm is zero, the result is undefined. Return NaN in this case.    */
     if (norm == 0.0F)
-        out = tmpl_NaN_F;
+        out = TMPL_NANF;
     else
     {
         /*  Using the fact that sin(theta) = x/r, where r is the hypotenus,   *
@@ -104,7 +104,7 @@ tmpl_Double_Two_Slit_Fraunhofer_Diffraction(double x, double z, double a,
 
     /*  If norm is zero, the result is undefined. Return NaN in this case.    */
     if (norm == 0.0)
-        out = tmpl_NaN;
+        out = TMPL_NAN;
     else
     {
         /*  Using the fact that sin(theta) = x/r, where r is the hypotenus,   *
@@ -148,7 +148,7 @@ tmpl_LDouble_Two_Slit_Fraunhofer_Diffraction(long double x, long double z,
 
     /*  If norm is zero, the result is undefined. Return NaN in this case.    */
     if (norm == 0.0L)
-        out = tmpl_NaN_L;
+        out = TMPL_NANL;
     else
     {
         /*  Using the fact that sin(theta) = x/r, where r is the hypotenus,   *

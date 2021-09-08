@@ -19,7 +19,7 @@ tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
     /*  If the derivative is zero at your initial guess, Newton-Raphson       *
      *  fails. Return Not-a-Number in this case.                              */
     if (tmpl_CDouble_Compare(w_prime, tmpl_CDouble_Zero))
-        return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
+        return tmpl_CDouble_Rect(TMPL_NAN, TMPL_NAN);
 
     /*  Compute the first iteration of Newton-Raphson.                        */
     dz = tmpl_CDouble_Divide(w, w_prime);
@@ -35,7 +35,7 @@ tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
         w_prime = (*f_prime)(z);
 
         if (tmpl_CDouble_Compare(w_prime, tmpl_CDouble_Zero))
-            return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
+            return tmpl_CDouble_Rect(TMPL_NAN, TMPL_NAN);
 
         dz = tmpl_CDouble_Divide(w, w_prime);
         z  = tmpl_CDouble_Subtract(z, dz);

@@ -21,7 +21,7 @@ tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z, double *coeffs,
      *  fails. Return Not-a-Number in this case.                              */
     comp = tmpl_CDouble_Compare(wp, tmpl_CDouble_Zero);
     if (comp)
-        return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
+        return tmpl_CDouble_Rect(TMPL_NAN, TMPL_NAN);
 
     /*  Compute the first iteration of Newton-Raphson.                        */
     dz = tmpl_CDouble_Divide(w, wp);
@@ -40,7 +40,7 @@ tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z, double *coeffs,
         comp = tmpl_CDouble_Compare(wp, tmpl_CDouble_Zero);
 
         if (comp)
-            return tmpl_CDouble_Rect(tmpl_NaN, tmpl_NaN);
+            return tmpl_CDouble_Rect(TMPL_NAN, TMPL_NAN);
 
         dz = tmpl_CDouble_Divide(w, wp);
         z  = tmpl_CDouble_Subtract(z, dz);

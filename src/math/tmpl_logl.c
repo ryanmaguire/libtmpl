@@ -30,9 +30,9 @@ long double tmpl_LDouble_Log(long double x)
     signed long int exponent;
 
     if (x < 0.0L)
-        return tmpl_NaN_L;
+        return TMPL_NANL;
     else if (x == 0.0L)
-        return -tmpl_Infinity_L;
+        return -TMPL_INFINITYL;
 
     tmpl_LDouble_Base2_Exp_and_Mant(x, &mantissa, &exponent);
 

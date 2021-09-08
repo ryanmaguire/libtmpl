@@ -16,7 +16,7 @@ float tmpl_Newton_Raphson_Float(float x, float (*f)(float),
     /*  If the derivative is zero at your initial guess, Newton-Raphson       *
      *  fails. Return Not-a-Number in this case.                              */
     if (y_prime == 0.0F)
-        return tmpl_NaN_F;
+        return TMPL_NANF;
 
     /*  Compute the first iteration of Newton-Raphson.                        */
     dx = y/y_prime;
@@ -32,7 +32,7 @@ float tmpl_Newton_Raphson_Float(float x, float (*f)(float),
         y_prime = (*f_prime)(x);
 
         if (y_prime == 0.0F)
-            return tmpl_NaN_F;
+            return TMPL_NANF;
 
         dx = y/y_prime;
         x -= dx;
@@ -61,7 +61,7 @@ double tmpl_Newton_Raphson_Double(double x, double (*f)(double),
     /*  If the derivative is zero at your initial guess, Newton-Raphson       *
      *  fails. Return Not-a-Number in this case.                              */
     if (y_prime == 0.0)
-        return tmpl_NaN;
+        return TMPL_NAN;
 
     /*  Compute the first iteration of Newton-Raphson.                        */
     dx = y/y_prime;
@@ -77,7 +77,7 @@ double tmpl_Newton_Raphson_Double(double x, double (*f)(double),
         y_prime = (*f_prime)(x);
 
         if (y_prime == 0.0)
-            return tmpl_NaN;
+            return TMPL_NAN;
 
         dx = y/y_prime;
         x -= dx;

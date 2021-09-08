@@ -1398,7 +1398,7 @@ static double chebyshev_lookup_table(double y100, double x)
 
         /*  We get here if the input x was NaN, so return NaN.                */
         default:
-            return tmpl_NaN;
+            return TMPL_NAN;
     }
 
     /*  Use tmpl_Real_Poly_Double_Coeffs to evaluate the                      *
