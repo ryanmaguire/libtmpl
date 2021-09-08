@@ -80,8 +80,8 @@ tmpl_Stereographic_Projection(tmpl_ThreeVector P)
      *  "the point at infinity" so we'll return (infinity, infinity).         */
     else if (Pz == norm)
     {
-        x = tmpl_Infinity;
-        y = tmpl_Infinity;
+        x = TMPL_INFINITY;
+        y = TMPL_INFINITY;
     }
 
     /*  Otherwise we have a "normal" case and can use stereographic           *

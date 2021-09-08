@@ -9,9 +9,9 @@ float tmpl_Float_Log(float x)
     signed int exponent;
 
     if (x < 0.0F)
-        return tmpl_NaN_F;
+        return TMPL_NANF;
     else if (x == 0.0F)
-        return -tmpl_Infinity_F;
+        return -TMPL_INFINITYF;
 
     tmpl_Float_Base2_Exp_and_Mant(x, &mantissa, &exponent);
 

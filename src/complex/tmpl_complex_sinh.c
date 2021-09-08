@@ -136,7 +136,7 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Sinh(tmpl_ComplexLongDouble z)
 
     /*  Compute the difference of exp(z) and exp(-z) and divide by 2.         */
     sinh_z = tmpl_CLDouble_Subtract(exp_z, exp_minus_z);
-    sinh_z = tmpl_CLDouble_Multiply_Real(0.5, sinh_z);
+    sinh_z = tmpl_CLDouble_Multiply_Real(0.5L, sinh_z);
     return sinh_z;
 }
 /*  End of tmpl_CLDouble_Sinh.                                                */

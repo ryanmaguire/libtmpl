@@ -67,10 +67,10 @@ int main(void)
     z0[0] = tmpl_CDouble_Zero;
     z0[1] = tmpl_CDouble_One;
     z0[2] = tmpl_CDouble_Rect(1.0, 1.0);
-    z0[3] = tmpl_CDouble_Rect(tmpl_NaN, 0.0);
-    z0[4] = tmpl_CDouble_Rect(tmpl_Infinity, 0.0);
-    z0[5] = tmpl_CDouble_NaN;
-    z0[6] = tmpl_CDouble_Infinity;
+    z0[3] = tmpl_CDouble_Rect(TMPL_NAN, 0.0);
+    z0[4] = tmpl_CDouble_Rect(TMPL_INFINITY, 0.0);
+    z0[5] = tmpl_Complex_NaN;
+    z0[6] = tmpl_Complex_Infinity;
 
     /*  Set the test values for the array z1.                                 */
     z1[0] = tmpl_CDouble_Rect(1.0, 1.0);

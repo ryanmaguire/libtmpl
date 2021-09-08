@@ -42,9 +42,9 @@ tmpl_ThreeVector tmpl_ThreeVector_Normalize(tmpl_ThreeVector P)
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0)
     {
-        x_hat = tmpl_NaN;
-        y_hat = tmpl_NaN;
-        z_hat = tmpl_NaN;
+        x_hat = TMPL_NAN;
+        y_hat = TMPL_NAN;
+        z_hat = TMPL_NAN;
     }
     else
     {

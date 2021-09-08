@@ -63,10 +63,10 @@ tmpl_TwoByTwoMatrix tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A)
 
     if ((det <= DBL_MIN) && (det >= -DBL_MIN))
     {
-        ainv = tmpl_NaN;
-        binv = tmpl_NaN;
-        cinv = tmpl_NaN;
-        dinv = tmpl_NaN;
+        ainv = TMPL_NAN;
+        binv = TMPL_NAN;
+        cinv = TMPL_NAN;
+        dinv = TMPL_NAN;
     }
     else
     {

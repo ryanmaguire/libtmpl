@@ -18,7 +18,7 @@ tmpl_Inverse_Orthographic_Projection_Torus(tmpl_TwoVector P, double r, double R)
     threshold = r*r - threshold*threshold;
 
     if (threshold < 0.0)
-        out = tmpl_ThreeVector_Rect(tmpl_NaN, tmpl_NaN, tmpl_NaN);
+        out = tmpl_ThreeVector_Rect(TMPL_NAN, TMPL_NAN, TMPL_NAN);
 
     else
     {

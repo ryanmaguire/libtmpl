@@ -68,19 +68,19 @@ int main(void)
     z[0] = tmpl_CFloat_Zero;
     z[1] = tmpl_CFloat_One;
     z[2] = tmpl_CFloat_Rect(1.0F, 1.0F);
-    z[3] = tmpl_CFloat_Rect(tmpl_NaN_F, 0.0F);
-    z[4] = tmpl_CFloat_Rect(tmpl_Infinity_F, 0.0F);
+    z[3] = tmpl_CFloat_Rect(TMPL_NANF, 0.0F);
+    z[4] = tmpl_CFloat_Rect(TMPL_INFINITYF, 0.0F);
     z[5] = tmpl_CFloat_NaN;
     z[6] = tmpl_CFloat_Infinity;
 
     /*  Set the test values for the array x.                                  */
-    x[0] = tmpl_Infinity_F;
-    x[1] = tmpl_NaN_F;
+    x[0] = TMPL_INFINITYF;
+    x[1] = TMPL_NANF;
     x[2] = -4.0F;
     x[3] = 1.0F;
     x[4] = 2.0F;
     x[5] = 1.0F;
-    x[6] = -tmpl_Infinity_F;
+    x[6] = -TMPL_INFINITYF;
 
     /*  Loop over the results and print them.                                 */
     for (n = 0U; n < 7U; ++n)

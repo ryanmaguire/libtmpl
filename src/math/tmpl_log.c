@@ -8,9 +8,9 @@ double tmpl_Double_Log(double x)
     signed int exponent;
 
     if (x < 0.0)
-        return tmpl_NaN;
+        return TMPL_NAN;
     else if (x == 0.0)
-        return -tmpl_Infinity;
+        return -TMPL_INFINITY;
 
     tmpl_Double_Base2_Exp_and_Mant(x, &mantissa, &exponent);
 

@@ -19,7 +19,7 @@ float tmpl_Halleys_Method_Float(float x, float (*f)(float),
 
     /*  Check that the denominator is non-zero.                               */
     if (denom == 0.0F)
-        return tmpl_NaN_F;
+        return TMPL_NANF;
 
     /*  Compute the first iteration of Halley's method.                       */
     dx = 2.0F*y*y_prime/denom;
@@ -38,7 +38,7 @@ float tmpl_Halleys_Method_Float(float x, float (*f)(float),
         denom = 2*y_prime*y_prime - y*y_2prime;
 
         if (denom == 0.0F)
-            return tmpl_NaN_F;
+            return TMPL_NANF;
 
         dx = 2.0F*y*y_prime/denom;
         x -= dx;
@@ -70,7 +70,7 @@ double tmpl_Halleys_Method_Double(double x, double (*f)(double),
 
     /*  Check that the denominator is non-zero.                               */
     if (denom == 0.0)
-        return tmpl_NaN;
+        return TMPL_NAN;
 
     /*  Compute the first iteration of Halley's method.                       */
     dx = 2.0*y*y_prime/denom;
@@ -89,7 +89,7 @@ double tmpl_Halleys_Method_Double(double x, double (*f)(double),
         denom = 2.0*y_prime*y_prime - y*y_2prime;
 
         if (denom == 0.0)
-            return tmpl_NaN;
+            return TMPL_NAN;
 
         dx = 2.0*y*y_prime/denom;
         x -= dx;
@@ -122,7 +122,7 @@ tmpl_Halleys_Method_LDouble(long double x, long double (*f)(long double),
 
     /*  Check that the denominator is non-zero.                               */
     if (denom == 0.0L)
-        return tmpl_NaN_L;
+        return TMPL_NANL;
 
     /*  Compute the first iteration of Halley's method.                       */
     dx = 2.0L*y*y_prime/denom;
@@ -141,7 +141,7 @@ tmpl_Halleys_Method_LDouble(long double x, long double (*f)(long double),
         denom = 2.0L*y_prime*y_prime - y*y_2prime;
 
         if (denom == 0.0L)
-            return tmpl_NaN_L;
+            return TMPL_NANL;
 
         dx = 2.0L*y*y_prime/denom;
         x -= dx;

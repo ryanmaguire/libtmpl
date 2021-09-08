@@ -89,10 +89,8 @@ int main(void)
      *  function attempts to determine this. If your compiler does not        *
      *  support IEEE-754 format at all (most do in modern times), the         *
      *  endianness will be set to unknown and none of those tools will be     *
-     *  used in libtmpl.                                                      */
-#if defined(__STDC_IEC_559__)
-
-    /*  The IEEE-754 format specifies that a 64-bit float is comprised of a   *
+     *  used in libtmpl.                                                      *
+     *  The IEEE-754 format specifies that a 64-bit float is comprised of a   *
      *  sign bit (positive or negative), 11 bits for the exponent (the value  *
      *  b in the expression x = 1.m * 2^b), and 52 bits for the mantissa (the *
      *  value m in x = 1.m * 2^b). Big endian will have sign -> expo -> mant, *
@@ -132,7 +130,7 @@ int main(void)
         double r;
     } d;
 
-    /*  Same this for single precision.                                       */
+    /*  Same thing for single precision.                                      */
     union {
         struct _big_bitsf {
             unsigned int sign : 1;
@@ -148,8 +146,6 @@ int main(void)
         } little_bits;
         float r;
     } f;
-#endif
-/*  End of #if defined(__STDC_IEC_559__).                                     */
 
     /*  n is for indexing and power keeps track of the power of an integer.   */
     unsigned long int n, power;
@@ -312,7 +308,6 @@ int main(void)
     /*  Now that integer endianness has been determined, try floating point.  *
      *  It is almost always the same as integer, but on certain ARM           *
      *  processors it is different.                                           */
-#if defined(__STDC_IEC_559__)
 
     /*  Set the bits in the struct to represent the number 1.0 using the      *
      *  IEEE-754 format. If the endianness is flipped, we should get          *
@@ -369,13 +364,6 @@ int main(void)
         else
             fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
     }
-#else
-
-    /*  Define the floating-point endianness macro.                           */
-    fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
-    fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
-
-#endif
 
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");

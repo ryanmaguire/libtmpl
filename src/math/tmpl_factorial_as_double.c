@@ -25,7 +25,7 @@ static const double tmpl_factorial_values[34] = {
 double tmpl_Factorial_As_Real(unsigned int n)
 {
     if (n > 34U)
-        return tmpl_Infinity;
+        return TMPL_INFINITY;
     else
         return tmpl_factorial_values[n];
 }
@@ -96,7 +96,7 @@ static const double tmpl_factorial_values[171] = {
 double tmpl_Factorial_As_Real(unsigned int n)
 {
     if (n > 170U)
-        return tmpl_Infinity;
+        return TMPL_INFINITY;
     else
         return tmpl_factorial_values[n];
 }

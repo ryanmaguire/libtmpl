@@ -162,7 +162,7 @@ tmpl_CDouble_Bessel_I0(tmpl_ComplexDouble z)
 
     /*  For very large inputs, return infinity.                               */
     else
-        bessel_I0 = tmpl_CDouble_Infinity;
+        bessel_I0 = tmpl_Complex_Infinity;
 
     return bessel_I0;
 }

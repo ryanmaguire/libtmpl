@@ -8,7 +8,7 @@ float tmpl_Float_LambertW(float x)
 {
     float EPS = 1.0E-4F;
     float x0, dx, exp_x0;
-    if ((x < tmpl_Infinity_F) && (x>-tmpl_Rcpr_Euler_E_F))
+    if ((x < TMPL_INFINITYF) && (x>-tmpl_Rcpr_Euler_E_F))
     {
         if (x > 2.0F)
             x0 = tmpl_Float_Log(x/tmpl_Float_Log(x));
@@ -32,16 +32,16 @@ float tmpl_Float_LambertW(float x)
     else if (x==-tmpl_Rcpr_Euler_E_F)
         return -1.0F;
     else if (x<-tmpl_Rcpr_Euler_E_F)
-        return tmpl_NaN_F;
+        return TMPL_NANF;
     else
-        return tmpl_Infinity_F;
+        return TMPL_INFINITYF;
 }
 
 double tmpl_Double_LambertW(double x)
 {
     double EPS = 1.0e-8;
     double x0, dx, exp_x0;
-    if ((x < tmpl_Infinity) && (x>-tmpl_Rcpr_Euler_E))
+    if ((x < TMPL_INFINITY) && (x>-tmpl_Rcpr_Euler_E))
     {
         if (x > 2.0){
             x0 = tmpl_Double_Log(x/tmpl_Double_Log(x));
@@ -53,7 +53,7 @@ double tmpl_Double_LambertW(double x)
             return -1.0;
         }
         else {
-            return tmpl_NaN;
+            return TMPL_NAN;
         }
         exp_x0 = tmpl_Double_Exp(x0);
         dx = (x0*exp_x0 - x) / 
@@ -71,16 +71,16 @@ double tmpl_Double_LambertW(double x)
     else if (x==-tmpl_Rcpr_Euler_E)
         return -1.0;
     else if (x<-tmpl_Rcpr_Euler_E)
-        return tmpl_NaN;
+        return TMPL_NAN;
     else
-        return tmpl_Infinity;
+        return TMPL_INFINITY;
 }
 
 long double tmpl_LDouble_LambertW(long double x)
 {
     const long double EPS = 1.0E-12L;
     long double x0, dx, exp_x0;
-    if ((x < tmpl_Infinity_L) && (x>-tmpl_Rcpr_Euler_E_L))
+    if ((x < TMPL_INFINITYL) && (x>-tmpl_Rcpr_Euler_E_L))
     {
         if (x > 2.0L)
             x0 = tmpl_LDouble_Log(x/tmpl_LDouble_Log(x));
@@ -103,7 +103,7 @@ long double tmpl_LDouble_LambertW(long double x)
     else if (x == -tmpl_Rcpr_Euler_E_L)
         return -1.0L;
     else if (x < -tmpl_Rcpr_Euler_E_L)
-        return tmpl_NaN_L;
+        return TMPL_NANL;
     else
-        return tmpl_Infinity_L;
+        return TMPL_INFINITYL;
 }

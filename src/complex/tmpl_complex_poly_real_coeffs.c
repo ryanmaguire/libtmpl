@@ -63,13 +63,10 @@
  *  2021/02/18: Ryan Maguire                                                  *
  *      Edited file for use in libtmpl.                                       *
  *      Added float and long double support.                                  *
+ *  2021/09/08: Ryan Maguire                                                  *
+ *      Removed "exit" call. NULL pointer is now treated as zero polynomial,  *
+ *      and the value "zero" is returned.                                     *
  ******************************************************************************/
-
-/*  Needed for the 'puts' function.                                           */
-#include <stdio.h>
-
-/*  And the 'exit' function is located here.                                  */
-#include <stdlib.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -87,14 +84,8 @@ tmpl_CFloat_Poly_Real_Coeffs(float *coeffs, unsigned int degree,
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_CFloat_Poly_Real_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return tmpl_CFloat_Zero;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *
@@ -133,14 +124,8 @@ tmpl_CDouble_Poly_Real_Coeffs(double *coeffs, unsigned int degree,
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_CDouble_Poly_Real_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return tmpl_CDouble_Zero;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *
@@ -179,14 +164,8 @@ tmpl_CLDouble_Poly_Real_Coeffs(long double *coeffs, unsigned int degree,
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_CLDouble_Poly_Real_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return tmpl_CLDouble_Zero;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *

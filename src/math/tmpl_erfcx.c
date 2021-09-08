@@ -1274,7 +1274,7 @@ double tmpl_Double_Erfcx(double x)
          *  less than infinity. Since the function is asymptotic to exp(x^2)  *
          *  we take the square root of this and compare x with that.          */
         if (x < -tmpl_Double_Sqrt(tmpl_Max_Double_Base_E))
-            out = tmpl_Infinity;
+            out = TMPL_INFINITY;
 
         /*  For smaller values, but not too small, use the asymptotic         *
          *  expansion 2 exp(x^2).                                             */

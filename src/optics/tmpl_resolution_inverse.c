@@ -9,8 +9,8 @@ float tmpl_Float_Resolution_Inverse(float x)
     float P1, P2, out;                                                          
                                                                                
     if (x <= 1.0F)                                                              
-        out = tmpl_NaN_F;                                                 
-    else if (x < tmpl_Infinity_F)                                         
+        out = TMPL_NANF;                                                 
+    else if (x < TMPL_INFINITYF)                                         
     {                                                                          
         P1 = x/(1.0F-x);                                                        
         P2 = P1*tmpl_Float_Exp(P1);                                  
@@ -27,8 +27,8 @@ double tmpl_Double_Resolution_Inverse(double x)
     double P1, P2, out;                                                          
                                                                                
     if (x <= 1.0)                                                              
-        out = tmpl_NaN;                                                 
-    else if (x < tmpl_Infinity)                                         
+        out = TMPL_NAN;                                                 
+    else if (x < TMPL_INFINITY)                                         
     {                                                                          
         P1 = x/(1.0-x);                                                        
         P2 = P1*tmpl_Double_Exp(P1);                                  
@@ -45,8 +45,8 @@ long double tmpl_LDouble_Resolution_Inverse(long double x)
     long double P1, P2, out;                                                          
                                                                                
     if (x <= 1.0L)                                                              
-        out = tmpl_NaN_L;                                                 
-    else if (x < tmpl_Infinity_L)                                         
+        out = TMPL_NANL;                                                 
+    else if (x < TMPL_INFINITYL)                                         
     {                                                                          
         P1 = x/(1.0L - x);                                                        
         P2 = P1*tmpl_LDouble_Exp(P1);                                  

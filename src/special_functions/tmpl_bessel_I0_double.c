@@ -102,7 +102,7 @@
  *      does not complain.                                                    *
  ******************************************************************************/
 
-/*  tmpl_Infinity is found here.                                              */
+/*  TMPL_INFINITY is found here.                                              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Prototypes for these functions declared here.                             */
@@ -211,7 +211,7 @@ double tmpl_Double_Bessel_I0(double x)
 
     /*  For very large inputs, return infinity.                               */
     else
-        bessel_I0 = tmpl_Infinity;
+        bessel_I0 = TMPL_INFINITY;
 
     return bessel_I0;
 }

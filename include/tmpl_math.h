@@ -38,9 +38,9 @@
  *                                                                            *
  *      NOTE:                                                                 *
  *          There is no real portable way to implement infinity in strictly   *
- *          compliant ISO C. Compilers implementing the IEEE-754 have a means *
- *          of supporting infinity, but compilers that don't may not. The     *
- *          way glibc implements infinity for compiler lacking IEEE-754       *
+ *          compliant ISO C. Compilers implementing the IEEE-754 format have  *
+ *          a way of supporting infinity, but compilers that don't may not.   *
+ *          They way glibc implements infinity for compiler lacking IEEE-754  *
  *          support is via the number 1.0E10000, which is guaranteed to       *
  *          overflow. This is undefined behavior, but in practice it works.   *
  *          This implementation uses similar tactics.                         *
@@ -48,7 +48,7 @@
  *          A similar problems arises with NAN. IEEE-754 has a means of       *
  *          defining NAN, but compilers lacking this may not. The standard    *
  *          trick is to use 0.0 / 0.0, but this may also be undefined         *
- *          behavior. Again, in practice this works fine.                     *
+ *          behavior. Again, in practice this usually works fine.             *
  *                                                                            *
  *      This file is a fork of the code I wrote for rss_ringoccs. That        *
  *      library is also released under GPL3.                                  *
@@ -168,7 +168,7 @@
  *      ~ 10^308                                                              *
  *      = Infinity (according to the standard).                               *
  *                                                                            *
- *  Setting 2^1023 to infinity means we can reserve a number of               *
+ *  Setting 2^1023 to infinity means we can reserve a number for              *
  *  Not-a-Number (NaN) as follows:                                            *
  *                                                                            *
  *    0 11111111111 1111111111111111111111111111111111111111111111111111      *
@@ -189,17 +189,6 @@
  *    Sign Exponent        Fraction                                           *
  *                                                                            *
  ******************************************************************************/
-
-/*  Check if your compiler supports the IEEE-754 standard.                    */
-#if !defined(__STDC_IEC_559__)
-
-/*  If not, set these macros to zero. Functions will then know not to use     *
- *  the IEEE-754 format in their algorithms.                                  */
-#define TMPL_HAS_IEEE754_FLOAT 0
-#define TMPL_HAS_IEEE754_DOUBLE 0
-
-#else
-/*  Else statement of #if !defined(__STDC_IEC_559__).                         */
 
 /*  Check if TMPL_FLOAT_ENDIANNESS was defined in tmpl_endianness.h. It       *
  *  should be unless there was a problem when building libtmpl.               */
@@ -229,11 +218,17 @@ typedef union _tmpl_IEEE754_Float {
      *  for the exponent, and 2 variables adding up to 23 bits for the        *
      *  mantissa.                                                             */
     struct _float_bits {
+        /*  The notation x : n; means x will be a variable in the struct with *
+         *  exactly n bits reserved. So unsigned int sign : 1; means the      *
+         *  variable "sign" will have exactly 1 bit reserved for it.          */
         unsigned int sign : 1;
         unsigned int expo : 8;
         unsigned int man0 : 7;
         unsigned int man1 : 16;
     } bits;
+
+    /*  The above struct hold 32-bits, which the IEEE-754 format specifies as *
+     *  the size of a single-precision float. This is "float" in C.           */
     float r;
 } tmpl_IEEE754_Float;
 
@@ -243,7 +238,9 @@ typedef union _tmpl_IEEE754_Float {
 /*  Macro indicating support for IEEE-754 single precision.                   */
 #define TMPL_HAS_IEEE754_FLOAT 1
 
-/*  Same type of union as above, but for little endian.                       */
+/*  Same type of union as above, but for little endian. See the above union   *
+ *  for comments on this data type. Little endianness simply means we need    *
+ *  to swap the order of the bit-field in the union.                          */
 typedef union _tmpl_IEEE754_Float {
     struct _float_bits {
         unsigned int man1 : 16;
@@ -272,9 +269,12 @@ typedef union _tmpl_IEEE754_Float {
 #define TMPL_HAS_IEEE754_DOUBLE 0
 
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
+/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
 
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_DOUBLE 1
 
+/*  Same idea as the union used for float, but for a 64-bit double.           */
 typedef union _tmpl_IEEE754_Double {
     struct _big_bits {
         unsigned int sign : 1;
@@ -288,9 +288,13 @@ typedef union _tmpl_IEEE754_Double {
 } tmpl_IEEE754_Double;
 
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
+/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
 
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_DOUBLE 1
 
+/*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
+ *  endianness. See the above comments for information on this data type.     */
 typedef union _tmpl_IEEE754_Double {
     struct _big_bits {
         unsigned int man3 : 16;
@@ -304,25 +308,13 @@ typedef union _tmpl_IEEE754_Double {
 } tmpl_IEEE754_Double;
 
 #else
+/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
 
+/*  TMPL_DOUBLE_ENDIANNESS is likely set to unknown. Set this to zero.        */
 #define TMPL_HAS_IEEE754_DOUBLE 0
 
 #endif
 /*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
-
-#endif
-/*  End of #if !defined(__STDC_IEC_559__).                                    */
-
-extern void
-tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo);
-
-extern void
-tmpl_Float_Base2_Exp_and_Mant(float x, float *mant, signed int *expo);
-
-extern void
-tmpl_LDouble_Base2_Exp_and_Mant(long double x,
-                                long double *mant,
-                                signed long int *expo);
 
 /* Declare Miscellaneous Constants.                                           */
 
@@ -416,16 +408,6 @@ extern const float tmpl_Rad_to_Deg_F;
 extern const double tmpl_Rad_to_Deg;
 extern const long double tmpl_Rad_to_Deg_L;
 
-/*  Positive Infinity                                                         */
-extern const float tmpl_Infinity_F;
-extern const double tmpl_Infinity;
-extern const long double tmpl_Infinity_L;
-
-/*  Not-A-Number.                                                             */
-#define tmpl_NaN_F (0.0F / 0.0F)
-#define tmpl_NaN (0.0 / 0.0)
-#define tmpl_NaN_L (0.0L / 0.0L)
-
 /*  Largest value such that exp(x) will not return inifinity.                 */
 extern const float tmpl_Max_Float_Base_E;
 extern const double tmpl_Max_Double_Base_E;
@@ -436,6 +418,24 @@ extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
 
+extern float tmpl_Float_Infinity(void);
+extern double tmpl_Double_Infinity(void);
+extern long double tmpl_LDouble_Infinity(void);
+
+extern float tmpl_Float_NaN(void);
+extern double tmpl_Double_NaN(void);
+extern long double tmpl_LDouble_NaN(void);
+
+/*  Positive Infinity                                                         */
+#define TMPL_INFINITYF (tmpl_Float_Infinity())
+#define TMPL_INFINITY (tmpl_Double_Infinity())
+#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
+
+/*  Not-A-Number.                                                             */
+#define TMPL_NANF (tmpl_Float_NaN())
+#define TMPL_NAN (tmpl_Double_NaN())
+#define TMPL_NANL (tmpl_LDouble_NaN())
+
 extern tmpl_Bool tmpl_Float_Is_Inf(float x);
 extern tmpl_Bool tmpl_Double_Is_Inf(double x);
 extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
@@ -443,6 +443,41 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 extern tmpl_Bool tmpl_Float_Is_NaN(float x);
 extern tmpl_Bool tmpl_Double_Is_NaN(double x);
 extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Base2_Exp_and_Mant                                         *
+ *  Purpose:                                                                  *
+ *      Computes the exponent and mantissa of a float in base 2. That is,     *
+ *      given a number x, this function computes the numbers m and b such     *
+ *      that:                                                                 *
+ *          x = m * 2^b                                                       *
+ *      where 1 <= m < 2, and b is an integer. The exception is x = 0, where  *
+ *      m is set to 0, and b is set to zero.                                  *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          The value we want to extract the exponent and mantissa from.      *
+ *      mant (float *):                                                       *
+ *          A pointer to a float. The mantissa will be stored in this.        *
+ *      expo (signed int *):                                                  *
+ *          A pointer to a SIGNED int. The exponent will be stored in this.   *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *      It is assumed mant and expo are not NULL. Nothing is done if they are.*
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_base2_exp_and_mant.c                            *
+ ******************************************************************************/
+extern void
+tmpl_Float_Base2_Exp_and_Mant(float x, float *mant, signed int *expo);
+
+extern void
+tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo);
+
+extern void
+tmpl_LDouble_Base2_Exp_and_Mant(long double x, long double *mant,
+                                signed long int *expo);
 
 /******************************************************************************
  *  Function:                                                                 *
