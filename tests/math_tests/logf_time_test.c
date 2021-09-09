@@ -25,16 +25,12 @@
 
 int main(void)
 {
-    float start, end, dx, max_abs, max_rel, temp;
+    float start, end, dx, max_abs, max_rel, temp, worst_abs, worst_rel;
     float *x, *y0, *y1;
-    unsigned long int n, N;
+    float mant;
+    signed int expo;
+    unsigned long int n, N, bad;
     clock_t t1, t2;
-
-    float (*f0)(float);
-    float (*f1)(float);
-
-    f0 = tmpl_Float_Log;
-    f1 = logf;
 
     start = 0.0F;
     end   = 100.0F;
@@ -51,33 +47,45 @@ int main(void)
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y0[n] = f0(x[n]);
+        y0[n] = tmpl_Float_Log(x[n]);
     t2 = clock();
 
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y1[n] = f1(x[n]);
+        y1[n] = logf(x[n]);
     t2 = clock();
 
     printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
+    max_abs = 0.0F;
     max_rel = 0.0F;
+    worst_abs = start;
+    worst_rel = start;
+    bad = 0U;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabsf(y0[n] - y1[n]);
         if (max_abs < temp)
+        {
             max_abs = temp;
+            worst_abs = x[n];
+        }
 
         temp = fabsf((y0[n] - y1[n]) / y1[n]);
         if (max_rel < temp)
+        {
             max_rel = temp;
+            worst_rel = x[n];
+            bad = n;
+        }
     }
 
     printf("Max Abs Error: %.16e\n", (double)max_abs);
     printf("Max Rel Error: %.16e\n", (double)max_rel);
+    printf("Worst Abs: %.16e\n", (double)worst_abs);
+    printf("Worst Rel: %.16e\n", (double)worst_rel);
 
     free(x);
     free(y0);
