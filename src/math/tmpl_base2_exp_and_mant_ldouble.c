@@ -1,34 +1,50 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <float.h>
-
-#include <stdio.h>
-
-#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
-void tmpl_Float_Base2_Exp_and_Mant(float x, float *mant, signed int *expo)
-{
-    tmpl_IEEE754_Float w;
-    w.r = x;
-
-    *expo = (signed int)w.bits.expo - 0x7F;
-
-    w.bits.expo = 0x7FU;
-    *mant = w.r;
-}
-#endif
-
 
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
-void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
+void tmpl_LDouble_Base2_Exp_and_Mant(long double x,
+                                     long double *mant,
+                                     signed long int *expo)
 {
-    tmpl_IEEE754_Double w;
+    tmpl_IEEE754_LDouble w;
+
+    if (x == 0.0L)
+    {
+        *mant = 0.0L;
+        *expo = 0L;
+        return;
+    }
+    else if (tmpl_LDouble_Is_Inf(x))
+    {
+        *mant = TMPL_INFINITYL;
+        *expo = 0L;
+        return;
+    }
+    else if (tmpl_LDouble_Is_NaN(x))
+    {
+        *mant = TMPL_NANL;
+        *expo = 0L;
+        return;
+    }
+
     w.r = x;
 
-    *expo = (signed int)w.bits.expo - 0x3FF;
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_AMD64 || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_I386  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_AARCH64
+
+    *expo = (signed long int)w.bits.expo - 0x3FFF;
+    w.bits.expo = 0x3FFF;
+    *mant = w.r;
+#else
+    *expo = (signed long int)w.bits.expo - 0x3FF;
 
     w.bits.expo = 0x3FFU;
     *mant = w.r;
-}
 #endif
+}
+
+#else
+#include <float.h>
 
 void tmpl_LDouble_Base2_Exp_and_Mant(long double x,
                                      long double *mant,
@@ -165,3 +181,5 @@ void tmpl_LDouble_Base2_Exp_and_Mant(long double x,
     if (x < 0.0L)
         *mant = -*mant;
 }
+
+#endif

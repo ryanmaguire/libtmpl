@@ -274,7 +274,7 @@ static tmpl_float_type tmpl_det_float_type(void)
     f.big_bits.man0 = 0x0U;
     f.big_bits.man1 = 0x0U;
 
-    /*  If the float in the union is actual 1, we have IEEE-754 support and   *
+    /*  If the float in the union is actually 1 we have IEEE-754 support and  *
      *  we have big endianness for float.                                     */
     if (f.r == 1.0F)
         return tmpl_float_big_endian;
@@ -319,7 +319,7 @@ static tmpl_double_type tmpl_det_double_type(void)
          *  number of bits (up to 16, per the standard) for a single variable *
          *  inside the struct. Use this to have 1 bit for the sign, 11 bits   *
          *  for the exponent, and 52 bits for the mantissa. Note, to avoid    *
-         *  padding (adding extra redundant bits), Ensure that the 4-bit      *
+         *  padding (adding extra redundant bits), ensure that the 4-bit      *
          *  mantissa component is adjacent to the 11 bit exponent. This way   *
          *  the sign, exponent, and smallest mantissa component will occupy a *
          *  16 bit block and no padding will be needed.                       */
@@ -356,7 +356,7 @@ static tmpl_double_type tmpl_det_double_type(void)
     d.little_bits.man2 = 0x0U;
     d.little_bits.man3 = 0x0U;
 
-    /*  If the double in the union is actual 1, we have IEEE-754 support and  *
+    /*  If the double in the union is actually 1 we have IEEE-754 support and *
      *  we have little endianness for double.                                 */
     if (d.r == 1.0)
         return tmpl_double_little_endian;
@@ -514,7 +514,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     if (aarch64_type.r == 1.0L)
         return tmpl_ldouble_aarch64;
 
-    /*  Next, MIPS big endian.                                                */
+    /*  Next, MIPS big endian (or PowerPC, or s390).                          */
     mips_big_type.bits.man3 = 0x0U;
     mips_big_type.bits.man2 = 0x0U;
     mips_big_type.bits.man1 = 0x0U;
@@ -525,7 +525,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     if (mips_big_type.r == 1.0L)
         return tmpl_ldouble_mips_big_endian;
 
-    /*  Lastly, MIPS little endian (or PowerPC, or s390).                     */
+    /*  Lastly, MIPS little endian.                                           */
     mips_little_type.bits.man3 = 0x0U;
     mips_little_type.bits.man2 = 0x0U;
     mips_little_type.bits.man1 = 0x0U;
@@ -550,12 +550,12 @@ int main(void)
     tmpl_double_type double_type = tmpl_det_double_type();
     tmpl_ldouble_type ldouble_type = tmpl_det_ldouble_type();
 
-    /*  And lastly, open the file include/tmpl_endianness.h using fopen and   *
+    /*  Open the file include/tmpl_endianness.h using fopen and               *
      *  give the file write permissions.                                      */
     FILE *fp = fopen("./include/tmpl_endianness.h", "w");
 
     /*  If fopen fails, it returns NULL. Check that it did not.               */
-    if (fp == NULL)
+    if (!fp)
     {
         puts("Error Encountered: libtmpl\n"
              "    det_end.c\n"
@@ -624,7 +624,7 @@ int main(void)
     /*  Next, double.                                                         */
     if (double_type == tmpl_double_little_endian)
         fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_LITTLE_ENDIAN\n");
-    else if (float_type == tmpl_float_big_endian)
+    else if (double_type == tmpl_double_big_endian)
         fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_BIG_ENDIAN\n");
     else
         fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");

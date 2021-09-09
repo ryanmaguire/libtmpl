@@ -45,7 +45,7 @@
  *          overflow. This is undefined behavior, but in practice it works.   *
  *          This implementation uses similar tactics.                         *
  *                                                                            *
- *          A similar problems arises with NAN. IEEE-754 has a means of       *
+ *          A similar problems arise with NAN. IEEE-754 has a means of        *
  *          defining NAN, but compilers lacking this may not. The standard    *
  *          trick is to use 0.0 / 0.0, but this may also be undefined         *
  *          behavior. Again, in practice this usually works fine.             *
@@ -80,6 +80,8 @@
  *      Copied from rss_ringoccs.                                             *
  *  2021/09/03: Ryan Maguire                                                  *
  *      Rewriting to increase portability.                                    *
+ *  2021/09/09: Ryan Maguire                                                  *
+ *      Added long double IEEE-754 support.                                   *
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
@@ -148,7 +150,7 @@
  *                                                                            *
  *  Since we know the first digit in scientific notation is always 1, we don't*
  *  need to waste a bit and can store 53 bits worth of the fractional part    *
- *  using just 52 bits. The eeeeeeeeeee - 1023 needs an explaination. We want *
+ *  using just 52 bits. The eeeeeeeeeee - 1023 needs an explanation. We want  *
  *  to store fractional numbers between 0 and 1 and so we need negative       *
  *  exponents. We could reserve a second bit for the sign of the exponent,    *
  *  but the standard is to just subtract 2^10-1 from the exponent. The last   *
@@ -194,9 +196,8 @@
  *  should be unless there was a problem when building libtmpl.               */
 #if !defined(TMPL_FLOAT_ENDIANNESS)
 
-/*  If not, there is a problem with libtmpl. Set this macro to zero to be on  *
- *  the safe side. IEEE-754 support will not be assumed.                      */
-#define TMPL_HAS_IEEE754_FLOAT 0
+/*  If not, there is a problem with libtmpl. Abort compiling.                 */
+#error "tmpl_math.h: TMPL_FLOAT_ENDIANNESS is undefined."
 
 #elif TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN
 /*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
@@ -227,8 +228,8 @@ typedef union _tmpl_IEEE754_Float {
         unsigned int man1 : 16;
     } bits;
 
-    /*  The above struct hold 32-bits, which the IEEE-754 format specifies as *
-     *  the size of a single-precision float. This is "float" in C.           */
+    /*  The above struct holds 32-bits, which the IEEE-754 format specifies   *
+     *  as the size of a single-precision float. This is "float" in C.        */
     float r;
 } tmpl_IEEE754_Float;
 
@@ -264,9 +265,9 @@ typedef union _tmpl_IEEE754_Float {
 /*  Same thing for double precision.                                          */
 #if !defined(TMPL_DOUBLE_ENDIANNESS)
 
-/*  There is likely a problem with libtmpl. Set this macro to zero to be on   *
- *  the safe side. IEEE-754 support will not be assumed.                      */
-#define TMPL_HAS_IEEE754_DOUBLE 0
+/*  If TMPL_DOUBLE_ENDIANNESS is undefined, there is a problem with libtmpl.  *
+ *  Abort compiling.                                                          */
+#error "tmpl_math.h: TMPL_DOUBLE_ENDIANNESS is undefined."
 
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
 /*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
@@ -315,6 +316,145 @@ typedef union _tmpl_IEEE754_Double {
 
 #endif
 /*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
+
+/*  Same thing for long double. Long double is not as standardized as float   *
+ *  and double and there are several ways to implement it. This includes      *
+ *  64-bit, 80-bit, 96-bit, and 128-bit implementations, and with big or      *
+ *  little endianness. The macro TMPL_LDOUBLE_ENDIANNESS contains this        *
+ *  information.                                                              */
+#if !defined(TMPL_LDOUBLE_ENDIANNESS)
+
+/*  If TMPL_LDOUBLE_ENDIANNESS is undefined, there is a problem with libtmpl. *
+ *  Abort compiling.                                                          */
+#error "tmpl_math.h: TMPL_LDOUBLE_ENDIANNESS is undefined."
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_AMD64
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  The most common type of long double for personal computers is the         *
+ *  little endian amd64 format (also the x86_64 format). This uses            *
+ *  the IEEE-754 extended precision 80-bit format with 48-bits of padding     *
+ *  to create a single 128-bit object. The padding components are junk        *
+ *  and can almost always be ignored.                                         */
+typedef union _tmpl_IEEE754_LDouble {
+    struct {
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 15;
+
+        /*  The 80-bit extended format specifies that the 64th bit is the     *
+         *  integer part of the mantissa. That is, the value n in the         *
+         *  representation x = n.m * 2^e (m is the rest of the mantissa,      *
+         *  e is the exponent). It is a single bit and can be 0 or 1.         */
+        unsigned int intr : 1;
+        unsigned int expo : 15;
+        unsigned int sign : 1;
+        unsigned int pad2 : 16;
+        unsigned int pad1 : 16;
+        unsigned int pad0 : 16;
+    } bits;
+
+    /*  Long double the above struct represents.                              */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_I386
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  The i386 architecture uses a 96-bit implementation. This uses the         *
+ *  80-bit extended precision with 16 bits of padding.                        */
+typedef union _tmpl_IEEE754_LDouble {
+    struct {
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 15;
+        unsigned int intr : 1;
+        unsigned int expo : 15;
+        unsigned int sign : 1;
+        unsigned int pad0 : 16;
+    } bits;
+
+    /*  Long double the above struct represents.                              */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_AARCH64
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  aarch64 uses the 128-bit quadruple precision for long double.             */
+typedef union _tmpl_IEEE754_LDouble {
+    struct {
+        unsigned int man6 : 16;
+        unsigned int man5 : 16;
+        unsigned int man4 : 16;
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 16;
+        unsigned int expo : 15;
+        unsigned int sign : 1;
+    } bits;
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_MIPS_LITTLE_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  MIPS little endian uses the same structure as double, 64 bit.             */
+typedef union _tmpl_IEEE754_LDouble {
+    struct {
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 4;
+        unsigned int expo : 11;
+        unsigned int sign : 1;
+    } bits;
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_MIPS_BIG_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  MIPS for big endian. PowerPC and S390 also implement long double          *
+ *  using this style, which is the same as double.                            */
+typedef union _tmpl_IEEE754_LDouble {
+    struct {
+        unsigned int sign : 1;
+        unsigned int expo : 11;
+        unsigned int man0 : 4;
+        unsigned int man1 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
+    } bits;
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#else
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  No support for IEEE-754 long double. Set this to zero.                    */
+#define TMPL_HAS_IEEE754_LDOUBLE 0
+
+#endif
+/*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
 
 /* Declare Miscellaneous Constants.                                           */
 
