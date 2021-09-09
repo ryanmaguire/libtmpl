@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -19,12 +19,12 @@
  *                              tmpl_infinity                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide a infinity for libtmpl.                                       *
+ *      Provide infinity for libtmpl.                                         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
- *      Header file where all of these constants are declared.                *
+ *          Header file containing the function prototype.                    *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -37,7 +37,7 @@
  *  Date:       May 7, 2021                                                   *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_endianness.h>
+/*  Function prototype and IEEE-754 data types here.                          */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Single-precision real positive infinity.                                  */
@@ -45,6 +45,7 @@ float tmpl_Float_Infinity(void)
 {
     /*  Check for IEEE-754. This is the easiest way to define infinity.       */
 #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
+
     /*  IEEE-754 declares single precision positive infinity to have zero for *
      *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
      *  sign. Set the bits to this and then return the resulting float.       */
@@ -73,9 +74,10 @@ double tmpl_Double_Infinity(void)
 {
     /*  Check for IEEE-754. This is the easiest way to define infinity.       */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+
     /*  IEEE-754 declares double precision positive infinity to have zero for *
      *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
-     *  sign. Set the bits to this and then return the resulting float.       */
+     *  sign. Set the bits to this and then return the resulting double.      */
     tmpl_IEEE754_Double x;
     x.bits.sign = 0x0U;
     x.bits.expo = 0x7FFU;
