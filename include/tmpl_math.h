@@ -171,7 +171,7 @@
  *  Setting 2^1023 to infinity means we can reserve a number for              *
  *  Not-a-Number (NaN) as follows:                                            *
  *                                                                            *
- *    0 11111111111 1111111111111111111111111111111111111111111111111111      *
+ *    0 11111111111 1000000000000000000000000000000000000000000000000001      *
  *      = NaN                                                                 *
  *                                                                            *
  *  This is useful for log(-1) or sqrt(-1) or 0.0/0.0. As a final example,    *
@@ -205,7 +205,7 @@
 #define TMPL_HAS_IEEE754_FLOAT 1
 
 /*  To access the binary representation of a floating point number, we use    *
- *  unions. Unions allows us to have different data types share the same block*
+ *  unions. Unions allow us to have different data types share the same block *
  *  of memory. If we have a union of a floating point and an integer, and then*
  *  set the floating point part to some number, then when we try to access the*
  *  integer part it will already have its bits set (They'll be set by the     *
@@ -413,29 +413,71 @@ extern const float tmpl_Max_Float_Base_E;
 extern const double tmpl_Max_Double_Base_E;
 extern const long double tmpl_Max_LDouble_Base_E;
 
-/*  Smallest positive value such that exp(x) will not return zero.            */
+/*  Smallest value such that exp(x) will not return zero.                     */
 extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Infinity                                                   *
+ *  Purpose:                                                                  *
+ *      Returns positive infinity.                                            *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      inf (float):                                                          *
+ *          Positive infinity.                                                *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *      If IEEE-754 support is available, this code creates infinity using    *
+ *      the format. If not, the function mimics glibc's method, returning     *
+ *      the number 1.0E10000 which is guaranteed to overflow.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_infinity.c                                      *
+ ******************************************************************************/
 extern float tmpl_Float_Infinity(void);
 extern double tmpl_Double_Infinity(void);
 extern long double tmpl_LDouble_Infinity(void);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_NaN                                                        *
+ *  Purpose:                                                                  *
+ *      Returns Not-A-Number.                                                 *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      nan (float):                                                          *
+ *          Not-a-Number.                                                     *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *      If IEEE-754 support is available, this code creates NaN using         *
+ *      the format. If not, the function mimics glibc's method, returning     *
+ *      the number 0.0 / 0.0 which should be NaN.                             *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_nan.c                                           *
+ ******************************************************************************/
 extern float tmpl_Float_NaN(void);
 extern double tmpl_Double_NaN(void);
 extern long double tmpl_LDouble_NaN(void);
 
-/*  Positive Infinity                                                         */
-#define TMPL_INFINITYF (tmpl_Float_Infinity())
-#define TMPL_INFINITY (tmpl_Double_Infinity())
-#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
-
-/*  Not-A-Number.                                                             */
-#define TMPL_NANF (tmpl_Float_NaN())
-#define TMPL_NAN (tmpl_Double_NaN())
-#define TMPL_NANL (tmpl_LDouble_NaN())
-
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Is_Inf                                                     *
+ *  Purpose:                                                                  *
+ *      This function tests if a number is positive or negative infinity.     *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      is_inf (tmpl_Bool):                                                   *
+ *          A Boolean indicating if x is +/- infinity or not.                 *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_is_inf.c                                        *
+ ******************************************************************************/
 extern tmpl_Bool tmpl_Float_Is_Inf(float x);
 extern tmpl_Bool tmpl_Double_Is_Inf(double x);
 extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
@@ -776,6 +818,16 @@ tmpl_Min_Long(long *arr, unsigned long n_elements);
 
 extern unsigned long
 tmpl_Min_ULong(unsigned long *arr, unsigned long n_elements);
+
+/*  Macro for positive infinity                                               */
+#define TMPL_INFINITYF (tmpl_Float_Infinity())
+#define TMPL_INFINITY (tmpl_Double_Infinity())
+#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
+
+/*  Macro for Not-A-Number.                                                   */
+#define TMPL_NANF (tmpl_Float_NaN())
+#define TMPL_NAN (tmpl_Double_NaN())
+#define TMPL_NANL (tmpl_LDouble_NaN())
 
 
 #endif
