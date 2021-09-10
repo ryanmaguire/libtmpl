@@ -969,6 +969,5 @@ tmpl_Min_ULong(unsigned long *arr, unsigned long n_elements);
 #define TMPL_NAN (tmpl_Double_NaN())
 #define TMPL_NANL (tmpl_LDouble_NaN())
 
-
 #endif
 /*  End of include guard.                                                     */

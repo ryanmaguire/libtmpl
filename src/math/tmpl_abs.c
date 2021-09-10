@@ -194,9 +194,19 @@ double tmpl_Double_Abs(double x)
 #endif
 /* End of #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1*/
 
-/*  libtmpl does not implement IEEE754 support for long double extended       *
- *  precision. This is because extended precision can be 80, 96, or 128 bit.  *
- *  Guessing which one is being used would break portability.                 */
+/*  Check for IEEE-754 long double support.                                   */
+#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
+
+/*  Long double precision absolute value function (fabsl equivalent).         */
+long double tmpl_LDouble_Abs(long double x)
+{
+    tmpl_IEEE754_LDouble w;
+    w.r = x;
+    w.bits.sign = 0x0U;
+    return w.r;
+}
+
+#else
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)
@@ -214,3 +224,4 @@ long double tmpl_LDouble_Abs(long double x)
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
 
+#endif
