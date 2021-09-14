@@ -69,6 +69,10 @@ typedef struct tmpl_TwoByTwoMatrix {
     double dat[2][2];
 } tmpl_TwoByTwoMatrix;
 
+typedef struct _tmpl_LineSegment2D {
+    tmpl_TwoVector dat[2];
+} tmpl_LineSegment2D;
+
 typedef struct tmpl_Line2D {
     tmpl_TwoVector P;
     tmpl_TwoVector V;
@@ -84,6 +88,13 @@ typedef struct _tmpl_Circle2D {
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_Circle2D;
+
+typedef struct _tmpl_Polygon2D {
+    tmpl_TwoVector *points;
+    unsigned long int number_of_points;
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_Polygon2D;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -135,8 +146,6 @@ tmpl_Euclidean_Orthogonal_Vector_2D(tmpl_TwoVector v);
  *  Outputs:                                                                  *
  *      double out:                                                           *
  *          The (m,n) component of the tmpl_TwoByTwoMatrix                    *
- *  Note:                                                                     *
- *      This is not a function, but rather a preprocessor macro.              *
  ******************************************************************************/
 extern double
 tmpl_TwoByTwoMatrix_Component(tmpl_TwoByTwoMatrix A,
@@ -216,9 +225,11 @@ extern tmpl_TwoByTwoMatrix tmpl_Rotation_Matrix_2D(double theta);
 extern tmpl_TwoByTwoMatrix
 tmpl_TwoByTwoMatrix_Scale(double r, tmpl_TwoByTwoMatrix P);
 
-extern double tmpl_TwoByTwoMatrix_Determinant(tmpl_TwoByTwoMatrix A);
+extern double
+tmpl_TwoByTwoMatrix_Determinant(tmpl_TwoByTwoMatrix A);
 
-extern tmpl_TwoByTwoMatrix tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A);
+extern tmpl_TwoByTwoMatrix
+tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -485,6 +496,10 @@ tmpl_TwoVector_Euclidean_Is_Collinear(tmpl_TwoVector A,
 
 extern double
 tmpl_TwoVector_Euclidean_Distance(tmpl_TwoVector A, tmpl_TwoVector B);
+
+
+extern tmpl_Bool
+tmpl_LineSegment2D_Intersect(tmpl_LineSegment2D L0, tmpl_LineSegment2D L1);
 
 #endif
 /*  End of include guard.                                                     */
