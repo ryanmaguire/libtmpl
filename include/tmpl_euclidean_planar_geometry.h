@@ -182,52 +182,6 @@ tmpl_LDouble_Rotation_Matrix2D(long double theta);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_TwoVector_Euclidean_Orthogonal                                   *
- *  Purpose:                                                                  *
- *      Compute a vector which is orthogonal to the input.                    *
- *  Arguments:                                                                *
- *      tmpl_TwoVector v:                                                     *
- *          A 2D vector.                                                      *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector orth:                                                  *
- *          A vector orthogonal to v.                                         *
- *  NOTE:                                                                     *
- *      Float and Long Double precisions are also provided.                   *
- ******************************************************************************/
-extern tmpl_FloatTwoVector
-tmpl_FloatTwoVector_Euclidean_Orthogonal(tmpl_FloatTwoVector v);
-
-extern tmpl_DoubleTwoVector
-tmpl_DoubleTwoVector_Euclidean_Orthogonal(tmpl_DoubleTwoVector v);
-
-extern tmpl_LDoubleTwoVector
-tmpl_LDoubleTwoVector_Euclidean_Orthogonal(tmpl_LDoubleTwoVector v);
-
-#define tmpl_TwoVector_Euclidean_Orthogonal \
-        tmpl_DoubleTwoVector_Euclidean_Orthogonal
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_GET_2x2_MATRIX_COMPONENT                                         *
- *  Purpose:                                                                  *
- *      Returns the (m,n) element of a 2x2 matrix.                            *
- *  Arguments:                                                                *
- *      tmpl_TwoByTwoMatrix A:                                                *
- *          A 2x2 matrix.                                                     *
- *      int m:                                                                *
- *          The first index of the element.                                   *
- *      int n:                                                                *
- *          The second index of the element.                                  *
- *  Outputs:                                                                  *
- *      double out:                                                           *
- *          The (m,n) component of the tmpl_TwoByTwoMatrix                    *
- *  Note:                                                                     *
- *      This is not a function, but rather a preprocessor macro.              *
- ******************************************************************************/
-#define tmpl_GET_2x2_MATRIX_COMPONENT(A, m, n) (A.dat[m][n])
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_TwoByTwoMatrix_Component                                         *
  *  Purpose:                                                                  *
  *      Returns the (m,n) element of a 2x2 matrix.                            *
@@ -280,6 +234,26 @@ extern long double
 tmpl_LDoubleTwoByTwoMatrix_Determinant(tmpl_LDoubleTwoByTwoMatrix A);
 
 #define tmpl_TwoByTwoMatrix_Determinant tmpl_DoubleTwoByTwoMatrix_Determinant
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_GET_2x2_MATRIX_COMPONENT                                         *
+ *  Purpose:                                                                  *
+ *      Returns the (m,n) element of a 2x2 matrix.                            *
+ *  Arguments:                                                                *
+ *      tmpl_TwoByTwoMatrix A:                                                *
+ *          A 2x2 matrix.                                                     *
+ *      int m:                                                                *
+ *          The first index of the element.                                   *
+ *      int n:                                                                *
+ *          The second index of the element.                                  *
+ *  Outputs:                                                                  *
+ *      double out:                                                           *
+ *          The (m,n) component of the tmpl_TwoByTwoMatrix                    *
+ *  Note:                                                                     *
+ *      This is not a function, but rather a preprocessor macro.              *
+ ******************************************************************************/
+#define tmpl_GET_2x2_MATRIX_COMPONENT(A, m, n) (A.dat[m][n])
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -364,6 +338,89 @@ extern tmpl_LDoubleTwoByTwoMatrix
 tmpl_LDoubleTwoByTwoMatrix_Scale(long double r, tmpl_LDoubleTwoByTwoMatrix P);
 
 #define tmpl_TwoByTwoMatrix_Scale tmpl_DoubleTwoByTwoMatrix_Scale
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoVector_Add                                                    *
+ *  Purpose:                                                                  *
+ *      Given two tmpl_TwoVector's, compute the vector sum of them.           *
+ *  Arguments:                                                                *
+ *      tmpl_TwoVector P:                                                     *
+ *          An arbitrary tmpl_TwoVector.                                      *
+ *      tmpl_TwoVector Q:                                                     *
+ *          The vector we wish to add to P.                                   *
+ *  Outputs:                                                                  *
+ *      tmpl_TwoVector sum:                                                   *
+ *          The vector sum P+Q.                                               *
+ *  Location:                                                                 *
+ *      The source code is contained in src/kissvg.c                          *
+ ******************************************************************************/
+extern tmpl_FloatTwoVector
+tmpl_FloatTwoVector_Add(tmpl_FloatTwoVector P, tmpl_FloatTwoVector Q);
+
+extern tmpl_DoubleTwoVector
+tmpl_DoubleTwoVector_Add(tmpl_DoubleTwoVector P, tmpl_DoubleTwoVector Q);
+
+extern tmpl_LDoubleTwoVector
+tmpl_LDoubleTwoVector_Add(tmpl_LDoubleTwoVector P, tmpl_LDoubleTwoVector Q);
+
+#define tmpl_TwoVector_Add tmpl_DoubleTwoVector
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoVector_Dot_Product                                            *
+ *  Purpose:                                                                  *
+ *      Compute the Euclidean dot product of two 2D vectors.                  *
+ *  Arguments:                                                                *
+ *      tmpl_TwoVector P:                                                     *
+ *          A 2D vector.                                                      *
+ *      tmpl_TwoVector Q:                                                     *
+ *          Another 2D vector.                                                *
+ *  Outputs:                                                                  *
+ *      double dot_prod:                                                      *
+ *          The dot product of P and Q.                                       *
+ *  Source Code:                                                              *
+ *      src/euclidean_planar_geometry/tmpl_two_vector_dot_product.c           *
+ ******************************************************************************/
+extern float
+tmpl_FloatTwoVector_Dot_Product(tmpl_FloatTwoVector P, tmpl_FloatTwoVector Q);
+
+extern double
+tmpl_DoubleTwoVector_Dot_Product(tmpl_DoubleTwoVector P,
+                                 tmpl_DoubleTwoVector Q);
+
+extern long double
+tmpl_LDoubleTwoVector_Dot_Product(tmpl_LDoubleTwoVector P,
+                                  tmpl_LDoubleTwoVector Q);
+
+#define tmpl_TwoVector_Dot_Product tmpl_DoubleTwoVector_Dot_Product
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoVector_Euclidean_Orthogonal                                   *
+ *  Purpose:                                                                  *
+ *      Compute a vector which is orthogonal to the input.                    *
+ *  Arguments:                                                                *
+ *      tmpl_TwoVector v:                                                     *
+ *          A 2D vector.                                                      *
+ *  Outputs:                                                                  *
+ *      tmpl_TwoVector orth:                                                  *
+ *          A vector orthogonal to v.                                         *
+ *  NOTE:                                                                     *
+ *      Float and Long Double precisions are also provided.                   *
+ ******************************************************************************/
+extern tmpl_FloatTwoVector
+tmpl_FloatTwoVector_Euclidean_Orthogonal(tmpl_FloatTwoVector v);
+
+extern tmpl_DoubleTwoVector
+tmpl_DoubleTwoVector_Euclidean_Orthogonal(tmpl_DoubleTwoVector v);
+
+extern tmpl_LDoubleTwoVector
+tmpl_LDoubleTwoVector_Euclidean_Orthogonal(tmpl_LDoubleTwoVector v);
+
+#define tmpl_TwoVector_Euclidean_Orthogonal \
+        tmpl_DoubleTwoVector_Euclidean_Orthogonal
+
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -475,33 +532,6 @@ extern long double tmpl_LDoubleTwoVector_Y(tmpl_LDoubleTwoVector P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_TwoVector_Add                                                    *
- *  Purpose:                                                                  *
- *      Given two tmpl_TwoVector's, compute the vector sum of them.           *
- *  Arguments:                                                                *
- *      tmpl_TwoVector P:                                                     *
- *          An arbitrary tmpl_TwoVector.                                      *
- *      tmpl_TwoVector Q:                                                     *
- *          The vector we wish to add to P.                                   *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector sum:                                                   *
- *          The vector sum P+Q.                                               *
- *  Location:                                                                 *
- *      The source code is contained in src/kissvg.c                          *
- ******************************************************************************/
-extern tmpl_FloatTwoVector
-tmpl_FloatTwoVector_Add(tmpl_FloatTwoVector P, tmpl_FloatTwoVector Q);
-
-extern tmpl_DoubleTwoVector
-tmpl_DoubleTwoVector_Add(tmpl_DoubleTwoVector P, tmpl_DoubleTwoVector Q);
-
-extern tmpl_LDoubleTwoVector
-tmpl_LDoubleTwoVector_Add(tmpl_LDoubleTwoVector P, tmpl_LDoubleTwoVector Q);
-
-#define tmpl_TwoVector_Add tmpl_DoubleTwoVector
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_TwoVector_Subtract                                               *
  *  Purpose:                                                                  *
  *      Given two tmpl_TwoVector's P and Q, compute P-Q.                      *
@@ -576,24 +606,6 @@ extern double tmpl_TwoVector_Euclidean_Norm(tmpl_TwoVector P);
  *      src/euclidean_planar_geometry/tmpl_two_vector_euclidean_norm_squared.c*
  ******************************************************************************/
 extern double tmpl_TwoVector_Euclidean_Norm_Squared(tmpl_TwoVector P);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_TwoVector_Dot_Product                                            *
- *  Purpose:                                                                  *
- *      Compute the Euclidean dot product of two 2D vectors.                  *
- *  Arguments:                                                                *
- *      tmpl_TwoVector P:                                                     *
- *          A 2D vector.                                                      *
- *      tmpl_TwoVector Q:                                                     *
- *          Another 2D vector.                                                *
- *  Outputs:                                                                  *
- *      double dot_prod:                                                      *
- *          The dot product of P and Q.                                       *
- *  Source Code:                                                              *
- *      src/euclidean_planar_geometry/tmpl_two_vector_dot_product.c           *
- ******************************************************************************/
-extern double tmpl_TwoVector_Dot_Product(tmpl_TwoVector P, tmpl_TwoVector Q);
 
 /******************************************************************************
  *  Function:                                                                 *
