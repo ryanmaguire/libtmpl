@@ -44,17 +44,67 @@
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Computes the determinant of a 2x2 matrix.                                 */
-double tmpl_TwoByTwoMatrix_Determinant(tmpl_TwoByTwoMatrix A)
+float tmpl_FloatTwoByTwoMatrix_Determinant(tmpl_FloatTwoByTwoMatrix A)
 {
-    double a00, a01, a10, a11, det;
 
-    a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
-    a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
-    a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
-    a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+    /*  Extract the components of the matrix.                                 */
+    const float a = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    const float b = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    const float c = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    const float d = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
 
-    det = a00*a11 - a01*a10;
-    return det;
+    /*  The determinant of the matrix                                         *
+     *                                                                        *
+     *       --    --                                                         *
+     *      |  a  b  |                                                        *
+     *      |  c  d  |                                                        *
+     *       --    --                                                         *
+     *                                                                        *
+     *  Is ad - bc. Return this.                                              */
+    return a*d - b*c;
 }
-/*  End of tmpl_TwoByTwoMatrix_Determinant.                                   */
+/*  End of tmpl_FloatTwoByTwoMatrix_Determinant.                              */
 
+/*  Computes the determinant of a 2x2 matrix.                                 */
+double tmpl_DoubleTwoByTwoMatrix_Determinant(tmpl_DoubleTwoByTwoMatrix A)
+{
+
+    /*  Extract the components of the matrix.                                 */
+    const double a = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    const double b = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    const double c = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    const double d = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+
+    /*  The determinant of the matrix                                         *
+     *                                                                        *
+     *       --    --                                                         *
+     *      |  a  b  |                                                        *
+     *      |  c  d  |                                                        *
+     *       --    --                                                         *
+     *                                                                        *
+     *  Is ad - bc. Return this.                                              */
+    return a*d - b*c;
+}
+/*  End of tmpl_DoubleTwoByTwoMatrix_Determinant.                             */
+
+/*  Computes the determinant of a 2x2 matrix.                                 */
+long double tmpl_LDoubleTwoByTwoMatrix_Determinant(tmpl_LDoubleTwoByTwoMatrix A)
+{
+
+    /*  Extract the components of the matrix.                                 */
+    const long double a = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    const long double b = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    const long double c = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    const long double d = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+
+    /*  The determinant of the matrix                                         *
+     *                                                                        *
+     *       --    --                                                         *
+     *      |  a  b  |                                                        *
+     *      |  c  d  |                                                        *
+     *       --    --                                                         *
+     *                                                                        *
+     *  Is ad - bc. Return this.                                              */
+    return a*d - b*c;
+}
+/*  End of tmpl_LDoubleTwoByTwoMatrix_Determinant.                            */

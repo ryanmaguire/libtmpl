@@ -51,27 +51,43 @@
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for adding 2 two-dimensional vectors.                            */
-tmpl_TwoVector tmpl_TwoVector_Add(tmpl_TwoVector P, tmpl_TwoVector Q)
+tmpl_DoubleTwoVector
+tmpl_DoubleTwoVector_Add(tmpl_DoubleTwoVector P, tmpl_DoubleTwoVector Q)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    double Px, Py, Qx, Qy, x, y;
-    tmpl_TwoVector sum;
-
     /*  Extract the x and y components from P.                                */
-    Px = tmpl_TwoVector_X(P);
-    Py = tmpl_TwoVector_Y(P);
+    const double Px = tmpl_DoubleTwoVector_X(P);
+    const double Py = tmpl_DoubleTwoVector_Y(P);
 
     /*  Extract the x and y components from Q.                                */
-    Qx = tmpl_TwoVector_X(Q);
-    Qy = tmpl_TwoVector_Y(Q);
+    const double Qx = tmpl_DoubleTwoVector_X(Q);
+    const double Qy = tmpl_DoubleTwoVector_Y(Q);
 
     /*  The sum of two vectors simply adds their components together.         */
-    x = Px + Qx;
-    y = Py + Qy;
+    const double x = Px + Qx;
+    const double y = Py + Qy;
 
     /*  Use tmpl_TwoVector_Rect to create the output vector and return.       */
-    sum = tmpl_TwoVector_Rect(x, y);
-    return sum;
+    return tmpl_DoubleTwoVector_Rect(x, y);
 }
-/*  End of tmpl_TwoVector_Add.                                                */
+/*  End of tmpl_DoubleTwoVector_Add.                                          */
 
+/*  Function for adding 2 two-dimensional vectors.                            */
+tmpl_LDoubleTwoVector
+tmpl_LDoubleTwoVector_Add(tmpl_LDoubleTwoVector P, tmpl_LDoubleTwoVector Q)
+{
+    /*  Extract the x and y components from P.                                */
+    const long double Px = tmpl_LDoubleTwoVector_X(P);
+    const long double Py = tmpl_LDoubleTwoVector_Y(P);
+
+    /*  Extract the x and y components from Q.                                */
+    const long double Qx = tmpl_LDoubleTwoVector_X(Q);
+    const long double Qy = tmpl_LDoubleTwoVector_Y(Q);
+
+    /*  The sum of two vectors simply adds their components together.         */
+    const long double x = Px + Qx;
+    const long double y = Py + Qy;
+
+    /*  Use tmpl_TwoVector_Rect to create the output vector and return.       */
+    return tmpl_LDoubleTwoVector_Rect(x, y);
+}
+/*  End of tmpl_LDoubleTwoVector_Add.                                         */
