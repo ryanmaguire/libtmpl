@@ -1,20 +1,20 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Returns the y component of a two dimensional vector/planar point.     *
@@ -44,23 +44,39 @@
  *      Created file (Wellesley College for librssringoccs).                  *
  *  2021/03/03: Ryan Maguire                                                  *
  *      Edited file for use in libtmpl.                                       *
+ *  2021/09/15: Ryan Maguire                                                  *
+ *      Edited license and added float and long double support.               *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
+/*  Function prototypes and two-vector typedef's found here.                  */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for returning the y component of a two dimensional vector.       */
-double tmpl_TwoVector_Y(tmpl_TwoVector P)
+float tmpl_FloatTwoVector_Y(tmpl_FloatTwoVector P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double y;
-
-    /*  tmpl_TwoVector is defined the same way tmpl_ComplexDouble is. It is a *
-     *  struct containing a single double array dat consisting of two entries.*
-     *  The first entry corresponds to the y component. Retrieve this and     *
-     *  return.                                                               */
-    y = P.dat[1];
-    return y;
+    /*  The tmpl_FloatTwoVector mimics the method used by GSL for complex     *
+     *  numbers, using a struct containing a float array with 2 elements.     *
+     *  The y component is the first element. Return this.                    */
+    return P.dat[1];
 }
-/*  End of tmpl_TwoVector_Y.                                                  */
+/*  End of tmpl_FloatTwoVector_Y.                                             */
 
+/*  Function for returning the y component of a two dimensional vector.       */
+double tmpl_DoubleTwoVector_Y(tmpl_DoubleTwoVector P)
+{
+    /*  The tmpl_DoubleTwoVector mimics the method used by GSL for complex    *
+     *  numbers, using a struct containing a double array with 2 elements.    *
+     *  The y component is the first element. Return this.                    */
+    return P.dat[1];
+}
+/*  End of tmpl_DoubleTwoVector_Y.                                            */
+
+/*  Function for returning the y component of a two dimensional vector.       */
+long double tmpl_LDoubleTwoVector_Y(tmpl_LDoubleTwoVector P)
+{
+    /*  The tmpl_LDoubleTwoVector mimics the method used by GSL for complex   *
+     *  numbers, using a struct containing a long double array with 2         *
+     *  elements. The y component is the first element. Return this.          */
+    return P.dat[1];
+}
+/*  End of tmpl_LDoubleTwoVector_Y.                                           */

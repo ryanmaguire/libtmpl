@@ -22,11 +22,16 @@
  *      Define data types for two dimensional Euclidean geometry, and give    *
  *      the prototypes for useful functions in planar geometry.               *
  *                                                                            *
- *  NOTES:                                                                    *
+ *  NOTE:                                                                     *
  *      A lot of the code comes from code I wrote for both rss_ringoccs, and  *
  *      for my vector graphics library KissVG. Many of the tools are being    *
  *      centralized to this project to save myself from maintaining repeat    *
  *      code.                                                                 *
+ ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file containing Booleans.                                  *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -52,53 +57,132 @@
  *      Created file (KissVG).                                                *
  *  2021/03/03: Ryan Maguire                                                  *
  *      Edited file for use in libtmpl.                                       *
+ *  2021/09/15: Ryan Maguire                                                  *
+ *      Adding tools for working with planar polygons.                        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_EUCLIDEAN_PLANAR_GEOMETRY_H
 #define TMPL_EUCLIDEAN_PLANAR_GEOMETRY_H
 
+/*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Data types for two dimensional points and transformations, respectively.  */
-typedef struct tmpl_TwoVector {
+/*  Data types for two dimensional points at various precisions.              */
+typedef struct _tmpl_FloatTwoVector {
+    float dat[2];
+} tmpl_FloatTwoVector;
+
+typedef struct _tmpl_DoubleTwoVector {
     double dat[2];
-} tmpl_TwoVector;
+} tmpl_DoubleTwoVector;
 
-typedef struct tmpl_TwoByTwoMatrix {
+typedef struct _tmpl_LDoubleTwoVector {
+    long double dat[2];
+} tmpl_LDoubleTwoVector;
+
+/*  For simplicity, TwoVector is typedef'd to double precision.               */
+typedef tmpl_DoubleTwoVector tmpl_TwoVector;
+
+/*  Data types for linear transformations of the plane.                       */
+typedef struct _tmpl_FloatTwoByTwoMatrix {
+    float dat[2][2];
+} tmpl_FloatTwoByTwoMatrix;
+
+typedef struct _tmpl_DoubleTwoByTwoMatrix {
     double dat[2][2];
-} tmpl_TwoByTwoMatrix;
+} tmpl_DoubleTwoByTwoMatrix;
 
-typedef struct _tmpl_LineSegment2D {
-    tmpl_TwoVector dat[2];
-} tmpl_LineSegment2D;
+typedef struct _tmpl_LDoubleTwoByTwoMatrix {
+    long double dat[2][2];
+} tmpl_LDoubleTwoByTwoMatrix;
 
+/*  Similarly, typedef TwoByTwoMatrix to double precision for simplicity.     */
+typedef tmpl_DoubleTwoByTwoMatrix tmpl_TwoByTwoMatrix;
+
+/*  A line segment is given by the start and end points.                      */
+typedef struct _tmpl_FloatLineSegment2D {
+    tmpl_FloatTwoVector dat[2];
+} tmpl_FloatLineSegment2D;
+
+typedef struct _tmpl_DoubleLineSegment2D {
+    tmpl_DoubleTwoVector dat[2];
+} tmpl_DoubleLineSegment2D;
+
+typedef struct _tmpl_LDoubleLineSegment2D {
+    tmpl_LDoubleTwoVector dat[2];
+} tmpl_LDoubleLineSegment2D;
+
+/*  Typedef LineSegment2D to double precision for simplicity.                 */
+typedef tmpl_DoubleLineSegment2D tmpl_LineSegment2D;
+
+/*  A line is given by a point on the line, and the direction. That is, we    *
+ *  can write a(t) = P + tV.                                                  */
 typedef struct tmpl_Line2D {
     tmpl_TwoVector P;
     tmpl_TwoVector V;
 } tmpl_Line2D;
 
+/*  Planar circles are represented by a point and a radius. Many functions    *
+ *  allow circles to degenerate to straight lines. In this case the radius is *
+ *  infinite, and the "center" instead becomes the line. To save memory, a    *
+ *  union is used between the center and the line.                            */
 typedef struct _tmpl_Circle2D {
     union Data {
         tmpl_TwoVector center;
         tmpl_Line2D line;
     } data;
     double radius;
+
+    /*  Boolean for if the circle degenerated to a line.                      */
     tmpl_Bool is_line;
+
+    /*  Boolean for keeping track of errors in computations. Most functions   *
+     *  check this variable before doing anything.                            */
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_Circle2D;
 
+/*  A polygon is an array of points which represent the vertices of the       *
+ *  polygon. There's no need for simple polygons, so a polygon with two       *
+ *  points will be treated as a path from P to Q and then from Q to P.        */
 typedef struct _tmpl_Polygon2D {
     tmpl_TwoVector *points;
     unsigned long int number_of_points;
+
+    /*  Boolean for keeping track of errors in various computations.          */
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_Polygon2D;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Euclidean_Orthogonal_Vector_2D                                   *
+ *      tmpl_Rotation_Matrix_2D                                               *
+ *  Purpose:                                                                  *
+ *      Returns the rotation matrix corresponding to the angle theta.         *
+ *  Arguments:                                                                *
+ *      double theta:                                                         *
+ *          A real number, the angle to rotate by.                            *
+ *  Outputs:                                                                  *
+ *      tmpl_TwoByTwoMatrix R:                                                *
+ *          The rotation matrix.                                              *
+ *  Location:                                                                 *
+ *      The source code is contained in src/kissvg.c                          *
+ ******************************************************************************/
+extern tmpl_FloatTwoByTwoMatrix
+tmpl_Float_Rotation_Matrix2D(float theta);
+
+extern tmpl_DoubleTwoByTwoMatrix
+tmpl_Double_Rotation_Matrix2D(double theta);
+
+extern tmpl_LDoubleTwoByTwoMatrix
+tmpl_LDouble_Rotation_Matrix2D(long double theta);
+
+#define tmpl_Rotation_Matrix2D tmpl_Double_Rotation_Matrix2D
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoVector_Euclidean_Orthogonal                                   *
  *  Purpose:                                                                  *
  *      Compute a vector which is orthogonal to the input.                    *
  *  Arguments:                                                                *
@@ -107,9 +191,20 @@ typedef struct _tmpl_Polygon2D {
  *  Outputs:                                                                  *
  *      tmpl_TwoVector orth:                                                  *
  *          A vector orthogonal to v.                                         *
+ *  NOTE:                                                                     *
+ *      Float and Long Double precisions are also provided.                   *
  ******************************************************************************/
-extern tmpl_TwoVector
-tmpl_Euclidean_Orthogonal_Vector_2D(tmpl_TwoVector v);
+extern tmpl_FloatTwoVector
+tmpl_FloatTwoVector_Euclidean_Orthogonal(tmpl_FloatTwoVector v);
+
+extern tmpl_DoubleTwoVector
+tmpl_DoubleTwoVector_Euclidean_Orthogonal(tmpl_DoubleTwoVector v);
+
+extern tmpl_LDoubleTwoVector
+tmpl_LDoubleTwoVector_Euclidean_Orthogonal(tmpl_LDoubleTwoVector v);
+
+#define tmpl_TwoVector_Euclidean_Orthogonal \
+        tmpl_DoubleTwoVector_Euclidean_Orthogonal
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -147,13 +242,76 @@ tmpl_Euclidean_Orthogonal_Vector_2D(tmpl_TwoVector v);
  *      double out:                                                           *
  *          The (m,n) component of the tmpl_TwoByTwoMatrix                    *
  ******************************************************************************/
+extern float
+tmpl_FloatTwoByTwoMatrix_Component(tmpl_FloatTwoByTwoMatrix A,
+                                   unsigned int m, unsigned int n);
+
 extern double
-tmpl_TwoByTwoMatrix_Component(tmpl_TwoByTwoMatrix A,
-                              unsigned int m, unsigned int n);
+tmpl_DoubleTwoByTwoMatrix_Component(tmpl_DoubleTwoByTwoMatrix A,
+                                    unsigned int m, unsigned int n);
+
+extern long double
+tmpl_LDoubleTwoByTwoMatrix_Component(tmpl_LDoubleTwoByTwoMatrix A,
+                                     unsigned int m, unsigned int n);
+
+#define tmpl_TwoByTwoMatrix_Component tmpl_DoubleTwoByTwoMatrix_Component
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_New_TwoByTwoMatrix                                               *
+ *      tmpl_TwoByTwoMatrix_Determinant                                       *
+ *  Purpose:                                                                  *
+ *      Coomputes the determinant of a 2x2 matrix.                            *
+ *  Arguments:                                                                *
+ *      tmpl_TwoByTwoMatrix A:                                                *
+ *          A 2x2 matrix.                                                     *
+ *  Outputs:                                                                  *
+ *      det (double):                                                         *
+ *          The determinant of A.                                             *
+ *  NOTE:                                                                     *
+ *      Float and Long Double precisions are also provided.                   *
+ ******************************************************************************/
+extern float
+tmpl_FloatTwoByTwoMatrix_Determinant(tmpl_FloatTwoByTwoMatrix A);
+
+extern double
+tmpl_DoubleTwoByTwoMatrix_Determinant(tmpl_DoubleTwoByTwoMatrix A);
+
+extern long double
+tmpl_LDoubleTwoByTwoMatrix_Determinant(tmpl_LDoubleTwoByTwoMatrix A);
+
+#define tmpl_TwoByTwoMatrix_Determinant tmpl_DoubleTwoByTwoMatrix_Determinant
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoByTwoMatrix_Inverse                                           *
+ *  Purpose:                                                                  *
+ *      Coomputes the inverse of a 2x2 matrix.                                *
+ *  Arguments:                                                                *
+ *      A (tmpl_TwoByTwoMatrix):                                              *
+ *          A 2x2 matrix.                                                     *
+ *  Outputs:                                                                  *
+ *      inv_A (tmpl_TwoByTwoMatrix):                                          *
+ *          The inverse of A.                                                 *
+ *  NOTE:                                                                     *
+ *      Float and Long Double precisions are also provided.                   *
+ *      If A is not invertible (i.e. a singular matrix), the output has all   *
+ *      entries set to NaN (Not-A-Number). This appropriate since a           *
+ *      divide-by-zero results when one tries to invert a singular matrix.    *
+ ******************************************************************************/
+extern tmpl_FloatTwoByTwoMatrix
+tmpl_FloatTwoByTwoMatrix_Inverse(tmpl_FloatTwoByTwoMatrix A);
+
+extern tmpl_DoubleTwoByTwoMatrix
+tmpl_DoubleTwoByTwoMatrix_Inverse(tmpl_DoubleTwoByTwoMatrix A);
+
+extern tmpl_LDoubleTwoByTwoMatrix
+tmpl_LDoubleTwoByTwoMatrix_Inverse(tmpl_LDoubleTwoByTwoMatrix A);
+
+#define tmpl_TwoByTwoMatrix_Inverse tmpl_DoubleTwoByTwoMatrix_Inverse
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoByTwoMatrix_New                                               *
  *  Purpose:                                                                  *
  *      Create a new tmpl_TwoByTwoMatrix from four doubles. This returns:     *
  *           -       -                                                        *
@@ -170,8 +328,42 @@ tmpl_TwoByTwoMatrix_Component(tmpl_TwoByTwoMatrix A,
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoByTwoMatrix
-tmpl_TwoByTwoMatrix_New(double a, double b, double c, double d);
+extern tmpl_FloatTwoByTwoMatrix
+tmpl_FloatTwoByTwoMatrix_New(float a, float b, float c, float d);
+
+extern tmpl_DoubleTwoByTwoMatrix
+tmpl_DoubleTwoByTwoMatrix_New(double a, double b, double c, double d);
+
+extern tmpl_LDoubleTwoByTwoMatrix
+tmpl_LDoubleTwoByTwoMatrix_New(long double a, long double b,
+                               long double c, long double d);
+
+#define tmpl_TwoByTwoMatrix_New tmpl_DoubleTwoByTwoMatrix_New
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_TwoByTwoMatrix_Scale                                             *
+ *  Purpose:                                                                  *
+ *      Returns the rotation matrix corresponding to the angle theta.         *
+ *  Arguments:                                                                *
+ *      double theta:                                                         *
+ *          A real number, the angle to rotate by.                            *
+ *  Outputs:                                                                  *
+ *      tmpl_TwoByTwoMatrix R:                                                *
+ *          The rotation matrix.                                              *
+ *  Location:                                                                 *
+ *      The source code is contained in src/kissvg.c                          *
+ ******************************************************************************/
+extern tmpl_FloatTwoByTwoMatrix
+tmpl_FloatTwoByTwoMatrix_Scale(float r, tmpl_FloatTwoByTwoMatrix P);
+
+extern tmpl_DoubleTwoByTwoMatrix
+tmpl_DoubleTwoByTwoMatrix_Scale(double r, tmpl_DoubleTwoByTwoMatrix P);
+
+extern tmpl_LDoubleTwoByTwoMatrix
+tmpl_LDoubleTwoByTwoMatrix_Scale(long double r, tmpl_LDoubleTwoByTwoMatrix P);
+
+#define tmpl_TwoByTwoMatrix_Scale tmpl_DoubleTwoByTwoMatrix_Scale
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -191,45 +383,6 @@ tmpl_TwoByTwoMatrix_New(double a, double b, double c, double d);
  ******************************************************************************/
 extern tmpl_TwoVector
 tmpl_TwoVector_Matrix_Transform(tmpl_TwoByTwoMatrix A, tmpl_TwoVector P);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Rotation_Matrix_2D                                               *
- *  Purpose:                                                                  *
- *      Returns the rotation matrix corresponding to the angle theta.         *
- *  Arguments:                                                                *
- *      double theta:                                                         *
- *          A real number, the angle to rotate by.                            *
- *  Outputs:                                                                  *
- *      tmpl_TwoByTwoMatrix R:                                                *
- *          The rotation matrix.                                              *
- *  Location:                                                                 *
- *      The source code is contained in src/kissvg.c                          *
- ******************************************************************************/
-extern tmpl_TwoByTwoMatrix tmpl_Rotation_Matrix_2D(double theta);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_TwoByTwoMatrix_Scale                                             *
- *  Purpose:                                                                  *
- *      Returns the rotation matrix corresponding to the angle theta.         *
- *  Arguments:                                                                *
- *      double theta:                                                         *
- *          A real number, the angle to rotate by.                            *
- *  Outputs:                                                                  *
- *      tmpl_TwoByTwoMatrix R:                                                *
- *          The rotation matrix.                                              *
- *  Location:                                                                 *
- *      The source code is contained in src/kissvg.c                          *
- ******************************************************************************/
-extern tmpl_TwoByTwoMatrix
-tmpl_TwoByTwoMatrix_Scale(double r, tmpl_TwoByTwoMatrix P);
-
-extern double
-tmpl_TwoByTwoMatrix_Determinant(tmpl_TwoByTwoMatrix A);
-
-extern tmpl_TwoByTwoMatrix
-tmpl_TwoByTwoMatrix_Inverse(tmpl_TwoByTwoMatrix A);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -269,7 +422,16 @@ tmpl_TwoVector_Euclidean_Midpoint(tmpl_TwoVector P, tmpl_TwoVector Q);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoVector tmpl_TwoVector_Rect(double x, double y);
+extern tmpl_FloatTwoVector
+tmpl_FloatTwoVector_Rect(float x, float y);
+
+extern tmpl_DoubleTwoVector
+tmpl_DoubleTwoVector_Rect(double x, double y);
+
+extern tmpl_LDoubleTwoVector
+tmpl_LDoubleTwoVector_Rect(long double x, long double y);
+
+#define tmpl_TwoVector_Rect tmpl_DoubleTwoVector_Rect
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -286,7 +448,10 @@ extern tmpl_TwoVector tmpl_TwoVector_Rect(double x, double y);
  *  Note:                                                                     *
  *      This is not a function, but rather a preprocessor macro.              *
  ******************************************************************************/
-extern double tmpl_TwoVector_X(tmpl_TwoVector P);
+extern float tmpl_FloatTwoVector_X(tmpl_FloatTwoVector P);
+extern double tmpl_DoubleTwoVector_X(tmpl_DoubleTwoVector P);
+extern long double tmpl_LDoubleTwoVector_X(tmpl_LDoubleTwoVector P);
+#define tmpl_TwoVector_X tmpl_DoubleTwoVector_X
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -303,7 +468,10 @@ extern double tmpl_TwoVector_X(tmpl_TwoVector P);
  *  Note:                                                                     *
  *      This is not a function, but rather a preprocessor macro.              *
  ******************************************************************************/
-extern double tmpl_TwoVector_Y(tmpl_TwoVector P);
+extern float tmpl_FloatTwoVector_Y(tmpl_FloatTwoVector P);
+extern double tmpl_DoubleTwoVector_Y(tmpl_DoubleTwoVector P);
+extern long double tmpl_LDoubleTwoVector_Y(tmpl_LDoubleTwoVector P);
+#define tmpl_TwoVector_Y tmpl_DoubleTwoVector_Y
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -321,7 +489,16 @@ extern double tmpl_TwoVector_Y(tmpl_TwoVector P);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoVector tmpl_TwoVector_Add(tmpl_TwoVector P, tmpl_TwoVector Q);
+extern tmpl_FloatTwoVector
+tmpl_FloatTwoVector_Add(tmpl_FloatTwoVector P, tmpl_FloatTwoVector Q);
+
+extern tmpl_DoubleTwoVector
+tmpl_DoubleTwoVector_Add(tmpl_DoubleTwoVector P, tmpl_DoubleTwoVector Q);
+
+extern tmpl_LDoubleTwoVector
+tmpl_LDoubleTwoVector_Add(tmpl_LDoubleTwoVector P, tmpl_LDoubleTwoVector Q);
+
+#define tmpl_TwoVector_Add tmpl_DoubleTwoVector
 
 /******************************************************************************
  *  Function:                                                                 *

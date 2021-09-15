@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -44,19 +44,46 @@
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for multiplying a 2x2 matrix by a real number.                   */
-tmpl_TwoByTwoMatrix
-tmpl_TwoByTwoMatrix_Scale(double r, tmpl_TwoByTwoMatrix A)
+tmpl_FloatTwoByTwoMatrix
+tmpl_FloatTwoByTwoMatrix_Scale(float r, tmpl_FloatTwoByTwoMatrix A)
 {
-    tmpl_TwoByTwoMatrix out;
-    double a00, a01, a10, a11;
+    /*  Extract the components of the matrix.                                 */
+    const float a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    const float a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    const float a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    const float a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
 
-    a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
-    a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
-    a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
-    a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
-
-    out = tmpl_TwoByTwoMatrix_New(r*a00, r*a01, r*a10, r*a11);
-    return out;
+    /*  Multiply each component by the scalar and return.                     */
+    return tmpl_FloatTwoByTwoMatrix_New(r*a00, r*a01, r*a10, r*a11);
 }
-/*  End of tmpl_TwoByTwoMatrix_Scale.                                         */
+/*  End of tmpl_FloatTwoByTwoMatrix_Scale.                                    */
 
+/*  Function for multiplying a 2x2 matrix by a real number.                   */
+tmpl_DoubleTwoByTwoMatrix
+tmpl_DoubleTwoByTwoMatrix_Scale(double r, tmpl_DoubleTwoByTwoMatrix A)
+{
+    /*  Extract the components of the matrix.                                 */
+    const double a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    const double a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    const double a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    const double a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+
+    /*  Multiply each component by the scalar and return.                     */
+    return tmpl_DoubleTwoByTwoMatrix_New(r*a00, r*a01, r*a10, r*a11);
+}
+/*  End of tmpl_DoubleTwoByTwoMatrix_Scale.                                   */
+
+/*  Function for multiplying a 2x2 matrix by a real number.                   */
+tmpl_LDoubleTwoByTwoMatrix
+tmpl_LDoubleTwoByTwoMatrix_Scale(long double r, tmpl_LDoubleTwoByTwoMatrix A)
+{
+    /*  Extract the components of the matrix.                                 */
+    const long double a00 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 0);
+    const long double a01 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 0, 1);
+    const long double a10 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 0);
+    const long double a11 = tmpl_GET_2x2_MATRIX_COMPONENT(A, 1, 1);
+
+    /*  Multiply each component by the scalar and return.                     */
+    return tmpl_LDoubleTwoByTwoMatrix_New(r*a00, r*a01, r*a10, r*a11);
+}
+/*  End of tmpl_LDoubleTwoByTwoMatrix_Scale.                                  */

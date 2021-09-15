@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -48,16 +48,41 @@
 /*  Function prototype and two-vector typedef found here.                     */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
-/*  Function for returning the point (x, y) given two doubles x and y.        */
-tmpl_TwoVector tmpl_TwoVector_Rect(double x, double y)
+/*  Function for returning the point (x, y) given two flaots x and y.         */
+tmpl_FloatTwoVector tmpl_FloatTwoVector_Rect(float x, float y)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_TwoVector P;
+    tmpl_FloatTwoVector P;
 
     /*  Set the zeroth entry of P.dat to x and the first entry to y.          */
     P.dat[0] = x;
     P.dat[1] = y;
     return P;
 }
-/*  End of tmpl_TwoVector_Rect.                                               */
+/*  End of tmpl_FloatTwoVector_Rect.                                          */
 
+/*  Function for returning the point (x, y) given two doubles x and y.        */
+tmpl_DoubleTwoVector tmpl_DoubleTwoVector_Rect(double x, double y)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_DoubleTwoVector P;
+
+    /*  Set the zeroth entry of P.dat to x and the first entry to y.          */
+    P.dat[0] = x;
+    P.dat[1] = y;
+    return P;
+}
+/*  End of tmpl_DoubleTwoVector_Rect.                                         */
+
+/*  Function for returning the point (x, y) given two doubles x and y.        */
+tmpl_LDoubleTwoVector tmpl_LDoubleTwoVector_Rect(long double x, long double y)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_LDoubleTwoVector P;
+
+    /*  Set the zeroth entry of P.dat to x and the first entry to y.          */
+    P.dat[0] = x;
+    P.dat[1] = y;
+    return P;
+}
+/*  End of tmpl_LDoubleTwoVector_Rect.                                        */

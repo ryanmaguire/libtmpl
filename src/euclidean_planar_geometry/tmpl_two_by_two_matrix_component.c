@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -40,19 +40,47 @@
  *  Date:       March 03, 2021                                                *
  ******************************************************************************/
 
+/*  TMPL_NAN is here.                                                         */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype and two-vector typedef found here.                     */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
-/*  Computes the determinant of a 2x2 matrix.                                 */
-double tmpl_TwoByTwoMatrix_Component(tmpl_TwoByTwoMatrix A, unsigned int m,
-                                     unsigned int n)
+/*  Returns the (m, n) component of a 2x2 matrix.                             */
+float
+tmpl_FloatTwoByTwoMatrix_Component(tmpl_FloatTwoByTwoMatrix A,
+                                   unsigned int m, unsigned int n)
 {
-    if ((m > 1) || (n > 1))
+    /*  Check for invalid indices.                                            */
+    if ((m > 1U) || (n > 1U))
+        return TMPL_NANF;
+    else
+        return A.dat[m][n];
+}
+/*  End of tmpl_FloatTwoByTwoMatrix_Component.                                */
+
+/*  Returns the (m, n) component of a 2x2 matrix.                             */
+double
+tmpl_DoubleTwoByTwoMatrix_Component(tmpl_DoubleTwoByTwoMatrix A,
+                                    unsigned int m, unsigned int n)
+{
+    /*  Check for invalid indices.                                            */
+    if ((m > 1U) || (n > 1U))
         return TMPL_NAN;
     else
         return A.dat[m][n];
 }
-/*  End of tmpl_TwoByTwoMatrix_Component.                                     */
+/*  End of tmpl_DoubleTwoByTwoMatrix_Component.                               */
 
+/*  Returns the (m, n) component of a 2x2 matrix.                             */
+long double
+tmpl_LDoubleTwoByTwoMatrix_Component(tmpl_LDoubleTwoByTwoMatrix A,
+                                     unsigned int m, unsigned int n)
+{
+    /*  Check for invalid indices.                                            */
+    if ((m > 1U) || (n > 1U))
+        return TMPL_NANL;
+    else
+        return A.dat[m][n];
+}
+/*  End of tmpl_LDoubleTwoByTwoMatrix_Component.                              */

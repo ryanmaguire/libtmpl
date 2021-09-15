@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -44,10 +44,10 @@
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for creating a new 2x2 matrix.                                   */
-tmpl_TwoByTwoMatrix
-tmpl_TwoByTwoMatrix_New(double a, double b, double c, double d)
+tmpl_FloatTwoByTwoMatrix
+tmpl_FloatTwoByTwoMatrix_New(float a, float b, float c, float d)
 {
-    tmpl_TwoByTwoMatrix A;
+    tmpl_FloatTwoByTwoMatrix A;
 
     A.dat[0][0] = a;
     A.dat[0][1] = b;
@@ -56,5 +56,35 @@ tmpl_TwoByTwoMatrix_New(double a, double b, double c, double d)
 
     return A;
 }
-/*  End of tmpl_TwoByTwoMatrix_New.                                           */
+/*  End of tmpl_FloatTwoByTwoMatrix_New.                                      */
 
+/*  Function for creating a new 2x2 matrix.                                   */
+tmpl_DoubleTwoByTwoMatrix
+tmpl_DoubleTwoByTwoMatrix_New(double a, double b, double c, double d)
+{
+    tmpl_DoubleTwoByTwoMatrix A;
+
+    A.dat[0][0] = a;
+    A.dat[0][1] = b;
+    A.dat[1][0] = c;
+    A.dat[1][1] = d;
+
+    return A;
+}
+/*  End of tmpl_DoubleTwoByTwoMatrix_New.                                     */
+
+/*  Function for creating a new 2x2 matrix.                                   */
+tmpl_LDoubleTwoByTwoMatrix
+tmpl_LDoubleTwoByTwoMatrix_New(long double a, long double b,
+                               long double c, long double d)
+{
+    tmpl_LDoubleTwoByTwoMatrix A;
+
+    A.dat[0][0] = a;
+    A.dat[0][1] = b;
+    A.dat[1][0] = c;
+    A.dat[1][1] = d;
+
+    return A;
+}
+/*  End of tmpl_LDoubleTwoByTwoMatrix_New.                                    */

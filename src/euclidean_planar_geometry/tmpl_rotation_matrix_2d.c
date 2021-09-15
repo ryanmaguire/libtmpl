@@ -47,16 +47,37 @@
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for computing the rotation matrix corresponding to a real number.*/
-tmpl_TwoByTwoMatrix tmpl_Rotation_Matrix_2D(double theta)
+tmpl_FloatTwoByTwoMatrix tmpl_Float_Rotation_Matrix2D(float theta)
 {
-    double cos_theta, sin_theta;
-    tmpl_TwoByTwoMatrix R;
+    /*  The components of the rotation matrix are determined by cos and sin.  */
+    const float cos_theta = tmpl_Float_Cos(theta);
+    const float sin_theta = tmpl_Float_Sin(theta);
 
-    cos_theta = tmpl_Double_Cos(theta);
-    sin_theta = tmpl_Double_Sin(theta);
-
-    R = tmpl_TwoByTwoMatrix_New(cos_theta, -sin_theta, sin_theta, cos_theta);
-    return R;
+    return tmpl_FloatTwoByTwoMatrix_New(cos_theta, -sin_theta,
+                                        sin_theta, cos_theta);
 }
-/*  End of tmpl_Rotation_Matrix_2D.                                           */
+/*  End of tmpl_Float_Rotation_Matrix2D.                                      */
 
+/*  Function for computing the rotation matrix corresponding to a real number.*/
+tmpl_DoubleTwoByTwoMatrix tmpl_Double_Rotation_Matrix2D(double theta)
+{
+    /*  The components of the rotation matrix are determined by cos and sin.  */
+    const double cos_theta = tmpl_Double_Cos(theta);
+    const double sin_theta = tmpl_Double_Sin(theta);
+
+    return tmpl_DoubleTwoByTwoMatrix_New(cos_theta, -sin_theta,
+                                         sin_theta, cos_theta);
+}
+/*  End of tmpl_Double_Rotation_Matrix2D.                                     */
+
+/*  Function for computing the rotation matrix corresponding to a real number.*/
+tmpl_LDoubleTwoByTwoMatrix tmpl_LDouble_Rotation_Matrix2D(long double theta)
+{
+    /*  The components of the rotation matrix are determined by cos and sin.  */
+    const long double cos_theta = tmpl_LDouble_Cos(theta);
+    const long double sin_theta = tmpl_LDouble_Sin(theta);
+
+    return tmpl_LDoubleTwoByTwoMatrix_New(cos_theta, -sin_theta,
+                                          sin_theta, cos_theta);
+}
+/*  End of tmpl_LDouble_Rotation_Matrix2D.                                    */

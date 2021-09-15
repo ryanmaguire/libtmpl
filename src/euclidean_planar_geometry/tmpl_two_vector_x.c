@@ -1,20 +1,20 @@
 /******************************************************************************
  *                                 LICENSE                                    *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Returns the x component of a two dimensional vector/planar point.     *
@@ -44,22 +44,39 @@
  *      Created file (Wellesley College for librssringoccs).                  *
  *  2021/03/03: Ryan Maguire                                                  *
  *      Edited file for use in libtmpl.                                       *
+ *  2021/09/15: Ryan Maguire                                                  *
+ *      Edited license and added float and long double support.               *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
+/*  Function prototypes and two-vector typedef's found here.                  */
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for returning the x component of a two dimensional vector.       */
-double tmpl_TwoVector_X(tmpl_TwoVector P)
+float tmpl_FloatTwoVector_X(tmpl_FloatTwoVector P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double x;
-
-    /*  rssringoccs_TwoVector is defined the same way                         *
-     *  rssringoccs_ComplexDouble is. It is a struct containing a single      *
-     *  double array dat consisting of two entries. The zeroth entry          *
-     *  corresponds to the x component. Retrieve this and return.             */
-    x = P.dat[0];
-    return x;
+    /*  The tmpl_FloatTwoVector mimics the method used by GSL for complex     *
+     *  numbers, using a struct containing a float array with 2 elements.     *
+     *  The x component is the zeroth element. Return this.                   */
+    return P.dat[0];
 }
-/*  End of rssringoccs_TwoVector_X.                                           */
+/*  End of tmpl_FloatTwoVector_X.                                             */
+
+/*  Function for returning the x component of a two dimensional vector.       */
+double tmpl_DoubleTwoVector_X(tmpl_DoubleTwoVector P)
+{
+    /*  The tmpl_DoubleTwoVector mimics the method used by GSL for complex    *
+     *  numbers, using a struct containing a double array with 2 elements.    *
+     *  The x component is the zeroth element. Return this.                   */
+    return P.dat[0];
+}
+/*  End of tmpl_DoubleTwoVector_X.                                            */
+
+/*  Function for returning the x component of a two dimensional vector.       */
+long double tmpl_LDoubleTwoVector_X(tmpl_LDoubleTwoVector P)
+{
+    /*  The tmpl_LDoubleTwoVector mimics the method used by GSL for complex   *
+     *  numbers, using a struct containing a long double array with 2         *
+     *  elements. The x component is the zeroth element. Return this.         */
+    return P.dat[0];
+}
+/*  End of tmpl_LDoubleTwoVector_X.                                           */
