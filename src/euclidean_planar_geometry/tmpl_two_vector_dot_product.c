@@ -51,22 +51,53 @@
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 
 /*  Function for returning the x component of a two dimensional vector.       */
-double tmpl_TwoVector_Dot_Product(tmpl_TwoVector P, tmpl_TwoVector Q)
+float
+tmpl_FloatTwoVector_Dot_Product(tmpl_FloatTwoVector P, tmpl_FloatTwoVector Q)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double Px, Py, Qx, Qy, dot_prod;
-
     /*  Extract the x and y components from P.                                */
-    Px = tmpl_TwoVector_X(P);
-    Py = tmpl_TwoVector_Y(P);
+    const float Px = tmpl_FloatTwoVector_X(P);
+    const float Py = tmpl_FloatTwoVector_Y(P);
 
     /*  Extract the x and y components from Q.                                */
-    Qx = tmpl_TwoVector_X(Q);
-    Qy = tmpl_TwoVector_Y(Q);
+    const float Qx = tmpl_FloatTwoVector_X(Q);
+    const float Qy = tmpl_FloatTwoVector_Y(Q);
 
     /*  Use the Euclidean dot product formula and return.                     */
-    dot_prod = Px*Qx + Py*Qy;
-    return dot_prod;
+    return Px*Qx + Py*Qy;;
 }
-/*  End of tmpl_TwoVector_Dot_Product.                                        */
+/*  End of tmpl_FloatTwoVector_Dot_Product.                                   */
 
+/*  Function for returning the x component of a two dimensional vector.       */
+double
+tmpl_DoubleTwoVector_Dot_Product(tmpl_DoubleTwoVector P, tmpl_DoubleTwoVector Q)
+{
+    /*  Extract the x and y components from P.                                */
+    const double Px = tmpl_DoubleTwoVector_X(P);
+    const double Py = tmpl_DoubleTwoVector_Y(P);
+
+    /*  Extract the x and y components from Q.                                */
+    const double Qx = tmpl_DoubleTwoVector_X(Q);
+    const double Qy = tmpl_DoubleTwoVector_Y(Q);
+
+    /*  Use the Euclidean dot product formula and return.                     */
+    return Px*Qx + Py*Qy;;
+}
+/*  End of tmpl_DoubleTwoVector_Dot_Product.                                  */
+
+/*  Function for returning the x component of a two dimensional vector.       */
+long double
+tmpl_LDoubleTwoVector_Dot_Product(tmpl_LDoubleTwoVector P,
+                                  tmpl_LDoubleTwoVector Q)
+{
+    /*  Extract the x and y components from P.                                */
+    const long double Px = tmpl_LDoubleTwoVector_X(P);
+    const long double Py = tmpl_LDoubleTwoVector_Y(P);
+
+    /*  Extract the x and y components from Q.                                */
+    const long double Qx = tmpl_LDoubleTwoVector_X(Q);
+    const long double Qy = tmpl_LDoubleTwoVector_Y(Q);
+
+    /*  Use the Euclidean dot product formula and return.                     */
+    return Px*Qx + Py*Qy;;
+}
+/*  End of tmpl_LDoubleTwoVector_Dot_Product.                                 */
