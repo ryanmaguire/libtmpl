@@ -145,8 +145,8 @@ for m in range(185):
     for n in range(torus_count):
         tstring = TorusStringList[n]
         if (f == KnotList[n]):
-            print("\t%s matches a torus knot: %s" % (knot_string, t_string))
+            print("\t%s matches a torus knot: %s" % (knot_string, tstring))
         elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"%(knot_string,t_string))
+            print("\t%s matches a torus knot mirror: %s"%(knot_string, tstring))
         else:
             pass

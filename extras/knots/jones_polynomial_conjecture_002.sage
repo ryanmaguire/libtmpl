@@ -1,4 +1,42 @@
+"""
+################################################################################
+#                                  LICENSE                                     #
+################################################################################
+#   This file is part of libtmpl.                                              #
+#                                                                              #
+#   libtmpl is free software: you can redistribute it and/or modify it         #
+#   under the terms of the GNU General Public License as published by          #
+#   the Free Software Foundation, either version 3 of the License, or          #
+#   (at your option) any later version.                                        #
+#                                                                              #
+#   libtmpl is distributed in the hope that it will be useful,                 #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
+#   GNU General Public License for more details.                               #
+#                                                                              #
+#   You should have received a copy of the GNU General Public License          #
+#   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
+################################################################################
+#   Purpose:                                                                   #
+#       Test a conjecture about Khovanov homology and the Jones' polynomial.   #
+#       The idea is that Khovanov homology can distinguish a Torus knot from   #
+#       a non-torus knot. First, see if this is true of the Jones' polynomial. #
+#       If we find a match, compute (currently by hand or lookup table) the    #
+#       Khovanov homologies of the matching pair to see if they're the same.   #
+#       This is the same as jones_polynomial_conjecture_001.sage, with the     #
+#       exception that the torus knot Jones' polynomials are computed via      #
+#       a known formula, rather than using SnapPy to directly compute the      #
+#       polynomial. This hugely saves on computation time.                     #
+################################################################################
+#   Author: Ryan Maguire                                                       #
+#   Date:   June 12, 2021.                                                     #
+################################################################################
+"""
+
+# The SnapPy module will be used for most of the computations with knots.
 import snappy
+
+# Numpy is needed for it's GCD function.
 import numpy
 
 # Largest number of twists we'll check for torus knots.
@@ -86,7 +124,7 @@ for k in range(3, 12):
     # Perform this loop in a try-except block to catch any exception raised
     # by the SnapPy module.
     try:
-    	while(1):
+        while(1):
             knot_string = ("%d_%d" % (k, n))
 
             # Create a copy of the manifold class and the link class
@@ -113,7 +151,7 @@ for m in range(total_size):
     knot_string = knot_struct[0]
 
     for n in range(torus_count):
-    	tstring = TorusStringList[n]
+        tstring = TorusStringList[n]
         if (f == KnotList[n]):
             print("\t%s matches a torus knot: %s" % (knot_string, tstring))
         elif (f == MirrorList[n]):
@@ -128,7 +166,7 @@ for m in range(367):
     knot_string = knot_struct[0]
 
     for n in range(torus_count):
-    	tstring = TorusStringList[n]
+        tstring = TorusStringList[n]
         if (f == KnotList[n]):
             print("\t%s matches a torus knot: %s" % (knot_string, tstring))
         elif (f == MirrorList[n]):
@@ -143,7 +181,7 @@ for m in range(185):
     knot_string = knot_struct[0]
 
     for n in range(torus_count):
-    	tstring = TorusStringList[n]
+        tstring = TorusStringList[n]
         if (f == KnotList[n]):
             print("\t%s matches a torus knot: %s" % (knot_string, t_string))
         elif (f == MirrorList[n]):
