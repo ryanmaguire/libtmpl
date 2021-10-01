@@ -34,6 +34,12 @@ struct knot {
     enum crossing_sign *sign;
     enum crossing_type *type;
     unsigned int *crossing_number;
+    unsigned int *other_link_at_crossing;
+};
+
+struct link {
+    unsigned int number_of_components;
+    struct knot *components;
 };
 
 struct laurent_polynomial {
@@ -41,6 +47,30 @@ struct laurent_polynomial {
     signed int highest_degree;
     signed int *coeffs;
 };
+
+static void 
+zero_crossing_resolution(struct link *L,
+                         unsigned int component_number,
+                         unsigned int crossing_number,
+                         struct link *resolved)
+{
+    unsigned int n;
+
+    if (!L)
+        return;
+
+    if (!resolved)
+        return;
+
+    if (!L->components)
+        return;
+
+    if (component_number > L->number_of_components)
+        return;
+
+    if (crossing_number > L->components[component_number].number_of_crossings)
+        return;
+}
 
 static void
 print_poly(struct laurent_polynomial P)
@@ -74,16 +104,77 @@ print_poly(struct laurent_polynomial P)
     printf("\n");
 }
 
+static void
+poly_add(struct laurent_polynomial P,
+         struct laurent_polynomial Q,
+         struct laurent_polynomial *sum)
+{
+    unsigned int n, N, Pstart, Pend, Qstart, Qend;
+
+    if (!sum)
+        return;
+
+    if (P.lowest_degree < Q.lowest_degree)
+    {
+        sum->lowest_degree = P.lowest_degree;
+        Pstart = 0U;
+        Qstart = (unsigned int)(Q.lowest_degree - P.lowest_degree);
+    }
+    else
+    {
+        sum->lowest_degree = Q.lowest_degree;
+        Qstart = 0U;
+        Pstart = (unsigned int)(P.lowest_degree - Q.lowest_degree);
+    }
+
+    if (P.highest_degree < Q.highest_degree)
+    {
+        sum->highest_degree = Q.highest_degree;
+        Pend = (unsigned int)(P.highest_degree - sum->lowest_degree) + 1U;
+        Qend = (unsigned int)(sum->highest_degree - sum->lowest_degree) + 1U;
+    }
+    else
+    {
+        sum->highest_degree = P.highest_degree;
+        Qend = (unsigned int)(Q.highest_degree - sum->lowest_degree) + 1U;
+        Pend = (unsigned int)(sum->highest_degree - sum->lowest_degree) + 1U;
+    }
+
+    if (!P.coeffs || !Q.coeffs)
+        return;
+
+    if (!sum->coeffs)
+        free(sum->coeffs);
+
+    N = (unsigned int)(sum->highest_degree - sum->lowest_degree) + 1U;
+    sum->coeffs = calloc(sizeof(*sum->coeffs), N);
+
+    for (n = Pstart; n < Pend; ++n)
+        sum->coeffs[n] += P.coeffs[n - Pstart];
+
+    for (n = Qstart; n < Qend; ++n)
+        sum->coeffs[n] += Q.coeffs[n - Qstart];
+}
+
 int main(void)
 {
-    struct laurent_polynomial P;
-    signed int coeffs[7] = {3, 2, 1, 0, -1, -2, -3};
+    struct laurent_polynomial P, Q, sum;
+    signed int Pcoeffs[7] = {3, 2, 1, 0, -1, -2, -3};
+    signed int Qcoeffs[6] = {-3, 2, -1, 7, 3, 1};
     P.lowest_degree = -3;
     P.highest_degree = 3;
-    P.coeffs = coeffs;
+    P.coeffs = Pcoeffs;
+
+    Q.lowest_degree = -1;
+    Q.highest_degree = 4;
+    Q.coeffs = Qcoeffs;
+
+    poly_add(P, Q, &sum);
 
     print_poly(P);
-    print_poly(poly_add(P, P));
+    print_poly(Q);
+    print_poly(sum);
+
 
     return 0;
 }
