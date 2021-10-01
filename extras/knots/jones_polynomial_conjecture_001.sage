@@ -1,8 +1,44 @@
+"""
+################################################################################
+#                                  LICENSE                                     #
+################################################################################
+#   This file is part of libtmpl.                                              #
+#                                                                              #
+#   libtmpl is free software: you can redistribute it and/or modify it         #
+#   under the terms of the GNU General Public License as published by          #
+#   the Free Software Foundation, either version 3 of the License, or          #
+#   (at your option) any later version.                                        #
+#                                                                              #
+#   libtmpl is distributed in the hope that it will be useful,                 #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
+#   GNU General Public License for more details.                               #
+#                                                                              #
+#   You should have received a copy of the GNU General Public License          #
+#   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
+################################################################################
+#   Purpose:                                                                   #
+#       Test a conjecture about Khovanov homology and the Jones' polynomial.   #
+#       The idea is that Khovanov homology can distinguish a Torus knot from   #
+#       a non-torus knot. First, see if this is true of the Jones' polynomial. #
+#       If we find a match, compute (currently by hand or lookup table) the    #
+#       Khovanov homologies of the matching pair to see if they're the same.   #
+################################################################################
+#   Author: Ryan Maguire                                                       #
+#   Date:   June 12, 2021.                                                     #
+################################################################################
+"""
+
+# The SnapPy module will be used for most of the computations with knots.
 import snappy
+
+# Numpy is needed for it's GCD function.
 import numpy
 
+# A torus knot is of the form T(p,q) where p and q are coprime. We'll loop over
+# the lattice [Torus_Start, Torus_End]^2 and check these Jones' polynomials.
 Torus_Start = 3
-Torus_End   = 15
+Torus_End = 20
 
 # The SnapPy module has 367 altnerating Hoste-Thistlethwaite knots
 # and 185 non-alternating Hoste-Thistlethwaite knots. We can loop over these
@@ -19,7 +55,7 @@ Torus_End   = 15
 # And these are the non-alternating ones.
 # Kn = [("K11n%d" % n) for n in range(1, 186)]
 
-# As a side note, the range function (which is from Python) has syntanx
+# As a side note, the range function (which is from Python) has syntax
 # range(m,n) and creates an iterator between m and n-1. That is, n is NOT
 # included. Hence the need to iterate between 1 and 368 for the alternating and
 # 1 and 186 for the non-alternating.
@@ -42,7 +78,7 @@ for k in range(3, 12):
     # Perform this loop in a try-except block to catch any exception raised
     # by the SnapPy module.
     try:
-    	while(1):
+        while(1):
             knot_string = ("%d_%d" % (k, n))
 
             # Create a copy of the manifold class and the link class
@@ -51,7 +87,7 @@ for k in range(3, 12):
             l = snappy.Link(knot_string)
 
             # Append the manifold and link to our list and increment n.
-            ManifoldList.append([knot_string,m,l])
+            ManifoldList.append([knot_string, m, l])
             n += 1
 
     # SnapPy raises an IOError on failure. Try to catch this to prevent error.
@@ -96,7 +132,7 @@ for n in range(Torus_Start, Torus_End):
             for k in ManifoldList:
 
                 # Print out some information for status updates.
-            	# print(k[0], knot_string)
+                # print(k[0], knot_string)
 
                 # Skip this for now, it does not work.
                 # The is_isometric_to method failed for EVERY torus knot. The
@@ -106,19 +142,21 @@ for n in range(Torus_Start, Torus_End):
                 # SnapPea (the C code) is unable to determine if two manifolds
                 # are isometric.
                 """
-            	try:
-            	    if (k[1].is_isometric_to(torus_knot.exterior())):
-            	        continue
-            	except RuntimeError as err:
-            	    print(err)
-        	        continue
-        	    """
+                try:
+                    if (k[1].is_isometric_to(torus_knot.exterior())):
+                        continue
+                except RuntimeError as err:
+                    print(err)
+                    continue
+                """
 
                 # If we get here (and the is_isometric_to block is NOT
                 # commented out), then is_isometric_to succeeded and we should
                 # increment our counter. If the is_isometric_to block is
                 # commented out, we can just ignore this.
+                """
                 counter_success += 1
+                """
 
                 # Compute the Jones polynomial of the torus knot.
                 torus_poly = torus_knot.jones_polynomial()
@@ -142,7 +180,4 @@ for n in range(Torus_Start, Torus_End):
 
                 # Compare the two polynomials.
                 if (torus_poly == knot_poly):
-            	    print("\n\tMATCH: %s %s\n" % (k[0], knot_string))
-
-# print(100.0*counter_success/counter_gcd)
-
+                    print("\tMATCH: %s %s" % (k[0], knot_string))
