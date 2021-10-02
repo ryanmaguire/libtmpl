@@ -34,12 +34,6 @@ struct knot {
     enum crossing_sign *sign;
     enum crossing_type *type;
     unsigned int *crossing_number;
-    unsigned int *other_link_at_crossing;
-};
-
-struct link {
-    unsigned int number_of_components;
-    struct knot *components;
 };
 
 struct laurent_polynomial {
@@ -48,28 +42,70 @@ struct laurent_polynomial {
     signed int *coeffs;
 };
 
-static void 
-zero_crossing_resolution(struct link *L,
-                         unsigned int component_number,
-                         unsigned int crossing_number,
-                         struct link *resolved)
+struct CrossingIndices {
+    unsigned long int under;
+    unsigned long int over;
+};
+
+static struct CrossingIndices *
+get_indices(struct knot *K)
 {
     unsigned int n;
+    struct CrossingIndices *ind;
 
-    if (!L)
-        return;
+    if (!K)
+        return NULL;
 
-    if (!resolved)
-        return;
+    if (K->number_of_crossings == 0U)
+        return NULL;
 
-    if (!L->components)
-        return;
+    ind = malloc(sizeof(*ind)*K->number_of_crossings);
 
-    if (component_number > L->number_of_components)
-        return;
+    if (!ind)
+        return NULL;
 
-    if (crossing_number > L->components[component_number].number_of_crossings)
-        return;
+    for (n = 0U; n < 2U * K->number_of_crossings; ++n)
+    {
+        if (K->type[n] == over_crossing)
+            ind[K->crossing_number[n]].over = n;
+        else
+             ind[K->crossing_number[n]].under = n;
+    }
+
+    return ind;
+}
+
+static unsigned int
+number_of_circles_in_resolution(struct knot *K,
+                                unsigned int resolution)
+{
+    unsigned int number_of_circles, crossing_resolution, n;
+    struct CrossingIndices *ind;
+
+    /*  The empty knot has zero circles.                                      */
+    if (!K)
+        return 0U;
+
+    /*  The unknot has 1 circle.                                              */
+    if (K->number_of_crossings == 0U)
+        return 1U;
+
+    ind = get_indices(K);
+
+    if (!ind)
+        return 0;
+
+    number_of_circles = 0U;
+
+    for (n = 0U; n < K->number_of_crossings; ++n)
+    {
+        crossing_resolution = resolution & 1U;
+        number_of_circles += crossing_resolution;
+        resolution >>= 1U;
+    }
+
+    free(ind);
+    return number_of_circles;
 }
 
 static void
@@ -159,8 +195,20 @@ poly_add(struct laurent_polynomial P,
 int main(void)
 {
     struct laurent_polynomial P, Q, sum;
+    struct knot K;
     signed int Pcoeffs[7] = {3, 2, 1, 0, -1, -2, -3};
     signed int Qcoeffs[6] = {-3, 2, -1, 7, 3, 1};
+    enum crossing_sign s[6] = {
+        positive_crossing, positive_crossing, positive_crossing,
+        positive_crossing, positive_crossing, positive_crossing
+    };
+    unsigned int c[6] = {0U, 1U, 2U, 0U, 1U, 2U};
+
+    enum crossing_type t[6] = {
+        over_crossing, under_crossing, over_crossing,
+        under_crossing, over_crossing, under_crossing
+    };
+
     P.lowest_degree = -3;
     P.highest_degree = 3;
     P.coeffs = Pcoeffs;
@@ -174,6 +222,13 @@ int main(void)
     print_poly(P);
     print_poly(Q);
     print_poly(sum);
+
+    K.number_of_crossings = 3;
+    K.sign = s;
+    K.type = t;
+    K.crossing_number = c;
+
+    number_of_circles_in_resolution(&K, 0x00);
 
 
     return 0;
