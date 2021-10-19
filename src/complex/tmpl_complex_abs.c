@@ -204,7 +204,7 @@ long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
      *  input complex number.                                                 */
     const long double abs_real = tmpl_LDouble_Abs(tmpl_CLDouble_Real_Part(z));
     const long double abs_imag = tmpl_LDouble_Abs(tmpl_CLDouble_Imag_Part(z));
-    double s, t;
+    long double s, t;
 
     /*  Special case, to avoid division by zero.                              */
     if (abs_real == 0.0L)
@@ -225,6 +225,6 @@ long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
     }
 
     /*  The absolute value is new t * sqrt(1 + s^2). Compute this.            */
-    return t*tmpl_Double_Sqrt(1.0 + s*s);
+    return t*tmpl_LDouble_Sqrt(1.0L + s*s);
 }
 /*  End of tmpl_CLDouble_Abs.                                                 */

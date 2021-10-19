@@ -2,6 +2,7 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 #include <math.h>
+
 /*  The "double" version of sin is defined in both C89 and C99 math.h so we   *
  *  only need to alias this function.                                         */
 double tmpl_Double_Sqrt(double x)
