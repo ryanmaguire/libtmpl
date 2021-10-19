@@ -94,6 +94,7 @@ typedef struct _tmpl_ComplexFloat {
     float dat[2];
 } tmpl_ComplexFloat;
 
+/*  Long double precision complex numbers.                                    */
 typedef struct _tmpl_ComplexLongDouble {
     long double dat[2];
 } tmpl_ComplexLongDouble;
@@ -1028,6 +1029,39 @@ tmpl_CDouble_Pow_Real(tmpl_ComplexDouble z, double x);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_QuickAbs                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the absolute value of a complex number. This is equivalent to *
+ *      the cabs function found in complex.h (C99). This method is faster     *
+ *      than tmpl_CDouble_Abs, but can overflow for numbers greater than      *
+ *      sqrt(DBL_MAX). On most computers this is 10^154. If you will be using *
+ *      numbers greater than this, DO NOT USE THIS FUNCTION. Use              *
+ *      tmpl_CDouble_Abs instead. tmpl_CDouble_QuickAbs is about 1.3-1.5x     *
+ *      faster than tmpl_CDouble_Abs.                                         *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          A complex number.                                                 *
+ *  Output:                                                                   *
+ *      double abs_z:                                                         *
+ *          The absolute value of z, computed by the Pythagorean formula. If  *
+ *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/complex/tmpl_complex_abs.c                                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/complex_examples/tmpl_complex_absf_example.c         *
+ *      libtmpl/examples/complex_examples/tmpl_complex_abs_example.c          *
+ *      libtmpl/examples/complex_examples/tmpl_complex_absl_example.c         *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/complex_tests/tmpl_complex_absf_time_test.c             *
+ *      libtmpl/tests/complex_tests/tmpl_complex_abs_time_test.c              *
+ *      libtmpl/tests/complex_tests/tmpl_complex_absl_time_test.c             *
+ ******************************************************************************/
+extern float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
