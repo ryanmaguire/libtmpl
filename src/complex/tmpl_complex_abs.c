@@ -24,9 +24,9 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Abs:                                                      *
- *      tmpl_CDouble_Abs:                                                     *
- *      tmpl_CLDouble_Abs:                                                    *
+ *      tmpl_CFloat_QuickAbs:                                                 *
+ *      tmpl_CDouble_QuickAbs:                                                *
+ *      tmpl_CLDouble_QuickAbs:                                               *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
@@ -112,48 +112,36 @@
 /*  Single precision complex abs function (cabsf equivalent).                 */
 float tmpl_CFloat_Abs(tmpl_ComplexFloat z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float real, imag, abs_value;
-
     /*  Extract the real and imaginary parts from the input complex number.   */
-    real = tmpl_CFloat_Real_Part(z);
-    imag = tmpl_CFloat_Imag_Part(z);
+    const float real = tmpl_CFloat_Real_Part(z);
+    const float imag = tmpl_CFloat_Imag_Part(z);
 
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    abs_value = tmpl_Float_Sqrt(real*real + imag*imag);
-    return abs_value;
+    return tmpl_Float_Sqrt(real*real + imag*imag);;
 }
 /*  End of tmpl_CFloat_Abs.                                                   */
 
 /*  Double precision complex abs function (cabs equivalent).                  */
 double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double real, imag, abs_value;
-
     /*  Extract the real and imaginary parts from the input complex number.   */
-    real = tmpl_CDouble_Real_Part(z);
-    imag = tmpl_CDouble_Imag_Part(z);
+    const double real = tmpl_CDouble_Real_Part(z);
+    const double imag = tmpl_CDouble_Imag_Part(z);
 
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    abs_value = tmpl_Double_Sqrt(real*real + imag*imag);
-    return abs_value;
+    return tmpl_Double_Sqrt(real*real + imag*imag);
 }
 /*  End of tmpl_CDouble_Abs.                                                  */
 
 /*  Long double precision complex abs function (cabsl equivalent).            */
 long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double real, imag, abs_value;
-
     /*  Extract the real and imaginary parts from the input complex number.   */
-    real = tmpl_CLDouble_Real_Part(z);
-    imag = tmpl_CLDouble_Imag_Part(z);
+    const long double real = tmpl_CLDouble_Real_Part(z);
+    const long double imag = tmpl_CLDouble_Imag_Part(z);
 
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    abs_value = tmpl_LDouble_Sqrt(real*real + imag*imag);
-    return abs_value;
+    return tmpl_LDouble_Sqrt(real*real + imag*imag);
 }
 /*  End of tmpl_CLDouble_Abs.                                                 */
 

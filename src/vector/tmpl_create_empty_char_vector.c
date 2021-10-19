@@ -28,7 +28,7 @@
  *      tmpl_Create_Empty_CharVector                                          *
  *      tmpl_Create_Empty_UCharVector                                         *
  *  Purpose:                                                                  *
- *      Allocates memory for an char-valued vector.                           *
+ *      Allocates memory for a char-valued vector.                            *
  *  Arguments:                                                                *
  *      length (unsigned long int):                                           *
  *          The desired length of the vector.                                 *
@@ -46,6 +46,9 @@
  *      You will need to free the memory allocated to the vector when you are *
  *      done with it. This is done with tmpl_Destroy_UCharVector and          *
  *      tmpl_Destroy_CharVector.                                              *
+ *                                                                            *
+ *      If malloc fails it returns NULL. Hence, this function returns NULL on *
+ *      failure. Check the resulting pointer before using it.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
