@@ -1049,15 +1049,9 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
  *          The absolute value of z, computed by the Pythagorean formula. If  *
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
  *  Source Code:                                                              *
- *      libtmpl/src/complex/tmpl_complex_abs.c                                *
- *  Examples:                                                                 *
- *      libtmpl/examples/complex_examples/tmpl_complex_absf_example.c         *
- *      libtmpl/examples/complex_examples/tmpl_complex_abs_example.c          *
- *      libtmpl/examples/complex_examples/tmpl_complex_absl_example.c         *
+ *      libtmpl/src/complex/tmpl_complex_quick_abs.c                          *
  *  Tests:                                                                    *
- *      libtmpl/tests/complex_tests/tmpl_complex_absf_time_test.c             *
- *      libtmpl/tests/complex_tests/tmpl_complex_abs_time_test.c              *
- *      libtmpl/tests/complex_tests/tmpl_complex_absl_time_test.c             *
+ *      libtmpl/tests/complex_tests/tmpl_complex_quick_abs_time_test.c        *
  ******************************************************************************/
 extern float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z);
