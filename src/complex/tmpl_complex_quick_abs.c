@@ -16,17 +16,19 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_complex_abs                               *
+ *                         tmpl_complex_quick_abs                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex modulus (absolute value).        *
+ *      Contains the source code for complex modulus (absolute value), done   *
+ *      "quickly". This method is about 1.5 times faster than the default one *
+ *      but may overflow for certain values.                                  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Abs:                                                      *
- *      tmpl_CDouble_Abs:                                                     *
- *      tmpl_CLDouble_Abs:                                                    *
+ *      tmpl_CFloat_QuickAbs:                                                 *
+ *      tmpl_CDouble_QuickAbs:                                                *
+ *      tmpl_CLDouble_QuickAbs:                                               *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
@@ -42,9 +44,12 @@
  *                                                                            *
  *          |z| = |y| sqrt(1 + (x/y)^2)                                       *
  *                                                                            *
- *      otherwise. This is about 1.3-1.5x slower. The faster, naive method    *
- *      is implemented in tmpl_CDouble_QuickAbs, but may overflow for large   *
- *      values. This method avoids overflows at intermediate steps.           *
+ *      otherwise. This involves computing |x|, |y|, and seeing which one is  *
+ *      the max as intermediate steps, and a division. The resulting time     *
+ *      tests indicate that this is about 1.5x slower. The naive method is    *
+ *      kept here in case the user needs extra speed and is not worried about *
+ *      overflowing. On IEEE-754 compliant implementations, this means        *
+ *      working with numbers less than 10^154, which is very plausible.       *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
  *          A complex number.                                                 *
@@ -52,10 +57,6 @@
  *      abs_z (float/double/long double):                                     *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Float_Abs          (tmpl_math.h)                                 *
- *      tmpl_Double_Abs         (tmpl_math.h)                                 *
- *      tmpl_LDouble_Abs        (tmpl_math.h)                                 *
- *          Computes the absolute value of a real number.                     *
  *      tmpl_Float_Sqrt         (tmpl_math.h)                                 *
  *      tmpl_Double_Sqrt        (tmpl_math.h)                                 *
  *      tmpl_LDouble_Sqrt       (tmpl_math.h)                                 *
@@ -69,9 +70,7 @@
  *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
  *          Returns the imaginary part of a complex number.                   *
  *  Method:                                                                   *
- *      Extract the real and imaginary parts of z, label as z = x + iy.       *
- *      determine a = min(|x|, |y|) and b = max(|x|, |y|), returning the      *
- *      value b*sqrt(1 + (a/b)^2).                                            *
+ *      Extract the real and imaginary parts of z and return sqrt(x^2 + y^2). *
  *  Notes:                                                                    *
  *      This code is a fork of the code I wrote for rss_ringoccs.             *
  *      librssringoccs is also released under GPL3.                           *
@@ -121,10 +120,12 @@
  *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
  *      No more changes unless something breaks.                              *
  *  2021/10/19: Ryan Maguire                                                  *
- *      Changed the algorithm to prevent certain numbers from overflowing.    *
- *      Complex numbers with a magnitude greater than sqrt(DBL_MAX) will      *
- *      overflow, even though they shouldn't for a proper implementation.     *
- *      This has been fixed, albeit at the expense of speed.                  *
+ *      Changed this to "QuickAbs". Numbers greater than sqrt(DBL_MAX) will   *
+ *      overflow using this method. On most computers, this is 10^154. These  *
+ *      numbers shouldn't overflow for a proper implementation of complex abs.*
+ *      A proper implementation is now implemented in tmpl_CDouble_Abs. These *
+ *      functions are 1.3-1.5x faster and are kept for users who will not be  *
+ *      using large numbers but would prefer speed.                           *
  ******************************************************************************/
 
 /*  Header file containing basic math functions.                              */
@@ -134,97 +135,37 @@
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Single precision complex abs function (cabsf equivalent).                 */
-float tmpl_CFloat_Abs(tmpl_ComplexFloat z)
+float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z)
 {
-    /*  Extract the absolute values of the real and imaginary parts from the  *
-     *  input complex number.                                                 */
-    const float abs_real = tmpl_Float_Abs(tmpl_CFloat_Real_Part(z));
-    const float abs_imag = tmpl_Float_Abs(tmpl_CFloat_Imag_Part(z));
-    float s, t;
+    /*  Extract the real and imaginary parts from the input complex number.   */
+    const float real = tmpl_CFloat_Real_Part(z);
+    const float imag = tmpl_CFloat_Imag_Part(z);
 
-    /*  Special case, to avoid division by zero.                              */
-    if (abs_real == 0.0F)
-        return abs_imag;
-    else if (abs_imag == 0.0F)
-        return abs_real;
-
-    /*  Compute the max of |real| and |imag|.                                 */
-    if (abs_real < abs_imag)
-    {
-        t = abs_imag;
-        s = abs_real / abs_imag;
-    }
-    else
-    {
-        t = abs_real;
-        s = abs_imag / abs_real;
-    }
-
-    /*  The absolute value is new t * sqrt(1 + s^2). Compute this.            */
-    return t*tmpl_Float_Sqrt(1.0F + s*s);
+    /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
+    return tmpl_Float_Sqrt(real*real + imag*imag);;
 }
-/*  End of tmpl_CFloat_Abs.                                                   */
+/*  End of tmpl_CFloat_QuickAbs.                                              */
 
 /*  Double precision complex abs function (cabs equivalent).                  */
-double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
+double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z)
 {
-    /*  Extract the absolute values of the real and imaginary parts from the  *
-     *  input complex number.                                                 */
-    const double abs_real = tmpl_Double_Abs(tmpl_CDouble_Real_Part(z));
-    const double abs_imag = tmpl_Double_Abs(tmpl_CDouble_Imag_Part(z));
-    double s, t;
+    /*  Extract the real and imaginary parts from the input complex number.   */
+    const double real = tmpl_CDouble_Real_Part(z);
+    const double imag = tmpl_CDouble_Imag_Part(z);
 
-    /*  Special case, to avoid division by zero.                              */
-    if (abs_real == 0.0)
-        return abs_imag;
-    else if (abs_imag == 0.0)
-        return abs_real;
-
-    /*  Compute the max of |real| and |imag|.                                 */
-    if (abs_real < abs_imag)
-    {
-        t = abs_imag;
-        s = abs_real / abs_imag;
-    }
-    else
-    {
-        t = abs_real;
-        s = abs_imag / abs_real;
-    }
-
-    /*  The absolute value is new t * sqrt(1 + s^2). Compute this.            */
-    return t*tmpl_Double_Sqrt(1.0 + s*s);
+    /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
+    return tmpl_Double_Sqrt(real*real + imag*imag);
 }
-/*  End of tmpl_CDouble_Abs.                                                  */
+/*  End of tmpl_CDouble_QuickAbs.                                             */
 
 /*  Long double precision complex abs function (cabsl equivalent).            */
-long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
+long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z)
 {
-    /*  Extract the absolute values of the real and imaginary parts from the  *
-     *  input complex number.                                                 */
-    const long double abs_real = tmpl_LDouble_Abs(tmpl_CLDouble_Real_Part(z));
-    const long double abs_imag = tmpl_LDouble_Abs(tmpl_CLDouble_Imag_Part(z));
-    double s, t;
+    /*  Extract the real and imaginary parts from the input complex number.   */
+    const long double real = tmpl_CLDouble_Real_Part(z);
+    const long double imag = tmpl_CLDouble_Imag_Part(z);
 
-    /*  Special case, to avoid division by zero.                              */
-    if (abs_real == 0.0L)
-        return abs_imag;
-    else if (abs_imag == 0.0L)
-        return abs_real;
-
-    /*  Compute the max of |real| and |imag|.                                 */
-    if (abs_real < abs_imag)
-    {
-        t = abs_imag;
-        s = abs_real / abs_imag;
-    }
-    else
-    {
-        t = abs_real;
-        s = abs_imag / abs_real;
-    }
-
-    /*  The absolute value is new t * sqrt(1 + s^2). Compute this.            */
-    return t*tmpl_Double_Sqrt(1.0 + s*s);
+    /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
+    return tmpl_LDouble_Sqrt(real*real + imag*imag);
 }
-/*  End of tmpl_CLDouble_Abs.                                                 */
+/*  End of tmpl_CLDouble_QuickAbs.                                            */
