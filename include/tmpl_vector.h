@@ -19,12 +19,15 @@
  *                              tmpl_vector                                   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide tools for working with vectors with real entries.             *
+ *      Provide tools for working with vectors with integer, rational, real,  *
+ *      or complex entries.                                                   *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file which typedef's Boolean types for C89/C90 compilers.  *
+ *  2.) tmpl_complex.h:                                                       *
+ *          Header file with complex data types.                              *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -45,18 +48,52 @@
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_VECTOR_H
 #define TMPL_VECTOR_H
 
+/*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
+
+/*  Complex numbers here.                                                     */
 #include <libtmpl/include/tmpl_complex.h>
 
-typedef struct tmpl_ComplexDoubleVector {
+/******************************************************************************
+ *                        Complex Valued Vectors                              *
+ ******************************************************************************/
+
+/*  Single precision vector with complex entries.                             */
+typedef struct _tmpl_ComplexFloatVector {
+    tmpl_ComplexFloat *data;
+    unsigned long int length;
+
+    /*  In the event of an error, this Boolean is set to true and a string    *
+     *  detailing the error is stored in the error_message pointer.           */
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_ComplexFloatVector;
+
+/*  Double precision vector with complex entries.                             */
+typedef struct _tmpl_ComplexDoubleVector {
     tmpl_ComplexDouble *data;
-    unsigned long length;
+    unsigned long int length;
+
+    /*  In the event of an error, this Boolean is set to true and a string    *
+     *  detailing the error is stored in the error_message pointer.           */
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_ComplexDoubleVector;
+
+/*  Extended precision vector with complex entries.                           */
+typedef struct _tmpl_ComplexLongDoubleVector {
+    tmpl_ComplexLongDouble *data;
+    unsigned long int length;
+
+    /*  In the event of an error, this Boolean is set to true and a string    *
+     *  detailing the error is stored in the error_message pointer.           */
+    tmpl_Bool error_occurred;
+    char *error_message;
+} tmpl_ComplexLongDoubleVector;
 
 /******************************************************************************
  *                          Real Valued Vectors                               *
@@ -98,6 +135,9 @@ typedef struct _tmpl_LongDoubleVector {
 /******************************************************************************
  *                         Integer Valued Vectors                             *
  ******************************************************************************/
+
+/*  These data types are similar to the real-valued ones. See those structs   *
+ *  for comments.                                                             */
 
 typedef struct _tmpl_CharVector {
     char *data;
@@ -161,6 +201,62 @@ typedef struct _tmpl_ULongVector {
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Create_Empty_FloatVector                                         *
+ *  Purpose:                                                                  *
+ *      Creates a tmpl_FloatVector and allocates memory for the data.         *
+ *      Integer, double, and long double equivalents are provided.            *
+ *  Arguments:                                                                *
+ *      length (unsigned long int):                                           *
+ *          The desired length of the vector.                                 *
+ *  Output:                                                                   *
+ *    vec (tmpl_FloatVector *):                                               *
+ *        A pointer to a tmpl_FloatVector with memory allocated for the       *
+ *        data. The data is not initialized.                                  *
+ *  Called Functions:                                                         *
+ *      malloc      (stdlib.h)                                                *
+ *      tmpl_strdup (tmpl_string.h)                                           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vector/tmpl_create_empty_real_vector.c                    *
+ *      libtmpl/src/vector/tmpl_create_empty_char_vector.c                    *
+ *      libtmpl/src/vector/tmpl_create_empty_short_vector.c                   *
+ *      libtmpl/src/vector/tmpl_create_empty_int_vector.c                     *
+ *      libtmpl/src/vector/tmpl_create_empty_long_vector.c                    *
+ ******************************************************************************/
+extern tmpl_FloatVector *
+tmpl_Create_Empty_FloatVector(unsigned long int length);
+
+extern tmpl_DoubleVector *
+tmpl_Create_Empty_DoubleVector(unsigned long int length);
+
+extern tmpl_LongDoubleVector *
+tmpl_Create_Empty_LongDoubleVector(unsigned long int length);
+
+extern tmpl_CharVector *
+tmpl_Create_Empty_CharVector(unsigned long int length);
+
+extern tmpl_UCharVector *
+tmpl_Create_Empty_UCharVector(unsigned long int length);
+
+extern tmpl_ShortVector *
+tmpl_Create_Empty_ShortVector(unsigned long int length);
+
+extern tmpl_UShortVector *
+tmpl_Create_Empty_UShortVector(unsigned long int length);
+
+extern tmpl_IntVector *
+tmpl_Create_Empty_IntVector(unsigned long int length);
+
+extern tmpl_UIntVector *
+tmpl_Create_Empty_UIntVector(unsigned long int length);
+
+extern tmpl_LongVector *
+tmpl_Create_Empty_LongVector(unsigned long int length);
+
+extern tmpl_ULongVector *
+tmpl_Create_Empty_ULongVector(unsigned long int length);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Create_FloatVector_From_Data                                     *
  *  Purpose:                                                                  *
  *      Creates a tmpl_FloatVector from a pointer to a float array.           *
@@ -221,62 +317,6 @@ tmpl_Create_LongVector_From_Data(long int *v, unsigned long int length);
 extern tmpl_ULongVector *
 tmpl_Create_ULongVector_From_Data(unsigned long int *v,
                                   unsigned long int length);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Create_Empty_FloatVector                                         *
- *  Purpose:                                                                  *
- *      Creates a tmpl_FloatVector and allocates memory for the data.         *
- *      Integer, double, and long double equivalents are provided.            *
- *  Arguments:                                                                *
- *      length (unsigned long int):                                           *
- *          The desired length of the vector.                                 *
- *  Output:                                                                   *
- *    vec (tmpl_FloatVector *):                                               *
- *        A pointer to a tmpl_FloatVector with memory allocated for the       *
- *        data. The data is not initialized.                                  *
- *  Called Functions:                                                         *
- *      malloc      (stdlib.h)                                                *
- *      tmpl_strdup (tmpl_string.h)                                           *
- *  Source Code:                                                              *
- *      libtmpl/src/vector/tmpl_create_empty_real_vector.c                    *
- *      libtmpl/src/vector/tmpl_create_empty_char_vector.c                    *
- *      libtmpl/src/vector/tmpl_create_empty_short_vector.c                   *
- *      libtmpl/src/vector/tmpl_create_empty_int_vector.c                     *
- *      libtmpl/src/vector/tmpl_create_empty_long_vector.c                    *
- ******************************************************************************/
-extern tmpl_FloatVector *
-tmpl_Create_Empty_FloatVector(unsigned long int length);
-
-extern tmpl_DoubleVector *
-tmpl_Create_Empty_DoubleVector(unsigned long int length);
-
-extern tmpl_LongDoubleVector *
-tmpl_Create_Empty_LongDoubleVector(unsigned long int length);
-
-extern tmpl_CharVector *
-tmpl_Create_Empty_CharVector(unsigned long int length);
-
-extern tmpl_UCharVector *
-tmpl_Create_Empty_UCharVector(unsigned long int length);
-
-extern tmpl_ShortVector *
-tmpl_Create_Empty_ShortVector(unsigned long int length);
-
-extern tmpl_UShortVector *
-tmpl_Create_Empty_UShortVector(unsigned long int length);
-
-extern tmpl_IntVector *
-tmpl_Create_Empty_IntVector(unsigned long int length);
-
-extern tmpl_UIntVector *
-tmpl_Create_Empty_UIntVector(unsigned long int length);
-
-extern tmpl_LongVector *
-tmpl_Create_Empty_LongVector(unsigned long int length);
-
-extern tmpl_ULongVector *
-tmpl_Create_Empty_ULongVector(unsigned long int length);
 
 /******************************************************************************
  *  Function:                                                                 *
