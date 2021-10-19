@@ -39,9 +39,9 @@ int main(void)
     tmpl_ComplexDouble *z0;
     complex double *z1;
 
-    const unsigned int N = 10000U;
-    const double start = -100.0L;
-    const double end = 100.0L;
+    const unsigned int N = 1000U;
+    const double start = -100.0;
+    const double end = 100.0;
     const double ds = (end - start) / (double)(N - 1U);
 
     unsigned int x, y;
