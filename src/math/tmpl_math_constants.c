@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -40,6 +40,9 @@
 
 /*  All constants are declared in this header file.                           */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Header containing MIN/MAX_10_EXP macros.                                  */
+#include <float.h>
 
 /*  sqrt( 1 / (2 pi) )                                                        */
 const float tmpl_Sqrt_One_By_Two_Pi_F       = 0.398942280F;
@@ -131,4 +134,14 @@ const float tmpl_Rad_to_Deg_F       = 57.295779513F;
 const double tmpl_Rad_to_Deg        = 57.29577951308232087;
 const long double tmpl_Rad_to_Deg_L = 57.29577951308232087679815481L;
 
+const float tmpl_Max_Float_Base_E = FLT_MAX_10_EXP * 2.302585093F;
+const double tmpl_Max_Double_Base_E = DBL_MAX_10_EXP * 2.30258509299404568;
+const long double tmpl_Max_LDouble_Base_E =
+    LDBL_MAX_10_EXP * 2.3025850929940456840179910L;
 
+/*  Macros for the smallest values of float, double, and long double,         *
+ *  respectively, that will not return 0 when exp(x) is computed.             */
+const float tmpl_Min_Float_Base_E = FLT_MIN_10_EXP * 2.302585093F;
+const double tmpl_Min_Double_Base_E = DBL_MIN_10_EXP  * 2.30258509299404568;
+const long double tmpl_Min_LDouble_Base_E
+    = LDBL_MIN_10_EXP * 2.3025850929940456840179910L;

@@ -548,7 +548,7 @@ extern const float tmpl_Rad_to_Deg_F;
 extern const double tmpl_Rad_to_Deg;
 extern const long double tmpl_Rad_to_Deg_L;
 
-/*  Largest value such that exp(x) will not return inifinity.                 */
+/*  Largest value such that exp(x) will not return infinity.                  */
 extern const float tmpl_Max_Float_Base_E;
 extern const double tmpl_Max_Double_Base_E;
 extern const long double tmpl_Max_LDouble_Base_E;
