@@ -199,25 +199,10 @@ make omp_inplace
 source ~/.bashrc
 ```
 
-### Some Warnings
+### Warnings
 Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option
 will result in an error. Homebrew has versions of clang and gcc that do support
 OpenMP.
-
-On Debian GNU/Linux 10 (Buster), there are two problems with PCC and TCC.
-The version of TCC (the Tiny C Compiler) that ships with Debian 10 does not
-accept 0.0 * HUGE_VAL as a compiler-time constant. This value is used to
-represent Not-A-Number. On Debian 11 (Bullseye), the more up-to-date version of
-TCC correctly compiles libtmpl.
-
-On PCC (the Portable C Compiler), it fails to compile because it cannot
-handle glibc's math.h. In particular, it complains about certain typedef's
-in `bits/floatn.h`. In Debian 11 (Bullseye), the more recent version of PCC
-compiles libtmpl without error.
-
-In both cases, the problem does not seem to be with libtmpl, but with the
-particular versions of those compilers. At any rate, clang and gcc compile
-without error, and without warnings :)
 
 ## Installation (Windows) <a name="InstallWindows"></a>
 Step 1: Remove Windows and install a nice Linux distribution. I recommend
