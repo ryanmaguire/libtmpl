@@ -5,7 +5,14 @@
 #include <math.h>
 #include <stdlib.h>
 
-const int kGifTransIndex = 0;
+static const int kGifTransIndex = 0;
+
+typedef struct
+{
+    FILE* f;
+    uint8_t* oldImage;
+    bool firstFrame;
+} GifWriter;
 
 typedef struct
 {
@@ -22,16 +29,36 @@ typedef struct
     uint8_t treeSplit[256];
 } GifPalette;
 
+// Simple structure to write out the LZW-compressed portion of the image
+// one bit at a time
+typedef struct
+{
+    uint8_t bitIndex;  // how many bits in the partial byte written so far
+    uint8_t byte;      // current partial byte
+
+    uint32_t chunkIndex;
+    uint8_t chunk[256];   // bytes are written in here until we have 256 of them, then written to the file
+} GifBitStatus;
+
+// The LZW dictionary is a 256-ary tree constructed as the file is encoded,
+// this is one node
+typedef struct
+{
+    uint16_t m_next[256];
+} GifLzwNode;
+
 // max, min, and abs functions
-int GifIMax(int l, int r) { return l>r?l:r; }
-int GifIMin(int l, int r) { return l<r?l:r; }
-int GifIAbs(int i) { return i<0?-i:i; }
+static int GifIMax(int l, int r) { return l>r?l:r; }
+static int GifIMin(int l, int r) { return l<r?l:r; }
+static int GifIAbs(int i) { return i<0?-i:i; }
 
 // walks the k-d tree to pick the palette entry for a desired color.
 // Takes as in/out parameters the current best color and its error -
 // only changes them if it finds a better color in its subtree.
 // this is the major hotspot in the code at the moment.
-void GifGetClosestPaletteColor( GifPalette* pPal, int r, int g, int b, int* bestInd, int* bestDiff, int treeRoot )
+static void
+GifGetClosestPaletteColor(GifPalette* pPal, int r, int g, int b,
+                          int* bestInd, int* bestDiff, int treeRoot)
 {
     // base case, reached the bottom of the tree
     if(treeRoot > (1<<pPal->bitDepth)-1)
@@ -79,7 +106,7 @@ void GifGetClosestPaletteColor( GifPalette* pPal, int r, int g, int b, int* best
     }
 }
 
-void GifSwapPixels(uint8_t* image, int pixA, int pixB)
+static void GifSwapPixels(uint8_t* image, int pixA, int pixB)
 {
     uint8_t rA = image[pixA*4];
     uint8_t gA = image[pixA*4+1];
@@ -103,7 +130,9 @@ void GifSwapPixels(uint8_t* image, int pixA, int pixB)
 }
 
 // just the partition operation from quicksort
-int GifPartition(uint8_t* image, const int left, const int right, const int elt, int pivotIndex)
+static int
+GifPartition(uint8_t* image, const int left, const int right,
+             const int elt, int pivotIndex)
 {
     const int pivotValue = image[(pivotIndex)*4+elt];
     GifSwapPixels(image, pivotIndex, right-1);
@@ -132,9 +161,11 @@ int GifPartition(uint8_t* image, const int left, const int right, const int elt,
 }
 
 // Perform an incomplete sort, finding all elements above and below the desired median
-void GifPartitionByMedian(uint8_t* image, int left, int right, int com, int neededCenter)
+static void
+GifPartitionByMedian(uint8_t* image, int left, int right,
+                     int com, int neededCenter)
 {
-    if(left < right-1)
+    if (left < right-1)
     {
         int pivotIndex = left + (right-left)/2;
 
@@ -150,7 +181,10 @@ void GifPartitionByMedian(uint8_t* image, int left, int right, int com, int need
 }
 
 // Builds a palette by creating a balanced k-d tree of all pixels in the image
-void GifSplitPalette(uint8_t* image, int numPixels, int firstElt, int lastElt, int splitElt, int splitDist, int treeNode, bool buildForDither, GifPalette* pal)
+static void
+GifSplitPalette(uint8_t* image, int numPixels, int firstElt, int lastElt,
+                int splitElt, int splitDist, int treeNode,
+                bool buildForDither, GifPalette* pal)
 {
     if(lastElt <= firstElt || numPixels == 0)
         return;
@@ -269,7 +303,8 @@ void GifSplitPalette(uint8_t* image, int numPixels, int firstElt, int lastElt, i
 // moves them to the fromt of th buffer.
 // This allows us to build a palette optimized for the colors of the
 // changed pixels only.
-int GifPickChangedPixels( const uint8_t* lastFrame, uint8_t* frame, int numPixels )
+static int
+GifPickChangedPixels(const uint8_t* lastFrame, uint8_t* frame, int numPixels)
 {
     int numChanged = 0;
     uint8_t* writeIter = frame;
@@ -295,7 +330,10 @@ int GifPickChangedPixels( const uint8_t* lastFrame, uint8_t* frame, int numPixel
 
 // Creates a palette by placing all the image pixels in a k-d tree and then averaging the blocks at the bottom.
 // This is known as the "modified median split" technique
-void GifMakePalette( const uint8_t* lastFrame, const uint8_t* nextFrame, uint32_t width, uint32_t height, int bitDepth, bool buildForDither, GifPalette* pPal )
+static void
+GifMakePalette(const uint8_t* lastFrame, const uint8_t* nextFrame,
+               uint32_t width, uint32_t height, int bitDepth,
+               bool buildForDither, GifPalette* pPal)
 {
     pPal->bitDepth = bitDepth;
 
@@ -325,7 +363,10 @@ void GifMakePalette( const uint8_t* lastFrame, const uint8_t* nextFrame, uint32_
 }
 
 // Implements Floyd-Steinberg dithering, writes palette value to alpha
-void GifDitherImage( const uint8_t* lastFrame, const uint8_t* nextFrame, uint8_t* outFrame, uint32_t width, uint32_t height, GifPalette* pPal )
+static void
+GifDitherImage(const uint8_t* lastFrame, const uint8_t* nextFrame,
+               uint8_t* outFrame, uint32_t width, uint32_t height,
+               GifPalette* pPal)
 {
     int numPixels = (int)(width * height);
 
@@ -434,7 +475,10 @@ void GifDitherImage( const uint8_t* lastFrame, const uint8_t* nextFrame, uint8_t
 }
 
 // Picks palette colors for the image using simple thresholding, no dithering
-void GifThresholdImage( const uint8_t* lastFrame, const uint8_t* nextFrame, uint8_t* outFrame, uint32_t width, uint32_t height, GifPalette* pPal )
+static void
+GifThresholdImage(const uint8_t* lastFrame, const uint8_t* nextFrame,
+                  uint8_t* outFrame, uint32_t width, uint32_t height,
+                  GifPalette* pPal)
 {
     uint32_t numPixels = width*height;
     for( uint32_t ii=0; ii<numPixels; ++ii )
@@ -471,19 +515,8 @@ void GifThresholdImage( const uint8_t* lastFrame, const uint8_t* nextFrame, uint
     }
 }
 
-// Simple structure to write out the LZW-compressed portion of the image
-// one bit at a time
-typedef struct
-{
-    uint8_t bitIndex;  // how many bits in the partial byte written so far
-    uint8_t byte;      // current partial byte
-
-    uint32_t chunkIndex;
-    uint8_t chunk[256];   // bytes are written in here until we have 256 of them, then written to the file
-} GifBitStatus;
-
 // insert a single bit
-void GifWriteBit( GifBitStatus* stat, uint32_t bit )
+static void GifWriteBit( GifBitStatus* stat, uint32_t bit )
 {
     bit = bit & 1;
     bit = bit << stat->bitIndex;
@@ -501,7 +534,7 @@ void GifWriteBit( GifBitStatus* stat, uint32_t bit )
 }
 
 // write all bytes so far to the file
-void GifWriteChunk( FILE* f, GifBitStatus* stat )
+static void GifWriteChunk( FILE* f, GifBitStatus* stat )
 {
     fputc((int)stat->chunkIndex, f);
     fwrite(stat->chunk, 1, stat->chunkIndex, f);
@@ -511,7 +544,8 @@ void GifWriteChunk( FILE* f, GifBitStatus* stat )
     stat->chunkIndex = 0;
 }
 
-void GifWriteCode( FILE* f, GifBitStatus* stat, uint32_t code, uint32_t length )
+static void
+GifWriteCode( FILE* f, GifBitStatus* stat, uint32_t code, uint32_t length )
 {
     for( uint32_t ii=0; ii<length; ++ii )
     {
@@ -525,15 +559,8 @@ void GifWriteCode( FILE* f, GifBitStatus* stat, uint32_t code, uint32_t length )
     }
 }
 
-// The LZW dictionary is a 256-ary tree constructed as the file is encoded,
-// this is one node
-typedef struct
-{
-    uint16_t m_next[256];
-} GifLzwNode;
-
 // write a 256-color (8-bit) image palette to the file
-void GifWritePalette( const GifPalette* pPal, FILE* f )
+static void GifWritePalette( const GifPalette* pPal, FILE* f )
 {
     fputc(0, f);  // first color: transparency
     fputc(0, f);
@@ -552,7 +579,8 @@ void GifWritePalette( const GifPalette* pPal, FILE* f )
 }
 
 // write the image header, LZW-compress and write out the image
-void GifWriteLzwImage(FILE* f, uint8_t* image, uint32_t left, uint32_t top,  uint32_t width, uint32_t height, uint32_t delay, GifPalette* pPal)
+static void
+GifWriteLzwImage(FILE* f, uint8_t* image, uint32_t left, uint32_t top,  uint32_t width, uint32_t height, uint32_t delay, GifPalette* pPal)
 {
     // graphics control extension
     fputc(0x21, f);
@@ -670,13 +698,6 @@ void GifWriteLzwImage(FILE* f, uint8_t* image, uint32_t left, uint32_t top,  uin
     free(codetree);
 }
 
-typedef struct
-{
-    FILE* f;
-    uint8_t* oldImage;
-    bool firstFrame;
-} GifWriter;
-
 // Creates a gif file.
 // The input GIFWriter is assumed to be uninitialized.
 // The delay value is the time between frames in hundredths of a second - note that not all viewers pay much attention to this value.
@@ -782,8 +803,6 @@ static void GifEnd(GifWriter* writer)
     writer->oldImage = NULL;
 }
 
-#define PI_BY_TWO 1.5707963267948966
-
 struct complex_number {
     double real, imag;
 };
@@ -806,12 +825,12 @@ int main(void)
     double ds = 3.0;
     const unsigned int width = 256U;
     const unsigned int height = 256U;
-    const unsigned int nframes = 100U;
-    uint8_t image[width*height*4];
+    const unsigned int nframes = 1000U;
+    uint8_t *image = malloc(sizeof(*image)*width*height*4);
 
     unsigned int x, y, iters, frame;
     unsigned char red, green, blue;
-    double c_x, c_y, backgnd, val, exp_x;
+    double c_x, c_y, backgnd, val;
     struct complex_number z, c;
 
     const char* filename = "swipecat_fractal.gif";
@@ -879,5 +898,6 @@ int main(void)
         ds *= 0.95;
     }
     GifEnd(&writer);
+    free(image);
     return 0;
 }
