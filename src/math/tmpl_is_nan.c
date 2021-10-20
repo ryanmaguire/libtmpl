@@ -37,7 +37,7 @@
  *          Boolean for if x is +/- nan.                                      *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, check if the bits correspond to     *
- *      +/- infinity. IEEE-754 states NaN is when all exponent bits are       *
+ *      +/- NaN. IEEE-754 states NaN is when all exponent bits are            *
  *      1 and some of the mantissa bits are 1. The sign can be zero or 1.     *
  *                                                                            *
  *      If IEEE-754 is not available, a portable way to check is by comparing *
@@ -89,7 +89,7 @@ tmpl_Bool tmpl_Float_Is_NaN(float x)
 
     /*  NaN for IEEE-754 is exponent set to all 1's and the mantissa set to   *
      *  zeros and ones . The sign can be 0 or 1 for +/- nan.                  */
-    if (w.bits.expo == 0xFFU && (w.bits.man0 != 0x0U || w.bits.man1 == 0x0U))
+    if (w.bits.expo == 0xFFU && (w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
         return tmpl_True;
     else
         return tmpl_False;
@@ -117,7 +117,7 @@ tmpl_Bool tmpl_Float_Is_NaN(float x)
 /*  Function for testing if a double is Not-A-Number.                         */
 tmpl_Bool tmpl_Double_Is_NaN(double x)
 {
-    /*  Check for IEEE-754 support. This is the easiest way to work with inf. */
+    /*  Check for IEEE-754 support. This is the easiest way to work with nan. */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
     /*  Declare a variable for the IEEE-754 double object.                    */
