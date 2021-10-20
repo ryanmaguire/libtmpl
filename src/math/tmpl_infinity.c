@@ -66,6 +66,7 @@ float tmpl_Float_Infinity(void)
     return x;
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
+
 }
 /*  End of tmpl_Float_Infinity.                                               */
 
@@ -97,6 +98,7 @@ double tmpl_Double_Infinity(void)
     return x;
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1  */
+
 }
 /*  End of tmpl_Double_Infinity.                                              */
 

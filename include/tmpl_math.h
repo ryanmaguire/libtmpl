@@ -575,6 +575,8 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *      the number 1.0E10000 which is guaranteed to overflow.                 *
  *  Source Code:                                                              *
  *      libtmpl/src/math/tmpl_infinity.c                                      *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_infinity_example.c                *
  ******************************************************************************/
 extern float tmpl_Float_Infinity(void);
 extern double tmpl_Double_Infinity(void);
@@ -597,6 +599,8 @@ extern long double tmpl_LDouble_Infinity(void);
  *      the number 0.0 / 0.0 which should be NaN.                             *
  *  Source Code:                                                              *
  *      libtmpl/src/math/tmpl_nan.c                                           *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_nan_example.c                     *
  ******************************************************************************/
 extern float tmpl_Float_NaN(void);
 extern double tmpl_Double_NaN(void);
@@ -617,11 +621,35 @@ extern long double tmpl_LDouble_NaN(void);
  *      Double and long double equivalents are also provided.                 *
  *  Source Code:                                                              *
  *      libtmpl/src/math/tmpl_is_inf.c                                        *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_is_inf_float_example.c            *
+ *      libtmpl/examples/math_examples/tmpl_is_inf_double_example.c           *
+ *      libtmpl/examples/math_examples/tmpl_is_inf_ldouble_example.c          *
  ******************************************************************************/
 extern tmpl_Bool tmpl_Float_Is_Inf(float x);
 extern tmpl_Bool tmpl_Double_Is_Inf(double x);
 extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Is_NaN                                                     *
+ *  Purpose:                                                                  *
+ *      This function tests if a number is Not-a-Number.                      *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      is_nan (tmpl_Bool):                                                   *
+ *          A Boolean indicating if x is +/- nan or not.                      *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_is_nan.c                                        *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_is_nan_float_example.c            *
+ *      libtmpl/examples/math_examples/tmpl_is_nan_double_example.c           *
+ *      libtmpl/examples/math_examples/tmpl_is_nan_ldouble_example.c          *
+ ******************************************************************************/
 extern tmpl_Bool tmpl_Float_Is_NaN(float x);
 extern tmpl_Bool tmpl_Double_Is_NaN(double x);
 extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
