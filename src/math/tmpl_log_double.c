@@ -2,16 +2,7 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 0
-
-#include <math.h>
-
-double tmpl_Double_Log(double x)
-{
-    return log(x);
-}
-
-#else 
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 double tmpl_Double_Log(double x)
 {
@@ -47,4 +38,14 @@ double tmpl_Double_Log(double x)
 
     return tmpl_Natural_Log_of_Two*exponent + A*poly;
 }
+
+#else 
+
+#include <math.h>
+
+double tmpl_Double_Log(double x)
+{
+    return log(x);
+}
+
 #endif
