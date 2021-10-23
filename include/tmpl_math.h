@@ -94,6 +94,13 @@
 /*  Endianness macros are here.                                               */
 #include <libtmpl/include/tmpl_endianness.h>
 
+/*  Set this to 1 to use libtmpl's version of libm. Set this to zero to have  *
+ *  math.h included, using standard library functions instead. libtmpl's      *
+ *  libm functions are quite fast and efficient, but most would prefer to use *
+ *  the libm provided by the implementation of the C standard library they    *
+ *  are using, so this is set to 0 by default.                                */
+#define TMPL_USE_MATH_ALGORITHMS 0
+
 /*  The following comment block explains the IEEE-754 format. Those who know  *
  *  the format can skip it.                                                   */
 
