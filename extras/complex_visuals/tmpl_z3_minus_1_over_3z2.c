@@ -19,7 +19,8 @@
  *  This file creates a complex plot of (z^3 - 1)/(3z^2). The color is given  *
  *  by the argument, and the intensity is given by the modulus. This function *
  *  was chosen to try and better understand the dynamics of the Newton        *
- *  for z^3-1. The iterative step is z_{n+1} = z_{n} - (z_{n}^3-1)/(3z_{n}^2) *
+ *  fractal for z^3-1. The iterative step is                                  *
+ *      z_{n+1} = z_{n} - (z_{n}^3-1)/(3z_{n}^2)                              *
  *  hence the choice of this function.                                        *
  *                                                                            *
  *  This file is compliant with the C89 standard and does not use C99         *
@@ -29,6 +30,16 @@
  *  Author: Ryan Maguire                                                      *
  *  Date:   2021/09/30                                                        *
  ******************************************************************************/
+
+/*  Microsoft "deprecated" the fopen function in favor of the fopen_s         *
+ *  function. The actual working group for the C language has not deprecated  *
+ *  fopen, and fopen_s was only introduced in the C11 standard, so I will     *
+ *  still use fopen. To avoid a "deprecated" warning on Microsoft's MSVC,     *
+ *  first check that the user is running windows, then define this macro.     *
+ *  Unix-based (GNU, Linux, macOS, FreeBSD, etc.) platforms yield no warnings.*/
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
 
 /*  fprintf, FILE, and more found here.                                       */
 #include <stdio.h>
@@ -59,14 +70,36 @@ struct color {
     unsigned char red, green, blue;
 };
 
+/*  For reasons completely beyond me, fputc doesn't seem to work correctly on *
+ *  Windows 10. The problem seems to arise when too many colors are present   *
+ *  in the PPM file. The rendered PPM file is completely corrupted and looks  *
+ *  horrible. If the user is running Windows, use fprintf instead of fputc,   *
+ *  and use the text-based PPM format instead of the binary based one. The    *
+ *  text-based format ends up being around 4x larger than the binary format,  *
+ *  but renders properly.                                                     */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+
 /*  Function for writing a color to a PPM file.                               */
 static void write_color(FILE *fp, struct color c)
 {
-    fputc(c.red, fp);
-    fputc(c.green, fp);
-    fputc(c.blue, fp);
+    fprintf(fp, "%u %u %u\n", c.red, c.green, c.blue);
 }
 /*  End of write_color.                                                       */
+
+#else
+/*  Everyone else (GNU, Linux, macOS, FreeBSD, etc.).                         */
+
+/*  Function for writing a color to a PPM file.                               */
+static void write_color(FILE *fp, struct color c)
+{
+    fputc(c.red,   fp);
+    fputc(c.green, fp);
+    fputc(c.blue,  fp);
+}
+/*  End of write_color.                                                       */
+
+#endif
+/*  End of #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER).       */
 
 /*  Function for computing the argument of a complex number.                  */
 static double complex_arg(struct complex_number z)
@@ -214,8 +247,13 @@ int main(void)
         return -1;
     }
 
-    /*  Otherwise, print the preamble to the PPM file.                        */
+    /*  Write the preamble to the PPM file. For Windows users we'll use text  *
+     *  based PPM, and for everyone else we'll use binary format.             */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    fprintf(fp, "P3\n%u %u\n255\n", width, height);
+#else
     fprintf(fp, "P6\n%u %u\n255\n", width, height);
+#endif
 
     /*  Loop over the y coordinates.                                          */
     for (y = 0U; y < height; ++y)
