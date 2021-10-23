@@ -1,5 +1,4 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <float.h>
 
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
@@ -35,7 +34,6 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
         return;
     }
 
-
     w.r = x;
 
     *expo = (signed int)w.bits.expo - 0x3FF;
@@ -44,6 +42,8 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
     *mant = w.r;
 }
 #else
+
+#include <float.h>
 
 /*  This method does not assume IEEE-754 support, but instead of running in   *
  *  O(1) time, it runs in O(ln(m)), where m is the exponent of the input. So  *
@@ -83,7 +83,7 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
     }
 
     /*  If we have a non-exceptional case, compute |x|.                       */
-    abs_x = tmpl_Double_Abs((double)x);
+    abs_x = tmpl_Double_Abs(x);
 
     /*  If |x| < 1,0, compute with 1/|x|. We'll then negate the exponent at   *
      *  the end of the computation.                                           */
@@ -101,84 +101,43 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
      *  powers of 2 the value is greater than, and then divide by these,      *
      *  which amounts to zeroing out that particular value in the binary      *
      *  expansion of the exponent. Because of this, for values less than      *
-     *  10^4932 (which is almost certainly beyond the bounds of float for     *
+     *  10^308 (which is almost certainly beyond the bounds of double for     *
      *  your implementation), we can compute the mantissa and exponent in     *
      *  O(ln(ln(x))) time. To avoid compiler warnings about constants beyond  *
-     *  the range of float, use the macro FLT_MAX_10_EXP to check the largest *
-     *  power of 10 allowed.                                                  */
-#if FLT_MAX_10_EXP > 4932
-
-    /*  While it is likely not the case, if float has a range larger than     *
-     *  10^4932, we should use a while loop to continuously decrease the      *
-     *  the exponent until it is below this value. This is for the sake of    *
-     *  portability. If float has a very large range, this part of the        *
-     *  algorithm runs in O(ln(x)) time, instead of O(ln(ln(x))).             */
-    while (*mant >= 1.1897314953572317650857593266280E4932)
+     *  the range of double, use the macro DBL_MAX_10_EXP to check the        *
+     *  largest power of 10 allowed.                                          */
+#if DBL_MAX_10_EXP > 154
+    while (*mant >= 1.34078079299425971E154)
     {
-        *mant /= 1.1897314953572317650857593266280E4932;
-        *expo += 16384;
-    }
-#endif
-#if FLT_MAX_10_EXP > 2466
-    while (*mant >= 1.0907481356194159294629842447338E2466)
-    {
-        *mant /= 1.0907481356194159294629842447338E2466;
-        *expo += 8192;
-    }
-#endif
-#if FLT_MAX_10_EXP > 1233
-    while (*mant >= 1.0443888814131525066917527107166E1233)
-    {
-        *mant /= 1.0443888814131525066917527107166E1233;
-        *expo += 4096;
-    }
-#endif
-#if FLT_MAX_10_EXP > 616
-    while (*mant >= 3.2317006071311007300714876688670E616)
-    {
-        *mant /= 3.2317006071311007300714876688670E616;
-        *expo += 2048;
-    }
-#endif
-#if FLT_MAX_10_EXP > 308
-    while (*mant >= 1.7976931348623159077293051907890E308)
-    {
-        *mant /= 1.7976931348623159077293051907890E308;
-        *expo += 1024;
-    }
-#endif
-#if FLT_MAX_10_EXP > 154
-    while (*mant >= 1.3407807929942597099574024998206E154)
-    {
-        *mant /= 1.3407807929942597099574024998206E154;
+        *mant /= 1.34078079299425971E154;
         *expo += 512;
     }
 #endif
-#if FLT_MAX_10_EXP > 77
-    while (*mant >= 1.1579208923731619542357098500869E77)
+#if DBL_MAX_10_EXP > 77
+    while (*mant >= 1.15792089237316195E77)
     {
-        *mant /= 1.1579208923731619542357098500869E77;
+        *mant /= 1.15792089237316195E77;
         *expo += 256;
     }
 #endif
-#if FLT_MAX_10_EXP > 38
-    while (*mant >= 3.4028236692093846346337460743177E38)
+#if DBL_MAX_10_EXP > 38
+    while (*mant >= 3.40282366920938463E38)
     {
-        *mant /= 3.4028236692093846346337460743177E38;
+        *mant /= 3.40282366920938463E38;
         *expo += 128;
     }
 #endif
-#if FLT_MAX_10_EXP > 19
-    while (*mant >= 1.84467440737095516160E19)
+#if DBL_MAX_10_EXP > 19
+    while (*mant >= 1.84467440737095516E19)
     {
-        *mant /= 1.84467440737095516160E19;
+        *mant /= 1.84467440737095516E19;
         *expo += 64;
     }
 #endif
-#if FLT_MAX_10_EXP > 9
-    while (*mant >= 4.2949672960E9)
+#if DBL_MAX_10_EXP > 9
+    while (*mant >= 4.29496729600000000E09)
     {
-        *mant /= 4.2949672960E9;
+        *mant /= 4.29496729600000000E09;
         *expo += 32;
     }
 #endif
@@ -224,7 +183,7 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
         *mant = -*mant;
 
 }
-/*  End of tmpl_Float_Base2_Exp_and_Mant.                                     */
+/*  End of tmpl_Double_Base2_Exp_and_Mant.                                    */
 
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1. */
