@@ -37,8 +37,8 @@ import numpy
 
 # A torus knot is of the form T(p,q) where p and q are coprime. We'll loop over
 # the lattice [Torus_Start, Torus_End]^2 and check these Jones' polynomials.
-Torus_Start = 3
-Torus_End = 20
+Torus_Start = 2
+Torus_End = 11
 
 # The SnapPy module has 367 altnerating Hoste-Thistlethwaite knots
 # and 185 non-alternating Hoste-Thistlethwaite knots. We can loop over these
@@ -66,8 +66,8 @@ ManifoldList = []
 
 # Counters for seeing how many of the knots work with the SnapPy
 # is_isometric_to method.
-counter_gcd = 0
-counter_success = 0
+# counter_gcd = 0
+# counter_success = 0
 
 # SnapPy has the Rolfsen table for many knots, the highest being 11 crossings.
 # Loop between 3 (Trefoil) and 11.
@@ -86,8 +86,19 @@ for k in range(3, 12):
             m = snappy.Manifold(knot_string)
             l = snappy.Link(knot_string)
 
+            # Shift the Jones polynomial so that all of the powers are
+            # non-negative. That is, make the Jones polynomial an actual
+            # polynomial, and not a Laurent polynomial with negative
+            # exponents.
+            knot_poly = l.jones_polynomial()
+            knot_poly = knot_poly.shift(-min(knot_poly.exponents()))
+
+            # Make the constant coefficient of our polynomials positive.
+            if (knot_poly[0] < 0.0):
+                knot_poly = -knot_poly
+
             # Append the manifold and link to our list and increment n.
-            ManifoldList.append([knot_string, m, l])
+            ManifoldList.append([knot_string, m, l, knot_poly])
             n += 1
 
     # SnapPy raises an IOError on failure. Try to catch this to prevent error.
@@ -95,7 +106,6 @@ for k in range(3, 12):
 
         # Reset n to 1 and continue the outer-most for-loop.
         n = 1
-        continue
 
 # We need to loop over all Torus knots within a certain range. A torus knot
 # can be specified by an ordered pair (n, m) of COPRIME integers.
@@ -121,11 +131,24 @@ for n in range(Torus_Start, Torus_End):
         if (numpy.gcd(n, m) == 1):
 
             # Increment our counter that checks if is_isometric_to works.
-            counter_gcd += 1
+            # counter_gcd += 1
 
             # Compute the Link class corresponding to our torus knot.
             knot_string = "T(%d, %d)" % (n, m)
             torus_knot = snappy.Link(knot_string)
+
+            # Compute the Jones polynomial of the torus knot.
+            torus_poly = torus_knot.jones_polynomial()
+
+            # Shift the Jones polynomial so that all of the powers are
+            # non-negative. That is, make the Jones polynomial an actual
+            # polynomial, and not a Laurent polynomial with negative
+            # exponents.
+            torus_poly = torus_poly.shift(-min(torus_poly.exponents()))
+
+            # Make the constant coefficient of our polynomials positive.
+            if (torus_poly[0] < 0.0):
+                torus_poly = -torus_poly
 
             # Loop over all of the knots in our list and check if they have the
             # same Jones Polynomial as the torus knot T(n,m).
@@ -154,30 +177,8 @@ for n in range(Torus_Start, Torus_End):
                 # commented out), then is_isometric_to succeeded and we should
                 # increment our counter. If the is_isometric_to block is
                 # commented out, we can just ignore this.
-                """
-                counter_success += 1
-                """
-
-                # Compute the Jones polynomial of the torus knot.
-                torus_poly = torus_knot.jones_polynomial()
-
-                # Shift the Jones polynomial so that all of the powers are
-                # non-negative. That is, make the Jones polynomial an actual
-                # polynomial, and not a Laurent polynomial with negative
-                # exponents.
-                torus_poly = torus_poly.shift(-min(torus_poly.exponents()))
-
-                # Do the same thing for our current knot.
-                knot_poly = k[2].jones_polynomial()
-                knot_poly = knot_poly.shift(-min(knot_poly.exponents()))
-
-                # Make the constant coefficient of our polynomials positive.
-                if (knot_poly[0] < 0.0):
-                    knot_poly = -knot_poly
-
-                if (torus_poly[0] < 0.0):
-                    torus_poly = -torus_poly
+                # counter_success += 1
 
                 # Compare the two polynomials.
-                if (torus_poly == knot_poly):
+                if (torus_poly == k[3]):
                     print("\tMATCH: %s %s" % (k[0], knot_string))
