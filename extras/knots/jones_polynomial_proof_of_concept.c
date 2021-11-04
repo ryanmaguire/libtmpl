@@ -26,9 +26,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*  Crossing signs or negative and positive. This assumes the knot has been   *
+ *  given an orientation.                                                     */
 enum crossing_sign {negative_crossing, positive_crossing};
+
+/*  Crossing type for the Gauss code. Is the current strand over or under.    */
 enum crossing_type {under_crossing, over_crossing};
 
+static unsigned char backward = 0x00U;
+static unsigned char forward = 0x01U;
+
+/*  Extended Gauss code. This contains crossing number, sign, and type. This  *
+ *  allows us to distinguish a knot from it's mirror.                         */
 struct knot {
     unsigned int number_of_crossings;
     enum crossing_sign *sign;
@@ -36,34 +45,44 @@ struct knot {
     unsigned int *crossing_number;
 };
 
+/*  Laurent polynomials, i.e. polynomials with negative exponents allowed.    */
 struct laurent_polynomial {
     signed int lowest_degree;
     signed int highest_degree;
     signed int *coeffs;
 };
 
+/*  This struct is used for keeping track of which crossing number            *
+ *  corresponds to which indices.                                             */
 struct CrossingIndices {
-    unsigned long int under;
-    unsigned long int over;
+    unsigned int under;
+    unsigned int over;
 };
 
+/*  Returns an array ind where ind[n] is a struct containing the indices of   *
+ *  the under and over crossings of the nth crossing.                         */
 static struct CrossingIndices *
 get_indices(struct knot *K)
 {
     unsigned int n;
     struct CrossingIndices *ind;
 
+    /*  Check for invalid inputs.                                             */
     if (!K)
         return NULL;
 
+    /*  If there are no crossings, return an empty array (a NULL pointer).    */
     if (K->number_of_crossings == 0U)
         return NULL;
 
+    /*  Allocate memory for the array.                                        */
     ind = malloc(sizeof(*ind)*K->number_of_crossings);
 
+    /*  Check if malloc failed.                                               */
     if (!ind)
         return NULL;
 
+    /*  Loop through and save the indices.                                    */
     for (n = 0U; n < 2U * K->number_of_crossings; ++n)
     {
         if (K->type[n] == over_crossing)
@@ -74,13 +93,16 @@ get_indices(struct knot *K)
 
     return ind;
 }
+/*  End of get_indices.                                                       */
 
 static unsigned int
 number_of_circles_in_resolution(struct knot *K,
-                                unsigned int resolution)
+                                struct CrossingIndices *ind,
+                                unsigned int resolution,
+                                unsigned char *have_visited)
 {
-    unsigned int number_of_circles, crossing_resolution, n;
-    struct CrossingIndices *ind;
+    unsigned int number_of_circles, n, k, m;
+    unsigned char dir, crossing_resolution;
 
     /*  The empty knot has zero circles.                                      */
     if (!K)
@@ -90,21 +112,181 @@ number_of_circles_in_resolution(struct knot *K,
     if (K->number_of_crossings == 0U)
         return 1U;
 
-    ind = get_indices(K);
-
     if (!ind)
-        return 0;
+        return 0U;
+
+    if (!have_visited)
+        return 0U;
 
     number_of_circles = 0U;
 
-    for (n = 0U; n < K->number_of_crossings; ++n)
+    for (n = 0U; n < 2U*K->number_of_crossings; ++n)
     {
-        crossing_resolution = resolution & 1U;
-        number_of_circles += crossing_resolution;
-        resolution >>= 1U;
-    }
+        k = 4U*K->crossing_number[n];
 
-    free(ind);
+        /*  Each crossing has four entrances. Bottom left, bottom right, top  *
+         *  left, top right. Check which one's we have visited.               */
+        for (m = 0U; m < 3; ++m)
+        {
+            if (!have_visited[k])
+                break;
+            else
+                ++k;
+        }
+
+        if (have_visited[k])
+            continue;
+
+        if (m < 2U)
+            dir = forward;
+        else
+            dir = backward;
+
+        m = n;
+        while (!have_visited[k])
+        {
+            crossing_resolution = (resolution >> K->crossing_number[m]) & 0x01U;
+            have_visited[k] = 0x01U;
+
+            if (K->sign[m] == positive_crossing)
+            {
+                if (K->type[m] == over_crossing)
+                {
+                    if (crossing_resolution == 0x00U)
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m] + 3U;
+                        else
+                            k = 4U*K->crossing_number[m] + 1U;
+                    }
+                    else
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m] + 1U;
+                        else
+                            k = 4U*K->crossing_number[m] + 3U;
+
+                        dir = 0x01U - dir;
+                    }
+                    m = ind[K->crossing_number[m]].under;
+                }
+                else
+                {
+                    if (crossing_resolution == 0x00U)
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m] + 2U;
+                        else
+                            k = 4U*K->crossing_number[m];
+                    }
+                    else
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m];
+                        else
+                            k = 4U*K->crossing_number[m] + 2U;
+
+                        dir = 0x01U - dir;
+                    }
+                    m = ind[K->crossing_number[m]].over;
+                }
+            }
+            else
+            {
+                if (K->type[m] == over_crossing)
+                {
+                    if (crossing_resolution == 0x00U)
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m] + 2U;
+                        else
+                            k = 4U*K->crossing_number[m];
+                    }
+                    else
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m];
+                        else
+                            k = 4U*K->crossing_number[m] + 2U;
+
+                        dir = 0x01U - dir;
+                    }
+
+                    m = ind[K->crossing_number[m]].under;
+                }
+                else
+                {
+                    if (crossing_resolution == 0x00U)
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m] + 3U;
+                        else
+                            k = 4U*K->crossing_number[m] + 1U;
+                    }
+                    else
+                    {
+                        if (dir == forward)
+                            k = 4U*K->crossing_number[m] + 1U;
+                        else
+                            k = 4U*K->crossing_number[m] + 3U;
+
+                        dir = 0x01U - dir;
+                    }
+                    m = ind[K->crossing_number[m]].over;
+                }
+            }
+
+            if (dir == forward)
+            {
+                if (m == 2U*K->number_of_crossings - 1U)
+                    m = 0U;
+                else
+                    ++m;
+            }
+            else
+            {
+                if (m == 0U)
+                    m = 2U*K->number_of_crossings - 1U;
+                else
+                    --m;
+            }
+            
+            have_visited[k] = 0x01U;
+
+            k = 4U*K->crossing_number[m];
+            if (K->sign[m] == positive_crossing)
+            {
+                if (K->type[m] == over_crossing)
+                {
+                    if (dir == backward)
+                        k += 2U;
+                }
+                else
+                {
+                    if (dir == forward)
+                        k += 1U;
+                    else
+                        k += 3U;
+                }
+            }
+            else
+            {
+                if (K->type[m] == over_crossing)
+                {
+                    if (dir == forward)
+                        k += 1U;
+                    else
+                        k += 3U;
+                }
+                else
+                {
+                    if (dir == backward)
+                        k += 2U;
+                }
+            }
+        }
+        ++number_of_circles;
+    }
     return number_of_circles;
 }
 
@@ -196,6 +378,9 @@ int main(void)
 {
     struct laurent_polynomial P, Q, sum;
     struct knot K;
+    struct CrossingIndices *ind;
+    unsigned char *have_visited;
+    unsigned int n, m;
     signed int Pcoeffs[7] = {3, 2, 1, 0, -1, -2, -3};
     signed int Qcoeffs[6] = {-3, 2, -1, 7, 3, 1};
     enum crossing_sign s[6] = {
@@ -227,9 +412,19 @@ int main(void)
     K.sign = s;
     K.type = t;
     K.crossing_number = c;
+    ind = get_indices(&K);
+    have_visited = calloc(sizeof(*have_visited), 4U*K.number_of_crossings);
+    printf("\n");
+    for (n = 0U; n < 1U << K.number_of_crossings; ++n)
+    {
+        printf("%u : %u\n",
+               n, number_of_circles_in_resolution(&K, ind, n, have_visited));
 
-    number_of_circles_in_resolution(&K, 0x00);
+        for (m = 0U; m < 4U*K.number_of_crossings; ++m)
+            have_visited[m] = 0x00U;
+    }
 
-
+    free(ind);
+    free(have_visited);
     return 0;
 }
