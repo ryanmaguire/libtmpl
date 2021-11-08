@@ -348,9 +348,13 @@ poly_add(struct laurent_polynomial P,
          struct laurent_polynomial *sum)
 {
     unsigned int n, N, Pstart, Pend, Qstart, Qend;
+    signed int *tmp, *Pcoeffs, *Qcoeffs;
 
     if (!sum)
-        return;
+    {
+        puts("Error: poly_add\n\tsum is NULL.");
+        exit(0);
+    }
 
     if (P.lowest_degree < Q.lowest_degree)
     {
@@ -378,20 +382,48 @@ poly_add(struct laurent_polynomial P,
         Pend = (unsigned int)(sum->highest_degree - sum->lowest_degree) + 1U;
     }
 
-    if (!P.coeffs || !Q.coeffs)
-        return;
+    if (!P.coeffs)
+    {
+        puts("Error: poly_add\n\tP coeffs is NULL.");
+        exit(0);
+    }
+    else if (!Q.coeffs)
+    {
+        puts("Error: poly_add\n\tQ coeffs is NULL.");
+        exit(0);
+    }
 
-    if (sum->coeffs != NULL)
-        free(sum->coeffs);
+    Pcoeffs = malloc(sizeof(*Pcoeffs) * (Pend - Pstart + 1U));
+    Qcoeffs = malloc(sizeof(*Qcoeffs) * (Qend - Qstart + 1U));
+
+    for (n = 0; n <= Pend - Pstart; ++n)
+        Pcoeffs[n] = P.coeffs[n];
+
+    for (n = 0; n <= Qend - Qstart; ++n)
+        Qcoeffs[n] = Q.coeffs[n];
 
     N = (unsigned int)(sum->highest_degree - sum->lowest_degree) + 1U;
-    sum->coeffs = calloc(sizeof(*sum->coeffs), N);
+    tmp = realloc(sum->coeffs, sizeof(*sum->coeffs) * N);
+
+    if (!tmp)
+    {
+        puts("Error: poly_add\n\trealloc failed.\n");
+        exit(0);
+    }
+    else
+        sum->coeffs = tmp;
+
+    for (n = 0U; n < N; ++n)
+        sum->coeffs[n] = 0;
 
     for (n = Pstart; n < Pend; ++n)
-        sum->coeffs[n] += P.coeffs[n - Pstart];
+        sum->coeffs[n] += Pcoeffs[n - Pstart];
 
     for (n = Qstart; n < Qend; ++n)
-        sum->coeffs[n] += Q.coeffs[n - Qstart];
+        sum->coeffs[n] += Qcoeffs[n - Qstart];
+
+    free(Pcoeffs);
+    free(Qcoeffs);
 }
 
 /*  Function for multiplying two polynomials.                                 */
@@ -401,23 +433,35 @@ poly_multiply(struct laurent_polynomial P,
               struct laurent_polynomial *prod)
 {
     /*  Declare variables for indexing.                                       */
-    signed int n, k;
+    unsigned int n, k;
 
     /*  Two polynomial pointers for ordering the inputs in terms of degree.   */
     struct laurent_polynomial first, second;
-    signed int *first_coeffs, *second_coeffs, shift;
-    signed int first_deg, second_deg;
+    signed int *first_coeffs, *second_coeffs;
+    unsigned int first_deg, second_deg, sum_deg;
+    signed int shift;
 
     /*  Temporary variable used in case realloc is needed.                    */
     signed int *tmp;
 
     /*  If prod is NULL, nothing can be done.                                 */
     if (prod == NULL)
-        return;
+    {
+        puts("Error: poly_multiply\n\tprod is NULL.");
+        exit(0);
+    }
 
     /*  If either P or Q has a NULL coeffs pointer, nothing can be done.      */
-    if ((P.coeffs == NULL) || (Q.coeffs == NULL))
-        return;
+    if (!P.coeffs)
+    {
+        puts("Error: poly_add\n\tP coeffs is NULL.");
+        exit(0);
+    }
+    else if (!Q.coeffs)
+    {
+        puts("Error: poly_add\n\tQ coeffs is NULL.");
+        exit(0);
+    }
 
     shift = P.lowest_degree + Q.lowest_degree; 
     P.highest_degree -= P.lowest_degree;
@@ -437,19 +481,22 @@ poly_multiply(struct laurent_polynomial P,
         second = P;
     }
 
-    first_deg = first.highest_degree;
+    first_deg = (unsigned int)first.highest_degree;
     first_coeffs = malloc(sizeof(*first_coeffs) * (first_deg + 1));
 
     /*  Check if malloc failed.                                               */
     if (first_coeffs == NULL)
-        return;
+    {
+        puts("Error: poly_multiply\n\tmalloc failed for first_coeffs.");
+        exit(0);
+    }
 
     /*  If malloc was successful, copy the data from first.                   */
-    for (n = 0; n <= first.highest_degree; ++n)
+    for (n = 0; n <= first_deg; ++n)
         first_coeffs[n] = first.coeffs[n];
 
     /*  Do the same thing with the second pointer.                            */
-    second_deg = second.highest_degree;
+    second_deg = (unsigned int)second.highest_degree;
     second_coeffs = malloc(sizeof(*second_coeffs) * (second_deg + 1));
 
     /*  Check if malloc failed.                                               */
@@ -462,20 +509,22 @@ poly_multiply(struct laurent_polynomial P,
     }
 
     /*  Otherwise, copy the data.                                             */
-    for (n = 0; n <= second.highest_degree; ++n)
+    for (n = 0; n <= second_deg; ++n)
         second_coeffs[n] = second.coeffs[n];
 
     /*  The degree of a product is the sum of the degrees.                    */
+    sum_deg = first_deg + second_deg;
     prod->lowest_degree = 0;
-    prod->highest_degree = first_deg + second_deg;
-    tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->highest_degree + 1));
+    prod->highest_degree = (signed int)sum_deg;
+    tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(sum_deg + 1U));
 
     /*  Check if realloc failed.                                              */
     if (tmp == NULL)
     {
+        puts("Error: poly_multiply\n\trealloc failed.\n");
         free(first_coeffs);
         free(second_coeffs);
-        return;
+        exit(0);
     }
     else
         prod->coeffs = tmp;
@@ -494,7 +543,7 @@ poly_multiply(struct laurent_polynomial P,
             prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
     }
 
-    for (n = second_deg; n <= prod->highest_degree; ++n)
+    for (n = second_deg; n <= sum_deg; ++n)
     {
         prod->coeffs[n] = 0;
         for (k = n - first_deg; k <= second_deg; ++k)
@@ -510,81 +559,55 @@ poly_multiply(struct laurent_polynomial P,
 }
 /*  End of tmpl_Create_Zero_PolynomialZ.                                      */
 
-static void
-poly_shift(struct laurent_polynomial P,
-           signed int shift,
-           struct laurent_polynomial *out)
-{
-    if (!out)
-        return;
-
-    *out = P;
-    out->lowest_degree += shift;
-    out->highest_degree += shift;
-}
-
-static void
-poly_scale(struct laurent_polynomial P,
-           signed int scale,
-           struct laurent_polynomial *out)
-{
-    unsigned int n;
-    unsigned int N = (unsigned int)(P.highest_degree - P.lowest_degree + 1);
-
-    if (!out)
-        return;
-
-    *out = P;
-
-    for (n = 0U; n < N; ++n)
-        out->coeffs[n] *= scale;
-}
-
-static void
-poly_power(struct laurent_polynomial P,
-           unsigned int power,
-           struct laurent_polynomial *out)
-{
-    unsigned int n;
-
-    if (!out)
-        return;
-
-    *out = P;
-
-    for (n = 0U; n < power-1; ++n)
-        poly_multiply(P, *out, out);
-}
-
 static struct laurent_polynomial
 kauffman_bracket(struct knot *K)
 {
-    unsigned int n, weight, n_circles;
-    struct laurent_polynomial P, tmp, out;
-    P.lowest_degree = -1;
-    P.highest_degree = 1;
-    P.coeffs = calloc(sizeof(*tmp.coeffs), 3);
-    P.coeffs[0] = -1;
-    P.coeffs[2] = 1;
-    out.lowest_degree = 0;
-    out.highest_degree = 0;
-    out.coeffs = calloc(sizeof(*out.coeffs), 1);
-    print_poly(out);
-
+    unsigned int n, m, weight, n_circles, deg;
+    signed int coeffs[3] = {1, 0, 1};
+    signed int onecoeffs[1] = {1};
+    struct laurent_polynomial P, tmp, out, one;
     struct CrossingIndices *ind = get_indices(K);
     unsigned char *have_visited = calloc(sizeof(*have_visited), 4U*K->number_of_crossings);  
 
-    for (n = 0; n < (2U << K->number_of_crossings); ++n)
+    P.lowest_degree = -1;
+    P.highest_degree = 1;
+    P.coeffs = coeffs;
+    one.lowest_degree = 0;
+    one.highest_degree = 0;
+    one.coeffs = onecoeffs;
+
+    out.lowest_degree = 0;
+    out.highest_degree = 0;
+    out.coeffs = calloc(sizeof(*out.coeffs), 1);
+
+    for (n = 0; n < (1U << K->number_of_crossings); ++n)
     {
         weight = hamming_weight(n);
         n_circles = number_of_circles_in_resolution(K, ind, n, have_visited);
-        poly_power(P, n_circles, &tmp);
+        if (n_circles == 1U)
+            poly_multiply(P, one, &tmp);
+        else if (n_circles == 2U)
+            poly_multiply(P, P, &tmp);
+        else
+        {
+            poly_multiply(P, P, &tmp);
+            poly_multiply(P, tmp, &tmp);
+        }
 
-        if (weight & 1U)
-            poly_scale(tmp, -1, &tmp);
+        if (weight & 0x01U)
+        {
+            deg = (unsigned int)(tmp.highest_degree - tmp.lowest_degree);
+            for (m = 0U; m <= deg; ++m)
+                tmp.coeffs[m] *= -1;
+        }
 
-        poly_shift(tmp, weight, &tmp);
+        tmp.lowest_degree += (signed int)weight;
+        tmp.highest_degree += (signed int)weight;
+
         poly_add(tmp, out, &out);
+
+        for (m = 0U; m < 4U*K->number_of_crossings; ++m)
+            have_visited[m] = 0x00U;
     }
 
     free(ind);
@@ -613,7 +636,6 @@ int main(void)
     K.crossing_number = c;
     out = kauffman_bracket(&K);
     print_poly(out);
-
 
     return 0;
 }
