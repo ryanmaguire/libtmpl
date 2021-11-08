@@ -60,7 +60,7 @@ struct CrossingIndices {
     unsigned int over;
 };
 
-unsigned int hamming_weight(unsigned int val)
+static unsigned int hamming_weight(unsigned int val)
 {
     unsigned int result = 0U;
     unsigned int n;
@@ -323,7 +323,7 @@ print_poly(struct laurent_polynomial P)
     else if (P.coeffs[0] == -1)
         printf("-q^%d", P.lowest_degree);
     else
-        printf("%dq^%d", P.coeffs[n], P.lowest_degree);
+        printf("%dq^%d", P.coeffs[0], P.lowest_degree);
 
     for (n = 1; n < N; ++n)
     {
@@ -394,6 +394,122 @@ poly_add(struct laurent_polynomial P,
         sum->coeffs[n] += Q.coeffs[n - Qstart];
 }
 
+/*  Function for multiplying two polynomials.                                 */
+static void
+poly_multiply(struct laurent_polynomial P,
+              struct laurent_polynomial Q,
+              struct laurent_polynomial *prod)
+{
+    /*  Declare variables for indexing.                                       */
+    signed int n, k;
+
+    /*  Two polynomial pointers for ordering the inputs in terms of degree.   */
+    struct laurent_polynomial first, second;
+    signed int *first_coeffs, *second_coeffs, shift;
+    signed int first_deg, second_deg;
+
+    /*  Temporary variable used in case realloc is needed.                    */
+    signed int *tmp;
+
+    /*  If prod is NULL, nothing can be done.                                 */
+    if (prod == NULL)
+        return;
+
+    /*  If either P or Q has a NULL coeffs pointer, nothing can be done.      */
+    if ((P.coeffs == NULL) || (Q.coeffs == NULL))
+        return;
+
+    shift = P.lowest_degree + Q.lowest_degree; 
+    P.highest_degree -= P.lowest_degree;
+    P.lowest_degree = 0;
+    Q.highest_degree -= Q.lowest_degree;
+    Q.lowest_degree = 0;
+
+    /*  Order the polynomials by degree.                                      */
+    if (P.highest_degree <= Q.highest_degree)
+    {
+        first = P;
+        second = Q;
+    }
+    else
+    {
+        first = Q;
+        second = P;
+    }
+
+    first_deg = first.highest_degree;
+    first_coeffs = malloc(sizeof(*first_coeffs) * (first_deg + 1));
+
+    /*  Check if malloc failed.                                               */
+    if (first_coeffs == NULL)
+        return;
+
+    /*  If malloc was successful, copy the data from first.                   */
+    for (n = 0; n <= first.highest_degree; ++n)
+        first_coeffs[n] = first.coeffs[n];
+
+    /*  Do the same thing with the second pointer.                            */
+    second_deg = second.highest_degree;
+    second_coeffs = malloc(sizeof(*second_coeffs) * (second_deg + 1));
+
+    /*  Check if malloc failed.                                               */
+    if (second_coeffs == NULL)
+    {
+        /*  Free the memory allocated to first_coeffs, since malloc was       *
+         *  successful for that one.                                          */
+        free(first_coeffs);
+        return;
+    }
+
+    /*  Otherwise, copy the data.                                             */
+    for (n = 0; n <= second.highest_degree; ++n)
+        second_coeffs[n] = second.coeffs[n];
+
+    /*  The degree of a product is the sum of the degrees.                    */
+    prod->lowest_degree = 0;
+    prod->highest_degree = first_deg + second_deg;
+    tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->highest_degree + 1));
+
+    /*  Check if realloc failed.                                              */
+    if (tmp == NULL)
+    {
+        free(first_coeffs);
+        free(second_coeffs);
+        return;
+    }
+    else
+        prod->coeffs = tmp;
+
+    for (n = 0; n < first_deg; ++n)
+    {
+        prod->coeffs[n] = first_coeffs[n] * second_coeffs[0];
+        for (k = 1; k <= n; ++k)
+            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
+    }
+
+    for (n = first_deg; n < second_deg; ++n)
+    {
+        prod->coeffs[n] = 0;
+        for (k = n - first_deg; k <= n; ++k)
+            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
+    }
+
+    for (n = second_deg; n <= prod->highest_degree; ++n)
+    {
+        prod->coeffs[n] = 0;
+        for (k = n - first_deg; k <= second_deg; ++k)
+            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
+    }
+
+    /*  Free the memory allocated to first and second.                        */
+    free(first_coeffs);
+    free(second_coeffs);
+    prod->lowest_degree += shift;
+    prod->highest_degree += shift;
+    return;
+}
+/*  End of tmpl_Create_Zero_PolynomialZ.                                      */
+
 static void
 poly_shift(struct laurent_polynomial P,
            signed int shift,
@@ -414,6 +530,7 @@ poly_scale(struct laurent_polynomial P,
 {
     unsigned int n;
     unsigned int N = (unsigned int)(P.highest_degree - P.lowest_degree + 1);
+
     if (!out)
         return;
 
@@ -423,232 +540,62 @@ poly_scale(struct laurent_polynomial P,
         out->coeffs[n] *= scale;
 }
 
-/*  Function for multiplying two polynomials.                                 */
-void
-poly_multiply(struct laurent_polynomial *P,
-              struct laurent_polynomial *Q,
-              struct laurent_polynomial *prod)
+static void
+poly_power(struct laurent_polynomial P,
+           unsigned int power,
+           struct laurent_polynomial *out)
 {
-    /*  Declare variables for indexing.                                       */
-    signed int n, k;
+    unsigned int n;
 
-    /*  Two polynomial pointers for ordering the inputs in terms of degree.   */
-    struct laurent_polynomial *first, *second;
-    signed long int *first_coeffs, *second_coeffs;
-    unsigned long int first_deg, second_deg;
-
-    /*  Temporary variable used in case realloc is needed.                    */
-    signed long int *tmp;
-
-    /*  If prod is NULL, nothing can be done.                                 */
-    if (prod == NULL)
+    if (!out)
         return;
 
-    /*  If either P or Q are NULL, nothing can be done. Store an error        *
-     *  message in prod.                                                      */
-    if ((P == NULL) || (Q == NULL))
-        return;
+    *out = P;
 
-    /*  If either P or Q has a NULL coeffs pointer, nothing can be done.      */
-    if ((P->coeffs == NULL) || (Q->coeffs == NULL))
-        return;
-
-    /*  Order the polynomials by degree.                                      */
-    if (P->degree <= Q->degree)
-    {
-        first = P;
-        second = Q;
-    }
-    else
-    {
-        first = Q;
-        second = P;
-    }
-
-    /*  Copy the data from first and second, rather than using them directly. *
-     *  If either P or Q are also the same as the prod pointer, their coeffs  *
-     *  pointers will be changed as the Cauchy sum is performed. This will    *
-     *  result in the wrong values for the product polynomial. To prevent P   *
-     *  and Q from being changed in transit, make copies of their data and    *
-     *  work with that.                                                       */
-    first_deg = first->degree;
-    first_coeffs = malloc(sizeof(*first_coeffs) * (first_deg + 1UL));
-
-    /*  Check if malloc failed.                                               */
-    if (first_coeffs == NULL)
-        return;
-
-    /*  If malloc was successful, copy the data from first.                   */
-    for (n = 0UL; n <= first->degree; ++n)
-        first_coeffs[n] = first->coeffs[n];
-
-    /*  Do the same thing with the second pointer.                            */
-    second_deg = second->degree;
-    second_coeffs = malloc(sizeof(*second_coeffs) * (second_deg + 1UL));
-
-    /*  Check if malloc failed.                                               */
-    if (second_coeffs == NULL)
-    {
-        /*  Free the memory allocated to first_coeffs, since malloc was       *
-         *  successful for that one.                                          */
-        free(first_coeffs);
-        return;
-    }
-
-    /*  Otherwise, copy the data.                                             */
-    for (n = 0; n <= second->highest_degree; ++n)
-        second_coeffs[n] = second->coeffs[n];
-
-    /*  If the prod coeffs pointer is NULL, allocate memory for it.           */
-    if (prod->coeffs == NULL)
-    {
-        /*  The degree of a product is the sum of the degrees.                */
-        prod->degree = first_deg + second_deg;
-        prod->coeffs = malloc(sizeof(*prod->coeffs) * (prod->degree + 1UL));
-
-        /*  Check if malloc failed.                                           */
-        if (prod->coeffs == NULL)
-        {
-            free(first_coeffs);
-            free(second_coeffs);
-            return;  
-        }
-    }
-
-    /*  If prod does not have the correct size for it's degree, reallocate    *
-     *  the coeffs pointer to be the sum of the two others.                   */
-    else if (prod->degree != (first_deg + second_deg))
-    {
-        /*  The degree of a product is the sum of the degrees.                */
-        prod->degree = first_deg + second_deg;
-        tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*(prod->degree + 1UL));
-
-        /*  Check if realloc failed.                                          */
-        if (tmp == NULL)
-        {
-            free(first_coeffs);
-            free(second_coeffs);
-            return;
-        }
-
-        /*  If realloc was successful, set prod->coeffs to the result.        */
-        prod->coeffs = tmp;
-    }
-
-    /*  Perform the first part of the Cauchy product. We arrange coefficients *
-     *  P_m, Q_n in a rectangular array. Suppose P->degree = 5 and            *
-     *  Q->degree = 3, we get the following:                                  *
-     *      P0*Q0 P0*Q1 P0*Q2 P0*Q3                                           *
-     *      P1*Q0 P1*Q1 P1*Q2 P1*Q3                                           *
-     *      P2*Q0 P2*Q1 P2*Q2 P2*Q3                                           *
-     *      P3*Q0 P3*Q1 P3*Q2 P3*Q3                                           *
-     *      P4*Q0 P4*Q1 P4*Q2 P4*Q3                                           *
-     *      P5*Q0 P5*Q1 P5*Q2 P5*Q3                                           *
-     *  The Cauchy product for infinite sums is defined by:                   *
-     *      /  infty     \ /  infty     \     infty                           *
-     *      |  -----     | |  -----     |     -----                           *
-     *      |  \         | |  \         |     \                               *
-     *      |  /     a_m | |  /     b_n |  =  /     c_n                       *
-     *      |  -----     | |  -----     |     -----                           *
-     *      \  m = 0     / \   n = 0    /     n = 0                           *
-     *  Where:                                                                *
-     *              n                                                         *
-     *            -----                                                       *
-     *            \                                                           *
-     *      c_n = /    a_k * b_{n-k}                                          *
-     *            -----                                                       *
-     *            k = 0                                                       *
-     *  To make this well defined for finite sums we need to limit the range  *
-     *  of the sum for c_n. The first leg of this is going to be:             *
-     *        00   01   02   03                                               *
-     *                                                                        *
-     *        10   11   12   13                                               *
-     *      -----                                                             *
-     *      | 20 | 21   22   23                                               *
-     *      |     ----                                                        *
-     *      | 30   31 | 32   33                                               *
-     *      |          ----                                                   *
-     *      | 40   41   42 | 43                                               *
-     *      |               ----                                              *
-     *      | 50   51   52   53 |                                             *
-     *      --------------------                                              *
-     *  Perform this part of the sum.                                         */
-    for (n = 0UL; n < first_deg; ++n)
-    {
-        prod->coeffs[n] = first_coeffs[n] * second_coeffs[0];
-        for (k = 1UL; k <= n; ++k)
-            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
-    }
-
-    /*  In the next part, the sum can't start at zero since Q does not have   *
-     *  a fifth coefficient. We can pretend it does by adding 0 x^4, or we    *
-     *  start the sum at 1, and then the next one starts at 2, and so on.     *
-     *  This leg of the sum is the following:                                 *
-     *       ----                                                             *
-     *      | 00 | 01   02   03                                               *
-     *      |     ----                                                        *
-     *      | 10   11 | 12   13                                               *
-     *      -----      ----                                                   *
-     *        20 | 21   22 | 23                                               *
-     *            ----      ----                                              *
-     *        30   31 | 32   33 |                                             *
-     *                 ----     |                                             *
-     *        40   41   42 | 43 |                                             *
-     *                      ----                                              *
-     *        50   51   52   53                                               *
-     *  Perform this part of the sum.                                         */
-    for (n = first_deg; n < second_deg; ++n)
-    {
-        prod->coeffs[n] = 0UL;
-        for (k = n - first_deg; k <= n; ++k)
-            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
-    }
-
-    /*  In the last part, the sum can't go too high since P may not have the  *
-     *  corresponding coefficient. Here we compute the following portion:     *
-     *          --------------                                                *
-     *      00 | 01   02   03 |                                               *
-     *          ----          |                                               *
-     *      10   11 | 12   13 |                                               *
-     *               ----     |                                               *
-     *      20   21   22 | 23 |                                               *
-     *                    ----                                                *
-     *      30   31   32   33                                                 *
-     *                                                                        *
-     *      40   41   42   43                                                 *
-     *                                                                        *
-     *      50   51   52   53                                                 *
-     *  Perform this part of the sum.                                         */
-    for (n = second_deg; n <= prod->degree; ++n)
-    {
-        prod->coeffs[n] = 0UL;
-        for (k = n - first_deg; k <= second_deg; ++k)
-            prod->coeffs[n] += first_coeffs[n-k] * second_coeffs[k];
-    }
-
-    /*  Free the memory allocated to first and second.                        */
-    free(first_coeffs);
-    free(second_coeffs);
-    return;
+    for (n = 0U; n < power-1; ++n)
+        poly_multiply(P, *out, out);
 }
-/*  End of tmpl_Create_Zero_PolynomialZ.                                      */
 
 static struct laurent_polynomial
-kaufmann_bracket(struct knot *K)
+kauffman_bracket(struct knot *K)
 {
-    struct laurent_polynomial out;
+    unsigned int n, weight, n_circles;
+    struct laurent_polynomial P, tmp, out;
+    P.lowest_degree = -1;
+    P.highest_degree = 1;
+    P.coeffs = calloc(sizeof(*tmp.coeffs), 3);
+    P.coeffs[0] = -1;
+    P.coeffs[2] = 1;
+    out.lowest_degree = 0;
+    out.highest_degree = 0;
+    out.coeffs = calloc(sizeof(*out.coeffs), 1);
+    print_poly(out);
+
+    struct CrossingIndices *ind = get_indices(K);
+    unsigned char *have_visited = calloc(sizeof(*have_visited), 4U*K->number_of_crossings);  
+
+    for (n = 0; n < (2U << K->number_of_crossings); ++n)
+    {
+        weight = hamming_weight(n);
+        n_circles = number_of_circles_in_resolution(K, ind, n, have_visited);
+        poly_power(P, n_circles, &tmp);
+
+        if (weight & 1U)
+            poly_scale(tmp, -1, &tmp);
+
+        poly_shift(tmp, weight, &tmp);
+        poly_add(tmp, out, &out);
+    }
+
+    free(ind);
+    free(have_visited);
     return out;
 }
 
 int main(void)
 {
-    struct laurent_polynomial P, Q, sum = {0, 0, NULL};
+    struct laurent_polynomial out;
     struct knot K;
-    struct CrossingIndices *ind;
-    unsigned char *have_visited;
-    unsigned int n, m;
-    signed int Pcoeffs[7] = {1, 0, 0, 0, 0, 0, 1};
-    signed int Qcoeffs[6] = {1, 0, 0, 0, 0, 1};
     enum crossing_sign s[6] = {
         positive_crossing, positive_crossing, positive_crossing,
         positive_crossing, positive_crossing, positive_crossing
@@ -660,39 +607,13 @@ int main(void)
         under_crossing, over_crossing, under_crossing
     };
 
-    P.lowest_degree = -3;
-    P.highest_degree = 3;
-    P.coeffs = Pcoeffs;
-
-    Q.lowest_degree = -1;
-    Q.highest_degree = 4;
-    Q.coeffs = Qcoeffs;
-
-    poly_add(P, Q, &sum);
-
-    print_poly(P);
-    print_poly(Q);
-    print_poly(sum);
-    poly_multiply(P, Q, &sum);
-    print_poly(sum);
-
     K.number_of_crossings = 3;
     K.sign = s;
     K.type = t;
     K.crossing_number = c;
-    ind = get_indices(&K);
-    have_visited = calloc(sizeof(*have_visited), 4U*K.number_of_crossings);
-    printf("\n");
-    for (n = 0U; n < 1U << K.number_of_crossings; ++n)
-    {
-        printf("%u : %u\n",
-               n, number_of_circles_in_resolution(&K, ind, n, have_visited));
+    out = kauffman_bracket(&K);
+    print_poly(out);
 
-        for (m = 0U; m < 4U*K.number_of_crossings; ++m)
-            have_visited[m] = 0x00U;
-    }
 
-    free(ind);
-    free(have_visited);
     return 0;
 }
