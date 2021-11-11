@@ -31,9 +31,6 @@
 # The SnapPy module will be used for most of the computations with knots.
 import snappy
 
-# Numpy is needed for it's GCD function.
-import numpy
-
 # Generate the ring of Laurent polynomials in variable over Q (rationals).
 R.<q> = LaurentPolynomialRing(QQ)
 
@@ -93,8 +90,3 @@ for k in range(3, 12):
     # SnapPy raises an IOError on failure. Try to catch this to prevent error.
     except (IOError, ValueError):
         continue
-
-    if (f == figure_8_poly):
-        print("\tMatch: %s" % knot_string)
-    else:
-        pass

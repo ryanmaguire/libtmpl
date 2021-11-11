@@ -55,11 +55,11 @@ KnotList = []
 MirrorList = []
 TorusStringList = []
 
-# Loop over and compute the Jones' Polynomial of torus knows.
+# Loop over and compute the Jones' Polynomial of torus knots.
 for m in range(torus_start, torus_end):
 
     # There are no torus knots with m or n equal to 0. The torus knots with
-    # m or n equal +/- 1 are actually trivial knots, so skip.
+    # m or n equal +/- 1 are trivial knots, so skip.
     if (m == 0) or (m == 1) or (m == -1):
         continue
 
@@ -77,6 +77,7 @@ for m in range(torus_start, torus_end):
         if (numpy.gcd(m, n) != 1):
             continue
 
+        # Torus knots have a closed form Jones' polynomial. Use this.
         f = q**((m-1)*(n-1)//2)*(1-q**(m+1)-q**(n+1)+q**(m+n)) / (1-q**2)
         g = q**((1-m)*(n-1)//2)*(1-q**(-m-1)-q**(-n-1)+q**(-m-n))/(1-q**(-2))
 
@@ -112,7 +113,8 @@ for n in range(1, 368):
         if (f == KnotList[n]):
             print("\t%s matches a torus knot: %s" % (knot_string, tstring))
         elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"%(knot_string,tstring))
+            print("\t%s matches a torus knot mirror: %s"
+                  % (knot_string, tstring))
         else:
             pass
 
@@ -128,7 +130,8 @@ for n in range(1, 186):
         if (f == KnotList[n]):
             print("\t%s matches a torus knot: %s" % (knot_string, tstring))
         elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"%(knot_string, tstring))
+            print("\t%s matches a torus knot mirror: %s"
+                  % (knot_string, tstring))
         else:
             pass
 
