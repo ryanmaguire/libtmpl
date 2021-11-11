@@ -23,6 +23,9 @@
 #       a non-torus knot. First, see if this is true of the Jones' polynomial. #
 #       If we find a match, compute (currently by hand or lookup table) the    #
 #       Khovanov homologies of the matching pair to see if they're the same.   #
+#                                                                              #
+#       DO NOT USE THIS. The second rendition of this code is significantly    #
+#       faster: jones_polynomial_conjecture_snappy_2_9_002.sage.               #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   June 12, 2021.                                                     #
@@ -40,6 +43,10 @@ import numpy
 Torus_Start = 2
 Torus_End = 11
 
+# Threshold value for n*m for the Torus knot T(n,m). If n*m is large, the
+# computation for the Jones' polynomial will take a very very long time.
+threshold = 25
+
 # The SnapPy module has 367 altnerating Hoste-Thistlethwaite knots
 # and 185 non-alternating Hoste-Thistlethwaite knots. We can loop over these
 # with strings.
@@ -50,9 +57,11 @@ Torus_End = 11
 # and actual integer. We surround the string with quotation marks.
 
 # These are all of the alternating Hoste-Thistlethwaite knots available:
+#       The Rolfsen table contains these, so skipping.
 # Ka = [("K11a%d" % n) for n in range(1, 368)]
 
 # And these are the non-alternating ones.
+#       The Rolfsen table also contains these. Skipping.
 # Kn = [("K11n%d" % n) for n in range(1, 186)]
 
 # As a side note, the range function (which is from Python) has syntax
@@ -60,18 +69,21 @@ Torus_End = 11
 # included. Hence the need to iterate between 1 and 368 for the alternating and
 # 1 and 186 for the non-alternating.
 
-# We can use a try-except to store all of the knots in the Rolfsen table.
-n = 1
+# Empty list we'll store knots in.
 ManifoldList = []
 
 # Counters for seeing how many of the knots work with the SnapPy
 # is_isometric_to method.
+#       None of them worked. Commenting out this code.
 # counter_gcd = 0
 # counter_success = 0
 
 # SnapPy has the Rolfsen table for many knots, the highest being 11 crossings.
 # Loop between 3 (Trefoil) and 11.
 for k in range(3, 12):
+
+    # Starting value for n.
+    n = 1
 
     # If the knot k_n does not exist (for example, "3_5"), and we try to
     # create it, Python will produce an error, crashing the program.
@@ -103,14 +115,11 @@ for k in range(3, 12):
 
     # SnapPy raises an IOError on failure. Try to catch this to prevent error.
     except IOError:
-
-        # Reset n to 1 and continue the outer-most for-loop.
-        n = 1
+        continue
 
 # We need to loop over all Torus knots within a certain range. A torus knot
 # can be specified by an ordered pair (n, m) of COPRIME integers.
 for n in range(Torus_Start, Torus_End):
-    print("Current: %d  Total: %d" % (n, Torus_End))
 
     # If n is -1, 0, or 1, skip. There are no Torus knots with -1, 0, or 1 as
     # one of its entries, with the exception of the trivial knot, and we can
@@ -127,10 +136,18 @@ for n in range(Torus_Start, Torus_End):
         if ((m == -1) or (m == 1) or (m == 0)):
             continue
 
-        # We only have a new torus knot is GCD(n,m) = 1. Check this.
+        # If m*n is large, the computation can take a very very long time.
+        if (n*m > threshold):
+            break
+
+        # We only have a new torus knot if GCD(n,m) = 1. Check this.
         if (numpy.gcd(n, m) == 1):
 
+            # Print an update.
+            print("Current: (%d, %d)  Total: %d" % (n, m, Torus_End))
+
             # Increment our counter that checks if is_isometric_to works.
+            #       This doesn't work. Commenting out this line.
             # counter_gcd += 1
 
             # Compute the Link class corresponding to our torus knot.
@@ -154,9 +171,6 @@ for n in range(Torus_Start, Torus_End):
             # same Jones Polynomial as the torus knot T(n,m).
             for k in ManifoldList:
 
-                # Print out some information for status updates.
-                # print(k[0], knot_string)
-
                 # Skip this for now, it does not work.
                 # The is_isometric_to method failed for EVERY torus knot. The
                 # documentation indicates this may happen for
@@ -164,14 +178,11 @@ for n in range(Torus_Start, Torus_End):
                 # try-except block since SnapPy produces a RunTime error if
                 # SnapPea (the C code) is unable to determine if two manifolds
                 # are isometric.
-                """
-                try:
-                    if (k[1].is_isometric_to(torus_knot.exterior())):
-                        continue
-                except RuntimeError as err:
-                    print(err)
-                    continue
-                """
+                #   try:
+                #       if (k[1].is_isometric_to(torus_knot.exterior())):
+                #           continue
+                #   except RuntimeError as err:
+                #       print(err)
 
                 # If we get here (and the is_isometric_to block is NOT
                 # commented out), then is_isometric_to succeeded and we should
