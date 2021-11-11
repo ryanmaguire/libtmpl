@@ -265,7 +265,7 @@ number_of_circles_in_resolution(struct knot *K,
                 else
                     --m;
             }
-            
+
             have_visited[k] = 0x01U;
 
             k = 4U*K->crossing_number[m];
@@ -335,7 +335,7 @@ print_poly(struct laurent_polynomial P)
             printf(" - q^%d", P.lowest_degree + n);
         else if (P.coeffs[n] > 1)
             printf(" + %dq^%d", P.coeffs[n], P.lowest_degree + n);
-        else 
+        else
             printf(" - %dq^%d", -P.coeffs[n], P.lowest_degree + n);
     }
 
@@ -463,7 +463,7 @@ poly_multiply(struct laurent_polynomial P,
         exit(0);
     }
 
-    shift = P.lowest_degree + Q.lowest_degree; 
+    shift = P.lowest_degree + Q.lowest_degree;
     P.highest_degree -= P.lowest_degree;
     P.lowest_degree = 0;
     Q.highest_degree -= Q.lowest_degree;
@@ -567,7 +567,8 @@ kauffman_bracket(struct knot *K)
     signed int onecoeffs[1] = {1};
     struct laurent_polynomial P, tmp, out, one;
     struct CrossingIndices *ind = get_indices(K);
-    unsigned char *have_visited = calloc(sizeof(*have_visited), 4U*K->number_of_crossings);  
+    unsigned char *have_visited = calloc(sizeof(*have_visited),
+                                         4U*K->number_of_crossings);
 
     P.lowest_degree = -1;
     P.highest_degree = 1;
@@ -579,6 +580,9 @@ kauffman_bracket(struct knot *K)
     out.lowest_degree = 0;
     out.highest_degree = 0;
     out.coeffs = calloc(sizeof(*out.coeffs), 1);
+    tmp.lowest_degree = 0;
+    tmp.highest_degree = 0;
+    tmp.coeffs = calloc(sizeof(*out.coeffs), 1);
 
     for (n = 0; n < (1U << K->number_of_crossings); ++n)
     {
@@ -612,6 +616,7 @@ kauffman_bracket(struct knot *K)
 
     free(ind);
     free(have_visited);
+    free(tmp.coeffs);
     return out;
 }
 
