@@ -28,11 +28,6 @@
 #       a known formula, rather than using SnapPy to directly compute the      #
 #       polynomial. This hugely saves on computation time.                     #
 #                                                                              #
-#       The only difference between this and the file                          #
-#       jones_polynomial_conjecture_snappy_2_9_002.sage is the number of torus #
-#       knots tested. This goes up to T(n,m) with min(n,m) = 2 and             #
-#       max(n,m) = 400.                                                        #
-#                                                                              #
 #       This code works with SnapPy versions less than 3.0. Snappy 3.0 and     #
 #       higher changed how the Jones' polynomial function works.               #
 ################################################################################
@@ -44,13 +39,10 @@
 # The SnapPy module will be used for most of the computations with knots.
 import snappy
 
-# Numpy is needed for it's GCD function.
-import numpy
-
 # Largest number of twists we'll check for torus knots.
-torus_start = 2
-torus_end = 400
-torus_count = 0
+twist_start = 0
+twist_end = 20
+twist_count = 0
 
 # Generate the ring of Laurent polynomials in variable over Q (rationals).
 R.<q> = LaurentPolynomialRing(QQ)
@@ -58,84 +50,25 @@ R.<q> = LaurentPolynomialRing(QQ)
 # Create two empty lists for storing the knots and their Jones' polynomials.
 KnotList = []
 MirrorList = []
-TorusStringList = []
+TwistInd = []
 
-# Loop over and compute the Jones' Polynomial of torus knows.
-for m in range(torus_start, torus_end):
+# Loop over and compute the Jones' Polynomial of twist knots.
+for m in range(twist_start, twist_end):
 
-    # There are no torus knots with m or n equal to 0. The torus knots with
-    # m or n equal +/- 1 are actually trivial knots, so skip.
-    if (m == 0) or (m == 1) or (m == -1):
-        continue
+    # We only perform the computation if p and q are coprime. Otherwise we
+    # have a link, several intertwined knots.
+    if m % 2 == 0:
+        f = (q**3 + q - q**(3-m) + q**(-m))/(1+q)
+        g = (q**(-3) + q**(-1) - q**(m-3) + q**m)/(1+q**(-1))
+    else:
+        f = (1 + q**(-2) + q**(-m) - q**(-m-3))/(1+q)
+        g = (1 + q**2 + q**(m) - q**(m+3))/(1+q**(-1))
 
-    # The torus knot T(m,n) and T(m,n) are the same. Because of this we can cut
-    # the square lattice [-N, -N] x [N, N] in half and compute the upper
-    # triangle. This saves us from redundant computations.
-    for n in range(m+1, torus_end):
-
-        # Same skip as before.
-        if (n == 0) or (n == 1) or (n == -1):
-            continue
-
-        # We only perform the computation if p and q are coprime. Otherwise we
-        # have a link, several intertwined knots.
-        if (numpy.gcd(m, n) != 1):
-            continue
-
-        f = q**((m-1)*(n-1)//2)*(1-q**(m+1)-q**(n+1)+q**(m+n)) / (1-q**2)
-        g = q**((1-m)*(n-1)//2)*(1-q**(-m-1)-q**(-n-1)+q**(-m-n))/(1-q**(-2))
-
-        # Add the two knots to our lists.
-        KnotList.append(f)
-        MirrorList.append(g)
-        TorusStringList.append("(%d, %d)" % (m, n))
-        torus_count += 1
-
-# The SnapPy module has 367 alternating Hoste-Thistlethwaite knots
-# and 185 non-alternating Hoste-Thistlethwaite knots. We can loop over these
-# with strings.
-
-# The syntax for manipulating strings in Sage comes from Python, which is
-# borrowed from the syntax used in C. We use %d to indicate a placeholder for
-# and integer, and then pass an integer to that placeholder via % n, where n is
-# and actual integer. We surround the string with quotation marks.
-
-# As a side note, the range function (which is from Python) has syntanx
-# range(m,n) and creates an iterator between m and n-1. That is, n is NOT
-# included. Hence the need to iterate between 1 and 368 for the alternating and
-# 1 and 186 for the non-alternating.
-
-# These are all of the alternating Hoste-Thistlethwaite knots available:
-print("\nProcessing Hoste-Thistlethwaite Alternating Table:")
-for n in range(1, 368):
-    knot_string = "K11a%d" % n
-    knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial()
-
-    for n in range(torus_count):
-        tstring = TorusStringList[n]
-        if (f == KnotList[n]):
-            print("\t%s matches a torus knot: %s" % (knot_string, tstring))
-        elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"%(knot_string,tstring))
-        else:
-            pass
-
-# And these are the non-alternating ones.
-print("\nProcessing Hoste-Thistlethwaite Non-Alternating Table:")
-for n in range(1, 186):
-    knot_string = "K11n%d" % n
-    knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial()
-
-    for n in range(torus_count):
-        tstring = TorusStringList[n]
-        if (f == KnotList[n]):
-            print("\t%s matches a torus knot: %s" % (knot_string, tstring))
-        elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"%(knot_string, tstring))
-        else:
-            pass
+    # Add the two knots to our lists.
+    KnotList.append(f)
+    MirrorList.append(g)
+    TwistInd.append(m)
+    twist_count += 1
 
 # SnapPy has the Rolfsen table for many knots, the highest being 11 crossings.
 # Loop between 3 (Trefoil) and 11.
@@ -155,14 +88,13 @@ for k in range(3, 12):
             knot = snappy.Link(knot_string)
             f = knot.jones_polynomial()
 
-            for n in range(torus_count):
-                tstring = TorusStringList[n]
+            for n in range(twist_count):
                 if (f == KnotList[n]):
-                    print("\t%s matches a torus knot: %s"
-                          % (knot_string, tstring))
+                    print("\t%s matches a twist knot: %d"
+                          % (knot_string, TwistInd[n]))
                 elif (f == MirrorList[n]):
-                    print("\t%s matches a torus knot mirror: %s"
-                          % (knot_string, tstring))
+                    print("\t%s matches a torus knot mirror: %d"
+                          % (knot_string, TwistInd[n]))
                 else:
                     pass
 

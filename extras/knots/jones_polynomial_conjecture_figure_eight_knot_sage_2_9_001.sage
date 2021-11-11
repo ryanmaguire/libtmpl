@@ -24,7 +24,7 @@
 #       higher changed how the Jones' polynomial function works.               #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   June 12, 2021.                                                     #
+#   Date:   November 10, 2021.                                                 #
 ################################################################################
 """
 
@@ -93,7 +93,6 @@ for k in range(3, 12):
     # SnapPy raises an IOError on failure. Try to catch this to prevent error.
     except (IOError, ValueError):
         continue
-
 
     if (f == figure_8_poly):
         print("\tMatch: %s" % knot_string)
