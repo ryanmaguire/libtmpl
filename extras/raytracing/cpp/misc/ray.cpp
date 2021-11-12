@@ -179,8 +179,8 @@ vector Shader(vector o, vector d)
 //  Usage of the program is hence: ./card > erk.ppm
 int main(void)
 {
-
-     // The '!' are for normalizing each vectors with ! operator.
+    // The '!' are for normalizing each vectors with ! operator.
+    FILE *fp = fopen("ray.ppm", "w");
 
     //  Camera direction
     vector g=!vector(-6,-16,0);
@@ -198,7 +198,7 @@ int main(void)
     vector p, t;
 
     //  The PPM Header is issued
-    printf("P6\n512 512\n255\n");
+    fprintf(fp, "P6\n512 512\n255\n");
 
     //For each column
     for(y=512;y--;)
