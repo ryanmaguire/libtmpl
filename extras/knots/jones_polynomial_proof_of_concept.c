@@ -23,22 +23,25 @@
  *  Date:   2021/09/30                                                        *
  ******************************************************************************/
 
+/*  printf found here.                                                        */
 #include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
 
-/*  Crossing signs or negative and positive. This assumes the knot has been   *
+/*  malloc, calloc, realloc, and free are here.                               */
+#include <stdlib.h>
+
+/*  Crossing signs are negative and positive. This assumes the knot has been  *
  *  given an orientation.                                                     */
 enum crossing_sign {negative_crossing, positive_crossing};
 
 /*  Crossing type for the Gauss code. Is the current strand over or under.    */
 enum crossing_type {under_crossing, over_crossing};
 
+/*  The direction is stored as an unsigned char. There are two possibilities: *
+ *  forwards and backwards.                                                   */
 static unsigned char backward = 0x00U;
 static unsigned char forward = 0x01U;
 
-/*  Extended Gauss code. This contains crossing number, sign, and type. This  *
- *  allows us to distinguish a knot from it's mirror.                         */
+/*  Extended Gauss code. This contains crossing number, sign, and type.       */
 struct knot {
     unsigned int number_of_crossings;
     enum crossing_sign *sign;
@@ -60,24 +63,31 @@ struct CrossingIndices {
     unsigned int over;
 };
 
+/*  Basic algorithm for computing the Hamming weight of an unsigned integer   *
+ *  that is sizeof(unsigned int) * CHAR_BIT bits long. There are faster       *
+ *  methods, but this does not assume 32-bit int and is more portable.        */
 static unsigned int hamming_weight(unsigned int val)
 {
     unsigned int result = 0U;
-    unsigned int n;
 
-    for (n = 0; n < sizeof(val) * CHAR_BIT; ++n)
+    /*  Loop over the bits of the input.                                      */
+    while(val != 0U)
     {
+        /*  val & 1U returns 0 if the last bit is zero, and 1 if the last     *
+         *  bit is one. Summing over these gives us the Hamming weight.       */
         result += val & 1U;
+
+        /*  Move the input 1 bit to the right.                                */
         val = val >> 1U;
     }
 
     return result;
 }
+/*  End of hamming_weight.                                                    */
 
 /*  Returns an array ind where ind[n] is a struct containing the indices of   *
  *  the under and over crossings of the nth crossing.                         */
-static struct CrossingIndices *
-get_indices(struct knot *K)
+static struct CrossingIndices *get_indices(struct knot *K)
 {
     unsigned int n;
     struct CrossingIndices *ind;
@@ -113,11 +123,11 @@ get_indices(struct knot *K)
 static unsigned int
 number_of_circles_in_resolution(struct knot *K,
                                 struct CrossingIndices *ind,
-                                unsigned int resolution,
-                                unsigned char *have_visited)
+                                unsigned int resolution)
 {
     unsigned int number_of_circles, n, k, m;
     unsigned char dir, crossing_resolution;
+    unsigned char *have_visited;
 
     /*  The empty knot has zero circles.                                      */
     if (!K)
@@ -127,12 +137,18 @@ number_of_circles_in_resolution(struct knot *K,
     if (K->number_of_crossings == 0U)
         return 1U;
 
+    /*  If ind is a NULL pointer, there's nothing that can be done.           */
     if (!ind)
         return 0U;
 
+    /*  Create an array of zeros with calloc.                                 */
+    have_visited = calloc(sizeof(*have_visited), 4U*K->number_of_crossings);
+
+    /*  Check if calloc failed.                                               */
     if (!have_visited)
         return 0U;
 
+    /*  Initialize number_of_circles to zero.                                 */
     number_of_circles = 0U;
 
     for (n = 0U; n < 2U*K->number_of_crossings; ++n)
@@ -567,8 +583,6 @@ kauffman_bracket(struct knot *K)
     signed int onecoeffs[1] = {1};
     struct laurent_polynomial P, tmp, out, one;
     struct CrossingIndices *ind = get_indices(K);
-    unsigned char *have_visited = calloc(sizeof(*have_visited),
-                                         4U*K->number_of_crossings);
 
     P.lowest_degree = -1;
     P.highest_degree = 1;
@@ -587,7 +601,7 @@ kauffman_bracket(struct knot *K)
     for (n = 0; n < (1U << K->number_of_crossings); ++n)
     {
         weight = hamming_weight(n);
-        n_circles = number_of_circles_in_resolution(K, ind, n, have_visited);
+        n_circles = number_of_circles_in_resolution(K, ind, n);
         if (n_circles == 1U)
             poly_multiply(P, one, &tmp);
         else if (n_circles == 2U)
@@ -609,13 +623,9 @@ kauffman_bracket(struct knot *K)
         tmp.highest_degree += (signed int)weight;
 
         poly_add(tmp, out, &out);
-
-        for (m = 0U; m < 4U*K->number_of_crossings; ++m)
-            have_visited[m] = 0x00U;
     }
 
     free(ind);
-    free(have_visited);
     free(tmp.coeffs);
     return out;
 }
