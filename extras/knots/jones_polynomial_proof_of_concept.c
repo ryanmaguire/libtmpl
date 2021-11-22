@@ -318,6 +318,7 @@ number_of_circles_in_resolution(struct knot *K,
         }
         ++number_of_circles;
     }
+    free(have_visited);
     return number_of_circles;
 }
 
@@ -651,6 +652,6 @@ int main(void)
     K.crossing_number = c;
     out = kauffman_bracket(&K);
     print_poly(out);
-
+    free(out.coeffs);
     return 0;
 }
