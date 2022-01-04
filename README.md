@@ -217,35 +217,37 @@ success using Cygwin to emulate Unix-like commands in Windows.
 
 ```
 # Remove old files.
-del *.exe *.obj *.o *.so *.dll
+del *.exe *.obj *.o *.so *.dll *.lib
 
-# Create the tmpl_endianness.h header file. Using MSVC
+# Create the tmpl_endianness.h header file.
 cl det_end.c /link /out:det.exe
-
-# Using clang
-clang-cl det_end.c -o det.exe
 
 # Run the executable.
 det.exe
-del det.exe
+del *.exe *.obj
 
-# Create the rest of the library. Using Microsoft's C Compiler:
-for /D %d in (.\src\*) do cl /I../ /O2 /c .\src\%d\*.c
+# Create the rest of the library.
+for /D %d in (.\src\*) do cl /I../ /O2 /c %d\*.c
 
-# Using LLVM's clang
-for /D %d in (.\src\*) do clang-cl -O2 -I../ -c .\src\%d\*.c
-
-# Link and create a .dll file. Using MSVC:
-cl .\*.obj /LD /O2 /out:libtmpl.dll
-
-# Using clang
-clang-cl .\*.obj -O2 -flto -shared -o -libtmpl.dll
+# Link and create a .lib file.
+lib /out:libtmpl.lib *.obj
 
 # Remove old stuff.
 del *.exe *.obj
 ```
-This creates libtmpl.dll directly in the top directory of libtmpl. You can
-move this to the `System32` directory, or add this directory to your path.
+
+Same idea using `clang-cl`.
+
+```
+del *.exe *.obj *.o *.so *.dll *.lib
+clang-cl det_end.c -o det.exe
+det.exe
+del *.exe *.obj
+for /D %d in (.\src\*) do clang-cl -O2 -I../ -c %d\*.c
+lib /out:libtmpl.lib *.obj
+del *.exe *.obj
+```
+This creates `libtmpl.lib` directly in the top directory of libtmpl.
 
 The other option is using the Linux Subsystem for Windows. I've not personally
 tried this, but a colleague has had some success with it.
