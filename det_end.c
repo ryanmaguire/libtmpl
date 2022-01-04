@@ -63,7 +63,19 @@
  *      Added macro for floating-point endianness for IEEE-754 support.       *
  *  2021/09/8:  Ryan Maguire                                                  *
  *      Added test for long double precision.                                 *
+ *  2022/01/03: Ryan Maguire                                                  *
+ *      Added preprocessor checks for Windows users. The fopen command does   *
+ *      not create a file on Windows if the string has forward-slash. Must    *
+ *      use back-slash on Windows (which is dumb).                            *
+ *      Added _CRT_SECURE_NO_DEPRECATE for Windows users since MSVC           *
+ *      deprecated standard library functions (which is dumber).              *
  ******************************************************************************/
+
+/*  Avoid silly warning on Windows for using printf. GNU/Linux, FreeBSD, and  *
+ *  macOS have no such warnings for using standard library functions.         */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
 
 /*  Macros for determining the size of integer data types found here. In      *
  *  particular, the macro CHAR_BIT is here telling us how many bits in a byte.*/
@@ -444,7 +456,13 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } aarch64_type;
 
-    /*  MIPS little endian uses the same structure as double, 64 bit.         */
+    /*  MIPS little endian uses the same structure as double, 64 bit. Note,   *
+     *  Microsoft's C Compiler does not support higher precision than double  *
+     *  and long double is the same size as double. Because of this, using    *
+     *  MSVC this function will return MIPS Little Endian. Your computer is   *
+     *  likely not using that architecture, it's just that MIPS Little        *
+     *  Endian and double precision are identical. As far as libtmpl is       *
+     *  concerned, there's no difference.                                     */
     union {
         struct {
             unsigned int man3 : 16;
@@ -525,7 +543,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     if (mips_big_type.r == 1.0L)
         return tmpl_ldouble_mips_big_endian;
 
-    /*  Lastly, MIPS little endian.                                           */
+    /*  Lastly, MIPS little endian (or Microsoft compiler, amd64).            */
     mips_little_type.bits.man3 = 0x0U;
     mips_little_type.bits.man2 = 0x0U;
     mips_little_type.bits.man1 = 0x0U;
@@ -551,8 +569,13 @@ int main(void)
     tmpl_ldouble_type ldouble_type = tmpl_det_ldouble_type();
 
     /*  Open the file include/tmpl_endianness.h using fopen and               *
-     *  give the file write permissions.                                      */
+     *  give the file write permissions. If using Windows, we'll need to use  *
+     *  backslashes. Forward slashes fail to create the file.                 */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    FILE *fp = fopen(".\\include\\tmpl_endianness.h", "w");
+#else
     FILE *fp = fopen("./include/tmpl_endianness.h", "w");
+#endif
 
     /*  If fopen fails, it returns NULL. Check that it did not.               */
     if (!fp)
