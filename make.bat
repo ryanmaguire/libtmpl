@@ -17,7 +17,7 @@
 ::  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::  Author:     Ryan Maguire, Dartmouth College                               ::
-::  Date:       January 4, 2021                                               ::
+::  Date:       January 4, 2022                                               ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: Delete old files.
