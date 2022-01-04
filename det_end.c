@@ -461,8 +461,8 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
      *  and long double is the same size as double. Because of this, using    *
      *  MSVC this function will return MIPS Little Endian. Your computer is   *
      *  likely not using that architecture, it's just that MIPS Little        *
-     *  Endian and double precision are identical. As far as libtmpl is       *
-     *  concerned, there's no difference.                                     */
+     *  Endian long double and amd64 double precision are identical. As far   *
+     *  as libtmpl is concerned, there's no difference.                       */
     union {
         struct {
             unsigned int man3 : 16;
