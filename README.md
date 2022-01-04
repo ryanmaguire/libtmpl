@@ -103,12 +103,6 @@ allowed, the output is always complex valued. Convolutions are also provided.
 Currently a limited library that allows one to create bipartite and complete
 graphs. This will grow over time.
 
-### ieee754
-A library for working with the IEEE754 floating point format. Users most likely
-need not delve into these functions, unless they want to learn how the format
-works. If your compiler does not use the IEEE754 format, these functions are
-most likely useless.
-
 ### interpolate
 Linear and cubic splining interpolation tools for working with data.
 
@@ -169,9 +163,6 @@ applications, such as the Savitzky-Golay smoothing filter.
 Provides basic string manipulations that are defined in the POSIX version of C,
 but are not part of the C standard. This includes the strdup function. The
 phrase "tmpl" is preprended to all functions to avoid name conflicts.
-
-### Wish List
-Abstract algebra (groups), topology.
 
 ## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
 Run the Makefile with (requires sudo privileges):
