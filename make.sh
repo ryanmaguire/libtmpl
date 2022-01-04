@@ -44,7 +44,7 @@ for arg in "$@"; do
     elif [[ "$arg" == *"-cc"* ]]; then
         CC=${arg#*=}
     elif [[ "$arg" == *"-std"* ]]; then
-    	STDVER=$arg
+        STDVER=$arg
     elif [ "$arg" == "-omp" ]; then
         USEOMP=1
     elif [ "$arg" == "-inplace" ]; then
@@ -58,7 +58,7 @@ if [ $USEOMP == 1 ]; then
     ExtraArgs="$ExtraArgs -fopenmp"
 fi
 
-# Name of the created Share Object file (.so).
+# Name of the created Shared Object file (.so).
 SONAME="libtmpl.so"
 
 # Location to store SONAME at the end of building.
@@ -99,7 +99,7 @@ DET_END_EXEC=det_end_out
 
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
-echo -e "\nClearing older files..."
+echo "Clearing older files..."
 rm -f *.so *.o
 if [ -e "$END_HEADER" ]; then
     rm -f "$END_HEADER";
@@ -129,45 +129,38 @@ if [ $INPLACE == 0 ]; then
 fi
 
 echo "Compiling libtmpl..."
-echo -e "\n\tCompiler:\n\t\t$CC"
-echo -e "\n\tVersion:\n\t\t$STDVER"
-echo -e "\n\tCompiler Options:"
-echo -e "\t\t$CArgs1"
-echo -e "\t\t$CArgs2"
-echo -e "\t\t$CArgs3"
-echo -e "\t\t$CArgs4"
-echo -e "\t\t$CArgs5"
-echo -e "\n\tExtra Compiler Arguments:\n\t\t$ExtraArgs"
+echo "    Compiler:"
+echo "        $CC"
+echo "    Version:"
+echo "        $STDVER"
+echo "    Compiler Options:"
+echo "        $CArgs1"
+echo "        $CArgs2"
+echo "        $CArgs3"
+echo "        $CArgs4"
+echo "        $CArgs5"
+echo "    Extra Compiler Arguments:"
+echo "        $ExtraArgs"
 
 # Loop over all directories in src/ and compile all .c files.
 for dir in ./src/*; do
-    echo -e "\n\tCompiling $dir"
+    echo ""
+    echo "    Compiling $dir"
     for filename in $dir/*.c; do
-        echo -e "\t\tCompiling: $filename"
+        echo "        Compiling: $filename"
         if !($CC $CompilerArgs $filename); then
             exit 1
         fi
     done
 done
 
-echo -e "\nBuilding libtmpl Shared Object (.so file)"
+echo ""
+echo "Building libtmpl Shared Object (.so file)"
 $CC ./*.o $LinkerArgs
 
 if [ $INPLACE == 0 ]; then
     echo "Moving to /usr/local/lib/libtmpl.so"
     sudo mv $SONAME $SODIR
-fi
-
-if [ $INPLACE == 0 ]; then
-    LDPATH="/usr/local/lib"
-else
-    LDPATH="$(pwd)"
-fi
-
-if [[ $LD_LIBRARY_PATH != *$LDPATH* ]]; then
-    echo -e "\n# Needed for loading libtmpl." >> ~/.bashrc
-    echo 'export LD_LIBRARY_PATH=$LDPATH:$LD_LIBRARY_PATH"' >> ~/.bashrc
-    source ~/.bashrc
 fi
 
 echo "Cleaning up..."
@@ -177,17 +170,17 @@ echo "Done"
 
 if [ $INPLACE == 1 ]; then
     echo "PLEASE NOTE:"
-    echo -e "\tYou used the in-place option."
-    echo -e "\tlibtmpl was only installed in this directory:"
-    echo -e "\t\t$(pwd)."
-    echo -e "\tTo use libtmpl you must have this in your path."
-    echo -e "\tThe header files are located in:"
-    echo -e "\t\t$(pwd)/include/"
-    echo -e "\tand have NOT been placed in /usr/local/include/"
-    echo -e "\tYour compiler will not see these if you"
-    echo -e "\tdo not pass the correct options."
-    echo -e "\tFor most compilers (GCC, Clang, PCC, TCC) you can link"
-    echo -e "\tlibtmpl to you programs with the proper include"
-    echo -e "\tdirectories using the -I and -L option as follows:"
-    echo -e "\t\tgcc -I$(pwd)/../ -L$(pwd)/ my_file.c -o my_output -ltmpl"
+    echo "    You used the in-place option."
+    echo "    libtmpl was only installed in this directory:"
+    echo "        $(pwd)"
+    echo "    To use libtmpl you must have this in your path."
+    echo "    The header files are located in:"
+    echo "        $(pwd)/include/"
+    echo "    and have NOT been placed in /usr/local/include/"
+    echo "    Your compiler will not see these if you"
+    echo "    do not pass the correct options."
+    echo "    For most compilers (GCC, Clang, PCC, TCC) you can link"
+    echo "    libtmpl to you programs with the proper include"
+    echo "    directories using the -I and -L option as follows:"
+    echo "        gcc -I$(pwd)/../ -L$(pwd)/ my_file.c -o my_output -ltmpl"
 fi

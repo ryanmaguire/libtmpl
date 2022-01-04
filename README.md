@@ -185,9 +185,10 @@ And for inplace with OpenMP support
 ```
 make omp_inplace
 ```
-**After running `make`, source your `.bashrc` file:**
+**You may need to update the LD_LIBRARY_PATH environment variable.**
+Add the following to your `.bashrc`, `.shrc`, or whichever shell you're using.
 ```
-source ~/.bashrc
+export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 ```
 
 ### Warnings
