@@ -30,19 +30,15 @@ CC = cc
 # -I../ includes that directory in the path.
 # -flto is link time optimization.
 # -fopenmp uses OpenMP.
-CARGS = -O3 -c -flto -I/usr/local/include/
-CARGSOMP = -O3 -c -flto -fopenmp -I/usr/local/include/
-CARGSINPLACE = -O3 -c -flto -I../
-CARGSOMPINPLACE = -O3 -c -flto -fopenmp -I../
+CARGS = -O3 -c -flto -I../
+CARGSOMP = -O3 -c -flto -fopenmp -I../
 
 # Linking arguments. -O3, -I, and -flto are the same as before.
 # -lm means link against the standard math library.
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
-LARGS = -O3 -I/usr/local/include -flto -shared -o $(SONAME) -lm
-LARGSOMP = -O3 -fopenmp -I/usr/local/include -flto -shared -o $(SONAME) -lm
-LARGSINPLACE = -O3 -I../ -flto -shared -o $(SONAME) -lm
-LARGSOMPINPLACE = -O3 -fopenmp -I../ -flto -shared -o $(SONAME) -lm
+LARGS = -O3 -flto -shared -o $(SONAME) -lm
+LARGSOMP = -O3 -fopenmp  -flto -shared -o $(SONAME) -lm
 
 # Name of the created Share Object file (.so).
 SONAME = libtmpl.so
@@ -69,102 +65,74 @@ SRCS_LINK = ./*.o
 all: make
 
 make:
-	make clean
-	make clean_old
-	make determine_endianness
-	make create_include_folder
-	make compile
-	make link
-	make clean
-	make create_ld_var
+    make clean
+    make clean_old
+    make determine_endianness
+    make compile
+    make link
+    make move_stuff
+    make clean
 
 inplace:
-	make clean
-	make determine_endianness
-	make compile_inplace
-	make link_inplace
-	make clean_inplace
-	make create_ld_var_inplace
+    make clean
+    make determine_endianness
+    make compile
+    make link
+    make clean_inplace
 
 # Same as make, but compiling with OpenMP support.
 omp:
-	make clean
-	make clean_old
-	make determine_endianness
-	make create_include_folder
-	make compile_omp
-	make link_omp
-	make clean
-	make create_ld_var
+    make clean
+    make clean_old
+    make determine_endianness
+    make compile_omp
+    make link_omp
+    make move_stuff
+    make clean
 
 # Same as inplace, but compiling with OpenMP support.
 omp_inplace:
-	make clean
-	make determine_endianness
-	make compile_omp_inplace
-	make link_omp_inplace
-	make clean_inplace
-	make create_ld_var_inplace
+    make clean
+    make determine_endianness
+    make compile_omp
+    make link_omp
+    make clean_inplace
 
 clean:
-	rm -f *.so *.o
+    rm -f *.so *.o
 
 clean_inplace:
-	rm -f *.o
+    rm -f *.o
 
 clean_old:
-	sudo rm -f $(END_HEADER)
-	sudo rm -rf $(INCLUDE_TARGET)
-	sudo mkdir -p $(INCLUDE_TARGET)/include/
-	sudo rm -f $(SODIR)/$(SONAME)
+    sudo rm -f $(END_HEADER)
+    sudo rm -rf $(INCLUDE_TARGET)
+    sudo mkdir -p $(INCLUDE_TARGET)/include/
+    sudo rm -f $(SODIR)/$(SONAME)
 
-create_include_folder:
-	sudo cp ./include/*.h $(INCLUDE_TARGET)/include/
+move_stuff:
+    sudo cp ./include/*.h $(INCLUDE_TARGET)/include/
+    sudo mv $(SONAME) $(SODIR)
 
 determine_endianness:
-	$(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
-	./$(DET_END_EXEC)
-	rm -f $(DET_END_EXEC)
+    $(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
+    ./$(DET_END_EXEC)
+    rm -f $(DET_END_EXEC)
 
 compile:
-	$(CC) $(CARGS) $(SRCS)
-
-compile_inplace:
-	$(CC) $(CARGSINPLACE) $(SRCS)
+    $(CC) $(CARGS) $(SRCS)
 
 compile_omp:
-	$(CC) $(CARGSOMP) $(SRCS)
-
-compile_omp_inplace:
-	$(CC) $(CARGSOMPINPLACE) $(SRCS)
+    $(CC) $(CARGSOMP) $(SRCS)
 
 link:
-	$(CC) $(SRCS_LINK) $(LARGS)
-	sudo mv $(SONAME) $(SODIR)
+    $(CC) $(SRCS_LINK) $(LARGS)
 
 link_omp:
-	$(CC) $(SRCS_LINK) $(LARGSOMP)
-	sudo mv $(SONAME) $(SODIR)
-
-link_inplace:
-	$(CC) $(SRCS_LINK) $(LARGSINPLACE)
-
-link_omp_inplace:
-	$(CC) $(SRCS_LINK) $(LARGSOMPINPLACE)
+    $(CC) $(SRCS_LINK) $(LARGSOMP)
 
 uninstall:
-	rm -f *.so *.o
-	sudo rm -f $(SODIR)/$(SONAME)
-	sudo rm -rf $(INCLUDE_TARGET)/
+    rm -f *.so *.o
+    sudo rm -f $(SODIR)/$(SONAME)
+    sudo rm -rf $(INCLUDE_TARGET)/
 
-create_ld_var:
-ifeq (,$(findstring /usr/local/lib,$(LD_LIBRARY_PATH)))
-	echo '\n# Needed for loading libtmpl.' >> ~/.bashrc
-	echo 'export LD_LIBRARY_PATH="LD_LIBRARY_PATH:/usr/local/lib"' >> ~/.bashrc
-endif
-
-create_ld_var_inplace:
-ifeq (,$(findstring $(pwd),$(LD_LIBRARY_PATH)))
-	echo '\n# Needed for loading libtmpl.' >> ~/.bashrc
-	echo 'export LD_LIBRARY_PATH="LD_LIBRARY_PATH:$(pwd)"' >> ~/.bashrc
-endif

@@ -1,92 +1,92 @@
 Finish Proofreading:
-	Complex
-		complex_log10
-		complex_logb
-			complex log in different bases.
-		complex_sec/complex_csc/complex_cot.
-			Additional complex trig functions.
-		Also add inverse trig functions.
-		Hyperbolic trig functions for complex arguments.
-		Inverse hyperbolic trig functions as well.
-		Various powers of small exponent:
-			square, cube, fourth power, etc.
-	Math
-	Numerical
-		5 point 2, 3, and 4th derivatives using Lagrange.
-		Riemann sum
-		Trapezoid rule
-		Simpson's rule
+    Complex
+        complex_log10
+        complex_logb
+            complex log in different bases.
+        complex_sec/complex_csc/complex_cot.
+            Additional complex trig functions.
+        Also add inverse trig functions.
+        Hyperbolic trig functions for complex arguments.
+        Inverse hyperbolic trig functions as well.
+        Various powers of small exponent:
+            square, cube, fourth power, etc.
+    Math
+    Numerical
+        5 point 2, 3, and 4th derivatives using Lagrange.
+        Riemann sum
+        Trapezoid rule
+        Simpson's rule
 
-	Special Functions
-		Bessel J1
-		Airy
-		Add complex versions of current special functions.
+    Special Functions
+        Bessel J1
+        Airy
+        Add complex versions of current special functions.
 
 Add Airy diffraction.
 
 Add polynomial library.
-	Fast multiply (Strassen algorithm)
-	For Z[x]:
-		Function for if a polynomial divides another.
-		Polynomial equality.
-		Polynomial comparison.
-		Polynomial eval.
+    Fast multiply (Strassen algorithm)
+    For Z[x]:
+        Function for if a polynomial divides another.
+        Polynomial equality.
+        Polynomial comparison.
+        Polynomial eval.
 
-	For Q[x]:
-		polynomial subtract
-		polynomial multiply
-		equality
-		Derivative
-		polynomial eval
-		GCD function.
-		Bezout function: ap + bq = GCD(p,q)
-		quotient and remainder: a = qb + r
-		print
-		get string
-		Set term
-		Extract term
+    For Q[x]:
+        polynomial subtract
+        polynomial multiply
+        equality
+        Derivative
+        polynomial eval
+        GCD function.
+        Bezout function: ap + bq = GCD(p,q)
+        quotient and remainder: a = qb + r
+        print
+        get string
+        Set term
+        Extract term
 
-	For C[z]:
-		Implement root finding algorithm
-		for polynomial from that MIT paper.
+    For C[z]:
+        Implement root finding algorithm
+        for polynomial from that MIT paper.
 
 
-	For Mat[Q[x], N]:
-		Smith-Normal Form.
-		Determinant.
+    For Mat[Q[x], N]:
+        Smith-Normal Form.
+        Determinant.
 
 Quad-Precision
-	Quad-precision complex as well.
+    Quad-precision complex as well.
 
 Finalize knot theory library:
-	Knot Floer Homology
-	Khovanov Homology
-	Alexander Polynomial
-	Jones Polynomial
-	HOMFLY Polynomial
+    Knot Floer Homology
+    Khovanov Homology
+    Alexander Polynomial
+    Jones Polynomial
+    HOMFLY Polynomial
 
 Add interpolation:
-	Linear and cubic
-	Add savitzy-golay filter.
+    Linear and cubic
+    Add savitzy-golay filter.
 
 Add linear algebra and matrix library.
-	LU and SVD decomposition.
-	Moore-Penrose pseudo-inverse.
+    LU and SVD decomposition.
+    Moore-Penrose pseudo-inverse.
 
 Add convolution to FFT folder.
 Abelian Groups
 
 Graph theory code:
-	Create Tait Graph from Gauss code.
-	Create Gauss code from signed graph using medial graph.
-	Function if two vertices are connected
-	Computing adjacency matrix.
-	Sorting graph edges by lexicographic ordering.
-	Determining if graph is planar.
-	Find Kuratowski subgraph of non-planar graph.
-	Compute degree of vertex.
-	Compute spanning tree.
-	Compute homology.
+    Create Tait Graph from Gauss code.
+    Create Gauss code from signed graph using medial graph.
+    Function if two vertices are connected
+    Computing adjacency matrix.
+    Sorting graph edges by lexicographic ordering.
+    Determining if graph is planar.
+    Find Kuratowski subgraph of non-planar graph.
+    Compute degree of vertex.
+    Compute spanning tree.
+    Compute homology.
 
 Add these back;
 extern tmpl_ComplexDouble
