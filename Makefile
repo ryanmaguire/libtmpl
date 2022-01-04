@@ -1,23 +1,23 @@
 ################################################################################
-#                                  LICENSE                                     #
+#								  LICENSE									 #
 ################################################################################
-#   This file is part of libtmpl.                                              #
-#                                                                              #
-#   libtmpl is free software: you can redistribute it and/or modify            #
-#   it under the terms of the GNU General Public License as published by       #
-#   the Free Software Foundation, either version 3 of the License, or          #
-#   (at your option) any later version.                                        #
-#                                                                              #
-#   libtmpl is distributed in the hope that it will be useful,                 #
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of             #
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
-#   GNU General Public License for more details.                               #
-#                                                                              #
-#   You should have received a copy of the GNU General Public License          #
-#   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
+#   This file is part of libtmpl.											  #
+#																			  #
+#   libtmpl is free software: you can redistribute it and/or modify			#
+#   it under the terms of the GNU General Public License as published by	   #
+#   the Free Software Foundation, either version 3 of the License, or		  #
+#   (at your option) any later version.										#
+#																			  #
+#   libtmpl is distributed in the hope that it will be useful,				 #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of			 #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			  #
+#   GNU General Public License for more details.							   #
+#																			  #
+#   You should have received a copy of the GNU General Public License		  #
+#   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.		  #
 ################################################################################
-#   Author:     Ryan Maguire, Dartmouth College                                #
-#   Date:       August 31, 2021                                                #
+#   Author:	 Ryan Maguire, Dartmouth College								#
+#   Date:	   August 31, 2021												#
 ################################################################################
 
 #   Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
@@ -65,74 +65,57 @@ SRCS_LINK = ./*.o
 all: make
 
 make:
-    make clean
-    make clean_old
-    make determine_endianness
-    make compile
-    make link
-    make move_stuff
-    make clean
+	rm -f *.so *.o
+	sudo rm -f $(END_HEADER)
+	sudo rm -rf $(INCLUDE_TARGET)
+	sudo mkdir -p $(INCLUDE_TARGET)/include/
+	sudo rm -f $(SODIR)/$(SONAME)
+	$(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
+	./$(DET_END_EXEC)
+	rm -f $(DET_END_EXEC)
+	$(CC) $(CARGS) $(SRCS)
+	$(CC) $(SRCS_LINK) $(LARGS)
+	sudo cp ./include/*.h $(INCLUDE_TARGET)/include/
+	sudo mv $(SONAME) $(SODIR)
+	rm -f *.o
 
 inplace:
-    make clean
-    make determine_endianness
-    make compile
-    make link
-    make clean_inplace
+	rm -f *.so *.o
+	$(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
+	./$(DET_END_EXEC)
+	rm -f $(DET_END_EXEC)
+	$(CC) $(CARGS) $(SRCS)
+	$(CC) $(SRCS_LINK) $(LARGS)
+	rm -f *.o
 
 # Same as make, but compiling with OpenMP support.
 omp:
-    make clean
-    make clean_old
-    make determine_endianness
-    make compile_omp
-    make link_omp
-    make move_stuff
-    make clean
+	rm -f *.so *.o
+	sudo rm -f $(END_HEADER)
+	sudo rm -rf $(INCLUDE_TARGET)
+	sudo mkdir -p $(INCLUDE_TARGET)/include/
+	sudo rm -f $(SODIR)/$(SONAME)
+	$(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
+	./$(DET_END_EXEC)
+	rm -f $(DET_END_EXEC)
+	$(CC) $(CARGSOMP) $(SRCS)
+	$(CC) $(SRCS_LINK) $(LARGSOMP)
+	sudo cp ./include/*.h $(INCLUDE_TARGET)/include/
+	sudo mv $(SONAME) $(SODIR)
+	rm -f *.o
 
 # Same as inplace, but compiling with OpenMP support.
 omp_inplace:
-    make clean
-    make determine_endianness
-    make compile_omp
-    make link_omp
-    make clean_inplace
-
-clean:
-    rm -f *.so *.o
-
-clean_inplace:
-    rm -f *.o
-
-clean_old:
-    sudo rm -f $(END_HEADER)
-    sudo rm -rf $(INCLUDE_TARGET)
-    sudo mkdir -p $(INCLUDE_TARGET)/include/
-    sudo rm -f $(SODIR)/$(SONAME)
-
-move_stuff:
-    sudo cp ./include/*.h $(INCLUDE_TARGET)/include/
-    sudo mv $(SONAME) $(SODIR)
-
-determine_endianness:
-    $(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
-    ./$(DET_END_EXEC)
-    rm -f $(DET_END_EXEC)
-
-compile:
-    $(CC) $(CARGS) $(SRCS)
-
-compile_omp:
-    $(CC) $(CARGSOMP) $(SRCS)
-
-link:
-    $(CC) $(SRCS_LINK) $(LARGS)
-
-link_omp:
-    $(CC) $(SRCS_LINK) $(LARGSOMP)
+	rm -f *.so *.o
+	$(CC) $(DET_END_FILE) -o $(DET_END_EXEC)
+	./$(DET_END_EXEC)
+	rm -f $(DET_END_EXEC)
+	$(CC) $(CARGSOMP) $(SRCS)
+	$(CC) $(SRCS_LINK) $(LARGSOMP)
+	rm -f *.o
 
 uninstall:
-    rm -f *.so *.o
-    sudo rm -f $(SODIR)/$(SONAME)
-    sudo rm -rf $(INCLUDE_TARGET)/
+	rm -f *.so *.o
+	sudo rm -f $(SODIR)/$(SONAME)
+	sudo rm -rf $(INCLUDE_TARGET)/
 
