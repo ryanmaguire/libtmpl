@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License          #
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
-#   Author:     Ryan Maguire, Dartmouth College                                #
+#   Author:     Ryan Maguire                                                   #
 #   Date:       August 31, 2021                                                #
 ################################################################################
 
@@ -38,7 +38,7 @@ CARGSOMP = -O3 -c -flto -fopenmp -I../
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
 LARGS = -O3 -flto -shared -o $(SONAME) -lm
-LARGSOMP = -O3 -fopenmp  -flto -shared -o $(SONAME) -lm
+LARGSOMP = -O3 -fopenmp -flto -shared -o $(SONAME) -lm
 
 # Name of the created Share Object file (.so).
 SONAME = libtmpl.so
