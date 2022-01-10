@@ -16,13 +16,15 @@
 #   You should have received a copy of the GNU General Public License          #
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
-#   Author:     Ryan Maguire, Dartmouth College                                #
+#   Author:     Ryan Maguire                                                   #
 #   Date:       August 31, 2021                                                #
 ################################################################################
 
 # This file is created by the make.sh script.
 include/tmpl_endianness.h
 
+# Various filetypes to be excluded from LaTeX, C, C++, and Python output.
+# Plus a bunch of random ones GitHub recommended be in the .gitignore file.
 *.ppm
 .DS_Store*
 *.pyc
@@ -52,52 +54,34 @@ include/tmpl_endianness.h
 *.png
 *.listing
 *.ps
-
-# Prerequisites
 *.d
-
-# Object files
 *.o
 *.ko
 *.obj
 *.elf
-
-# Linker output
 *.ilk
 *.map
 *.exp
-
-# Precompiled Headers
 *.gch
 *.pch
-
-# Libraries
 *.lib
 *.a
 *.la
 *.lo
-
-# Shared objects (inc. Windows DLLs)
 *.dll
 *.so
 *.so.*
 *.dylib
-
-# Executables
 *.exe
 *.out
 *.app
 *.i*86
 *.x86_64
 *.hex
-
-# Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
-
-# Kernel Module Compile Results
 *.mod*
 *.cmd
 .tmp_versions/
@@ -105,3 +89,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
