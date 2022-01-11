@@ -7,13 +7,21 @@ float tmpl_Float_Log(float x)
 {
     float poly, A, A_sq, mantissa;
     signed int exponent;
+    tmpl_IEEE754_Float w;
 
     if (x < 0.0F)
         return TMPL_NANF;
     else if (x == 0.0F)
         return -TMPL_INFINITYF;
+    else if (tmpl_Float_Is_Inf(x))
+        return x;
+    else if (tmpl_Float_Is_NaN(x))
+        return x;
 
-    tmpl_Float_Base2_Exp_and_Mant(x, &mantissa, &exponent);
+    w.r = x;
+    exponent = w.bits.expo - TMPL_FLOAT_BIAS;
+    w.bits.expo = TMPL_FLOAT_BIAS;
+    mantissa = w.r;
 
     if (mantissa > 1.5F)
     {

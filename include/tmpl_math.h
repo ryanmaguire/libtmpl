@@ -99,7 +99,7 @@
  *  libm functions are quite fast and efficient, but most would prefer to use *
  *  the libm provided by the implementation of the C standard library they    *
  *  are using, so this is set to 0 by default.                                */
-#define TMPL_USE_MATH_ALGORITHMS 0
+#define TMPL_USE_MATH_ALGORITHMS 1
 
 /*  The following comment block explains the IEEE-754 format. Those who know  *
  *  the format can skip it.                                                   */
@@ -212,6 +212,9 @@
 /*  Macro indicating support for IEEE-754 single precision.                   */
 #define TMPL_HAS_IEEE754_FLOAT 1
 
+/*  32-bit single precision bias is 127.                                      */
+#define TMPL_FLOAT_BIAS 0x7F
+
 /*  To access the binary representation of a floating point number, we use    *
  *  unions. Unions allow us to have different data types share the same block *
  *  of memory. If we have a union of a floating point and an integer, and then*
@@ -245,6 +248,9 @@ typedef union _tmpl_IEEE754_Float {
 
 /*  Macro indicating support for IEEE-754 single precision.                   */
 #define TMPL_HAS_IEEE754_FLOAT 1
+
+/*  32-bit single precision bias is 127.                                      */
+#define TMPL_FLOAT_BIAS 0x7F
 
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
@@ -282,6 +288,9 @@ typedef union _tmpl_IEEE754_Float {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_DOUBLE 1
 
+/*  64-bit double precision has exponent bias of 1,023.                       */
+#define TMPL_DOUBLE_BIAS 0x3FF
+
 /*  Same idea as the union used for float, but for a 64-bit double.           */
 typedef union _tmpl_IEEE754_Double {
     struct _big_bits {
@@ -300,6 +309,9 @@ typedef union _tmpl_IEEE754_Double {
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_DOUBLE 1
+
+/*  64-bit double precision has exponent bias of 1,023.                       */
+#define TMPL_DOUBLE_BIAS 0x3FF
 
 /*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
  *  endianness. See the above comments for information on this data type.     */
@@ -341,6 +353,9 @@ typedef union _tmpl_IEEE754_Double {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
+/*  80-bit extended precision has exponent bias of 16,383.                    */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
  *  the IEEE-754 extended precision 80-bit format with 48-bits of padding     *
@@ -375,6 +390,9 @@ typedef union _tmpl_IEEE754_LDouble {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
+/*  80-bit extended precision has exponent bias of 16,383.                    */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
 /*  The i386 architecture uses a 96-bit implementation. This uses the         *
  *  80-bit extended precision with 16 bits of padding.                        */
 typedef union _tmpl_IEEE754_LDouble {
@@ -399,6 +417,9 @@ typedef union _tmpl_IEEE754_LDouble {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
+/*  128-bit quadruple precision has exponent bias of 16,383.                  */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
 /*  aarch64 uses the 128-bit quadruple precision for long double.             */
 typedef union _tmpl_IEEE754_LDouble {
     struct {
@@ -421,6 +442,9 @@ typedef union _tmpl_IEEE754_LDouble {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
+/*  64-bit double precision has exponent bias of 1,023.                       */
+#define TMPL_LDOUBLE_BIAS 0x3FF
+
 /*  MIPS little endian uses the same structure as double, 64 bit.             */
 typedef union _tmpl_IEEE754_LDouble {
     struct {
@@ -439,6 +463,9 @@ typedef union _tmpl_IEEE754_LDouble {
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  64-bit double precision has exponent bias of 1,023.                       */
+#define TMPL_LDOUBLE_BIAS 0x3FF
 
 /*  MIPS for big endian. PowerPC and S390 also implement long double          *
  *  using this style, which is the same as double.                            */
@@ -459,6 +486,9 @@ typedef union _tmpl_IEEE754_LDouble {
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  128-bit quadruple precision has exponent bias of 16,383.                  */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
 
 typedef union _tmpl_IEEE754_LDouble {
     struct {
@@ -681,41 +711,6 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 extern tmpl_Bool tmpl_Float_Is_NaN(float x);
 extern tmpl_Bool tmpl_Double_Is_NaN(double x);
 extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Float_Base2_Exp_and_Mant                                         *
- *  Purpose:                                                                  *
- *      Computes the exponent and mantissa of a float in base 2. That is,     *
- *      given a number x, this function computes the numbers m and b such     *
- *      that:                                                                 *
- *          x = m * 2^b                                                       *
- *      where 1 <= m < 2, and b is an integer. The exception is x = 0, where  *
- *      m is set to 0, and b is set to zero.                                  *
- *  Arguments:                                                                *
- *      x (float):                                                            *
- *          The value we want to extract the exponent and mantissa from.      *
- *      mant (float *):                                                       *
- *          A pointer to a float. The mantissa will be stored in this.        *
- *      expo (signed int *):                                                  *
- *          A pointer to a SIGNED int. The exponent will be stored in this.   *
- *  Output:                                                                   *
- *      None (void).                                                          *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
- *      It is assumed mant and expo are not NULL. Nothing is done if they are.*
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_base2_exp_and_mant.c                            *
- ******************************************************************************/
-extern void
-tmpl_Float_Base2_Exp_and_Mant(float x, float *mant, signed int *expo);
-
-extern void
-tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo);
-
-extern void
-tmpl_LDouble_Base2_Exp_and_Mant(long double x, long double *mant,
-                                signed long int *expo);
 
 /******************************************************************************
  *  Function:                                                                 *
