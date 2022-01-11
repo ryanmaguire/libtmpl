@@ -69,9 +69,12 @@
  *      use back-slash on Windows (which is dumb).                            *
  *      Added _CRT_SECURE_NO_DEPRECATE for Windows users since MSVC           *
  *      deprecated standard library functions (which is dumber).              *
+ *  2022/01/11: Ryan Maguire                                                  *
+ *      Added support for s390x big endian quadruple precision. This is how   *
+ *      GCC implements long double on that architecture.                      *
  ******************************************************************************/
 
-/*  Avoid silly warning on Windows for using printf. GNU/Linux, FreeBSD, and  *
+/*  Avoid silly warning on Windows for using fopen. GNU/Linux, FreeBSD, and   *
  *  macOS have no such warnings for using standard library functions.         */
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
 #define _CRT_SECURE_NO_DEPRECATE
@@ -120,6 +123,7 @@ typedef enum _tmpl_ldouble_type {
     tmpl_ldouble_i386,
     tmpl_ldouble_aarch64,
     tmpl_ldouble_amd64,
+    tmpl_ldouble_s390x,
     tmpl_ldouble_unknown
 } tmpl_ldouble_type;
 
@@ -489,6 +493,26 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } mips_big_type;
 
+    /*  After some trial and error, I managed to figure out how GCC           *
+     *  implements long double on the s390x architecture (64-bit, big endian).*
+     *  It uses IEEE-754 quadruple precision, with big endianness. This is    *
+     *  similar to ARM64, but with the order flipped.                         */
+    union {
+        struct {
+            unsigned int sign : 1;
+            unsigned int expo : 15;
+            unsigned int man0 : 16;
+            unsigned int man1 : 16;
+            unsigned int man2 : 16;
+            unsigned int man3 : 16;
+            unsigned int man4 : 16;
+            unsigned int man5 : 16;
+            unsigned int man6 : 16;
+        } bits;
+        long double r;
+    } s390x_type;
+    
+
     /*  Set the bits to represent 1.0 for AMD64 architecture.                 */
     amd64_type.bits.man3 = 0x0U;
     amd64_type.bits.man2 = 0x0U;
@@ -543,7 +567,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     if (mips_big_type.r == 1.0L)
         return tmpl_ldouble_mips_big_endian;
 
-    /*  Lastly, MIPS little endian (or Microsoft compiler, amd64).            */
+    /*  Next, MIPS little endian (or Microsoft compiler, amd64).              */
     mips_little_type.bits.man3 = 0x0U;
     mips_little_type.bits.man2 = 0x0U;
     mips_little_type.bits.man1 = 0x0U;
@@ -554,6 +578,20 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     if (mips_little_type.r == 1.0L)
         return tmpl_ldouble_mips_little_endian;
 
+    /*  s390x architecture using GCC.                                         */
+    s390x_type.bits.man6 = 0x0U;
+    s390x_type.bits.man5 = 0x0U;
+    s390x_type.bits.man4 = 0x0U;
+    s390x_type.bits.man3 = 0x0U;
+    s390x_type.bits.man2 = 0x0U;
+    s390x_type.bits.man1 = 0x0U;
+    s390x_type.bits.man0 = 0x0U;
+    s390x_type.bits.expo = 0x3FFFU;
+    s390x_type.bits.sign = 0x0U;
+
+    if (s390x_type.r == 1.0L)
+        return tmpl_ldouble_s390x;
+    
     /*  If all failed, return unknown.                                        */
     return tmpl_ldouble_unknown;
 }
@@ -624,7 +662,8 @@ int main(void)
     fprintf(fp, "#define TMPL_LDOUBLE_I386 2\n");
     fprintf(fp, "#define TMPL_LDOUBLE_AARCH64 3\n");
     fprintf(fp, "#define TMPL_LDOUBLE_AMD64 4\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 5\n\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_S390X 5\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 6\n\n");
 
     /*  Print the integer endianness to the header file.                      */
     if (int_type == tmpl_integer_little_endian)
@@ -663,6 +702,8 @@ int main(void)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_MIPS_LITTLE_ENDIAN\n");
     else if (ldouble_type == tmpl_ldouble_mips_big_endian)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_MIPS_BIG_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_s390x)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_S390X\n");
     else
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
 
