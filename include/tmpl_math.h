@@ -454,6 +454,27 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_S390X
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+typedef union _tmpl_IEEE754_LDouble {
+    struct {
+        unsigned int sign : 1;
+        unsigned int expo : 15;
+        unsigned int man0 : 16;
+        unsigned int man1 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
+        unsigned int man4 : 16;
+        unsigned int man5 : 16;
+        unsigned int man6 : 16;
+    } bits;
+    long double r;
+} tmpl_IEEE754_LDouble;
+
 #else
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
