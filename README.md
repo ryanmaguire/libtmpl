@@ -28,8 +28,7 @@
 2. [tmpyl (Python Wrapper)](#tmpyl)
     1. [Installation](#InstallUnixtmpyl)
 3. [tmppl (C++ Wrapper)](#tmppl)
-4. [Acknowledgment](#Acknowledgment)
-5. [License](#license)
+4. [License](#license)
 
 # libtmpl
 
