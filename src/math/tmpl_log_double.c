@@ -2,19 +2,27 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
 double tmpl_Double_Log(double x)
 {
     double mantissa, poly, A, A_sq;
     signed int exponent;
+    tmpl_IEEE754_Double w;
 
     if (x < 0.0)
         return TMPL_NAN;
     else if (x == 0.0)
         return -TMPL_INFINITY;
+    else if (tmpl_Double_Is_Inf(x))
+        return x;
+    else if (tmpl_Double_Is_NaN(x))
+        return x;
 
-    tmpl_Double_Base2_Exp_and_Mant(x, &mantissa, &exponent);
+    w.r = x;
+    exponent = w.bits.expo - TMPL_DOUBLE_BIAS;
+    w.bits.expo = TMPL_DOUBLE_BIAS;
+    mantissa = w.r;
 
     if (mantissa > 1.5)
     {

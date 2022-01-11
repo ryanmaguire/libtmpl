@@ -2,6 +2,7 @@
 
 #include <libtmpl/include/tmpl_math.h>
 
+#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
 
 #define TMPL_LOGL_A00 2.00000000000000000000000000000000L
 #define TMPL_LOGL_A01 0.66666666666666666666666666666667L
@@ -28,13 +29,21 @@ long double tmpl_LDouble_Log(long double x)
 {
     long double mantissa, A, A_sq, poly;
     signed long int exponent;
+    tmpl_IEEE754_LDouble w;
 
     if (x < 0.0L)
         return TMPL_NANL;
     else if (x == 0.0L)
         return -TMPL_INFINITYL;
+    else if (tmpl_LDouble_Is_Inf(x))
+        return x;
+    else if (tmpl_LDouble_Is_NaN(x))
+        return x;
 
-    tmpl_LDouble_Base2_Exp_and_Mant(x, &mantissa, &exponent);
+    w.r = x;
+    exponent = w.bits.expo - TMPL_LDOUBLE_BIAS;
+    w.bits.expo = TMPL_LDOUBLE_BIAS;
+    mantissa = w.r;
 
     if (mantissa > 1.5L)
     {
@@ -74,3 +83,23 @@ long double tmpl_LDouble_Log(long double x)
 #undef TMPL_LOGL_A10
 #undef TMPL_LOGL_A11
 #undef TMPL_LOGL_A12
+
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+#include <math.h>
+
+long double tmpl_LDouble_Log(long double x)
+{
+    return logl(x);
+}
+
+#else
+
+long double tmpl_LDouble_Log(long double x)
+{
+    double logx = log((double)x);
+    return (long double)x;
+}
+
+#endif
+
