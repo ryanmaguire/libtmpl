@@ -17,7 +17,7 @@
     along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.
 
     AUTHOR
-        Ryan Maguire, Dartmouth College
+        Ryan Maguire
 --->
 
 # Table of Contents
