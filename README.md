@@ -71,7 +71,7 @@ To compile with OpenMP (highly recommended) run:
 make omp
 ```
 **If you do not have sudo privileges, use the in-place option**
-The inplace method will place libtmpl.so in `libtmpl/`. You will NOT have
+The in-place method will place libtmpl.so in `libtmpl/`. You will NOT have
 the header files placed in `/usr/local/include/` and you will therefore need to
 pass the `-I` and `-L` options to your compiler whenever you want to use
 libtmpl.
@@ -86,6 +86,10 @@ make omp_inplace
 Add the following to your `.bashrc`, `.shrc`, or whichever shell you're using.
 ```
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+```
+If you used the in-place options:
+```
+export LD_LIBRARY_PATH="/path/to/libtmpl:$LD_LIBRARY_PATH"
 ```
 
 ### Warnings
