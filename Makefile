@@ -30,8 +30,8 @@ CC = cc
 # -I../ includes that directory in the path.
 # -flto is link time optimization.
 # -fopenmp uses OpenMP.
-CARGS = -O3 -c -flto -I../
-CARGSOMP = -O3 -c -flto -fopenmp -I../
+CARGS = -O3 -fPIC -c -flto -I../
+CARGSOMP = -O3 -fPIC -c -flto -fopenmp -I../
 
 # Linking arguments. -O3, -I, and -flto are the same as before.
 # -lm means link against the standard math library.
