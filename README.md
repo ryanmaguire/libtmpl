@@ -102,7 +102,7 @@ Run the batch script `make.bat`.
 ```
 C:\Users\ryan\source\repos\libtmpl>make.bat
 ```
-This creates libtmpl.lib in this directory.
+This creates libtmpl.lib in the `libtmpl/` directory.
 It does not copy the `include/` directory or the library to any system
 directories. This has been tested using a Windows 10 virtual machine and it
 worked as expected. 
