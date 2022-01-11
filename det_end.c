@@ -511,7 +511,6 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         } bits;
         long double r;
     } s390x_type;
-    
 
     /*  Set the bits to represent 1.0 for AMD64 architecture.                 */
     amd64_type.bits.man3 = 0x0U;
