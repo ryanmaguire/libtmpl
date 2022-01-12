@@ -55,10 +55,10 @@ do {                                                                           \
     }                                                                          \
                                                                                \
     printf(#cfunc " vs. " #tmplfunc "\n");                                     \
-    printf("    Start: %.8Le\n", (long double)start);                         \
-    printf("    End:   %.8Le\n", (long double)end);                           \
-    printf("    Max Abs: %.8Le\n", (long double)max_abs);                     \
-    printf("    Max Rel: %.8Le\n\n", (long double)max_rel);                   \
+    printf("    Start: %.8Le\n", (long double)start);                          \
+    printf("    End:   %.8Le\n", (long double)end);                            \
+    printf("    Max Abs: %.8Le\n", (long double)max_abs);                      \
+    printf("    Max Rel: %.8Le\n\n", (long double)max_rel);                    \
 } while(0)
 
 int main(void)
