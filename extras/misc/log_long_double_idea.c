@@ -4,7 +4,7 @@
 
 static const unsigned long n_coeffs = 10;
 
-static long double coeffs[13] = {
+static long double coeffs[16] = {
     2.00000000000000000000000000000000L,
     0.66666666666666666666666666666667L,
     0.40000000000000000000000000000000L,
@@ -17,15 +17,12 @@ static long double coeffs[13] = {
     0.10526315789473684210526315789474L,
     0.095238095238095238095238095238095L,
     0.086956521739130434782608695652174L,
-    0.080000000000000000000000000000000L
+    0.080000000000000000000000000000000L,
+    0.074074074074074074074074074074074L,
+    0.068965517241379310344827586206897L,
+    0.064516129032258064516129032258065L
 };
 
-/*
- * Not needed.
- * #define TMPL_LOGL_A13 0.074074074074074074074074074074074L
- * #define TMPL_LOGL_A14 0.068965517241379310344827586206897L
- * #define TMPL_LOGL_A15 0.064516129032258064516129032258065L
- */
 
 static long double table[32] = {
     0.0L,
@@ -127,7 +124,7 @@ static long double my_log(long double x)
 int main(void)
 {
     unsigned long int n;
-    unsigned long int N = 1E7;
+    unsigned long int N = 1E6;
     long double start = 2.0L;
     long double end = 100.0L;
     long double dx = (end - start) / (long double)N;
