@@ -70,7 +70,7 @@ int main(void)
 
     TEST_FUNC(atanf, tmpl_Float_Arctan, float, -1000.0F, 1000.0F, N);
     TEST_FUNC(atan, tmpl_Double_Arctan, double, -1000.0, 1000.0, N);
-    TEST_FUNC(atanl, tmpl_LDouble_Arctan, long double, -1000.0L, 100.0L, N);
+    TEST_FUNC(atanl, tmpl_LDouble_Arctan, long double, -1000.0L, 1000.0L, N);
 
     TEST_FUNC(logf, tmpl_Float_Log, float, 0.0F, 100.0F, N);
     TEST_FUNC(log, tmpl_Double_Log, double, 0.0, 100.0, N);
