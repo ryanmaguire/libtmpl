@@ -46,8 +46,8 @@ long double tmpl_LDouble_Log(long double x)
 
     if (mantissa > 1.5L)
     {
-        mantissa *= 0.7071067811865475244008443621048490392848359376884749L;
-        exponent += 0.5L;
+        mantissa *= 0.5L;
+        exponent += 1.0L;
     }
 
     A = (mantissa - 1.0L) / (mantissa + 1.0L);
