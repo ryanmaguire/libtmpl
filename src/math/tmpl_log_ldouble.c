@@ -27,8 +27,7 @@
 
 long double tmpl_LDouble_Log(long double x)
 {
-    long double mantissa, A, A_sq, poly;
-    signed long int exponent;
+    long double mantissa, A, A_sq, poly, exponent;
     tmpl_IEEE754_LDouble w;
 
     if (x < 0.0L)
@@ -41,14 +40,14 @@ long double tmpl_LDouble_Log(long double x)
         return x;
 
     w.r = x;
-    exponent = w.bits.expo - TMPL_LDOUBLE_BIAS;
+    exponent = (long double)(w.bits.expo - TMPL_LDOUBLE_BIAS);
     w.bits.expo = TMPL_LDOUBLE_BIAS;
     mantissa = w.r;
 
     if (mantissa > 1.5L)
     {
-        mantissa *= 0.5L;
-        exponent += 1L;
+        mantissa *= 0.7071067811865475244008443621048490392848359376884749L;
+        exponent += 0.5L;
     }
 
     A = (mantissa - 1.0L) / (mantissa + 1.0L);
@@ -67,7 +66,7 @@ long double tmpl_LDouble_Log(long double x)
     poly = poly * A_sq + TMPL_LOGL_A01;
     poly = poly * A_sq + TMPL_LOGL_A00;
 
-    return tmpl_Natural_Log_of_Two_L*(long double)exponent + A*poly;
+    return tmpl_Natural_Log_of_Two_L*exponent + A*poly;
 }
 
 #undef TMPL_LOGL_A00
