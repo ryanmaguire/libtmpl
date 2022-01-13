@@ -69,7 +69,7 @@
  *  much as possible. Vagueness or unclear code should be reported to:        *
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -445,7 +445,8 @@ typedef union _tmpl_IEEE754_LDouble {
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_LDOUBLE_BIAS 0x3FF
 
-/*  MIPS little endian uses the same structure as double, 64 bit.             */
+/*  MIPS little endian uses the same structure as double, 64 bit. The         *
+ *  Windows compiler MSVC also uses this for x86_64.                          */
 typedef union _tmpl_IEEE754_LDouble {
     struct {
         unsigned int man3 : 16;
@@ -490,6 +491,7 @@ typedef union _tmpl_IEEE754_LDouble {
 /*  128-bit quadruple precision has exponent bias of 16,383.                  */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
 
+/*  Similar to aarch64, but with big endianness.                              */
 typedef union _tmpl_IEEE754_LDouble {
     struct {
         unsigned int sign : 1;
