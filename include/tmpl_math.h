@@ -45,13 +45,14 @@
  *          overflow. This is undefined behavior, but in practice it works.   *
  *          This implementation uses similar tactics.                         *
  *                                                                            *
- *          A similar problems arise with NAN. IEEE-754 has a means of        *
+ *          A similar problem arises with NAN. IEEE-754 has a means of        *
  *          defining NAN, but compilers lacking this may not. The standard    *
  *          trick is to use 0.0 / 0.0, but this may also be undefined         *
  *          behavior. Again, in practice this usually works fine.             *
  *                                                                            *
  *      This file is a fork of the code I wrote for rss_ringoccs. That        *
- *      library is also released under GPL3.                                  *
+ *      library is also released under GPL3. rss_ringoccs no longer contains  *
+ *      this file, and all math related tools have migrated to libtmpl.       *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -82,6 +83,9 @@
  *      Rewriting to increase portability.                                    *
  *  2021/09/09: Ryan Maguire                                                  *
  *      Added long double IEEE-754 support.                                   *
+ *  2022/01/13: Ryan Maguire                                                  *
+ *    Added s390x implementation of long double. Removed the get mantissa and *
+ *    exponent functions.                                                     *
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
@@ -220,12 +224,16 @@
  *  of memory. If we have a union of a floating point and an integer, and then*
  *  set the floating point part to some number, then when we try to access the*
  *  integer part it will already have its bits set (They'll be set by the     *
- *  floating point value). This is known as "type-punning."                   */
+ *  floating point value). This is known as "type-punning." Note, the C       *
+ *  standard says type-punning is undefined behavior. Indeed, it says you can *
+ *  only access the member of a union that was most recently written to. In   *
+ *  practice, most compilers support type punning and use it to implement the *
+ *  IEEE-754 format of floating point arithmetic.                             */
 typedef union _tmpl_IEEE754_Float {
 
     /*  Use a bit-field for the binary representation of a float. A bit-field *
      *  allows us to define variables with an exact number of bits (up to 16).*
-     *  We'll use this to a have 1-bit variable for the sign, 8-bit variable  *
+     *  We'll use this to have a 1-bit variable for the sign, 8-bit variable  *
      *  for the exponent, and 2 variables adding up to 23 bits for the        *
      *  mantissa.                                                             */
     struct _float_bits {
