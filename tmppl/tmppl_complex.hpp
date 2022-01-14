@@ -17,7 +17,7 @@ namespace tmppl {
             complexf operator -(complexf w);
             complexf operator *(complexf w);
             complexf operator /(complexf w);
-	};
+    };
 
     class complex {
         public:
@@ -64,7 +64,7 @@ namespace tmppl {
             complex operator /(complex w);
             complex operator +(double x);
             complex operator *(double x);
-	};
+    };
 
     class complexl {
         public:
@@ -80,7 +80,7 @@ namespace tmppl {
             complexl operator -(complexl w);
             complexl operator *(complexl w);
             complexl operator /(complexl w);
-	};
+    };
 
     complex cos(complex z);
     complex exp(complex z);
@@ -89,4 +89,3 @@ namespace tmppl {
 
 tmppl::complex operator - (double x, tmppl::complex z);
 tmppl::complex operator - (tmppl::complex z, double x);
-

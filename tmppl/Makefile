@@ -45,11 +45,8 @@ CARGSOMP = -O3 -c -flto -fopenmp -I../../
 # -lm means link against the standard math library.
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
-LARGS = -O3 -I/usr/local/include -flto -shared -o $(SONAME) -ltmpl
-LARGSOMP = -O3 -fopenmp -I/usr/local/include -flto -shared -o $(SONAME) -ltmpl
-LARGSINPLACE = -O3 -I../../ -flto -shared -o $(SONAME) -ltmpl
-LARGSOMPINPLACE = -O3 -fopenmp -I../../ -flto -shared -o $(SONAME) -ltmpl
-
+LARGS = -O3 -I../../ -flto -shared -o $(SONAME) -ltmpl
+LARGSOMP = -O3 -fopenmp -I../../ -flto -shared -o $(SONAME) -ltmpl
 
 #   Location of source files for all sub-libraries.
 SRCS = ./*.cpp
@@ -58,71 +55,42 @@ SRCS_LINK = ./*.o
 all: make
 
 make:
-	make clean
-	make clean_old
-	make create_include_folder
-	make compile
-	make link
-	make clean
-
-inplace:
-	make clean
-	make compile
-	make link_inplace
-	make clean_inplace
-
-# Same as make, but compiling with OpenMP support.
-omp:
-	make clean
-	make clean_old
-	make create_include_folder
-	make compile_omp
-	make link_omp
-	make clean
-
-# Same as inplace, but compiling with OpenMP support.
-omp_inplace:
-	make clean
-	make compile_omp
-	make link_omp_inplace
-	make clean_inplace
-
-clean:
-	rm -f *.so *.o
-
-clean_inplace:
 	rm -f *.o
-
-clean_old:
 	sudo rm -rf $(INCLUDE_TARGET)/
 	sudo mkdir -p $(INCLUDE_TARGET)
 	sudo rm -f $(SODIR)/$(SONAME)
-
-create_include_folder:
 	sudo cp *.hpp $(INCLUDE_TARGET)/
-
-compile:
 	$(CC) $(CARGS) $(SRCS)
-
-compile_omp:
-	$(CC) $(CARGSOMP) $(SRCS)
-
-link:
 	$(CC) $(SRCS_LINK) $(LARGS)
 	sudo mv $(SONAME) $(SODIR)
+	rm -f *.so *.o
 
-link_omp:
+inplace:
+	rm -f *.o
+	$(CC) $(CARGS) $(SRCS)
+	$(CC) $(SRCS_LINK) $(LARGS)
+	rm -f *.o
+
+# Same as make, but compiling with OpenMP support.
+omp:
+	rm -f *.o
+	sudo rm -rf $(INCLUDE_TARGET)/
+	sudo mkdir -p $(INCLUDE_TARGET)
+	sudo rm -f $(SODIR)/$(SONAME)
+	sudo cp *.hpp $(INCLUDE_TARGET)/
+	$(CC) $(CARGSOMP) $(SRCS)
 	$(CC) $(SRCS_LINK) $(LARGSOMP)
 	sudo mv $(SONAME) $(SODIR)
+	rm -f *.so *.o
 
-link_inplace:
-	$(CC) $(SRCS_LINK) $(LARGSINPLACE)
-
-link_omp_inplace:
-	$(CC) $(SRCS_LINK) $(LARGSOMPINPLACE)
+# Same as inplace, but compiling with OpenMP support.
+omp_inplace:
+	rm -f *.o
+	$(CC) $(CARGSOMP) $(SRCS)
+	$(CC) $(SRCS_LINK) $(LARGSOMP)
+	rm -f *.o
 
 uninstall:
 	rm -f *.so *.o
 	sudo rm -f $(SODIR)/$(SONAME)
 	sudo rm -rf $(INCLUDE_TARGET)/
-
