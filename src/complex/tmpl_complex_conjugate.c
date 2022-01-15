@@ -126,4 +126,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z)
     return conj_z;
 }
 /*  End of tmpl_CLDouble_Conjugate.                                           */
-

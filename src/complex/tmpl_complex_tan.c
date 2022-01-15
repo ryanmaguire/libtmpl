@@ -122,4 +122,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Tan(tmpl_ComplexLongDouble z)
     return tan_z;
 }
 /*  End of tmpl_CLDouble_Tan.                                                 */
-

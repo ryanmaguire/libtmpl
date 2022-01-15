@@ -176,4 +176,3 @@ tmpl_CLDouble_Divide_Imag(long double y, tmpl_ComplexLongDouble z)
     return div;
 }
 /*  End of tmpl_CLDouble_Divide_Imag.                                         */
-

@@ -98,4 +98,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Polar(long double r, long double theta)
     return z;
 }
 /*  End of tmpl_CLDouble_Polar.                                               */
-

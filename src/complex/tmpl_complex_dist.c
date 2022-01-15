@@ -158,4 +158,3 @@ tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return dist;
 }
 /*  End of tmpl_CLDouble_Dist.                                                */
-

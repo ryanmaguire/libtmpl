@@ -95,4 +95,3 @@ tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z)
     return real;
 }
 /*  End of tmpl_CLDouble_Real_Part.                                           */
-

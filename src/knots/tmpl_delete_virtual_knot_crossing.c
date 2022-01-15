@@ -64,8 +64,7 @@ tmpl_Delete_Virtual_Knot_Crossing(tmpl_VirtualKnot *K,
         gauss_code_length -= 2;
         K->gauss_code = realloc(K->gauss_code,
                                 sizeof(*K->gauss_code)*gauss_code_length);
-        
+
         --K->number_of_crossings;
     }
 }
-

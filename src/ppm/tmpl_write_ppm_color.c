@@ -7,4 +7,3 @@ void tmpl_Write_PPM_Color(FILE *fp, tmpl_PPM_Color color)
     fputc(color.green, fp);
     fputc(color.blue,  fp);
 }
-

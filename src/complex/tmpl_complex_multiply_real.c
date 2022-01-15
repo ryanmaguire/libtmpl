@@ -112,4 +112,3 @@ tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z)
     return prod;
 }
 /*  End of tmpl_CLDouble_Multiply_Real.                                       */
-

@@ -123,4 +123,3 @@ tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K)
     genus = (K->number_of_crossings - faces) / 2UL;
     return genus;
 }
-

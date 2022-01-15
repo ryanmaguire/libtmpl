@@ -95,4 +95,3 @@ long double tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z)
     return imag;
 }
 /*  End of tmpl_CLDouble_Imag_Part.                                           */
-

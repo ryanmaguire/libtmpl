@@ -110,4 +110,3 @@ tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z)
     return prod;
 }
 /*  End of tmpl_CLDouble_Multiply_Imag.                                       */
-

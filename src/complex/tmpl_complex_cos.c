@@ -162,4 +162,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z)
     return cos_z;
 }
 /*  End of tmpl_CLDouble_Cos.                                                 */
-

@@ -176,4 +176,3 @@ tmpl_CLDouble_Divide_Real(long double x, tmpl_ComplexLongDouble z)
     return div;
 }
 /*  End of tmpl_CLDouble_Divide_Real.                                         */
-

@@ -140,4 +140,3 @@ long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z)
     return abs_sq;
 }
 /*  End of tmpl_CLDouble_Abs_Squared.                                         */
-

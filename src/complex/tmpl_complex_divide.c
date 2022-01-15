@@ -183,4 +183,3 @@ tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return div;
 }
 /*  End of tmpl_CLDouble_Divide.                                              */
-

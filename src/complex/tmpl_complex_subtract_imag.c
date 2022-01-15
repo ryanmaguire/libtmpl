@@ -97,4 +97,3 @@ tmpl_CLDouble_Subtract_Imag(long double y, tmpl_ComplexLongDouble z)
     return sum;
 }
 /*  End of tmpl_CLDouble_Subtract_Imag.                                       */
-

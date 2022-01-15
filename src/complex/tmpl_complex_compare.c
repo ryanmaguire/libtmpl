@@ -152,4 +152,3 @@ tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
         return tmpl_False;
 }
 /*  End of tmpl_CLDouble_Compare.                                             */
-

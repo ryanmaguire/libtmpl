@@ -115,4 +115,3 @@ void tmpl_Easy_Complex_Plots(const char *func_name,
         }
     }
 }
-

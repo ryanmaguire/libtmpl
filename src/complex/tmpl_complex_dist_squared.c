@@ -154,4 +154,3 @@ tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return dist_squared;
 }
 /*  End of tmpl_CLDouble_Dist_Squared.                                        */
-

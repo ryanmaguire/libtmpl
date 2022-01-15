@@ -130,4 +130,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Log(tmpl_ComplexLongDouble z)
     return ln_z;
 }
 /*  End of tmpl_CLDouble_Log.                                                 */
-
