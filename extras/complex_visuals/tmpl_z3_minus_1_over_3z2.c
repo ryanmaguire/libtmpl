@@ -92,9 +92,9 @@ static void write_color(FILE *fp, struct color c)
 /*  Function for writing a color to a PPM file.                               */
 static void write_color(FILE *fp, struct color c)
 {
-    fputc(c.red,   fp);
+    fputc(c.red, fp);
     fputc(c.green, fp);
-    fputc(c.blue,  fp);
+    fputc(c.blue, fp);
 }
 /*  End of write_color.                                                       */
 
@@ -106,12 +106,14 @@ static double complex_arg(struct complex_number z)
 {
     return atan2(z.imag, z.real);
 }
+/*  End of complex_arg.                                                       */
 
 /*  Function for computing the modulus, or magnitude, of a complex number.    */
 static double complex_abs(struct complex_number z)
 {
     return sqrt(z.real*z.real + z.imag*z.imag);
 }
+/*  End of complex_abs.                                                       */
 
 /*  Function for dividing complex numbers.                                    */
 static struct complex_number
@@ -127,7 +129,7 @@ complex_divide(struct complex_number z, struct complex_number w)
     quot.imag = (z.imag*w.real - z.real*w.imag)*denom;
     return quot;
 }
-/*  End of complex_division.                                                  */
+/*  End of complex_divide.                                                    */
 
 /*  Function for scaling the intensity of a color by a real number.           */
 static struct color scale_color(struct color c, double t)
@@ -145,9 +147,18 @@ static struct color get_color(struct complex_number z)
 {
     /*  Declare an output struct for the color we're computing.               */
     struct color out;
+
+    /*  The gradient is based on the modulus and argument of the complex      *
+     *  number. The argument gives the color, and the modulus gives the       *
+     *  intensity. Compute both of these with the routines above.             */
     const double arg = complex_arg(z);
     const double abs = complex_abs(z);
+
+    /*  To allow for a large range of intensities, compress the real line     *
+     *  to the interval [-1, 1] using the arctan function.                    */
     const double t = TWO_BY_PI * atan(5.0*abs);
+
+    /*  Transform the argument from [-pi, pi] to [0, 1023].                   */
     double val = (arg + PI)*GRADIENT_FACTOR;
 
     /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
@@ -155,9 +166,9 @@ static struct color get_color(struct complex_number z)
      *  The first interval corresponds to blue to blue-green.                 */
     if (val < 256.0)
     {
-        out.red   = (unsigned char)0;
+        out.red = 0x00U;
         out.green = (unsigned char)(val);
-        out.blue  = (unsigned char)255;
+        out.blue = 0xFFU;
     }
 
     /*  Next we do blue-green to green.                                       */
@@ -166,9 +177,9 @@ static struct color get_color(struct complex_number z)
         /*  Subtract 256 from val so that val lies in [0, 255], which are the *
          *  allowed values for an 8-bit unsigned char.                        */
         val -= 256.0;
-        out.red   = (unsigned char)0;
-        out.green = (unsigned char)255;
-        out.blue  = (unsigned char)(256.0 - val);
+        out.red = 0x00U;
+        out.green = 0xFFU;
+        out.blue = (unsigned char)(256.0 - val);
     }
 
     /*  Next is green to yellow.                                              */
@@ -176,9 +187,9 @@ static struct color get_color(struct complex_number z)
     {
         /*  Subtract by 512 to get val in [0, 255].                           */
         val -= 512.0;
-        out.red   = (unsigned char)(val);
-        out.green = (unsigned char)255;
-        out.blue  = (unsigned char)0;
+        out.red = (unsigned char)(val);
+        out.green = 0xFFU;
+        out.blue = 0x00U;
     }
 
     /*  Finally, yellow to red.                                               */
@@ -186,15 +197,15 @@ static struct color get_color(struct complex_number z)
     {
         /*  Subtract by 768 to get val in the range [0, 255].                 */
         val -= 768.0;
-        out.red   = (unsigned char)255;
+        out.red = 0xFFU;
         out.green = (unsigned char)(256.0 - val);
-        out.blue  = (unsigned char)0;
+        out.blue = 0x00U;
     }
 
     /*  Scale the color by |z| to differentiate complex numbers by intensity. */
     return scale_color(out, t);
 }
-/*  End of rainbow_gradient.                                                  */
+/*  End of get_color.                                                         */
 
 /*  The rational function (z^3 - 1)/(3z^2).                                   */
 static struct complex_number f(struct complex_number z)
@@ -205,11 +216,15 @@ static struct complex_number f(struct complex_number z)
     /*  Compute z^3, and then subtract 1 from the real part.                  */
     numer.real = z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag - 1.0;
     numer.imag = 3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag;
+
+    /*  Now compute 3z^2.                                                     */
     denom.real = 3.0*(z.real*z.real - z.imag*z.imag);
     denom.imag = 6.0*z.real*z.imag;
 
+    /*  Return number / denom using the division function.                    */
     return complex_divide(numer, denom);
 }
+/*  End of f.                                                                 */
 
 /*  Function for plotting f.                                                  */
 int main(void)
@@ -240,7 +255,7 @@ int main(void)
     /*  Open a file and give it write permission.                             */
     FILE *fp = fopen("complex_plot_z3_minus_1_over_3z2.ppm", "w");
 
-    /*  fopen returned NULL on failure. Check for this.                       */
+    /*  fopen returns NULL on failure. Check for this.                        */
     if (!fp)
     {
         puts("fopen failed and return NULL. Aborting.");
