@@ -10,4 +10,3 @@ void tmpl_Write_PPM_Color_From_Values(unsigned char red, unsigned char green,
     fputc(green, fp);
     fputc(blue,  fp);
 }
-

@@ -178,4 +178,3 @@ void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
     return;
 }
 /*  End of tmpl_Print_Gauss_Code.                                             */
-

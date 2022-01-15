@@ -33,4 +33,3 @@ tmpl_Graph *tmpl_Create_Complete_Graph(unsigned long int N)
 
     return G;
 }
-

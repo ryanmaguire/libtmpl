@@ -87,4 +87,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Reciprocal(tmpl_ComplexLongDouble z)
     return rcpr_z;
 }
 /*  End of tmpl_CLDouble_Reciprocal.                                          */
-

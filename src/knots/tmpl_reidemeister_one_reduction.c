@@ -34,4 +34,3 @@ tmpl_Reidemeister_One_Reduction(tmpl_VirtualKnot *K)
     if (S->crossing_number == T->crossing_number)
         tmpl_Delete_Virtual_Knot_Crossing(K, S->crossing_number);
 }
-

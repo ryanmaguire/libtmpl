@@ -111,4 +111,3 @@ long double tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z)
     return ln_abs_z;
 }
 /*  End of tmpl_CLDouble_Log_Abs.                                             */
-

@@ -72,4 +72,3 @@ tmpl_CLDouble_Rect(long double x, long double y)
     return z;
 }
 /*  End of tmpl_CLDouble_Rect.                                                */
-

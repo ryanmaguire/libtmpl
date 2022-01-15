@@ -13,4 +13,3 @@ void tmpl_Destroy_Gauss_Tuple_Pointer(tmpl_GaussTuple **T_ptr)
     *T_ptr = NULL;
     return;
 }
-

@@ -190,4 +190,3 @@ tmpl_CLDouble_Poly_Real_Coeffs(long double *coeffs, unsigned int degree,
     return poly;
 }
 /*  End of tmpl_CLDouble_Poly_Real_Coeffs.                                    */
-

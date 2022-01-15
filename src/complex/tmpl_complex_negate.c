@@ -121,4 +121,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Negate(tmpl_ComplexLongDouble z)
     return neg_z;
 }
 /*  End of tmpl_CLDouble_Negate.                                              */
-

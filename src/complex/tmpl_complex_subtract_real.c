@@ -97,4 +97,3 @@ tmpl_CLDouble_Subtract_Real(long double x, tmpl_ComplexLongDouble z)
     return sum;
 }
 /*  End of tmpl_CLDouble_Subtract_Real.                                       */
-

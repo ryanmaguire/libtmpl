@@ -118,4 +118,3 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x)
     return z_to_the_x;
 }
 /*  End of tmpl_CLDouble_Pow_Real.                                            */
-

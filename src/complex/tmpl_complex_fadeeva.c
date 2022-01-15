@@ -640,4 +640,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z)
     return erfc_z;
 }
 /*  End of tmpl_CLDouble_Faddeeva.                                            */
-

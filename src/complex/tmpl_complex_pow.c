@@ -123,4 +123,3 @@ tmpl_CLDouble_Pow(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return z0_to_the_z1;
 }
 /*  End of tmpl_CLDouble_Pow.                                                 */
-

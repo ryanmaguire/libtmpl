@@ -181,4 +181,3 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return sum;
 }
 /*  End of tmpl_CLDouble_Add.                                                 */
-

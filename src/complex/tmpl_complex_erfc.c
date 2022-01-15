@@ -366,4 +366,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Erfc(tmpl_ComplexLongDouble z)
     return erfc_z;
 }
 /*  End of tmpl_CLDouble_Erfc.                                                */
-

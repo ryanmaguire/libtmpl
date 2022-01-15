@@ -126,4 +126,3 @@ tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return prod;
 }
 /*  End of tmpl_CLDouble_Multiply.                                            */
-

@@ -133,4 +133,3 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Erf(tmpl_ComplexLongDouble z)
     return erfz;
 }
 /*  End of tmpl_CLDouble_Erf.                                                 */
-

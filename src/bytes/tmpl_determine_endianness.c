@@ -270,4 +270,3 @@ tmpl_Endian tmpl_Determine_Endianness(void)
         return tmpl_UnknownEndian;
 }
 /*  End of tmpl_Determine_Endianness.                                         */
-

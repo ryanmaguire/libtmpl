@@ -193,4 +193,3 @@ tmpl_CLDouble_Poly_Complex_Coeffs(tmpl_ComplexLongDouble *coeffs,
     return poly;
 }
 /*  End of tmpl_CLDouble_Poly_Complex_Coeffs.                                 */
-

@@ -47,4 +47,3 @@ tmpl_PPM_Color tmpl_RGB_Linear_Gradient(double val, double min, double max)
 
     return out;
 }
-
