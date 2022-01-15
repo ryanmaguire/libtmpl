@@ -87,15 +87,15 @@ tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
 
         if (isdigit(str[i]))
         {
-	        size_t k = i;
+            size_t k = i;
             while (isdigit(str[k]))
             {
                 ++k;
             }
 
-	        (K->gauss_code[ind]).crossing_number =
+            (K->gauss_code[ind]).crossing_number =
                 (unsigned long int)atoi(str + i);
-	        i = k;
+            i = k;
         }
         else
         {
@@ -156,4 +156,3 @@ tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
 
     return K;
 }
-
