@@ -34,8 +34,8 @@ tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
      *  just that point.                                                      */
     if (N == 1)
     {
-    	out[0] = in[0];
-    	return;
+        out[0] = in[0];
+        return;
     }
 
     /*  The "twiddle" factors are just the complex exponentials that occur    *
@@ -77,14 +77,14 @@ tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
         Xp2 = Xstart + N/2;
         for (k=0; k<n; ++k)
         {
-        	t = twiddles[k * skip];
+            t = twiddles[k * skip];
             for (m=0; m<skip; ++m)
             {
                 /*  Set the D pointer to the desired address.                 */
-            	D = E + skip;
+                D = E + skip;
 
-            	/* twiddle *D to get dre and dim                              */
-            	d    = tmpl_CDouble_Multiply(t, *D);
+                /* twiddle *D to get dre and dim                              */
+                d    = tmpl_CDouble_Multiply(t, *D);
                 *Xp  = tmpl_CDouble_Add(*E, d);
                 *Xp2 = tmpl_CDouble_Subtract(*E, d);
                 ++Xp;

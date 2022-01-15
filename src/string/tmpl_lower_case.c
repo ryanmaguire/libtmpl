@@ -24,14 +24,14 @@
 char tmpl_Lower_Case(char c)
 {
     /*  Use a switch to check the value of c and return the lower-case.       */
-	switch(c)
-	{
-		case 'A':
-			return 'a';
-		case 'B':
-			return 'b';
-		case 'C':
-			return 'c';
+    switch(c)
+    {
+        case 'A':
+            return 'a';
+        case 'B':
+            return 'b';
+        case 'C':
+            return 'c';
         case 'D':
             return 'd';
         case 'E':
@@ -80,9 +80,8 @@ char tmpl_Lower_Case(char c)
             return 'z';
 
         /*  If the input is not a capital letter, return the input.           */
-		default:
-			return c;
-	}
+        default:
+            return c;
+    }
 }
 /*  End of tmpl_Lower_Case.                                                   */
-
