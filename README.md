@@ -105,7 +105,7 @@ C:\Users\ryan\source\repos\libtmpl>make.bat
 This creates libtmpl.lib in the `libtmpl/` directory.
 It does not copy the `include/` directory or the library to any system
 directories. This has been tested using a Windows 10 virtual machine and it
-worked as expected. 
+worked as expected.
 
 # tmpyl
 `tmpyl` is a Python Extension module written using the Python-C API. It can be
@@ -150,4 +150,3 @@ you wish, just make sure it is in your `PATH` in order to import `tmpyl`.
 
     You should have received a copy of the GNU General Public License
     along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.
-
