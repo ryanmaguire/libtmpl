@@ -151,15 +151,15 @@ static struct color get_color(struct complex_number z)
     /*  The gradient is based on the modulus and argument of the complex      *
      *  number. The argument gives the color, and the modulus gives the       *
      *  intensity. Compute both of these with the routines above.             */
-    const double arg = complex_arg(z);
-    const double abs = complex_abs(z);
+    const double arg_z = complex_arg(z);
+    const double abs_z = complex_abs(z);
 
     /*  To allow for a large range of intensities, compress the real line     *
      *  to the interval [-1, 1] using the arctan function.                    */
-    const double t = TWO_BY_PI * atan(5.0*abs);
+    const double t = TWO_BY_PI * atan(5.0*abs_z);
 
     /*  Transform the argument from [-pi, pi] to [0, 1023].                   */
-    double val = (arg + PI)*GRADIENT_FACTOR;
+    double val = (arg_z + PI)*GRADIENT_FACTOR;
 
     /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
      *  and [768, 1023]. Create a blue-to-red rainbow gradient from this.     *
