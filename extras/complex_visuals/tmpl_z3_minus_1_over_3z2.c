@@ -35,7 +35,7 @@
  *  function. The actual working group for the C language has not deprecated  *
  *  fopen, and fopen_s was only introduced in the C11 standard, so I will     *
  *  still use fopen. To avoid a "deprecated" warning on Microsoft's MSVC,     *
- *  first check that the user is running windows, then define this macro.     *
+ *  first check that the user is running Windows, then define this macro.     *
  *  Unix-based (GNU, Linux, macOS, FreeBSD, etc.) platforms yield no warnings.*/
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
 #define _CRT_SECURE_NO_DEPRECATE
@@ -214,8 +214,8 @@ static struct complex_number f(struct complex_number z)
     struct complex_number numer, denom;
 
     /*  Compute z^3, and then subtract 1 from the real part.                  */
-    numer.real = z.real*z.real*z.real - 3.0*z.real*z.imag*z.imag - 1.0;
-    numer.imag = 3.0*z.real*z.real*z.imag - z.imag*z.imag*z.imag;
+    numer.real = z.real*(z.real*z.real - 3.0*z.imag*z.imag) - 1.0;
+    numer.imag = z.imag*(3.0*z.real*z.real - z.imag*z.imag);
 
     /*  Now compute 3z^2.                                                     */
     denom.real = 3.0*(z.real*z.real - z.imag*z.imag);
