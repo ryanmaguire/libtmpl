@@ -179,9 +179,8 @@ static struct color get_color(struct complex_number z)
     /*  Transform the argument from [-pi, pi] to [0, 1023].                   */
     double val = (arg_z + PI)*GRADIENT_FACTOR;
 
-    /*  Split [0, 1023] into four parts, [0, 255], [256, 511], [512, 767],    *
-     *  and [768, 1023]. Create a blue-to-red rainbow gradient from this.     *
-     *  The first interval corresponds to blue to blue-green.                 */
+    /*  Split [0, 1536] into six parts. Create a color wheel gradient from    *
+     *  this. The first interval corresponds to blue to blue-green.           */
     if (val < 256.0)
     {
         out.red = 0x00U;
@@ -233,7 +232,7 @@ static struct color get_color(struct complex_number z)
     /*  Finally, purple back to blue.                                         */
     else
     {
-        /*  Subtract by 1024 to get val in the range [0, 255].                */
+        /*  Subtract by 1280 to get val in the range [0, 255].                */
         val -= 1280.0;
         out.red = (unsigned char)(256.0 - val);
         out.green = 0x00U;
@@ -291,7 +290,7 @@ int main(void)
     const double yfactor = (ymax - ymin) / (double)(height - 1U);
 
     /*  Open a file and give it write permission.                             */
-    FILE *fp = fopen("complex_plot_z3_minus_1_over_3z2_color_wheel.ppm", "w");
+    FILE *fp = fopen("z3_minus_1_over_3z2_color_wheel_normalized.ppm", "w");
 
     /*  fopen returns NULL on failure. Check for this.                        */
     if (!fp)

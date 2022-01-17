@@ -276,7 +276,7 @@ int main(void)
     const double yfactor = (ymax - ymin) / (double)(height - 1U);
 
     /*  Open a file and give it write permission.                             */
-    FILE *fp = fopen("complex_plot_z3_minus_1_over_3z2_color_wheel.ppm", "w");
+    FILE *fp = fopen("z3_minus_1_over_3z2_color_wheel.ppm", "w");
 
     /*  fopen returns NULL on failure. Check for this.                        */
     if (!fp)
