@@ -92,7 +92,7 @@ struct color {
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
     void write(std::FILE *fp)
     {
-        std::fprintf("%u %u %u\n", red, green, blue);
+        std::fprintf(fp, "%u %u %u\n", red, green, blue);
     }
 #else
 void write(std::FILE *fp)
