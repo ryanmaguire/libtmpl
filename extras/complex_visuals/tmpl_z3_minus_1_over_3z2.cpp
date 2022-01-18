@@ -37,8 +37,8 @@ struct complex_number {
 
     complex_number operator * (complex_number w)
     {
-        const double re = real*w.imag - imag*w.imag;
-        const double im = real*w.imag + imag*w.imag;
+        const double re = real*w.real - imag*w.imag;
+        const double im = real*w.imag + imag*w.real;
         return complex_number(re, im);
     }
 
@@ -88,9 +88,9 @@ struct color {
 
     void write(std::FILE *fp)
     {
-        std::fputc(red, fp);
-        std::fputc(green, fp);
-        std::fputc(blue, fp);
+        std::fwrite(&red, sizeof(red), 1, fp);
+        std::fwrite(&green, sizeof(green), 1, fp);
+        std::fwrite(&blue, sizeof(blue), 1, fp);
     }
 
     color scale(double t)
@@ -189,20 +189,30 @@ int main(void)
     }
 
     std::fprintf(fp, "P6\n%u %u\n255\n", width, height);
-
     z.imag = ymax;
 
+    /*  Loop over the y coordinates.                                          */
     for (y = 0U; y < height; ++y)
     {
+        /*  Compute the current imaginary part of z.                          */
         z.imag -= yfactor;
         z.real = xmin;
+
+        /*  Loop over the x coordinates.                                      */
         for (x = 0U; x < width; ++x)
         {
+            /*  Compute the real part of z.                                   */
             z.real += xfactor;
+
+            /*  Calculate the color corresponding to f(z).                    */
             c = get_color(f(z));
+
+            /*  Write the color to the file.                                  */
             c.write(fp);
         }
+        /*  End of for-loop for x.                                            */
     }
+    /*  End of for-loop for y.                                                */
 
     std::fclose(fp);
     return 0;
