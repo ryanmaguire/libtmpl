@@ -107,19 +107,14 @@ static struct color get_color(struct complex_number z)
     /*  Declare an output struct for the color we're computing.               */
     struct color out;
 
-    /*  The gradient is based on the modulus and argument of the complex      *
-     *  number. The argument gives the color, and the modulus gives the       *
-     *  intensity. Compute both of these with the routines above.             */
-    const double arg_z = complex_arg(z);
-
     /*  Transform the argument from [-pi, pi] to [0, 1536].                   */
-    double val = (arg_z + PI)*GRADIENT_FACTOR;
+    double val = (complex_arg(z) + PI)*GRADIENT_FACTOR;
 
     /*  Split [0, 1536] into six parts. Start with blue to blue-green.        */
     if (val < 256.0)
     {
         out.red = 0x00U;
-        out.green = (unsigned char)(val);
+        out.green = (unsigned char)val;
         out.blue = 0xFFU;
     }
 
@@ -131,7 +126,7 @@ static struct color get_color(struct complex_number z)
         val -= 256.0;
         out.red = 0x00U;
         out.green = 0xFFU;
-        out.blue = (unsigned char)(256.0 - val);
+        out.blue = 0xFFU - (unsigned char)val;
     }
 
     /*  Next is green to yellow.                                              */
@@ -139,7 +134,7 @@ static struct color get_color(struct complex_number z)
     {
         /*  Subtract by 512 to get val in [0, 255].                           */
         val -= 512.0;
-        out.red = (unsigned char)(val);
+        out.red = (unsigned char)val;
         out.green = 0xFFU;
         out.blue = 0x00U;
     }
@@ -150,7 +145,7 @@ static struct color get_color(struct complex_number z)
         /*  Subtract by 768 to get val in the range [0, 255].                 */
         val -= 768.0;
         out.red = 0xFFU;
-        out.green = (unsigned char)(256.0 - val);
+        out.green = 0xFFU - (unsigned char)val;
         out.blue = 0x00U;
     }
 
@@ -169,7 +164,7 @@ static struct color get_color(struct complex_number z)
     {
         /*  Subtract by 1280 to get val in the range [0, 255].                */
         val -= 1280.0;
-        out.red = (unsigned char)(256.0 - val);
+        out.red = 0xFFU - (unsigned char)val;
         out.green = 0x00U;
         out.blue = 0xFFU;
     }
@@ -178,7 +173,7 @@ static struct color get_color(struct complex_number z)
 }
 /*  End of get_color.                                                         */
 
-/*  The polynomial z^3 - 1.               .                                   */
+/*  The polynomial z^3 - 1.                                                   */
 static struct complex_number f(struct complex_number z)
 {
     /*  Declare a variable for the output.                                    */
