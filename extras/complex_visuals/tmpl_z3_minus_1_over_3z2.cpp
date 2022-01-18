@@ -1,7 +1,10 @@
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
 
-#include <cmath>
 #include <cstdio>
+#include <cmath>
 
 /*  Some implementations of math.h provide a PI macro. Some don't. Check this.*/
 #ifndef PI
@@ -86,12 +89,19 @@ struct color {
         blue = c;
     }
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
     void write(std::FILE *fp)
     {
-        std::fwrite(&red, sizeof(red), 1, fp);
-        std::fwrite(&green, sizeof(green), 1, fp);
-        std::fwrite(&blue, sizeof(blue), 1, fp);
+        std::fprintf("%u %u %u\n", red, green, blue);
     }
+#else
+void write(std::FILE *fp)
+{
+    std::fputc(red, fp);
+    std::fputc(green, fp);
+    std::fputc(blue, fp);
+}
+#endif
 
     color scale(double t)
     {
@@ -180,7 +190,7 @@ int main(void)
     unsigned int x, y;
     complex_number z;
     color c;
-    std::FILE *fp = std::fopen("z3_minus_over_3z2_cpp.ppm", "w");
+    std::FILE *fp = std::fopen("z3_minus_1_over_3z2_cpp.ppm", "w");
 
     if (!fp)
     {
