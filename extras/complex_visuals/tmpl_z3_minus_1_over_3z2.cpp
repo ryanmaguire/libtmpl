@@ -190,6 +190,7 @@ int main(void)
     unsigned int x, y;
     complex_number z;
     color c;
+
     std::FILE *fp = std::fopen("z3_minus_1_over_3z2_cpp.ppm", "w");
 
     if (!fp)
@@ -198,7 +199,12 @@ int main(void)
         return -1;
     }
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    std::fprintf(fp, "P3\n%u %u\n255\n", width, height);
+#else
     std::fprintf(fp, "P6\n%u %u\n255\n", width, height);
+#endif
+
     z.imag = ymax;
 
     /*  Loop over the y coordinates.                                          */
