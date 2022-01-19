@@ -48,8 +48,8 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 15, 2021                                                 *
+ *  Author: Ryan Maguire                                                      *
+ *  Date:   June 15, 2021                                                     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
