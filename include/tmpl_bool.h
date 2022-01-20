@@ -45,10 +45,10 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 1, 2021                                              *
  ******************************************************************************
- *                          Revision History                                  *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/09/12: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
@@ -67,8 +67,8 @@
 #ifndef TMPL_BOOL_H
 #define TMPL_BOOL_H
 
-/*  If using with C++ (and not C) we need to wrap the entire header file in   *
- *  an extern "C" statement. Check if C++ is being using with __cplusplus.    */
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
 #ifdef __cplusplus 
 extern "C" {
 #endif
@@ -88,4 +88,3 @@ typedef enum _tmpl_Bool {tmpl_False, tmpl_True} tmpl_Bool;
 
 #endif
 /*  End of include guard.                                                     */
-
