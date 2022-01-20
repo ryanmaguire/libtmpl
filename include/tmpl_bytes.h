@@ -161,4 +161,3 @@ extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
 
 #endif
 /*  End of include guard.                                                     */
-
