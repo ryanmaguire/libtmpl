@@ -69,7 +69,7 @@
 
 /*  If using with C++ (and not C), wrap the entire header file in an extern   *
  *  "C" statement. Check if C++ is being used with __cplusplus.               */
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 
