@@ -364,3 +364,4 @@ int main(void)
     destroy_roots(roots_of_f);
     return 0;
 }
+
