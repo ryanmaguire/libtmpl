@@ -1371,4 +1371,3 @@ tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
 
 #endif
 /*  End of include guard.                                                     */
-
