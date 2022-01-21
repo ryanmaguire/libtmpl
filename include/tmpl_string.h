@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                               tmpl_string                                  *
+ *                                tmpl_string                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide functions for dealing with strings. Some of these functions   *
@@ -43,8 +43,14 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       April 8, 2021                                                 *
+ *  Author: Ryan Maguire                                                      *
+ *  Date:   April 8, 2021                                                     *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/01/21: Ryan Maguire                                                  *
+ *      Added docstring style comments for function declarations.             *
+ *      Added and updates tests for functions in test/ directory.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -65,7 +71,7 @@
  *      dup (char *):                                                         *
  *          A pointer to a char array whose entries correspond to the input   *
  *          string str.                                                       *
- *  NOTES:                                                                    *
+ *  NOTE:                                                                     *
  *      A call to malloc is made to allocate memory for the string. You must  *
  *      free the pointer after you are done with it to avoid memory leaks.    *
  *      There is also the (unlikely) chance that malloc failed to allocate    *
