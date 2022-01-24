@@ -142,7 +142,7 @@ float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z)
     const float imag = tmpl_CFloat_Imag_Part(z);
 
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    return tmpl_Float_Sqrt(real*real + imag*imag);;
+    return tmpl_Float_Sqrt(real*real + imag*imag);
 }
 /*  End of tmpl_CFloat_QuickAbs.                                              */
 

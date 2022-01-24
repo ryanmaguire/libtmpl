@@ -1,5 +1,5 @@
-#ifndef __TMPL_OPTICS_H__
-#define __TMPL_OPTICS_H__
+#ifndef TMPL_OPTICS_H
+#define TMPL_OPTICS_H
 
 /*  The speed of light in km/s.                                               */
 #define tmpl_Speed_Of_Light_KMS_F  299792.4580F
