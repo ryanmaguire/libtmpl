@@ -35,7 +35,7 @@ int main(void)
     char out[2] = " ";
 
     /*  Loop over and print the results.                                      */
-    for (n = 0x00; n != 0xFF; ++n)
+    for (n = 0x00; n < 0xFF; ++n)
     {
         in[0] = (char)n;
         out[0] = tmpl_ASCII_Lower_Case(in[0]);
