@@ -78,7 +78,14 @@
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_ascii_lower_case.c                            *
  *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ *      libtmpl/examples/string_examples/tmpl_ascii_lower_case_example.c      *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/string_tests/unit_tests/                                *
+ *          tmpl_ascii_lower_case_unit_test_001.c                             *
+ *      libtmpl/tests/string_tests/unit_tests/                                *
+ *          tmpl_ascii_lower_case_unit_test_002.c                             *
+ *      libtmpl/tests/string_tests/time_tests/                                *
+ *          tmpl_lower_case_functions_time_test.c                             *
  ******************************************************************************/
 extern char tmpl_ASCII_Lower_Case(char c);
 
