@@ -112,7 +112,7 @@ extern char tmpl_ASCII_Lower_Case(char c);
  *  Examples:                                                                 *
  *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
-extern char tmpl_ASCII_Lower_Case(char c);
+extern char tmpl_ASCII_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
