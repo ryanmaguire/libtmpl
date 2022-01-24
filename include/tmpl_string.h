@@ -50,12 +50,62 @@
  ******************************************************************************
  *  2022/01/21: Ryan Maguire                                                  *
  *      Added docstring style comments for function declarations.             *
- *      Added and updates tests for functions in test/ directory.             *
+ *      Added and updated tests for functions in test/ directory.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_STRING_H
 #define TMPL_STRING_H
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_ASCII_Lower_Case                                                 *
+ *  Purpose:                                                                  *
+ *      Takes in a char which represents an ASCII character and returns the   *
+ *      lower-case of the character if it is a capital letter, and returns    *
+ *      the input otherwise.                                                  *
+ *  Arguments:                                                                *
+ *      upper (char):                                                         *
+ *          The input character.                                              *
+ *  Output:                                                                   *
+ *      lower (char):                                                         *
+ *          The lower case version of the input character.                    *
+ *  Note:                                                                     *
+ *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
+ *      This has been the case on all devices I've tested. If you're unsure,  *
+ *      use tmpl_Lower_Case. That function is slower, but the computational   *
+ *      time is essentially negligible for both functions.                    *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_ascii_lower_case.c                            *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern char tmpl_ASCII_Lower_Case(char c);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_ASCII_Upper_Case                                                 *
+ *  Purpose:                                                                  *
+ *      Takes in a char which represents an ASCII character and returns the   *
+ *      upper-case of the character if it is a lower-case letter, and returns *
+ *      the input otherwise.                                                  *
+ *  Arguments:                                                                *
+ *      lower (char):                                                         *
+ *          The input character.                                              *
+ *  Output:                                                                   *
+ *      upper (char):                                                         *
+ *          The upper case version of the input character.                    *
+ *  Note:                                                                     *
+ *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
+ *      This has been the case on all devices I've tested. If you're unsure,  *
+ *      use tmpl_Lower_Case. That function is slower, but the computational   *
+ *      time is essentially negligible for both functions.                    *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_strdup.c                                      *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ ******************************************************************************/
+extern char tmpl_ASCII_Lower_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -83,32 +133,6 @@
  *      libtmpl/examples/string/tmpl_strdup_example.c                         *
  ******************************************************************************/
 extern char *tmpl_strdup(const char *str);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_ASCII_Lower_Case                                                 *
- *  Purpose:                                                                  *
- *      Takes in a char which represents an ASCII character and returns the   *
- *      lower-case of the character if it is a capital letter, and returns    *
- *      the input otherwise.                                                  *
- *  Arguments:                                                                *
- *      c (char):                                                             *
- *          The string that is to be duplicated.                              *
- *  Output:                                                                   *
- *      dup (char *):                                                         *
- *          A pointer to a char array whose entries correspond to the input   *
- *          string str.                                                       *
- *  NOTES:                                                                    *
- *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
- *      This has been the case on all devices I've tested. If you're unsure,  *
- *      use tmpl_Lower_Case. That function is about ~10x slower, but the      *
- *      computational time is essentially negligible for both functions.      *
- *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_strdup.c                                      *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
- ******************************************************************************/
-extern char tmpl_ASCII_Lower_Case(char c);
 
 extern char tmpl_Lower_Case(char c);
 

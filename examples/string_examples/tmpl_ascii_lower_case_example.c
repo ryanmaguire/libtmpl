@@ -16,15 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       August 12, 2021                                               *
+ *  Author: Ryan Maguire                                                      *
+ *  Date:   August 12, 2021                                                   *
  ******************************************************************************/
 
 /*  printf function is here.                                                  */
 #include <stdio.h>
-
-/*  Maximum of char is here.                                                  */
-#include <limits.h>
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_string.h>
@@ -36,7 +33,6 @@ int main(void)
     int n;
     char in[2] = " ";
     char out[2] = " ";
-
 
     /*  Loop over and print the results.                                      */
     for (n = 0x00; n != 0xFF; ++n)
