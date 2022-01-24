@@ -3,8 +3,8 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  under the terms of the GNU General Public License as published by         *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -15,34 +15,46 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *  Author: Ryan Maguire                                                      *
- *  Date:   August 12, 2021                                                   *
  ******************************************************************************/
 
-/*  printf function is here.                                                  */
 #include <stdio.h>
-
-/*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Function for testing tmpl_ASCII_Lower_Case.                               */
+static char upper_arr[26] = {
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+};
+
+static char lower_arr[26] = {
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+};
+
 int main(void)
 {
-    /*  Variables for looping over all characters.                            */
-    int n;
-    char in[2] = " ";
-    char out[2] = " ";
+    unsigned int n;
+    char c;
 
-    /*  Loop over and print the results.                                      */
-    for (n = 0x00; n < 0xFF; ++n)
+    for (n = 0; n < 26; ++n)
     {
-        in[0] = (char)n;
-        out[0] = tmpl_ASCII_Lower_Case(in[0]);
-        printf("Input: %s Output: %s\n", in, out);
+        c = tmpl_ASCII_Lower_Case(upper_arr[n]);
+
+        if (c != lower_arr[n])
+        {
+            puts("FAIL");
+            return -1;
+        }
+
+        c = tmpl_ASCII_Lower_Case(lower_arr[n]);
+
+        if (c != lower_arr[n])
+        {
+            puts("FAIL");
+            return -1;
+        }
     }
 
+    puts("PASS");
     return 0;
 }
-/*  End of main.                                                              */
 
