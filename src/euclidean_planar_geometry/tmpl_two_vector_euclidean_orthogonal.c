@@ -96,7 +96,7 @@ tmpl_FloatTwoVector_Euclidean_Orthogonal(tmpl_FloatTwoVector V)
 
     /*  Simply return (-y, x) since this will be orthogonal. That is, the dot *
      *  product is <V|U> = <(x,y)|(-y,x)> = -xy + yx = 0.                     */
-    return tmpl_FloatTwoVector_Rect(-y, x);;
+    return tmpl_FloatTwoVector_Rect(-y, x);
 }
 /*  End of tmpl_DoubleTwoVector_Euclidean_Orthogonal.                         */
 
@@ -112,7 +112,7 @@ tmpl_DoubleTwoVector_Euclidean_Orthogonal(tmpl_DoubleTwoVector V)
 
     /*  Simply return (-y, x) since this will be orthogonal. That is, the dot *
      *  product is <V|U> = <(x,y)|(-y,x)> = -xy + yx = 0.                     */
-    return tmpl_DoubleTwoVector_Rect(-y, x);;
+    return tmpl_DoubleTwoVector_Rect(-y, x);
 }
 /*  End of tmpl_DoubleTwoVector_Euclidean_Orthogonal.                         */
 
@@ -126,6 +126,6 @@ tmpl_LDoubleTwoVector_Euclidean_Orthogonal(tmpl_LDoubleTwoVector V)
 
     /*  Simply return (-y, x) since this will be orthogonal. That is, the dot *
      *  product is <V|U> = <(x,y)|(-y,x)> = -xy + yx = 0.                     */
-    return tmpl_LDoubleTwoVector_Rect(-y, x);;
+    return tmpl_LDoubleTwoVector_Rect(-y, x);
 }
 /*  End of tmpl_LDoubleTwoVector_Euclidean_Orthogonal.                        */

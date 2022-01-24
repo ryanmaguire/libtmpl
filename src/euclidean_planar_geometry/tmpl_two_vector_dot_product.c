@@ -63,7 +63,7 @@ tmpl_FloatTwoVector_Dot_Product(tmpl_FloatTwoVector P, tmpl_FloatTwoVector Q)
     const float Qy = tmpl_FloatTwoVector_Y(Q);
 
     /*  Use the Euclidean dot product formula and return.                     */
-    return Px*Qx + Py*Qy;;
+    return Px*Qx + Py*Qy;
 }
 /*  End of tmpl_FloatTwoVector_Dot_Product.                                   */
 
@@ -80,7 +80,7 @@ tmpl_DoubleTwoVector_Dot_Product(tmpl_DoubleTwoVector P, tmpl_DoubleTwoVector Q)
     const double Qy = tmpl_DoubleTwoVector_Y(Q);
 
     /*  Use the Euclidean dot product formula and return.                     */
-    return Px*Qx + Py*Qy;;
+    return Px*Qx + Py*Qy;
 }
 /*  End of tmpl_DoubleTwoVector_Dot_Product.                                  */
 
@@ -98,6 +98,6 @@ tmpl_LDoubleTwoVector_Dot_Product(tmpl_LDoubleTwoVector P,
     const long double Qy = tmpl_LDoubleTwoVector_Y(Q);
 
     /*  Use the Euclidean dot product formula and return.                     */
-    return Px*Qx + Py*Qy;;
+    return Px*Qx + Py*Qy;
 }
 /*  End of tmpl_LDoubleTwoVector_Dot_Product.                                 */

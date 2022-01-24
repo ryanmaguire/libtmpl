@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License          #
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
-#   Author:     Ryan Maguire, Dartmouth College                                #
+#   Author:     Ryan Maguire                                                   #
 #   Date:       August 31, 2021                                                #
 ################################################################################
 

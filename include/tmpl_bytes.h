@@ -51,10 +51,10 @@
  *  Examples of all of the functions can be found in:                         *
  *      libtmpl/examples/bytes/                                               *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 1, 2021                                              *
  ******************************************************************************
- *                          Revision History                                  *
+ *                              Revision History                              *
  ******************************************************************************
  *  2021/01/14: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
@@ -69,11 +69,19 @@
  *  2021/04/30: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code/comments. No  *
  *      more changes to comments or code unless something breaks.             *
+ *  2022/01/24: Ryan Maguire                                                  *
+ *      Added extern "C" statement for C++ compatibility.                     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BYTES_H
 #define TMPL_BYTES_H
+
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*  Data type for determining the endianness of your platform.                */
 typedef enum _tmpl_Endian {
@@ -158,6 +166,11 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
 extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
 extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);
 extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
