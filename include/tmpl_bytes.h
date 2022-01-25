@@ -167,6 +167,8 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *  Tests:                                                                    *
  *      libtmpl/tests/bytes_tests/                                            *
  *          tmpl_swap_most_significant_bit_2_unit_test_001.c                  *
+ *          tmpl_swap_most_significant_bit_4_unit_test_001.c                  *
+ *          tmpl_swap_most_significant_bit_8_unit_test_001.c                  *
  ******************************************************************************/
 extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
 extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);
