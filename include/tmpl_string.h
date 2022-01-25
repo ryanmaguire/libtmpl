@@ -43,8 +43,8 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author: Ryan Maguire                                                      *
- *  Date:   April 8, 2021                                                     *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       April 8, 2021                                                 *
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
@@ -56,6 +56,12 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_STRING_H
 #define TMPL_STRING_H
+
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -145,6 +151,11 @@ extern char tmpl_Lower_Case(char c);
 
 extern void tmpl_Make_Lower(char *str);
 extern void tmpl_Remove_Spaces(char * str);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
