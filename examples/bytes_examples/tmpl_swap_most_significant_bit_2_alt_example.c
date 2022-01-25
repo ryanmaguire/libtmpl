@@ -23,7 +23,7 @@
  *  long) this need not be the case. If no integer data type is 2 char's long *
  *  this example will simply print this fact out and exit.                    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       April 6, 2021                                                 *
  ******************************************************************************/
 
@@ -115,7 +115,7 @@ int main(void)
     /*  If we get here, there is no integer data type that is 2 char's wide.  *
      *  Print this and exit the function.                                     */
     else
-        puts("Could not find integer type with sizeof = 4");
+        puts("Could not find integer type with sizeof = 2");
 
     return 0;
 }
