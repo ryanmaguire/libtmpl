@@ -139,6 +139,8 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *      libtmpl/src/bytes/tmpl_swap_bytes.c                                   *
  *  Examples:                                                                 *
  *      libtmpl/examples/bytes_examples/tmpl_swap_bytes_example.c             *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/bytes_tests/tmpl_swap_bytes_unit_test_001.c             *
  ******************************************************************************/
 extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
 
@@ -162,6 +164,9 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_2_alt_example.c *
  *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_4_example.c     *
  *      libtmpl/examples/bytes/tmpl_swap_most_significant_bit_8_example.c     *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/bytes_tests/                                            *
+ *          tmpl_swap_most_significant_bit_2_unit_test_001.c                  *
  ******************************************************************************/
 extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
 extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);
