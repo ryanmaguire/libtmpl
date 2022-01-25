@@ -156,7 +156,9 @@ done
 
 echo ""
 echo "Building libtmpl Shared Object (.so file)"
-$CC ./*.o $LinkerArgs
+if !($CC ./*.o $LinkerArgs); then
+    exit 1
+fi
 
 if [ $INPLACE == 0 ]; then
     echo "Moving to /usr/local/lib/libtmpl.so"
