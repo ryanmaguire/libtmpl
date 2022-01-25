@@ -79,7 +79,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 11, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -117,3 +117,4 @@ void tmpl_Swap_Most_Significant_Bit_8(char *ptr)
     return;
 }
 /*  End of tmpl_Swap_Most_Significant_Bit_8.                                  */
+
