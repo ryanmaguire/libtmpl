@@ -99,7 +99,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 11, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -270,3 +270,4 @@ tmpl_Endian tmpl_Determine_Endianness(void)
         return tmpl_UnknownEndian;
 }
 /*  End of tmpl_Determine_Endianness.                                         */
+
