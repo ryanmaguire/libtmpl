@@ -64,7 +64,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 11, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -103,3 +103,4 @@ void tmpl_Swap_Bytes(char *ptr1, char *ptr2)
     return;
 }
 /*  End of tmpl_Swap_Bytes.                                                   */
+
