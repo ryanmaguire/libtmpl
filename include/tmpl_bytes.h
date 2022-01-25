@@ -49,7 +49,7 @@
  *                                EXAMPLES                                    *
  ******************************************************************************
  *  Examples of all of the functions can be found in:                         *
- *      libtmpl/examples/bytes/                                               *
+ *      libtmpl/examples/bytes_examples/                                      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 1, 2021                                              *
@@ -119,7 +119,7 @@ typedef enum _tmpl_Endian {
  *  Source Code:                                                              *
  *      libtmpl/src/bytes/tmpl_determine_endianness.c                         *
  *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ *      libtmpl/examples/bytes_examples/tmpl_determine_endianness_example.c   *
  ******************************************************************************/
 extern tmpl_Endian tmpl_Determine_Endianness(void);
 
