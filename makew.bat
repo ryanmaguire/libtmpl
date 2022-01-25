@@ -28,8 +28,8 @@ cl det_end.c /link /out:det.exe
 det.exe
 del *.exe *.obj
 
-:: Compile the library.
-for /D %%d in (.\src\*) do cl /I../ /O2 /c %%d\*.c
+:: Compile the library with warnings enabled.
+for /D %%d in (.\src\*) do cl /Wall /I../ /O2 /c %%d\*.c
 
 :: Link everything into a .lib file.
 lib /out:libtmpl.lib *.obj
