@@ -23,7 +23,7 @@
  *      are included in the POSIX standard of the C programming language, but *
  *      are not required by the actual standard. They are provided here for   *
  *      the sake of portability.                                              *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      This code is identical to the code I wrote for rss_ringoccs, only the *
  *      rssringoccs titles have been replaced with tmpl. rss_ringoccs is also *
  *      released under GPL3.                                                  *
@@ -50,7 +50,9 @@
  ******************************************************************************
  *  2022/01/21: Ryan Maguire                                                  *
  *      Added docstring style comments for function declarations.             *
- *      Added and updated tests for functions in test/ directory.             *
+ *      Added and updated tests for functions in tests/ directory.            *
+ *  2022/01/25: Ryan Maguire                                                  *
+ *      Added C++ compatibility.                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -88,7 +90,6 @@ extern "C" {
  *  Tests:                                                                    *
  *      libtmpl/tests/string_tests/unit_tests/                                *
  *          tmpl_ascii_lower_case_unit_test_001.c                             *
- *      libtmpl/tests/string_tests/unit_tests/                                *
  *          tmpl_ascii_lower_case_unit_test_002.c                             *
  *      libtmpl/tests/string_tests/time_tests/                                *
  *          tmpl_lower_case_functions_time_test.c                             *
