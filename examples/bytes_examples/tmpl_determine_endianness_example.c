@@ -42,7 +42,7 @@
  *      tcc: tcc version 0.9.27 (x86_64 Linux)                                *
  *      clang: Debian clang version 11.0.1-2                                  *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       March 29, 2021                                                *
  ******************************************************************************/
 

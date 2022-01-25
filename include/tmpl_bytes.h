@@ -138,7 +138,7 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *  Source Code:                                                              *
  *      libtmpl/src/bytes/tmpl_swap_bytes.c                                   *
  *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_swap_bytes_example.c                      *
+ *      libtmpl/examples/bytes_examples/tmpl_swap_bytes_example.c             *
  ******************************************************************************/
 extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
 
