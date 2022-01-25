@@ -43,7 +43,7 @@
  *      tcc: tcc version 0.9.27 (x86_64 Linux)                                *
  *      clang: Debian clang version 11.0.1-2                                  *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       March 12, 2021                                                *
  ******************************************************************************/
 
@@ -61,7 +61,7 @@
 
 /*  Probe the macros in limits.h to find an integer data type that is two     *
  *  bytes. The C standard does not guarantee this must exist, so abort        *
- *  to compiling process if none is found.                                    */
+ *  the compiling process if none is found.                                   */
 #if CHAR_BIT == 8
 #if USHRT_MAX == 0xFFFF
 typedef short unsigned int two_byte_integer;
