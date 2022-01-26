@@ -20,51 +20,34 @@
  *  Date:       January 26, 2022                                              *
  ******************************************************************************/
 
-/*  puts function found here.                                                 */
+/*  puts found here.                                                          */
 #include <stdio.h>
 
-/*  tmpl_ASCII_Lower_Case declared here.                                      */
+/*  toupper found here.                                                       */
+#include <ctype.h>
+
+/*  CHAR_MIN and CHAR_MAX macros are here.                                    */
+#include <limits.h>
+
+/*  tmpl_Upper_Case declared here.                                            */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Array of all upper case letters in order.                                 */
-static char upper_arr[26] = {
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-    'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-};
-
-/*  Array of all lower case letters in order.                                 */
-static char lower_arr[26] = {
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-};
-
-/*  Function for testing tmpl_ASCII_Lower_Case.                               */
+/*  Function for testing tmpl_Upper_Case against toupper.                     */
 int main(void)
 {
-    /*  Variable for indexing.                                                */
-    unsigned int n;
+    /*  Variables for indexing and testing toupper vs tmpl_Upper_Case.        */
+    char n, c;
+    int out;
 
-    /*  Character to be used for testing tmpl_ASCII_Lower_Case.               */
-    char c;
-
-    /*  Loop over all letters and test tmpl_ASCII_Lower_Case.                 */
-    for (n = 0; n < 26; ++n)
+    /*  Loop over all possible char values.                                   */
+    for (n = CHAR_MIN; n < CHAR_MAX; ++n)
     {
-        /*  Convert the upper case letter to lower case.                      */
-        c = tmpl_ASCII_Lower_Case(upper_arr[n]);
+        /*  Compute toupper and tmpl_Upper_Case of n and compare.             */
+        c = tmpl_Upper_Case(n);
+        out = toupper(n);
 
-        /*  Check if it worked.                                               */
-        if (c != lower_arr[n])
-        {
-            puts("FAIL");
-            return -1;
-        }
-
-        /*  Convert lower case to lower case. Nothing should happen.          */
-        c = tmpl_ASCII_Lower_Case(lower_arr[n]);
-
-        /*  Check if it worked.                                               */
-        if (c != lower_arr[n])
+        /*  The answers should be identical.                                  */
+        if (c != (char)out)
         {
             puts("FAIL");
             return -1;

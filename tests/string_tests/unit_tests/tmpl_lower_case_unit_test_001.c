@@ -23,7 +23,7 @@
 /*  puts function found here.                                                 */
 #include <stdio.h>
 
-/*  tmpl_ASCII_Lower_Case declared here.                                      */
+/*  tmpl_Lower_Case declared here.                                            */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Array of all upper case letters in order.                                 */
@@ -38,20 +38,20 @@ static char lower_arr[26] = {
     'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 };
 
-/*  Function for testing tmpl_ASCII_Lower_Case.                               */
+/*  Function for testing tmpl_Lower_Case.                                     */
 int main(void)
 {
     /*  Variable for indexing.                                                */
     unsigned int n;
 
-    /*  Character to be used for testing tmpl_ASCII_Lower_Case.               */
+    /*  Character to be used for testing tmpl_Lower_Case.                     */
     char c;
 
-    /*  Loop over all letters and test tmpl_ASCII_Lower_Case.                 */
+    /*  Loop over all letters and test tmpl_Lower_Case.                       */
     for (n = 0; n < 26; ++n)
     {
         /*  Convert the upper case letter to lower case.                      */
-        c = tmpl_ASCII_Lower_Case(upper_arr[n]);
+        c = tmpl_Lower_Case(upper_arr[n]);
 
         /*  Check if it worked.                                               */
         if (c != lower_arr[n])
@@ -61,7 +61,7 @@ int main(void)
         }
 
         /*  Convert lower case to lower case. Nothing should happen.          */
-        c = tmpl_ASCII_Lower_Case(lower_arr[n]);
+        c = tmpl_Lower_Case(lower_arr[n]);
 
         /*  Check if it worked.                                               */
         if (c != lower_arr[n])

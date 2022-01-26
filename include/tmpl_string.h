@@ -28,6 +28,11 @@
  *      rssringoccs titles have been replaced with tmpl. rss_ringoccs is also *
  *      released under GPL3.                                                  *
  ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file containing Booleans.                                  *
+ ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
@@ -64,6 +69,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*  Booleans found here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -149,6 +157,7 @@ extern char tmpl_ASCII_Upper_Case(char c);
 extern char *tmpl_strdup(const char *str);
 
 extern char tmpl_Lower_Case(char c);
+extern char tmpl_Upper_Case(char c);
 
 extern void tmpl_Make_Lower(char *str);
 extern void tmpl_Remove_Spaces(char * str);

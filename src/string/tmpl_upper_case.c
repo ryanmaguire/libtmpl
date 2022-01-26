@@ -16,32 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_ascii_lower_case                             *
+ *                              tmpl_upper_case                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Convert upper case letters to lower case.                             *
+ *      Convert lower case letters to upper case.                             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_ASCII_Lower_Case                                                 *
+ *      tmpl_Upper_Case                                                       *
  *  Purpose:                                                                  *
- *      Given a char c that represents an ascii character, convert it to      *
- *      lower case (if applicable).                                           *
+ *      Given a char c, convert it to upper case (if applicable).             *
  *  Arguments:                                                                *
  *      c (char):                                                             *
- *          An ASCII character.                                               *
+ *          Any character.                                                    *
  *  Output:                                                                   *
- *      lower_c (char):                                                       *
- *          The lower case of c (if applicable).                              *
+ *      upper_c (char):                                                       *
+ *          The upper case of c (if applicable).                              *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the ISO 8859-1 standard to convert an upper case character to a   *
- *      lower case one. See the code for an explanation.                      *
+ *      Use a switch to check the argument, returning the upper case version  *
+ *      if applicable, and returning the input otherwise.                     *
  *  Notes:                                                                    *
- *      If ISO 8859-1 is not implemented, use tmpl_Lower_Case. That function  *
- *      is more portable, using a simple switch to check the argument.        *
+ *      This is the more portable version of tmpl_ASCII_Upper_Case, but it    *
+ *      is a bit slower. The computational time is negligible for most        *
+ *      applications for both functions.                                      *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -64,34 +64,75 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       August 12, 2021                                               *
+ *  Date:       January 26, 2022                                              *
  ******************************************************************************/
 
 /*  Function prototype is here.                                               */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Function for converting an ASCII character to lower case.                 */
-char tmpl_ASCII_Lower_Case(char c)
+/*  Function for converting lower case character to upper case.               */
+char tmpl_Upper_Case(char c)
 {
-    /*  In the ISO 8859-1 standard, the ASCII table has the following         *
-     *  property (written in binary):                                         *
-     *      1000001 = A                                                       *
-     *      1000010 = B                                                       *
-     *      1000011 = C                                                       *
-     *          ...                                                           *
-     *      1100001 = a                                                       *
-     *      1100010 = b                                                       *
-     *      1100011 = c                                                       *
-     *          ...                                                           *
-     *  So if we flip the 6th bit, i.e. the 2^5 factor, from 0 to 1 we go     *
-     *  from upper case to lower case. Do this with bit-wise OR using 0x20.   */
-    if ((c >= 'A') && (c <= 'Z'))
-        return c | 0x20;
+    /*  Use a switch to check the value of c and return the lower-case.       */
+    switch(c)
+    {
+        case 'a':
+            return 'A';
+        case 'b':
+            return 'B';
+        case 'c':
+            return 'C';
+        case 'd':
+            return 'D';
+        case 'e':
+            return 'E';
+        case 'f':
+            return 'F';
+        case 'g':
+            return 'G';
+        case 'h':
+            return 'H';
+        case 'i':
+            return 'I';
+        case 'j':
+            return 'J';
+        case 'k':
+            return 'K';
+        case 'l':
+            return 'L';
+        case 'm':
+            return 'M';
+        case 'n':
+            return 'N';
+        case 'o':
+            return 'O';
+        case 'p':
+            return 'P';
+        case 'q':
+            return 'Q';
+        case 'r':
+            return 'R';
+        case 's':
+            return 'S';
+        case 't':
+            return 'T';
+        case 'u':
+            return 'U';
+        case 'v':
+            return 'V';
+        case 'w':
+            return 'W';
+        case 'x':
+            return 'X';
+        case 'y':
+            return 'Y';
+        case 'z':
+            return 'Z';
 
-    /*  Every other value is either already lower-case, or lower-case doesn't *
-     *  make sense (i.e. ! or 5), so return the input.                        */
-    else
-        return c;
+        /*  If the input is not a lower-case letter, return the input.        */
+        default:
+            return c;
+    }
 }
-/*  End of tmpl_ASCII_Lower_Case.                                             */
+/*  End of tmpl_Upper_Case.                                                   */
 
