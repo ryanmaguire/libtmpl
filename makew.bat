@@ -29,7 +29,7 @@ det.exe
 del *.exe *.obj
 
 :: Compile the library with warnings enabled.
-for /D %%d in (.\src\*) do cl /Wall /I../ /O2 /c %%d\*.c
+for /D %%d in (.\src\*) do cl /W4 /I../ /O2 /c %%d\*.c
 
 :: Link everything into a .lib file.
 lib /out:libtmpl.lib *.obj
