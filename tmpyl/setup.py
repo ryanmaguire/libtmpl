@@ -39,6 +39,7 @@
 
 from distutils.core import setup, Extension
 import sys
+import os
 
 # ImportError became ModuleNotFoundError in Python 3.6. Check the version first.
 if sys.version_info[0] > 2 and sys.version_info[1] > 5:
@@ -65,6 +66,13 @@ else:
         include=['../../']
         tmpyl_macros=[("TMPYL_HAS_NUMPY", 0)]
 
+if os.path.isfile("/usr/local/lib/libtmpl.so"):
+    libs=['/usr/local/lib']
+elif os.path.isfile("../libtmpl.so") or os.path.isfile("../../libtmpl.lib"):
+    libs=['../']
+else:
+    sys.exit("Error: libtmpl file (libtmpl.so or libtmpl.lib) not found.")
+
 # List of files to be compiled for tmpyl.
 source_files = [
     "tmpyl.c",
@@ -78,7 +86,7 @@ optional_args = []
 # Create the module.
 setup(name='tmpyl',
       version='0.1',
-      description='Python Extension module for the C Library libtmpl',
+      description='Python Extension Module for the C Library libtmpl',
       author='Ryan Maguire',
       ext_modules=[
           Extension('tmpyl',
@@ -86,7 +94,7 @@ setup(name='tmpyl',
                     extra_compile_args=optional_args,
                     define_macros=tmpyl_macros,
                     include_dirs=include,
-                    library_dirs=['/usr/local/lib', '../'],
+                    library_dirs=libs,
                     libraries=['tmpl'])
           ]
      )

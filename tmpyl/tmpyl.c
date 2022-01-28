@@ -249,6 +249,13 @@ PyMODINIT_FUNC inittmpyl(void)
     m = Py_InitModule("tmpyl", tmpyl_methods);
     if (m == NULL)
         return;
+
+    /*  This line is REQUIRED for numpy support. Without it, a segmentation   *
+     *  fault will occur crashing tmpyl.                                      */
+#if TMPYL_HAS_NUMPY == 1
+    import_array();
+#endif
+
 }
 #endif
 
