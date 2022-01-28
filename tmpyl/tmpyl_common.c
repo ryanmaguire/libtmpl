@@ -33,6 +33,13 @@
  *          Header file for libtmpl.                                          *
  *  4.) tmpyl_common.h:                                                       *
  *          Header file that defines the generic function object.             *
+ *                                                                            *
+ *  If you want numpy support, you must have numpy installed and have the     *
+ *  these additional headers available:                                       *
+ *                                                                            *
+ *  5.) ndarraytypes.h                                                        *
+ *  6.) ufuncobject.h                                                         *
+ *          Header files for the C-Numpy API.                                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -48,7 +55,7 @@
  *  build fails, please report this to:                                       *
  *      https://github.com/ryanmaguire/libtmpl/issues                         *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       August 31, 2021                                               *
  ******************************************************************************/
 
@@ -145,15 +152,15 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
     {
         if (c_func->func_name == NULL)
             PyErr_Format(PyExc_RuntimeError,
-                        "\n\rError Encountered: tmpyl\n"
-                        "\r\tFunction Name: Unknown\n"
-                        "\n\rInput is not 1-dimensional.\n");
+                         "\n\rError Encountered: tmpyl\n"
+                         "\r\tFunction Name: Unknown\n"
+                         "\n\rInput is not 1-dimensional.\n");
         else
             PyErr_Format(PyExc_RuntimeError,
-                        "\n\rError Encountered: tmpyl\n"
-                        "\r\tFunction Name: %s\n\n"
-                        "\n\rInput is not 1-dimensional.\n",
-                        c_func->func_name);
+                         "\n\rError Encountered: tmpyl\n"
+                         "\r\tFunction Name: %s\n\n"
+                         "\n\rInput is not 1-dimensional.\n",
+                         c_func->func_name);
         return NULL;
     }
 
@@ -189,6 +196,8 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
     {
         /*  float in C.                                                       */
         case NPY_FLOAT:
+
+            /*  This function is real in, real out.                           */
             if (c_func->float_func != NULL)
             {
                 /*  Allocate memory for the output.                           */
@@ -202,6 +211,8 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
                  *  libtmpl for computation.                                  */
                 tmpl_get_void_from_void_f2f(data, out, dim, c_func->float_func);
             }
+
+            /*  This function is real in, complex out.                        */
             else if (c_func->cfloat_from_float_func != NULL)
             {
                 /*  The output is a complex float, so change typenum to this. */
@@ -219,6 +230,8 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
                 tmpl_get_void_from_void_f2cf(data, out, dim,
                                              c_func->cfloat_from_float_func);
             }
+
+            /*  If neither exists, the function does not support float.       */
             else
                 goto FAILURE;
 
@@ -226,6 +239,7 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
 
         /*  double in C.                                                      */
         case NPY_DOUBLE:
+
             /*  This function is real in, real out.                           */
             if (c_func->double_func != NULL)
             {
@@ -268,6 +282,7 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
             break;
 
         case NPY_LONGDOUBLE:
+
             /*  This function is real in, real out.                           */
             if (c_func->ldouble_func != NULL)
             {
@@ -303,55 +318,123 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
                                                c_func->cldouble_from_ldouble_func);
             }
 
-            /*  If neither exists, the function does not support double.      */
+            /*  If neither exists, the function does not support long double. */
             else
                 goto FAILURE;
 
             break;
 
         case NPY_CDOUBLE:
+
+            /*  Check for complex in, complex out.                            */
             if (c_func->cdouble_from_cdouble_func == NULL)
                 goto FAILURE;
-            out = malloc(sizeof(long double) * dim);
-                tmpl_get_void_from_void_cd2cd(data, out, dim,
-                                              c_func->cdouble_from_cdouble_func);
+
+            out = malloc(sizeof(tmpl_ComplexDouble) * dim);
+
+            /*  Check if malloc failed.                                       */
+            if (out == NULL)
+                goto MALLOC_FAILURE;
+
+            /*  Otherwise, pass the function pointer to libtmpl.              */
+            tmpl_get_void_from_void_cd2cd(data, out, dim,
+                                          c_func->cdouble_from_cdouble_func);
 
             break;
+
+        /*  Integer inputs.                                                   */
         case NPY_LONG:
             if (c_func->long_func != NULL)
             {
+                /*  Allocate memory for the output.                           */
                 out = malloc(sizeof(long) * dim);
+
+                /*  Check if malloc failed.                                   */
+                if (out == NULL)
+                    goto MALLOC_FAILURE;
+
+                /*  If not, perform the computation.                          */
                 tmpl_get_void_from_void_l2l(data, out, dim, c_func->long_func);
             }
+
+            /*  If no integer value function exists, try converting to real.  */
             else if (c_func->double_func != NULL)
             {
+                /*  Try to convert the data to double.                        */
                 double *temp = malloc(sizeof(*temp) * dim);
-                out = malloc(sizeof(double) * dim);
-                for (n = 0UL; n < dim; ++n)
-                    temp[n] = (double)((long *)data)[n];
 
+                /*  Check if malloc failed.                                   */
+                if (temp == NULL)
+                    goto MALLOC_FAILURE;
+
+                /*  The output is double, so change typenum.                  */
+                typenum = NPY_DOUBLE;
+
+                /*  Allocate memory for the output.                           */
+                out = malloc(sizeof(double) * dim);
+
+                /*  Check if malloc failed.                                   */
+                if (out == NULL)
+                {
+                    /*  Free temp since it was succesfully allocated, then go *
+                     *  to malloc failure.                                    */
+                    free(temp);
+                    goto MALLOC_FAILURE;
+                }
+
+                /*  Loop through the data and cast to double.                 */
+                for (n = 0UL; n < dim; ++n)
+                    temp[n] = (double)(((long *)data)[n]);
+
+                /*  Perform the computation in libtmpl.                       */
                 tmpl_get_void_from_void_d2d(temp, out, dim,
                                             c_func->double_func);
+
+                /*  Free temp since we're done with it.                       */
                 free(temp);
-                typenum = NPY_DOUBLE;
             }
             else if (c_func->cdouble_from_double_func != NULL)
             {
+                /*  Allocate memory for a temp variable to cast to double.    */
                 double *temp = malloc(sizeof(*temp) * dim);
-                out = malloc(sizeof(double) * dim);
-                for (n = 0UL; n < dim; ++n)
-                    temp[n] = (double)((long *)data)[n];
 
+                /*  The output is complex double, so change typenum.          */
+                typenum = NPY_CDOUBLE;
+
+                /*  Allocate memory for the output.                           */
+                out = malloc(sizeof(tmpl_ComplexDouble) * dim);
+
+                /*  Check if malloc failed.                                   */
+                if (out == NULL)
+                {
+                    /*  Free temp since it was succesfully allocated, then go *
+                     *  to malloc failure.                                    */
+                    free(temp);
+                    goto MALLOC_FAILURE;
+                }
+
+                for (n = 0UL; n < dim; ++n)
+                    temp[n] = (double)(((long *)data)[n]);
+
+                /*  Perform the computation with libtmpl.                     */
                 tmpl_get_void_from_void_d2cd(temp, out, dim,
                                              c_func->cdouble_from_double_func);
+
+                /*  Free temp since we're done with it.                       */
                 free(temp);
-                typenum = NPY_CDOUBLE;
             }
 
+            /*  If none of these exist, the function does not support long.   */
+            else
+                goto FAILURE;
+
+            break;
+
+        /*  The function does not support the type of the input array. Abort. */
         default:
             goto FAILURE;
-
     }
+    /*  End of switch (typenum).                                              */
 
     signed_dim = (long int)dim;
     output = PyArray_SimpleNewFromData(1, &signed_dim, typenum, out);
@@ -686,7 +769,6 @@ tmpyl_Get_Py_Out_From_Complex(PyObject *x, tmpyl_Generic_Function_Obj *c_func)
                          "\rComplex input provided but this function does not\n"
                          "\rexcept complex arguments.");
 
-        puts("Bob");
         return NULL;
     }
 }
@@ -787,7 +869,6 @@ tmpl_Get_Py_Func_From_C(PyObject *self, PyObject *args,
     else if (PyArray_Check(x))
         return tmpyl_Get_Py_Out_From_NumpyArray(x, c_func);
 #endif
-    puts("BOB");
     goto FAILURE;
 
 FAILURE:
