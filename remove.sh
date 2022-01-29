@@ -48,3 +48,4 @@ if [ -e "$SODIR/$SONAME" ]; then
 fi
 
 echo "libtmpl removed."
+
