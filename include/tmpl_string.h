@@ -137,6 +137,35 @@ extern char tmpl_ASCII_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Lower_Case                                                       *
+ *  Purpose:                                                                  *
+ *      Takes in a char which represents an ASCII character and returns the   *
+ *      lower-case of the character if it is a capital letter, and returns    *
+ *      the input otherwise.                                                  *
+ *  Arguments:                                                                *
+ *      upper (char):                                                         *
+ *          The input character.                                              *
+ *  Output:                                                                   *
+ *      lower (char):                                                         *
+ *          The lower case version of the input character.                    *
+ *  Note:                                                                     *
+ *      This function is the more portable version of tmpl_ASCII_Lower_Case,  *
+ *      but is slightly slower. It uses a simple switch to check the input.   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_lower_case.c                                  *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/string_examples/tmpl_ascii_lower_case_example.c      *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/string_tests/unit_tests/                                *
+ *          tmpl_lower_case_unit_test_001.c                                   *
+ *          tmpl_lower_case_unit_test_002.c                                   *
+ *      libtmpl/tests/string_tests/time_tests/                                *
+ *          tmpl_lower_case_functions_time_test.c                             *
+ ******************************************************************************/
+extern char tmpl_Lower_Case(char c);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_strdup                                                           *
  *  Purpose:                                                                  *
  *      Copies a string, verbatim, into a pointer to a char array. This is    *
@@ -162,7 +191,6 @@ extern char tmpl_ASCII_Upper_Case(char c);
  ******************************************************************************/
 extern char *tmpl_strdup(const char *str);
 
-extern char tmpl_Lower_Case(char c);
 extern char tmpl_Upper_Case(char c);
 
 extern void tmpl_Make_Lower(char *str);
