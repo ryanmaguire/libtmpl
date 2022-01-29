@@ -51,7 +51,7 @@ int main(void)
 
     /*  Create an empty polynomial to store the sum in.                       */
     sum = tmpl_Create_Empty_PolynomialZ();
-    
+
     /*  Compute the sum of P with itself, and store it in sum.                */
     tmpl_PolynomialZ_Add(P, P, sum);
 

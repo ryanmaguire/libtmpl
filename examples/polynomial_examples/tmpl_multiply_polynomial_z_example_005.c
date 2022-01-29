@@ -51,7 +51,7 @@ int main(void)
 
     /*  Get P as a string.                                                    */
     OldPstr = tmpl_PolynomialZ_Get_String(P);
-    
+
     /*  Compute the product of P with itself, and store it in P.              */
     tmpl_PolynomialZ_Multiply(P, P, P);
 

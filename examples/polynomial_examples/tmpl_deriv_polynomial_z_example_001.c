@@ -55,7 +55,7 @@ int main(void)
 
     /*  Create an empty polynomial to store the derivative in.                */
     Pprime = tmpl_Create_Empty_PolynomialZ();
-    
+
     /*  Compute the derivative of P and store it in Pprime.                   */
     tmpl_PolynomialZ_Deriv(P, Pprime);
 

@@ -56,7 +56,7 @@ int main(void)
 
     /*  Create an empty polynomial to store the sum in.                       */
     sum = tmpl_Create_Empty_PolynomialZ();
-    
+
     /*  Compute the sum of P and Q, and store it in sum.                      */
     tmpl_PolynomialZ_Add(P, Q, sum);
 
