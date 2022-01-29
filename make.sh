@@ -186,3 +186,4 @@ if [ $INPLACE == 1 ]; then
     echo "    directories using the -I and -L option as follows:"
     echo "        gcc -I$(pwd)/../ -L$(pwd)/ my_file.c -o my_output -ltmpl"
 fi
+
