@@ -55,7 +55,7 @@ int main(void)
 
     /*  Create a degree 7 polynomial with coefficients set to zero.           */
     Pprime = tmpl_Create_Zero_PolynomialZ(7);
-    
+
     /*  Compute the derivative of P and store it in Pprime.                   */
     tmpl_PolynomialZ_Deriv(P, Pprime);
 

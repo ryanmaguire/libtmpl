@@ -107,7 +107,7 @@ int main(void)
         tmpl_Destroy_PolynomialZ(&Q);
         return -1;
     }
-    
+
     /*  Compute the difference of P and Q, and store it in diff.              */
     tmpl_PolynomialZ_Subtract(P, Q, diff);
 

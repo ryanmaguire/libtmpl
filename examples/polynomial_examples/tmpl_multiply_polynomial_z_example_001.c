@@ -106,7 +106,7 @@ int main(void)
         tmpl_Destroy_PolynomialZ(&Q);
         return -1;
     }
-    
+
     /*  Compute the product of P and Q, and store it in prod.                 */
     tmpl_PolynomialZ_Multiply(P, Q, prod);
 

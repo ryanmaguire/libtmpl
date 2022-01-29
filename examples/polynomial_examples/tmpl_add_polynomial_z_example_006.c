@@ -103,7 +103,7 @@ int main(void)
         tmpl_Destroy_PolynomialZ(&Q);
         return -1;
     }
-    
+
     /*  Compute the sum of P and Q, and store it in sum.                      */
     tmpl_PolynomialZ_Add(P, Q, sum);
 

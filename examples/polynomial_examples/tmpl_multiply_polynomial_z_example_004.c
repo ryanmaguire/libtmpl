@@ -56,7 +56,7 @@ int main(void)
 
     /*  Create an empty polynomial to store the product in.                   */
     prod = tmpl_Create_Empty_PolynomialZ();
-    
+
     /*  Compute the product of P and Q, and store it in prod.                 */
     tmpl_PolynomialZ_Multiply(P, Q, prod);
 
