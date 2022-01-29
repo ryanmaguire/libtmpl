@@ -37,7 +37,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the ISO 8859-1 standard to convert an upper case character to an  *
+ *      Use the ISO 8859-1 standard to convert a lower case character to an   *
  *      upper case one. See the code for an explanation.                      *
  *  Notes:                                                                    *
  *      If ISO 8859-1 is not implemented, use tmpl_Upper_Case. That function  *

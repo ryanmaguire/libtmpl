@@ -26,7 +26,7 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Function for testing tmpl_ASCII_Lower_Case.                               */
+/*  Function for testing tmpl_ASCII_Upper_Case.                               */
 int main(void)
 {
     /*  Variables for looping over all characters.                            */
@@ -38,7 +38,7 @@ int main(void)
     for (n = 0x00; n < 0xFF; ++n)
     {
         in[0] = (char)n;
-        out[0] = tmpl_ASCII_Lower_Case(in[0]);
+        out[0] = tmpl_ASCII_Upper_Case(in[0]);
         printf("Input: %s Output: %s\n", in, out);
     }
 

@@ -120,12 +120,18 @@ extern char tmpl_ASCII_Lower_Case(char c);
  *  Note:                                                                     *
  *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
  *      This has been the case on all devices I've tested. If you're unsure,  *
- *      use tmpl_Lower_Case. That function is slower, but the computational   *
+ *      use tmpl_Upper_Case. That function is slower, but the computational   *
  *      time is essentially negligible for both functions.                    *
  *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_strdup.c                                      *
+ *      libtmpl/src/string/tmpl_ascii_upper_case.c                            *
  *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
+ *      libtmpl/examples/string_examples/tmpl_ascii_upper_case_example.c      *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/string_tests/unit_tests/                                *
+ *          tmpl_ascii_upper_case_unit_test_001.c                             *
+ *          tmpl_ascii_upper_case_unit_test_002.c                             *
+ *      libtmpl/tests/string_tests/time_tests/                                *
+ *          tmpl_upper_case_functions_time_test.c                             *
  ******************************************************************************/
 extern char tmpl_ASCII_Upper_Case(char c);
 
