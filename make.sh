@@ -80,9 +80,9 @@ CompilerArgs="$STDVER $ExtraArgs $CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5"
 # -o means create an output.
 # -shared means the output is a shared object, like a library file.
 if [ $USEOMP == 1 ]; then
-    LinkerArgs="-O3 -I../ -flto -fopenmp -shared -o $SONAME -lm"
+    LinkerArgs="-O3 -flto -fopenmp -shared -o $SONAME -lm"
 else
-    LinkerArgs="-O3 -I../ -flto -shared -o $SONAME -lm"
+    LinkerArgs="-O3 -flto -shared -o $SONAME -lm"
 fi
 
 # Location where the .h files will be stored.
@@ -100,7 +100,7 @@ DET_END_EXEC=det_end_out
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
 echo "Clearing older files..."
-rm -f *.so *.o
+rm -f *.so *.o *.obj *.lib
 if [ -e "$END_HEADER" ]; then
     rm -f "$END_HEADER";
 fi
