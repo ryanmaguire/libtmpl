@@ -94,6 +94,8 @@ long double tmpl_LDouble_Log(long double x)
 
 #else
 
+#include <math.h>
+
 long double tmpl_LDouble_Log(long double x)
 {
     double logx = log((double)x);
