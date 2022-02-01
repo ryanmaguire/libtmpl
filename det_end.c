@@ -720,9 +720,9 @@ int main(void)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN\n");
     else if (ldouble_type == tmpl_ldouble_96_bit_extended_little_endian)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_64_bit_big_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN\n");
     else if (ldouble_type == tmpl_ldouble_64_bit_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_64_bit_big_endian)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_BIG_ENDIAN\n");
     else
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
