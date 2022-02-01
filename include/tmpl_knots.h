@@ -67,12 +67,12 @@
  *  of ordered triples of the form (n, t, s) where n is an unsigned integer   *
  *  and t and s represent the crossing number and sign, respectively. We'll   *
  *  typedef enum data types for crossing types and crossing signs.            */
-typedef enum _tmpl_CrossingType {
+typedef enum tmpl_CrossingType_Def {
   tmpl_UnderCrossing,
   tmpl_OverCrossing
 } tmpl_CrossingType;
 
-typedef enum _tmpl_CrossingSign {
+typedef enum tmpl_CrossingSign_Def {
     tmpl_NegativeCrossing = -1,
     tmpl_PositiveCrossing = 1
 } tmpl_CrossingSign;
@@ -80,7 +80,7 @@ typedef enum _tmpl_CrossingSign {
 /*  A Gauss tuple will be an ordered triple (n, t, s), with n an unsigned     *
  *  integer, and t and s being tmpl_CrossingType and tmpl_CrossingSign        *
  *  variables. We'll typedef this into a struct.                              */
-typedef struct _tmpl_GaussTuple {
+typedef struct tmpl_GaussTuple_Def {
 
     /*  The crossing number of the crossing. Note, a virtual knot's crossings *
      *  need to first be labelled 0 to n-1, where n is the number of          *
@@ -96,7 +96,7 @@ typedef struct _tmpl_GaussTuple {
 
 /*  A virtual knot is just the Gauss code of the knot. This is a sequence of  *
  *  Gauss tuples.                                                             */
-typedef struct _tmpl_VirtualKnot {
+typedef struct tmpl_VirtualKnot_Def {
     /*  Use a single unsigned integer to represent the number of (virtual)    *
      *  crossings in the knot. 32-bit architectures may find it beneficial /  *
      *  efficient to use 32-bit integers instead of 64. A 64-bit integer is   *
@@ -116,24 +116,24 @@ typedef struct _tmpl_VirtualKnot {
   char *error_message;
 } tmpl_VirtualKnot;
 
-typedef struct _tmpl_CrossingIndices {
+typedef struct tmpl_CrossingIndices_Def {
     unsigned long int under;
     unsigned long int over;
 } tmpl_CrossingIndices;
 
-typedef struct _tmpl_KnotCrossingArcTuple {
+typedef struct tmpl_KnotCrossingArcTuple_Def {
     unsigned long int arc_travelling_on;
     unsigned long int arc_on_left;
     unsigned long int arc_on_right;
     unsigned long int crossing_number;
 } tmpl_KnotArcCrossingTuple;
 
-typedef struct _tmpl_KnotArcTuple {
+typedef struct tmpl_KnotArcTuple_Def {
     tmpl_GaussTuple *start;
     tmpl_GaussTuple *end;
 } tmpl_KnotArcTuple;
 
-typedef struct _tmpl_KnotArcs {
+typedef struct tmpl_KnotArcs_Def {
     tmpl_KnotArcCrossingTuple *arc_crossings;
     tmpl_KnotArcTuple *arcs;
     unsigned long int number_of_crossings;

@@ -69,15 +69,15 @@
 #include <libtmpl/include/tmpl_bool.h>
 
 /*  Data types for two dimensional points at various precisions.              */
-typedef struct _tmpl_FloatTwoVector {
+typedef struct tmpl_FloatTwoVector_Def {
     float dat[2];
 } tmpl_FloatTwoVector;
 
-typedef struct _tmpl_DoubleTwoVector {
+typedef struct tmpl_DoubleTwoVector_Def {
     double dat[2];
 } tmpl_DoubleTwoVector;
 
-typedef struct _tmpl_LDoubleTwoVector {
+typedef struct tmpl_LDoubleTwoVector_Def {
     long double dat[2];
 } tmpl_LDoubleTwoVector;
 
@@ -85,15 +85,15 @@ typedef struct _tmpl_LDoubleTwoVector {
 typedef tmpl_DoubleTwoVector tmpl_TwoVector;
 
 /*  Data types for linear transformations of the plane.                       */
-typedef struct _tmpl_FloatTwoByTwoMatrix {
+typedef struct tmpl_FloatTwoByTwoMatrix_Def {
     float dat[2][2];
 } tmpl_FloatTwoByTwoMatrix;
 
-typedef struct _tmpl_DoubleTwoByTwoMatrix {
+typedef struct tmpl_DoubleTwoByTwoMatrix_Def {
     double dat[2][2];
 } tmpl_DoubleTwoByTwoMatrix;
 
-typedef struct _tmpl_LDoubleTwoByTwoMatrix {
+typedef struct tmpl_LDoubleTwoByTwoMatrix_Def {
     long double dat[2][2];
 } tmpl_LDoubleTwoByTwoMatrix;
 
@@ -101,15 +101,15 @@ typedef struct _tmpl_LDoubleTwoByTwoMatrix {
 typedef tmpl_DoubleTwoByTwoMatrix tmpl_TwoByTwoMatrix;
 
 /*  A line segment is given by the start and end points.                      */
-typedef struct _tmpl_FloatLineSegment2D {
+typedef struct tmpl_FloatLineSegment2D_Def {
     tmpl_FloatTwoVector dat[2];
 } tmpl_FloatLineSegment2D;
 
-typedef struct _tmpl_DoubleLineSegment2D {
+typedef struct tmpl_DoubleLineSegment2D_Def {
     tmpl_DoubleTwoVector dat[2];
 } tmpl_DoubleLineSegment2D;
 
-typedef struct _tmpl_LDoubleLineSegment2D {
+typedef struct tmpl_LDoubleLineSegment2D_Def {
     tmpl_LDoubleTwoVector dat[2];
 } tmpl_LDoubleLineSegment2D;
 
@@ -118,7 +118,7 @@ typedef tmpl_DoubleLineSegment2D tmpl_LineSegment2D;
 
 /*  A line is given by a point on the line, and the direction. That is, we    *
  *  can write a(t) = P + tV.                                                  */
-typedef struct tmpl_Line2D {
+typedef struct tmpl_Line2D_Def {
     tmpl_TwoVector P;
     tmpl_TwoVector V;
 } tmpl_Line2D;
@@ -127,7 +127,7 @@ typedef struct tmpl_Line2D {
  *  allow circles to degenerate to straight lines. In this case the radius is *
  *  infinite, and the "center" instead becomes the line. To save memory, a    *
  *  union is used between the center and the line.                            */
-typedef struct _tmpl_Circle2D {
+typedef struct tmpl_Circle2D_Def {
     union Data {
         tmpl_TwoVector center;
         tmpl_Line2D line;
@@ -146,7 +146,7 @@ typedef struct _tmpl_Circle2D {
 /*  A polygon is an array of points which represent the vertices of the       *
  *  polygon. There's no need for simple polygons, so a polygon with two       *
  *  points will be treated as a path from P to Q and then from Q to P.        */
-typedef struct _tmpl_Polygon2D {
+typedef struct tmpl_Polygon2D_Def {
     tmpl_TwoVector *points;
     unsigned long int number_of_points;
 

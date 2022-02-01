@@ -50,6 +50,11 @@
  ******************************************************************************
  *  Author: Ryan Maguire                                                      *
  *  Date:   June 15, 2021                                                     *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Getting rid of -Wreserved-identifier warnings with clang.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -70,7 +75,7 @@
 
 /*  Data type for working with elements of Z[x]. That is, polynomials with    *
  *  integer coefficients.                                                     */
-typedef struct _tmpl_PolynomialZ {
+typedef struct tmpl_PolynomialZ_Def {
     /*  A single pointer to a SIGNED long int array will contain the          *
      *  coefficients in the order a_0 + a_1 x + ... + a_N x^N.                */
     signed long int *coeffs;
@@ -88,7 +93,7 @@ typedef struct _tmpl_PolynomialZ {
 
 /*  Data type for working with elements of Z[x] that are of a high degree     *
  *  where most of the coefficients are zero. This method saves on memory.     */
-typedef struct _tmpl_SparsePolynomialZ {
+typedef struct tmpl_SparsePolynomialZ_Def {
     /*  A pointer to all of the terms. The degree of the terms is stored in   *
      *  the next pointer.                                                     */
     signed long int *terms;
@@ -107,7 +112,7 @@ typedef struct _tmpl_SparsePolynomialZ {
 } tmpl_SparsePolynomialZ;
 
 /*  Data type for matrices of polynomials in Z[x].                            */
-typedef struct _tmpl_PolynomialZMatrix {
+typedef struct tmpl_PolynomialZMatrix_Def {
     /*  An array of polynomials, representing the matrix.                     */
     tmpl_PolynomialZ **data;
 
@@ -122,14 +127,14 @@ typedef struct _tmpl_PolynomialZMatrix {
     char *error_message;
 } tmpl_PolynomialZMatrix;
 
-typedef struct _tmpl_PolynomialQ {
+typedef struct tmpl_PolynomialQ_Def {
     tmpl_RationalNumber *coeffs;
     unsigned long int degree;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_PolynomialQ;
 
-typedef struct _tmpl_PolynomialQMatrix {
+typedef struct tmpl_PolynomialQMatrix_Def {
     tmpl_PolynomialQ **data;
     unsigned long int number_of_rows;
     unsigned long int number_of_columns;
@@ -137,14 +142,14 @@ typedef struct _tmpl_PolynomialQMatrix {
     char *error_message;
 } tmpl_PolynomialQMatrix;
 
-typedef struct _tmpl_PolynomialR {
+typedef struct tmpl_PolynomialR_Def {
     double *coeffs;
     unsigned long int degree;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_PolynomialR;
 
-typedef struct _tmpl_PolynomialC {
+typedef struct tmpl_PolynomialC_Def {
     tmpl_ComplexDouble *coeffs;
     unsigned long int degree;
     tmpl_Bool error_occurred;

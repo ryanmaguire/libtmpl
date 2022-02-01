@@ -90,7 +90,7 @@
 /*  There are 4 possibilities for endianness. Little endian is the most       *
  *  common, big endian is rare, mixed endian is essentially non-existent, and *
  *  unknown means the function could not determine anything.                  */
-typedef enum _tmpl_integer_endianness {
+typedef enum tmpl_integer_endianness_def {
     tmpl_integer_little_endian,
     tmpl_integer_big_endian,
     tmpl_integer_mixed_endian,
@@ -100,14 +100,14 @@ typedef enum _tmpl_integer_endianness {
 /*  IEEE-754 does not specify the endianness of float. It is usually the      *
  *  same as the endianness of integers, but this is not required. Unknown     *
  *  is returned if the function could not determine how float is implemented. */
-typedef enum _tmpl_float_type {
+typedef enum tmpl_float_type_def {
     tmpl_float_little_endian,
     tmpl_float_big_endian,
     tmpl_float_unknown_endian
 } tmpl_float_type;
 
 /*  Similarly, IEEE-754 does not specify endianness for double precision.     */
-typedef enum _tmpl_double_type {
+typedef enum tmpl_double_type_def {
     tmpl_double_little_endian,
     tmpl_double_big_endian,
     tmpl_double_unknown_endian
@@ -117,13 +117,15 @@ typedef enum _tmpl_double_type {
  *  This includes 64-bit, 80-bit, 96-bit, and 128-bit. The long double        *
  *  function below will attempt to determine which of these, if any, is       *
  *  implemented. Unknown is returned if this can't be determined.             */
-typedef enum _tmpl_ldouble_type {
-    tmpl_ldouble_64_bit_big_endian,
+typedef enum tmpl_ldouble_type_def {
     tmpl_ldouble_64_bit_little_endian,
+    tmpl_ldouble_64_bit_big_endian,
     tmpl_ldouble_96_bit_extended_little_endian,
+    tmpl_ldouble_96_bit_extended_big_endian,
+    tmpl_ldouble_128_bit_extended_little_endian,
+    tmpl_ldouble_128_bit_extended_big_endian,
     tmpl_ldouble_128_bit_quadruple_little_endian,
     tmpl_ldouble_128_bit_quadruple_big_endian,
-    tmpl_ldouble_128_bit_extended_little_endian,
     tmpl_ldouble_128_bit_doubledouble_little_endian,
     tmpl_ldouble_128_bit_doubledouble_big_endian,
     tmpl_ldouble_unknown
@@ -522,6 +524,50 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } s390x_type;
 
+    /*  GCC implements long double as 128-bit double double on powerpc.       */
+    union {
+        struct {
+            /*  The most significant double.                                  */
+            unsigned int man3a : 16;
+            unsigned int man2a : 16;
+            unsigned int man1a : 16;
+            unsigned int man0a : 4;
+            unsigned int expoa : 11;
+            unsigned int signa : 1;
+
+            /*  The least significant double.                                 */
+            unsigned int man3b : 16;
+            unsigned int man2b : 16;
+            unsigned int man1b : 16;
+            unsigned int man0b : 4;
+            unsigned int expob : 11;
+            unsigned int signb : 1;
+        } bits;
+        long double r;
+    } powerpc_little_type;
+
+    /*  GCC implements long double as 128-bit double double on powerpc.       */
+    union {
+        struct {
+            /*  The most significant double.                                  */
+            unsigned int signa : 1;
+            unsigned int expoa : 11;
+            unsigned int man0a : 4;
+            unsigned int man1a : 16;
+            unsigned int man2a : 16;
+            unsigned int man3a : 16;
+
+            /*  The least significant double.                                 */
+            unsigned int signb : 1;
+            unsigned int expob : 11;
+            unsigned int man0b : 4;
+            unsigned int man1b : 16;
+            unsigned int man2b : 16;
+            unsigned int man3b : 16;
+        } bits;
+        long double r;
+    } powerpc_big_type;
+
     /*  Try the 64-bit types first.                                           */
     /*  float should have 32 bits. Check for this.                            */
     if ((sizeof(long double) * CHAR_BIT) == 64)
@@ -610,6 +656,40 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
 
         if (s390x_type.r == 1.0L)
             return tmpl_ldouble_128_bit_quadruple_big_endian;
+
+
+        /*  Try the little endian equivalent.                                 */
+        powerpc_little_type.bits.man3a = 0x0U;
+        powerpc_little_type.bits.man2a = 0x0U;
+        powerpc_little_type.bits.man1a = 0x0U;
+        powerpc_little_type.bits.man0a = 0x0U;
+        powerpc_little_type.bits.expoa = 0x3FFU;
+        powerpc_little_type.bits.signa = 0x0U;
+        powerpc_little_type.bits.man3b = 0x0U;
+        powerpc_little_type.bits.man2b = 0x0U;
+        powerpc_little_type.bits.man1b = 0x0U;
+        powerpc_little_type.bits.man0b = 0x0U;
+        powerpc_little_type.bits.expob = 0x0U;
+        powerpc_little_type.bits.signb = 0x0U;
+
+        if (powerpc_little_type.r == 1.0L)
+            return tmpl_ldouble_128_bit_doubledouble_little_endian;
+
+        powerpc_big_type.bits.man3a = 0x0U;
+        powerpc_big_type.bits.man2a = 0x0U;
+        powerpc_big_type.bits.man1a = 0x0U;
+        powerpc_big_type.bits.man0a = 0x0U;
+        powerpc_big_type.bits.expoa = 0x3FFU;
+        powerpc_big_type.bits.signa = 0x0U;
+        powerpc_big_type.bits.man3b = 0x0U;
+        powerpc_big_type.bits.man2b = 0x0U;
+        powerpc_big_type.bits.man1b = 0x0U;
+        powerpc_big_type.bits.man0b = 0x0U;
+        powerpc_big_type.bits.expob = 0x0U;
+        powerpc_big_type.bits.signb = 0x0U;
+
+        if (powerpc_big_type.r == 1.0L)
+            return tmpl_ldouble_128_bit_doubledouble_big_endian;
     }
 
     /*  If all failed, return unknown.                                        */
@@ -677,13 +757,17 @@ int main(void)
     fprintf(fp, "#define TMPL_LITTLE_ENDIAN 1\n");
     fprintf(fp, "#define TMPL_MIXED_ENDIAN 2\n");
     fprintf(fp, "#define TMPL_UNKNOWN_ENDIAN 3\n\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_BIG_ENDIAN 0\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN 1\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN 0\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_BIG_ENDIAN 1\n");
     fprintf(fp, "#define TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN 2\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN 3\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUAD_BIG_ENDIAN 4\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN 5\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 6\n\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN 3\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN 4\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN 5\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN 6\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN 7\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN 8\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN 9\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 10\n\n");
 
     /*  Print the integer endianness to the header file.                      */
     if (int_type == tmpl_integer_little_endian)
@@ -712,20 +796,31 @@ int main(void)
         fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
 
     /*  Lastly, long double.                                                  */
-    if (ldouble_type == tmpl_ldouble_128_bit_extended_little_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_big_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUAD_BIG_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_little_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_96_bit_extended_little_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_64_bit_little_endian)
+
+
+    if (ldouble_type == tmpl_ldouble_64_bit_little_endian)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN\n");
     else if (ldouble_type == tmpl_ldouble_64_bit_big_endian)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_BIG_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_96_bit_extended_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_96_bit_extended_big_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_extended_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_extended_big_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_big_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_doubledouble_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_doubledouble_big_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN\n");
     else
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
+
 
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");

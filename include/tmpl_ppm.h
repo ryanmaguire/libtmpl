@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <libtmpl/include/tmpl_complex.h>
 
-typedef struct _tmpl_PPM_Color {
+typedef struct tmpl_PPM_Color_Def {
     unsigned char red, green, blue;
 } tmpl_PPM_Color;
 

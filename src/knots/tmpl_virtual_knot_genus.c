@@ -1,18 +1,16 @@
 #include <libtmpl/include/tmpl_knots.h>
 #include <stdlib.h>
 
-typedef enum __path_dir {
+typedef enum path_dir_def {
     reverse = 0,
     forward = 1
 } path_dir;
 
-static void __tmpl_go_left(unsigned long int k,
-                           unsigned long int *genus,
-                           unsigned long int index,
-                           path_dir dir,
-                           unsigned char *have_visited,
-                           tmpl_CrossingIndices *Indices,
-                           tmpl_VirtualKnot *K)
+static void
+tmpl_go_left(unsigned long int k, unsigned long int *genus,
+             unsigned long int index, path_dir dir,
+             unsigned char *have_visited, tmpl_CrossingIndices *Indices,
+             tmpl_VirtualKnot *K)
 {
     tmpl_GaussTuple *T;
     while (!have_visited[k])
@@ -98,22 +96,22 @@ tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K)
         k = 4UL * n;
         dir = forward;
         index = Indices[n].over;
-        __tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
+        tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
 
         k = 4UL * n + 1UL;
         dir = forward;
         index = Indices[n].under;
-        __tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
+        tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
 
         k = 4UL * n + 2UL;
         dir = reverse;
         index = Indices[n].over;
-        __tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
+        tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
 
         k = 4UL * n + 3UL;
         dir = reverse;
         index = Indices[n].under;
-        __tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
+        tmpl_go_left(k, &faces, index, dir, have_visited, Indices, K);
     }
 
     free(have_visited);

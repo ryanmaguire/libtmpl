@@ -44,8 +44,13 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Getting rid of -Wreserved-identifier warnings with clang.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -63,7 +68,7 @@
  ******************************************************************************/
 
 /*  Single precision vector with complex entries.                             */
-typedef struct _tmpl_ComplexFloatVector {
+typedef struct tmpl_ComplexFloatVector_Def {
     tmpl_ComplexFloat *data;
     unsigned long int length;
 
@@ -74,7 +79,7 @@ typedef struct _tmpl_ComplexFloatVector {
 } tmpl_ComplexFloatVector;
 
 /*  Double precision vector with complex entries.                             */
-typedef struct _tmpl_ComplexDoubleVector {
+typedef struct tmpl_ComplexDoubleVector_Def {
     tmpl_ComplexDouble *data;
     unsigned long int length;
 
@@ -85,7 +90,7 @@ typedef struct _tmpl_ComplexDoubleVector {
 } tmpl_ComplexDoubleVector;
 
 /*  Extended precision vector with complex entries.                           */
-typedef struct _tmpl_ComplexLongDoubleVector {
+typedef struct tmpl_ComplexLongDoubleVector_Def {
     tmpl_ComplexLongDouble *data;
     unsigned long int length;
 
@@ -100,7 +105,7 @@ typedef struct _tmpl_ComplexLongDoubleVector {
  ******************************************************************************/
 
 /*  Single-precision vector with real entries.                                */
-typedef struct _tmpl_FloatVector {
+typedef struct tmpl_FloatVector_Def {
     float *data;
     unsigned long int length;
 
@@ -111,7 +116,7 @@ typedef struct _tmpl_FloatVector {
 } tmpl_FloatVector;
 
 /*  Double-precision vector with real entries.                                */
-typedef struct _tmpl_DoubleVector {
+typedef struct tmpl_DoubleVector_Def {
     double *data;
     unsigned long int length;
 
@@ -122,7 +127,7 @@ typedef struct _tmpl_DoubleVector {
 } tmpl_DoubleVector;
 
 /*  Long double-precision vector with real entries.                           */
-typedef struct _tmpl_LongDoubleVector {
+typedef struct tmpl_LongDoubleVector_Def {
     long double *data;
     unsigned long int length;
 
@@ -139,56 +144,56 @@ typedef struct _tmpl_LongDoubleVector {
 /*  These data types are similar to the real-valued ones. See those structs   *
  *  for comments.                                                             */
 
-typedef struct _tmpl_CharVector {
+typedef struct tmpl_CharVector_Def {
     char *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_CharVector;
 
-typedef struct _tmpl_UCharVector {
+typedef struct tmpl_UCharVector_Def {
     unsigned char *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_UCharVector;
 
-typedef struct _tmpl_ShortVector {
+typedef struct tmpl_ShortVector_Def {
     short int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_ShortVector;
 
-typedef struct _tmpl_UShortVector {
+typedef struct tmpl_UShortVector_Def {
     unsigned short int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_UShortVector;
 
-typedef struct _tmpl_IntVector {
+typedef struct tmpl_IntVector_Def {
     int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_IntVector;
 
-typedef struct _tmpl_UIntVector {
+typedef struct tmpl_UIntVector_Def {
     unsigned int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_UIntVector;
 
-typedef struct _tmpl_LongVector {
+typedef struct tmpl_LongVector_Def {
     long int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;
     char *error_message;
 } tmpl_LongVector;
 
-typedef struct _tmpl_ULongVector {
+typedef struct tmpl_ULongVector_Def {
     unsigned long int *data;
     unsigned long int length;
     tmpl_Bool error_occurred;

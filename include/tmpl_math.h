@@ -86,6 +86,8 @@
  *  2022/01/13: Ryan Maguire                                                  *
  *    Added s390x implementation of long double. Removed the get mantissa and *
  *    exponent functions.                                                     *
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Getting rid of -Wreserved-identifier warnings with clang.             *
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
@@ -229,14 +231,14 @@
  *  only access the member of a union that was most recently written to. In   *
  *  practice, most compilers support type punning and use it to implement the *
  *  IEEE-754 format of floating point arithmetic.                             */
-typedef union _tmpl_IEEE754_Float {
+typedef union tmpl_IEEE754_Float_Def {
 
     /*  Use a bit-field for the binary representation of a float. A bit-field *
      *  allows us to define variables with an exact number of bits (up to 16).*
      *  We'll use this to have a 1-bit variable for the sign, 8-bit variable  *
      *  for the exponent, and 2 variables adding up to 23 bits for the        *
      *  mantissa.                                                             */
-    struct _float_bits {
+    struct {
         /*  The notation x : n; means x will be a variable in the struct with *
          *  exactly n bits reserved. So unsigned int sign : 1; means the      *
          *  variable "sign" will have exactly 1 bit reserved for it.          */
@@ -263,8 +265,8 @@ typedef union _tmpl_IEEE754_Float {
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
  *  to swap the order of the bit-field in the union.                          */
-typedef union _tmpl_IEEE754_Float {
-    struct _float_bits {
+typedef union tmpl_IEEE754_Float_Def {
+    struct {
         unsigned int man1 : 16;
         unsigned int man0 : 7;
         unsigned int expo : 8;
@@ -300,8 +302,8 @@ typedef union _tmpl_IEEE754_Float {
 #define TMPL_DOUBLE_BIAS 0x3FF
 
 /*  Same idea as the union used for float, but for a 64-bit double.           */
-typedef union _tmpl_IEEE754_Double {
-    struct _big_bits {
+typedef union tmpl_IEEE754_Double_Def {
+    struct {
         unsigned int sign : 1;
         unsigned int expo : 11;
         unsigned int man0 : 4;
@@ -323,8 +325,8 @@ typedef union _tmpl_IEEE754_Double {
 
 /*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
  *  endianness. See the above comments for information on this data type.     */
-typedef union _tmpl_IEEE754_Double {
-    struct _big_bits {
+typedef union tmpl_IEEE754_Double_Def {
+    struct {
         unsigned int man3 : 16;
         unsigned int man2 : 16;
         unsigned int man1 : 16;
@@ -355,95 +357,6 @@ typedef union _tmpl_IEEE754_Double {
  *  Abort compiling.                                                          */
 #error "tmpl_math.h: TMPL_LDOUBLE_ENDIANNESS is undefined."
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
-
-/*  The most common type of long double for personal computers is the         *
- *  little endian amd64 format (also the x86_64 format). This uses            *
- *  the IEEE-754 extended precision 80-bit format with 48-bits of padding     *
- *  to create a single 128-bit object. The padding components are junk        *
- *  and can almost always be ignored.                                         */
-typedef union _tmpl_IEEE754_LDouble {
-    struct {
-        unsigned int man3 : 16;
-        unsigned int man2 : 16;
-        unsigned int man1 : 16;
-        unsigned int man0 : 15;
-
-        /*  The 80-bit extended format specifies that the 64th bit is the     *
-         *  integer part of the mantissa. That is, the value n in the         *
-         *  representation x = n.m * 2^e (m is the rest of the mantissa,      *
-         *  e is the exponent). It is a single bit and can be 0 or 1.         */
-        unsigned int intr : 1;
-        unsigned int expo : 15;
-        unsigned int sign : 1;
-        unsigned int pad2 : 16;
-        unsigned int pad1 : 16;
-        unsigned int pad0 : 16;
-    } bits;
-
-    /*  Long double the above struct represents.                              */
-    long double r;
-} tmpl_IEEE754_LDouble;
-
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
-
-/*  The i386 architecture uses a 96-bit implementation. This uses the         *
- *  80-bit extended precision with 16 bits of padding.                        */
-typedef union _tmpl_IEEE754_LDouble {
-    struct {
-        unsigned int man3 : 16;
-        unsigned int man2 : 16;
-        unsigned int man1 : 16;
-        unsigned int man0 : 15;
-        unsigned int intr : 1;
-        unsigned int expo : 15;
-        unsigned int sign : 1;
-        unsigned int pad0 : 16;
-    } bits;
-
-    /*  Long double the above struct represents.                              */
-    long double r;
-} tmpl_IEEE754_LDouble;
-
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
-
-/*  aarch64 uses the 128-bit quadruple precision for long double.             */
-typedef union _tmpl_IEEE754_LDouble {
-    struct {
-        unsigned int man6 : 16;
-        unsigned int man5 : 16;
-        unsigned int man4 : 16;
-        unsigned int man3 : 16;
-        unsigned int man2 : 16;
-        unsigned int man1 : 16;
-        unsigned int man0 : 16;
-        unsigned int expo : 15;
-        unsigned int sign : 1;
-    } bits;
-    long double r;
-} tmpl_IEEE754_LDouble;
-
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
@@ -455,7 +368,7 @@ typedef union _tmpl_IEEE754_LDouble {
 
 /*  MIPS little endian uses the same structure as double, 64 bit. The         *
  *  Windows compiler MSVC also uses this for x86_64.                          */
-typedef union _tmpl_IEEE754_LDouble {
+typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
         unsigned int man2 : 16;
@@ -478,7 +391,7 @@ typedef union _tmpl_IEEE754_LDouble {
 
 /*  MIPS for big endian. PowerPC and S390 also implement long double          *
  *  using this style, which is the same as double.                            */
-typedef union _tmpl_IEEE754_LDouble {
+typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
         unsigned int expo : 11;
@@ -490,7 +403,96 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUAD_BIG_ENDIAN
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  80-bit extended precision has exponent bias of 16,383.                    */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  The i386 architecture uses a 96-bit implementation. This uses the         *
+ *  80-bit extended precision with 16 bits of padding.                        */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 15;
+        unsigned int intr : 1;
+        unsigned int expo : 15;
+        unsigned int sign : 1;
+        unsigned int pad0 : 16;
+    } bits;
+
+    /*  Long double the above struct represents.                              */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  80-bit extended precision has exponent bias of 16,383.                    */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  The most common type of long double for personal computers is the         *
+ *  little endian amd64 format (also the x86_64 format). This uses            *
+ *  the IEEE-754 extended precision 80-bit format with 48-bits of padding     *
+ *  to create a single 128-bit object. The padding components are junk        *
+ *  and can almost always be ignored.                                         */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 15;
+
+        /*  The 80-bit extended format specifies that the 64th bit is the     *
+         *  integer part of the mantissa. That is, the value n in the         *
+         *  representation x = n.m * 2^e (m is the rest of the mantissa,      *
+         *  e is the exponent). It is a single bit and can be 0 or 1.         */
+        unsigned int intr : 1;
+        unsigned int expo : 15;
+        unsigned int sign : 1;
+        unsigned int pad2 : 16;
+        unsigned int pad1 : 16;
+        unsigned int pad0 : 16;
+    } bits;
+
+    /*  Long double the above struct represents.                              */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  128-bit quadruple precision has exponent bias of 16,383.                  */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  aarch64 uses the 128-bit quadruple precision for long double.             */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        unsigned int man6 : 16;
+        unsigned int man5 : 16;
+        unsigned int man4 : 16;
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 16;
+        unsigned int expo : 15;
+        unsigned int sign : 1;
+    } bits;
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
@@ -500,7 +502,7 @@ typedef union _tmpl_IEEE754_LDouble {
 #define TMPL_LDOUBLE_BIAS 0x3FFF
 
 /*  Similar to aarch64, but with big endianness.                              */
-typedef union _tmpl_IEEE754_LDouble {
+typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
         unsigned int expo : 15;

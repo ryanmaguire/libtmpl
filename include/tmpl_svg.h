@@ -66,7 +66,7 @@
  *  are modeled after the tikz arrows. A no-arrow option is also provided. If *
  *  you want to flip the direction, use the Reverse option, i.e. something    *
  *  like tmpl_SVG_Reverse_Stealth_Arrow.                                      */
-typedef enum {
+typedef enum tmpl_SVG_ArrowType_Def {
     tmpl_SVG_No_Arrow,
     tmpl_SVG_Stealth_Arrow,
     tmpl_SVG_Reverse_Stealth_Arrow,
@@ -77,7 +77,7 @@ typedef enum {
 } tmpl_SVG_ArrowType;
 
 /*  Struct for adding text and labelling things in the drawing.               */
-typedef struct _tmpl_SVG_Label {
+typedef struct tmpl_SVG_Label_Def {
     char *content;
     tmpl_TwoVector anchor;
     tmpl_TwoVector shift;
@@ -96,7 +96,7 @@ typedef struct _tmpl_SVG_Label {
 
 /*  Simple struct for working with colors. Stores the RGB value of the color, *
  *  and allows for opacity with values between 0 and 1.                       */
-typedef struct _tmpl_SVG_Color {
+typedef struct tmpl_SVG_Color_Def {
     unsigned char red, green, blue;
     double opacity;
 } tmpl_SVG_Color;
@@ -114,7 +114,7 @@ extern const tmpl_SVG_Color tmpl_SVG_Magenta;
 /*  This is the primary structure for using colors in drawings. It contains a *
  *  color, which allows for opacity (see above), a linewidth, and a string    *
  *  for optional dashed lines.                                                */
-typedef struct _tmpl_SVG_Pen {
+typedef struct tmpl_SVG_Pen_Def {
     tmpl_SVG_Color color;
     double linewidth;
     char *dash_array;
@@ -164,7 +164,7 @@ extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Silver;
 extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Sand;
 
 /*  Struct containing all of the information for arrows.                      */
-typedef struct _tmpl_SVG_Arrow {
+typedef struct tmpl_SVG_Arrow_Def {
 
     /*  The type of arrow to draw. (Stealth, triangle, LaTeX, or none).       */
     tmpl_SVG_ArrowType arrow_type;
@@ -208,15 +208,15 @@ typedef struct _tmpl_SVG_Arrow {
 /*  This struct is required for most routines and is included as an attribute *
  *  of several data types. It is used to convert between the geometry of the  *
  *  actual output file and the coordinates we use for computations.           */
-typedef struct _tmpl_SVG_Canvas tmpl_SVG_Canvas;
+typedef struct tmpl_SVG_Canvas_Def tmpl_SVG_Canvas;
 
-/*  This function pointer is stored inside a _tmpl_SVG_Canvas struct. The     *
+/*  This function pointer is stored inside a tmpl_SVG_Canvas struct. The      *
  *  function takes in the canvas and a double and transforms the user's       *
  *  coordinates to the coordinates of the actual file.                        */
 typedef double (*tmpl_SVG_Canvas_Transform)(tmpl_SVG_Canvas *, double);
 
-/*  Actual definition of _tmpl_SVG_Canvas struct.                             */
-struct _tmpl_SVG_Canvas {
+/*  Actual definition of tmpl_SVG_Canvas struct.                              */
+struct tmpl_SVG_Canvas_Def {
 
     /*  The size of the SVG, in pixels.                                       */
     unsigned int width, height;
@@ -240,7 +240,7 @@ struct _tmpl_SVG_Canvas {
     tmpl_SVG_Canvas_Transform X_Transform;
     tmpl_SVG_Canvas_Transform Y_Transform;
 };
-/*  End of _tmpl_SVG_Canvas definition.                                       */
+/*  End of tmpl_SVG_Canvas definition.                                        */
 
 /*  Use these macros to access the data in a pointer to tmpl_SVG_Canvas.      */
 #define tmpl_SVG_CANVAS_WIDTH(canvas) ((canvas)->width)
@@ -256,7 +256,7 @@ struct _tmpl_SVG_Canvas {
 
 /*  Struct stored in paths and circles containing all of the info on how to   *
  *  draw the object.                                                          */
-typedef struct _tmpl_SVG_Palette {
+typedef struct tmpl_SVG_Palette_Def {
 
     /*  Boolean for determining if there are lables along the path.           */
     tmpl_Bool has_labels;
@@ -370,13 +370,13 @@ typedef struct _tmpl_SVG_Palette {
     ((palette)->tick_semi_semi_height)
 
 /*  Struct for working with SVG files.                                        */
-typedef struct _tmpl_SVG {
+typedef struct tmpl_SVG_Def {
     FILE *fp;
     tmpl_SVG_Canvas *canvas;
 } tmpl_SVG;
 
 /*  This is the primary data type used for drawing 2 dimensional figures.     */
-typedef struct _tmpl_SVG_Path2D {
+typedef struct tmpl_SVG_Path2D_Def {
 
     /*  This pointer contains all of the points of the path.                  */
     tmpl_TwoVector *data;
@@ -403,7 +403,7 @@ typedef struct _tmpl_SVG_Path2D {
 
 /*  This is the primary structure for working with and drawing circles. It    *
  *  contains geometric data as well as visual data for how to draw it.        */
-typedef struct _tmpl_SVG_Circle {
+typedef struct tmpl_SVG_Circle_Def {
 
     /*  The geometrical data of the circle. We need the center and the radius.*/
     tmpl_Circle2D *data;
@@ -417,7 +417,7 @@ typedef struct _tmpl_SVG_Circle {
 #define tmpl_SVG_CIRCLE_PALETTE(circle) ((circle)->palette)
 
 /*  A data type for conviently dealing with lines.                            */
-typedef struct _tmpl_SVG_Line {
+typedef struct tmpl_SVG_Line_Def {
 
     /*  The data for the line.                                                */
     tmpl_Line2D *data;

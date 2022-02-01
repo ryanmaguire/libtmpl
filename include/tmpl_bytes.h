@@ -71,6 +71,8 @@
  *      more changes to comments or code unless something breaks.             *
  *  2022/01/24: Ryan Maguire                                                  *
  *      Added extern "C" statement for C++ compatibility.                     *
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Getting rid of -Wreserved-identifier warnings with clang.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -84,7 +86,7 @@ extern "C" {
 #endif
 
 /*  Data type for determining the endianness of your platform.                */
-typedef enum _tmpl_Endian {
+typedef enum tmpl_Endian_Def {
     tmpl_UnknownEndian,
     tmpl_LittleEndian,
     tmpl_MixedEndian,

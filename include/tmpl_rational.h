@@ -64,7 +64,7 @@
  *      will define 64-bit, since signed long int is 32-bit.                  */
 
 /*  Data type for working with rational numbers.                              */
-typedef struct _tmpl_RationalNumber {
+typedef struct tmpl_RationalNumber_Def {
     signed long int numerator;
     signed long int denominator;
 } tmpl_RationalNumber;

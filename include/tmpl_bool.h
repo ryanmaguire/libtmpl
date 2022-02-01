@@ -61,6 +61,8 @@
  *      more changes to comments or code unless something breaks.             *
  *  2021/08/31: Ryan Maguire                                                  *
  *      Added extern "C" statement for C++ support.                           *
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Getting rid of -Wreserved-identifier warnings with clang.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -79,7 +81,7 @@ extern "C" {
  *  supports Booleans, you should be able to use stdbools with libtmpl.       */
 
 /*  We prepend tmpl onto False, True, and Bool to avoid name conflicts.       */
-typedef enum _tmpl_Bool {tmpl_False, tmpl_True} tmpl_Bool;
+typedef enum tmpl_Bool_Def {tmpl_False, tmpl_True} tmpl_Bool;
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
