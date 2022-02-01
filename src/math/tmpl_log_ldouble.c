@@ -99,7 +99,7 @@ long double tmpl_LDouble_Log(long double x)
 long double tmpl_LDouble_Log(long double x)
 {
     double logx = log((double)x);
-    return (long double)x;
+    return (long double)logx;
 }
 
 #endif
