@@ -24,7 +24,7 @@
  *  required to be at least 16 bits wide, so we can safely and portably       *
  *  create this struct. The IEEE format specify 112 bits for the mantissa, 15 *
  *  bits for the exponent, and 1 bit for the sign.                            */
-typedef struct _tmpl_Quadruple {
+typedef struct tmpl_Quadruple_Def {
     unsigned int mant1 : 16;
     unsigned int mant2 : 16;
     unsigned int mant3 : 16;

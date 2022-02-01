@@ -63,6 +63,8 @@
  *      Copied from rss_ringoccs.                                             *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Edited file for use in libtmpl.                                       *
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Getting rid of -Wreserved-identifier warnings with clang.             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -85,17 +87,17 @@ extern "C" {
  *  gsl_complex *w; you can safely cast via:                                  *
  *      z = (tmpl_ComplexDouble *)&w;                                         *
  *  And similarly we can do w = (gsl_complex *)&z;                            */
-typedef struct _tmpl_ComplexDouble {
+typedef struct tmpl_ComplexDouble_Def {
     double dat[2];
 } tmpl_ComplexDouble;
 
 /*  Define single and long double precision equivalents.                      */
-typedef struct _tmpl_ComplexFloat {
+typedef struct tmpl_ComplexFloat_Def {
     float dat[2];
 } tmpl_ComplexFloat;
 
 /*  Long double precision complex numbers.                                    */
-typedef struct _tmpl_ComplexLongDouble {
+typedef struct tmpl_ComplexLongDouble_Def {
     long double dat[2];
 } tmpl_ComplexLongDouble;
 

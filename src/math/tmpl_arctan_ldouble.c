@@ -19,7 +19,7 @@
 
 #include <libtmpl/include/tmpl_math.h>
 
-static long double __arctan_small_vals(long double x)
+static long double tmpl_arctan_small_vals(long double x)
 {
     long double x_sq = x*x;
     long double out;
@@ -59,27 +59,27 @@ long double tmpl_LDouble_Arctan(long double x)
     }
 
     if (arg < 0.4375L)
-        return sgn_x * __arctan_small_vals(arg);
+        return sgn_x * tmpl_arctan_small_vals(arg);
 
     else if (arg < 0.6875L)
     {
         arg = (2.0L * arg - 1.0L) / (2.0L + arg);
-        return sgn_x * (ATAN_OF_ONE_HALF + __arctan_small_vals(arg));
+        return sgn_x * (ATAN_OF_ONE_HALF + tmpl_arctan_small_vals(arg));
     }
     else if (arg < 1.1875L)
     {
         arg = (arg - 1.0L) / (arg + 1.0L);
-        return sgn_x * (ATAN_OF_ONE + __arctan_small_vals(arg));
+        return sgn_x * (ATAN_OF_ONE + tmpl_arctan_small_vals(arg));
     }
     else if (arg < 2.4375L)
     {
         arg = (2.0L * arg - 3.0L) / (2.0L + 3.0L * arg);
-        return sgn_x * (ATAN_OF_THREE_HALFS + __arctan_small_vals(arg));
+        return sgn_x * (ATAN_OF_THREE_HALFS + tmpl_arctan_small_vals(arg));
     }
     else
     {
         arg = -1.0L / arg;
-        return sgn_x * (tmpl_Pi_By_Two_L + __arctan_small_vals(arg));
+        return sgn_x * (tmpl_Pi_By_Two_L + tmpl_arctan_small_vals(arg));
     }
 }
 
