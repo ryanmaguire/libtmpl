@@ -355,7 +355,7 @@ typedef union _tmpl_IEEE754_Double {
  *  Abort compiling.                                                          */
 #error "tmpl_math.h: TMPL_LDOUBLE_ENDIANNESS is undefined."
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_AMD64
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
@@ -392,7 +392,7 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_I386
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
@@ -419,7 +419,7 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_AARCH64
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
@@ -444,7 +444,7 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_MIPS_LITTLE_ENDIAN
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
@@ -467,7 +467,7 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_MIPS_BIG_ENDIAN
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
@@ -490,7 +490,7 @@ typedef union _tmpl_IEEE754_LDouble {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_S390X
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUAD_BIG_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */

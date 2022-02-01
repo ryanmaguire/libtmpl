@@ -118,12 +118,14 @@ typedef enum _tmpl_double_type {
  *  function below will attempt to determine which of these, if any, is       *
  *  implemented. Unknown is returned if this can't be determined.             */
 typedef enum _tmpl_ldouble_type {
-    tmpl_ldouble_mips_big_endian,
-    tmpl_ldouble_mips_little_endian,
-    tmpl_ldouble_i386,
-    tmpl_ldouble_aarch64,
-    tmpl_ldouble_amd64,
-    tmpl_ldouble_s390x,
+    tmpl_ldouble_64_bit_big_endian,
+    tmpl_ldouble_64_bit_little_endian,
+    tmpl_ldouble_96_bit_extended_little_endian,
+    tmpl_ldouble_128_bit_quadruple_little_endian,
+    tmpl_ldouble_128_bit_quadruple_big_endian,
+    tmpl_ldouble_128_bit_extended_little_endian,
+    tmpl_ldouble_128_bit_doubledouble_little_endian,
+    tmpl_ldouble_128_bit_doubledouble_big_endian,
     tmpl_ldouble_unknown
 } tmpl_ldouble_type;
 
@@ -282,6 +284,10 @@ static tmpl_float_type tmpl_det_float_type(void)
         float r;
     } f;
 
+    /*  float should have 32 bits. Check for this.                            */
+    if ((sizeof(float) * CHAR_BIT) != 32)
+        return tmpl_float_unknown_endian;
+
     /*  Set the bits in the struct to represent the number 1.0 using the      *
      *  IEEE-754 format. If the endianness is flipped, we should get          *
      *  gibberish, whereas if its correct we should get 1.0.                  */
@@ -361,6 +367,10 @@ static tmpl_double_type tmpl_det_double_type(void)
         /*  And lastly, a double that the above structs are representing.     */
         double r;
     } d;
+
+    /*  float should have 32 bits. Check for this.                            */
+    if ((sizeof(double) * CHAR_BIT) != 64)
+        return tmpl_double_unknown_endian;
 
     /*  Set the bits to represent 1.0 using the IEEE-754 format. If this is   *
      *  big endian, we should get gibberish. If it's little endian, we should *
@@ -512,85 +522,96 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } s390x_type;
 
-    /*  Set the bits to represent 1.0 for AMD64 architecture.                 */
-    amd64_type.bits.man3 = 0x0U;
-    amd64_type.bits.man2 = 0x0U;
-    amd64_type.bits.man1 = 0x0U;
-    amd64_type.bits.man0 = 0x0U;
-    amd64_type.bits.intr = 0x1U;
-    amd64_type.bits.expo = 0x3FFFU;
-    amd64_type.bits.sign = 0x0U;
-    amd64_type.bits.pad0 = 0x0U;
-    amd64_type.bits.pad1 = 0x0U;
-    amd64_type.bits.pad2 = 0x0U;
+    /*  Try the 64-bit types first.                                           */
+    /*  float should have 32 bits. Check for this.                            */
+    if ((sizeof(long double) * CHAR_BIT) == 64)
+    {
+        /*  MIPS big endian (or PowerPC, or s390).                            */
+        mips_big_type.bits.man3 = 0x0U;
+        mips_big_type.bits.man2 = 0x0U;
+        mips_big_type.bits.man1 = 0x0U;
+        mips_big_type.bits.man0 = 0x0U;
+        mips_big_type.bits.expo = 0x3FFU;
+        mips_big_type.bits.sign = 0x0U;
 
-    /*  Check if this worked.                                                 */
-    if (amd64_type.r == 1.0L)
-        return tmpl_ldouble_amd64;
+        if (mips_big_type.r == 1.0L)
+            return tmpl_ldouble_64_bit_big_endian;
 
-    /*  If not, try the i386 implementation.                                  */
-    i386_type.bits.man3 = 0x0U;
-    i386_type.bits.man2 = 0x0U;
-    i386_type.bits.man1 = 0x0U;
-    i386_type.bits.man0 = 0x0U;
-    i386_type.bits.intr = 0x1U;
-    i386_type.bits.expo = 0x3FFFU;
-    i386_type.bits.sign = 0x0U;
-    i386_type.bits.pad0 = 0x0U;
+        /*  Next, MIPS little endian (or Microsoft compiler, amd64).          */
+        mips_little_type.bits.man3 = 0x0U;
+        mips_little_type.bits.man2 = 0x0U;
+        mips_little_type.bits.man1 = 0x0U;
+        mips_little_type.bits.man0 = 0x0U;
+        mips_little_type.bits.expo = 0x3FFU;
+        mips_little_type.bits.sign = 0x0U;
 
-    if (i386_type.r == 1.0L)
-        return tmpl_ldouble_i386;
+        if (mips_little_type.r == 1.0L)
+            return tmpl_ldouble_64_bit_little_endian;
+    }
 
-    /*  Next, try aarch64.                                                    */
-    aarch64_type.bits.man6 = 0x0U;
-    aarch64_type.bits.man5 = 0x0U;
-    aarch64_type.bits.man4 = 0x0U;
-    aarch64_type.bits.man3 = 0x0U;
-    aarch64_type.bits.man2 = 0x0U;
-    aarch64_type.bits.man1 = 0x0U;
-    aarch64_type.bits.man0 = 0x0U;
-    aarch64_type.bits.expo = 0x3FFFU;
-    aarch64_type.bits.sign = 0x0U;
+    /*  96-bit implementations.                                               */
+    else if ((sizeof(long double) * CHAR_BIT) == 96)
+    {
+        /*  Try the i386 implementation.                                      */
+        i386_type.bits.man3 = 0x0U;
+        i386_type.bits.man2 = 0x0U;
+        i386_type.bits.man1 = 0x0U;
+        i386_type.bits.man0 = 0x0U;
+        i386_type.bits.intr = 0x1U;
+        i386_type.bits.expo = 0x3FFFU;
+        i386_type.bits.sign = 0x0U;
+        i386_type.bits.pad0 = 0x0U;
 
-    if (aarch64_type.r == 1.0L)
-        return tmpl_ldouble_aarch64;
+        if (i386_type.r == 1.0L)
+            return tmpl_ldouble_96_bit_extended_little_endian;
+    }
+    else if ((sizeof(long double) * CHAR_BIT) == 128)
+    {
+        /*  Set the bits to represent 1.0 for AMD64 architecture.             */
+        amd64_type.bits.man3 = 0x0U;
+        amd64_type.bits.man2 = 0x0U;
+        amd64_type.bits.man1 = 0x0U;
+        amd64_type.bits.man0 = 0x0U;
+        amd64_type.bits.intr = 0x1U;
+        amd64_type.bits.expo = 0x3FFFU;
+        amd64_type.bits.sign = 0x0U;
+        amd64_type.bits.pad0 = 0x0U;
+        amd64_type.bits.pad1 = 0x0U;
+        amd64_type.bits.pad2 = 0x0U;
 
-    /*  Next, MIPS big endian (or PowerPC, or s390).                          */
-    mips_big_type.bits.man3 = 0x0U;
-    mips_big_type.bits.man2 = 0x0U;
-    mips_big_type.bits.man1 = 0x0U;
-    mips_big_type.bits.man0 = 0x0U;
-    mips_big_type.bits.expo = 0x3FFU;
-    mips_big_type.bits.sign = 0x0U;
+        /*  Check if this worked.                                             */
+        if (amd64_type.r == 1.0L)
+            return tmpl_ldouble_128_bit_extended_little_endian;
 
-    if (mips_big_type.r == 1.0L)
-        return tmpl_ldouble_mips_big_endian;
+        /*  Next, try aarch64.                                                */
+        aarch64_type.bits.man6 = 0x0U;
+        aarch64_type.bits.man5 = 0x0U;
+        aarch64_type.bits.man4 = 0x0U;
+        aarch64_type.bits.man3 = 0x0U;
+        aarch64_type.bits.man2 = 0x0U;
+        aarch64_type.bits.man1 = 0x0U;
+        aarch64_type.bits.man0 = 0x0U;
+        aarch64_type.bits.expo = 0x3FFFU;
+        aarch64_type.bits.sign = 0x0U;
 
-    /*  Next, MIPS little endian (or Microsoft compiler, amd64).              */
-    mips_little_type.bits.man3 = 0x0U;
-    mips_little_type.bits.man2 = 0x0U;
-    mips_little_type.bits.man1 = 0x0U;
-    mips_little_type.bits.man0 = 0x0U;
-    mips_little_type.bits.expo = 0x3FFU;
-    mips_little_type.bits.sign = 0x0U;
+        if (aarch64_type.r == 1.0L)
+            return tmpl_ldouble_128_bit_quadruple_little_endian;
 
-    if (mips_little_type.r == 1.0L)
-        return tmpl_ldouble_mips_little_endian;
+        /*  s390x architecture using GCC.                                     */
+        s390x_type.bits.man6 = 0x0U;
+        s390x_type.bits.man5 = 0x0U;
+        s390x_type.bits.man4 = 0x0U;
+        s390x_type.bits.man3 = 0x0U;
+        s390x_type.bits.man2 = 0x0U;
+        s390x_type.bits.man1 = 0x0U;
+        s390x_type.bits.man0 = 0x0U;
+        s390x_type.bits.expo = 0x3FFFU;
+        s390x_type.bits.sign = 0x0U;
 
-    /*  s390x architecture using GCC.                                         */
-    s390x_type.bits.man6 = 0x0U;
-    s390x_type.bits.man5 = 0x0U;
-    s390x_type.bits.man4 = 0x0U;
-    s390x_type.bits.man3 = 0x0U;
-    s390x_type.bits.man2 = 0x0U;
-    s390x_type.bits.man1 = 0x0U;
-    s390x_type.bits.man0 = 0x0U;
-    s390x_type.bits.expo = 0x3FFFU;
-    s390x_type.bits.sign = 0x0U;
+        if (s390x_type.r == 1.0L)
+            return tmpl_ldouble_128_bit_quadruple_big_endian;
+    }
 
-    if (s390x_type.r == 1.0L)
-        return tmpl_ldouble_s390x;
-    
     /*  If all failed, return unknown.                                        */
     return tmpl_ldouble_unknown;
 }
@@ -656,12 +677,12 @@ int main(void)
     fprintf(fp, "#define TMPL_LITTLE_ENDIAN 1\n");
     fprintf(fp, "#define TMPL_MIXED_ENDIAN 2\n");
     fprintf(fp, "#define TMPL_UNKNOWN_ENDIAN 3\n\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_MIPS_BIG_ENDIAN 0\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_MIPS_LITTLE_ENDIAN 1\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_I386 2\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_AARCH64 3\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_AMD64 4\n");
-    fprintf(fp, "#define TMPL_LDOUBLE_S390X 5\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_BIG_ENDIAN 0\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN 1\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN 2\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN 3\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUAD_BIG_ENDIAN 4\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN 5\n");
     fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 6\n\n");
 
     /*  Print the integer endianness to the header file.                      */
@@ -691,18 +712,18 @@ int main(void)
         fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
 
     /*  Lastly, long double.                                                  */
-    if (ldouble_type == tmpl_ldouble_amd64)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_AMD64\n");
-    else if (ldouble_type == tmpl_ldouble_aarch64)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_AARCH64\n");
-    else if (ldouble_type == tmpl_ldouble_i386)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_I386\n");
-    else if (ldouble_type == tmpl_ldouble_mips_little_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_MIPS_LITTLE_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_mips_big_endian)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_MIPS_BIG_ENDIAN\n");
-    else if (ldouble_type == tmpl_ldouble_s390x)
-        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_S390X\n");
+    if (ldouble_type == tmpl_ldouble_128_bit_extended_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_big_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUAD_BIG_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUAD_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_96_bit_extended_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_64_bit_big_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN\n");
+    else if (ldouble_type == tmpl_ldouble_64_bit_little_endian)
+        fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_BIG_ENDIAN\n");
     else
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
 
