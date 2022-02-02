@@ -430,6 +430,32 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  80-bit extended precision has exponent bias of 16,383.                    */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  Big endian version of i386 method.                                        */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        unsigned int sign : 1;
+        unsigned int expo : 15;
+        unsigned int pad0 : 16;
+        unsigned int intr : 1;
+        unsigned int man0 : 15;
+        unsigned int man1 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
+    } bits;
+
+    /*  Long double the above struct represents.                              */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
 /*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
@@ -461,6 +487,34 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int pad2 : 16;
         unsigned int pad1 : 16;
         unsigned int pad0 : 16;
+    } bits;
+
+    /*  Long double the above struct represents.                              */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  80-bit extended precision has exponent bias of 16,383.                    */
+#define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  Big endian version of the amd64 method. GCC uses this for ia64.           */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        unsigned int pad0 : 16;
+        unsigned int pad1 : 16;
+        unsigned int sign : 1;
+        unsigned int expo : 15;
+        unsigned int pad2 : 16;
+        unsigned int intr : 1;
+        unsigned int man3 : 15;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 16;
     } bits;
 
     /*  Long double the above struct represents.                              */
@@ -514,6 +568,78 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man5 : 16;
         unsigned int man6 : 16;
     } bits;
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  128-bit double-double has exponent bias of 1,023, same as double.         */
+#define TMPL_LDOUBLE_BIAS 0x3FF
+
+/*  Similar to aarch64, but with big endianness.                              */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        /*  The most significant double.                                      */
+        unsigned int man3a : 16;
+        unsigned int man2a : 16;
+        unsigned int man1a : 16;
+        unsigned int man0a : 4;
+        unsigned int expoa : 11;
+        unsigned int signa : 1;
+
+        /*  The least significant double.                                     */
+        unsigned int man3b : 16;
+        unsigned int man2b : 16;
+        unsigned int man1b : 16;
+        unsigned int man0b : 4;
+        unsigned int expob : 11;
+        unsigned int signb : 1;
+    } bits;
+
+    /*  The two double making up r. r = d[0] + d[1].                          */
+    double d[2];
+
+    /*  The long double the bits represent.                                   */
+    long double r;
+} tmpl_IEEE754_LDouble;
+
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
+/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+
+/*  Define this macro to 1, indicating IEEE-754 support.                      */
+#define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  128-bit double-double has exponent bias of 1,023, same as double.         */
+#define TMPL_LDOUBLE_BIAS 0x3FF
+
+/*  Similar to aarch64, but with big endianness.                              */
+typedef union tmpl_IEEE754_LDouble_Def {
+    struct {
+        /*  The most significant double.                                      */
+        unsigned int signa : 1;
+        unsigned int expoa : 11;
+        unsigned int man0a : 4;
+        unsigned int man1a : 16;
+        unsigned int man2a : 16;
+        unsigned int man3a : 16;
+
+        /*  The least significant double.                                     */
+        unsigned int signb : 1;
+        unsigned int expob : 11;
+        unsigned int man0b : 4;
+        unsigned int man1b : 16;
+        unsigned int man2b : 16;
+        unsigned int man3b : 16;
+    } bits;
+
+    /*  The two double making up r. r = d[0] + d[1].                          */
+    double d[2];
+
+    /*  The long double the bits represent.                                   */
     long double r;
 } tmpl_IEEE754_LDouble;
 

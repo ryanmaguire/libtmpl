@@ -72,6 +72,8 @@
  *  2022/01/11: Ryan Maguire                                                  *
  *      Added support for s390x big endian quadruple precision. This is how   *
  *      GCC implements long double on that architecture.                      *
+ *  2022/02/01: Ryan Maguire                                                  *
+ *      Added more general support for long double.                           *
  ******************************************************************************/
 
 /*  Avoid silly warning on Windows for using fopen. GNU/Linux, FreeBSD, and   *
@@ -370,7 +372,7 @@ static tmpl_double_type tmpl_det_double_type(void)
         double r;
     } d;
 
-    /*  float should have 32 bits. Check for this.                            */
+    /*  double should have 64 bits. Check for this.                           */
     if ((sizeof(double) * CHAR_BIT) != 64)
         return tmpl_double_unknown_endian;
 
@@ -438,6 +440,25 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } amd64_type;
 
+    /*  Similar to amd64, but big endian. GCC uses this with ia64.            */
+    union {
+        struct {
+            unsigned int pad0 : 16;
+            unsigned int pad1 : 16;
+            unsigned int sign : 1;
+            unsigned int expo : 15;
+            unsigned int pad2 : 16;
+            unsigned int intr : 1;
+            unsigned int man3 : 15;
+            unsigned int man2 : 16;
+            unsigned int man1 : 16;
+            unsigned int man0 : 16;
+        } bits;
+
+        /*  Long double the above struct represents.                          */
+        long double r;
+    } ia64_type;
+
     /*  The i386 architecture uses a 96-bit implementation. This uses the     *
      *  80-bit extended precision with 16 bits of padding.                    */
     union {
@@ -450,7 +471,18 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
             unsigned int expo : 15;
             unsigned int sign : 1;
             unsigned int pad0 : 16;
-        } bits;
+        } little_bits;
+
+        struct {
+            unsigned int sign : 1;
+            unsigned int expo : 15;
+            unsigned int pad0 : 16;
+            unsigned int intr : 1;
+            unsigned int man0 : 15;
+            unsigned int man1 : 16;
+            unsigned int man2 : 16;
+            unsigned int man3 : 16;
+        } big_bits;
 
         /*  Long double the above struct represents.                          */
         long double r;
@@ -474,11 +506,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
 
     /*  MIPS little endian uses the same structure as double, 64 bit. Note,   *
      *  Microsoft's C Compiler does not support higher precision than double  *
-     *  and long double is the same size as double. Because of this, using    *
-     *  MSVC this function will return MIPS Little Endian. Your computer is   *
-     *  likely not using that architecture, it's just that MIPS Little        *
-     *  Endian long double and amd64 double precision are identical. As far   *
-     *  as libtmpl is concerned, there's no difference.                       */
+     *  and long double is the same size as double.                           */
     union {
         struct {
             unsigned int man3 : 16;
@@ -524,7 +552,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } s390x_type;
 
-    /*  GCC implements long double as 128-bit double double on powerpc.       */
+    /*  GCC implements long double as 128-bit double-double on ppc64el.       */
     union {
         struct {
             /*  The most significant double.                                  */
@@ -569,7 +597,6 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     } powerpc_big_type;
 
     /*  Try the 64-bit types first.                                           */
-    /*  float should have 32 bits. Check for this.                            */
     if ((sizeof(long double) * CHAR_BIT) == 64)
     {
         /*  MIPS big endian (or PowerPC, or s390).                            */
@@ -599,17 +626,27 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     else if ((sizeof(long double) * CHAR_BIT) == 96)
     {
         /*  Try the i386 implementation.                                      */
-        i386_type.bits.man3 = 0x0U;
-        i386_type.bits.man2 = 0x0U;
-        i386_type.bits.man1 = 0x0U;
-        i386_type.bits.man0 = 0x0U;
-        i386_type.bits.intr = 0x1U;
-        i386_type.bits.expo = 0x3FFFU;
-        i386_type.bits.sign = 0x0U;
-        i386_type.bits.pad0 = 0x0U;
+        i386_type.big_bits.man3 = 0x0U;
+        i386_type.big_bits.man2 = 0x0U;
+        i386_type.big_bits.man1 = 0x0U;
+        i386_type.big_bits.man0 = 0x0U;
+        i386_type.big_bits.intr = 0x1U;
+        i386_type.big_bits.expo = 0x3FFFU;
+        i386_type.big_bits.sign = 0x0U;
+        i386_type.big_bits.pad0 = 0x0U;
 
         if (i386_type.r == 1.0L)
             return tmpl_ldouble_96_bit_extended_little_endian;
+
+        /*  Try little endianness as well.                                    */
+        i386_type.little_bits.man3 = 0x0U;
+        i386_type.little_bits.man2 = 0x0U;
+        i386_type.little_bits.man1 = 0x0U;
+        i386_type.little_bits.man0 = 0x0U;
+        i386_type.little_bits.intr = 0x1U;
+        i386_type.little_bits.expo = 0x3FFFU;
+        i386_type.little_bits.sign = 0x0U;
+        i386_type.little_bits.pad0 = 0x0U;
     }
     else if ((sizeof(long double) * CHAR_BIT) == 128)
     {
@@ -628,6 +665,21 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         /*  Check if this worked.                                             */
         if (amd64_type.r == 1.0L)
             return tmpl_ldouble_128_bit_extended_little_endian;
+
+        ia64_type.bits.man3 = 0x0U;
+        ia64_type.bits.man2 = 0x0U;
+        ia64_type.bits.man1 = 0x0U;
+        ia64_type.bits.man0 = 0x0U;
+        ia64_type.bits.intr = 0x1U;
+        ia64_type.bits.expo = 0x3FFFU;
+        ia64_type.bits.sign = 0x0U;
+        ia64_type.bits.pad0 = 0x0U;
+        ia64_type.bits.pad1 = 0x0U;
+        ia64_type.bits.pad2 = 0x0U;
+
+        /*  Check if this worked.                                             */
+        if (ia64_type.r == 1.0L)
+            return tmpl_ldouble_128_bit_extended_big_endian;
 
         /*  Next, try aarch64.                                                */
         aarch64_type.bits.man6 = 0x0U;
@@ -657,8 +709,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         if (s390x_type.r == 1.0L)
             return tmpl_ldouble_128_bit_quadruple_big_endian;
 
-
-        /*  Try the little endian equivalent.                                 */
+        /*  Lastly, try the two double-double implementations.                */
         powerpc_little_type.bits.man3a = 0x0U;
         powerpc_little_type.bits.man2a = 0x0U;
         powerpc_little_type.bits.man1a = 0x0U;
