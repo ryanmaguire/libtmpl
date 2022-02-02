@@ -633,7 +633,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         i386_type.big_bits.pad0 = 0x0U;
 
         if (i386_type.r == 1.0L)
-            return tmpl_ldouble_96_bit_extended_little_endian;
+            return tmpl_ldouble_96_bit_extended_big_endian;
 
         /*  Try little endianness as well.                                    */
         i386_type.little_bits.man3 = 0x0U;
@@ -643,6 +643,9 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         i386_type.little_bits.expo = 0x3FFFU;
         i386_type.little_bits.sign = 0x0U;
         i386_type.little_bits.pad0 = 0x0U;
+
+        if (i386_type.r == 1.0L)
+            return tmpl_ldouble_96_bit_extended_little_endian;
     }
     else if ((sizeof(long double) * CHAR_BIT) == 128)
     {
