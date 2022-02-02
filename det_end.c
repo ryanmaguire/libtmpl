@@ -466,8 +466,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
             unsigned int man3 : 16;
             unsigned int man2 : 16;
             unsigned int man1 : 16;
-            unsigned int man0 : 15;
-            unsigned int intr : 1;
+            unsigned int man0 : 16;
             unsigned int expo : 15;
             unsigned int sign : 1;
             unsigned int pad0 : 16;
@@ -477,8 +476,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
             unsigned int sign : 1;
             unsigned int expo : 15;
             unsigned int pad0 : 16;
-            unsigned int intr : 1;
-            unsigned int man0 : 15;
+            unsigned int man0 : 16;
             unsigned int man1 : 16;
             unsigned int man2 : 16;
             unsigned int man3 : 16;
@@ -630,7 +628,6 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         i386_type.big_bits.man2 = 0x0U;
         i386_type.big_bits.man1 = 0x0U;
         i386_type.big_bits.man0 = 0x0U;
-        i386_type.big_bits.intr = 0x1U;
         i386_type.big_bits.expo = 0x3FFFU;
         i386_type.big_bits.sign = 0x0U;
         i386_type.big_bits.pad0 = 0x0U;
@@ -643,7 +640,6 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         i386_type.little_bits.man2 = 0x0U;
         i386_type.little_bits.man1 = 0x0U;
         i386_type.little_bits.man0 = 0x0U;
-        i386_type.little_bits.intr = 0x1U;
         i386_type.little_bits.expo = 0x3FFFU;
         i386_type.little_bits.sign = 0x0U;
         i386_type.little_bits.pad0 = 0x0U;
