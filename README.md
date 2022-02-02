@@ -62,36 +62,31 @@ available. Running these tests is **not** required, and they are mostly for
 internal use and to verify the algorithms implemented in libtmpl.
 
 ## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
-Run the Makefile with (requires sudo privileges):
+Run the Makefile with:
 ```
 make
 ```
 To compile with OpenMP (highly recommended) run:
 ```
-make omp
+make omp=1
 ```
-**If you do not have sudo privileges, use the in-place option**
-The in-place method will place libtmpl.so in `libtmpl/`. You will NOT have
-the header files placed in `/usr/local/include/` and you will therefore need to
-pass the `-I` and `-L` options to your compiler whenever you want to use
-libtmpl.
+Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
 ```
-make inplace
-```
-And for inplace with OpenMP support
-```
-make omp_inplace
+sudo make install
 ```
 **You may need to update the LD_LIBRARY_PATH environment variable.**
 Add the following to your `.bashrc`, `.shrc`, or whichever shell you're using.
 ```
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 ```
-If you used the in-place options:
+If you did not install libtmpl to `/usr/local/lib`, try:
 ```
 export LD_LIBRARY_PATH="/path/to/libtmpl:$LD_LIBRARY_PATH"
 ```
-
+To uninstall, run:
+```
+sudo make uninstall
+```
 ### Warnings
 Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option
 will result in an error. Homebrew has versions of clang and gcc that do support
