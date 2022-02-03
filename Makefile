@@ -30,8 +30,10 @@ DEPS := $(OBJS:.o=.d)
 
 ifdef omp
 	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto -fopenmp
+	LFLAGS := -O3 -flto -fopenmp -shared
 else
 	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto
+	LFLAGS := -O3 -flto -shared
 endif
 
 .PHONY: clean install uninstall all
@@ -44,7 +46,7 @@ include/tmpl_endianness.h: ./det_end.c
 	rm -f det_end.out
 
 $(TARGET_LIB): $(OBJS)
-	$(CC) $(OBJS) -O3 -flto -shared -o $@ -lm
+	$(CC) $(OBJS) $(LFLAGS) -o $@ -lm
 
 $(BUILD_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
