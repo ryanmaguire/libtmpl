@@ -1,8 +1,207 @@
+/******************************************************************************
+ *                                 LICENSE                                    *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  under the terms of the GNU General Public License as published by         *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                             tmpl_log_double                                *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Contains code for computing the natural log at double precision.      *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Double_Log                                                       *
+ *  Purpose:                                                                  *
+ *      Computes log(x) = ln(x) = log_e(x), with e = 2.71828...               *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      log_x (double):                                                       *
+ *          The natural log of x at double precision.                         *
+ *  Called Functions:                                                         *
+ *      None if IEEE-754 support is available and libtmpl algorithms have     *
+ *      been requested. log from math.h otherwise.                            *
+ *  Method:                                                                   *
+ *      If IEEE-754 support is available, and if libtmpl algorithms have      *
+ *      been requested, log(x) is computed as follows:                        *
+ *                                                                            *
+ *          Check if x < 0, return Not-A-Number if so.                        *
+ *                                                                            *
+ *          Check if x = 0.0, return -infinity if so.                         *
+ *                                                                            *
+ *          Check if x is a subnormal (all exponent bits set to zero) number, *
+ *          normalize by 2^52 if so, and then pass to the main part of the    *
+ *          algorithm.                                                        *
+ *                                                                            *
+ *          For values not in the range 0.95 < x < 1.0, compute log(x) as     *
+ *          follows:                                                          *
+ *                                                                            *
+ *              log(x) = log(1.m * 2^b)                                       *
+ *                     = log(1.m) + log(2^b)                                  *
+ *                     = log(1.m) + b*log(2)                                  *
+ *                     = log(u) + b*log(2)      with u = 1.m                  *
+ *                     = log(ut/t) + b*log(2)   with t = 1 + k/64 for some k. *
+ *                     = log(u/t) + log(t) + b*log(2)                         *
+ *                                                                            *
+ *          Precompute log(t) in a table. Precompute 1/t in a table so that   *
+ *          u/t can be computed as u * (1/t). Also precompute log(2). The     *
+ *          value k is chosen to be the largest value such that               *
+ *          t = 1 + k/64 <= u. This value k can be obtained directly from the *
+ *          mantissa. By looking at the most significant 6 bits of the        *
+ *          mantissa, the value k is simply these 6 bits read in binary.      *
+ *                                                                            *
+ *          The value s = u/t is such that 1 <= s < 1 + 1/64. Compute log(s)  *
+ *          via the following sum:                                            *
+ *                                                                            *
+ *                        inf                                                 *
+ *                        ----                                                *
+ *              log(s) =  \      2     2n+1                                   *
+ *                        /    ------ A             A = (s - 1) / (s + 1)     *
+ *                        ---- 2n + 1                                         *
+ *                        n = 0                                               *
+ *                                                                            *
+ *          A polynomial with the first three terms is then used. The         *
+ *          standard Taylor series polynomial for ln(1 + x) with x small has  *
+ *          poor convergences, roughly on the order of 1/N where N is the     *
+ *          number of terms. This alternative sum in is terms of the square   *
+ *          of a small value, and has much between convergence.               *
+ *                                                                            *
+ *          For values slightly less than 1, the computation of (s-1) / (s+1) *
+ *          leads to large relative error (about ~10^-6) since log(1) = 0     *
+ *          (the absolute error is still around 10^-16). We can achieve much  *
+ *          better relative error using the standard Taylor series to seven   *
+ *          terms. This is slower than the series above, but more accurate in *
+ *          this range. That is, for 0.95 < x < 1.0 we use:                   *
+ *                                                                            *
+ *                        inf                                                 *
+ *                        ----                                                *
+ *              log(x) =  \    -1   n                                         *
+ *                        /    --- s             s = 1 - x                    *
+ *                        ----  n                                             *
+ *                        n = 1                                               *
+ *                                                                            *
+ *      If the user has not requested libtmpl algorithms, or if IEEE-754      *
+ *      support is not available (highly unlikely), then #include <math.h>    *
+ *      is called and tmpl_Double_Log returns log(x) from math.h              *
+ *  Notes:                                                                    *
+ *      This function compiles without error or warning on Debian 11          *
+ *      GNU/Linux with clang, gcc, tcc, and pcc using -Wall, -Wextra,         *
+ *      -Wpedantic, and other options. It passes clang with -Weverything if   *
+ *      -Wno-float-equal is also called (otherwise it complains about         *
+ *      comparison of doubles with 0.0). -std=c89, -std=c99, -std=c11, and    *
+ *      -std=c18 flags have been passed as well, and no problems were found.  *
+ *      If any error or warnings arise on your platform, please report this.  *
+ *                                                                            *
+ *      A time and accuracy test yields the following results versus glibc:   *
+ *                                                                            *
+ *          start:   0.000010                                                 *
+ *          end:     1000.000000                                              *
+ *          samples: 2615628245                                               *
+ *          libtmpl: 12.147736 seconds                                        *
+ *          glibc:   12.877888 seconds                                        *
+ *          max abs error: 1.776356839400250464677811e-15                     *
+ *          max rel error: 3.974159232191061493588562e-14                     *
+ *          rms abs error: 4.723482256825820120737012e-16                     *
+ *          rms rel error: 1.005584744547481228737409e-16                     *
+ *                                                                            *
+ *      The error values assume 100% accuracy in glibc. I believe the         *
+ *      documentation states the actual error of glibc's log is less then     *
+ *      1 ULP. The value 2615628245 was chosen since 3 double arrays of that  *
+ *      size take up 62 GB of memory, and the test was performed with 64 GB   *
+ *      available.                                                            *
+ *                                                                            *
+ *      I'm quite pleased with the result. Slightly faster and almost         *
+ *      identical in accuracy. It should be noted the DBL_EPSILON for 64-bit  *
+ *      double is 2.22044605e-16, and the rms relative error is below this    *
+ *      value. If we look at larger values, we get:                           *
+ *                                                                            *
+ *          start:   100.000000                                               *
+ *          end:     1000000.000000                                           *
+ *          samples: 2615628245                                               *
+ *          libtmpl: 12.848024 seconds                                        *
+ *          glibc:   13.344097 seconds                                        *
+ *          max abs error: 3.552713678800500929355621e-15                     *
+ *          max rel error: 4.249092703851493751745130e-16                     *
+ *          rms abs error: 9.014680961494817467426997e-16                     *
+ *          rms rel error: 7.161314011139170388755192e-17                     *
+ *                                                                            *
+ *      The function also handles subnormal (denormal) values well:           *
+ *                                                                            *
+ *          start:   4.940656e-324                                            *
+ *          end:     2.225074e-308                                            *
+ *          samples: 2615628245                                               *
+ *          libtmpl: 20.399479 seconds                                        *
+ *          glibc:   26.694451 seconds                                        *
+ *          max abs error: 2.273736754432320594787598e-13                     *
+ *          max rel error: 3.203426503780625857238163e-16                     *
+ *          rms abs error: 7.023668651274727205910219e-14                     *
+ *          rms rel error: 9.898239337197008493665686e-17                     *
+ *                                                                            *
+ *      These tests were performed with the following specs:                  *
+ *                                                                            *
+ *          CPU:  AMD Ryzen 3900 12-core                                      *
+ *          MAX:  4672.0698 MHz                                               *
+ *          MIN:  2200.0000 MHz                                               *
+ *          ARCH: x86_64                                                      *
+ *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
+ *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
+ *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
+ *                                                                            *
+ *      Performance will of course vary on different systems.                 *
+ *      All tests were ran using the following options:                       *
+ *                                                                            *
+ *          gcc -O3 -flto tmpl_log_double_huge_time_test.c -o test -lm -ltmpl *
+ *                                                                            *
+ *      -O3 is optimization level, and -flto is link-time optimization.       *
+ *      tmpl_log_double_huge_time_test.c can be found in                      *
+ *          libtmpl/tests/math_tests/time_tests/                              *
+ ******************************************************************************
+ *                               DEPENDENCIES                                 *
+ ******************************************************************************
+ *  1.) tmpl_math.h:                                                          *
+ *          Header file containing tmpl_IEEE754_Double typedef and the        *
+ *          function prototype.                                               *
+ *  2.) math.h:                                                               *
+ *          Only included if TMPL_HAS_IEEE754_DOUBLE == 0 or if               *
+ *          TMPL_USE_MATH_ALGORITHMS == 0. If either of these is true, then   *
+ *          tmpl_Double_Log is identical to the standard library log function.*
+ ******************************************************************************
+ *                            A NOTE ON COMMENTS                              *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *                            A FRIENDLY WARNING                              *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       February 4, 2022                                              *
+ ******************************************************************************/
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
-
-#include <float.h>
 
 /*  We can only implement this function if IEEE754 support is available. Also *
  *  only implement this if the user has requested libtmpl algorithms.         */
@@ -145,6 +344,7 @@ static double rcpr[64] = {
     0.50393700787401574803149606299213
 };
 
+/*  Macros for 1/n for n = 2, 3, ..., 6, 7. These make the code look cleaner. */
 #define ONE_HALF 0.5
 #define ONE_THIRD 0.3333333333333333333333333333
 #define ONE_FOURTH 0.25
@@ -195,25 +395,28 @@ double tmpl_Double_Log(double x)
         exponent = w.bits.expo - TMPL_DOUBLE_BIAS - 52;
     }
 
-    /*  NaN of infinity. Simply return the input.                             */
+    /*  NaN or positive infinity. Simply return the input.                    */
     else if (w.bits.expo == 0xFFU)
         return x;
 
     /*  For values close to but less than 1, the computation of the division  *
      *  (x-1)/(x+1) may lose precision and log(x) may have bad relative error *
      *  (it will still have ~10^-16 absolute error since log(1) = 0). To      *
-     *  avoid this, use the basic Taylor series for log(1+s), s = 1-x, and    *
-     *  return this. Since 1-x is very small, only a few terms are needed.    */
+     *  avoid this, use the basic Taylor series for log(1 + (-s)), s = 1 - x, *
+     *  and return this. Since 1-x is very small, only a few terms are needed.*/
     else if (0.995 < w.r && w.r < 1.0)
     {
         s = 1.0 - x;
-        return -s*(
-            1.0 + s*(
-                ONE_HALF + s*(
-                    ONE_THIRD + s *(
+
+        /*  Horner's method of polynomial computation reduces the number of   *
+         *  multiplications needed. Use this.                                 */
+        return -s * (
+            1.0 + s * (
+                ONE_HALF + s * (
+                    ONE_THIRD + s * (
                         ONE_FOURTH + s * (
                             ONE_FIFTH + s * (
-                                ONE_SIXTH + ONE_SEVENTH*s
+                                ONE_SIXTH + s * ONE_SEVENTH
                             )
                         )
                     )
@@ -264,7 +467,7 @@ double tmpl_Double_Log(double x)
     /*  man0 has the first 4 bits. The next 16 bits are in man1. We only need *
      *  the first two bits from man1. Obtain these with w.bits.man1 & 0xC000U *
      *  and then shift this value down by 2^14 via >> 14. We also need to     *
-     *  shift the value of man0 up by 4, which is obtained by << 2.           *
+     *  shift the value of man0 up by 2^2, which is obtained by << 2.         *
      *  Altogether, this gives us the number abcdef in binary, as above,      *
      *  a is the first bit, b is the second, ..., f is the sixth.             */
     ind = (ind << 2U) + ((w.bits.man1 & 0xC000U) >> 14U);
@@ -274,13 +477,12 @@ double tmpl_Double_Log(double x)
 
     /*  The Taylor series of log(1+x) for small x has very poor convergence.  *
      *  Using the alternating series test, the error is like 1/N where N is   *
-     *  the number of terms in the series. To get 16 decimals would require a *
-     *  sum of 10^16 terms! log(x) has a different expansion:                 *
+     *  the number of terms in the series. log(x) has a different expansion:  *
      *                                                                        *
      *                inf                                                     *
      *                ----                                                    *
      *      log(x) =  \      2     2n+1                                       *
-     *                /    ------ q             A = (x - 1) / (x + 1)         *
+     *                /    ------ A             A = (x - 1) / (x + 1)         *
      *                ---- 2n + 1                                             *
      *                 n                                                      *
      *                                                                        *
@@ -299,7 +501,7 @@ double tmpl_Double_Log(double x)
 
 #else
 
-/*  The C Standard Library requires a log function. If these user lacks       *
+/*  The C Standard Library requires a log function. If the user lacks         *
  *  IEEE754 support, or does not want to use libtmpl algorithms, simply wrap  *
  *  this function for tmpl_Double_Log.                                        */
 #include <math.h>
@@ -312,55 +514,4 @@ double tmpl_Double_Log(double x)
 /*  End of tmpl_Double_Log.                                                   */
 
 #endif
-
-/******************************************************************************
- *  This alternative algorithm uses an if-then statement to reduce the        *
- *  argument of x even further. It has slightly better peak relative error,   *
- *  but identical RMS relative error. It is significantly slower (about 1.6x) *
- *  and hence the other method is implemented. The algorithm is saved here    *
- *  just in case.                                                             *
- ******************************************************************************/
-
-/*
-double tmpl_Double_Log(double x)
-{
-    double mantissa, poly, A, A_sq;
-    signed int exponent;
-    tmpl_IEEE754_Double w;
-
-    if (x < 0.0)
-        return TMPL_NAN;
-    else if (x == 0.0)
-        return -TMPL_INFINITY;
-    else if (tmpl_Double_Is_NaN_Or_Inf(x))
-        return x + x;
-
-    w.r = x;
-    exponent = w.bits.expo - TMPL_DOUBLE_BIAS;
-    w.bits.expo = TMPL_DOUBLE_BIAS;
-    mantissa = w.r;
-
-    if (mantissa > 1.5)
-    {
-        mantissa *= 0.5;
-        exponent += 1;
-    }
-
-    A = (mantissa - 1.0) / (mantissa + 1.0);
-    A_sq = A*A;
-
-    poly = 0.095238095238095238 * A_sq + 0.10526315789473684;
-    poly =                 poly * A_sq + 0.11764705882352941;
-    poly =                 poly * A_sq + 0.13333333333333333;
-    poly =                 poly * A_sq + 0.15384615384615385;
-    poly =                 poly * A_sq + 0.18181818181818182;
-    poly =                 poly * A_sq + 0.22222222222222222;
-    poly =                 poly * A_sq + 0.28571428571428571;
-    poly =                 poly * A_sq + 0.40000000000000000;
-    poly =                 poly * A_sq + 0.66666666666666667;
-    poly =                 poly * A_sq + 2.0000000000000000;
-
-    return tmpl_Natural_Log_of_Two*exponent + A*poly;
-}
-*/
 
