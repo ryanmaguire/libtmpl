@@ -65,23 +65,23 @@ int main(void)
 
     max_abs = 0.0;
     max_rel = 0.0;
-	rms_abs = 0.0;
-	rms_rel = 0.0;
+    rms_abs = 0.0;
+    rms_rel = 0.0;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabs(y0[n] - y1[n]);
-		rms_abs += temp*temp;
+        rms_abs += temp*temp;
         if (max_abs < temp)
             max_abs = temp;
 
         temp = fabs((y0[n] - y1[n]) / y1[n]);
-		rms_rel += temp*temp;
+        rms_rel += temp*temp;
         if (max_rel < temp)
             max_rel = temp;
     }
 
-	rms_rel = sqrt(rms_rel / (double)N);
-	rms_abs = sqrt(rms_abs / (double)N);
+    rms_rel = sqrt(rms_rel / (double)N);
+    rms_abs = sqrt(rms_abs / (double)N);
     printf("max Abs Error: %.24e\n", max_abs);
     printf("max Rel Error: %.24e\n", max_rel);
     printf("rms Abs Error: %.24e\n", rms_abs);
