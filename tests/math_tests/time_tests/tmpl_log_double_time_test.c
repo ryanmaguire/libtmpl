@@ -25,7 +25,7 @@
 
 int main(void)
 {
-    double start, end, dx, max_abs, max_rel, temp;
+    double start, end, dx, max_abs, max_rel, temp, rms_rel, rms_abs;
     double *x, *y0, *y1;
     unsigned long int n, N;
     clock_t t1, t2;
@@ -36,7 +36,7 @@ int main(void)
     f0 = tmpl_Double_Log;
     f1 = log;
 
-    start = 0.0;
+    start = 0.00001;
     end   = 100.0;
     N     = 1E8;
     dx    = (end - start) / (double)N;
@@ -65,19 +65,27 @@ int main(void)
 
     max_abs = 0.0;
     max_rel = 0.0;
+	rms_abs = 0.0;
+	rms_rel = 0.0;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabs(y0[n] - y1[n]);
+		rms_abs += temp*temp;
         if (max_abs < temp)
             max_abs = temp;
 
         temp = fabs((y0[n] - y1[n]) / y1[n]);
+		rms_rel += temp*temp;
         if (max_rel < temp)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.24e\n", max_abs);
-    printf("Max Rel Error: %.24e\n", max_rel);
+	rms_rel = sqrt(rms_rel / (double)N);
+	rms_abs = sqrt(rms_abs / (double)N);
+    printf("max Abs Error: %.24e\n", max_abs);
+    printf("max Rel Error: %.24e\n", max_rel);
+    printf("rms Abs Error: %.24e\n", rms_abs);
+    printf("rms Rel Error: %.24e\n", rms_rel);
 
     free(x);
     free(y0);
