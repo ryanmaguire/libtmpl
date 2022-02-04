@@ -852,6 +852,26 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Float_Is_NaN_Or_Inf                                              *
+ *  Purpose:                                                                  *
+ *      This function tests if a number is Not-a-Number or infinity.          *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      is_nan_or_inf (tmpl_Bool):                                            *
+ *          A Boolean indicating if x is +/- nan/inf or not.                  *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_is_nan_or_inf.c                                 *
+ ******************************************************************************/
+extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
+extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
+extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Abs                                                       *
  *  Purpose:                                                                  *
  *      Compute the absolute value of a real number (fabs alias).             *
