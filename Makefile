@@ -29,10 +29,10 @@ OBJS := $(SRCS:%.c=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 ifdef omp
-	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto -fopenmp
+	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG
 	LFLAGS := -O3 -flto -fopenmp -shared
 else
-	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto
+	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto -DNDEBUG
 	LFLAGS := -O3 -flto -shared
 endif
 
