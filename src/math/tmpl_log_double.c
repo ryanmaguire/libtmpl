@@ -79,7 +79,7 @@
  *          standard Taylor series polynomial for ln(1 + x) with x small has  *
  *          poor convergences, roughly on the order of 1/N where N is the     *
  *          number of terms. This alternative sum in is terms of the square   *
- *          of a small value, and has much between convergence.               *
+ *          of a small value, and has much better convergence.                *
  *                                                                            *
  *          For values slightly less than 1, the computation of (s-1) / (s+1) *
  *          leads to large relative error (about ~10^-6) since log(1) = 0     *
@@ -396,7 +396,7 @@ double tmpl_Double_Log(double x)
     }
 
     /*  NaN or positive infinity. Simply return the input.                    */
-    else if (w.bits.expo == 0xFFU)
+    else if (w.bits.expo == 0x7FFU)
         return x;
 
     /*  For values close to but less than 1, the computation of the division  *
@@ -465,12 +465,11 @@ double tmpl_Double_Log(double x)
     ind = w.bits.man0;
 
     /*  man0 has the first 4 bits. The next 16 bits are in man1. We only need *
-     *  the first two bits from man1. Obtain these with w.bits.man1 & 0xC000U *
-     *  and then shift this value down by 2^14 via >> 14. We also need to     *
-     *  shift the value of man0 up by 2^2, which is obtained by << 2.         *
-     *  Altogether, this gives us the number abcdef in binary, as above,      *
-     *  a is the first bit, b is the second, ..., f is the sixth.             */
-    ind = (ind << 2U) + ((w.bits.man1 & 0xC000U) >> 14U);
+     *  the first two bits from man1. Obtain these by shifting down 14 bits   *
+     *  via >> 14. We also need to shift the value of man0 up by 2^2, which   *
+     *  is obtained by << 2. Altogether, this gives us the number abcdef in   *
+     *  binary, as above, a is the first bit, ..., f is the sixth.            */
+    ind = (ind << 2U) + (w.bits.man1 >> 14U);
 
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
     s = w.r*rcpr[ind];
