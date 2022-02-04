@@ -34,9 +34,9 @@ int main(void)
     unsigned long int n;
     clock_t t1, t2;
 
-    const double start = 0.00001;
-    const double end = 1000.0;
-    const unsigned long int N = 2615628245UL;
+    const double start = 4.9406564584124654e-324;
+    const double end = 2.2250738585072009e-308;
+    const unsigned long int N = 10000000UL;
     const double dx = (end - start) / (double)N;
 
     x = malloc(sizeof(*x)  * N);
@@ -66,8 +66,8 @@ int main(void)
         return -1;
     }
 
-    printf("start:   %f\n", start);
-    printf("end:     %f\n", end);
+    printf("start:   %e\n", start);
+    printf("end:     %e\n", end);
     printf("samples: %lu\n", N);
 
     x[0] = start;

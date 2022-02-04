@@ -36,7 +36,7 @@ int main(void)
 
     const double start = 0.00001;
     const double end = 1000.0;
-    const unsigned long int N = 2615628245UL;
+    const unsigned long int N = 10000000UL;
     const double dx = (end - start) / (double)N;
 
     x = malloc(sizeof(*x)  * N);

@@ -499,6 +499,14 @@ double tmpl_Double_Log(double x)
 }
 /*  End of tmpl_Double_Log.                                                   */
 
+/*  undef all the macros incase someone wants to #include this file.          */
+#undef ONE_HALF
+#undef ONE_THIRD
+#undef ONE_FOURTH
+#undef ONE_FIFTH
+#undef ONE_SIXTH
+#undef ONE_SEVENTH
+
 #else
 
 /*  The C Standard Library requires a log function. If the user lacks         *
