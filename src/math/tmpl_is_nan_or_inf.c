@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_is_nan                                   *
+ *                          tmpl_is_nan_or_inf                                *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Determines if the input is +/- nan.                                   *
@@ -24,24 +24,26 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Is_NaN:                                                    *
- *      tmpl_Double_Is_NaN:                                                   *
- *      tmpl_LDouble_Is_NaN:                                                  *
+ *      tmpl_Float_Is_NaN_Or_Inf:                                             *
+ *      tmpl_Double_Is_NaN_Or_Inf:                                            *
+ *      tmpl_LDouble_Is_NaN_Or_Inf:                                           *
  *  Purpose:                                                                  *
- *      Determines if the input is +/- nan.                                   *
+ *      Determines if the input is +/- nan/inf.                               *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      is_nan (tmpl_Bool):                                                   *
- *          Boolean for if x is +/- nan.                                      *
+ *          Boolean for if x is +/- nan/inf.                                  *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, check if the bits correspond to     *
- *      +/- NaN. IEEE-754 states NaN is when all exponent bits are            *
- *      1 and some of the mantissa bits are 1. The sign can be zero or 1.     *
+ *      +/- NaN/Inf. IEEE-754 states NaN or Inf is when all exponent bits are *
+ *      1. The mantissa values can be anything, depending on whether the      *
+ *      value is NaN, inf, sNaN, or qNaN.                                     *
  *                                                                            *
  *      If IEEE-754 is not available, a portable way to check is by comparing *
- *      x == x. This returns true for numbers, and false for NaN.             *
+ *      x == x. This returns true for numbers, and false for NaN. For inf we  *
+ *      check if x != x + x.                                                  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -66,7 +68,7 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 21, 2021                                              *
+ *  Date:       February 3, 2022                                              *
  ******************************************************************************/
 
 /*  Booleans found here.                                                      */
@@ -76,7 +78,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for testing if a float is Not-A-Number.                          */
-tmpl_Bool tmpl_Float_Is_NaN(float x)
+tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x)
 {
     /*  Check for IEEE-754. This is the easiest way check for NaN.            */
 #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
@@ -87,9 +89,8 @@ tmpl_Bool tmpl_Float_Is_NaN(float x)
     /*  Set the float part to the input.                                      */
     w.r = x;
 
-    /*  NaN for IEEE-754 is exponent set to all 1's and the mantissa set to   *
-     *  zeros and ones . The sign can be 0 or 1 for +/- nan.                  */
-    if (w.bits.expo == 0xFFU && (w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
+    /*  NaN/Inf for IEEE-754 is exponent set to all 1's. The sign can be +/-. */
+    if (w.bits.expo == 0xFFU)
         return tmpl_True;
     else
         return tmpl_False;
@@ -103,8 +104,9 @@ tmpl_Bool tmpl_Float_Is_NaN(float x)
      *  out this code, declare y as "volatile".                               */
     volatile float y = x;
 
-    /*  If x == y, x is a number. Otherwise, it is NaN.                       */
-    if (x == y)
+    /*  If x == y, x is a number. Otherwise, it is NaN. x != y + y is not     *
+     *  infinity. x == y + y is infinity. Check this cases.                   */
+    if ((x == y) && (x != y + y))
         return tmpl_False;
     else
         return tmpl_True;
@@ -112,10 +114,10 @@ tmpl_Bool tmpl_Float_Is_NaN(float x)
 /*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
 
 }
-/*  End of tmpl_Float_Is_NaN.                                                 */
+/*  End of tmpl_Float_Is_NaN_Or_Inf.                                          */
 
 /*  Function for testing if a double is Not-A-Number.                         */
-tmpl_Bool tmpl_Double_Is_NaN(double x)
+tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x)
 {
     /*  Check for IEEE-754 support. This is the easiest way to work with nan. */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
@@ -128,11 +130,7 @@ tmpl_Bool tmpl_Double_Is_NaN(double x)
 
     /*  NaN for IEEE-754 is exponent set to all 1's and the mantissa set to   *
      *  zeros and ones . The sign can be 0 or 1 for +/- nan.                  */
-    if (w.bits.expo == 0x7FFU &&
-        (w.bits.man0 != 0x00U ||
-         w.bits.man1 != 0x00U ||
-         w.bits.man2 != 0x00U ||
-         w.bits.man3 != 0x00U))
+    if (w.bits.expo == 0x7FFU)
         return tmpl_True;
     else
         return tmpl_False;
@@ -145,8 +143,9 @@ tmpl_Bool tmpl_Double_Is_NaN(double x)
      *  out this code, declare y as "volatile".                               */
     volatile double y = x;
 
-    /*  If x == y, x is a number. Otherwise, it is NaN.                       */
-    if (x == y)
+    /*  If x == y, x is a number. Otherwise, it is NaN. x != y + y is not     *
+     *  infinity. x == y + y is infinity. Check this cases.                   */
+    if ((x == y) && (x != y + y))
         return tmpl_False;
     else
         return tmpl_True;
@@ -157,7 +156,7 @@ tmpl_Bool tmpl_Double_Is_NaN(double x)
 /*  End of tmpl_Double_Is_NaN.                                                */
 
 /*  Function for testing if a long double is Not-A-Number.                    */
-tmpl_Bool tmpl_LDouble_Is_NaN(long double x)
+tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x)
 {
     /*  The compiler will see this as x == x, which for normal values will    *
      *  always return true. It may try to optimize this code away. For        *
