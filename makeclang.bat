@@ -29,7 +29,7 @@ det.exe
 del *.exe *.obj
 
 :: Compile the library.
-for /D %%d in (.\src\*) do clang-cl -O3 -I..\ -c %%d\*.c
+for /D %%d in (.\src\*) do clang-cl -O2 -I..\ -c %%d\*.c
 
 :: Link everything into a .lib file.
 lib /out:libtmpl.lib *.obj
