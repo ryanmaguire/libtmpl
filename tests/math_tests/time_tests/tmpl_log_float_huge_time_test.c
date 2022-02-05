@@ -88,12 +88,12 @@ int main(void)
 
     for (n = 0UL; n < N; ++n)
     {
-        temp = fabs(y0[n] - y1[n]);
+        temp = fabsf(y0[n] - y1[n]);
         rms_abs += temp*temp;
         if (max_abs < temp)
             max_abs = temp;
 
-        temp = fabs((y0[n] - y1[n]) / y1[n]);
+        temp = fabsf((y0[n] - y1[n]) / y1[n]);
         rms_rel += temp*temp;
         if (max_rel < temp)
             max_rel = temp;
