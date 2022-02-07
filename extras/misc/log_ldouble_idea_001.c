@@ -2,17 +2,7 @@
 
 #include <libtmpl/include/tmpl_math.h>
 
-/*  We can only implement this function if IEEE754 support is available. Also *
- *  only implement this if the user has requested libtmpl algorithms.         */
-#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1 && \
-    defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
-
-/*  64-bit long double can be run identically as 64-bit double. The code is   *
- *  therefore mostly a copy/paste of tmpl_Double_Log.                         */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
-
-#else
+#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
 
 #define TMPL_LOGL_A00 2.00000000000000000000000000000000L
 #define TMPL_LOGL_A01 0.66666666666666666666666666666667L
@@ -93,21 +83,24 @@ long double tmpl_LDouble_Log(long double x)
 #undef TMPL_LOGL_A11
 #undef TMPL_LOGL_A12
 
-#endif
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
-#else
 #include <math.h>
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
 long double tmpl_LDouble_Log(long double x)
 {
     return logl(x);
 }
+
 #else
+
+#include <math.h>
+
 long double tmpl_LDouble_Log(long double x)
 {
     double logx = log((double)x);
     return (long double)logx;
 }
-#endif
+
 #endif
 

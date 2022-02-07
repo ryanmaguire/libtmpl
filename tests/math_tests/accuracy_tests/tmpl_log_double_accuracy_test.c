@@ -32,41 +32,49 @@
 /*  Function for testing the speed and accuracy of tmpl_Double_Arctan.        */
 int main(void)
 {
-    double max_abs, max_rel, temp, x, y0, y1;
+    double max_abs = 0.0;
+    double max_rel = 0.0;
+    double rms_abs = 0.0;
+    double rms_rel = 0.0;
+    double temp, y0, y1;
     unsigned long int n;
 
-    const double start = -0.1*DBL_MAX;
-    const double end = 0.1*DBL_MAX;
-    const unsigned long int N = 1E8;
+    const double start = 1.0E-4;
+    const double end = 1.0E4;
+    const unsigned long int N = 1000000000UL;
     const double dx = (end - start) / (double)N;
+    double x = start;
 
-    printf("Functions: tmpl_Double_Arctan vs atan\n\n");
-    printf("Start:     %.16e\n", start);
-    printf("End:       %.16e\n", end);
-    printf("Number:    %lu\n", N);
-    printf("Increment: %.16e\n\n", dx);
+    printf("Functions: tmpl_Double_Log vs log\n");
+    printf("start:     %.16e\n", start);
+    printf("end:       %.16e\n", end);
+    printf("samples:   %lu\n", N);
+    printf("increment: %.16e\n\n", dx);
 
-    max_abs = 0.0;
-    max_rel = 0.0;
-    x = start;
     for (n = 0UL; n < N; ++n)
     {
-        y0 = tmpl_Double_Arctan(x);
-        y1 = atan(x);
+        y0 = tmpl_Double_Log(x);
+        y1 = log(x);
 
         temp = fabs(y0 - y1);
+        rms_abs += temp*temp;
         if (max_abs < temp)
             max_abs = temp;
 
         temp = fabs((y0 - y1) / y1);
+        rms_rel += temp*temp;
         if (max_rel < temp)
             max_rel = temp;
 
         x += dx;
     }
+    rms_abs = sqrt(rms_abs / (double)N);
+    rms_rel = sqrt(rms_rel / (double)N);
 
-    printf("Max Abs Error: %.24e\n", max_abs);
-    printf("Max Rel Error: %.24e\n", max_rel);
+    printf("max abs error: %.24e\n", max_abs);
+    printf("max rel error: %.24e\n", max_rel);
+    printf("rms abs error: %.24e\n", rms_abs);
+    printf("rms rel error: %.24e\n", rms_rel);
     return 0;
 }
 /*  End of main.                                                              */
