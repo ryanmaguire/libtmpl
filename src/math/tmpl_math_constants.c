@@ -41,12 +41,15 @@
 /*  All constants are declared in this header file.                           */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Header containing MIN/MAX_10_EXP macros.                                  */
+#if TMPL_HAS_IEEE754_FLOAT == 0  || \
+    TMPL_HAS_IEEE754_DOUBLE == 0 || \
+    TMPL_HAS_IEEE754_LDOUBLE == 0
 #include <float.h>
+#endif
 
 /*  sqrt( 1 / (2 pi) )                                                        */
-const float tmpl_Sqrt_One_By_Two_Pi_F       = 0.398942280F;
-const double tmpl_Sqrt_One_By_Two_Pi        = 0.39894228040143267;
+const float tmpl_Sqrt_One_By_Two_Pi_F = 0.398942280F;
+const double tmpl_Sqrt_One_By_Two_Pi = 0.3989422804014326779;
 const long double tmpl_Sqrt_One_By_Two_Pi_L = 0.3989422804014326779399461L;
 
 /*  sqrt( pi / 8 )                                                            */
@@ -134,14 +137,43 @@ const float tmpl_Rad_to_Deg_F       = 57.295779513F;
 const double tmpl_Rad_to_Deg        = 57.29577951308232087;
 const long double tmpl_Rad_to_Deg_L = 57.29577951308232087679815481L;
 
-const float tmpl_Max_Float_Base_E = FLT_MAX_10_EXP * 2.302585093F;
-const double tmpl_Max_Double_Base_E = DBL_MAX_10_EXP * 2.30258509299404568;
-const long double tmpl_Max_LDouble_Base_E =
-    LDBL_MAX_10_EXP * 2.3025850929940456840179910L;
-
-/*  Macros for the smallest values of float, double, and long double,         *
- *  respectively, that will not return 0 when exp(x) is computed.             */
+#if TMPL_HAS_IEEE754_FLOAT == 1
+const float tmpl_Min_Float_Base_E = -85.1956484408F;
+const float tmpl_Max_Float_Base_E = 87.4982335338F;
+#else
 const float tmpl_Min_Float_Base_E = FLT_MIN_10_EXP * 2.302585093F;
-const double tmpl_Min_Double_Base_E = DBL_MIN_10_EXP  * 2.30258509299404568;
-const long double tmpl_Min_LDouble_Base_E
-    = LDBL_MIN_10_EXP * 2.3025850929940456840179910L;
+const float tmpl_Max_Float_Base_E = FLT_MAX_10_EXP * 2.302585093F;
+#endif
+
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+const double tmpl_Min_Double_Base_E = -706.893623549172024993;
+const double tmpl_Max_Double_Base_E = 709.196208642166070678;
+#else
+const double tmpl_Min_Double_Base_E = DBL_MIN_10_EXP * 2.30258509299404568;
+const double tmpl_Max_Double_Base_E = DBL_MAX_10_EXP * 2.30258509299404568;
+#endif
+
+#if !defined(TMPL_LDOUBLE_ENDIANNESS) || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
+const long double
+tmpl_Max_LDouble_Base_E = LDBL_MAX_10_EXP*2.30258509299404568401799145468436421L;
+const long double
+tmpl_Min_LDouble_Base_E = LDBL_MIN_10_EXP*2.3025850929940456840179910L;
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
+const long double
+tmpl_Min_LDouble_Base_E = -11354.04709355363926789271586304859990768L;
+const long double
+tmpl_Max_LDouble_Base_E = 11356.34967864663331357673385450328427189L;
+#else
+const long double
+tmpl_Min_LDouble_Base_E = -706.89362354917202499352337658809981173L;
+const long double
+tmpl_Max_LDouble_Base_E = 709.19620864216607067754136804278417594L;
+#endif
+
