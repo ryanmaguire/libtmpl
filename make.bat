@@ -23,17 +23,42 @@
 :: Delete old files.
 del *.exe *.obj *.o *.so *.dll *.lib
 
-:: Create include\tmpl_endianness.h
-cl det_end.c /link /out:det.exe
-det.exe
-del *.exe *.obj
+IF %1.==. SET CC=cl
+IF %1 == cl SET CC=cl
+IF %1 == clang SET CC=clang-cl
+IF %1 == clang-cl SET CC=clang-cl
 
-:: Compile the library.
-for /D %%d in (.\src\*) do cl /I../ /O2 /c %%d\*.c
+IF %CC% == "clang-cl" (
+    :: Delete old files.
+    del *.exe *.obj *.o *.so *.dll *.lib
 
-:: Link everything into a .lib file.
-lib /out:libtmpl.lib *.obj
+    :: Create include\tmpl_endianness.h
+    clang-cl det_end.c -o det.exe
+    det.exe
+    del *.exe *.obj
 
-:: Clean up.
-del *.exe *.obj
+    :: Compile the library.
+    for /D %%d in (.\src\*) do ^
+        clang-cl -O2 -Weverything -Wno-padded -Wno-float-equal -I..\ -c %%d\*.c
+
+    :: Link everything into a .lib file.
+    lib /out:libtmpl.lib *.obj
+
+    :: Clean up.
+    del *.exe *.obj
+) ELSE (
+    :: Create include\tmpl_endianness.h
+    cl det_end.c /link /out:det.exe
+    det.exe
+    del *.exe *.obj
+
+    :: Compile the library.
+    for /D %%d in (.\src\*) do cl /I../ /W4 /O2 /c %%d\*.c
+
+    :: Link everything into a .lib file.
+    lib /out:libtmpl.lib *.obj
+
+    :: Clean up.
+    del *.exe *.obj
+)
 
