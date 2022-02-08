@@ -25,25 +25,52 @@
 
 int main(void)
 {
-    double start, end, dx, max_abs, max_rel, temp, rms_rel, rms_abs;
+    double max_abs = 0.0;
+    double max_rel = 0.0;
+    double rms_rel = 0.0;
+    double rms_abs = 0.0;
+    double temp;
     double *x, *y0, *y1;
-    unsigned long int n, N;
+    unsigned long int n;
     clock_t t1, t2;
 
-    double (*f0)(double);
-    double (*f1)(double);
+    const double start = -1.0E6;
+    const double end = 1.0E6;
+    const unsigned long int N = 100000000UL;
+    const double dx = (end - start) / (double)N;
 
-    f0 = tmpl_Double_Log;
-    f1 = log;
+    x = malloc(sizeof(*x)  * N);
 
-    start = 0.00001;
-    end   = 100.0;
-    N     = 1E8;
-    dx    = (end - start) / (double)N;
+    if (!x)
+    {
+        puts("malloc failed and returned NULL for x. Aborting.");
+        return -1;
+    }
 
-    x  = malloc(sizeof(*x)  * N);
     y0 = malloc(sizeof(*y0) * N);
+
+    if (!y0)
+    {
+        puts("malloc failed and returned NULL for y0. Aborting.");
+        free(x);
+        return -1;
+    }
+
     y1 = malloc(sizeof(*y1) * N);
+
+    if (!y1)
+    {
+        puts("malloc failed and returned NULL for y1. Aborting.");
+        free(x);
+        free(y0);
+        return -1;
+    }
+
+    printf("tmpl_Double_Mod_2 vs. fmod\n");
+    printf("start:   %f\n", start);
+    printf("end:     %f\n", end);
+    printf("samples: %lu\n", N);
+    printf("dx:      %f\n", dx);
 
     x[0] = start;
     for (n = 1UL; n < N; ++n)
@@ -51,22 +78,16 @@ int main(void)
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y0[n] = f0(x[n]);
+        y0[n] = tmpl_Double_Mod_2(x[n]);
     t2 = clock();
-
-    printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
+    printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y1[n] = f1(x[n]);
+        y1[n] = fmod(x[n], 2.0);
     t2 = clock();
+    printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
-
-    max_abs = 0.0;
-    max_rel = 0.0;
-    rms_abs = 0.0;
-    rms_rel = 0.0;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabs(y0[n] - y1[n]);
@@ -75,18 +96,21 @@ int main(void)
             max_abs = temp;
 
         temp = fabs((y0[n] - y1[n]) / y1[n]);
-        rms_rel += temp*temp;
+
+        /*  Avoid adding NaN to the error.                                    */
+        if (y1[n] != 0.0)
+            rms_rel += temp*temp;
+
         if (max_rel < temp)
             max_rel = temp;
     }
 
     rms_rel = sqrt(rms_rel / (double)N);
     rms_abs = sqrt(rms_abs / (double)N);
-    printf("max Abs Error: %.24e\n", max_abs);
-    printf("max Rel Error: %.24e\n", max_rel);
-    printf("rms Abs Error: %.24e\n", rms_abs);
-    printf("rms Rel Error: %.24e\n", rms_rel);
-
+    printf("max abs error: %.16e\n", max_abs);
+    printf("max rel error: %.16e\n", max_rel);
+    printf("rms abs error: %.16e\n", rms_abs);
+    printf("rms rel error: %.16e\n", rms_rel);
     free(x);
     free(y0);
     free(y1);

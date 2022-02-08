@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -17,41 +17,33 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  tmpl_Double_Abs function is here.                                         */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  malloc is here.                                                           */
 #include <stdlib.h>
-
-/*  printf here.                                                              */
 #include <stdio.h>
-
-/*  The C standard library function fabs is here. This is the function we're  *
- *  comparing libtmpl with.                                                   */
 #include <math.h>
-
-/*  Tools for timing computations found here.                                 */
 #include <time.h>
 
-/*  Function for testing the speed and accuracy of tmpl_Double_Abs.           */
 int main(void)
 {
-    double max_abs, max_rel, temp;
-    double *x, *y0, *y1;
+    float max_abs = 0.0F;
+    float max_rel = 0.0F;
+    float rms_rel = 0.0F;
+    float rms_abs = 0.0F;
+    float temp;
+    float *x, *y0, *y1;
     unsigned long int n;
     clock_t t1, t2;
 
-    const double start = -1000.0;
-    const double end = 1000.00;
-    const unsigned long int N = 1E8;
-    const double dx = (end - start) / (double)N;
+    const float start = 0.00001F;
+    const float end = 1000.0F;
+    const unsigned long int N = 100000000UL;
+    const float dx = (end - start) / (float)N;
 
     x = malloc(sizeof(*x)  * N);
 
-    /*  Check if malloc failed.                                               */
     if (!x)
     {
-        puts("Error: malloc returned NULL. Aborting.");
+        puts("malloc failed and returned NULL for x. Aborting.");
         return -1;
     }
 
@@ -59,7 +51,7 @@ int main(void)
 
     if (!y0)
     {
-        puts("Error: malloc returned NULL. Aborting.");
+        puts("malloc failed and returned NULL for y0. Aborting.");
         free(x);
         return -1;
     }
@@ -68,17 +60,17 @@ int main(void)
 
     if (!y1)
     {
-        puts("Error: malloc returned NULL. Aborting.");
+        puts("malloc failed and returned NULL for y1. Aborting.");
         free(x);
         free(y0);
         return -1;
     }
 
-    printf("Functions: tmpl_Double_Abs vs fabs\n\n");
-    printf("Start:     %.16e\n", start);
-    printf("End:       %.16e\n", end);
-    printf("Number:    %lu\n", N);
-    printf("Increment: %.16e\n\n", dx);
+    printf("tmpl_Float_Log vs. logf\n");
+    printf("start:   %f\n", (double)start);
+    printf("end:     %f\n", (double)end);
+    printf("samples: %lu\n", N);
+    printf("dx:      %f\n", (double)dx);
 
     x[0] = start;
     for (n = 1UL; n < N; ++n)
@@ -86,37 +78,38 @@ int main(void)
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y0[n] = tmpl_Double_Abs(x[n]);
+        y0[n] = tmpl_Float_Log(x[n]);
     t2 = clock();
-
-    printf("libtmpl time: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
+    printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (n = 0UL; n < N; ++n)
-        y1[n] = fabs(x[n]);
+        y1[n] = logf(x[n]);
     t2 = clock();
+    printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    printf("C time:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
-
-    max_abs = 0.0;
-    max_rel = 0.0;
     for (n = 0UL; n < N; ++n)
     {
-        temp = fabs(y0[n] - y1[n]);
+        temp = fabsf(y0[n] - y1[n]);
+        rms_abs += temp*temp;
         if (max_abs < temp)
             max_abs = temp;
 
-        temp = fabs((y0[n] - y1[n]) / y1[n]);
+        temp = fabsf((y0[n] - y1[n]) / y1[n]);
+        rms_rel += temp*temp;
         if (max_rel < temp)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.24e\n", max_abs);
-    printf("Max Rel Error: %.24e\n", max_rel);
-
+    rms_rel = sqrtf(rms_rel / (float)N);
+    rms_abs = sqrtf(rms_abs / (float)N);
+    printf("max abs error: %.16e\n", (double)max_abs);
+    printf("max rel error: %.16e\n", (double)max_rel);
+    printf("rms abs error: %.16e\n", (double)rms_abs);
+    printf("rms rel error: %.16e\n", (double)rms_rel);
     free(x);
     free(y0);
     free(y1);
     return 0;
 }
-/*  End of main.                                                              */
+
