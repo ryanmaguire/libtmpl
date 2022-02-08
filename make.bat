@@ -20,15 +20,18 @@
 ::  Date:       January 4, 2022                                               ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+@echo off
+
 :: Delete old files.
 del *.exe *.obj *.o *.so *.dll *.lib
 
-IF %1.==. SET CC=cl
-IF %1 == cl SET CC=cl
-IF %1 == clang SET CC=clang-cl
-IF %1 == clang-cl SET CC=clang-cl
+IF %1.==. GOTO MakeCL
+IF %1 == cl GOTO MakeCL
+IF %1 == CL GOTO MakeCL
+IF %1 == clang-cl GOTO MakeClang
+IF %1 == clang GOTO MakeClang
 
-IF %CC% == "clang-cl" (
+:MakeClang
     :: Delete old files.
     del *.exe *.obj *.o *.so *.dll *.lib
 
@@ -38,15 +41,16 @@ IF %CC% == "clang-cl" (
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do ^
-        clang-cl -O2 -Weverything -Wno-padded -Wno-float-equal -I..\ -c %%d\*.c
+    for /D %%d in (.\src\*) do clang-cl -O2 -Weverything -Wno-padded -Wno-float-equal -I..\ -c %%d\*.c
 
     :: Link everything into a .lib file.
     lib /out:libtmpl.lib *.obj
 
     :: Clean up.
     del *.exe *.obj
-) ELSE (
+    GOTO End
+
+:MakeCL
     :: Create include\tmpl_endianness.h
     cl det_end.c /link /out:det.exe
     det.exe
@@ -60,5 +64,6 @@ IF %CC% == "clang-cl" (
 
     :: Clean up.
     del *.exe *.obj
-)
+
+:End
 
