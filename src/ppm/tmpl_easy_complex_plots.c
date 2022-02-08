@@ -1,3 +1,10 @@
+
+/*  Avoid silly warning on Windows for using fopen. GNU/Linux, FreeBSD, and   *
+ *  macOS have no such warnings for using standard library functions.         */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <libtmpl/include/tmpl_math.h>

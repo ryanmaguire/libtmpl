@@ -82,9 +82,20 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 21, 2021                                                 *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/02/08: Ryan Maguire                                                  *
+ *      Added _CRT_SECURE_NO_DEPRECATE to avoid MSVC warnings.                *
  ******************************************************************************/
+
+/*  Avoid silly warning on Windows for using sprintf. GNU/Linux, FreeBSD, and *
+ *  macOS have no such warnings for using standard library functions.         */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
 
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
