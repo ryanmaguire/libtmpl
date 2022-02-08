@@ -21,12 +21,12 @@
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double,
-             4.9406564584124654e-324,
-             2.2250738585072009e-308,
-             1305052789L,
-             tmpl_Double_Log,
-             log);
+    RUN_TEST(float,
+             1.401298E-45F,
+             1.166347E-38F,
+             5220285568UL,
+             tmpl_Float_Log,
+             logf);
     return 0;
 }
 
