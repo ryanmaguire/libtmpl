@@ -18,15 +18,15 @@
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
 
+static inline float fmod2f(float x)
+{
+    return fmodf(x, 2.0F);
+}
+
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double,
-             4.9406564584124654e-324,
-             2.2250738585072009e-308,
-             1305052789L,
-             tmpl_Double_Log,
-             log);
+    RUN_TEST(float, -1.0E4F, 1.0E4F, 10000000UL, tmpl_Float_Mod_2, fmod2f);
     return 0;
 }
 

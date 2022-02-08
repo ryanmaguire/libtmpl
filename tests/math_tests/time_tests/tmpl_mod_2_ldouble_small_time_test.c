@@ -18,15 +18,15 @@
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
 
+static inline long double fmod2l(long double x)
+{
+    return fmodl(x, 2.0L);
+}
+
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double,
-             4.9406564584124654e-324,
-             2.2250738585072009e-308,
-             1305052789L,
-             tmpl_Double_Log,
-             log);
+    RUN_TEST(long double, -1.0E4, 1.0E4, 10000000UL, tmpl_LDouble_Mod_2, fmod2l);
     return 0;
 }
 
