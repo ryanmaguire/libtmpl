@@ -26,14 +26,17 @@
 
 int main(void)
 {
-    long double max_abs, max_rel, temp;
+    long double rms_abs = 0.0L;
+    long double rms_rel = 0.0L;
+    long double max_abs = 0.0L;
+    long double max_rel = 0.0L;
+    long double temp;
     long double *x, *y0, *y1;
     unsigned long int n;
     clock_t t1, t2;
-
-    const long double start = 0.0L;
+    const long double start = 0.00001L;
     const long double end = 100.0L;
-    const unsigned long int N = 1E8;
+    const unsigned long int N = 1E6;
     const long double dx = (end - start) / (long double)N;
 
     x = malloc(sizeof(*x) * N);
@@ -58,25 +61,26 @@ int main(void)
 
     printf("C:       %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0L;
-    max_rel = 0.0L;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabsl(y0[n] - y1[n]);
+        rms_abs += temp*temp;
         if (max_abs < temp)
             max_abs = temp;
 
         temp = fabsl((y0[n] - y1[n]) / y1[n]);
+        rms_rel += temp*temp;
         if (max_rel < temp)
             max_rel = temp;
     }
 
-    printf("Max Abs Error: %.32Le\n", max_abs);
-    printf("Max Rel Error: %.32Le\n", max_rel);
+    printf("max abs error: %.32Le\n", max_abs);
+    printf("max rel error: %.32Le\n", max_rel);
+    printf("rms abs error: %.32Le\n", rms_abs);
+    printf("rms rel error: %.32Le\n", rms_rel);
 
     free(x);
     free(y0);
     free(y1);
     return 0;
 }
-
