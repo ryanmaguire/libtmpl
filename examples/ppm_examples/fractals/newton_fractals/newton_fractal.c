@@ -22,38 +22,34 @@
 
 /*  The Newton-Raphson routine is found here. Note the rss_ringoccs_complex.h *
  *  is included by rss_ringoccs_numerical.h so we don't need to include again.*/
-#include <rss_ringoccs/include/rss_ringoccs_numerical.h>
-#include <rss_ringoccs/include/rss_ringoccs_complex.h>
-#include <rss_ringoccs/include/rss_ringoccs_ppm_plot.h>
+#include <libtmpl/include/tmpl_numerical.h>
+#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/tmpl_ppm.h>
 
 /*  The function we're working with is f(z) = z^3 - 1, so create this.        */
-static rssringoccs_ComplexDouble f(rssringoccs_ComplexDouble z)
+static tmpl_ComplexDouble f(tmpl_ComplexDouble z)
 {
-    rssringoccs_ComplexDouble z_cubed, z_cubed_minus_1;
-
-    z_cubed = rssringoccs_CDouble_Multiply(rssringoccs_CDouble_Multiply(z, z),
-                                           z);
-
-    z_cubed_minus_1 = rssringoccs_CDouble_Subtract(z_cubed,
-                                                   rssringoccs_CDouble_One);
+    tmpl_ComplexDouble z_cubed, z_cubed_minus_1;
+    z_cubed = tmpl_CDouble_Multiply(tmpl_CDouble_Multiply(z, z), z);
+    z_cubed_minus_1 = tmpl_CDouble_Subtract(z_cubed, tmpl_CDouble_One);
 
     return z_cubed_minus_1;
 }
 
 /*  The derivative is f'(z) = 3z^2, so create this.                           */
-static rssringoccs_ComplexDouble f_prime(rssringoccs_ComplexDouble z)
+static tmpl_ComplexDouble f_prime(tmpl_ComplexDouble z)
 {
-    rssringoccs_ComplexDouble w;
-    w = rssringoccs_CDouble_Multiply_Real(3.0, rssringoccs_CDouble_Multiply(z, z));
+    tmpl_ComplexDouble w;
+    w = tmpl_CDouble_Multiply_Real(3.0, tmpl_CDouble_Multiply(z, z));
     return w;
 }
 
 /*  We can be more general and set up fractals for general polynomials. This  *
  *  cubic will have three roots, so set NRoots to 3, and compute the roots.   */
 #define NRoots 3
-rssringoccs_ComplexDouble ROOT_1 = {{1.0, 0.0}};
-rssringoccs_ComplexDouble ROOT_2 = {{-0.5, +0.8660254037844386}};
-rssringoccs_ComplexDouble ROOT_3 = {{-0.5, -0.8660254037844386}};
+tmpl_ComplexDouble ROOT_1 = {{1.0, 0.0}};
+tmpl_ComplexDouble ROOT_2 = {{-0.5, +0.8660254037844386}};
+tmpl_ComplexDouble ROOT_3 = {{-0.5, -0.8660254037844386}};
 
 /*  This function is used to set the current pixel of the output ppm to the   *
  *  desired color. fp is the filename we'll be using.                         */
@@ -71,6 +67,7 @@ int main(void)
     double x_max =  1.0;
     double y_min = -1.0;
     double y_max =  1.0;
+    const double eps = 1.0E-8;
 
     /*  The number of iterations allows in the Newton-Raphson scheme.         */
     unsigned int max_iters = 20;
@@ -78,15 +75,15 @@ int main(void)
     /*  The number of pixels in the x and y axes. If you want a higher        *
      *  resolution for the output fractal, increase this number. It is best   *
      *  to make n*1024 where n is some positive integer.                      */
-    const unsigned int size  = 4*1024;
+    const unsigned int size  = 1024;
 
     /* List the roots of z^3 - 1.                                             */
-    rssringoccs_ComplexDouble roots[NRoots] = {ROOT_1, ROOT_2, ROOT_3};
+    tmpl_ComplexDouble roots[NRoots] = {ROOT_1, ROOT_2, ROOT_3};
 
     /*  More dummy variables to loop over.                                    */
     unsigned int x, y, n, ind;
     double z_x, z_y, min, temp;
-    rssringoccs_ComplexDouble z, root;
+    tmpl_ComplexDouble z, root;
 
     /*  Colors for the roots (Red, Green, Blue).                              */
     char colors[NRoots][3] = {{255, 0, 30}, {0, 255, 30}, {0, 30, 255}};
@@ -113,22 +110,18 @@ int main(void)
             z_x = x * (x_max - x_min)/(size - 1) + x_min;
 
             /*  Set out current guess to z_x + i z_y.                         */
-            z = rssringoccs_CDouble_Rect(z_x, z_y);
+            z = tmpl_CDouble_Rect(z_x, z_y);
 
             /*  Use the Newton-Raphson function to compute a root.            */
-            root = rssringoccs_Newton_Raphson_Complex(z, f, f_prime, max_iters);
+            root = tmpl_Newton_Raphson_Complex(z, f, f_prime, max_iters, eps);
 
             /*  Find which root the final iteration is closest too.           */
-            min = rssringoccs_CDouble_Abs(
-                rssringoccs_CDouble_Subtract(root, roots[0])
-            );
+            min = tmpl_CDouble_Dist(root, roots[0]);
             ind = 0;
 
             for (n=1; n<NRoots; ++n)
             {
-                temp = rssringoccs_CDouble_Abs(
-                    rssringoccs_CDouble_Subtract(root, roots[n])
-                );
+                temp = tmpl_CDouble_Dist(root, roots[n]);
                 if (temp < min) {
                     min = temp;
                     ind = n;
