@@ -449,10 +449,10 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
             unsigned int expo : 15;
             unsigned int pad2 : 16;
             unsigned int intr : 1;
-            unsigned int man3 : 15;
-            unsigned int man2 : 16;
+            unsigned int man0 : 15;
             unsigned int man1 : 16;
-            unsigned int man0 : 16;
+            unsigned int man2 : 16;
+            unsigned int man3 : 16;
         } bits;
 
         /*  Long double the above struct represents.                          */
