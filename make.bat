@@ -20,6 +20,7 @@
 ::  Date:       January 4, 2022                                               ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+:: Disable printing out the line being executed.
 @echo off
 
 :: Delete old files.
@@ -32,6 +33,9 @@ IF %1 == clang-cl GOTO MakeClang
 IF %1 == clang GOTO MakeClang
 
 :MakeClang
+    :: Arguments for the compiler.
+    SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+
     :: Delete old files.
     del *.exe *.obj *.o *.so *.dll *.lib
 
@@ -41,7 +45,7 @@ IF %1 == clang GOTO MakeClang
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do clang-cl -O2 -Weverything -Wno-padded -Wno-float-equal -I..\ -c %%d\*.c
+    for /D %%d in (.\src\*) do clang-cl %CWARN% -O2 -I..\ -c %%d\*.c
 
     :: Link everything into a .lib file.
     lib /out:libtmpl.lib *.obj
