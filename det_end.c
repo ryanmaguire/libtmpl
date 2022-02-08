@@ -850,8 +850,6 @@ int main(void)
         fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
 
     /*  Lastly, long double.                                                  */
-
-
     if (ldouble_type == tmpl_ldouble_64_bit_little_endian)
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN\n");
     else if (ldouble_type == tmpl_ldouble_64_bit_big_endian)
