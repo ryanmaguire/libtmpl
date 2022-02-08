@@ -20,7 +20,6 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
 
 #define RUN_TEST(type, begin, finish, samples, f0, f1)                         \
 do {                                                                           \
@@ -31,7 +30,6 @@ do {                                                                           \
     long double temp;                                                          \
     type x, y0, y1;                                                            \
     unsigned long int n;                                                       \
-    clock_t t1, t2;                                                            \
                                                                                \
     const type start = (type)begin;                                            \
     const type end = (type)finish;                                             \
