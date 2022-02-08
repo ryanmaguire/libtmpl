@@ -20,24 +20,26 @@
 ::  Date:       January 4, 2022                                               ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-:: Disable printing out the line being executed.
+:: Disable printing out the lines being executed.
 @echo off
 
 :: Delete old files.
-del *.exe *.obj *.o *.so *.dll *.lib
+IF EXIST *.exe (del *.exe)
+IF EXIST *.obj (del *.obj)
+IF EXIST *.o (del *.o)
+IF EXIST *.lib (del *.lib)
+IF EXIST *.so (del *.so)
 
+:: See if the user specified which compiler to use.
 IF %1.==. GOTO MakeCL
 IF %1 == cl GOTO MakeCL
-IF %1 == CL GOTO MakeCL
 IF %1 == clang-cl GOTO MakeClang
 IF %1 == clang GOTO MakeClang
 
 :MakeClang
+
     :: Arguments for the compiler.
     SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
-
-    :: Delete old files.
-    del *.exe *.obj *.o *.so *.dll *.lib
 
     :: Create include\tmpl_endianness.h
     clang-cl det_end.c -o det.exe
@@ -47,14 +49,11 @@ IF %1 == clang GOTO MakeClang
     :: Compile the library.
     for /D %%d in (.\src\*) do clang-cl %CWARN% -O2 -I..\ -c %%d\*.c
 
-    :: Link everything into a .lib file.
-    lib /out:libtmpl.lib *.obj
-
-    :: Clean up.
-    del *.exe *.obj
-    GOTO End
+    :: Go to the Linking stage.
+    GOTO LinkLib
 
 :MakeCL
+
     :: Create include\tmpl_endianness.h
     cl det_end.c /link /out:det.exe
     det.exe
@@ -63,11 +62,14 @@ IF %1 == clang GOTO MakeClang
     :: Compile the library.
     for /D %%d in (.\src\*) do cl /I../ /W4 /O2 /c %%d\*.c
 
+    :: Go to the Linking stage.
+    GOTO LinkLib
+
+:LinkLib
+
     :: Link everything into a .lib file.
     lib /out:libtmpl.lib *.obj
 
     :: Clean up.
     del *.exe *.obj
-
-:End
 
