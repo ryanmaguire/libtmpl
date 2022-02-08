@@ -98,8 +98,8 @@ int main(void)
 
     printf("C time:       %f\n\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
-    max_rel = 0.0;
+    max_abs = 0.0L;
+    max_rel = 0.0L;
     for (n = 0UL; n < N; ++n)
     {
         temp = fabsl(y0[n] - y1[n]);
