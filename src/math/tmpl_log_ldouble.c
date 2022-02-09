@@ -276,8 +276,13 @@ static long double rcpr[128] = {
 #define ONE_FIFTH 0.20L
 #define ONE_SIXTH 0.16666666666666666666666666666666667L
 #define ONE_SEVENTH 0.14285714285714285714285714285714L
+
+/*  Not needed for 64-bit.                                                    */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 #define ONE_EIGHTH 0.1250L
 #define ONE_NINTH 0.11111111111111111111111111111111111L
+#endif
 
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN \
     && TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
@@ -346,6 +351,8 @@ long double tmpl_LDouble_Log(long double x)
 
         /*  Horner's method of polynomial computation reduces the number of   *
          *  multiplications needed. Use this.                                 */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
         return -s * (
             1.0L + s * (
                 ONE_HALF + s * (
@@ -363,6 +370,22 @@ long double tmpl_LDouble_Log(long double x)
                 )
             )
         );
+#else
+        /*  Few terms needed for 64-bit.                                      */
+        return -s * (
+            1.0L + s * (
+                ONE_HALF + s * (
+                    ONE_THIRD + s * (
+                        ONE_FOURTH + s * (
+                            ONE_FIFTH + s * (
+                                ONE_SIXTH + s * ONE_SEVENTH
+                            )
+                        )
+                    )
+                )
+            )
+        );
+#endif
     }
 
     /*  Normal number. Compute the exponent. This is the bits of the exponent *
@@ -395,6 +418,9 @@ long double tmpl_LDouble_Log(long double x)
     s = w.r*rcpr[ind];
     A = (s - 1.0L) / (s + 1.0L);
     A_sq = A*A;
+
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
     poly = A*(
         2.0L + A_sq * (
             0.666666666666666666666666666666666666667L + A_sq * (
@@ -402,6 +428,10 @@ long double tmpl_LDouble_Log(long double x)
             )
         )
     );
+#else
+    /*  Few terms needed for 64-bit.                                          */
+    poly = A*(2.0 + A_sq * (0.666666666666666667 + A_sq * 0.4));
+#endif
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
     return tmpl_Natural_Log_of_Two_L*exponent + poly + table[ind];
@@ -426,8 +456,12 @@ long double tmpl_LDouble_Log(long double x)
 #undef ONE_FIFTH
 #undef ONE_SIXTH
 #undef ONE_SEVENTH
+
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 #undef ONE_EIGHTH
 #undef ONE_NINTH
+#endif
 
 #else
 #include <math.h>
