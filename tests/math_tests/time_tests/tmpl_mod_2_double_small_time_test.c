@@ -26,7 +26,7 @@ static inline double fmod2(double x)
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double, -1.0E4, 1.0E4, 10000000UL, tmpl_Double_Mod_2, fmod2);
+    RUN_TEST(double, -1.0E4, 1.0E4, 10000000ULL, tmpl_Double_Mod_2, fmod2);
     return 0;
 }
 

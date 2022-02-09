@@ -26,7 +26,7 @@ static inline float fmod2f(float x)
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(float, -1.0E4F, 1.0E4F, 10000000UL, tmpl_Float_Mod_2, fmod2f);
+    RUN_TEST(float, -1.0E4F, 1.0E4F, 10000000ULL, tmpl_Float_Mod_2, fmod2f);
     return 0;
 }
 

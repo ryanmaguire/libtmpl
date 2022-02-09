@@ -21,7 +21,7 @@
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(long double, -1.0E4L, 1.0E4L, 10000000UL, tmpl_LDouble_Cos, cosl);
+    RUN_TEST(long double, -1.0E4L, 1.0E4L, 10000000ULL, tmpl_LDouble_Cos, cosl);
     return 0;
 }
 
