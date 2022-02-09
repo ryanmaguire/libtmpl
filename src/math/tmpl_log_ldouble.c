@@ -326,8 +326,14 @@ long double tmpl_LDouble_Log(long double x)
     }
 
     /*  NaN or positive infinity. Simply return the input.                    */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
+    else if (w.bits.expo == 0x7FFU)
+        return x;
+#else
     else if (w.bits.expo == 0x7FFFU)
         return x;
+#endif
 
     /*  For values close to but less than 1, the computation of the division  *
      *  (x-1)/(x+1) may lose precision and log(x) may have bad relative error *
