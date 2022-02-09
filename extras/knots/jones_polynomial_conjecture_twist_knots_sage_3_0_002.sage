@@ -54,7 +54,7 @@ twist_count = 0
 R.<q> = LaurentPolynomialRing(QQ)
 
 # Open the file containing the PD data.
-fp = open("pd_code.txt")
+fp = open("pd_code_0_12.txt")
 
 # Create two empty lists for storing the knots and their Jones' polynomials.
 KnotList = []
@@ -64,8 +64,6 @@ TwistInd = []
 # Loop over and compute the Jones' Polynomial of twist knots.
 for m in range(twist_start, twist_end):
 
-    # We only perform the computation if p and q are coprime. Otherwise we
-    # have a link, several intertwined knots.
     if m % 2 == 0:
         f = (q**3 + q - q**(3-m) + q**(-m))/(1+q)
         g = (q**(-3) + q**(-1) - q**(m-3) + q**m)/(1+q**(-1))
