@@ -21,7 +21,7 @@
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double, -1.0E6, 1.0E6, 2615628245UL, tmpl_Double_Sin, sin);
+    RUN_TEST(double, -1.0E6, 1.0E6, 2615628245ULL, tmpl_Double_Sin, sin);
     return 0;
 }
 

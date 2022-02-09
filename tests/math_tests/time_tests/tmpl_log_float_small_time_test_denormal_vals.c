@@ -24,7 +24,7 @@ int main(void)
     RUN_TEST(float,
              1.401298E-45F,
              1.166347E-38F,
-             10000000UL,
+             10000000ULL,
              tmpl_Float_Log,
              logf);
     return 0;

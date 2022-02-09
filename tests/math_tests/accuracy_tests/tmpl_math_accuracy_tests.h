@@ -33,13 +33,13 @@ do {                                                                           \
                                                                                \
     const type start = (type)begin;                                            \
     const type end = (type)finish;                                             \
-    const unsigned long int N = (unsigned long int)samples;                    \
+    const unsigned long long int N = (unsigned long long int)samples;          \
     const type dx = (end - start) / (type)N;                                   \
                                                                                \
     printf(#f0 " vs. " #f1 "\n");                                              \
     printf("start:   %.16Le\n", (long double)start);                           \
     printf("end:     %.16Le\n", (long double)end);                             \
-    printf("samples: %lu\n", N);                                               \
+    printf("samples: %llu\n", N);                                              \
     printf("dx:      %.16Le\n", (long double)dx);                              \
                                                                                \
     x = start;                                                                 \

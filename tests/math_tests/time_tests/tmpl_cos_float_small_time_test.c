@@ -21,7 +21,7 @@
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(float, -1.0E4F, 1.0E4F, 10000000UL, tmpl_Float_Cos, cosf);
+    RUN_TEST(float, -1.0E4F, 1.0E4F, 10000000ULL, tmpl_Float_Cos, cosf);
     return 0;
 }
 

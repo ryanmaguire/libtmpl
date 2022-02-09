@@ -24,7 +24,7 @@ int main(void)
     RUN_TEST(double,
              4.9406564584124654e-324,
              2.2250738585072009e-308,
-             1305052789L,
+             1305052789ULL,
              tmpl_Double_Log,
              log);
     return 0;
