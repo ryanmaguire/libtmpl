@@ -59,7 +59,7 @@ MirrorList = []
 TorusStringList = []
 
 # Open the file containing the PD data.
-fp = open("pd_code.txt")
+fp = open("pd_code_0_12.txt")
 
 # Loop over and compute the Jones' Polynomial of torus knots.
 for m in range(torus_start, torus_end):
