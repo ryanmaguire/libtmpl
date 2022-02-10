@@ -48,7 +48,7 @@
  *          normalize by 2^52 if so, and then pass to the main part of the    *
  *          algorithm.                                                        *
  *                                                                            *
- *          For values not in the range 0.95 < x < 1.0, compute log(x) as     *
+ *          For values not in the range 0.995 < x < 1.0, compute log(x) as    *
  *          follows:                                                          *
  *                                                                            *
  *              log(x) = log(1.m * 2^b)                                       *
@@ -485,7 +485,7 @@ double tmpl_Double_Log(double x)
      *                ---- 2n + 1                                             *
      *                 n                                                      *
      *                                                                        *
-     *  With x close to 1, q is close to zero, and the sum is in terms of the *
+     *  With x close to 1, A is close to zero, and the sum is in terms of the *
      *  square of q. This has great convergence.                              */
     A = (s - 1.0) / (s + 1.0);
     A_sq = A*A;
@@ -521,4 +521,5 @@ double tmpl_Double_Log(double x)
 /*  End of tmpl_Double_Log.                                                   */
 
 #endif
+/*  End of if for TMPL_HAS_IEEE754_DOUBLE and TMPL_USE_MATH_ALGORITHMS.       */
 
