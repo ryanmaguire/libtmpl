@@ -24,7 +24,7 @@ unsigned long **tmpl_Where_Greater_##Type(type *data, unsigned long dim,       \
     /*  Loop over the input array data to check which indices match.         */\
     for (i=0; i<dim; ++i)                                                      \
     {                                                                          \
-        if (data[i] > threshold)                                               \
+        if ((threshtype)data[i] > threshold)                                   \
         {                                                                      \
             arr[arr_size] = i;                                                 \
             arr_size += 1;                                                     \
@@ -77,7 +77,7 @@ unsigned long **tmpl_Where_Lesser_##Type(type *data, unsigned long dim,        \
     /*  Loop over the input array data to check which indices match.         */\
     for (i=0; i<dim; ++i)                                                      \
     {                                                                          \
-        if (data[i] < threshold)                                               \
+        if ((threshtype)data[i] < threshold)                                   \
         {                                                                      \
             arr[arr_size] = i;                                                 \
             arr_size += 1;                                                     \
@@ -130,7 +130,7 @@ unsigned long **tmpl_Where_LesserGreater_##Type(type *data, unsigned long dim, \
     /*  Loop over the input array data to check which indices match.         */\
     for (i=0; i<dim; ++i)                                                      \
     {                                                                          \
-        if ((data[i] > lower) && (data[i] < upper))                            \
+        if (((threshtype)data[i] > lower) && ((threshtype)data[i] < upper))    \
         {                                                                      \
             arr[arr_size] = i;                                                 \
             arr_size += 1;                                                     \
