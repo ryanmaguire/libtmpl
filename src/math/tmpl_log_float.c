@@ -77,7 +77,7 @@
  *                                                                            *
  *          For single precision, only the first term is needed. The          *
  *          standard Taylor series for ln(1 + x) with x small has             *
- *          poor convergences, roughly on the order of 1/N where N is the     *
+ *          poor convergence, roughly on the order of 1/N where N is the      *
  *          number of terms. This alternative sum in is terms of the square   *
  *          of a small value, and has much better convergence.                *
  *                                                                            *
@@ -98,6 +98,14 @@
  *      If the user has not requested libtmpl algorithms, or if IEEE-754      *
  *      support is not available (highly unlikely), then #include <math.h>    *
  *      is called and tmpl_Float_Log returns logf(x) from math.h              *
+ *  Notes:                                                                    *
+ *      This function compiles without error or warning on Debian 11          *
+ *      GNU/Linux with clang, gcc, tcc, and pcc using -Wall, -Wextra,         *
+ *      -Wpedantic, and other options. It passes clang with -Weverything if   *
+ *      -Wno-float-equal is also called (otherwise it complains about         *
+ *      comparison of floats with 0.0F). -std=c89, -std=c99, -std=c11, and    *
+ *      -std=c18 flags have been passed as well, and no problems were found.  *
+ *      If any error or warnings arise on your platform, please report this.  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -204,7 +212,7 @@ static float table[64] = {
     0.68530400309891941654404807896723F
 };
 
-/*  The values 1 / (1 + k/64) = 64 / (64 + k) for k = 0, 1, ..., 63, 64.      */
+/*  The values 1 / (1 + k/64) = 64 / (64 + k) for k = 0, 1, ..., 62, 63.      */
 static float rcpr[64] = {
     1.0000000000000000000000000000000F,
     0.98461538461538461538461538461538F,
@@ -408,7 +416,7 @@ float tmpl_Float_Log(float x)
 }
 /*  End of tmpl_Float_Log.                                                    */
 
-/*  undef all the macros incase someone wants to #include this file.          */
+/*  undef all the macros in case someone wants to #include this file.         */
 #undef ONE_HALF
 #undef ONE_THIRD
 #undef ONE_FOURTH
@@ -444,4 +452,5 @@ float tmpl_Float_Log(float x)
 /*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
 
 #endif
+/*  End of if for TMPL_HAS_IEEE754_FLOAT and TMPL_USE_MATH_ALGORITHMS.        */
 

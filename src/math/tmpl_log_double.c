@@ -77,7 +77,7 @@
  *                                                                            *
  *          A polynomial with the first three terms is then used. The         *
  *          standard Taylor series polynomial for ln(1 + x) with x small has  *
- *          poor convergences, roughly on the order of 1/N where N is the     *
+ *          poor convergence, roughly on the order of 1/N where N is the      *
  *          number of terms. This alternative sum in is terms of the square   *
  *          of a small value, and has much better convergence.                *
  *                                                                            *
@@ -276,7 +276,7 @@ static double table[64] = {
     0.68530400309891941654404807896723
 };
 
-/*  The values 1 / (1 + k/64) = 64 / (64 + k) for k = 0, 1, ..., 63, 64.      */
+/*  The values 1 / (1 + k/64) = 64 / (64 + k) for k = 0, 1, ..., 62, 63.      */
 static double rcpr[64] = {
     1.0000000000000000000000000000000,
     0.98461538461538461538461538461538,
@@ -498,7 +498,7 @@ double tmpl_Double_Log(double x)
 }
 /*  End of tmpl_Double_Log.                                                   */
 
-/*  undef all the macros incase someone wants to #include this file.          */
+/*  undef all the macros in case someone wants to #include this file.         */
 #undef ONE_HALF
 #undef ONE_THIRD
 #undef ONE_FOURTH
