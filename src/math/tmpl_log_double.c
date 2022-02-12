@@ -486,7 +486,7 @@ double tmpl_Double_Log(double x)
      *                 n                                                      *
      *                                                                        *
      *  With x close to 1, A is close to zero, and the sum is in terms of the *
-     *  square of q. This has great convergence.                              */
+     *  square of A. This has great convergence.                              */
     A = (s - 1.0) / (s + 1.0);
     A_sq = A*A;
 
