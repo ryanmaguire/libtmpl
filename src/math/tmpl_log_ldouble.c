@@ -446,15 +446,15 @@ long double tmpl_LDouble_Log(long double x)
 #include <math.h>
 long double tmpl_LDouble_Log(long double x)
 {
-    tmpl_IEEE754_LDouble w;
-    long double xhi, xlow, s, polya, polyb;
+    tmpl_IEEE754_LDouble w, xhi, xlow;
+    long double s, polya, polyb;
     signed int exponent;
     unsigned int ind;
     w.r = x;
 
-    xhi = (long double)w.d[0];
-    xlow = x - xhi;
-    s = xlow / xhi;
+    xhi.r = (long double)w.d[0];
+    xlow.r = x - xhi.r;
+    s = xlow.r / xhi.r;
 
     polya = s * (
         1.0L + s * (
