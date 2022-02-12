@@ -446,17 +446,17 @@ long double tmpl_LDouble_Log(long double x)
 #include <math.h>
 long double tmpl_LDouble_Log(long double x)
 {
-    tmpl_IEEE754_LDouble w, xhi, xlow, A, A_sq;
-    long double s, polya, polyb;
+    tmpl_IEEE754_LDouble w, xhi, xlow;
+    long double s, polya, polyb, A, A_sq;
     signed int exponent;
     unsigned int ind;
     w.r = x;
 
     xhi.r = (long double)w.d[0];
     xlow.r = x - xhi.r;
-    s = xlow.r / xhi.r;
+    s = -xlow.r / xhi.r;
 
-    polya = s * (
+    polya = -s * (
         1.0L + s * (
             ONE_HALF + s * (
                 ONE_THIRD + s * (
@@ -475,18 +475,17 @@ long double tmpl_LDouble_Log(long double x)
     );
 
     exponent = xhi.bits.expoa - TMPL_LDOUBLE_BIAS;
-
     xhi.bits.expoa = TMPL_LDOUBLE_BIAS;
 
-    ind = w.bits.man0;
+    ind = w.bits.man0a;
+    ind = (ind << 3U) + (w.bits.man1a >> 13U);
 
-    ind = (ind << 3U) + (w.bits.man1 >> 13U);
     s = w.r*rcpr[ind];
     A = (s - 1.0L) / (s + 1.0L);
     A_sq = A*A;
 
     /*  Compute the polynomial to the first few terms via Horner's method.    */
-    polyb = A*(2.0 + A_sq * (0.666666666666666667 + A_sq * 0.4));
+    polyb = A*(2.0L + A_sq * (0.666666666666666666666666666667L + A_sq * 0.4L));
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
     return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb + table[ind];   
