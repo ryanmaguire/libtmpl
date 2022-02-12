@@ -584,19 +584,20 @@ typedef union tmpl_IEEE754_LDouble_Def {
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         /*  The most significant double.                                      */
-        unsigned int man3 : 16;
-        unsigned int man2 : 16;
-        unsigned int man1 : 16;
-        unsigned int man0 : 4;
-        unsigned int expo : 11;
-        unsigned int sign : 1;
+        unsigned int man3a : 16;
+        unsigned int man2a : 16;
+        unsigned int man1a : 16;
+        unsigned int man0a : 4;
+        unsigned int expoa : 11;
+        unsigned int signa : 1;
 
         /*  The least significant double.                                     */
-        unsigned int man7 : 16;
-        unsigned int man6 : 16;
-        unsigned int man5 : 16;
-        unsigned int man4 : 4;
-        unsigned int junk : 12;
+        unsigned int man3b : 16;
+        unsigned int man2b : 16;
+        unsigned int man1b : 16;
+        unsigned int man0b : 4;
+        unsigned int expob : 11;
+        unsigned int signb : 1;
     } bits;
 
     /*  The two double making up r. r = d[0] + d[1].                          */
@@ -619,19 +620,20 @@ typedef union tmpl_IEEE754_LDouble_Def {
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         /*  The most significant double.                                      */
-        unsigned int sign : 1;
-        unsigned int expo : 11;
-        unsigned int man0 : 4;
-        unsigned int man1 : 16;
-        unsigned int man2 : 16;
-        unsigned int man3 : 16;
+        unsigned int signa : 1;
+        unsigned int expoa : 11;
+        unsigned int man0a : 4;
+        unsigned int man1a : 16;
+        unsigned int man2a : 16;
+        unsigned int man3a : 16;
 
         /*  The least significant double.                                     */
-        unsigned int junk : 12;
-        unsigned int man4 : 4;
-        unsigned int man5 : 16;
-        unsigned int man6 : 16;
-        unsigned int man7 : 16;
+        unsigned int signb : 1;
+        unsigned int expob : 11;
+        unsigned int man0b : 4;
+        unsigned int man1b : 16;
+        unsigned int man2b : 16;
+        unsigned int man3b : 16;
     } bits;
 
     /*  The two double making up r. r = d[0] + d[1].                          */

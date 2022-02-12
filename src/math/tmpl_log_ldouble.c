@@ -284,6 +284,8 @@ static long double rcpr[128] = {
 #define ONE_NINTH 0.11111111111111111111111111111111111L
 #endif
 
+/*  Double double uses a different algorithm. 64-bit, 80-bit extended, and    *
+ *  128-bit quadruple use the same idea.                                      */
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN \
     && TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
 
@@ -439,12 +441,55 @@ long double tmpl_LDouble_Log(long double x)
 /*  End of tmpl_LDouble_Log.                                                  */
 
 #else
+
 /*  Double double not implemented yet.                                        */
 #include <math.h>
 long double tmpl_LDouble_Log(long double x)
 {
-    double logx = log((double)x);
-    return (long double)logx;
+    tmpl_IEEE754_LDouble w;
+    long double xhi, xlow, s, polya, polyb;
+    signed int exponent;
+    unsigned int ind;
+    w.r = x;
+
+    xhi = (long double)w.d[0];
+    xlow = x - xhi;
+    s = xlow / xhi;
+
+    polya = s * (
+        1.0L + s * (
+            ONE_HALF + s * (
+                ONE_THIRD + s * (
+                    ONE_FOURTH + s * (
+                        ONE_FIFTH + s * (
+                            ONE_SIXTH + s * (
+                                ONE_SEVENTH + s * (
+                                    ONE_EIGHTH + s * ONE_NINTH
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    );
+
+    exponent = xhi.bits.expoa - TMPL_LDOUBLE_BIAS;
+
+    xhi.bits.expoa = TMPL_LDOUBLE_BIAS;
+
+    ind = w.bits.man0;
+
+    ind = (ind << 3U) + (w.bits.man1 >> 13U);
+    s = w.r*rcpr[ind];
+    A = (s - 1.0) / (s + 1.0);
+    A_sq = A*A;
+
+    /*  Compute the polynomial to the first few terms via Horner's method.    */
+    polyb = A*(2.0 + A_sq * (0.666666666666666667 + A_sq * 0.4));
+
+    /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
+    return tmpl_Natural_Log_of_Two*exponent + polya + polyb + table[ind];   
 }
 #endif
 /*  End of if for double double.                                              */
