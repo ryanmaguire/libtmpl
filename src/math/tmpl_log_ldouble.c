@@ -485,7 +485,13 @@ long double tmpl_LDouble_Log(long double x)
     A_sq = A*A;
 
     /*  Compute the polynomial to the first few terms via Horner's method.    */
-    polyb = A*(2.0L + A_sq * (0.666666666666666666666666666667L + A_sq * 0.4L));
+    polyb = A*(
+        2.0L + A_sq * (
+            0.666666666666666666666666666666666666667L + A_sq * (
+                0.4L + A_sq * 0.285714285714285714285714285714285714L
+            )
+        )
+    );
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
     return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb + table[ind];   
