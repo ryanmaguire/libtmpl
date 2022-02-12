@@ -271,10 +271,10 @@ static long double rcpr[128] = {
 
 /*  Macros for 1/n for n = 2, 3, ..., 6, 7. These make the code look cleaner. */
 #define ONE_HALF 0.50L
-#define ONE_THIRD 0.33333333333333333333333333333333333L
+#define ONE_THIRD 0.3333333333333333333333333333333333333L
 #define ONE_FOURTH 0.250L
 #define ONE_FIFTH 0.20L
-#define ONE_SIXTH 0.16666666666666666666666666666666667L
+#define ONE_SIXTH 0.1666666666666666666666666666666666667L
 #define ONE_SEVENTH 0.14285714285714285714285714285714L
 
 /*  Not needed for 64-bit.                                                    */
@@ -455,23 +455,7 @@ long double tmpl_LDouble_Log(long double x)
     xlow.r = x - xhi.r;
     s = -xlow.r / xhi.r;
 
-    polya = -s * (
-        1.0L + s * (
-            ONE_HALF + s * (
-                ONE_THIRD + s * (
-                    ONE_FOURTH + s * (
-                        ONE_FIFTH + s * (
-                            ONE_SIXTH + s * (
-                                ONE_SEVENTH + s * (
-                                    ONE_EIGHTH + s * ONE_NINTH
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
+    polya = -s * (1.0L + s * (ONE_HALF + s * ONE_THIRD));
 
     exponent = xhi.bits.expoa - TMPL_LDOUBLE_BIAS;
     xhi.bits.expoa = TMPL_LDOUBLE_BIAS;
