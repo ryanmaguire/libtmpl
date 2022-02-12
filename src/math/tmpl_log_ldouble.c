@@ -468,10 +468,10 @@ long double tmpl_LDouble_Log(long double x)
             0.666666666666666666666666666666666666667L + A_sq * (
                 0.4L + A_sq * (
                     0.285714285714285714285714285714285714L + A_sq * (
-                        0.222222222222222222222222222222222222 + A_sq * (
-                            0.181818181818181818181818181818181818 + A_sq * (
-                                0.153846153846153846153846153846153846 +
-                                A_sq * 0.133333333333333333333333333333333333
+                        0.222222222222222222222222222222222222L + A_sq * (
+                            0.181818181818181818181818181818181818L + A_sq * (
+                                0.153846153846153846153846153846153846L +
+                                A_sq * 0.133333333333333333333333333333333333L
                             )
                         )
                     )
@@ -493,12 +493,8 @@ long double tmpl_LDouble_Log(long double x)
 #undef ONE_FIFTH
 #undef ONE_SIXTH
 #undef ONE_SEVENTH
-
-#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
-    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 #undef ONE_EIGHTH
 #undef ONE_NINTH
-#endif
 
 #else
 #include <math.h>
