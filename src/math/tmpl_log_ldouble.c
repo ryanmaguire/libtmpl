@@ -443,7 +443,6 @@ long double tmpl_LDouble_Log(long double x)
 #else
 
 /*  Double double not implemented yet.                                        */
-#include <math.h>
 long double tmpl_LDouble_Log(long double x)
 {
     tmpl_IEEE754_LDouble w, xhi, xlow;
@@ -480,7 +479,7 @@ long double tmpl_LDouble_Log(long double x)
     ind = w.bits.man0a;
     ind = (ind << 3U) + (w.bits.man1a >> 13U);
 
-    s = w.r*rcpr[ind];
+    s = xhi.r*rcpr[ind];
     A = (s - 1.0L) / (s + 1.0L);
     A_sq = A*A;
 
