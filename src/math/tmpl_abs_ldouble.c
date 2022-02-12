@@ -103,7 +103,13 @@ long double tmpl_LDouble_Abs(long double x)
     w.r = x;
 
     /*  Set the sign bit to 0, indicating positive.                           */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN \
+    && TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
     w.bits.sign = 0x0U;
+#else
+    w.bits.signb = w.bits.signa ^ w.bits.signb;
+    w.bits.signa = 0x0U;
+#endif
 
     /*  Return the long double part of the union.                             */
     return w.r;
