@@ -276,13 +276,16 @@ static long double rcpr[128] = {
 #define ONE_FIFTH 0.20L
 #define ONE_SIXTH 0.1666666666666666666666666666666666667L
 #define ONE_SEVENTH 0.14285714285714285714285714285714L
-
-/*  Not needed for 64-bit.                                                    */
-#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
-    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 #define ONE_EIGHTH 0.1250L
 #define ONE_NINTH 0.11111111111111111111111111111111111L
-#endif
+#define ONE_TENTH 0.1L
+#define ONE_ELEVENTH 0.0909090909090909090909090909090909091L
+#define ONE_TWELFTH 0.0833333333333333333333333333333333333L
+#define ONE_THIRTEENTH 0.0769230769230769230769230769230769231L
+#define ONE_FOURTEENTH 0.0714285714285714285714285714285714286L
+
+
+
 
 /*  Double double uses a different algorithm. 64-bit, 80-bit extended, and    *
  *  128-bit quadruple use the same idea.                                      */
@@ -446,7 +449,7 @@ long double tmpl_LDouble_Log(long double x)
 long double tmpl_LDouble_Log(long double x)
 {
     tmpl_IEEE754_LDouble w, xhi, xlow;
-    long double s, polya, polyb, A, A_sq;
+    long double s, polya, polyb;
     signed int exponent;
     unsigned int ind;
     w.r = x;
@@ -463,28 +466,37 @@ long double tmpl_LDouble_Log(long double x)
     ind = w.bits.man0a;
     ind = (ind << 3U) + (w.bits.man1a >> 13U);
 
-    s = xhi.r*rcpr[ind];
-    A = (s - 1.0L) / (s + 1.0L);
-    A_sq = A*A;
+    s = 1.0L - xhi.r*rcpr[ind];
 
     /*  Compute the polynomial to the first few terms via Horner's method.    */
-    polyb = A*(
-        2.0L + A_sq * (
-            0.666666666666666666666666666666666666667L + A_sq * (
-                0.4L + A_sq * (
-                    0.285714285714285714285714285714285714L + A_sq * (
-                        0.222222222222222222222222222222222222 + A_sq * (
-                            0.181818181818181818181818181818181818 + A_sq * (
-                                0.153846153846153846153846153846153846 + A_sq * (
-                                    0.133333333333333333333333333333333333 + A_sq * 0.117647058823529411764705882352941176
+    polyb = -s * (
+            1.0L + s * (
+                ONE_HALF + s * (
+                    ONE_THIRD + s * (
+                        ONE_FOURTH + s * (
+                            ONE_FIFTH + s * (
+                                ONE_SIXTH + s * (
+                                    ONE_SEVENTH + s * (
+                                        ONE_EIGHTH + s * (
+                                            ONE_NINTH + s * (
+                                                ONE_TENTH + s * (
+                                                    ONE_ELEVENTH + s * (
+                                                        ONE_TWELFTH + s * (
+                                                            ONE_THIRTEENTH +
+                                                            s * ONE_FOURTEENTH
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
                                 )
                             )
                         )
                     )
                 )
             )
-        )
-    );
+        );
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
     return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb + table[ind];   
