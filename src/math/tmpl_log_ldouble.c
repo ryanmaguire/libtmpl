@@ -419,8 +419,13 @@ static long double rcpr[128] = {
 #define ONE_FIFTH 0.20L
 #define ONE_SIXTH 0.1666666666666666666666666666666666667L
 #define ONE_SEVENTH 0.14285714285714285714285714285714L
+
+/*  Not needed for 64-bit.                                                    */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 #define ONE_EIGHTH 0.1250L
 #define ONE_NINTH 0.11111111111111111111111111111111111L
+#endif
 
 /*  Double double uses a different algorithm. 64-bit, 80-bit extended, and    *
  *  128-bit quadruple use the same idea.                                      */
@@ -633,8 +638,13 @@ long double tmpl_LDouble_Log(long double x)
 #undef ONE_FIFTH
 #undef ONE_SIXTH
 #undef ONE_SEVENTH
+
+/*  Not defined for 64-bit.                                                   */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 #undef ONE_EIGHTH
 #undef ONE_NINTH
+#endif
 
 #else
 #include <math.h>
