@@ -507,7 +507,7 @@ double tmpl_Double_Log(double x)
 #undef ONE_SEVENTH
 
 #else
-/*  Else for TMPL_HAS_IEEE754_DOUBLE != 0 and TMPL_USE_MATH_ALGORITHMS != 0.  */
+/*  Else for TMPL_HAS_IEEE754_DOUBLE == 1 and TMPL_USE_MATH_ALGORITHMS == 1.  */
 
 /*  The C Standard Library requires a log function. If the user lacks         *
  *  IEEE754 support, or does not want to use libtmpl algorithms, simply wrap  *
