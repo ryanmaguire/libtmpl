@@ -86,7 +86,7 @@
  *          (the absolute error is still around 10^-16). We can achieve much  *
  *          better relative error using the standard Taylor series to seven   *
  *          terms. This is slower than the series above, but more accurate in *
- *          this range. That is, for 0.95 < x < 1.0 we use:                   *
+ *          this range. That is, for 0.995 < x < 1.0 we use:                  *
  *                                                                            *
  *                        inf                                                 *
  *                        ----                                                *
@@ -379,7 +379,7 @@ double tmpl_Double_Log(double x)
     if (w.bits.sign)
         return TMPL_NAN;
 
-    /*  Subnormal normal or zero.                                             */
+    /*  Subnormal number or zero.                                             */
     else if (w.bits.expo == 0x00U)
     {
         /*  log(0) = -infinity.                                               */
@@ -507,6 +507,7 @@ double tmpl_Double_Log(double x)
 #undef ONE_SEVENTH
 
 #else
+/*  Else for TMPL_HAS_IEEE754_DOUBLE != 0 and TMPL_USE_MATH_ALGORITHMS != 0.  */
 
 /*  The C Standard Library requires a log function. If the user lacks         *
  *  IEEE754 support, or does not want to use libtmpl algorithms, simply wrap  *
