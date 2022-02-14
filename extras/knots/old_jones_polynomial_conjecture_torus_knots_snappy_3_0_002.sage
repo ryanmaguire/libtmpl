@@ -47,12 +47,18 @@ torus_start = 2
 torus_end = 100
 torus_count = 0
 
-# Generate the ring of Laurent polynomials in variable over Q (rationals).
+# The polynomials in the Rolfsen table do not have their Jones polynomial with
+# degree higher than 50. Set this as a threshold.
+threshold = 50
+
+# Generate the ring of Laurent polynomials in variable q over Q (rationals).
 R.<q> = LaurentPolynomialRing(QQ)
 
 # Create two empty lists for storing the knots and their Jones' polynomials.
 KnotList = []
 MirrorList = []
+
+# And an empty list for the names of the torus knots.
 TorusStringList = []
 
 # Loop over and compute the Jones' Polynomial of torus knots.
@@ -66,10 +72,15 @@ for m in range(torus_start, torus_end):
     # The torus knot T(m,n) and T(m,n) are the same. Because of this we can cut
     # the square lattice [-N, -N] x [N, N] in half and compute the upper
     # triangle. This saves us from redundant computations.
-    for n in range(m+1, torus_end):
+    for n in range(m + 1, torus_end):
 
         # Same skip as before.
         if (n == 0) or (n == 1) or (n == -1):
+            continue
+
+        # If m*n is large, skip this. No knot in the Rolfsen table has their
+        # degree that large.
+        if (m - 1)*(n - 1) > threshold:
             continue
 
         # We only perform the computation if p and q are coprime. Otherwise we
@@ -79,7 +90,7 @@ for m in range(torus_start, torus_end):
 
         # Torus knots have a closed form Jones' polynomial. Use this.
         f = q**((m-1)*(n-1)//2)*(1-q**(m+1)-q**(n+1)+q**(m+n)) / (1-q**2)
-        g = q**((1-m)*(n-1)//2)*(1-q**(-m-1)-q**(-n-1)+q**(-m-n))/(1-q**(-2))
+        g = q**((1-m)*(n-1)//2)*(1-q**(-m-1)-q**(-n-1)+q**(-m-n)) / (1-q**(-2))
 
         # Add the two knots to our lists.
         KnotList.append(f)
@@ -87,61 +98,13 @@ for m in range(torus_start, torus_end):
         TorusStringList.append("(%d, %d)" % (m, n))
         torus_count += 1
 
-# The SnapPy module has 367 alternating Hoste-Thistlethwaite knots
-# and 185 non-alternating Hoste-Thistlethwaite knots. We can loop over these
-# with strings.
-
-# The syntax for manipulating strings in Sage comes from Python, which is
-# borrowed from the syntax used in C. We use %d to indicate a placeholder for
-# and integer, and then pass an integer to that placeholder via % n, where n is
-# and actual integer. We surround the string with quotation marks.
-
-# As a side note, the range function (which is from Python) has syntanx
-# range(m,n) and creates an iterator between m and n-1. That is, n is NOT
-# included. Hence the need to iterate between 1 and 368 for the alternating and
-# 1 and 186 for the non-alternating.
-
-# These are all of the alternating Hoste-Thistlethwaite knots available:
-print("\nProcessing Hoste-Thistlethwaite Alternating Table:")
-for n in range(1, 368):
-    knot_string = "K11a%d" % n
-    knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial()
-
-    for n in range(torus_count):
-        tstring = TorusStringList[n]
-        if (f == KnotList[n]):
-            print("\t%s matches a torus knot: %s" % (knot_string, tstring))
-        elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"
-                  % (knot_string, tstring))
-        else:
-            pass
-
-# And these are the non-alternating ones.
-print("\nProcessing Hoste-Thistlethwaite Non-Alternating Table:")
-for n in range(1, 186):
-    knot_string = "K11n%d" % n
-    knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial()
-
-    for n in range(torus_count):
-        tstring = TorusStringList[n]
-        if (f == KnotList[n]):
-            print("\t%s matches a torus knot: %s" % (knot_string, tstring))
-        elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %s"
-                  % (knot_string, tstring))
-        else:
-            pass
-
 # SnapPy has the Rolfsen table for many knots, the highest being 11 crossings.
 # Loop between 3 (Trefoil) and 11.
 print("\nProcessing Rolfsen Table:")
 for k in range(3, 12):
 
-    # Reset m to one.
-    m = 1
+    # Reset n to one.
+    n = 1
 
     # If the knot k_n does not exist (for example, "3_5"), and we try to
     # create it, Python will produce an error, crashing the program.
@@ -149,23 +112,23 @@ for k in range(3, 12):
     # by the SnapPy module.
     try:
         while(1):
-            knot_string = ("%d_%d" % (k, m))
+            knot_string = ("%d_%d" % (k, n))
             knot = snappy.Link(knot_string)
-            f = knot.jones_polynomial()
+            f = knot.jones_polynomial(new_convention=False)
 
-            for n in range(torus_count):
-                tstring = TorusStringList[n]
-                if (f == KnotList[n]):
-                    print("\t%s matches a torus knot: %s"
-                          % (knot_string, tstring))
-                elif (f == MirrorList[n]):
+            for m in range(torus_count):
+                if (f == KnotList[m]):
+                    print("\t%s matches a torus knot: %s" %
+                          (knot_string, TorusStringList[m]))
+                elif (f == MirrorList[m]):
+
                     print("\t%s matches a torus knot mirror: %s"
-                          % (knot_string, tstring))
+                          % (knot_string, TorusStringList[m]))
                 else:
                     pass
 
-            # Increment m.
-            m += 1
+            # Increment n.
+            n += 1
 
     # SnapPy raises an IOError on failure. Try to catch this to prevent error.
     except (IOError, ValueError):

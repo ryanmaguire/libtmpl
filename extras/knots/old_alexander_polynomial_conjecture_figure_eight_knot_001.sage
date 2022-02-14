@@ -18,13 +18,10 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Compare Jones' polynomial of the figure eight to other knots.          #
-#                                                                              #
-#       This code works with SnapPy versions less than 3.0. Snappy 3.0 and     #
-#       higher changed how the Jones' polynomial function works.               #
+#       Compare Alexander' polynomial of the figure eight to other knots.      #
 ################################################################################
-#   Author: Ryan Maguire                                                       #
-#   Date:   November 10, 2021.                                                 #
+#   Author:     Ryan Maguire                                                   #
+#   Date:       February 14, 2021.                                             #
 ################################################################################
 """
 
@@ -35,14 +32,14 @@ import snappy
 R.<q> = LaurentPolynomialRing(QQ)
 
 # Get the figure 8 knot's Jones polynomial.
-figure_8_poly = snappy.Link("4_1").jones_polynomial()
+figure_8_poly = snappy.Link("4_1").alexander_polynomial()
 
 # These are all of the alternating Hoste-Thistlethwaite knots available:
 print("\nProcessing Hoste-Thistlethwaite Alternating Table:")
 for n in range(1, 368):
     knot_string = "K11a%d" % n
     knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial()
+    f = knot.alexander_polynomial()
 
     if (f == figure_8_poly):
         print("\tMatch: %s" % knot_string)
@@ -54,7 +51,7 @@ print("\nProcessing Hoste-Thistlethwaite Non-Alternating Table:")
 for n in range(1, 186):
     knot_string = "K11n%d" % n
     knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial()
+    f = knot.alexander_polynomial()
 
     if (f == figure_8_poly):
         print("\tMatch: %s" % knot_string)
@@ -77,7 +74,7 @@ for k in range(3, 12):
         while(1):
             knot_string = ("%d_%d" % (k, m))
             knot = snappy.Link(knot_string)
-            f = knot.jones_polynomial()
+            f = knot.alexander_polynomial()
 
             if (f == figure_8_poly):
                 print("\tMatch: %s" % knot_string)

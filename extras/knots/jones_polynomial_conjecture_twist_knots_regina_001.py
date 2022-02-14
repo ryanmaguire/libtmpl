@@ -3,7 +3,7 @@ import regina
 import numpy
 
 twist_start = 0
-twist_end = 20
+twist_end = 40
 twist_count = 0
 
 KnotList = []
@@ -21,7 +21,7 @@ inv_square = regina.Laurent(-2)
 inv_quartic = regina.Laurent(-4)
 inv_sextic = regina.Laurent(-6)
 
-fp = open("dt_code_0_14.txt")
+fp = open("dt_code.txt")
 
 for m in range(twist_start, twist_end):
 
@@ -48,8 +48,8 @@ for m in range(twist_start, twist_end):
     TwistInd.append(m)
     twist_count += 1
 
-print("Computing Jones Polynomial from Table")
 for pd in fp:
+    pd = pd.replace("\n", "")
     L = regina.Link.fromDT(pd)
     j = L.jones()
     f = j*one_plus_pow_pos_q

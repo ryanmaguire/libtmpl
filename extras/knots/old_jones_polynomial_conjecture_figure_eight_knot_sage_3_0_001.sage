@@ -18,57 +18,45 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Test a conjecture about Khovanov homology and the Jones' polynomial.   #
-#       The idea is that Khovanov homology can distinguish a Torus knot from   #
-#       a non-torus knot. First, see if this is true of the Jones' polynomial. #
-#       If we find a match, compute (currently by hand or lookup table) the    #
-#       Khovanov homologies of the matching pair to see if they're the same.   #
-#       This is the same as jones_polynomial_conjecture_snappy_2_9_001.sage,   #
-#       except that the torus knot Jones' polynomials are computed via         #
-#       a known formula, rather than using SnapPy to directly compute the      #
-#       polynomial. This hugely saves on computation time.                     #
-#                                                                              #
-#       This code works with SnapPy versions less than 3.0. Snappy 3.0 and     #
-#       higher changed how the Jones' polynomial function works.               #
+#       Compare Jones' polynomial of the figure eight to other knots.          #
 ################################################################################
-#   Author: Ryan Maguire                                                       #
-#   Date:   June 12, 2021.                                                     #
+#   Author:     Ryan Maguire                                                   #
+#   Date:       February 14, 2021.                                             #
 ################################################################################
 """
 
 # The SnapPy module will be used for most of the computations with knots.
 import snappy
 
-# Largest number of twists we'll check for torus knots.
-twist_start = 0
-twist_end = 20
-twist_count = 0
-
 # Generate the ring of Laurent polynomials in variable over Q (rationals).
 R.<q> = LaurentPolynomialRing(QQ)
 
-# Create two empty lists for storing the knots and their Jones' polynomials.
-KnotList = []
-MirrorList = []
-TwistInd = []
+# Get the figure 8 knot's Jones polynomial.
+figure_8_poly = snappy.Link("4_1").jones_polynomial(new_convention=False)
 
-# Loop over and compute the Jones' Polynomial of twist knots.
-for m in range(twist_start, twist_end):
+# These are all of the alternating Hoste-Thistlethwaite knots available:
+print("\nProcessing Hoste-Thistlethwaite Alternating Table:")
+for n in range(1, 368):
+    knot_string = "K11a%d" % n
+    knot = snappy.Link(knot_string)
+    f = knot.jones_polynomial(new_convention=False)
 
-    # We only perform the computation if p and q are coprime. Otherwise we
-    # have a link, several intertwined knots.
-    if m % 2 == 0:
-        f = (q**3 + q - q**(3-m) + q**(-m))/(1+q)
-        g = (q**(-3) + q**(-1) - q**(m-3) + q**m)/(1+q**(-1))
+    if (f == figure_8_poly):
+        print("\tMatch: %s" % knot_string)
     else:
-        f = (1 + q**(-2) + q**(-m) - q**(-m-3))/(1+q)
-        g = (1 + q**2 + q**(m) - q**(m+3))/(1+q**(-1))
+        pass
 
-    # Add the two knots to our lists.
-    KnotList.append(f)
-    MirrorList.append(g)
-    TwistInd.append(m)
-    twist_count += 1
+# And these are the non-alternating ones.
+print("\nProcessing Hoste-Thistlethwaite Non-Alternating Table:")
+for n in range(1, 186):
+    knot_string = "K11n%d" % n
+    knot = snappy.Link(knot_string)
+    f = knot.jones_polynomial(new_convention=False)
+
+    if (f == figure_8_poly):
+        print("\tMatch: %s" % knot_string)
+    else:
+        pass
 
 # SnapPy has the Rolfsen table for many knots, the highest being 11 crossings.
 # Loop between 3 (Trefoil) and 11.
@@ -86,17 +74,12 @@ for k in range(3, 12):
         while(1):
             knot_string = ("%d_%d" % (k, m))
             knot = snappy.Link(knot_string)
-            f = knot.jones_polynomial()
+            f = knot.jones_polynomial(new_convention=False)
 
-            for n in range(twist_count):
-                if (f == KnotList[n]):
-                    print("\t%s matches a twist knot: %d"
-                          % (knot_string, TwistInd[n]))
-                elif (f == MirrorList[n]):
-                    print("\t%s matches a torus knot mirror: %d"
-                          % (knot_string, TwistInd[n]))
-                else:
-                    pass
+            if (f == figure_8_poly):
+                print("\tMatch: %s" % knot_string)
+            else:
+                pass
 
             # Increment m.
             m += 1
