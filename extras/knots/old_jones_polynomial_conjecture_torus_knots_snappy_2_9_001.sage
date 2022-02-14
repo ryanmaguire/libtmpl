@@ -27,8 +27,8 @@
 #       DO NOT USE THIS. The second rendition of this code is significantly    #
 #       faster: jones_polynomial_conjecture_snappy_2_9_002.sage.               #
 ################################################################################
-#   Author: Ryan Maguire                                                       #
-#   Date:   June 12, 2021.                                                     #
+#   Author:     Ryan Maguire                                                   #
+#   Date:       June 12, 2021.                                                 #
 ################################################################################
 """
 

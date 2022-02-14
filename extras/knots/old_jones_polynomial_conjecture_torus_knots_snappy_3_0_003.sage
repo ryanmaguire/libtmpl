@@ -19,20 +19,9 @@
 ################################################################################
 #   Purpose:                                                                   #
 #       Test a conjecture about Khovanov homology and the Jones' polynomial.   #
-#       The idea is that Khovanov homology can distinguish a Torus knot from   #
-#       a non-torus knot. First, see if this is true of the Jones' polynomial. #
-#       If we find a match, compute (currently by hand or lookup table) the    #
-#       Khovanov homologies of the matching pair to see if they're the same.   #
-#       This is the same as jones_polynomial_conjecture_snappy_2_9_001.sage,   #
-#       except that the torus knot Jones' polynomials are computed via         #
-#       a known formula, rather than using SnapPy to directly compute the      #
-#       polynomial. This hugely saves on computation time.                     #
-#                                                                              #
-#       This code works with SnapPy versions less than 3.0. Snappy 3.0 and     #
-#       higher changed how the Jones' polynomial function works.               #
 ################################################################################
-#   Author: Ryan Maguire                                                       #
-#   Date:   June 12, 2021.                                                     #
+#   Author:     Ryan Maguire                                                   #
+#   Date:       June 12, 2021.                                                 #
 ################################################################################
 """
 
@@ -42,7 +31,7 @@ import snappy
 # Numpy is needed for it's GCD function.
 import numpy
 
-# Needed to convert string to list of lists.
+# ast module needed for converting string of lists to list of lists.
 import ast
 
 # Largest number of twists we'll check for torus knots.
@@ -50,16 +39,22 @@ torus_start = 2
 torus_end = 100
 torus_count = 0
 
-# Generate the ring of Laurent polynomials in variable over Q (rationals).
+# The polynomials in the Rolfsen table do not have their Jones polynomial with
+# degree higher than 50. Set this as a threshold.
+threshold = 50
+
+# Generate the ring of Laurent polynomials in variable q over Q (rationals).
 R.<q> = LaurentPolynomialRing(QQ)
 
 # Create two empty lists for storing the knots and their Jones' polynomials.
 KnotList = []
 MirrorList = []
+
+# And an empty list for the names of the torus knots.
 TorusStringList = []
 
 # Open the file containing the PD data.
-fp = open("pd_code_0_12.txt")
+fp = open("pd_code.txt")
 
 # Loop over and compute the Jones' Polynomial of torus knots.
 for m in range(torus_start, torus_end):
@@ -72,10 +67,15 @@ for m in range(torus_start, torus_end):
     # The torus knot T(m,n) and T(m,n) are the same. Because of this we can cut
     # the square lattice [-N, -N] x [N, N] in half and compute the upper
     # triangle. This saves us from redundant computations.
-    for n in range(m+1, torus_end):
+    for n in range(m + 1, torus_end):
 
         # Same skip as before.
         if (n == 0) or (n == 1) or (n == -1):
+            continue
+
+        # If m*n is large, skip this. No knot in the Rolfsen table has their
+        # degree that large.
+        if (m - 1)*(n - 1) > threshold:
             continue
 
         # We only perform the computation if p and q are coprime. Otherwise we
@@ -85,7 +85,7 @@ for m in range(torus_start, torus_end):
 
         # Torus knots have a closed form Jones' polynomial. Use this.
         f = q**((m-1)*(n-1)//2)*(1-q**(m+1)-q**(n+1)+q**(m+n)) / (1-q**2)
-        g = q**((1-m)*(n-1)//2)*(1-q**(-m-1)-q**(-n-1)+q**(-m-n))/(1-q**(-2))
+        g = q**((1-m)*(n-1)//2)*(1-q**(-m-1)-q**(-n-1)+q**(-m-n)) / (1-q**(-2))
 
         # Add the two knots to our lists.
         KnotList.append(f)
@@ -93,6 +93,7 @@ for m in range(torus_start, torus_end):
         TorusStringList.append("(%d, %d)" % (m, n))
         torus_count += 1
 
+# Loop over all of the PD codes in the text file.
 for pd in fp:
     x = ast.literal_eval(pd)
     L = snappy.Link(x)

@@ -39,6 +39,12 @@
 # The SnapPy module will be used for most of the computations with knots.
 import snappy
 
+# Numpy is needed for it's GCD function.
+import numpy
+
+# Needed to convert string to list of lists.
+import ast
+
 # Largest number of twists we'll check for torus knots.
 twist_start = 0
 twist_end = 20
@@ -46,6 +52,9 @@ twist_count = 0
 
 # Generate the ring of Laurent polynomials in variable over Q (rationals).
 R.<q> = LaurentPolynomialRing(QQ)
+
+# Open the file containing the PD data.
+fp = open("pd_code.txt")
 
 # Create two empty lists for storing the knots and their Jones' polynomials.
 KnotList = []
@@ -55,8 +64,6 @@ TwistInd = []
 # Loop over and compute the Jones' Polynomial of twist knots.
 for m in range(twist_start, twist_end):
 
-    # We only perform the computation if p and q are coprime. Otherwise we
-    # have a link, several intertwined knots.
     if m % 2 == 0:
         f = (q**3 + q - q**(3-m) + q**(-m))/(1+q)
         g = (q**(-3) + q**(-1) - q**(m-3) + q**m)/(1+q**(-1))
@@ -70,72 +77,16 @@ for m in range(twist_start, twist_end):
     TwistInd.append(m)
     twist_count += 1
 
-# These are all of the alternating Hoste-Thistlethwaite knots available:
-print("\nProcessing Hoste-Thistlethwaite Alternating Table:")
-for n in range(1, 368):
-    knot_string = "K11a%d" % n
-    knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial(new_convention=False)
+for pd in fp:
+    pd = pd.replace("\n", "")
+    x = ast.literal_eval(pd)
+    L = snappy.Link(x)
+    f = L.jones_polynomial(new_convention=False)
 
     for n in range(twist_count):
-        if (f == KnotList[n]):
-            print("\t%s matches a twist knot: %d"
-                  % (knot_string, TwistInd[n]))
-        elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %d"
-                  % (knot_string, TwistInd[n]))
-        else:
-            pass
-
-# And these are the non-alternating ones.
-print("\nProcessing Hoste-Thistlethwaite Non-Alternating Table:")
-for n in range(1, 186):
-    knot_string = "K11n%d" % n
-    knot = snappy.Link(knot_string)
-    f = knot.jones_polynomial(new_convention=False)
-
-    for n in range(twist_count):
-        if (f == KnotList[n]):
-            print("\t%s matches a twist knot: %d"
-                  % (knot_string, TwistInd[n]))
-        elif (f == MirrorList[n]):
-            print("\t%s matches a torus knot mirror: %d"
-                  % (knot_string, TwistInd[n]))
-        else:
-            pass
+        if KnotList[n] == f or MirrorList[n] == f:
+            print("Match: %d" % TwistInd[n],
+                  "Crossing Number: %d" % len(x),
+                  "PD Code %s" % pd)
 
 
-# SnapPy has the Rolfsen table for many knots, the highest being 11 crossings.
-# Loop between 3 (Trefoil) and 11.
-print("\nProcessing Rolfsen Table:")
-for k in range(3, 12):
-
-    # Reset m to one.
-    m = 1
-
-    # If the knot k_n does not exist (for example, "3_5"), and we try to
-    # create it, Python will produce an error, crashing the program.
-    # Perform this loop in a try-except block to catch any exception raised
-    # by the SnapPy module.
-    try:
-        while(1):
-            knot_string = ("%d_%d" % (k, m))
-            knot = snappy.Link(knot_string)
-            f = knot.jones_polynomial(new_convention=False)
-
-            for n in range(twist_count):
-                if (f == KnotList[n]):
-                    print("\t%s matches a twist knot: %d"
-                          % (knot_string, TwistInd[n]))
-                elif (f == MirrorList[n]):
-                    print("\t%s matches a torus knot mirror: %d"
-                          % (knot_string, TwistInd[n]))
-                else:
-                    pass
-
-            # Increment m.
-            m += 1
-
-    # SnapPy raises an IOError on failure. Try to catch this to prevent error.
-    except (IOError, ValueError):
-        continue

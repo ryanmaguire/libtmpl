@@ -20,9 +20,6 @@
 #   Purpose:                                                                   #
 #       Check the Khovanov homologies of knots that had the same Jones'        #
 #       polynomial as a twist knot.                                            #
-#                                                                              #
-#       This code works with SnapPy versions less than 3.0. Snappy 3.0 and     #
-#       higher changed how the Jones' polynomial function works.               #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   November 24, 2021.                                                 #
@@ -44,4 +41,3 @@ for k in range(5):
 
     if RolfKh == TwistKh:
         print("\tMatch")
-

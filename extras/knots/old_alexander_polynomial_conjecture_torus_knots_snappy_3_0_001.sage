@@ -42,7 +42,7 @@ PolyList = []
 TorusStringList = []
 
 # Open the file containing the PD data.
-fp = open("pd_code_0_12.txt")
+fp = open("pd_code.txt")
 
 # Loop over all torus knots and compute their Alexander polynomial.
 for m in range(torus_start, torus_end):
@@ -52,7 +52,7 @@ for m in range(torus_start, torus_end):
         continue
 
     # T(m,n) and T(n,m) can be treated as the same, so start with n > m.
-    for n in range(m+1, torus_end):
+    for n in range(m + 1, torus_end):
 
         # Same skip as before.
         if (n == 0) or (n == 1) or (n == -1):
@@ -90,8 +90,12 @@ for pd in fp:
     # See if this matches any of the torus knots.
     for n in range(torus_count):
         if PolyList[n] == f:
+
+            # We only care about matching Knot Floer Homology. The Alexander
+            # polynomial has a much more efficient computation (polynomial time)
+            # than Knot Floer Homology (exponential time), hence the use of the
+            # Alexander polynomial to weed out potential matches.
             if L.knot_floer_homology() == KnotList[n].knot_floer_homology():
                 print("Match: %s" % TorusStringList[n],
                       "Crossing Number: %d" % len(x),
                       "PD Code %s" % pd)
-

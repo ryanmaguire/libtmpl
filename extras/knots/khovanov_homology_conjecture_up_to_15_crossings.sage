@@ -40,7 +40,7 @@ MirrorList = [
     ]
 ]
 
-for n in [1]:
+for n in range(3):
     KnotRegina = regina.Link.fromDT(DTList[n])
     pd = list(ast.literal_eval(((KnotRegina.pd())[3:-1]).replace("X", "")))
 
