@@ -16,56 +16,49 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_create_zero_polynomial_r                       *
+ *                          tmpl_polynomial_q_calloc                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a degree N polynomial in R[x] with all coefficients *
- *      set to zero. Mathematically this is the same thing as the zero        *
- *      polynomial, but computer-wise the coefficients array will have more   *
- *      memory allocated to it.                                               *
+ *      Code for creating a polynomial in Q[x] with coeffs pointer allocated  *
+ *      a given number of elements, all of which are initialized to zero.     *
+ *      Mathematically, this is the same as the zero polynomial.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Zero_PolynomialR                                          *
+ *      tmpl_PolynomialQ_Calloc                                               *
  *  Purpose:                                                                  *
- *      Creates a polynomial in R[x] with all coefficients set to zero.       *
+ *      Creates a polynomial in Q[x] with all coefficients set to zero.       *
  *  Arguments:                                                                *
- *      degree (unsigned long int):                                           *
- *          The degree of the polynomial. The array of coefficients will have *
- *          degree + 1 many elements allocated to it, and set to zero.        *
+ *      number_of_coeffs (unsigned long int):                                 *
+ *          The number of elements to be allocated for the coeffs pointer.    *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialR *):                                            *
- *          The polynomial 0 + 0 x + ... + 0 x^degree.                        *
+ *      poly (tmpl_PolynomialQ *):                                            *
+ *          The polynomial 0 + 0 x + ... + 0 x^(number_of_coeffs - 1).        *
  *  Called Functions:                                                         *
  *      malloc (stdlib.h):                                                    *
  *          Standard library function for allocating memory.                  *
- *      calloc (stdlib.h):                                                    *
- *          Standard library function for allocating memory and initializing  *
- *          all of the elements to zero.                                      *
  *  Method:                                                                   *
  *      Allocate memory for the polynomial pointer with malloc, and allocate  *
- *      and initialize to zero memory for the pointer to the coefficients     *
- *      array using calloc.                                                   *
+ *      memory for coeffs using malloc and loop over all terms, setting them  *
+ *      equal to zero.                                                        *
  *  Notes:                                                                    *
- *      If malloc fails, a NULL pointer is returned. If malloc succeeds, but  *
- *      calloc fails, the error_occurred Boolean is set to true and an        *
- *      error message is stored in the struct. Check these before using       *
- *      the polynomial.                                                       *
+ *      If malloc fails the first time, a NULL pointer is returned. If malloc *
+ *      the first time succeeds but fails the second time, the error_occurred *
+ *      Boolean is set to true and an error message is stored in the struct.  *
+ *      Check these before using the polynomial.                              *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
  *  2.) tmpl_string.h:                                                        *
- *          Header file where the tmpl_strdup function is declared. This is   *
- *          a clone of the strdup function, which is part of the POSIX        *
- *          standard library, but not the C standard library.                 *
+ *          Header file where the tmpl_strdup function is declared.           *
  *  3.) tmpl_polynomial.h:                                                    *
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
  *  4.) stdlib.h:                                                             *
- *          C Standard library header file containing malloc and calloc.      *
+ *          C Standard library header file containing malloc.                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -82,8 +75,8 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 15, 2021                                                 *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       February 15, 2021                                             *
  ******************************************************************************/
 
 /*  Booleans found here.                                                      */
@@ -92,32 +85,34 @@
 /*  tmpl_stdup function declared here.                                        */
 #include <libtmpl/include/tmpl_string.h>
 
+/*  Rational numbers found here.                                              */
+#include <libtmpl/include/tmpl_rational.h>
+
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
-/*  malloc and calloc are found here.                                         */
+/*  malloc found here.                                                        */
 #include <stdlib.h>
 
 /*  Function for creating a polynomial with all coefficients set to zero.     */
-tmpl_PolynomialR *tmpl_Create_Zero_PolynomialR(unsigned long int degree)
+tmpl_PolynomialQ *tmpl_PolynomialQ_Calloc(unsigned long int number_of_coeffs)
 {
-    /*  Declare necessary variables. The ISO C89/C90 standard forbids mixed   *
-     *  code with declarations, so declare everything at the top.             */
-    tmpl_PolynomialR *poly;
-
     /*  Allocate memory with malloc. Per every coding standard one can find,  *
      *  the result of malloc is not cast. Malloc returns a void pointer which *
      *  is safely promoted to the type of poly.                               */
-    poly = malloc(sizeof(*poly));
+    tmpl_PolynomialQ *poly = malloc(sizeof(*poly));
+
+    /*  Variable for indexing later.                                          */
+    unsigned long int n;
 
     /*  Check if malloc failed. It returns NULL if it does.                   */
     if (poly == NULL)
         return NULL;
 
     /*  Otherwise, allocate memory for the coefficients pointer.              */
-    poly->coeffs = calloc(sizeof(*poly->coeffs), degree + 1UL);
+    poly->coeffs = malloc(sizeof(*poly->coeffs) * number_of_coeffs);
 
-    /*  Check if calloc failed.                                               */
+    /*  Check if malloc failed.                                               */
     if (poly->coeffs == NULL)
     {
         /*  Set the error occured Boolean to True indicating an error.        */
@@ -126,16 +121,19 @@ tmpl_PolynomialR *tmpl_Create_Zero_PolynomialR(unsigned long int degree)
         /*  Set an error message indicating what went wrong.                  */
         poly->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\r\ttmpl_Create_Zero_PolynomialR\n\n"
-            "\rcalloc failed to allocate memory for the coefficients pointer\n"
-            "\rand returned NULL. Returning with error.\n"
+            "\r\ttmpl_PolynomialQ_Calloc\n\n"
+            "\rmalloc failed to allocate memory for the coefficients pointer\n"
+            "\rand returned NULL. Returning with error.\n\n"
         );
 
-        /*  Set the degree to zero since the coefficients pointer is NULL.    */
-        poly->degree = 0UL;
+        /*  NULL pointers can not be freed.                                   */
+        poly->coeffs_can_be_freed = tmpl_False;
+
+        /*  Set number_of_coeffs to zero since the coeffs pointer is NULL.    */
+        poly->number_of_coeffs = 0UL;
     }
 
-    /*  If calloc succeeded, set the remaining values in the polynomial.      */
+    /*  If malloc succeeded, set the remaining values in the polynomial.      */
     else
     {
         /*  No error occurred, so set to false.                               */
@@ -148,10 +146,20 @@ tmpl_PolynomialR *tmpl_Create_Zero_PolynomialR(unsigned long int degree)
          *  program.                                                          */
         poly->error_message = NULL;
 
-        /*  Lastly, set the degree.                                           */
-        poly->degree = degree;
+        /*  Since malloc succeeded, the coeffs pointer can safely be freed.   */
+        poly->coeffs_can_be_freed = tmpl_True;
+
+        /*  Lastly, set the number_of_coeffs attribute.                       */
+        poly->number_of_coeffs = number_of_coeffs;
+
+        /*  Loop over the coeffs array and set all values to zero.            */
+        for (n = 0UL; n < poly->number_of_coeffs; ++n)
+            poly->coeffs[n] = tmpl_RationalNumber_Zero;
     }
 
+    /*  Whether or not malloc failed, set mindeg to zero.                     */
+    poly->mindeg = 0UL;
     return poly;
 }
-/*  End of tmpl_Create_Zero_PolynomialR.                                      */
+/*  End of tmpl_PolynomialQ_Calloc.                                           */
+

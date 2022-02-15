@@ -16,44 +16,52 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_create_empty_polynomial_r                       *
+ *                          tmpl_polynomial_z_calloc                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a polynomial in R[x] with it's coeffs pointer set   *
- *      to NULL, and it's error_occurred and error_message attributes         *
- *      initialized to false and NULL, respectively. degree is set to zero.   *
+ *      Code for creating a polynomial in Z[x] with coeffs pointer allocated  *
+ *      a given number of elements, all of which are initialized to zero.     *
+ *      Mathematically, this is the same as the zero polynomial.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Empty_PolynomialR                                         *
+ *      tmpl_PolynomialZ_Calloc                                               *
  *  Purpose:                                                                  *
- *      Creates a pointer to a polynomial in R[x] with coeffs set to NULL,    *
- *      error_occurred set to false, error_message set to NULL, and           *
- *      degree set to 0.                                                      *
+ *      Creates a polynomial in Z[x] with all coefficients set to zero.       *
  *  Arguments:                                                                *
- *      None (void).                                                          *
+ *      number_of_coeffs (unsigned long int):                                 *
+ *          The number of elements to be allocated for the coeffs pointer.    *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialR *):                                            *
- *          A polynomial with its coeffs pointer set to NULL.                 *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          The polynomial 0 + 0 x + ... + 0 x^(number_of_coeffs - 1).        *
  *  Called Functions:                                                         *
  *      malloc (stdlib.h):                                                    *
  *          Standard library function for allocating memory.                  *
+ *      calloc (stdlib.h):                                                    *
+ *          Standard library function for allocating memory and initializing  *
+ *          all of the elements to zero.                                      *
  *  Method:                                                                   *
- *      Allocate memory for the polynomial pointer with malloc, and then      *
- *      set the rest of the values of the polynomial struct to defaults.      *
+ *      Allocate memory for the polynomial pointer with malloc, and allocate  *
+ *      and initialize to zero memory for the pointer to the coefficients     *
+ *      array using calloc.                                                   *
  *  Notes:                                                                    *
- *      If malloc fails, a NULL pointer is returned.                          *
+ *      If malloc fails, a NULL pointer is returned. If malloc succeeds, but  *
+ *      calloc fails, the error_occurred Boolean is set to true and an        *
+ *      error message is stored in the struct. Check these before using       *
+ *      the polynomial.                                                       *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- *  2.) tmpl_polynomial.h:                                                    *
+ *  2.) tmpl_string.h:                                                        *
+ *          Header file where the tmpl_strdup function is declared.           *
+ *  3.) tmpl_polynomial.h:                                                    *
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
- *  3.) stdlib.h:                                                             *
- *          C Standard library header file containing malloc.                 *
+ *  4.) stdlib.h:                                                             *
+ *          C Standard library header file containing malloc and calloc.      *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -70,40 +78,81 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 25, 2021                                                 *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       February 15, 2021                                             *
  ******************************************************************************/
 
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
+/*  tmpl_stdup function declared here.                                        */
+#include <libtmpl/include/tmpl_string.h>
+
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
-/*  malloc found here.                                                        */
+/*  malloc and calloc are found here.                                         */
 #include <stdlib.h>
 
-/*  Function for creating a polynomial with coeffs set to NULL.               */
-tmpl_PolynomialR *tmpl_Create_Empty_PolynomialR(void)
+/*  Function for creating a polynomial with all coefficients set to zero.     */
+tmpl_PolynomialZ *tmpl_PolynomialZ_Calloc(unsigned long int number_of_coeffs)
 {
-    /*  Declare necessary variables. The ISO C89/C90 standard forbids mixed   *
-     *  code with declarations, so declare everything at the top.             */
-    tmpl_PolynomialR *poly;
-
     /*  Allocate memory with malloc. Per every coding standard one can find,  *
      *  the result of malloc is not cast. Malloc returns a void pointer which *
      *  is safely promoted to the type of poly.                               */
-    poly = malloc(sizeof(*poly));
+    tmpl_PolynomialZ *poly = malloc(sizeof(*poly));
 
     /*  Check if malloc failed. It returns NULL if it does.                   */
     if (poly == NULL)
         return NULL;
 
-    /*  Otherwise, set the default values for the polynomial.                 */
-    poly->coeffs = NULL;
-    poly->error_occurred = tmpl_False;
-    poly->error_message = NULL;
-    poly->degree = 0UL;
+    /*  Otherwise, allocate memory for the coefficients pointer.              */
+    poly->coeffs = calloc(sizeof(*poly->coeffs), number_of_coeffs);
+
+    /*  Check if calloc failed.                                               */
+    if (poly->coeffs == NULL)
+    {
+        /*  Set the error occured Boolean to True indicating an error.        */
+        poly->error_occurred = tmpl_True;
+
+        /*  Set an error message indicating what went wrong.                  */
+        poly->error_message = tmpl_strdup(
+            "Error Encountered: libtmpl\n"
+            "\r\ttmpl_PolynomialZ_Calloc\n\n"
+            "\rcalloc failed to allocate memory for the coefficients pointer\n"
+            "\rand returned NULL. Returning with error.\n\n"
+        );
+
+        /*  NULL pointers can not be freed.                                   */
+        poly->coeffs_can_be_freed = tmpl_False;
+
+        /*  Set number_of_coeffs to zero since the coeffs pointer is NULL.    */
+        poly->number_of_coeffs = 0UL;
+    }
+
+    /*  If calloc succeeded, set the remaining values in the polynomial.      */
+    else
+    {
+        /*  No error occurred, so set to false.                               */
+        poly->error_occurred = tmpl_False;
+
+        /*  Set the error message pointer to NULL. This is important. When    *
+         *  trying to free all of the memory in a polynomial pointer other    *
+         *  functions will check if this pointer is NULL before attempting    *
+         *  to free it. free'ing a non-malloced pointer will crash the        *
+         *  program.                                                          */
+        poly->error_message = NULL;
+
+        /*  Since calloc succeeded, the coeffs pointer can safely be freed.   */
+        poly->coeffs_can_be_freed = tmpl_True;
+
+        /*  Lastly, set the number_of_coeffs attribute.                       */
+        poly->number_of_coeffs = number_of_coeffs;
+    }
+
+    /*  Whether or not calloc failed, set mindeg to zero.                     */
+    poly->mindeg = 0UL;
     return poly;
 }
-/*  End of tmpl_Create_Empty_PolynomialR.                                     */
+/*  End of tmpl_PolynomialZ_Calloc.                                           */
+
