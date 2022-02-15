@@ -48,13 +48,15 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author: Ryan Maguire                                                      *
- *  Date:   June 15, 2021                                                     *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       June 15, 2021                                                 *
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
+ *  2022/02/15: Ryan Maguire                                                  *
+ *      Changing overall layout of polynomials. Introduced "mindeg" attribute.*
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -76,13 +78,19 @@
 /*  Data type for working with elements of Z[x]. That is, polynomials with    *
  *  integer coefficients.                                                     */
 typedef struct tmpl_PolynomialZ_Def {
-    /*  A single pointer to a SIGNED long int array will contain the          *
-     *  coefficients in the order a_0 + a_1 x + ... + a_N x^N.                */
+
+    /*  A pointer to a SIGNED long int array containing the coefficients.     */
     signed long int *coeffs;
 
-    /*  The degree of the polynomial. A polynomial will have degree + 1       *
-     *  elements.                                                             */
-    unsigned long int degree;
+    /*  The number of elements in the coeffs array.                           */
+    unsigned long int number_of_coeffs;
+
+    /*  The smallest degree in the polynomial. The degree of the nth term in  *
+     *  the coeffs array is mindeg + n;                                       */
+    unsigned long int mindeg;
+
+    /*  Boolean for keeping track of the coeffs pointer.                      */
+    tmpl_Bool coeffs_can_be_freed;
 
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
@@ -94,6 +102,7 @@ typedef struct tmpl_PolynomialZ_Def {
 /*  Data type for working with elements of Z[x] that are of a high degree     *
  *  where most of the coefficients are zero. This method saves on memory.     */
 typedef struct tmpl_SparsePolynomialZ_Def {
+
     /*  A pointer to all of the terms. The degree of the terms is stored in   *
      *  the next pointer.                                                     */
     signed long int *terms;
@@ -102,7 +111,10 @@ typedef struct tmpl_SparsePolynomialZ_Def {
     unsigned long int *degree_of_term;
 
     /*  The number of non-zero terms.                                         */
-    unsigned long int size;
+    unsigned long int number_of_terms;
+
+    /*  Boolean for keeping track of the terms pointer.                       */
+    tmpl_Bool terms_can_be_freed;
 
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
@@ -113,12 +125,16 @@ typedef struct tmpl_SparsePolynomialZ_Def {
 
 /*  Data type for matrices of polynomials in Z[x].                            */
 typedef struct tmpl_PolynomialZMatrix_Def {
+
     /*  An array of polynomials, representing the matrix.                     */
-    tmpl_PolynomialZ **data;
+    tmpl_PolynomialZ *data;
 
     /*  The number of rows and columns, respectively.                         */
     unsigned long int number_of_rows;
     unsigned long int number_of_columns;
+
+    /*  Boolean for keeping track of the data pointer.                        */
+    tmpl_Bool data_can_be_freed;
 
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
@@ -128,44 +144,81 @@ typedef struct tmpl_PolynomialZMatrix_Def {
 } tmpl_PolynomialZMatrix;
 
 typedef struct tmpl_PolynomialQ_Def {
+
+    /*  A pointer to an array containing the coefficients.                    */
     tmpl_RationalNumber *coeffs;
-    unsigned long int degree;
+
+    /*  The number of elements in the coeffs array.                           */
+    unsigned long int number_of_coeffs;
+
+    /*  The smallest degree in the polynomial. The degree of the nth term in  *
+     *  the coeffs array is mindeg + n;                                       */
+    unsigned long int mindeg;
+
+    /*  Boolean for keeping track of the coeffs pointer.                      */
+    tmpl_Bool coeffs_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
     char *error_message;
 } tmpl_PolynomialQ;
 
-typedef struct tmpl_PolynomialQMatrix_Def {
-    tmpl_PolynomialQ **data;
-    unsigned long int number_of_rows;
-    unsigned long int number_of_columns;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_PolynomialQMatrix;
-
 typedef struct tmpl_PolynomialR_Def {
+
+    /*  A pointer to an array containing the coefficients.                    */
     double *coeffs;
-    unsigned long int degree;
+
+    /*  The number of elements in the coeffs array.                           */
+    unsigned long int number_of_coeffs;
+
+    /*  The smallest degree in the polynomial. The degree of the nth term in  *
+     *  the coeffs array is mindeg + n;                                       */
+    unsigned long int mindeg;
+
+    /*  Boolean for keeping track of the coeffs pointer.                      */
+    tmpl_Bool coeffs_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
     char *error_message;
 } tmpl_PolynomialR;
 
 typedef struct tmpl_PolynomialC_Def {
+
+    /*  A pointer to an array containing the coefficients.                    */
     tmpl_ComplexDouble *coeffs;
-    unsigned long int degree;
+
+    /*  The number of elements in the coeffs array.                           */
+    unsigned long int number_of_coeffs;
+
+    /*  The smallest degree in the polynomial. The degree of the nth term in  *
+     *  the coeffs array is mindeg + n;                                       */
+    unsigned long int mindeg;
+
+    /*  Boolean for keeping track of the coeffs pointer.                      */
+    tmpl_Bool coeffs_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
     char *error_message;
 } tmpl_PolynomialC;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Create_Zero_PolynomialZ                                          *
+ *      tmpl_PolynomialZ_Calloc                                               *
  *  Purpose:                                                                  *
- *      Creates a polynomial in Z[x] with the coefficients set to zero.       *
+ *      Creates a polynomial in Z[x] with number_of_coeffs elements allocated *
+ *      for the coeffs array, all of which are initialized to zero.           *
  *  Arguments:                                                                *
- *      degree (unsigned long int).                                           *
- *          The degree of the polynomial. Mathematically, since all of the    *
- *          coefficients are zero, the degree is zero. But computer-wise      *
- *          the coeffs pointer will have degree + 1 elements allocated to it. *
+ *      number_of_coeffs (unsigned long int).                                 *
+ *          The number of elements allocated to the coeffs array. All         *
+ *          elements will be initialized to zero.                             *
  *  Output:                                                                   *
  *      poly (tmpl_PolynomialZ *):                                            *
  *          A pointer to a polynomial with all coefficients set to zero.      *
@@ -173,47 +226,54 @@ typedef struct tmpl_PolynomialC_Def {
  *      If malloc fails this function returns NULL. If calloc fails, the      *
  *      pointer has the error_occurred Boolean set to True.                   *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_create_zero_polynomial_z.c                *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_calloc.c                     *
+ *      libtmpl/src/polynomial/tmpl_polynomial_q_calloc.c                     *
+ *      libtmpl/src/polynomial/tmpl_polynomial_r_calloc.c                     *
+ *      libtmpl/src/polynomial/tmpl_polynomial_c_calloc.c                     *
  ******************************************************************************/
 extern tmpl_PolynomialZ *
-tmpl_Create_Zero_PolynomialZ(unsigned long int degree);
+tmpl_PolynomialZ_Calloc(unsigned long int number_of_coeffs);
 
 extern tmpl_PolynomialQ *
-tmpl_Create_Zero_PolynomialQ(unsigned long int degree);
+tmpl_PolynomialQ_Calloc(unsigned long int degree);
 
 extern tmpl_PolynomialR *
-tmpl_Create_Zero_PolynomialR(unsigned long int degree);
+tmpl_PolynomialR_Calloc(unsigned long int degree);
 
 extern tmpl_PolynomialC *
-tmpl_Create_Zero_PolynomialC(unsigned long int degree);
+tmpl_PolynomialC_Calloc(unsigned long int degree);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Create_Empty_PolynomialZ                                         *
+ *      tmpl_PolynomialZ_Create_Empty                                         *
  *  Purpose:                                                                  *
- *      Creates an empty polynomial in Z[x]. The coeffs pointer is NULL and   *
- *      the degree is set to zero.                                            *
+ *      Creates a polynomial in Z[x] with all pointers set to NULL and all    *
+ *      variables set to 0. Similar functions are provided for Q[x], R[x],    *
+ *      C[x] for rational, real, and complex polynomials, respectively.       *
  *  Arguments:                                                                *
  *      None (void).                                                          *
  *  Output:                                                                   *
  *      poly (tmpl_PolynomialZ *):                                            *
- *          A pointer to a polynomial with coefficiets set to NULL.           *
+ *          A pointer to a polynomial with coeffs pointer set to NULL.        *
  *  Notes:                                                                    *
  *      If malloc fails this function returns NULL.                           *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_create_empty_polynomial_z.c               *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_create_empty.c               *
+ *      libtmpl/src/polynomial/tmpl_polynomial_q_create_empty.c               *
+ *      libtmpl/src/polynomial/tmpl_polynomial_r_create_empty.c               *
+ *      libtmpl/src/polynomial/tmpl_polynomial_c_create_empty.c               *
  ******************************************************************************/
 extern tmpl_PolynomialZ *
-tmpl_Create_Empty_PolynomialZ(void);
+tmpl_PolynomialZ_Create_Empty(void);
 
 extern tmpl_PolynomialQ *
-tmpl_Create_Empty_PolynomialQ(void);
+tmpl_PolynomialQ_Create_Empty(void);
 
 extern tmpl_PolynomialR *
-tmpl_Create_Empty_PolynomialR(void);
+tmpl_PolynomialR_Create_Empty(void);
 
 extern tmpl_PolynomialC *
-tmpl_Create_Empty_PolynomialC(void);
+tmpl_PolynomialC_Create_Empty(void);
 
 /******************************************************************************
  *  Function:                                                                 *

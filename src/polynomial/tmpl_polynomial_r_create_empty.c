@@ -16,38 +16,43 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_polynomials_z_extract_term                       *
+ *                       tmpl_polynomial_r_create_empty                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Return the coefficient of the requested term.                         *
+ *      Code for creating a polynomial in R[x] with all pointers set to NULL  *
+ *      and all variables set to their zero values.                           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_PolynomialZ_Extract_Term                                         *
+ *      tmpl_PolynomialR_Create_Empty                                         *
  *  Purpose:                                                                  *
- *      Computes the coefficient of a given term for a polynomial.            *
+ *      Creates a pointer to a polynomial in R[x] with coeffs set to NULL,    *
+ *      error_occurred set to false, error_message set to NULL, mindeg set to *
+ *      0, number_of_coeffs set to 0, and coeffs_can_be_freed set to false.   *
  *  Arguments:                                                                *
- *      poly (tmpl_PolynomialZ *):                                            *
- *          A pointer to the polynomial.                                      *
- *      term (unsigned long int):                                             *
- *          The degree of the term that is requested.                         *
+ *      None (void).                                                          *
  *  Output:                                                                   *
- *      coefficient (signed long int):                                        *
- *          The coefficient of the requested term.                            *
+ *      poly (tmpl_PolynomialR *):                                            *
+ *          A polynomial with its coeffs pointer set to NULL.                 *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      malloc (stdlib.h):                                                    *
+ *          Standard library function for allocating memory.                  *
  *  Method:                                                                   *
- *      Parse the poly pointer and returned the corresponding coefficient.    *
+ *      Allocate memory for the polynomial pointer with malloc, and then      *
+ *      set the rest of the values of the polynomial struct to defaults.      *
  *  Notes:                                                                    *
- *      If poly is NULL, poly->error_occurred is true, poly->degree < term,   *
- *      or if poly->coeffs = NULL, the value 0 is returned.                   *
+ *      If malloc fails, a NULL pointer is returned.                          *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_polynomial.h:                                                    *
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file containing Booleans.                                  *
+ *  2.) tmpl_polynomial.h:                                                    *
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
+ *  3.) stdlib.h:                                                             *
+ *          C Standard library header file containing malloc.                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -64,37 +69,41 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 22, 2021                                                 *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       February 15, 2022                                             *
  ******************************************************************************/
 
-/*  Function prototype is found here.                                         */
+/*  Booleans found here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
+
+/*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
-/*  Function for extracting the coefficient of a given term.                  */
-signed long int
-tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term)
+/*  malloc found here.                                                        */
+#include <stdlib.h>
+
+/*  Function for creating a polynomial with coeffs set to NULL.               */
+tmpl_PolynomialR *tmpl_PolynomialR_Create_Empty(void)
 {
-    /*  If the pointer is NULL, return zero.                                  */
+    /*  Allocate memory with malloc. Per every coding standard one can find,  *
+     *  the result of malloc is not cast. Malloc returns a void pointer which *
+     *  is safely promoted to the type of poly.                               */
+    tmpl_PolynomialR *poly = malloc(sizeof(*poly));
+
+    /*  Check if malloc failed. It returns NULL if it does.                   */
     if (poly == NULL)
-        return 0L;
+        return NULL;
 
-    /*  If an error occured, also return zero.                                */
-    else if (poly->error_occurred)
-        return 0L;
+    /*  Otherwise, set the default values for the polynomial.                 */
+    poly->coeffs = NULL;
+    poly->error_occurred = tmpl_False;
+    poly->error_message = NULL;
+    poly->mindeg = 0UL;
+    poly->number_of_coeffs = 0UL;
 
-    /*  If poly->coeffs is NULL, the polynomial is "empty" which can be       *
-     *  interpreted as the zero polynomial, so return zero.                   */
-    else if (poly->coeffs == NULL)
-        return 0L;
-
-    /*  If the requested term has it's degree greater than the degree of the  *
-     *  polynomial, the coefficient can be interpreted as zero. Return this.  */
-    else if (poly->degree < term)
-        return 0L;
-
-    /*  Otherwise, return the coefficient of the requested term.              */
-    else
-        return poly->coeffs[term];
+    /*  coeffs is set to NULL. This cannot be safely freed.                   */
+    poly->coeffs_can_be_freed = tmpl_False;
+    return poly;
 }
-/*  End of tmpl_PolynomialZ_Extract_Term.                                     */
+/*  End of tmpl_PolynomialR_Create_Empty.                                     */
+

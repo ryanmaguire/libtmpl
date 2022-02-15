@@ -16,25 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_create_empty_polynomial_z                       *
+ *                       tmpl_polynomial_c_create_empty                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a polynomial in Z[x] with it's coeffs pointer set   *
- *      to NULL, and it's error_occurred and error_message attributes         *
- *      initialized to false and NULL, respectively. degree is set to zero.   *
+ *      Code for creating a polynomial in C[x] with all pointers set to NULL  *
+ *      and all variables set to their zero values.                           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Empty_PolynomialZ                                         *
+ *      tmpl_PolynomialC_Create_Empty                                         *
  *  Purpose:                                                                  *
- *      Creates a pointer to a polynomial in Z[x] with coeffs set to NULL,    *
- *      error_occurred set to false, error_message set to NULL, and           *
- *      degree set to 0.                                                      *
+ *      Creates a pointer to a polynomial in C[x] with coeffs set to NULL,    *
+ *      error_occurred set to false, error_message set to NULL, mindeg set to *
+ *      0, number_of_coeffs set to 0, and coeffs_can_be_freed set to false.   *
  *  Arguments:                                                                *
  *      None (void).                                                          *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialZ *):                                            *
+ *      poly (tmpl_PolynomialC *):                                            *
  *          A polynomial with its coeffs pointer set to NULL.                 *
  *  Called Functions:                                                         *
  *      malloc (stdlib.h):                                                    *
@@ -70,8 +69,8 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 15, 2021                                                 *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       February 15, 2022                                             *
  ******************************************************************************/
 
 /*  Booleans found here.                                                      */
@@ -84,16 +83,12 @@
 #include <stdlib.h>
 
 /*  Function for creating a polynomial with coeffs set to NULL.               */
-tmpl_PolynomialZ *tmpl_Create_Empty_PolynomialZ(void)
+tmpl_PolynomialC *tmpl_PolynomialC_Create_Empty(void)
 {
-    /*  Declare necessary variables. The ISO C89/C90 standard forbids mixed   *
-     *  code with declarations, so declare everything at the top.             */
-    tmpl_PolynomialZ *poly;
-
     /*  Allocate memory with malloc. Per every coding standard one can find,  *
      *  the result of malloc is not cast. Malloc returns a void pointer which *
      *  is safely promoted to the type of poly.                               */
-    poly = malloc(sizeof(*poly));
+    tmpl_PolynomialC *poly = malloc(sizeof(*poly));
 
     /*  Check if malloc failed. It returns NULL if it does.                   */
     if (poly == NULL)
@@ -103,7 +98,12 @@ tmpl_PolynomialZ *tmpl_Create_Empty_PolynomialZ(void)
     poly->coeffs = NULL;
     poly->error_occurred = tmpl_False;
     poly->error_message = NULL;
-    poly->degree = 0UL;
+    poly->mindeg = 0UL;
+    poly->number_of_coeffs = 0UL;
+
+    /*  coeffs is set to NULL. This cannot be safely freed.                   */
+    poly->coeffs_can_be_freed = tmpl_False;
     return poly;
 }
-/*  End of tmpl_Create_Empty_PolynomialZ.                                     */
+/*  End of tmpl_PolynomialC_Create_Empty.                                     */
+
