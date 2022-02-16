@@ -139,7 +139,7 @@ tmpl_PolynomialR *tmpl_PolynomialR_Calloc(unsigned long int number_of_coeffs)
         /*  Set the error message pointer to NULL. This is important. When    *
          *  trying to free all of the memory in a polynomial pointer other    *
          *  functions will check if this pointer is NULL before attempting    *
-         *  to free it. free'ing a non-malloced pointer will crash the        *
+         *  to free it. free'ing a non-malloc'ed pointer will crash the       *
          *  program.                                                          */
         poly->error_message = NULL;
 
