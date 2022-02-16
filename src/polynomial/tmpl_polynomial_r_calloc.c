@@ -150,8 +150,8 @@ tmpl_PolynomialR *tmpl_PolynomialR_Calloc(unsigned long int number_of_coeffs)
         poly->number_of_coeffs = number_of_coeffs;
     }
 
-    /*  Whether or not calloc failed, set mindeg to zero.                     */
-    poly->mindeg = 0UL;
+    /*  Whether or not calloc failed, set min_degree to zero.                 */
+    poly->min_degree = 0UL;
     return poly;
 }
 /*  End of tmpl_PolynomialR_Calloc.                                           */

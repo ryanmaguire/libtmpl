@@ -112,7 +112,7 @@ tmpl_PolynomialC *tmpl_PolynomialC_Calloc(unsigned long int number_of_coeffs)
     /*  Check if calloc failed.                                               */
     if (poly->coeffs == NULL)
     {
-        /*  Set the error occured Boolean to True indicating an error.        */
+        /*  Set the error occurred Boolean to True indicating an error.       */
         poly->error_occurred = tmpl_True;
 
         /*  Set an error message indicating what went wrong.                  */
@@ -150,8 +150,8 @@ tmpl_PolynomialC *tmpl_PolynomialC_Calloc(unsigned long int number_of_coeffs)
         poly->number_of_coeffs = number_of_coeffs;
     }
 
-    /*  Whether or not calloc failed, set mindeg to zero.                     */
-    poly->mindeg = 0UL;
+    /*  Whether or not calloc failed, set min_degree to zero.                 */
+    poly->min_degree = 0UL;
     return poly;
 }
 /*  End of tmpl_PolynomialC_Calloc.                                           */
