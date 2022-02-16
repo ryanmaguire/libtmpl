@@ -112,7 +112,7 @@ tmpl_PolynomialR *tmpl_PolynomialR_Calloc(unsigned long int number_of_coeffs)
     /*  Check if calloc failed.                                               */
     if (poly->coeffs == NULL)
     {
-        /*  Set the error occured Boolean to True indicating an error.        */
+        /*  Set the error occurred Boolean to True indicating an error.       */
         poly->error_occurred = tmpl_True;
 
         /*  Set an error message indicating what went wrong.                  */
