@@ -85,7 +85,7 @@
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_stdup function declared here.                                        */
+/*  tmpl_strdup function declared here.                                       */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Function prototype is declared here.                                      */
