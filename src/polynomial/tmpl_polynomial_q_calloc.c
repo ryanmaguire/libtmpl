@@ -44,7 +44,7 @@
  *      equal to zero.                                                        *
  *  Notes:                                                                    *
  *      If malloc fails the first time, a NULL pointer is returned. If malloc *
- *      the first time succeeds but fails the second time, the error_occurred *
+ *      succeeds the first time but fails the second time, the error_occurred *
  *      Boolean is set to true and an error message is stored in the struct.  *
  *      Check these before using the polynomial.                              *
  ******************************************************************************
