@@ -28,7 +28,7 @@
  *      tmpl_PolynomialC_Create_Empty                                         *
  *  Purpose:                                                                  *
  *      Creates a pointer to a polynomial in C[x] with coeffs set to NULL,    *
- *      error_occurred set to false, error_message set to NULL, mindeg set to *
+ *      error_occurred set to false, error_message set to NULL, min_degree to *
  *      0, number_of_coeffs set to 0, and coeffs_can_be_freed set to false.   *
  *  Arguments:                                                                *
  *      None (void).                                                          *
@@ -98,7 +98,7 @@ tmpl_PolynomialC *tmpl_PolynomialC_Create_Empty(void)
     poly->coeffs = NULL;
     poly->error_occurred = tmpl_False;
     poly->error_message = NULL;
-    poly->mindeg = 0UL;
+    poly->min_degree = 0UL;
     poly->number_of_coeffs = 0UL;
 
     /*  coeffs is set to NULL. This cannot be safely freed.                   */

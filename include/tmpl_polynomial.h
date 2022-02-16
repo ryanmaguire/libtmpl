@@ -56,7 +56,7 @@
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
  *  2022/02/15: Ryan Maguire                                                  *
- *      Changing overall layout of polynomials. Introduced "mindeg" attribute.*
+ *      Changing overall layout of polynomials.                               *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -86,8 +86,8 @@ typedef struct tmpl_PolynomialZ_Def {
     unsigned long int number_of_coeffs;
 
     /*  The smallest degree in the polynomial. The degree of the nth term in  *
-     *  the coeffs array is mindeg + n;                                       */
-    unsigned long int mindeg;
+     *  the coeffs array is min_degree + n;                                   */
+    unsigned long int min_degree;
 
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
@@ -152,8 +152,8 @@ typedef struct tmpl_PolynomialQ_Def {
     unsigned long int number_of_coeffs;
 
     /*  The smallest degree in the polynomial. The degree of the nth term in  *
-     *  the coeffs array is mindeg + n;                                       */
-    unsigned long int mindeg;
+     *  the coeffs array is min_degree + n;                                   */
+    unsigned long int min_degree;
 
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
@@ -174,8 +174,8 @@ typedef struct tmpl_PolynomialR_Def {
     unsigned long int number_of_coeffs;
 
     /*  The smallest degree in the polynomial. The degree of the nth term in  *
-     *  the coeffs array is mindeg + n;                                       */
-    unsigned long int mindeg;
+     *  the coeffs array is min_degree + n;                                   */
+    unsigned long int min_degree;
 
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
@@ -196,8 +196,8 @@ typedef struct tmpl_PolynomialC_Def {
     unsigned long int number_of_coeffs;
 
     /*  The smallest degree in the polynomial. The degree of the nth term in  *
-     *  the coeffs array is mindeg + n;                                       */
-    unsigned long int mindeg;
+     *  the coeffs array is min_degree + n;                                   */
+    unsigned long int min_degree;
 
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;

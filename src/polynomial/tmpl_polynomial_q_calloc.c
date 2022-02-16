@@ -157,8 +157,8 @@ tmpl_PolynomialQ *tmpl_PolynomialQ_Calloc(unsigned long int number_of_coeffs)
             poly->coeffs[n] = tmpl_RationalNumber_Zero;
     }
 
-    /*  Whether or not malloc failed, set mindeg to zero.                     */
-    poly->mindeg = 0UL;
+    /*  Whether or not malloc failed, set min_degree to zero.                 */
+    poly->min_degree = 0UL;
     return poly;
 }
 /*  End of tmpl_PolynomialQ_Calloc.                                           */
