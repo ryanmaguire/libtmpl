@@ -92,6 +92,9 @@ typedef struct tmpl_PolynomialZ_Def {
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
 
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
 
@@ -158,6 +161,9 @@ typedef struct tmpl_PolynomialQ_Def {
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
 
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
 
@@ -179,6 +185,9 @@ typedef struct tmpl_PolynomialR_Def {
 
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
+
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
 
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
@@ -202,6 +211,9 @@ typedef struct tmpl_PolynomialC_Def {
     /*  Boolean for keeping track of the coeffs pointer.                      */
     tmpl_Bool coeffs_can_be_freed;
 
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
 
@@ -214,7 +226,8 @@ typedef struct tmpl_PolynomialC_Def {
  *      tmpl_PolynomialZ_Calloc                                               *
  *  Purpose:                                                                  *
  *      Creates a polynomial in Z[x] with number_of_coeffs elements allocated *
- *      for the coeffs array, all of which are initialized to zero.           *
+ *      for the coeffs array, all of which are initialized to zero. Similar   *
+ *      functions are provided for Q[x], R[x], and C[x].                      *
  *  Arguments:                                                                *
  *      number_of_coeffs (unsigned long int).                                 *
  *          The number of elements allocated to the coeffs array. All         *
@@ -235,13 +248,13 @@ extern tmpl_PolynomialZ *
 tmpl_PolynomialZ_Calloc(unsigned long int number_of_coeffs);
 
 extern tmpl_PolynomialQ *
-tmpl_PolynomialQ_Calloc(unsigned long int degree);
+tmpl_PolynomialQ_Calloc(unsigned long int number_of_coeffs);
 
 extern tmpl_PolynomialR *
-tmpl_PolynomialR_Calloc(unsigned long int degree);
+tmpl_PolynomialR_Calloc(unsigned long int number_of_coeffs);
 
 extern tmpl_PolynomialC *
-tmpl_PolynomialC_Calloc(unsigned long int degree);
+tmpl_PolynomialC_Calloc(unsigned long int number_of_coeffs);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -263,17 +276,10 @@ tmpl_PolynomialC_Calloc(unsigned long int degree);
  *      libtmpl/src/polynomial/tmpl_polynomial_r_create_empty.c               *
  *      libtmpl/src/polynomial/tmpl_polynomial_c_create_empty.c               *
  ******************************************************************************/
-extern tmpl_PolynomialZ *
-tmpl_PolynomialZ_Create_Empty(void);
-
-extern tmpl_PolynomialQ *
-tmpl_PolynomialQ_Create_Empty(void);
-
-extern tmpl_PolynomialR *
-tmpl_PolynomialR_Create_Empty(void);
-
-extern tmpl_PolynomialC *
-tmpl_PolynomialC_Create_Empty(void);
+extern tmpl_PolynomialZ *tmpl_PolynomialZ_Create_Empty(void);
+extern tmpl_PolynomialQ *tmpl_PolynomialQ_Create_Empty(void);
+extern tmpl_PolynomialR *tmpl_PolynomialR_Create_Empty(void);
+extern tmpl_PolynomialC *tmpl_PolynomialC_Create_Empty(void);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -292,19 +298,12 @@ tmpl_PolynomialC_Create_Empty(void);
  *      This function should always be called when done with a polynomial     *
  *      to avoid memory leaks.                                                *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_destroy_polynomial_z.c                    *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_destroy.c                    *
  ******************************************************************************/
-extern void
-tmpl_Destroy_PolynomialZ(tmpl_PolynomialZ **poly_ptr);
-
-extern void
-tmpl_Destroy_PolynomialQ(tmpl_PolynomialQ **poly_ptr);
-
-extern void
-tmpl_Destroy_PolynomialR(tmpl_PolynomialR **poly_ptr);
-
-extern void
-tmpl_Destroy_PolynomialC(tmpl_PolynomialC **poly_ptr);
+extern void tmpl_PolynomialZ_Destroy(tmpl_PolynomialZ **poly_ptr);
+extern void tmpl_PolynomialQ_Destroy(tmpl_PolynomialQ **poly_ptr);
+extern void tmpl_PolynomialR_Destroy(tmpl_PolynomialR **poly_ptr);
+extern void tmpl_PolynomialC_Destroy(tmpl_PolynomialC **poly_ptr);
 
 /******************************************************************************
  *  Function:                                                                 *

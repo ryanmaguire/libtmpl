@@ -106,7 +106,10 @@ tmpl_PolynomialR *tmpl_PolynomialR_Calloc(unsigned long int number_of_coeffs)
     if (poly == NULL)
         return NULL;
 
-    /*  Otherwise, allocate memory for the coefficients pointer.              */
+    /*  malloc was successful, set poly_can_be_freed to true.                 */
+    poly->poly_can_be_freed = tmpl_True;
+
+    /*  Next, allocate memory for the coefficients pointer.                   */
     poly->coeffs = calloc(sizeof(*poly->coeffs), number_of_coeffs);
 
     /*  Check if calloc failed.                                               */
@@ -155,4 +158,3 @@ tmpl_PolynomialR *tmpl_PolynomialR_Calloc(unsigned long int number_of_coeffs)
     return poly;
 }
 /*  End of tmpl_PolynomialR_Calloc.                                           */
-
