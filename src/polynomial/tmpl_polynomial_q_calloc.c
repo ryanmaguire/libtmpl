@@ -57,7 +57,9 @@
  *  3.) tmpl_polynomial.h:                                                    *
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
- *  4.) stdlib.h:                                                             *
+ *  4.) tmpl_rational.h:                                                      *
+ *          Header file containing tools for working with rational numbers.   *
+ *  5.) stdlib.h:                                                             *
  *          C Standard library header file containing malloc.                 *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -109,7 +111,10 @@ tmpl_PolynomialQ *tmpl_PolynomialQ_Calloc(unsigned long int number_of_coeffs)
     if (poly == NULL)
         return NULL;
 
-    /*  Otherwise, allocate memory for the coefficients pointer.              */
+    /*  malloc was successful, set poly_can_be_freed to true.                 */
+    poly->poly_can_be_freed = tmpl_True;
+
+    /*  Next, allocate memory for the coefficients pointer.                   */
     poly->coeffs = malloc(sizeof(*poly->coeffs) * number_of_coeffs);
 
     /*  Check if malloc failed.                                               */
@@ -162,4 +167,3 @@ tmpl_PolynomialQ *tmpl_PolynomialQ_Calloc(unsigned long int number_of_coeffs)
     return poly;
 }
 /*  End of tmpl_PolynomialQ_Calloc.                                           */
-

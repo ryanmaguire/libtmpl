@@ -101,9 +101,11 @@ tmpl_PolynomialZ *tmpl_PolynomialZ_Create_Empty(void)
     poly->min_degree = 0UL;
     poly->number_of_coeffs = 0UL;
 
+    /*  malloc was successful, set poly_can_be_freed to true.                 */
+    poly->poly_can_be_freed = tmpl_True;
+
     /*  coeffs is set to NULL. This cannot be safely freed.                   */
     poly->coeffs_can_be_freed = tmpl_False;
     return poly;
 }
 /*  End of tmpl_PolynomialZ_Create_Empty.                                     */
-

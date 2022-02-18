@@ -16,43 +16,38 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_polynomial_r_create_empty                       *
+ *                         tmpl_polynomial_c_destroy                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a polynomial in R[x] with all pointers set to NULL  *
- *      and all variables set to their zero values.                           *
+ *      Code for freeing all memory in a C[x] polynomial.                     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_PolynomialR_Create_Empty                                         *
+ *      tmpl_PolynomialC_Destroy                                              *
  *  Purpose:                                                                  *
- *      Creates a pointer to a polynomial in R[x] with coeffs set to NULL,    *
- *      error_occurred set to false, error_message set to NULL, min_degree to *
- *      0, number_of_coeffs set to 0, and coeffs_can_be_freed set to false.   *
+ *      Free all memory in a tmpl_PolynomialC polynomial.                     *
  *  Arguments:                                                                *
- *      None (void).                                                          *
+ *      poly (tmpl_PolynomialC **):                                           *
+ *          The polynomial that is to be destroyed.                           *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialR *):                                            *
- *          A polynomial with its coeffs pointer set to NULL.                 *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      malloc (stdlib.h):                                                    *
- *          Standard library function for allocating memory.                  *
+ *      free (stdlib.h):                                                      *
+ *          Standard library function for freeing allocated memory.           *
  *  Method:                                                                   *
- *      Allocate memory for the polynomial pointer with malloc, and then      *
- *      set the rest of the values of the polynomial struct to defaults.      *
+ *      Check for NULL pointers and errors, and free the pointers in the      *
+ *      polynomial struct if safe.                                            *
  *  Notes:                                                                    *
- *      If malloc fails, a NULL pointer is returned.                          *
+ *      Pointers are set to NULL after freeing, to avoid freeing them twice.  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_bool.h:                                                          *
- *          Header file containing Booleans.                                  *
- *  2.) tmpl_polynomial.h:                                                    *
+ *  1.) tmpl_polynomial.h:                                                    *
  *          Header file containing the definition of polynomials and the      *
  *          functions prototype.                                              *
- *  3.) stdlib.h:                                                             *
- *          C Standard library header file containing malloc.                 *
+ *  2.) stdlib.h:                                                             *
+ *          C Standard library header file containing free.                   *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -70,42 +65,59 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 15, 2022                                             *
+ *  Date:       February 18, 2022                                             *
  ******************************************************************************/
-
-/*  Booleans found here.                                                      */
-#include <libtmpl/include/tmpl_bool.h>
 
 /*  Function prototype is declared here.                                      */
 #include <libtmpl/include/tmpl_polynomial.h>
 
-/*  malloc found here.                                                        */
+/*  free found here.                                                          */
 #include <stdlib.h>
 
-/*  Function for creating a polynomial with coeffs set to NULL.               */
-tmpl_PolynomialR *tmpl_PolynomialR_Create_Empty(void)
+/*  Function for freeing all memory for a polynomial in C[x].                 */
+void tmpl_PolynomialC_Destroy(tmpl_PolynomialC **poly_ptr)
 {
-    /*  Allocate memory with malloc. Per every coding standard one can find,  *
-     *  the result of malloc is not cast. Malloc returns a void pointer which *
-     *  is safely promoted to the type of poly.                               */
-    tmpl_PolynomialR *poly = malloc(sizeof(*poly));
+    /*  Variable for the polynomial that poly_ptr is pointing to.             */
+    tmpl_PolynomialC *poly;
 
-    /*  Check if malloc failed. It returns NULL if it does.                   */
-    if (poly == NULL)
-        return NULL;
+    /*  If the input pointer is NULL, there's nothing to be done.             */
+    if (poly_ptr == NULL)
+        return;
 
-    /*  Otherwise, set the default values for the polynomial.                 */
-    poly->coeffs = NULL;
-    poly->error_occurred = tmpl_False;
-    poly->error_message = NULL;
-    poly->min_degree = 0UL;
-    poly->number_of_coeffs = 0UL;
+    /*  Otherwise, it is safe to dereference.                                 */
+    poly = *poly_ptr;
 
-    /*  malloc was successful, set poly_can_be_freed to true.                 */
-    poly->poly_can_be_freed = tmpl_True;
+    /*  If the coeffs pointer is NULL, we also do not need to free it.        */
+    if (poly->coeffs != NULL)
+    {
+        /*  It is possible that the coefficients pointer is simply a pointer  *
+         *  to a statically declared array. The coeffs_can_be_freed Boolean   *
+         *  is set to False in this case.                                     */
+        if (poly->coeffs_can_be_freed)
+            free(poly->coeffs);
 
-    /*  coeffs is set to NULL. This cannot be safely freed.                   */
-    poly->coeffs_can_be_freed = tmpl_False;
-    return poly;
+        /*  Set the coeffs pointer to NULL in case this function is           *
+         *  accidentally called twice.                                        */
+        poly->coeffs = NULL;
+    }
+
+    /*  Check if there is anything stored in error_message. All functions     *
+     *  either initialize this to NULL if no error occurred, or use the       *
+     *  tmpl_strdup function to store an error message in it. tmpl_strdup     *
+     *  returns NULL on failure, so we should still check for a NULL pointer. */
+    if (poly->error_message != NULL)
+    {
+        /*  Free the data and set it equal to NULL.                           */
+        free(poly->error_message);
+        poly->error_message = NULL;
+    }
+
+    /*  Lastly, check if poly itself was malloc'd. Free it if so.             */
+    if (poly->poly_can_be_freed)
+        free(poly);
+
+    /*  Set the pointer to NULL to avoid attempting to free it twice.         */
+    *poly_ptr = NULL;
+    return;
 }
-/*  End of tmpl_PolynomialR_Create_Empty.                                     */
+/*  End of tmpl_PolynomialC_Destroy.                                          */
