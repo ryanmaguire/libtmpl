@@ -626,7 +626,7 @@ long double tmpl_LDouble_Log(long double x)
     );
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb + table[ind];   
+    return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb + table[ind];
 }
 #endif
 /*  End of if for double double.                                              */

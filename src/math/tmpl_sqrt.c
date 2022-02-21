@@ -3,13 +3,6 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <math.h>
 
-/*  The "double" version of sin is defined in both C89 and C99 math.h so we   *
- *  only need to alias this function.                                         */
-double tmpl_Double_Sqrt(double x)
-{
-    return sqrt(x);
-}
-
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
 /*  C99 provides float and long double support for their math functions, so   *
