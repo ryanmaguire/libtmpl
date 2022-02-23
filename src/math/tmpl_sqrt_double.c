@@ -547,7 +547,7 @@ double tmpl_Double_Sqrt(double x)
     w.r = w.r*rcpr[ind] - 1.0;
 
     /*  Compute the polynomial to the first few terms via Horner's method.    */
-    w.r = 1.0 + w.r*(0.5 - 0.125*w.r);
+    w.r = 1.0 + w.r*(0.5 + w.r*(-0.125 + 0.0625*w.r));
 
     /*  Set the exponent part b to the integral part of b/2 by bit shifting   *
      *  down by 1.                                                            */
