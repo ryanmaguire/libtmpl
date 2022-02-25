@@ -95,12 +95,12 @@ struct color {
         std::fprintf(fp, "%u %u %u\n", red, green, blue);
     }
 #else
-void write(std::FILE *fp)
-{
-    std::fputc(red, fp);
-    std::fputc(green, fp);
-    std::fputc(blue, fp);
-}
+    void write(std::FILE *fp)
+    {
+        std::fputc(red, fp);
+        std::fputc(green, fp);
+        std::fputc(blue, fp);
+    }
 #endif
 
     color scale(double t)
