@@ -25,9 +25,9 @@
  *      This file is an "extra" and is not compiled as a part of the libtmpl  *
  *      library. It is also written in C++, just to mix things up a bit.      *
  *      I checked GNU's g++ with pedantic compiler warnings against C++98,    *
- *      C++11, and C++17 and recieved no warnings.                            *
+ *      C++11, and C++17 and recieved no warnings. Similarly with clang++.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 6, 2021                                                   *
  ******************************************************************************/
 
@@ -36,6 +36,20 @@
 
 /*  Square root function found here.                                          */
 #include <cmath>
+
+/*  Position of the detector and the square of this value.                    */
+static const double z_detector = -10.0;
+static const double z_detector_sq = z_detector*z_detector;
+
+/*  Position of the light source.                                             */
+static const double z_src = 10.0;
+
+/*  Radius of the black hole, and it's square.                                */
+static const double black_hole_radius = 1.0;
+static const double black_hole_radius_sq = black_hole_radius*black_hole_radius;
+
+/*  Maximum number of iterations in Euler's method.                           */
+static const unsigned int max_iters = 100000U;
 
 /*  A simple structure for dealing with vectors. Vectors are treated as rays  *
  *  of light moving under the influence of the gravity of a black hole.       */
@@ -107,6 +121,7 @@ static tmpl_simple_vector acc(tmpl_simple_vector p)
      *  towards the blacks hole.                                              */
     return tmpl_simple_vector(-p.x*factor, -p.y*factor, -p.z*factor);
 }
+/*  End of acc function.                                                      */
 
 /*  Function for computing the path of a light ray under the influence of     *
  *  the gravity of a black hole using Euler's method.                         */
@@ -138,10 +153,10 @@ Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
      * hits the detector, or is absorbed by the black hole.                   */
     unsigned int N = 0U;
 
-    while ((p.z > -10.0) && (N < 1E5))
+    while ((p.z > z_detector) && (N < max_iters))
     {
         /* If the light was absorbed by the black hole, abort the computation.*/
-        if (p.normsq() <= 1.0)
+        if (p.normsq() <= black_hole_radius_sq)
             return p;
 
         /*  We numerically solve d^2/dt^2 p = F(p) in two steps. First, we    *
@@ -154,7 +169,7 @@ Path(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 
         /*  It is possible that a photon was captured into orbit, but not     *
          *  absorbed into the black hole. To avoid an infinite loop, abort    *
-         *  the computation once N gets to large.                             */
+         *  the computation once N gets too large.                            */
         ++N;
     }
 
@@ -172,22 +187,24 @@ static void color_red(FILE *fp, tmpl_simple_vector p)
      *  where. Since the detector is the plane z = -10, the max value of      *
      *  1/||p||^2 is 1/100. RGB color takes values between 0 and 255, so we   *
      *  need to normalize 1/||p||^2 so that the max value is 255.             */
-    double x = 25500.0/p.normsq();
+    double x = 255.0*z_detector_sq/p.normsq();
 
     /*  RGB is Red-Green-Blue. Red is (255, 0, 0).                            */
     std::fputc(int(x), fp);
     std::fputc(0, fp);
     std::fputc(0, fp);
 }
+/*  End of color_red.                                                         */
 
 /*  Same idea of coloring, but with a gray-to-white gradient.                 */
 static void color_white(FILE *fp, tmpl_simple_vector p)
 {
-    double x = 25500.0/p.normsq();
+    double x = 255.0*z_detector_sq/p.normsq();
     std::fputc(int(x), fp);
     std::fputc(int(x), fp);
     std::fputc(int(x), fp);
 }
+/*  End of color_white.                                                       */
 
 /*  Black represents the black hole.                                          */
 static void color_black(FILE *fp)
@@ -196,6 +213,7 @@ static void color_black(FILE *fp)
     std::fputc(0, fp);
     std::fputc(0, fp);
 }
+/*  End of color_black.                                                       */
 
 /*  Main function for performing the raytracing.                              */
 int main(void)
@@ -204,30 +222,32 @@ int main(void)
      *  light. Since our light rays are being directed downwards, this vector *
      *  should be (0, 0, -c), where c is the speed of light. We can take this *
      *  to be 1 for simplicity. Adjusting this value would be equivalent to   *
-     *  adjusting the strength of Gravity. Smaller values mean stronger       *
+     *  adjusting the strength of gravity. Smaller values mean stronger       *
      *  gravity, and larger values mean weaker gravity.                       */
     tmpl_simple_vector v = tmpl_simple_vector(0.0, 0.0, -1.0);
-    tmpl_simple_vector p;
-    unsigned int x, y, size;
-    double factor, start, end, dt, prog_factor;
 
-    /*  Set the values for the size of the detector. I've chosen the square   *
-     *  [-10, 10]^2.                                                          */
-    start = -10.0;
-    end = 10.0;
+    /*  The position vector of a particle of light.                           */
+    tmpl_simple_vector p;
+
+    /*  Variables for looping over the x and y coordinates of the detector.   */
+    unsigned int x, y;
+
+    /*  Set the values for the size of the detector, [start, end]^2.          */
+    const double start = -10.0;
+    const double end = 10.0;
 
     /*  The step-size for our increment in time.                              */
-    dt = 0.01;
+    const double dt = 0.01;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 2048U;
+    const unsigned int size = 1024U;
 
-    /*  Factor used for a printing a progress report.                         */
-    prog_factor = 100.0 / (double)size;
+    /*  Factor used for printing a progress report.                           */
+    const double prog_factor = 100.0 / static_cast<double>(size);
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
-    factor = (end - start) / (double)(size - 1U);
+    const double factor = (end - start) / static_cast<double>(size - 1U);
 
     /*  Open the file "black_hole.ppm" and give it write permissions.         */
     FILE *fp = std::fopen("black_hole.ppm", "w");
@@ -255,19 +275,19 @@ int main(void)
         for (x = 0U; x < size; ++x)
         {
             /*  We're incrementing p across our detector.                     */
-            p = tmpl_simple_vector(start + factor*x, start + factor*y, 10.0);
+            p = tmpl_simple_vector(start + factor*x, start + factor*y, z_src);
 
             /*  Raytrace where the photon that hit p came from.               */
             p = Path(p, v, dt);
 
             /*  If the photon never made it to the detector, assume it was    *
              *  captured by the black hole and color the pixel black.         */
-            if (p.norm() < 9.9)
+            if (p.z > z_detector)
                 color_black(fp);
 
             /*  Otherwise, use this bitwise AND trick to create a             *
              *  checkerboard pattern of red and white.                        */
-            else if ((int)(std::ceil(p.x) + std::ceil(p.y)) & 1)
+            else if (static_cast<unsigned>(std::ceil(p.x) + std::ceil(p.y)) & 1)
                 color_white(fp, p);
 
             else
@@ -277,7 +297,7 @@ int main(void)
 
         /*  Print a status update.                                            */
         if ((y % 20U) == 0U)
-            std::fprintf(stderr, "Progress: %.4f%%  \r", prog_factor*(double)y);
+            std::fprintf(stderr, "Progress: %.4f%%  \r", prog_factor*y);
     }
     /*  End of y for-loop.                                                    */
 
@@ -289,4 +309,3 @@ int main(void)
     return 0;
 }
 /*  End of main.                                                              */
-
