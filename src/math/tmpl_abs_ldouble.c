@@ -83,9 +83,6 @@
  *          rms abs error: 0.0000000000000000e+00                             *
  *          rms rel error: 0.0000000000000000e+00                             *
  *                                                                            *
- *      fabs is a built-in function, so I doubt software will be able to get  *
- *      better performance.                                                   *
- *                                                                            *
  *      These tests were performed with the following specs:                  *
  *                                                                            *
  *          CPU:  AMD Ryzen 3900 12-core                                      *
@@ -102,6 +99,9 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
+ * 2.)  math.h:                                                               *
+ *          Only included if libtmpl algorithms have not be requested. This   *
+ *          file contains the fabs function.                                  *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -118,7 +118,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -133,6 +133,9 @@
  *      Added IEEE 754 code for computing the absolute value function.        *
  *  2021/09/10: Ryan Maguire                                                  *
  *      Moved float and long double to their own files.                       *
+ *  2022/03/01: Ryan Maguire                                                  *
+ *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
+ *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *
  ******************************************************************************/
 
 /*  Header file where the prototype for the function is defined.              */
@@ -153,11 +156,16 @@ long double tmpl_LDouble_Abs(long double x)
     /*  Set the long double part of w to the input.                           */
     w.r = x;
 
-    /*  Set the sign bit to 0, indicating positive.                           */
+    /*  64-bit double, 80-bit extended, and 128-bit quadruple implementations *
+     *  of long double use the same idea: Set the sign bit to zero. The       *
+     *  double-double implementation of long double needs to be more careful. */
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN \
     && TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
+
+    /*  Set the sign bit to 0, indicating positive.                           */
     w.bits.sign = 0x0U;
 #else
+
     /*  For double-double we have x = xhi + xlo. Define                       *
      *  abs_x = |x| = abs_xhi + abs_xlo. If xhi and xlo have the same sign,   *
      *  |x| = |xhi| + |xlo| and so abs_xhi = |xhi| and abs_xlo = |xlo|. If    *
@@ -206,7 +214,7 @@ long double tmpl_LDouble_Abs(long double x)
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
     (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
 
-/*  Single precision absolute value function (fabsl equivalent).              */
+/*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_Float_Abs(long double x)
 {
     return fabsl(x);
@@ -216,7 +224,7 @@ long double tmpl_Float_Abs(long double x)
 #else
 /*  C89 implementations are not required to provide fabsl.                    */
 
-/*  Single precision absolute value function (fabsl equivalent).              */
+/*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)
 {
     double abs_x = fabs((double)x);
