@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_abs_float                                 *
+ *                               tmpl_abs_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = |x| at single precision.                              *
@@ -35,11 +35,11 @@
  *      x (float):                                                            *
  *          A real number, the argument for |x|.                              *
  *  Output:                                                                   *
- *      abs_x (float/double/long double):                                     *
+ *      abs_x (float):                                                        *
  *          The absolute value of x.                                          *
  *  Called Functions:                                                         *
  *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
- *      been requested. fabsf from math.h if available. fabs otherwise.       *
+ *      been requested. fabsf or fabs from math.h otherwise.                  *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, set the sign bit of the             *
  *      input to 0. A 32-bit float is represented by:                         *
@@ -52,9 +52,8 @@
  *      method will work for NaN and inf, and the output will be              *
  *      "positive" NaN and positive infinity, respectively.                   *
  *                                                                            *
- *      If Ieee-754 is not supported, a simple if-then statement to check if  *
- *      the input is positive or not, returning x for non-negative and -x     *
- *      otherwise.                                                            *
+ *      If IEEE-754 is not supported, an if-then statement to check if the    *
+ *      input is positive, returning x for non-negative and -x otherwise.     *
  *                                                                            *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
@@ -153,8 +152,7 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  If your compiler supports the IEEE 754 format, we simply set the sign bit *
- *  to zero to compute the absolute value of the input.                       */
+/*  Check for IEEE-754 support.                                               */
 #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  Single precision absolute value function (fabsf equivalent).              */
@@ -175,7 +173,8 @@ float tmpl_Float_Abs(float x)
 /*  End of tmpl_Float_Abs.                                                    */
 
 #else
-/*  Else statement for #if TMPL_HAS_IEEE754_FLOAT == 1.                       */
+/*  Else #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1   *
+ *  Lacking IEEE-754 support, an if-then statement works and is is portable.  */
 
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)

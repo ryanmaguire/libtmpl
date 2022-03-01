@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_abs_double                                 *
+ *                              tmpl_abs_double                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x) = |x| at double precision.                              *
@@ -52,9 +52,8 @@
  *      method will work for NaN and inf, and the output will be              *
  *      "positive" NaN and positive infinity, respectively.                   *
  *                                                                            *
- *      If IEEE-754 is not supported, a simple if-then statement to check if  *
- *      the input is positive or not, returning x for non-negative and -x     *
- *      otherwise.                                                            *
+ *      If IEEE-754 is not supported, an if-then statement to check if the    *
+ *      input is positive, returning x for non-negative and -x otherwise.     *
  *                                                                            *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
@@ -111,7 +110,7 @@
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  * 2.)  math.h:                                                               *
- *          Only included if libtmpl algorithms have not be requested. This   *
+ *          Only included if libtmpl algorithms have not been requested. This *
  *          file contains the fabs function.                                  *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -146,7 +145,7 @@
  *      Moved float and long double to their own files.                       *
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
- *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *
+ *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
  ******************************************************************************/
 
 /*  Header file where the prototype for the function is defined.              */
@@ -176,10 +175,8 @@ double tmpl_Double_Abs(double x)
 /*  End of tmpl_Double_Abs.                                                   */
 
 #else
-/*  Else #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1 */
-
-/*  In the absence of IEEE-754 support, a simple if-then statement works and  *
- *  is portable. Use this.                                                    */
+/*  Else #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1 *
+ *  Lacking IEEE-754 support, an if-then statement works and is is portable.  */
 
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
