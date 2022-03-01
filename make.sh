@@ -58,6 +58,10 @@ if [ $USEOMP == 1 ]; then
     ExtraArgs="$ExtraArgs -fopenmp"
 fi
 
+if [ "$CC" == "clang" ]; then
+    ExtraArgs="$ExtraArgs -Weverything -Wno-padded -Wno-float-equal"
+fi
+
 # Name of the created Shared Object file (.so).
 SONAME="libtmpl.so"
 

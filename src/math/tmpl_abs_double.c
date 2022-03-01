@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Abs:                                                      *
+ *      tmpl_Double_Abs                                                       *
  *  Purpose:                                                                  *
  *      Computes the absolute value of a real number.                         *
  *                   --                                                       *
@@ -37,6 +37,9 @@
  *  Output:                                                                   *
  *      abs_x (double):                                                       *
  *          The absolute value of x.                                          *
+ *  Called Functions:                                                         *
+ *      None if IEEE-754 support is available and libtmpl algorithms have     *
+ *      been requested. fabs from math.h otherwise.                           *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, simply set the sign bit of the      *
  *      input to 0. A 64-bit double is represented by:                        *
@@ -53,10 +56,52 @@
  *      the input is positive or not, returning x for non-negative and -x     *
  *      otherwise.                                                            *
  *                                                                            *
- *      NOTE:                                                                 *
- *          If IEEE-754 is not supported, if the input is NaN one may get     *
- *          +/- NaN (which is still NaN). This is because NaN always          *
- *          evaluates to false when a comparison is made (==, <, >, etc.).    *
+ *  Notes:                                                                    *
+ *      If IEEE-754 is not supported, if the input is NaN one may get         *
+ *      +/- NaN (which is still NaN). This is because NaN always              *
+ *      evaluates to false when a comparison is made (==, <, >, etc.).        *
+ *                                                                            *
+ *      A time and accuracy test against glibc yields the following:          *
+ *                                                                            *
+ *          Using IEEE-754 method:                                            *
+ *                                                                            *
+ *          tmpl_Double_Abs vs. fabs                                          *
+ *          start:   -1.0000000000000000e+06                                  *
+ *          end:     1.0000000000000000e+06                                   *
+ *          samples: 2615628245                                               *
+ *          dx:      7.6463465472326707e-04                                   *
+ *          libtmpl: 8.950290 seconds                                         *
+ *          C:       7.323713 seconds                                         *
+ *          max abs error: 0.0000000000000000e+00                             *
+ *          max rel error: 0.0000000000000000e+00                             *
+ *          rms abs error: 0.0000000000000000e+00                             *
+ *          rms rel error: 0.0000000000000000e+00                             *
+ *                                                                            *
+ *          Using if-then method:                                             *
+ *                                                                            *
+ *          tmpl_Double_Abs vs. fabs                                          *
+ *          start:   -1.0000000000000000e+06                                  *
+ *          end:     1.0000000000000000e+06                                   *
+ *          samples: 2615628245                                               *
+ *          dx:      7.6463465472326707e-04                                   *
+ *          libtmpl: 9.523690 seconds                                         *
+ *          C:       7.324468 seconds                                         *
+ *          max abs error: 0.0000000000000000e+00                             *
+ *          max rel error: 0.0000000000000000e+00                             *
+ *          rms abs error: 0.0000000000000000e+00                             *
+ *          rms rel error: 0.0000000000000000e+00                             *
+ *                                                                            *
+ *      These tests were performed with the following specs:                  *
+ *                                                                            *
+ *          CPU:  AMD Ryzen 3900 12-core                                      *
+ *          MAX:  4672.0698 MHz                                               *
+ *          MIN:  2200.0000 MHz                                               *
+ *          ARCH: x86_64                                                      *
+ *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
+ *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
+ *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
+ *                                                                            *
+ *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -78,7 +123,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -93,10 +138,16 @@
  *      Added IEEE 754 code for computing the absolute value function.        *
  *  2021/09/10: Ryan Maguire                                                  *
  *      Moved float and long double to their own files.                       *
+ *  2022/03/01: Ryan Maguire                                                  *
+ *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
+ *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *
  ******************************************************************************/
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Only implement this if the user requested libtmpl algorithms.             */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 support.                                               */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
@@ -142,3 +193,18 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /* End of #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1*/
+
+#else
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+
+/*  math.h provides the fabs function.                                        */
+#include <math.h>
+
+double tmpl_Double_Abs(double x)
+{
+    return fabs(x);
+}
+/*  End of tmpl_Double_Abs.                                                   */
+
+#endif
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
