@@ -41,7 +41,7 @@
  *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
  *      been requested. fabs from math.h otherwise.                           *
  *  Method:                                                                   *
- *      If IEEE-754 support is available, simply set the sign bit of the      *
+ *      If IEEE-754 support is available, set the sign bit of the             *
  *      input to 0. A 64-bit double is represented by:                        *
  *                                                                            *
  *        s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  *
