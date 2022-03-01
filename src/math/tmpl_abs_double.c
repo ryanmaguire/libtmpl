@@ -109,7 +109,7 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- * 2.)  math.h:                                                               *
+ *  2.) math.h:                                                               *
  *          Only included if libtmpl algorithms have not been requested. This *
  *          file contains the fabs function.                                  *
  ******************************************************************************

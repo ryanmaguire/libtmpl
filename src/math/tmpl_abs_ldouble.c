@@ -39,14 +39,13 @@
  *          The absolute value of x.                                          *
  *  Called Functions:                                                         *
  *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
- *      been requested. fabsl from math.h if available. fabs otherwise.       *
+ *      been requested. fabsl or fabs from math.h otherwise.                  *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, simply set the sign bit of the      *
  *      input to 0.                                                           *
  *                                                                            *
- *      If IEEE-754 is not supported, a simple if-then statement to check if  *
- *      the input is positive or not, returning x for non-negative and -x     *
- *      otherwise.                                                            *
+ *      If IEEE-754 is not supported, an if-then statement to check if the    *
+ *      input is positive, returning x for non-negative and -x otherwise.     *
  *                                                                            *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
@@ -99,8 +98,8 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- * 2.)  math.h:                                                               *
- *          Only included if libtmpl algorithms have not be requested. This   *
+ *  2.) math.h:                                                               *
+ *          Only included if libtmpl algorithms have not been requested. This *
  *          file contains the fabs function.                                  *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -135,7 +134,7 @@
  *      Moved float and long double to their own files.                       *
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
- *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *
+ *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
  ******************************************************************************/
 
 /*  Header file where the prototype for the function is defined.              */
@@ -184,10 +183,8 @@ long double tmpl_LDouble_Abs(long double x)
 /*  End of tmpl_LDouble_Abs.                                                  */
 
 #else
-/*  For #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1*/
-
-/*  In the absence of IEEE-754 support, a simple if-then statement works and  *
- *  is portable. Use this.                                                    */
+/*  For #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1*
+ *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)
@@ -215,7 +212,7 @@ long double tmpl_LDouble_Abs(long double x)
     (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
-long double tmpl_Float_Abs(long double x)
+long double tmpl_LDouble_Abs(long double x)
 {
     return fabsl(x);
 }
