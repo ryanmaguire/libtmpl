@@ -70,8 +70,8 @@
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 5220285568                                               *
  *          dx:      3.8312081596814096e-04                                   *
- *          libtmpl: 14.085304 seconds                                        *
- *          C:       10.708962 seconds                                        *
+ *          libtmpl: 13.610260 seconds                                        *
+ *          C:       10.325856 seconds                                        *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
@@ -148,7 +148,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Only implement this if the user requested libtmpl algorithms.             */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 0
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  If your compiler supports the IEEE 754 format, we simply set the sign bit *
  *  to zero to compute the absolute value of the input.                       */
@@ -196,8 +196,8 @@ float tmpl_Float_Abs(float x)
 
 /*  C99 and higher have fabsf defined. C89 compilers may not. Microsoft has   *
  *  fabsf but does not define the __STDC_VERSION__ macro by default.          */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L || \
-    defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
+    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
 
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
@@ -212,7 +212,7 @@ float tmpl_Float_Abs(float x)
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
 {
-    double abs_x = fabs((float)x);
+    double abs_x = fabs((double)x);
     return (float)abs_x;
 }
 /*  End of tmpl_Float_Abs.                                                    */
