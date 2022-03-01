@@ -38,7 +38,7 @@
  *      abs_x (double):                                                       *
  *          The absolute value of x.                                          *
  *  Called Functions:                                                         *
- *      None if IEEE-754 support is available and libtmpl algorithms have     *
+ *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
  *      been requested. fabs from math.h otherwise.                           *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, simply set the sign bit of the      *
@@ -57,7 +57,7 @@
  *      otherwise.                                                            *
  *                                                                            *
  *  Notes:                                                                    *
- *      If IEEE-754 is not supported, if the input is NaN one may get         *
+ *      If IEEE-754 is not supported and if the input is NaN one may get      *
  *      +/- NaN (which is still NaN). This is because NaN always              *
  *      evaluates to false when a comparison is made (==, <, >, etc.).        *
  *                                                                            *
@@ -90,6 +90,9 @@
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
  *          rms rel error: 0.0000000000000000e+00                             *
+ *                                                                            *
+ *      fabs is a built-in function, so I doubt software will be able to get  *
+ *      better performance.                                                   *
  *                                                                            *
  *      These tests were performed with the following specs:                  *
  *                                                                            *
@@ -178,16 +181,11 @@ double tmpl_Double_Abs(double x)
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double abs_x;
-
     /*  If x is positive return it, otherwise return its negative.            */
     if (x >= 0.0)
-        abs_x = x;
+        return x;
     else
-        abs_x = -x;
-
-    return abs_x;
+        return -x;
 }
 /*  End of tmpl_Double_Abs.                                                   */
 
@@ -200,6 +198,7 @@ double tmpl_Double_Abs(double x)
 /*  math.h provides the fabs function.                                        */
 #include <math.h>
 
+/*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
 {
     return fabs(x);
