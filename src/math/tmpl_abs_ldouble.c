@@ -142,7 +142,7 @@
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 long double support.                                   */
-#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 0
+#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)
