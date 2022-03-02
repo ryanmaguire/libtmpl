@@ -16,25 +16,25 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_cross_product_double                          *
+ *                   tmpl_three_vector_cross_product_float                    *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at double precision.                                           *
+ *      in R^3 at single precision.                                           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DLDouble_Cross_Product                                          *
+ *      tmpl_3DFloat_Cross_Product                                            *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at double precision.        *
+ *      Computes the cross product of two vectors at single precision.        *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorLongDouble):                                       *
+ *      P (tmpl_ThreeVectorFloat):                                            *
  *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorLongDouble):                                       *
+ *      Q (tmpl_ThreeVectorFloat):                                            *
  *          Another vector in R^3.                                            *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorLongDouble):                                   *
+ *      cross (tmpl_ThreeVectorFloat):                                        *
  *          The cross product PxQ.                                            *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -49,8 +49,6 @@
  *                                                                            *
  *      The cross product is not commutative, but anti-commutative. That is,  *
  *      PxQ = -QxP. The order of P and Q matters for this function.           *
- *                                                                            *
- *      The macro tmpl_Cross_Product is an alias for this function.           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -74,18 +72,22 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/03/02: Ryan Maguire                                                  *
+ *      Removed function calls, added doc-string.                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing the cross product of vectors at double precision.  */
-tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Cross_Product(tmpl_ThreeVectorLongDouble P,
-                             tmpl_ThreeVectorLongDouble Q)
+/*  Function for computing the cross product of vectors at single precision.  */
+tmpl_ThreeVectorFloat
+tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
 {
     /*  Declare a variable for the output.                                    */
-    tmpl_ThreeVectorLongDouble cross;
+    tmpl_ThreeVectorFloat cross;
 
     /*  Compute the components of the cross product PxQ.                      */
     cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
@@ -93,4 +95,4 @@ tmpl_3DLDouble_Cross_Product(tmpl_ThreeVectorLongDouble P,
     cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
     return cross;
 }
-/*  End of tmpl_3DLDouble_Cross_Product.                                       */
+/*  End of tmpl_3DFloat_Cross_Product.                                        */

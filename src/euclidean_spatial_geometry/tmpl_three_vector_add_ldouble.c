@@ -16,41 +16,37 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_cross_product_float                          *
+ *                        tmpl_three_vector_add_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at single precision.                                           *
+ *      Contains code for performing vector addition at long double precision.*
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Cross_Product                                            *
+ *      tmpl_3DLDouble_Cross_Product                                          *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at single precision.        *
+ *      Computes the vector sum of two vectors at long double precision.      *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      P (tmpl_ThreeVectorLongDouble):                                       *
  *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorFloat):                                            *
+ *      Q (tmpl_ThreeVectorLongDouble):                                       *
  *          Another vector in R^3.                                            *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorFloat):                                        *
- *          The cross product PxQ.                                            *
+ *      sum (tmpl_ThreeVectorLongDouble):                                     *
+ *          The vector sum P+Q.                                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
- *          x = PyQz - PzQy                                                   *
- *          y = PzQx - PxQz                                                   *
- *          z = PxQy - PyQx                                                   *
+ *      Use the definition of vector addition. If P = (Px, Py, Pz) and        *
+ *      Q = (Qx, Qy, Qz), then the vector sum P+Q has coordinates:            *
+ *          x = Px + Qx                                                       *
+ *          y = Py + Qy                                                       *
+ *          z = Pz + Qz                                                       *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
- *                                                                            *
- *      The macro tmpl_Cross_Product is an alias for this function.           *
+ *      The macro tmpl_3D_Add is an alias for this function.                  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -74,22 +70,28 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/03/02: Ryan Maguire                                                  *
+ *      Removed function calls, added doc-string.                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing the cross product of vectors at single precision.  */
-tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
+/*  Function for adding 2 three-dimensional vectors.                          */
+tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q)
 {
-    /*  Declare a variable for the output.                                    */
-    tmpl_ThreeVectorFloat cross;
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_ThreeVectorLongDouble sum;
 
-    /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
-    cross.dat[1] = P.dat[2]*Q.dat[0] - P.dat[0]*Q.dat[2];
-    cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
-    return cross;
+    /*  The sum of two vectors simply adds their components together.         */
+    sum.dat[0] = P.dat[0] + Q.dat[0];
+    sum.dat[1] = P.dat[1] + Q.dat[1];
+    sum.dat[2] = P.dat[2] + Q.dat[2];
+    return sum;
 }
-/*  End of tmpl_3DFloat_Cross_Product.                                        */
+/*  End of tmpl_3DLDouble_Add.                                                */
+

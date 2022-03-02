@@ -37,9 +37,41 @@ typedef tmpl_ThreeByThreeMatrixDouble tmpl_ThreeByThreeMatrix;
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Cross_Product                                                    *
+ *      tmpl_3DFloat_Add                                                      *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors in R^3.                     *
+ *      Computes the vector sum of two vectors in R^3 at single precision.    *
+ *      Similar functions are provided for double and long double precisions. *
+ *  Arguments:                                                                *
+ *      P (tmpl_ThreeVectorFloat):                                            *
+ *          A three dimensional vector.                                       *
+ *      Q (tmpl_ThreeVectorFloat):                                            *
+ *          Another three dimensional vector.                                 *
+ *  Output:                                                                   *
+ *      sum (tmpl_ThreeVectorFloat):                                          *
+ *          The sum of P and Q, P + Q.                                        *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_add_float.c                                     *
+ *          tmpl_three_vector_add_double.c                                    *
+ *          tmpl_three_vector_add_ldouble.c                                   *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Add(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Add(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q);
+
+#define tmpl_3D_Add tmpl_3DDouble_Add
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Cross_Product                                            *
+ *  Purpose:                                                                  *
+ *      Computes the cross product of two vectors in R^3 at single precision. *
+ *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
  *      P (tmpl_ThreeVectorFloat):                                            *
  *          A three dimensional vector.                                       *
@@ -52,11 +84,9 @@ typedef tmpl_ThreeByThreeMatrixDouble tmpl_ThreeByThreeMatrix;
  *      The cross product is anti-commutative. That is, PxQ = -QxP.           *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_cross_product_float.c                                        *
- *          tmpl_cross_product_double.c                                       *
- *          tmpl_cross_product_ldouble.c                                      *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes_examples/tmpl_determine_endianness_example.c   *
+ *          tmpl_three_vector_cross_product_float.c                           *
+ *          tmpl_three_vector_cross_product_double.c                          *
+ *          tmpl_three_vector_cross_product_ldouble.c                         *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q);
@@ -69,6 +99,38 @@ tmpl_3DLDouble_Cross_Product(tmpl_ThreeVectorLongDouble P,
                              tmpl_ThreeVectorLongDouble Q);
 
 #define tmpl_Cross_Product tmpl_3DDouble_Cross_Product
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Dot_Product                                              *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean dot product of two vector in R^3 at single     *
+ *      precision. Similar functions are provided for double and long double. *
+ *  Arguments:                                                                *
+ *      P (tmpl_ThreeVectorFloat):                                            *
+ *          A three dimensional vector.                                       *
+ *      Q (tmpl_ThreeVectorFloat):                                            *
+ *          Another three dimensional vector.                                 *
+ *  Output:                                                                   *
+ *      dot (float):                                                          *
+ *          The dot product of P and Q, P . Q.                                *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_dot_product_float.c                             *
+ *          tmpl_three_vector_dot_product_double.c                            *
+ *          tmpl_three_vector_dot_product_ldouble.c                           *
+ ******************************************************************************/
+extern float
+tmpl_3DFloat_Dot_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q);
+
+extern double
+tmpl_3DDouble_Dot_Product(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q);
+
+extern long double
+tmpl_3DLDouble_Dot_Product(tmpl_ThreeVectorLongDouble P,
+                           tmpl_ThreeVectorLongDouble Q);
+
+#define tmpl_3D_Dot_Product tmpl_3DDouble_Dot_Product
 
 extern double tmpl_ThreeVector_X(tmpl_ThreeVector P);
 
@@ -85,14 +147,8 @@ tmpl_ThreeVector_Rect(double x, double y, double z);
 
 extern double tmpl_ThreeVector_Euclidean_Norm(tmpl_ThreeVector P);
 
-extern double
-tmpl_ThreeVector_Dot_Product(tmpl_ThreeVector P, tmpl_ThreeVector Q);
-
 extern tmpl_ThreeVector
 tmpl_ThreeVector_Normalize(tmpl_ThreeVector P);
-
-extern tmpl_ThreeVector
-tmpl_ThreeVector_Add(tmpl_ThreeVector P, tmpl_ThreeVector Q);
 
 extern tmpl_ThreeVector
 tmpl_ThreeVector_Scale(double a, tmpl_ThreeVector P);
@@ -101,4 +157,4 @@ extern tmpl_ThreeVector
 tmpl_Orthogonal_ThreeVector(tmpl_ThreeVector P);
 
 #endif
-/*  End of include guard: #ifndef __TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H__       */
+/*  End of include guard.                                                     */

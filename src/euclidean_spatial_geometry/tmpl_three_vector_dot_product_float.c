@@ -16,41 +16,33 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_cross_product_double                          *
+ *                        tmpl_three_vector_add_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at double precision.                                           *
+ *      Contains code for the Euclidean dot product at single precision.      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DDouble_Cross_Product                                           *
+ *      tmpl_3DFloat_Dot_Product                                              *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at double precision.        *
+ *      Computes the dot product of two vectors at single precision.          *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorDouble):                                           *
+ *      P (tmpl_ThreeVectorFloat):                                            *
  *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorDouble):                                           *
+ *      Q (tmpl_ThreeVectorFloat):                                            *
  *          Another vector in R^3.                                            *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorDouble):                                       *
- *          The cross product PxQ.                                            *
+ *      dot (float):                                                          *
+ *          The dot product P . Q.                                            *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
- *          x = PyQz - PzQy                                                   *
- *          y = PzQx - PxQz                                                   *
- *          z = PxQy - PyQx                                                   *
+ *      Use the definition of the dot product. If P = (Px, Py, Pz) and        *
+ *      Q = (Qx, Qy, Qz), then the dot product is:                            *
+ *          dot = PxQx + PyQy + PzQz                                          *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
- *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
- *                                                                            *
- *      The macro tmpl_Cross_Product is an alias for this function.           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -74,22 +66,20 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
+ ******************************************************************************
+ *                             Revision History                               *
+ ******************************************************************************
+ *  2022/03/02: Ryan Maguire                                                  *
+ *      Removed function calls, added doc-string.                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing the cross product of vectors at double precision.  */
-tmpl_ThreeVectorDouble
-tmpl_3DDouble_Cross_Product(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q)
+/*  Function for computing the dot product of 2 three-vectors.                */
+float tmpl_3DFloat_Dot_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
 {
-    /*  Declare a variable for the output.                                    */
-    tmpl_ThreeVectorDouble cross;
-
-    /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
-    cross.dat[1] = P.dat[2]*Q.dat[0] - P.dat[0]*Q.dat[2];
-    cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
-    return cross;
+    /*  Use the Euclidean dot product formula and return.                     */
+    return P.dat[0]*Q.dat[0] + P.dat[1]*Q.dat[1] + P.dat[2]*Q.dat[2];
 }
-/*  End of tmpl_3DDouble_Cross_Product.                                       */
+/*  End of tmpl_3DFloat_Dot_Product.                                          */
