@@ -100,6 +100,26 @@ struct tmpl_simple_vector {
 struct tmpl_simple_color {
     unsigned char red, green, blue;
 
+    tmpl_simple_color(void)
+    {
+        return;
+    }
+
+    tmpl_simple_color(unsigned char a, unsigned char b, unsigned char c)
+    {
+        red = a;
+        green = b;
+        blue = c;
+    }
+
+    tmpl_simple_color operator * (double a)
+    {
+        unsigned char r = static_cast<unsigned char>(a*red);
+        unsigned char g = static_cast<unsigned char>(a*green);
+        unsigned char b = static_cast<unsigned char>(a*blue);
+        return tmpl_simple_color(r, g, b);
+    }
+
     /*  Function for writing a color to a PPM file.                           */
     void write(FILE *fp)
     {
@@ -167,13 +187,7 @@ sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
             grad_p = grad_p.unit_vector();
             v = v - (grad_p * 2.0*(v % grad_p));
             p = p + v*(4.0*dt);
-
-            out = sampler(p, v, dt);
-            out.red   = static_cast<unsigned char>(0.5 * out.red);
-            out.green = static_cast<unsigned char>(0.5 * out.green);
-            out.blue  = static_cast<unsigned char>(0.5 * out.blue);
-
-            return out;
+            return sampler(p, v, dt) * 0.5;
         }
         else
             p = p + v*dt;
@@ -186,17 +200,9 @@ sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
         double t = -(p.z - Inner_Radius) / v.z;
         tmpl_simple_vector intesect = p + v*t;
         if (int(ceil(intesect.x) + ceil(intesect.y)) & 1)
-        {
-            out.red = 255U;
-            out.green = 255U;
-            out.blue = 255U;
-        }
+            return tmpl_simple_color(0xFFU, 0xFFU, 0xFFU);
         else
-        {
-            out.red   = 255U;
-            out.green = 0U;
-            out.blue  = 0U;
-        }
+            return tmpl_simple_color(0xFFU, 0x00U, 0x00U);
     }
     else
     {
