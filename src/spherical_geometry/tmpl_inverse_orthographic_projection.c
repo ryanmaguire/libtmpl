@@ -43,10 +43,10 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
 
         /*  The point on the sphere now satisfies x*X + y*Y + z*u_hat. We     *
          *  compute this and return.                                          */
-        out = tmpl_ThreeVector_Add(
-            tmpl_ThreeVector_Add(
-                tmpl_ThreeVector_Scale(x, X),
-                tmpl_ThreeVector_Scale(y, Y)
+        out = tmpl_3D_Add(
+                tmpl_3D_Add(
+                    tmpl_ThreeVector_Scale(x, X),
+                    tmpl_ThreeVector_Scale(y, Y)
             ),
             tmpl_ThreeVector_Scale(z, u_hat)
         );
