@@ -63,7 +63,7 @@ struct tmpl_simple_vector {
     }
 
     /*  Scalar multiplication.                                                */
-    tmpl_simple_vector operator * (double r) const
+    tmpl_simple_vector operator * (double r)
     {
         return tmpl_simple_vector(x*r, y*r, z*r);
     }
@@ -92,7 +92,6 @@ struct tmpl_simple_vector {
         double rcpr = 1.0 / sqrt(x*x + y*y + z*z);
         return tmpl_simple_vector(x*rcpr, y*rcpr, z*rcpr);
     }
-
 };
 /*  End of definition of tmpl_simple_vector.                                  */
 
@@ -134,16 +133,10 @@ static tmpl_simple_color sky_color(double zenith)
     tmpl_simple_color out;
     double factor;
     if (zenith < 0.1745)
-    {
-        out.red = 255U;
-        out.green = 255U;
-        out.blue = 0U;
-        return out;
-    }
-
-    out.blue = 255U;
+        return tmpl_simple_color(0xFFU, 0xFFU, 0x00U);
 
     factor = cos(zenith);
+    out.blue = 255U;
     out.red = static_cast<unsigned char>(factor * 135.0);
     out.green = static_cast<unsigned char>(factor * 206.0);
     return out;
@@ -151,7 +144,7 @@ static tmpl_simple_color sky_color(double zenith)
 
 static const double Inner_Radius = 1.0;
 static const double Outer_Radius = 2.0;
-static const unsigned int max_iters = 1E5;
+static const unsigned int max_iters = 1000U;
 static const double threshold = 0.01;
 
 static double torus_implicit(tmpl_simple_vector p)
@@ -162,14 +155,9 @@ static double torus_implicit(tmpl_simple_vector p)
 
 static tmpl_simple_vector torus_gradient(tmpl_simple_vector p)
 {
-    tmpl_simple_vector out;
     double rho = sqrt(p.x*p.x + p.y*p.y);
     double factor = 2.0*(rho - Outer_Radius) / rho;
-
-    out.x = factor * p.x;
-    out.y = factor * p.y;
-    out.z = 2*p.z;
-    return out;
+    return tmpl_simple_vector(factor * p.x, factor * p.y, 2.0 * p.z);
 }
 
 static tmpl_simple_color
@@ -181,13 +169,11 @@ sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 
     while ((iters < max_iters) && (p.z > -Inner_Radius))
     {
-        if (fabs(torus_implicit(p)) < threshold)
+        if (fabs(torus_implicit(p)) <= threshold)
         {
-            grad_p = torus_gradient(p);
-            grad_p = grad_p.unit_vector();
+            grad_p = torus_gradient(p).unit_vector();
             v = v - (grad_p * 2.0*(v % grad_p));
-            p = p + v*(4.0*dt);
-            return sampler(p, v, dt) * 0.5;
+            return sampler(p, v, dt) * 0.8;
         }
         else
             p = p + v*dt;
@@ -199,6 +185,7 @@ sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
     {
         double t = -(p.z - Inner_Radius) / v.z;
         tmpl_simple_vector intesect = p + v*t;
+
         if (int(ceil(intesect.x) + ceil(intesect.y)) & 1)
             return tmpl_simple_color(0xFFU, 0xFFU, 0xFFU);
         else
@@ -223,15 +210,16 @@ int main(void)
      *  adjusting the strength of Gravity. Smaller values mean stronger       *
      *  gravity, and larger values mean weaker gravity.                       */
     const double val = 0.7071067811865476;
-    const tmpl_simple_vector v = tmpl_simple_vector(0.0, -val, -val);
-    const tmpl_simple_vector u0 = tmpl_simple_vector(1.0,  0.0,  0.0);
-    const tmpl_simple_vector u1 = tmpl_simple_vector(0.0,  val, -val);
-    const tmpl_simple_vector eye = v * 11.0;
+    tmpl_simple_vector v = tmpl_simple_vector(0.0, -val, -val);
+    tmpl_simple_vector u0 = tmpl_simple_vector(1.0,  0.0,  0.0);
+    tmpl_simple_vector u1 = tmpl_simple_vector(0.0,  val, -val);
+    tmpl_simple_vector eye = v * 11.0;
     unsigned int x, y;
 
     /*  Set the values for the size of the detector.                          */
     const double start = -2.0;
     const double end =  2.0;
+    const double dt = 0.01;
 
     /*  Set the number of pixels in the detector.                             */
     const unsigned int size = 1024U;
@@ -259,16 +247,16 @@ int main(void)
 
     /*  We can NOT do parallel processing with the creation of our PPM file   *
      *  since the order the values are computed is essential.                 */
-    for (y = 0U; y<size; ++y)
+    for (y = 0U; y < size; ++y)
     {
-        for (x = 0U; x<size; ++x)
+        for (x = 0U; x < size; ++x)
         {
             /*  We're incrementing p across our detector.                     */
             tmpl_simple_vector p = u0*(start + x*factor) +
-                                   u1*(start + y*factor) -
-                                   v*10.0;
-            tmpl_simple_vector dir = p - eye;
-            tmpl_simple_color c = sampler(p, dir * (1.0 / dir.norm()), 0.01);
+                                   u1*(start + y*factor) +
+                                   v*val;
+            tmpl_simple_vector dir = (p - eye).unit_vector();
+            tmpl_simple_color c = sampler(p, dir, dt);
             c.write(fp);
         }
         if ((y % 20) == 0)
