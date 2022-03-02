@@ -4,7 +4,7 @@
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  iunder the terms of the GNU General Public License as published by        *
+ *  under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -15,6 +15,13 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *  This is my first poor attempt at raytracing a torus using the implicit    *
+ *  equation of a torus. It is slow, not optimized, and does not use          *
+ *  parallel processing.                                                      *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       2022/03/02                                                    *
  ******************************************************************************/
 
 /*  Needed for the FILE data type and fprintf function.                       */
@@ -23,8 +30,7 @@
 /*  Square root function found here.                                          */
 #include <math.h>
 
-/*  A simple structure for dealing with vectors. Vectors are treated as rays  *
- *  of light moving under the influence of the gravity of a black hole.       */
+/*  A simple structure for dealing with vectors. Used for rays of light.      */
 struct tmpl_simple_vector {
 
     /*  A vector will be defined by it's Euclidean components, x, y, z.       */
@@ -36,8 +42,7 @@ struct tmpl_simple_vector {
         return;
     }
 
-    /*  Simple method for creating a vector. Simply set the x, y, and z parts *
-     *  to the values a, b, and c, respectively.                              */
+    /*  Main constructor. Set x, y, and z to a, b, and c, respectively.       */
     tmpl_simple_vector(double a, double b, double c)
     {
         x = a;
@@ -45,24 +50,25 @@ struct tmpl_simple_vector {
         z = c;
     }
 
-    /*  This operator represents vector addition.                             */
+    /*  Vector addition. This is done component-wise.                         */
     tmpl_simple_vector operator + (tmpl_simple_vector r)
     {
         return tmpl_simple_vector(x + r.x, y + r.y, z + r.z);
     }
 
+    /*  Vector subtraction. Again, done component-wise.                       */
     tmpl_simple_vector operator - (tmpl_simple_vector r)
     {
         return tmpl_simple_vector(x - r.x, y - r.y, z - r.z);
     }
 
-    /*  And here we have scalar multiplication.                               */
-    tmpl_simple_vector operator * (double r)
+    /*  Scalar multiplication.                                                */
+    tmpl_simple_vector operator * (double r) const
     {
         return tmpl_simple_vector(x*r, y*r, z*r);
     }
 
-    /*  This operator will denote the Euclidean dot product of two vectors.   */
+    /*  Euclidean dot product of two vectors.                                 */
     double operator % (tmpl_simple_vector r)
     {
         return x*r.x + y*r.y + z*r.z;
@@ -71,31 +77,39 @@ struct tmpl_simple_vector {
     /*  A method for computing the Euclidean norm of a vector.                */
     double norm(void)
     {
-        return sqrt(*this % *this);
+        return sqrt(x*x + y*y + z*z);
     }
 
     /*  A method for computing the square of the Euclidean norm of a vector.  *
      *  This is computationally useful since it avoids redundant square roots.*/
     double normsq(void)
     {
-        return *this % *this;
+        return x*x + y*y + z*z;
     }
 
     tmpl_simple_vector unit_vector(void)
     {
-        return *this * (1.0 / (*this).norm());
+        double rcpr = 1.0 / sqrt(x*x + y*y + z*z);
+        return tmpl_simple_vector(x*rcpr, y*rcpr, z*rcpr);
     }
 
 };
 /*  End of definition of tmpl_simple_vector.                                  */
 
+/*  Struct for working with colors in RGB format.                             */
 struct tmpl_simple_color {
-    unsigned char red;
-    unsigned char green;
-    unsigned char blue;
+    unsigned char red, green, blue;
+
+    /*  Function for writing a color to a PPM file.                           */
+    void write(FILE *fp)
+    {
+        fputc(red, fp);
+        fputc(green, fp);
+        fputc(blue, fp);
+    }
 };
 
-tmpl_simple_color sky_color(double zenith)
+static tmpl_simple_color sky_color(double zenith)
 {
     tmpl_simple_color out;
     double factor;
@@ -110,16 +124,9 @@ tmpl_simple_color sky_color(double zenith)
     out.blue = 255U;
 
     factor = cos(zenith);
-    out.red = (unsigned char)(factor * 135.0);
-    out.green = (unsigned char)(factor * 206.0);
+    out.red = static_cast<unsigned char>(factor * 135.0);
+    out.green = static_cast<unsigned char>(factor * 206.0);
     return out;
-}
-
-void color(tmpl_simple_color c, FILE *fp)
-{
-    fputc(c.red, fp);
-    fputc(c.green, fp);
-    fputc(c.blue, fp);
 }
 
 static const double Inner_Radius = 1.0;
@@ -127,13 +134,13 @@ static const double Outer_Radius = 2.0;
 static const unsigned int max_iters = 1E5;
 static const double threshold = 0.01;
 
-double torus_implicit(tmpl_simple_vector p)
+static double torus_implicit(tmpl_simple_vector p)
 {
     double a = sqrt(p.x*p.x + p.y*p.y) - Outer_Radius;
     return a*a + p.z*p.z - Inner_Radius*Inner_Radius;
 }
 
-tmpl_simple_vector torus_gradient(tmpl_simple_vector p)
+static tmpl_simple_vector torus_gradient(tmpl_simple_vector p)
 {
     tmpl_simple_vector out;
     double rho = sqrt(p.x*p.x + p.y*p.y);
@@ -145,11 +152,11 @@ tmpl_simple_vector torus_gradient(tmpl_simple_vector p)
     return out;
 }
 
-tmpl_simple_color sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
+static tmpl_simple_color
+sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
 {
     tmpl_simple_color out;
     tmpl_simple_vector grad_p;
-    double rho;
     unsigned int iters = 0U;
 
     while ((iters < max_iters) && (p.z > -Inner_Radius))
@@ -162,9 +169,9 @@ tmpl_simple_color sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
             p = p + v*(4.0*dt);
 
             out = sampler(p, v, dt);
-            out.red   = (unsigned char)(0.5 * out.red);
-            out.green = (unsigned char)(0.5 * out.green);
-            out.blue  = (unsigned char)(0.5 * out.blue);
+            out.red   = static_cast<unsigned char>(0.5 * out.red);
+            out.green = static_cast<unsigned char>(0.5 * out.green);
+            out.blue  = static_cast<unsigned char>(0.5 * out.blue);
 
             return out;
         }
@@ -178,7 +185,7 @@ tmpl_simple_color sampler(tmpl_simple_vector p, tmpl_simple_vector v, double dt)
     {
         double t = -(p.z - Inner_Radius) / v.z;
         tmpl_simple_vector intesect = p + v*t;
-        if ((int)(ceil(intesect.x) + ceil(intesect.y)) & 1)
+        if (int(ceil(intesect.x) + ceil(intesect.y)) & 1)
         {
             out.red = 255U;
             out.green = 255U;
@@ -209,28 +216,24 @@ int main(void)
      *  to be 1 for simplicity. Adjusting this value would be equivalent to   *
      *  adjusting the strength of Gravity. Smaller values mean stronger       *
      *  gravity, and larger values mean weaker gravity.                       */
-    tmpl_simple_vector v  = tmpl_simple_vector(0.0, -1.0, -1.0);
-    tmpl_simple_vector u1 = tmpl_simple_vector(0.0,  1.0, -1.0);
-    tmpl_simple_vector u0 = tmpl_simple_vector(1.0,  0.0,  0.0);
-    tmpl_simple_vector p, dir, eye;
-    unsigned int x, y, size;
-    double factor, start, end;
-    eye = v*(-11.);
+    const double val = 0.7071067811865476;
+    const tmpl_simple_vector v = tmpl_simple_vector(0.0, -val, -val);
+    const tmpl_simple_vector u0 = tmpl_simple_vector(1.0,  0.0,  0.0);
+    const tmpl_simple_vector u1 = tmpl_simple_vector(0.0,  val, -val);
+    const tmpl_simple_vector eye = v * 11.0;
+    unsigned int x, y;
 
-    u0 = u0 * (1.0 / u0.norm());
-    v  = v  * (1.0 / v.norm());
-
-    /*  Set the values for the size of the detector. I've chosen the square   *
-     *  [-10, 10]^2.                                                          */
-    start = -2.0;
-    end   =  2.0;
+    /*  Set the values for the size of the detector.                          */
+    const double start = -2.0;
+    const double end =  2.0;
 
     /*  Set the number of pixels in the detector.                             */
-    size = 2048U;
+    const unsigned int size = 1024U;
 
     /*  And compute the factor that allows us to convert between a pixel      *
      *  and the corresponding point on the detector.                          */
-    factor = (end - start) / (double)size;
+    const double factor = (end - start) / static_cast<double>(size);
+    const double prog_factor = 100.0 / static_cast<double>(size);
 
     /*  Open the file "black.ppm" and give it write permissions.              */
     FILE *fp = fopen("black_hole.ppm", "w");
@@ -255,12 +258,15 @@ int main(void)
         for (x = 0U; x<size; ++x)
         {
             /*  We're incrementing p across our detector.                     */
-            p = u0*(start + x*factor) + u1*(start + y*factor) - v*10.0;
-            dir = p-eye;
-            color(sampler(p, dir * (1.0 / dir.norm()), 0.01), fp);
+            tmpl_simple_vector p = u0*(start + x*factor) +
+                                   u1*(start + y*factor) -
+                                   v*10.0;
+            tmpl_simple_vector dir = p - eye;
+            tmpl_simple_color c = sampler(p, dir * (1.0 / dir.norm()), 0.01);
+            c.write(fp);
         }
         if ((y % 20) == 0)
-            fprintf(stderr, "Progress: %.4f%%\r", 100.0*y / size);
+            fprintf(stderr, "Progress: %.4f%%\r", prog_factor*y);
     }
 
     fclose(fp);
