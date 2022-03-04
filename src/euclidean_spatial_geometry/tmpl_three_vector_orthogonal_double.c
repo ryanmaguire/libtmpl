@@ -68,7 +68,7 @@ tmpl_Orthogonal_ThreeVector(tmpl_ThreeVector P)
     }
     /*  End of if (Px == 0.0).                                                */
 
-    out = tmpl_ThreeVector_Rect(x, y, z);
+    out = tmpl_3DDouble_Rect(x, y, z);
     return out;
 }
 /*  End of tmpl_Orthogonal_ThreeVector.                                */

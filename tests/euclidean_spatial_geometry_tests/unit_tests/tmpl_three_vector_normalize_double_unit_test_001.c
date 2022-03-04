@@ -18,16 +18,20 @@
  ******************************************************************************/
 
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <math.h>
 #include <float.h>
 #include <stdio.h>
 
 int main(void)
 {
-    tmpl_ThreeVectorDouble P = tmpl_ThreeVector_Rect(DBL_MAX, DBL_MAX, DBL_MAX);
+    tmpl_ThreeVectorDouble P = tmpl_3DDouble_Rect(DBL_MAX, DBL_MAX, DBL_MAX);
     tmpl_ThreeVectorDouble u = tmpl_3DDouble_Normalize(P);
+    const double norm = tmpl_3DDouble_Norm(u);
 
-    printf("P         = (%e, %e, %e)\n", P.dat[0], P.dat[1], P.dat[2]);
-    printf("P_hat     = (%e, %e, %e)\n", u.dat[0], u.dat[1], u.dat[2]);
-    printf("||P_hat|| = %e\n", tmpl_3DDouble_Norm(u));
+    if (fabs(norm - 1.0) > 10.0*DBL_EPSILON)
+        puts("FAIL");
+    else
+        puts("PASS");
+
     return 0;
 }

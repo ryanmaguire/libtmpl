@@ -54,7 +54,7 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     rcpr_chirp = malloc(sizeof(*rcpr_chirp) * N_pow_2);
     x_in       = malloc(sizeof(*x_in)       * N_pow_2);
     temp       = malloc(sizeof(*temp)       * N_pow_2);
-    
+
     if (inverse)
         chirp_factor = tmpl_One_Pi/(double)N;
     else

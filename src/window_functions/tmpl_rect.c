@@ -16,7 +16,6 @@ float tmpl_Float_Rect_Window(float x, float W)
     return rect_x;
 }
 
-
 double tmpl_Double_Rect_Window(double x, double W)
 {
     double abs_x, rect_x;
@@ -31,7 +30,6 @@ double tmpl_Double_Rect_Window(double x, double W)
     return rect_x;
 }
 
-
 long double tmpl_LDouble_Rect_Window(long double x, long double W)
 {
     long double abs_x, rect_x;
@@ -45,4 +43,3 @@ long double tmpl_LDouble_Rect_Window(long double x, long double W)
 
     return rect_x;
 }
-

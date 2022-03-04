@@ -502,7 +502,6 @@ double tmpl_Double_Sqrt(double x)
     else
         exponent = w.bits.expo - TMPL_DOUBLE_BIAS;
 
-
     /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
      *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
     w.bits.expo = TMPL_DOUBLE_BIAS;
@@ -585,4 +584,3 @@ double tmpl_Double_Sqrt(double x)
 
 #endif
 /*  End of #if for TMPL_HAS_IEEE754_DOUBLE and TMPL_USE_MATH_ALGORITHMS.      */
-

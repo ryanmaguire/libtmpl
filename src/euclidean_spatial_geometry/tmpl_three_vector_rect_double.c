@@ -27,10 +27,10 @@
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for returning the point (x, y, z) given three doubles x, y, z.   */
-tmpl_ThreeVector tmpl_ThreeVector_Rect(double x, double y, double z)
+tmpl_ThreeVector tmpl_3DDouble_Rect(double x, double y, double z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ThreeVector P;
+    tmpl_ThreeVectorDouble P;
 
     /*  Set the zeroth entry of P.dat to x, the first to y, and second to z.  */
     P.dat[0] = x;
@@ -38,4 +38,4 @@ tmpl_ThreeVector tmpl_ThreeVector_Rect(double x, double y, double z)
     P.dat[2] = z;
     return P;
 }
-/*  End of tmpl_ThreeVector_Rect.                                             */
+/*  End of tmpl_3DDouble_Rect.                                                */

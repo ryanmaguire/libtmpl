@@ -102,10 +102,10 @@ tmpl_Create_LongVector_From_Data(long *arr, unsigned long int length)
      *  vector we'll be returning.                                            */
     unsigned long int n;
     tmpl_LongVector *vec;
-    
+
     /*  Allocate memory for vec using malloc.                                 */
     vec = malloc(sizeof(*vec));
-    
+
     /*  If malloc failed it returns NULL. Check that this did not happen.     */
     if (vec == NULL)
         return NULL;
@@ -133,7 +133,7 @@ tmpl_Create_LongVector_From_Data(long *arr, unsigned long int length)
 
         /*  Since the data is NULL, there are zero elements. Specify this.    */
         vec->length = 0UL;
-        
+
         /*  Store an error message detailing what went wrong in the struct.   */
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
@@ -141,7 +141,7 @@ tmpl_Create_LongVector_From_Data(long *arr, unsigned long int length)
             "Input pointer is NULL but input length is not zero.\n"
             "Setting vec->data to NULL and returning.\n"
         );
-        
+
         return vec;
     }
     /*  End of if (arr == NULL).                                              */
@@ -181,10 +181,10 @@ tmpl_Create_ULongVector_From_Data(unsigned long int *arr,
      *  vector we'll be returning.                                            */
     unsigned long int n;
     tmpl_ULongVector *vec;
-    
+
     /*  Allocate memory for vec using malloc.                                 */
     vec = malloc(sizeof(*vec));
-    
+
     /*  If malloc failed it returns NULL. Check that this did not happen.     */
     if (vec == NULL)
         return NULL;
@@ -212,7 +212,7 @@ tmpl_Create_ULongVector_From_Data(unsigned long int *arr,
 
         /*  Since the data is NULL, there are zero elements. Specify this.    */
         vec->length = 0UL;
-        
+
         /*  Store an error message detailing what went wrong in the struct.   */
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
@@ -220,7 +220,7 @@ tmpl_Create_ULongVector_From_Data(unsigned long int *arr,
             "Input pointer is NULL but input length is not zero.\n"
             "Setting vec->data to NULL and returning.\n"
         );
-        
+
         return vec;
     }
     /*  End of if (arr == NULL).                                              */
@@ -250,4 +250,3 @@ tmpl_Create_ULongVector_From_Data(unsigned long int *arr,
     return vec;
 }
 /*  End of tmpl_Create_ULongVector_From_Data.                                 */
-

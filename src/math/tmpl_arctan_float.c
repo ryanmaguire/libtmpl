@@ -100,7 +100,6 @@
 #define ATAN_A03 1.0648017377E-01F
 #define ATAN_A04 6.1687607318E-02F
 
-
 /*  This function computes arctan(x) via a Taylor series for small |x|.       */
 static float tmpl_arctan_small_vals(float x)
 {

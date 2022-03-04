@@ -144,7 +144,6 @@
  *   w_of_z(3), dawson(3), voigt(3), cerf(3), erfcx(3), erfi(3)
  */
 
-
 /*  Header file which contains aliases for the function in the standard C     *
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>

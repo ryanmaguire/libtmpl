@@ -72,7 +72,6 @@ double tmpl_Double_Erf(double x)
 }
 /*  End of tmpl_Double_Erf.                                                   */
 
-
 /*  Long double precision error function (erfl equivalent).                   */
 long double tmpl_LDouble_Erf(long double x)
 {
@@ -86,4 +85,3 @@ long double tmpl_LDouble_Erf(long double x)
     return erf;
 }
 /*  End of tmpl_Double_Erf.                                                   */
-

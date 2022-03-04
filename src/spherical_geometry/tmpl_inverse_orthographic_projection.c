@@ -22,7 +22,7 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
      *  projection is undefined. We'll return Not-a-Number in this case.      */
     if ((x*x + y*y) > radius)
     {
-        out = tmpl_ThreeVector_Rect(TMPL_NAN, TMPL_NAN, TMPL_NAN);
+        out = tmpl_3DDouble_Rect(TMPL_NAN, TMPL_NAN, TMPL_NAN);
     }
     else
     {

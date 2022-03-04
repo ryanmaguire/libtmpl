@@ -81,4 +81,3 @@ unsigned long tmpl_Factorial(unsigned int N)
 /*  End of factorial function.                                                */
 
 #endif
-
