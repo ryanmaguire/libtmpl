@@ -56,7 +56,7 @@ double tmpl_Double_LambertW(double x)
             return TMPL_NAN;
         }
         exp_x0 = tmpl_Double_Exp(x0);
-        dx = (x0*exp_x0 - x) / 
+        dx = (x0*exp_x0 - x) /
              (exp_x0*(x0 + 1.0) - (x0 + 2.0)*(x0*exp_x0 - x)/(2.0*x0 + 2.0));
         x0 = x0 - dx;
         while (tmpl_Double_Abs(dx) > EPS)
@@ -88,7 +88,7 @@ long double tmpl_LDouble_LambertW(long double x)
             x0 = x;
 
         exp_x0 = tmpl_LDouble_Exp(x0);
-        dx = (x0*exp_x0 - x) / 
+        dx = (x0*exp_x0 - x) /
              (exp_x0*(x0 + 1.0L) - (x0 + 2.0L)*(x0*exp_x0 - x)/(2.0L*x0 + 2.0L));
         x0 = x0 - dx;
         while (tmpl_LDouble_Abs(dx) > EPS)

@@ -36,5 +36,3 @@ float tmpl_Float_Cos(float x)
 
     return sgn_x * (cdx*cx - sx*sdx);
 }
-
-

@@ -285,7 +285,6 @@ kissvg_TwoVector kissvg_Plane_To_Disk_Homeo(kissvg_TwoVector P)
     return out;
 }
 
-
 kissvg_TwoVector *kissvg_Circle_Intersection(kissvg_Circle *C0,
                                              kissvg_Circle *C1)
 {

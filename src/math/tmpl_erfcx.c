@@ -94,7 +94,6 @@
  *   man 3 erfcx
  */
 
-
 /*  Header file which contains aliases for the function in the standard C     *
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>

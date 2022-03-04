@@ -32,7 +32,6 @@ double tmpl_Factorial_As_Real(unsigned int n)
 
 #elif DBL_MAX_10_EXP <= 307
 
-
 static const double tmpl_factorial_values[171] = {
     1.0000000000000000, 1.0000000000000000, 2.0000000000000000,
     6.0000000000000000, 24.000000000000000, 120.00000000000000,
@@ -105,4 +104,3 @@ double tmpl_Factorial_As_Real(unsigned int n)
 #else
 
 #endif
-

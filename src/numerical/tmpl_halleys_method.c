@@ -154,5 +154,3 @@ tmpl_Halleys_Method_LDouble(long double x, long double (*f)(long double),
 
     return x;
 }
-
-

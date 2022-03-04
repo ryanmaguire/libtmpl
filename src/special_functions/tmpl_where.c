@@ -45,7 +45,7 @@ unsigned long **tmpl_Where_Greater_##Type(type *data, unsigned long dim,       \
     *where[1] = arr_size;                                                      \
     return where;                                                              \
 }
- 
+
 CreateWhereFunction(char, Char, double)
 CreateWhereFunction(unsigned char, UChar, double)
 CreateWhereFunction(short, Short, double)
@@ -151,7 +151,6 @@ unsigned long **tmpl_Where_LesserGreater_##Type(type *data, unsigned long dim, \
     *where[1] = arr_size;                                                      \
     return where;                                                              \
 }
-
 
 CreateWhereFunction(char, Char, double)
 CreateWhereFunction(unsigned char, UChar, double)

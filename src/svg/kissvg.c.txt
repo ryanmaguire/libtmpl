@@ -1654,7 +1654,6 @@ void kissvg_DrawLine2D(cairo_t *cr, kissvg_Line2D *line, double t0, double t1)
     return;
 }
 
-
 void kissvg_GenerateFile(char *filename, void (*instruction)(cairo_t *),
                          kissvg_FileType type, double x_inches, double y_inches)
 {

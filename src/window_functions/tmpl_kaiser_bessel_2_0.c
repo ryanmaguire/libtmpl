@@ -16,7 +16,6 @@
 #define KAISER_BESSEL_2_0_A11 6.23627380586252011565352895678E-7
 #define KAISER_BESSEL_2_0_A12 4.27427468060687589919240887794E-8
 
-
 float tmpl_Float_Kaiser_Bessel_2_0(float x, float W)
 {
     float bessel_x, arg;

@@ -239,36 +239,6 @@ extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Laplacian                                                *
- *  Purpose:                                                                  *
- *      Computes the L1 norm of a vector in R^3 at single precision. This is  *
- *      defined as follows. If P = (x, y, z), we have:                        *
- *          ||P||_1 = |x| + |y| + |z|                                         *
- *      Functions for double and long double precision are also provided.     *
- *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A three dimensional vector.                                       *
- *  Output:                                                                   *
- *      norm (float):                                                         *
- *          The L1 norm of P.                                                 *
- *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_norm_float.c                                    *
- *          tmpl_three_vector_norm_double.c                                   *
- *          tmpl_three_vector_norm_ldouble.c                                  *
- ******************************************************************************/
-extern float
-tmpl_3DFloat_Laplacian(tmpl_3DFloat_Functional f, tmpl_ThreeVectorFloat P);
-
-extern double
-tmpl_3DDouble_Laplacian(tmpl_3DDouble_Functional f, tmpl_ThreeVectorDouble P);
-
-extern long double
-tmpl_3DLDouble_Laplacian(tmpl_3DLDouble_Functional f,
-                         tmpl_ThreeVectorLongDouble P);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_3DFloat_LInf_Norm                                                *
  *  Purpose:                                                                  *
  *      Computes the L-Infinity norm of a vector in R^3 at single precision.  *
@@ -362,8 +332,63 @@ extern double
 tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
                                   unsigned int m, unsigned int n);
 
-extern tmpl_ThreeVector
-tmpl_ThreeVector_Rect(double x, double y, double z);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Ptr_Add_To                                               *
+ *  Purpose:                                                                  *
+ *      Adds the source vector to the target vector, the result of which is   *
+ *      stored in the target.                                                 *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat *):                                     *
+ *          A pointer to the first vector, the sum will be stored here.       *
+ *      source (tmpl_ThreeVectorFloat *):                                     *
+ *          A pointer to the vector to be added to target.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_norm_float.c                                    *
+ *          tmpl_three_vector_norm_double.c                                   *
+ *          tmpl_three_vector_norm_ldouble.c                                  *
+ ******************************************************************************/
+extern void
+tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
+                   tmpl_ThreeVectorFloat *source);
+
+extern void
+tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
+                    tmpl_ThreeVectorDouble *source);
+
+extern void
+tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
+                     tmpl_ThreeVectorLongDouble *source);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Rect                                                     *
+ *  Purpose:                                                                  *
+ *      Creates a 3D vector from three real numbers.                          *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          The x-component of the vector.                                    *
+ *      y (float):                                                            *
+ *          The y-component of the vector.                                    *
+ *      z (float):                                                            *
+ *          The z-component of the vector.                                    *
+ *  Output:                                                                   *
+ *      P (tmpl_ThreeVectorFloat):                                            *
+ *          The vector (x, y, z).                                             *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_norm_float.c                                    *
+ *          tmpl_three_vector_norm_double.c                                   *
+ *          tmpl_three_vector_norm_ldouble.c                                  *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat tmpl_3DFloat_Rect(float x, float y, float z);
+extern tmpl_ThreeVectorDouble tmpl_3DDouble_Rect(double x, double y, double z);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Rect(long double x, long double y, long double z);
 
 extern tmpl_ThreeVector
 tmpl_ThreeVector_Scale(double a, tmpl_ThreeVector P);

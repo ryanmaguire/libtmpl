@@ -6,7 +6,6 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_window_functions.h>
 
-
 float tmpl_Float_Coss_Window(float x, float W)
 {
     /*  Declare necessary variables. C89 requires declaring these at the top. */
