@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_single                        *
+ *                        tmpl_three_vector_add_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for performing vector addition at single precision.     *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Cross_Product                                            *
+ *      tmpl_3DFloat_Add                                                      *
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at single precision.           *
  *  Arguments:                                                                *
@@ -45,6 +45,8 @@
  *          z = Pz + Qz                                                       *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
+ *                                                                            *
+ *      The macro tmpl_3D_Addf is an alias for this function.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -92,4 +94,3 @@ tmpl_3DFloat_Add(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
     return sum;
 }
 /*  End of tmpl_3DFloat_Add.                                                  */
-

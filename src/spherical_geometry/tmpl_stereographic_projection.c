@@ -64,7 +64,7 @@ tmpl_Stereographic_Projection(tmpl_ThreeVector P)
     /*  We will perform stereographic projection on the sphere centered at    *
      *  the origin which contains the given point. To do this we'll first     *
      *  need to compute the Euclidean norm of this point.                     */
-    norm = tmpl_ThreeVector_Euclidean_Norm(P);
+    norm = tmpl_3DDouble_Norm(P);
 
     /*  In the special case of P = 0, stereographic projection is not defined *
      *  and we can't say it's the "point at infinity." We'll just return      *

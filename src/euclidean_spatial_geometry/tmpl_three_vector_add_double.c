@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DDouble_Cross_Product                                           *
+ *      tmpl_3DDouble_Add                                                     *
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at double precision.           *
  *  Arguments:                                                                *
@@ -94,4 +94,3 @@ tmpl_3DDouble_Add(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q)
     return sum;
 }
 /*  End of tmpl_3DDouble_Add.                                                 */
-

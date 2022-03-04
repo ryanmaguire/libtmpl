@@ -30,22 +30,12 @@
 tmpl_ThreeVector tmpl_ThreeVector_Scale(double a, tmpl_ThreeVector P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double Px, Py, Pz, x, y, z;
-    tmpl_ThreeVector scale;
-
-    /*  Extract the x, y, and z components from P.                            */
-    Px = tmpl_ThreeVector_X(P);
-    Py = tmpl_ThreeVector_Y(P);
-    Pz = tmpl_ThreeVector_Z(P);
+    tmpl_ThreeVector scaled;
 
     /*  Scalar multiplication is done component-wise, so compute this.        */
-    x = a*Px;
-    y = a*Py;
-    z = a*Pz;
-
-    /*  Use tmpl_ThreeVector_Rect to create the output and return.            */
-    scale = tmpl_ThreeVector_Rect(x, y, z);
-    return scale;
+    scaled.dat[0] = a*P.dat[0];
+    scaled.dat[1] = a*P.dat[1];
+    scaled.dat[2] = a*P.dat[2];
+    return scaled;
 }
 /*  End of tmpl_ThreeVector_Scale.                                            */
-

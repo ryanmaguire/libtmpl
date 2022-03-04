@@ -16,41 +16,38 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_three_vector_cross_product_float                    *
+ *                     tmpl_three_vector_normalize_ldouble                    *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at single precision.                                           *
+ *      Contains code for computing unit normal vectors.                      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Cross_Product                                            *
+ *      tmpl_3DLDouble_Normalize                                              *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at single precision.        *
+ *      Computes the unit normal of the input non-zero vector.                *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another vector in R^3.                                            *
+ *      P (tmpl_ThreeVectorLongDouble):                                       *
+ *          A non-zero vector in R^3.                                         *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorFloat):                                        *
- *          The cross product PxQ.                                            *
+ *      P_hat (tmpl_ThreeVectorLongDouble):                                   *
+ *          The unit normal of P.                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
- *          x = PyQz - PzQy                                                   *
- *          y = PzQx - PxQz                                                   *
- *          z = PxQy - PyQx                                                   *
+ *      Use the definition of unit normal. If P = (x, y, z), the norm is:     *
+ *                                                                            *
+ *          norm = sqrt(x^2 + y^2 + z^2).                                     *
+ *                                                                            *
+ *      For a non-zero vector norm is positive. The unit normal is given by:  *
+ *                                                                            *
+ *          P_hat = P / norm                                                  *
+ *                                                                            *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
- *                                                                            *
- *      The macro tmpl_Cross_Productf is an alias for this function.          *
+ *      If the vector is zero, (NaN, NaN, NaN) is returned.                   *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -84,17 +81,40 @@
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing the cross product of vectors at single precision.  */
-tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
-{
-    /*  Declare a variable for the output.                                    */
-    tmpl_ThreeVectorFloat cross;
+/*  NaN is defined here.                                                      */
+#include <libtmpl/include/tmpl_math.h>
 
-    /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
-    cross.dat[1] = P.dat[2]*Q.dat[0] - P.dat[0]*Q.dat[2];
-    cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
-    return cross;
+/*  Function that normalizes non-zero three dimensional vectors.              */
+tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Normalize(tmpl_ThreeVectorLongDouble P)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    long double rcpr_norm;
+    tmpl_ThreeVectorLongDouble P_normalized;
+
+    /*  Get the norm of the input vector P.                                   */
+    const long double norm = tmpl_3DLDouble_Norm(P);
+
+    /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
+    if (norm == 0.0L)
+    {
+        P_normalized.dat[0] = TMPL_NANL;
+        P_normalized.dat[1] = TMPL_NANL;
+        P_normalized.dat[2] = TMPL_NANL;
+    }
+    else
+    {
+        /*  Compute the reciprocal of the norm. Precomputing a division and   *
+         *  using multiplication later is faster than repeated division.      */
+        rcpr_norm = 1.0L / norm;
+
+        /*  Compute the components of the normalized vector.                  */
+        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
+        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
+        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
+    }
+    /*  End of if (norm == 0.0).                                              */
+
+    return P_normalized;
 }
-/*  End of tmpl_3DFloat_Cross_Product.                                        */
+/*  End of tmpl_3DDouble_Normalize.                                           */

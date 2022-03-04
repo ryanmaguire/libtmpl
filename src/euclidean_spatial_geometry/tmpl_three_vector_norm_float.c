@@ -16,41 +16,51 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_three_vector_cross_product_float                    *
+ *                        tmpl_three_vector_norm_double                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at single precision.                                           *
+ *      Contains code for the Euclidean norm at double precision.             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Cross_Product                                            *
+ *      tmpl_3DDouble_Norm                                                    *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at single precision.        *
+ *      Computes the Euclidean norm, also called the L2 norm, of the input.   *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      P (tmpl_ThreeVectorDouble):                                           *
  *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another vector in R^3.                                            *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorFloat):                                        *
- *          The cross product PxQ.                                            *
+ *      norm (double):                                                        *
+ *          The Euclidean norm of P.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
- *          x = PyQz - PzQy                                                   *
- *          y = PzQx - PxQz                                                   *
- *          z = PxQy - PyQx                                                   *
+ *      The Euclidean norm, also called the L2 norm of a vector P = (x, y, z) *
+ *      is defined as:                                                        *
+ *                                                                            *
+ *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
+ *                                                                            *
+ *      The computation of x^2, y^2, and z^2 may result in an overflow        *
+ *      yielding an answer of infinity even if the norm is less than DBL_MAX. *
+ *      To avoid this, compute the max of |x|, |y|, and |z|. Suppose |x| is   *
+ *      the max, we then set:                                                 *
+ *                                                                            *
+ *          t = |x|                                                           *
+ *          u = |y| / |x|                                                     *
+ *          v = |z| / |x|                                                     *
+ *                                                                            *
+ *      The norm is then computed as:                                         *
+ *                                                                            *
+ *          ||P|| = t * sqrt(1 + u^2 + v^2)                                   *
+ *                                                                            *
+ *      If |y| / |x| or |z| / |x| results in an underflow the value is still  *
+ *      accurate to double precision. The variables are checked to see if all *
+ *      are zero to avoid division by zero.                                   *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
- *                                                                            *
- *      The macro tmpl_Cross_Productf is an alias for this function.          *
+ *      The macro tmpl_3D_Dot_Product is an alias for this function.          *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -77,24 +87,68 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2022/03/02: Ryan Maguire                                                  *
+ *  2022/03/03: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *      Changed routine to be safer, ensuring overflow does not occur in any  *
+ *      intermediate steps.                                                   *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing the cross product of vectors at single precision.  */
-tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
-{
-    /*  Declare a variable for the output.                                    */
-    tmpl_ThreeVectorFloat cross;
+/*  Square root function found here.                                          */
+#include <libtmpl/include/tmpl_math.h>
 
-    /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
-    cross.dat[1] = P.dat[2]*Q.dat[0] - P.dat[0]*Q.dat[2];
-    cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
-    return cross;
+/*  Function for computing the length of three dimensional vectors.           */
+float tmpl_3DFloat_Norm(tmpl_ThreeVectorFloat P)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    float x, y, z, t, u, v, rcpr_t;
+
+    x = tmpl_Float_Abs(P.dat[0]);
+    y = tmpl_Float_Abs(P.dat[1]);
+    z = tmpl_Float_Abs(P.dat[2]);
+
+    if (x < y)
+    {
+        if (y < z)
+        {
+            t = z;
+            u = x;
+            v = y;
+        }
+        else
+        {
+            t = y;
+            u = x;
+            v = z;
+        }
+    }
+    else
+    {
+        if (x < z)
+        {
+            t = z;
+            u = x;
+            v = y;
+        }
+        else
+        {
+            t = x;
+            u = x;
+            v = z;
+        }
+    }
+
+    if (t == 0.0F)
+        return 0.0F;
+
+    rcpr_t = 1.0F / t;
+    u *= rcpr_t;
+    v *= rcpr_t;
+
+    /*  Use the Pythagorean formula to compute the norm and return.           */
+    return t*tmpl_Float_Sqrt(1.0F + u*u + v*v);
 }
-/*  End of tmpl_3DFloat_Cross_Product.                                        */
+/*  End of tmpl_3DFloat_Norm.                                                 */
+

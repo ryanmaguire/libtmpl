@@ -16,41 +16,38 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_three_vector_cross_product_float                    *
+ *                     tmpl_three_vector_fast_norm_float                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at single precision.                                           *
+ *      Contains code for the Euclidean norm at single precision without      *
+ *      checking for overflows, and avoiding if-then nests and divisions.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Cross_Product                                            *
+ *      tmpl_3DFloat_Fast_Norm                                                *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at single precision.        *
+ *      Computes the Euclidean norm, also called the L2 norm, of the input.   *
  *  Arguments:                                                                *
  *      P (tmpl_ThreeVectorFloat):                                            *
  *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another vector in R^3.                                            *
  *  Output:                                                                   *
- *      cross (tmpl_ThreeVectorFloat):                                        *
- *          The cross product PxQ.                                            *
+ *      norm (float):                                                         *
+ *          The Euclidean norm of P.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
- *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
- *          x = PyQz - PzQy                                                   *
- *          y = PzQx - PxQz                                                   *
- *          z = PxQy - PyQx                                                   *
+ *      Use the definition of the Euclidean norm. If P = (x, y, z), we have:  *
+ *                                                                            *
+ *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
+ *                                                                            *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The cross product is not commutative, but anti-commutative. That is,  *
- *      PxQ = -QxP. The order of P and Q matters for this function.           *
+ *      Values larger than sqrt(DBL_MAX) will overflow, resulting in an inf   *
+ *      output. Use tmpl_3DDouble_Norm for large values.                      *
  *                                                                            *
- *      The macro tmpl_Cross_Productf is an alias for this function.          *
+ *      The macro tmpl_3D_Fast_Norm is an alias for this function.            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -77,24 +74,24 @@
  ******************************************************************************
  *                             Revision History                               *
  ******************************************************************************
- *  2022/03/02: Ryan Maguire                                                  *
+ *  2022/03/03: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *      Changed routine to be safer, ensuring overflow does not occur in any  *
+ *      intermediate steps.                                                   *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing the cross product of vectors at single precision.  */
-tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
-{
-    /*  Declare a variable for the output.                                    */
-    tmpl_ThreeVectorFloat cross;
+/*  Square root function found here.                                          */
+#include <libtmpl/include/tmpl_math.h>
 
-    /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
-    cross.dat[1] = P.dat[2]*Q.dat[0] - P.dat[0]*Q.dat[2];
-    cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
-    return cross;
+/*  Function for computing the length of three dimensional vectors.           */
+float tmpl_3DFloat_Fast_Norm(tmpl_ThreeVectorFloat P)
+{
+    /*  Use the pythagorean formula and return.                               */
+    return tmpl_Float_Sqrt(P.dat[0]*P.dat[0] +
+                           P.dat[1]*P.dat[1] +
+                           P.dat[2]*P.dat[2]);
 }
-/*  End of tmpl_3DFloat_Cross_Product.                                        */
+/*  End of tmpl_3DFloat_Norm.                                                 */
