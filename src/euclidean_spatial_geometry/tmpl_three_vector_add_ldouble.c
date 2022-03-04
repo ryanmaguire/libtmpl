@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DLDouble_Cross_Product                                          *
+ *      tmpl_3DLDouble_Add                                                    *
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at long double precision.      *
  *  Arguments:                                                                *
@@ -46,7 +46,7 @@
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_Add is an alias for this function.                  *
+ *      The macro tmpl_3D_Addl is an alias for this function.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -94,4 +94,3 @@ tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q)
     return sum;
 }
 /*  End of tmpl_3DLDouble_Add.                                                */
-

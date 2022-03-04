@@ -49,6 +49,8 @@
  *                                                                            *
  *      The cross product is not commutative, but anti-commutative. That is,  *
  *      PxQ = -QxP. The order of P and Q matters for this function.           *
+ *                                                                            *
+ *      The macro tmpl_Cross_Productl is an alias for this function.          *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************

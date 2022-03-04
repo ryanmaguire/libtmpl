@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_float                         *
+ *                    tmpl_three_vector_dot_product_float                     *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for the Euclidean dot product at single precision.      *
@@ -43,6 +43,8 @@
  *          dot = PxQx + PyQy + PzQz                                          *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
+ *                                                                            *
+ *      The macro tmpl_3D_Dot_Productf is an alias for this function.         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************

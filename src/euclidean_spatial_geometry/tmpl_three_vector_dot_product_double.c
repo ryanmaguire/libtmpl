@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_double                        *
+ *                    tmpl_three_vector_dot_product_double                    *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for the Euclidean dot product at double precision.      *
