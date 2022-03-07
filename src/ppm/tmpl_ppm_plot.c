@@ -16,10 +16,10 @@
 #define WHITE (unsigned char)255
 
 /*  Routine for plotting the absolute value function.                         */
-void tmpl_Easy_Real_Plots(const char *func_name, double (*f)(double),
-                          unsigned int x_size, unsigned int y_size,
-                          const double x_min, const double x_max,
-                          const double y_min, const double y_max)
+void tmpl_PPM_Plot(const char *func_name, double (*f)(double),
+                   unsigned int x_size, unsigned int y_size,
+                   const double x_min, const double x_max,
+                   const double y_min, const double y_max)
 {
 
     /*  Set a parameter for the thickness of the curve and the axes.          */

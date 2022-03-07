@@ -11,15 +11,15 @@
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_ppm.h>
 
-void tmpl_Easy_Complex_Plots(const char *func_name,
-                             tmpl_ComplexDouble(*func)(tmpl_ComplexDouble),
-                             unsigned int x_size, unsigned int y_size,
-                             const double x_min, const double x_max,
-                             const double y_min, const double y_max)
+void tmpl_PPM_Complex_Plot(const char *func_name,
+                           tmpl_ComplexDouble(*func)(tmpl_ComplexDouble),
+                           unsigned int x_size, unsigned int y_size,
+                           const double x_min, const double x_max,
+                           const double y_min, const double y_max)
 {
     unsigned int x, y;
     FILE *fp[4];
-    char re_file[100], im_file[100], arg_file[100], mag_file[100];
+    char re_file[256], im_file[256], arg_file[256], mag_file[256];
     double x_rcp_factor, y_rcp_factor;
     tmpl_ComplexDouble z, w;
     double z_x, z_y, w_x, w_y;
@@ -113,11 +113,11 @@ void tmpl_Easy_Complex_Plots(const char *func_name,
             mag = tmpl_CDouble_Abs(w);
 
             /*  Color the current pixel.                                      */
-            tmpl_Write_PPM_Color(fp[0], tmpl_RGB_Scaled_Gradient(w_x));
-            tmpl_Write_PPM_Color(fp[1], tmpl_RGB_Scaled_Gradient(w_y));
-            tmpl_Write_PPM_Color(fp[2], tmpl_RGB_Scaled_Gradient(mag));
-            tmpl_Write_PPM_Color(
-                fp[3], tmpl_RGB_Linear_Gradient(arg, -tmpl_One_Pi, tmpl_One_Pi)
+            tmpl_PPM_Write_Color(fp[0], tmpl_PPM_Scaled_Gradient(w_x));
+            tmpl_PPM_Write_Color(fp[1], tmpl_PPM_Scaled_Gradient(w_y));
+            tmpl_PPM_Write_Color(fp[2], tmpl_PPM_Scaled_Gradient(mag));
+            tmpl_PPM_Write_Color(
+                fp[3], tmpl_PPM_Linear_Gradient(arg, -tmpl_One_Pi, tmpl_One_Pi)
             );
         }
     }
