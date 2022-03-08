@@ -39,9 +39,8 @@ FUNCTION BESSEL_J0, x
     result = DBLARR(n)
 
     ; Use 'call_external' to pass the IDL parameters to the C code.
-    s = CALL_EXTERNAL('./tmpl_idl_bessel_j0.so', $
-                      'tmpl_IDL_Bessel_J0',      $
-                       x, n, result)
+    s = CALL_EXTERNAL('/usr/local/lib/libtmpidl.so', $
+    		      'tmpidl_Bessel_J0', x, n, result)
 
     ; The output has been stored in result, so return this.
     RETURN, result
@@ -50,14 +49,14 @@ END
 ; A little test for comparing the libtmpl Bessel J0 with
 ; IDL's built-in version.
 PRO TEST
-    x = DINDGEN(100000)*0.001
+    x = DINDGEN(1000000)*0.001
 
     t1  = SYSTIME(/SECONDS)
     y_c = BESSEL_J0(x)
     t2  = SYSTIME(/SECONDS)
 
     t3    = SYSTIME(/SECONDS)
-    y_idl = BESELJ(x, 0)
+    y_idl = BESELJ(x, 0, /DOUBLE)
     t4    = SYSTIME(/SECONDS)
 
     PRINT, "C Time:   ", t2-t1

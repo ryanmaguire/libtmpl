@@ -51,7 +51,7 @@
  ******************************************************************************
  *  1.) tmpl_ppm.h:                                                           *
  *          Header file containing function prototype and PPM color data type.*
- *  2.) stido.h:                                                              *
+ *  2.) stdio.h:                                                              *
  *          Standard C library header file containing the FILE data type.     *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *

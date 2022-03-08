@@ -16,43 +16,37 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_ppm_write_color_from_values                      *
+ *                            tmpl_ppm_scale_color                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Write a color to a PPM file using the explicit RGB values.            *
+ *      Scales the RGB values of a color by a real numbe.                     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_PPM_Write_Color_From_Values                                      *
+ *      tmpl_PPM_Scale_Color                                                  *
  *  Purpose:                                                                  *
- *      Write a color in RGB format to a PPM file.                            *
+ *      Scale the individual components of an RGB color by a real number.     *
  *  Arguments:                                                                *
- *      fp (FILE *):                                                          *
- *          The file the color is being written to.                           *
  *      color (tmpl_PPM_Color):                                               *
- *          The color being written to the file.                              *
+ *          The color being scaled.                                           *
+ *      t (double):                                                           *
+ *          The number being used to scale the color.                         *
  *  Output:                                                                   *
- *      None (void).                                                          *
+ *      scaled (tmpl_PPM_Color):                                              *
+ *          The scaled color. The components (r, g, b) become (tr, tg, tb).   *
  *  Called Functions:                                                         *
- *      fputc (stdio.h):                                                      *
- *          Function for printing a byte (char) to a file.                    *
+ *      None.                                                                 *
  *  Method:                                                                   *
- *      Use fputc and write the contents of the RGB color byte-by-byte.       *
+ *      Multiply the individual components by t and convert back to char's.   *
  *  Notes:                                                                    *
- *      It is assumed the input FILE pointer has been opened and may be       *
- *      written to. No check for a NULL pointer is performed. Improper use    *
- *      of this function may lead to segmentation faults.                     *
- *                                                                            *
- *      This function assumes the PPM is in binary format. Text-based PPM     *
- *      files should use tmpl_PPM_Print_Color_From_Values.                    *
+ *      If t*r, t*g, or t*b overflow, the result is mod UCHAR_MAX. For 8-bit  *
+ *      unsigned char, this is 255.                                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_ppm.h:                                                           *
  *          Header file containing function prototype and PPM color data type.*
- *  2.) stdio.h:                                                              *
- *          Standard C library header file containing the FILE data type.     *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -70,23 +64,27 @@
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 7, 2022                                                 *
+ *  Date:       March87, 2022                                                 *
  ******************************************************************************/
 
 /*  PPM color typedef and function prototype found here.                      */
 #include <libtmpl/include/tmpl_ppm.h>
 
-/*  FILE data type found here.                                                */
-#include <stdio.h>
-
-/*  Function for writing an RGB color to a PPM file.                          */
-void tmpl_PPM_Write_Color_From_Values(FILE *fp,
-                                      unsigned char red,
-                                      unsigned char green,
-                                      unsigned char blue)
+/*  Function for scaling an RGB color by a real number.                       */
+tmpl_PPM_Color tmpl_PPM_Scale_Color(tmpl_PPM_Color color, double t)
 {
-    fputc(red, fp);
-    fputc(green, fp);
-    fputc(blue, fp);
+    /*  Variable for the output, the scaled color.                            */
+    tmpl_PPM_Color scaled;
+
+    /*  Convert the RGB values to double and scale the by the input t.        */
+    const double r = t * (double)color.red;
+    const double g = t * (double)color.green;
+    const double b = t * (double)color.blue;
+
+    /*  Convert these values back to unsigned char and return.                */
+    scaled.red = (unsigned char)r;
+    scaled.green = (unsigned char)g;
+    scaled.blue = (unsigned char)b;
+    return scaled;
 }
-/*  End of tmpl_PPM_Write_Color_From_Values.                                  */
+/*  End of tmpl_PPM_Scale_Color.                                              */

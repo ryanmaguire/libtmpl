@@ -28,11 +28,9 @@
 #include <libtmpl/include/tmpl_special_functions.h>
 #include <stdio.h>
 
-void tmpl_IDL_Bessel_J0(int argc, void *argv[]);
-
 /*  This function will be callable from IDL via the string                    *
  *  'tmpl_IDL_Bessel_J0' using the CALL_EXTERNAL routine.                     */
-void tmpl_IDL_Bessel_J0(int argc, void *argv[])
+void tmpidl_Bessel_J0(int argc, void *argv[])
 {
     /*  Declare two double pointers, the input and output for IDL.            */
     double *x, *y;
@@ -57,6 +55,9 @@ void tmpl_IDL_Bessel_J0(int argc, void *argv[])
     size = *(unsigned long *)argv[1];
 
     /*  Loop through each point and compute the Bessel J0 function.           */
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
     for (n = 0U; n < size; ++n)
         y[n] = tmpl_Double_Bessel_J0(x[n]);
 }

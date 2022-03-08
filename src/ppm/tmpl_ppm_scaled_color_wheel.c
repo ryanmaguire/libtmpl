@@ -1,7 +1,7 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_ppm.h>
 
-tmpl_PPM_Color tmpl_PPM_Scaled_Gradient(double val)
+tmpl_PPM_Color tmpl_PPM_Scaled_Color_Wheel(double val)
 {
     /*  Declare variables for the color. We'll compute the color in RGB       *
      *  format, hence the need for these three variables.                     */
