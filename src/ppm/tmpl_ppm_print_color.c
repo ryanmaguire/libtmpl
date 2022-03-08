@@ -51,7 +51,7 @@
  ******************************************************************************
  *  1.) tmpl_ppm.h:                                                           *
  *          Header file containing function prototype and PPM color data type.*
- *  2.) stido.h:                                                              *
+ *  2.) stdio.h:                                                              *
  *          Standard C library header file containing the FILE data type.     *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -82,6 +82,6 @@
 /*  Function for writing an RGB color to a PPM file.                          */
 void tmpl_PPM_Print_Color(FILE *fp, tmpl_PPM_Color color)
 {
-    fprintf(fp, "%u %u %u\n", color.red, color.blue, color.red);
+    fprintf(fp, "%u %u %u\n", color.red, color.green, color.blue);
 }
 /*  End of tmpl_PPM_Print_Color.                                              */

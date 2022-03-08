@@ -2,7 +2,7 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_ppm.h>
 
-tmpl_PPM_Color tmpl_PPM_Linear_Gradient(double val, double min, double max)
+tmpl_PPM_Color tmpl_PPM_Linear_Color_Wheel(double val, double min, double max)
 {
     double scaled, temp;
     tmpl_PPM_Color out;
