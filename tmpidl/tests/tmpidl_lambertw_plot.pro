@@ -16,37 +16,15 @@
 ;  You should have received a copy of the GNU General Public License           ;
 ;  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.           ;
 ;******************************************************************************;
-;                                tmpidl_lambertw                               ;
-;******************************************************************************;
-;   Purpose:                                                                   ;
-;       Provide IDL wrappers for libtmpl's Lambert W function.                 ;
-;   Input:                                                                     ;
-;       A real array or scalar.                                                ;
-;   Output:                                                                    ;
-;       A real array or scalar, the solution to y(x) = w(y(x))*e^w(y(x))       ;
-;******************************************************************************;
 ;  Author:     Ryan Maguire                                                    ;
 ;  Date:       March 9, 2022                                                   ;
 ;******************************************************************************;
 
-FUNCTION TMPIDL_LAMBERTW, x
+@../src/tmpidl_lambertw
 
-    ; Set error handling.
-    ON_ERROR, 2
-
-    ; libtmpl wants a double, so convert if necessary.
-    IF TYPENAME(x) NE "DOUBLE" THEN in = DOUBLE(x) ELSE in = x
-
-    ; Get the number of elements in the input array.
-    n = ULONG(N_ELEMENTS(in))
-
-    ; Create an empty array to store the values.
-    out = DBLARR(n)
-
-    ; Use 'CALL_EXTERNAL' to pass the IDL parameters to the C code.
-    s = CALL_EXTERNAL('/usr/local/lib/libtmpidl.so', $
-                      'tmpidl_LambertW', in, n, out)
-
-    ; The output has been stored in out, so return this.
-    RETURN, out
+PRO MAKE_PLOT
+    RCPR_E = EXP(-1.0D, /DOUBLE)
+    x = DINDGEN(1000001) / 1.0D5 - RCPR_E
+    y = TMPIDL_LAMBERTW(x)
+    PLOT, x, y, XRANGE = [-RCPR_E, 10.0 - RCPR_E], /XSTYLE
 END

@@ -18,8 +18,12 @@
 ;******************************************************************************;
 ;                              tmpidl_fresnel_cos                              ;
 ;******************************************************************************;
-;  Purpose:                                                                    ;
-;      Provide IDL wrappers for libtmpl's Fresnel Cosine function.             ;
+;   Purpose:                                                                   ;
+;       Provide IDL wrappers for libtmpl's Fresnel Cosine function.            ;
+;   Input:                                                                     ;
+;       A real array or scalar.                                                ;
+;   Output:                                                                    ;
+;       A real array or scalar, the Fresnel Cosine of the input.               ;
 ;******************************************************************************;
 ;  Author:     Ryan Maguire                                                    ;
 ;  Date:       March 9, 2022                                                   ;
@@ -27,16 +31,19 @@
 
 FUNCTION TMPIDL_FRESNEL_COS, x
 
+    ; Set error handling.
+    ON_ERROR, 2
+
     ; libtmpl wants a double, so convert if necessary.
     IF TYPENAME(x) NE "DOUBLE" THEN in = DOUBLE(x) ELSE in = x
 
     ; Get the number of elements in the input array.
-    n = LONG(N_ELEMENTS(x))
+    n = ULONG(N_ELEMENTS(in))
 
     ; Create an empty array to store the values.
     out = DBLARR(n)
 
-    ; Use 'call_external' to pass the IDL parameters to the C code.
+    ; Use 'CALL_EXTERNAL' to pass the IDL parameters to the C code.
     s = CALL_EXTERNAL('/usr/local/lib/libtmpidl.so', $
                       'tmpidl_Fresnel_Cos', in, n, out)
 
