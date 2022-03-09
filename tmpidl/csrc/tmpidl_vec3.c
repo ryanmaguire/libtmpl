@@ -34,7 +34,7 @@
 extern void tmpidl_Vec3_Norm(int argc, void *argv[]);
 
 /*  Function for computing the 3D Euclidean norm of a 2D array.               */
-void tmpidl_Vec2_Norm(int argc, void *argv[])
+void tmpidl_Vec3_Norm(int argc, void *argv[])
 {
     /*  Pointers for the input and output data.                               */
     tmpl_ThreeVector *in;
