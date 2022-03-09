@@ -22,17 +22,17 @@
 
 TARGET_LIB := libtmpidl.so
 BUILD_DIR := ./build
-SRC_DIRS := .
+SRC_DIRS := ./csrc
 SRCS := $(shell find $(SRC_DIRS) -name "*.c")
 OBJS := $(SRCS:%.c=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 ifdef omp
-	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG
-	LFLAGS := -O3 -flto -fopenmp -shared
+	CFLAGS := $(CFLAGS) -O3 -fPIC -flto -fopenmp -DNDEBUG
+	LFLAGS := -O3 -flto -fopenmp -shared -ltmpl
 else
-	CFLAGS := $(CFLAGS) -MMD -MP -I../ -O3 -fPIC -flto -DNDEBUG
-	LFLAGS := -O3 -flto -shared
+	CFLAGS := $(CFLAGS) -O3 -fPIC -flto -DNDEBUG
+	LFLAGS := -O3 -flto -shared -ltmpl
 endif
 
 .PHONY: clean install uninstall all
@@ -44,16 +44,18 @@ $(TARGET_LIB): $(OBJS)
 
 $(BUILD_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f $(TARGET_LIB)
 
 install:
-	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
+	mv $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
 
 uninstall:
 	rm -rf $(BUILD_DIR)
+	rm -f $(TARGET_LIB)
 	rm -f /usr/local/lib/$(TARGET_LIB)
 
 -include $(DEPS)
