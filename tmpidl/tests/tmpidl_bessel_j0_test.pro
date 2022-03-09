@@ -26,14 +26,14 @@
 ;******************************************************************************;
 
 ; IDL wrappers are located here. @ is IDL's equivalent of #include.
-@../tmpidl_special_functions
+@../src/tmpidl_bessel_j0
 
 ; A test for comparing the tmpidl Bessel J0 with IDL's built-in version.
 PRO TEST
     x = DINDGEN(10000001) * 0.0001
 
     t1  = SYSTIME(/SECONDS)
-    y_c = BESSEL_J0(x)
+    y_c = TMPIDL_BESSEL_J0(x)
     t2  = SYSTIME(/SECONDS)
 
     t3    = SYSTIME(/SECONDS)
