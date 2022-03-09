@@ -65,6 +65,26 @@ FUNCTION BESSEL_J0, x
     RETURN, result
 END
 
+; Function for computing the Lambert W function via the library libtmpl.
+FUNCTION LAMBERTW, x
+
+    ; libtmpl wants a double, so convert if necessary.
+    x = DOUBLE(x)
+
+    ; Get the number of elements in the input array.
+    n = LONG(N_ELEMENTS(x))
+
+    ; Create an empty array to store the values.
+    result = DBLARR(n)
+
+    ; Use 'call_external' to pass the IDL parameters to the C code.
+    s = CALL_EXTERNAL('/usr/local/lib/libtmpidl.so', $
+                      'tmpidl_LambertW', x, n, result)
+
+    ; The output has been stored in result, so return this.
+    RETURN, result
+END
+
 ; Function for computing the Bessel I0 function via the library libtmpl.
 FUNCTION FRESNEL_COS, x
 
