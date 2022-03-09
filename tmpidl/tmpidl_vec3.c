@@ -19,43 +19,44 @@
  *                                 tmpidl_math                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide the math sublibrary of libtmpl for IDL users.                 *
+ *      Provide the 3D geometry sublibrary of libtmpl for IDL users.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 9, 2022                                                 *
  ******************************************************************************/
 
-/*  Math functions found here.                                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Geometry routines found here.                                             */
+#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  IDL's ULONG is 32-bits. Use stdint for portability.                       */
 #include <stdint.h>
 
-extern void tmpidl_Log(int argc, void *argv[]);
+extern void tmpidl_Vec3_Norm(int argc, void *argv[]);
 
-/*  IDL wrapper for the Log function.                                         */
-void tmpidl_Log(int argc, void *argv[])
+/*  Function for computing the 3D Euclidean norm of a 2D array.               */
+void tmpidl_Vec2_Norm(int argc, void *argv[])
 {
-    /*  Declare two double pointers, the input and output for IDL.            */
-    double *x, *y;
+    /*  Pointers for the input and output data.                               */
+    tmpl_ThreeVector *in;
+    double *out;
 
-    /*  Size is the size of the input IDL array.                              */
+    /*  Variable for indexing and for the total number of elements            */
     uint32_t n, size;
 
-    /*  We're expecting three inputs, so check this.                          */
+    /*  We're expecting 3 inputs from IDL.                                    */
     if (argc != 3)
         return;
 
-    /*  Get the parameters passed from IDL.                                   */
-    x = (double *)argv[0];
-    y = (double *)argv[2];
+    /*  Extract the data.                                                     */
+    in = (tmpl_ThreeVector *)argv[0];
     size = *(uint32_t *)argv[1];
+    out = (double *)argv[2];
 
-    /*  Loop through each point and compute the function for every value.     */
+    /*  Loop through the data and perform the computation.                    */
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-    for (n = 0U; n < size; ++n)
-        y[n] = tmpl_Double_Log(x[n]);
+    for (n = 0UL; n < size; ++n)
+        out[n] = tmpl_3DDouble_Norm(in[n]);
 }
-/*  End of tmpidl_Log.                                                        */
+/*  End of tmpidl_Vec2_Norm.                                                  */

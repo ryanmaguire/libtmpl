@@ -28,6 +28,9 @@
 /*  All special functions functions are found here.                           */
 #include <libtmpl/include/tmpl_special_functions.h>
 
+/*  IDL's ULONG is 32-bits. Use stdint for portability.                       */
+#include <stdint.h>
+
 extern void tmpidl_Bessel_J0(int argc, void *argv[]);
 extern void tmpidl_Bessel_I0(int argc, void *argv[]);
 extern void tmpidl_LambertW(int argc, void *argv[]);
@@ -41,7 +44,7 @@ void tmpidl_Bessel_I0(int argc, void *argv[])
     double *x, *y;
 
     /*  Size is the size of the input IDL array.                              */
-    unsigned long n, size;
+    uint32_t n, size;
 
     /*  We're expecting three inputs, so check this.                          */
     if (argc != 3)
@@ -50,7 +53,7 @@ void tmpidl_Bessel_I0(int argc, void *argv[])
     /*  Get the parameters passed from IDL.                                   */
     x = (double *)argv[0];
     y = (double *)argv[2];
-    size = *(unsigned long *)argv[1];
+    size = *(uint32_t *)argv[1];
 
     /*  Loop through each point and compute the function for every value.     */
 #ifdef _OPENMP
@@ -68,7 +71,7 @@ void tmpidl_Bessel_J0(int argc, void *argv[])
     double *x, *y;
 
     /*  Size is the size of the input IDL array.                              */
-    unsigned long n, size;
+    uint32_t n, size;
 
     /*  We're expecting three inputs, so check this.                          */
     if (argc != 3)
@@ -77,7 +80,7 @@ void tmpidl_Bessel_J0(int argc, void *argv[])
     /*  Get the parameters passed from IDL.                                   */
     x = (double *)argv[0];
     y = (double *)argv[2];
-    size = *(unsigned long *)argv[1];
+    size = *(uint32_t *)argv[1];
 
     /*  Loop through each point and compute the function for every value.     */
 #ifdef _OPENMP
@@ -95,7 +98,7 @@ void tmpidl_Fresnel_Cos(int argc, void *argv[])
     double *x, *y;
 
     /*  Size is the size of the input IDL array.                              */
-    unsigned long n, size;
+    uint32_t n, size;
 
     /*  We're expecting three inputs, so check this.                          */
     if (argc != 3)
@@ -104,7 +107,7 @@ void tmpidl_Fresnel_Cos(int argc, void *argv[])
     /*  Get the parameters passed from IDL.                                   */
     x = (double *)argv[0];
     y = (double *)argv[2];
-    size = *(unsigned long *)argv[1];
+    size = *(uint32_t *)argv[1];
 
     /*  Loop through each point and compute the function for every value.     */
 #ifdef _OPENMP
@@ -122,7 +125,7 @@ void tmpidl_Fresnel_Sin(int argc, void *argv[])
     double *x, *y;
 
     /*  Size is the size of the input IDL array.                              */
-    unsigned long n, size;
+    uint32_t n, size;
 
     /*  We're expecting three inputs, so check this.                          */
     if (argc != 3)
@@ -131,7 +134,7 @@ void tmpidl_Fresnel_Sin(int argc, void *argv[])
     /*  Get the parameters passed from IDL.                                   */
     x = (double *)argv[0];
     y = (double *)argv[2];
-    size = *(unsigned long *)argv[1];
+    size = *(uint32_t *)argv[1];
 
     /*  Loop through each point and compute the function for every value.     */
 #ifdef _OPENMP
@@ -149,7 +152,7 @@ void tmpidl_LambertW(int argc, void *argv[])
     double *x, *y;
 
     /*  Size is the size of the input IDL array.                              */
-    unsigned long n, size;
+    uint32_t n, size;
 
     /*  We're expecting three inputs, so check this.                          */
     if (argc != 3)
@@ -158,7 +161,7 @@ void tmpidl_LambertW(int argc, void *argv[])
     /*  Get the parameters passed from IDL.                                   */
     x = (double *)argv[0];
     y = (double *)argv[2];
-    size = *(unsigned long *)argv[1];
+    size = *(uint32_t *)argv[1];
 
     /*  Loop through each point and compute the function for every value.     */
 #ifdef _OPENMP
