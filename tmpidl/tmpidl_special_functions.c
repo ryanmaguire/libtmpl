@@ -88,33 +88,6 @@ void tmpidl_Bessel_J0(int argc, void *argv[])
 }
 /*  End of tmpidl_Bessel_J0.                                                  */
 
-/*  IDL wrapper for the Lambert W function.                                   */
-void tmpidl_LambertW(int argc, void *argv[])
-{
-    /*  Declare two double pointers, the input and output for IDL.            */
-    double *x, *y;
-
-    /*  Size is the size of the input IDL array.                              */
-    unsigned long n, size;
-
-    /*  We're expecting three inputs, so check this.                          */
-    if (argc != 3)
-        return;
-
-    /*  Get the parameters passed from IDL.                                   */
-    x = (double *)argv[0];
-    y = (double *)argv[2];
-    size = *(unsigned long *)argv[1];
-
-    /*  Loop through each point and compute the function for every value.     */
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
-    for (n = 0U; n < size; ++n)
-        y[n] = tmpl_Double_LambertW(x[n]);
-}
-/*  End of tmpidl_LambertW.                                                   */
-
 /*  IDL wrapper for the Fresnel Cosine function.                              */
 void tmpidl_Fresnel_Cos(int argc, void *argv[])
 {
@@ -168,3 +141,30 @@ void tmpidl_Fresnel_Sin(int argc, void *argv[])
         y[n] = tmpl_Double_Fresnel_Sin(x[n]);
 }
 /*  End of tmpidl_Fresnel_Sin.                                                */
+
+/*  IDL wrapper for the Lambert W function.                                   */
+void tmpidl_LambertW(int argc, void *argv[])
+{
+    /*  Declare two double pointers, the input and output for IDL.            */
+    double *x, *y;
+
+    /*  Size is the size of the input IDL array.                              */
+    unsigned long n, size;
+
+    /*  We're expecting three inputs, so check this.                          */
+    if (argc != 3)
+        return;
+
+    /*  Get the parameters passed from IDL.                                   */
+    x = (double *)argv[0];
+    y = (double *)argv[2];
+    size = *(unsigned long *)argv[1];
+
+    /*  Loop through each point and compute the function for every value.     */
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (n = 0U; n < size; ++n)
+        y[n] = tmpl_Double_LambertW(x[n]);
+}
+/*  End of tmpidl_LambertW.                                                   */
