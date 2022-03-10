@@ -327,6 +327,35 @@ tmpl_PPM_Linear_Color_Wheel(double val, double min, double max);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_PPM_Normalized_Linear_Gradient                                   *
+ *  Purpose:                                                                  *
+ *      Given a number between min and max, return a color based on a linear  *
+ *      gradient of blue -> cyan -> green -> yellow -> red. The colors are    *
+ *      normalized to have constant magnitude of UCHAR_MAX along the gradient.*
+ *  Arguments:                                                                *
+ *      val (double):                                                         *
+ *          The value we're computing the color of. Values close to (or less  *
+ *          than) min are blue, values closer to (or greater than) max are    *
+ *          red.                                                              *
+ *      min (double):                                                         *
+ *          The minimum value in the scale. Values less than min are red.     *
+ *      max (double):                                                         *
+ *          The maximum value in the scale. Values greater than max are blue. *
+ *  Output:                                                                   *
+ *      color (tmpl_PPM_Color).                                               *
+ *          The output color.                                                 *
+ *  Notes:                                                                    *
+ *      NaN returns black.                                                    *
+ *  Source Code:                                                              *
+ *      libtmpl/src/ppm/tmpl_ppm_normalized_linear_gradient.c                 *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
+ ******************************************************************************/
+extern tmpl_PPM_Color
+tmpl_PPM_Normalized_Linear_Gradient(double val, double min, double max);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_PPM_Linear_Gradient                                              *
  *  Purpose:                                                                  *
  *      Given a number between min and max, return a color based on a linear  *
