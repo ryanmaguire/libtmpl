@@ -82,7 +82,7 @@
 #include <libtmpl/include/tmpl.h>
 
 /*  Definition of the generic function object is here.                        */
-#include "tmpyl_common.h"
+#include <libtmpyl/include/tmpyl_common.h>
 
 /*  If numpy is available, we'll need to include the numpy header files.      */
 #if defined(TMPYL_HAS_NUMPY) && TMPYL_HAS_NUMPY == 1
@@ -145,7 +145,7 @@ tmpyl_Get_Py_Out_From_NumpyArray(PyObject *x,
      *  numpy array. The numpy documentation states it is safe to perform     *
      *  such a cast.                                                          */
     x_as_arr = (PyArrayObject *)x;
-    
+
     /*  Check the input to make sure it is valid. tmpyl only accepts          *
      *  1 dimensional numpy arrays.                                           */
     if (PyArray_NDIM(x_as_arr) != 1)

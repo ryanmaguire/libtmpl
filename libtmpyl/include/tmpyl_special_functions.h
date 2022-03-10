@@ -3,7 +3,7 @@
 
 #include <Python.h>
 #include <libtmpl/include/tmpl.h>
-#include "tmpyl_common.h"
+#include <libtmpyl/include/tmpyl_common.h>
 
 extern PyObject *tmpyl_besselI0(PyObject *self, PyObject *args);
 extern PyObject *tmpyl_besselJ0(PyObject *self, PyObject *args);

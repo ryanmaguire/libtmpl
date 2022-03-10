@@ -1,5 +1,5 @@
 
-#include "tmpyl_special_functions.h"
+#include <libtmpyl/include/tmpyl_special_functions.h>
 
 /*  Python wrapper for the Bessel I0 function from libtmpl.                   */
 PyObject *tmpyl_besselI0(PyObject *self, PyObject *args)
