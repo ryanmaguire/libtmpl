@@ -72,8 +72,8 @@
 #endif
 
 /*  All of the needed Python-to-C tools are defined in these header files.    */
-#include "tmpyl_common.h"
-#include "tmpyl_special_functions.h"
+#include <libtmpyl/include/tmpyl_common.h>
+#include <libtmpyl/include/tmpyl_special_functions.h>
 
 /*  All of the methods of the tmpyl module are defined in this array.         */
 static PyMethodDef tmpyl_methods[] =
