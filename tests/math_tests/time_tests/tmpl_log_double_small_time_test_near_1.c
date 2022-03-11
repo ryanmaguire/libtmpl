@@ -21,6 +21,6 @@
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double, -1.0E4, 1.0E4, 10000000ULL, tmpl_Double_Abs, fabs);
+    RUN_TEST(double, 0.9, 1.1, 10000000ULL, tmpl_Double_Log, log);
     return 0;
 }

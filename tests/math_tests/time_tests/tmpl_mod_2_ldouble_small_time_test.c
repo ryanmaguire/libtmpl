@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -26,7 +26,11 @@ static inline long double fmod2l(long double x)
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(long double, -1.0E4, 1.0E4, 10000000ULL, tmpl_LDouble_Mod_2, fmod2l);
+    RUN_TEST(long double,
+             -1.0E4,
+             1.0E4,
+             10000000ULL,
+             tmpl_LDouble_Mod_2,
+             fmod2l);
     return 0;
 }
-
