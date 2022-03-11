@@ -182,12 +182,41 @@
  *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
  *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
  *                                                                            *
- *      Performance will of course vary on different systems.                 *
+ *      Performance will of course vary on different systems. These tests     *
+ *      had libtmpl built via clang. Building with GCC yields nearly          *
+ *      identical times. Building libtmpl with TCC produced slower times:     *
+ *                                                                            *
+ *          libtmpl: 66.912582 seconds                                        *
+ *          C:       13.422482 seconds                                        *
+ *                                                                            *
+ *      Building libtmpl with PCC had the following:                          *
+ *                                                                            *
+ *          libtmpl: 46.706748 seconds                                        *
+ *          C:       13.351405 seconds                                        *
+ *                                                                            *
  *      All tests were ran using the following options:                       *
  *                                                                            *
  *          gcc -O3 -flto tmpl_log_double_huge_time_test.c -o test -lm -ltmpl *
  *                                                                            *
  *      All tests can be found in libtmpl/tests/math_tests/time_tests/        *
+ *                                                                            *
+ *      Smaller tests were performed using a Windows 10 Virtual Machine. The  *
+ *      results of libtmpl against Microsoft's C Library are as follows:      *
+ *                                                                            *
+ *          start:   1.0000000000000000e-04                                   *
+ *          end:     1.0000000000000000e+06                                   *
+ *          samples: 10000000                                                 *
+ *          libtmpl: 0.064 seconds                                            *
+ *          C:       0.092 seconds                                            *
+ *          max abs error: 7.1054273576010019e-15                             *
+ *          max rel error: 4.2634953389345209e-16                             *
+ *          rms abs error: 1.9900347824366729e-15                             *
+ *          rms rel error: 1.1289387375111485e-16                             *
+ *                                                                            *
+ *      The errors are identical to those for glibc. The performance is about *
+ *      1.43x better. Similar values are found for denormal and large values. *
+ *      GNOME Boxes was used for virtualization. clang-cl was used for this   *
+ *      test. Using MSVC produced the following:                              *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
