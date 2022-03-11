@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -29,4 +29,3 @@ int main(void)
     RUN_TEST(float, -1.0E4F, 1.0E4F, 10000000ULL, tmpl_Float_Mod_2, fmod2f);
     return 0;
 }
-
