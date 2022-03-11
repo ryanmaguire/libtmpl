@@ -107,6 +107,9 @@
  *      -std=c18 flags have been passed as well, and no problems were found.  *
  *      If any error or warnings arise on your platform, please report this.  *
  *                                                                            *
+ *                                                                            *
+ *  Accuracy and Performance:                                                 *
+ *                                                                            *
  *      A time and accuracy test yields the following results versus glibc:   *
  *                                                                            *
  *          tmpl_Double_Log vs. log                                           *
@@ -175,8 +178,8 @@
  *      These tests were performed with the following specs:                  *
  *                                                                            *
  *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MAX:  4672.0698 MHz                                               *
  *          MIN:  2200.0000 MHz                                               *
+ *          MAX:  4672.0698 MHz                                               *
  *          ARCH: x86_64                                                      *
  *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
  *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
@@ -203,20 +206,47 @@
  *      Smaller tests were performed using a Windows 10 Virtual Machine. The  *
  *      results of libtmpl against Microsoft's C Library are as follows:      *
  *                                                                            *
+ *          tmpl_Double_Log vs. log                                           *
  *          start:   1.0000000000000000e-04                                   *
  *          end:     1.0000000000000000e+06                                   *
- *          samples: 10000000                                                 *
- *          libtmpl: 0.064 seconds                                            *
- *          C:       0.092 seconds                                            *
- *          max abs error: 7.1054273576010019e-15                             *
- *          max rel error: 4.2634953389345209e-16                             *
- *          rms abs error: 1.9900347824366729e-15                             *
- *          rms rel error: 1.1289387375111485e-16                             *
+ *          samples: 50000000                                                 *
+ *          libtmpl: 0.314 seconds                                            *
+ *          C:       0.463 seconds                                            *
+ *          max abs error: 3.5527136788005009e-15                             *
+ *          max rel error: 8.9467566467383324e-15                             *
+ *          rms abs error: 9.0989260892815339e-16                             *
+ *          rms rel error: 1.0682607458165517e-16                             *
  *                                                                            *
- *      The errors are identical to those for glibc. The performance is about *
- *      1.43x better. Similar values are found for denormal and large values. *
- *      GNOME Boxes was used for virtualization. clang-cl was used for this   *
- *      test. Using MSVC produced the following:                              *
+ *      The errors are similar to those for glibc. The performance is about   *
+ *      1.47x better. Similar values are found for denormal and large values. *
+ *      GNOME Boxes was used for virtualization. libtmpl was built using      *
+ *      clang for this test. Using MSVC yields:                               *
+ *                                                                            *
+ *          samples: 50000000                                                 *
+ *          libtmpl: 0.974 seconds                                            *
+ *          C:       0.409 seconds                                            *
+ *                                                                            *
+ *      Significantly worse.                                                  *
+ *                                                                            *
+ *      Finally, on a FreeBSD 12.2 Virtual Machine (via GNOME Boxes), we have *
+ *      the following. Building libtmpl with FreeBSD's cc:                    *
+ *                                                                            *
+ *          tmpl_Double_Log vs. log                                           *
+ *          start:   1.0000000000000000e-04                                   *
+ *          end:     1.0000000000000000e+06                                   *
+ *          samples: 100000000                                                *
+ *          libtmpl: 0.523438 seconds                                         *
+ *          C:       0.820312 seconds                                         *
+ *          max abs error: 3.5527136788005009e-15                             *
+ *          max rel error: 8.8111997278351631e-15                             *
+ *          rms abs error: 9.0941028467094906e-16                             *
+ *          rms rel error: 1.0677265624885180e-16                             *
+ *                                                                            *
+ *      Building with clang-13 gives:                                         *
+ *                                                                            *
+ *          libtmpl: 0.492188 seconds                                         *
+ *          C:       0.804688 seconds                                         *
+ *                                                                            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
