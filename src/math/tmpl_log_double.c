@@ -48,7 +48,7 @@
  *          normalize by 2^52 if so, and then pass to the main part of the    *
  *          algorithm.                                                        *
  *                                                                            *
- *          For values not in the range 0.995 < x < 1.0, compute log(x) as    *
+ *          For values not in the range 0.95 < x < 1.05, compute log(x) as    *
  *          follows:                                                          *
  *                                                                            *
  *              log(x) = log(1.m * 2^b)                                       *
@@ -81,12 +81,12 @@
  *          number of terms. This alternative sum in is terms of the square   *
  *          of a small value, and has much better convergence.                *
  *                                                                            *
- *          For values slightly less than 1, the computation of (s-1) / (s+1) *
- *          leads to large relative error (about ~10^-6) since log(1) = 0     *
+ *          For values close to 1, the computation of (s-1) / (s+1) leads to  *
+ *          large relative error (about ~10^-8) since log(1) = 0              *
  *          (the absolute error is still around 10^-16). We can achieve much  *
- *          better relative error using the standard Taylor series to seven   *
+ *          better relative error using the standard Taylor series to ten     *
  *          terms. This is slower than the series above, but more accurate in *
- *          this range. That is, for 0.995 < x < 1.0 we use:                  *
+ *          this range. That is, for 0.95 < x < 1.05 we use:                  *
  *                                                                            *
  *                        inf                                                 *
  *                        ----                                                *
@@ -109,15 +109,17 @@
  *                                                                            *
  *      A time and accuracy test yields the following results versus glibc:   *
  *                                                                            *
- *          start:   0.000010                                                 *
- *          end:     1000.000000                                              *
+ *          tmpl_Double_Log vs. log                                           *
+ *          start:   1.0000000000000000e-04                                   *
+ *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
- *          libtmpl: 12.147736 seconds                                        *
- *          glibc:   12.877888 seconds                                        *
- *          max abs error: 1.776356839400250464677811e-15                     *
- *          max rel error: 3.974159232191061493588562e-14                     *
- *          rms abs error: 4.723482256825820120737012e-16                     *
- *          rms rel error: 1.005584744547481228737409e-16                     *
+ *          dx:      3.8231732732340180e-04                                   *
+ *          libtmpl: 12.287552 seconds                                        *
+ *          C:       13.931813 seconds                                        *
+ *          max abs error: 3.5527136788005009e-15                             *
+ *          max rel error: 8.8218232061381792e-15                             *
+ *          rms abs error: 9.0288083896098205e-16                             *
+ *          rms rel error: 7.1724645066645684e-17                             *
  *                                                                            *
  *      The error values assume 100% accuracy in glibc. I believe the         *
  *      documentation states the actual error of glibc's log is less then     *
@@ -130,27 +132,45 @@
  *      double is 2.22044605e-16, and the rms relative error is below this    *
  *      value. If we look at larger values, we get:                           *
  *                                                                            *
- *          start:   100.000000                                               *
- *          end:     1000000.000000                                           *
+ *          tmpl_Double_Log vs. log                                           *
+ *          start:   1.0000000000000000e+02                                   *
+ *          end:     1.0000000000000000e+08                                   *
  *          samples: 2615628245                                               *
- *          libtmpl: 12.848024 seconds                                        *
- *          glibc:   13.344097 seconds                                        *
- *          max abs error: 3.552713678800500929355621e-15                     *
- *          max rel error: 4.249092703851493751745130e-16                     *
- *          rms abs error: 9.014680961494817467426997e-16                     *
- *          rms rel error: 7.161314011139170388755192e-17                     *
+ *          dx:      3.8231694504430619e-02                                   *
+ *          libtmpl: 12.267691 seconds                                        *
+ *          C:       12.621467 seconds                                        *
+ *          max abs error: 7.1054273576010019e-15                             *
+ *          max rel error: 4.2634953389345209e-16                             *
+ *          rms abs error: 1.9900347824366729e-15                             *
+ *          rms rel error: 1.1289387375111485e-16                             *
  *                                                                            *
  *      The function also handles subnormal (denormal) values well:           *
  *                                                                            *
- *          start:   4.940656e-324                                            *
- *          end:     2.225074e-308                                            *
+ *          tmpl_Double_Log vs. log                                           *
+ *          start:   4.9406564584124654e-324                                  *
+ *          end:     2.2250738585072009e-308                                  *
  *          samples: 2615628245                                               *
- *          libtmpl: 20.399479 seconds                                        *
- *          glibc:   26.694451 seconds                                        *
- *          max abs error: 2.273736754432320594787598e-13                     *
- *          max rel error: 3.203426503780625857238163e-16                     *
- *          rms abs error: 7.023668651274727205910219e-14                     *
- *          rms rel error: 9.898239337197008493665686e-17                     *
+ *          dx:      8.5068420527204166e-318                                  *
+ *          libtmpl: 20.185706 seconds                                        *
+ *          C:       24.695628 seconds                                        *
+ *          max abs error: 2.2737367544323206e-13                             *
+ *          max rel error: 3.2034265037806259e-16                             *
+ *          rms abs error: 7.0236686512747269e-14                             *
+ *          rms rel error: 9.8982393371947679e-17                             *
+ *                                                                            *
+ *      The worst error is in the region around 1.                            *
+ *                                                                            *
+ *          tmpl_Double_Log vs. log                                           *
+ *          start:   9.0000000000000002e-01                                   *
+ *          end:     1.1000000000000001e+00                                   *
+ *          samples: 2615628245                                               *
+ *          dx:      7.6463465472326738e-11                                   *
+ *          libtmpl: 12.642206 seconds                                        *
+ *          C:       12.995864 seconds                                        *
+ *          max abs error: 4.8572257327350599e-16                             *
+ *          max rel error: 9.2097825747585990e-15                             *
+ *          rms abs error: 9.6042579543112006e-17                             *
+ *          rms rel error: 1.6879917053984482e-15                             *
  *                                                                            *
  *      These tests were performed with the following specs:                  *
  *                                                                            *
@@ -167,9 +187,7 @@
  *                                                                            *
  *          gcc -O3 -flto tmpl_log_double_huge_time_test.c -o test -lm -ltmpl *
  *                                                                            *
- *      -O3 is optimization level, and -flto is link-time optimization.       *
- *      tmpl_log_double_huge_time_test.c can be found in                      *
- *          libtmpl/tests/math_tests/time_tests/                              *
+ *      All tests can be found in libtmpl/tests/math_tests/time_tests/        *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -198,6 +216,15 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 4, 2022                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2022/03/11: Ryan Maguire                                                  *
+ *      Added more terms for the polynomial in the region around 1. Changed   *
+ *      this region of 0.95 < x < 1.05 instead of 0.995 < x < 1.0. Worst case *
+ *      relative error is 9 x 10^-15. rms error is in this interval is        *
+ *      1 x 10^-15. rms error for all positive real numbers is 1 x 10^-17,    *
+ *      which is less than 1 ULP.                                             *
  ******************************************************************************/
 
 /*  Function prototype found here.                                            */
@@ -351,6 +378,9 @@ static double rcpr[64] = {
 #define ONE_FIFTH 0.20
 #define ONE_SIXTH 0.166666666666666666666666667
 #define ONE_SEVENTH 0.14285714285714285714285714285714
+#define ONE_EIGTH 0.125
+#define ONE_NINTH 0.1111111111111111111111111111111111111111111111
+#define ONE_TENTH 0.1
 
 /*  Function for computing natural log at double precision.                   */
 double tmpl_Double_Log(double x)
@@ -399,12 +429,12 @@ double tmpl_Double_Log(double x)
     else if (w.bits.expo == 0x7FFU)
         return x;
 
-    /*  For values close to but less than 1, the computation of the division  *
+    /*  For values in the region around 1, the computation of the division    *
      *  (x-1)/(x+1) may lose precision and log(x) may have bad relative error *
      *  (it will still have ~10^-16 absolute error since log(1) = 0). To      *
      *  avoid this, use the basic Taylor series for log(1 + (-s)), s = 1 - x, *
      *  and return this. Since 1-x is very small, only a few terms are needed.*/
-    else if (0.995 < w.r && w.r < 1.0)
+    else if (0.95 < w.r && w.r < 1.05)
     {
         s = 1.0 - x;
 
@@ -416,7 +446,13 @@ double tmpl_Double_Log(double x)
                     ONE_THIRD + s * (
                         ONE_FOURTH + s * (
                             ONE_FIFTH + s * (
-                                ONE_SIXTH + s * ONE_SEVENTH
+                                ONE_SIXTH + s * (
+                                    ONE_SEVENTH + s * (
+                                        ONE_EIGTH + s * (
+                                            ONE_NINTH + s * ONE_TENTH
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
@@ -505,6 +541,9 @@ double tmpl_Double_Log(double x)
 #undef ONE_FIFTH
 #undef ONE_SIXTH
 #undef ONE_SEVENTH
+#undef ONE_EIGTH
+#undef ONE_NINTH
+#undef ONE_TENTH
 
 #else
 /*  Else for TMPL_HAS_IEEE754_DOUBLE == 1 and TMPL_USE_MATH_ALGORITHMS == 1.  */
@@ -523,4 +562,3 @@ double tmpl_Double_Log(double x)
 
 #endif
 /*  End of if for TMPL_HAS_IEEE754_DOUBLE and TMPL_USE_MATH_ALGORITHMS.       */
-
