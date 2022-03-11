@@ -103,15 +103,15 @@
  *          end:     1.0000000000000000e+04                                   *
  *          samples: 2615628245                                               *
  *          dx:      3.8231732353846026e-06                                   *
- *          libtmpl: 13.689632 seconds                                        *
- *          C:       8.601256 seconds                                         *
- *          max abs error: 5.6843418860808015e-14                             *
- *          max rel error: 6.6359741442268620e-16                             *
- *          rms abs error: 6.7487215520428957e-15                             *
- *          rms rel error: 9.4046566544817157e-17                             *
+ *          libtmpl: 13.819011 seconds                                        *
+ *          C:       8.283464 seconds                                         *
+ *          max abs error: 1.4210854715202004e-14                             *
+ *          max rel error: 2.2204460464058961e-16                             *
+ *          rms abs error: 5.8261746077544000e-15                             *
+ *          rms rel error: 8.2703094539573963e-17                             *
  *                                                                            *
- *      The rms relative error is below DBL_EPSILON, but the time is          *
- *      much worse (about 59% worse). It may be fairer to compare this        *
+ *      The rms and max relative errors are below DBL_EPSILON but the time is *
+ *      much worse (about 66% worse). It may be fairer to compare this        *
  *      function against another implementation in software. The openlibm     *
  *      implementation uses a bit-by-bit algorithm to ensure the value is     *
  *      accurate to all 52 bits in a double, and correctly rounded. This      *
