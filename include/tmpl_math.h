@@ -985,6 +985,10 @@ extern float tmpl_Float_Cosh(float x);
 extern double tmpl_Double_Cosh(double x);
 extern long double tmpl_LDouble_Cosh(long double x);
 
+
+extern void
+tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo);
+
 /*  Aliases for the sine trig function found in math.h.                       */
 extern float tmpl_Float_Sin(float x);
 extern double tmpl_Double_Sin(double x);
@@ -999,6 +1003,10 @@ extern long double tmpl_LDouble_Tan(long double x);
 extern float tmpl_Float_Sqrt(float x);
 extern double tmpl_Double_Sqrt(double x);
 extern long double tmpl_LDouble_Sqrt(long double x);
+
+extern float tmpl_Float_Cbrt(float x);
+extern double tmpl_Double_Cbrt(double x);
+extern long double tmpl_LDouble_Cbrt(long double x);
 
 /*  Aliases for the exponential function found in math.h.                     */
 extern float tmpl_Float_Exp(float x);
