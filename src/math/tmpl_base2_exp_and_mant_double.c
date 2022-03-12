@@ -9,36 +9,42 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
     if (!mant || !expo)
         return;
 
-    /*  Zero is a special value, and is represented as 0.0 * 2^0.             */
-    if (x == 0.0)
-    {
-        *mant = 0.0;
-        *expo = 0;
-        return;
-    }
-
-    /*  Infinity is another special case. The mantissa will be set to         *
-     *  infinity and the exponent will be set to zero.                        */
-    else if (tmpl_Double_Is_Inf(x))
-    {
-        *mant = TMPL_INFINITY;
-        *expo = 0;
-        return;
-    }
-
-    /*  The last special case is NaN. expo will be zero, and mant will be nan.*/
-    else if (tmpl_Double_Is_NaN(x))
-    {
-        *mant = TMPL_NAN;
-        *expo = 0;
-        return;
-    }
-
     w.r = x;
+    w.bits.sign = 0x00U;
 
-    *expo = (signed int)w.bits.expo - 0x3FF;
+    /*  NaN or Inf. Set exponent to zero and mant to the input.               */
+    if (w.bits.expo == 0x7FFU)
+    {
+        *mant = x;
+        *expo = 0;
+        return;
+    }
 
-    w.bits.expo = 0x3FFU;
+    /*  Subnormal or zero.                                                    */
+    else if (w.bits.expo == 0x00U)
+    {
+        /*  x = 0. Set mant to the input and expo to zero.                    */
+        if (w.r == 0.0)
+        {
+            *mant = x;
+            *expo = 0;
+            return;
+        }
+
+        /*  Non-zero subnormal number. Normalize by multiplying by 2^52,      *
+         *  which is 4.503599627370496 x 10^15.                               */
+        w.r *= 4.503599627370496E15;
+
+        /*  Compute the exponent. Since we multiplied by 2^52, subtract 52    *
+         *  from the value.                                                   */
+        *expo = (signed int)(w.bits.expo - TMPL_DOUBLE_BIAS - 52);
+        w.bits.expo = TMPL_DOUBLE_BIAS;
+        *mant = w.r;
+        return;
+    }
+
+    *expo = (signed int)w.bits.expo - TMPL_DOUBLE_BIAS;
+    w.bits.expo = TMPL_DOUBLE_BIAS;
     *mant = w.r;
 }
 #else
