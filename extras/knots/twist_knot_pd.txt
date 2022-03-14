@@ -10,3 +10,28 @@
 
 6 PD[X[16,14,1,13],X[12,2,13,1],X[2,12,3,11],X[10,4,11,3],X[4,10,5,9],X[8,6,9,5],X[6,15,7,16],X[14,7,15,8]]
 6m PD[X[12,15,13,0],X[0,11,1,12],X[10,1,11,2],X[2,9,3,10],X[8,3,9,4],X[4,7,5,8],X[14,6,15,5],X[6,14,7,13]]
+
+Match: 1 Crossing Number: 3 DT Code 4 6 2
+Match: 2 Crossing Number: 4 DT Code 4 6 8 2
+Match: 3 Crossing Number: 5 DT Code 4 8 10 2 6
+Match: 4 Crossing Number: 6 DT Code 4 8 12 10 2 6
+Match: 5 Crossing Number: 7 DT Code 4 10 14 12 2 8 6
+Match: 6 Crossing Number: 8 DT Code 4 10 16 14 12 2 8 6
+Match: 7 Crossing Number: 9 DT Code 4 12 18 16 14 2 10 8 6
+Match: 8 Crossing Number: 10 DT Code 4 12 20 18 16 14 2 10 8 6
+Match: 7 Crossing Number: 11 DT Code 4 8 10 16 2 -18 -20 6 -22 -12 -14
+Match: 2 Crossing Number: 11 DT Code 4 8 10 -16 2 -18 -20 -22 -6 -12 -14
+Match: 3 Crossing Number: 11 DT Code 4 8 -14 2 -16 -18 -20 -6 -10 -22 -12
+Match: 6 Crossing Number: 11 DT Code 4 8 -14 2 -18 -20 -6 -22 -12 -10 -16
+Match: 5 Crossing Number: 11 DT Code 4 10 12 16 18 2 -20 6 8 -22 -14
+Match: 9 Crossing Number: 11 DT Code 4 14 22 20 18 16 2 12 10 8 6
+Match: 3 Crossing Number: 12 DT Code 4 10 -16 -18 2 20 22 24 -8 -6 12 14
+Match: 10 Crossing Number: 12 DT Code 4 14 24 22 20 18 16 2 12 10 8 6
+Match: 6 Crossing Number: 13 DT Code 4 10 -16 -24 -18 2 -20 -22 -26 -12 -14 -8 -6
+Match: 3 Crossing Number: 13 DT Code 4 12 16 -22 14 -20 2 8 24 26 -10 -6 18
+Match: 11 Crossing Number: 13 DT Code 4 16 26 24 22 20 18 2 14 12 10 8 6
+Match: 12 Crossing Number: 14 DT Code 4 16 28 26 24 22 20 18 2 14 12 10 8 6
+Match: 13 Crossing Number: 15 DT Code 4 18 30 28 26 24 22 20 2 16 14 12 10 8 6
+Match: 14 Crossing Number: 1 DT Code biponmlkjahgfedc
+Match: 15 Crossing Number: 1 DT Code ponmlkjiqgfedcbah
+
