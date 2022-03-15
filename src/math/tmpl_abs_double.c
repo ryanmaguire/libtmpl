@@ -96,8 +96,8 @@
  *      These tests were performed with the following specs:                  *
  *                                                                            *
  *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MAX:  4672.0698 MHz                                               *
  *          MIN:  2200.0000 MHz                                               *
+ *          MAX:  4672.0698 MHz                                               *
  *          ARCH: x86_64                                                      *
  *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
  *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
@@ -131,7 +131,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/01: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
