@@ -17,51 +17,51 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides an example of using tmpl_Double_Abs function.                *
+ *      Provides an example of using tmpl_Float_Abs function.                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 21, 2021                                            *
+ *  Date:       March 15, 2022                                                *
  ******************************************************************************/
 
 /*  printf is here.                                                           */
 #include <stdio.h>
 
-/*  DBL_MAX is found here.                                                    */
+/*  FLT_MAX is found here.                                                    */
 #include <float.h>
 
-/*  tmpl_Double_Abs function found here.                                      */
+/*  tmpl_Float_Abs function found here.                                       */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Function for showing use of tmpl_Double_Abs function.                     */
+/*  Function for showing use of tmpl_Float_Abs function.                      */
 int main(void)
 {
     /*  Array for a few test values.                                          */
-    double x[11];
+    float x[11];
 
     /*  Variable for indexing.                                                */
     unsigned int n;
 
     /*  Variable for the output.                                              */
-    double out;
+    float out;
 
     /*  Set the values of the array.                                          */
-    x[0] = 0.0;
-    x[1] = -TMPL_INFINITY;
-    x[2] = TMPL_INFINITY;
-    x[3] = DBL_MAX;
-    x[4] = -DBL_MAX;
-    x[5] = DBL_MIN;
-    x[6] = -DBL_MIN;
-    x[7] = TMPL_NAN;
-    x[8] = -TMPL_NAN;
-    x[9] = 3.1415926;
-    x[10] = -1.414;
+    x[0] = 0.0F;
+    x[1] = -TMPL_INFINITYF;
+    x[2] = TMPL_INFINITYF;
+    x[3] = FLT_MAX;
+    x[4] = -FLT_MAX;
+    x[5] = FLT_MIN;
+    x[6] = -FLT_MIN;
+    x[7] = TMPL_NANF;
+    x[8] = -TMPL_NANF;
+    x[9] = 3.1415926F;
+    x[10] = -1.414F;
 
-    /*  Run tmpl_Double_Abs on the test values.                               */
+    /*  Run tmpl_Float_Abs on the test values.                                */
     for (n = 0U; n < sizeof(x)/sizeof(x[0]); ++n)
     {
-        out = tmpl_Double_Abs(x[n]);
-        printf("|%.8e| = %.8e\n", x[n], out);
+        out = tmpl_Float_Abs(x[n]);
+        printf("|%.8e| = %.8e\n", (double)x[n], (double)out);
     }
 
     return 0;
