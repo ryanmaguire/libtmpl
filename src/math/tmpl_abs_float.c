@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -96,8 +96,8 @@
  *      These tests were performed with the following specs:                  *
  *                                                                            *
  *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MAX:  4672.0698 MHz                                               *
  *          MIN:  2200.0000 MHz                                               *
+ *          MAX:  4672.0698 MHz                                               *
  *          ARCH: x86_64                                                      *
  *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
  *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
@@ -131,7 +131,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/01: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
