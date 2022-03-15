@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,34 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#include "tmpl_math_plots.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <libtmpl/include/tmpl_math.h>
-
-int main(void)
-{
-    FILE *fp = fopen("data.txt", "w");
-
-    double start =  -4.0;
-    double end   =   4.0;
-
-    unsigned int N = 1E5;
-    unsigned int n;
-    double x, y, diff, dx;
-
-    dx = (end - start) / (double)N;
-    x = start;
-
-    for (n = 0UL; n < N; ++n)
-    {
-        y = tmpl_Double_Mod_2(x);
-        fprintf(fp, "%f %f\n", x, y);
-        x += dx;
-    }
-
-    fclose(fp);
-    system("graph -T ps data.txt > tmpl_floor_gnuplotutils.ps");
-    system("rm -f data.txt");
-    return 0;
-}
+PLOT_FUNC(tmpl_Float_Arctan,
+          float,
+          -10.0F,
+          10.0F,
+          100000ULL,
+          "tmpl_arctan_float_plot.ps")
