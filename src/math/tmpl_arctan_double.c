@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_arctan_double                              *
+ *                             tmpl_arctan_double                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the arc-tangent function at double precision.                *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Arctan:                                                   *
+ *      tmpl_Double_Arctan                                                    *
  *  Purpose:                                                                  *
  *      Computes atan(x).                                                     *
  *  Arguments:                                                                *
@@ -60,19 +60,19 @@
  *      pi/2 is returned. If the input is negative infinity, the limit is     *
  *      used and -pi/2 is returned.                                           *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
+ *                             A NOTE ON COMMENTS                             *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
- *                            A FRIENDLY WARNING                              *
+ *                             A FRIENDLY WARNING                             *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
  *  is used to compile this in make.sh uses gcc and has the                   *
@@ -80,12 +80,15 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       September 09, 2021                                            *
  ******************************************************************************/
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Only implement this if the user requested libtmpl algorithms.             */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Precompute atan(1/2), atan(1), and atan(3/2).                             */
 #define ATAN_OF_ONE_HALF 0.46364760900080611621425623146121440202853705
@@ -94,39 +97,49 @@
 
 /*  Coefficients for the computation of the polynomial approximation. The     *
  *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
-#define ATAN_A00 3.33333333333329318027E-01
-#define ATAN_A01 1.99999999998764832476E-01
-#define ATAN_A02 1.42857142725034663711E-01
-#define ATAN_A03 1.11111104054623557880E-01
-#define ATAN_A04 9.09088713343650656196E-02
-#define ATAN_A05 7.69187620504482999495E-02
-#define ATAN_A06 6.66107313738753120669E-02
-#define ATAN_A07 5.83357013379057348645E-02
-#define ATAN_A08 4.97687799461593236017E-02
-#define ATAN_A09 3.65315727442169155270E-02
-#define ATAN_A10 1.62858201153657823623E-02
+#define A00 3.33333333333329318027E-01
+#define A01 -1.99999999998764832476E-01
+#define A02 1.42857142725034663711E-01
+#define A03 -1.11111104054623557880E-01
+#define A04 9.09088713343650656196E-02
+#define A05 -7.69187620504482999495E-02
+#define A06 6.66107313738753120669E-02
+#define A07 -5.83357013379057348645E-02
+#define A08 4.97687799461593236017E-02
+#define A09 -3.65315727442169155270E-02
+#define A10 1.62858201153657823623E-02
 
 /*  This function computes arctan(x) via a Taylor series for small |x|.       */
 static double tmpl_arctan_small_vals(double x)
 {
     /*  Declare necessary variables.                                          */
-    double x_sq = x*x;
-    double out;
+    const double x_sq = x*x;
 
     /*  Use Horner's method to compute the polynomial. The signs of the       *
      *  coefficients oscillate.                                               */
-    out = ATAN_A10 * x_sq - ATAN_A09;
-    out = out * x_sq + ATAN_A08;
-    out = out * x_sq - ATAN_A07;
-    out = out * x_sq + ATAN_A06;
-    out = out * x_sq - ATAN_A05;
-    out = out * x_sq + ATAN_A04;
-    out = out * x_sq - ATAN_A03;
-    out = out * x_sq + ATAN_A02;
-    out = out * x_sq - ATAN_A01;
-    out = out * x_sq + ATAN_A00;
-    out = x*(1.0 - x_sq * out);
-    return out;
+    return x * (
+        1.0 - x_sq * (
+            A00 + x_sq * (
+                A01 + x_sq * (
+                    A02 + x_sq * (
+                        A03 + x_sq * (
+                            A04 + x_sq * (
+                                A05 + x_sq * (
+                                    A06 + x_sq * (
+                                        A07 + x_sq * (
+                                            A08 + x_sq * (
+                                                A09 + x_sq * A10
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    );
 }
 /*  End of tmpl_arctan_small_vals.                                            */
 
@@ -202,17 +215,25 @@ double tmpl_Double_Arctan(double x)
 /*  End of tmpl_Double_Arctan.                                                */
 
 /*  Undefine all of the macros.                                               */
-#undef ATAN_A00
-#undef ATAN_A01
-#undef ATAN_A02
-#undef ATAN_A03
-#undef ATAN_A04
-#undef ATAN_A05
-#undef ATAN_A06
-#undef ATAN_A07
-#undef ATAN_A08
-#undef ATAN_A09
-#undef ATAN_A10
+#undef A00
+#undef A01
+#undef A02
+#undef A03
+#undef A04
+#undef A05
+#undef A06
+#undef A07
+#undef A08
+#undef A09
+#undef A10
 #undef ATAN_OF_ONE_HALF
 #undef ATAN_OF_ONE
 #undef ATAN_OF_THREE_HALFS
+
+#else
+#include <math.h>
+double tmpl_Double_Arctan(double x)
+{
+    return atan(x);
+}
+#endif
