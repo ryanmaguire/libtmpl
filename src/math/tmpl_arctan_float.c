@@ -36,7 +36,7 @@
  *  Called Functions:                                                         *
  *      tmpl_Float_Is_NaN (tmpl_math.h)                                       *
  *          Determines if a float is NaN.                                     *
- *      tmpl_Float_Is_Inf (tmpl_math.h)                                      *
+ *      tmpl_Float_Is_Inf (tmpl_math.h)                                       *
  *          Determines if a float is infinity.                                *
  *  Method:                                                                   *
  *      First, use the fact that atan(x) is odd to reduce to the case x >= 0. *
