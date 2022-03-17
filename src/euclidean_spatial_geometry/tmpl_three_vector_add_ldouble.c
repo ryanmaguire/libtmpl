@@ -82,15 +82,16 @@
 
 /*  Function for adding 2 three-dimensional vectors.                          */
 tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q)
+tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
+                   const tmpl_ThreeVectorLongDouble *Q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_ThreeVectorLongDouble sum;
 
     /*  The sum of two vectors simply adds their components together.         */
-    sum.dat[0] = P.dat[0] + Q.dat[0];
-    sum.dat[1] = P.dat[1] + Q.dat[1];
-    sum.dat[2] = P.dat[2] + Q.dat[2];
+    sum.dat[0] = P->dat[0] + Q->dat[0];
+    sum.dat[1] = P->dat[1] + Q->dat[1];
+    sum.dat[2] = P->dat[2] + Q->dat[2];
     return sum;
 }
 /*  End of tmpl_3DLDouble_Add.                                                */

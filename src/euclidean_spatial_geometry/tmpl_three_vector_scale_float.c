@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -17,27 +17,25 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the z component of a three dimensional vector/spacial point.  *
- *      That is, given (x, y, z), return z.                                   *
+ *      Function for multiplying a three vector by a real number.             *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       December 21, 2020                                             *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       March 17, 2022                                                *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for returning the z component of a three dimensional vector.     */
-double tmpl_ThreeVector_Z(tmpl_ThreeVector P)
+/*  Multiply a three vector by a real number.                                 */
+tmpl_ThreeVectorFloat tmpl_3DFloat_Scale(float a, tmpl_ThreeVectorFloat P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double z;
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_ThreeVectorFloat scaled;
 
-    /*  tmpl_ThreeVector is a struct consisting of a single double            *
-     *  array dat with three entries. The z component corresponds to the      *
-     *  second entry. Retrieve this and return.                               */
-    z = P.dat[2];
-    return z;
+    /*  Scalar multiplication is done component-wise, so compute this.        */
+    scaled.dat[0] = a*P.dat[0];
+    scaled.dat[1] = a*P.dat[1];
+    scaled.dat[2] = a*P.dat[2];
+    return scaled;
 }
-/*  End of tmpl_ThreeVector_Z.                                                */
-
+/*  End of tmpl_3DFloat_Scale.                                                */

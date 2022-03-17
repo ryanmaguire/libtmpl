@@ -82,15 +82,16 @@
 
 /*  Function for adding 2 three-dimensional vectors.                          */
 tmpl_ThreeVectorFloat
-tmpl_3DFloat_Add(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
+tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
+                 const tmpl_ThreeVectorFloat *Q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_ThreeVectorFloat sum;
 
     /*  The sum of two vectors simply adds their components together.         */
-    sum.dat[0] = P.dat[0] + Q.dat[0];
-    sum.dat[1] = P.dat[1] + Q.dat[1];
-    sum.dat[2] = P.dat[2] + Q.dat[2];
+    sum.dat[0] = P->dat[0] + Q->dat[0];
+    sum.dat[1] = P->dat[1] + Q->dat[1];
+    sum.dat[2] = P->dat[2] + Q->dat[2];
     return sum;
 }
 /*  End of tmpl_3DFloat_Add.                                                  */

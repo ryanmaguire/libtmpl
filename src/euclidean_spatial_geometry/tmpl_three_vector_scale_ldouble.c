@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -17,52 +17,26 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors.                            *
+ *      Function for multiplying a three vector by a real number.             *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       December 21, 2020                                             *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       March 17, 2022                                                *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for computing an orthogonal vector to the given input.           */
-tmpl_ThreeVector
-tmpl_3DDouble_Orthogonal(tmpl_ThreeVector P)
+/*  Multiply a three vector by a real number.                                 */
+tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Scale(long double a, tmpl_ThreeVectorLongDouble P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVector out;
+    tmpl_ThreeVectorLongDouble scaled;
 
-    /*  If the x component is zero, (1,0,0) will be orthogonal to P since the *
-     *  dot product will be 1*0 + 0*Py + 0*Pz = 0. Return (1,0,0).            */
-    if (P.dat[0] == 0.0)
-    {
-        out.dat[0] = 1.0;
-        out.dat[1] = 0.0;
-        out.dat[2] = 0.0;
-    }
-    else
-    {
-        /*  Similarly, if the y component is zero, return (0,1,0).            */
-        if (P.dat[1] == 0.0)
-        {
-            out.dat[0] = 0.0;
-            out.dat[1] = 1.0;
-            out.dat[2] = 0.0;
-        }
-
-        /*  If both the x and y components are non-zero, we can set the       *
-         *  output to (1, -Px/Py, 0), which is orthogonal to P.               */
-        else
-        {
-            out.dat[0] = 1.0;
-            out.dat[1] = -P.dat[0]/P.dat[1];
-            out.dat[2] = 0.0;
-        }
-        /*  End of if (Py == 0.0).                                            */
-    }
-    /*  End of if (Px == 0.0).                                                */
-
-    return out;
+    /*  Scalar multiplication is done component-wise, so compute this.        */
+    scaled.dat[0] = a*P.dat[0];
+    scaled.dat[1] = a*P.dat[1];
+    scaled.dat[2] = a*P.dat[2];
+    return scaled;
 }
-/*  End of tmpl_Orthogonal_ThreeVector.                                */
+/*  End of tmpl_3DDouble_Scale.                                               */

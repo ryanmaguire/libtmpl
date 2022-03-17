@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -17,25 +17,20 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Function for multiplying a three vector by a real number.             *
+ *      Returns the z component of a three dimensional vector/spacial point.  *
+ *      That is, given (x, y, z), return z.                                   *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Multiply a three vector by a real number.                                 */
-tmpl_ThreeVector tmpl_ThreeVector_Scale(double a, tmpl_ThreeVector P)
+/*  Function for returning the z component of a three dimensional vector.     */
+double tmpl_3DDouble_Z(tmpl_ThreeVectorDouble P)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVector scaled;
-
-    /*  Scalar multiplication is done component-wise, so compute this.        */
-    scaled.dat[0] = a*P.dat[0];
-    scaled.dat[1] = a*P.dat[1];
-    scaled.dat[2] = a*P.dat[2];
-    return scaled;
+    /*  The second coordinate of the dat array is the z-component.            */
+    return P.dat[2];
 }
-/*  End of tmpl_ThreeVector_Scale.                                            */
+/*  End of tmpl_3DDouble_Z.                                                   */

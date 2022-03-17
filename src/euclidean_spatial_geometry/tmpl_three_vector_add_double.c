@@ -28,13 +28,13 @@
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at double precision.           *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorDouble):                                           *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorDouble):                                           *
- *          Another vector in R^3.                                            *
+ *      P (const tmpl_ThreeVectorDouble *):                                   *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorDouble *):                                   *
+ *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorDouble):                                         *
- *          The vector sum P+Q.                                               *
+ *          The vector sum P + Q.                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -82,15 +82,16 @@
 
 /*  Function for adding 2 three-dimensional vectors.                          */
 tmpl_ThreeVectorDouble
-tmpl_3DDouble_Add(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q)
+tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble *P,
+                  const tmpl_ThreeVectorDouble *Q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_ThreeVectorDouble sum;
 
     /*  The sum of two vectors simply adds their components together.         */
-    sum.dat[0] = P.dat[0] + Q.dat[0];
-    sum.dat[1] = P.dat[1] + Q.dat[1];
-    sum.dat[2] = P.dat[2] + Q.dat[2];
+    sum.dat[0] = P->dat[0] + Q->dat[0];
+    sum.dat[1] = P->dat[1] + Q->dat[1];
+    sum.dat[2] = P->dat[2] + Q->dat[2];
     return sum;
 }
 /*  End of tmpl_3DDouble_Add.                                                 */

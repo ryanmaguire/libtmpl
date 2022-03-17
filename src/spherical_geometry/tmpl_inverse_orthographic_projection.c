@@ -30,7 +30,7 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
         u_hat = tmpl_3DDouble_Normalize(u);
 
         /*  Get a vector orthogonal to u and normalize it.                    */
-        X = tmpl_Orthogonal_ThreeVector(u);
+        X = tmpl_3DDouble_Orthogonal(u);
         X = tmpl_3DDouble_Normalize(X);
 
         /*  Compute the cross product of X and u, giving as an orthonormal    *
@@ -43,13 +43,9 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
 
         /*  The point on the sphere now satisfies x*X + y*Y + z*u_hat. We     *
          *  compute this and return.                                          */
-        out = tmpl_3D_Add(
-                tmpl_3D_Add(
-                    tmpl_ThreeVector_Scale(x, X),
-                    tmpl_ThreeVector_Scale(y, Y)
-            ),
-            tmpl_ThreeVector_Scale(z, u_hat)
-        );
+        out.dat[0] = x*X.dat[0] + y*Y.dat[0] + z*u_hat.dat[0];
+        out.dat[1] = x*X.dat[1] + y*Y.dat[1] + z*u_hat.dat[1];
+        out.dat[2] = x*X.dat[2] + y*Y.dat[2] + z*u_hat.dat[2];
     }
 
     return out;
