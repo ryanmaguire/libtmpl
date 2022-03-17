@@ -57,9 +57,9 @@ tmpl_Stereographic_Projection(tmpl_ThreeVector P)
     tmpl_TwoVector out;
 
     /*  Extract the X, Y, and Z components of the input vector.               */
-    Px = tmpl_ThreeVector_X(P);
-    Py = tmpl_ThreeVector_Y(P);
-    Pz = tmpl_ThreeVector_Z(P);
+    Px = P.dat[0];
+    Py = P.dat[1];
+    Pz = P.dat[2];
 
     /*  We will perform stereographic projection on the sphere centered at    *
      *  the origin which contains the given point. To do this we'll first     *

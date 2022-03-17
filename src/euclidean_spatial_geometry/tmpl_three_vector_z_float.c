@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -17,27 +17,20 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the x component of a three dimensional vector/spacial point.  *
- *      That is, given (x, y, z), return x.                                   *
+ *      Returns the z component of a three dimensional vector/spacial point.  *
+ *      That is, given (x, y, z), return z.                                   *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for returning the x component of a three dimensional vector.     */
-double tmpl_ThreeVector_X(tmpl_ThreeVector P)
+/*  Function for returning the z component of a three dimensional vector.     */
+float tmpl_3DFloat_Z(tmpl_ThreeVectorFloat P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double x;
-
-    /*  rssringoccs_ThreeVector is a struct consisting of a single double     *
-     *  array dat with three entries. The x component corresponds to the      *
-     *  zeroth entry. Retrieve this and return.                               */
-    x = P.dat[0];
-    return x;
+    /*  The second coordinate of the dat array is the z-component.            */
+    return P.dat[2];
 }
-/*  End of tmpl_ThreeVector_X.                                                */
-
+/*  End of tmpl_3DFloat_Z.                                                    */

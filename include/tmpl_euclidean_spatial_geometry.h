@@ -21,25 +21,31 @@ typedef struct tmpl_ThreeVectorLongDouble_Def {
  *  tmpl_ThreeVector is typedef'd to tmpl_ThreeVectorDouble.                  */
 typedef tmpl_ThreeVectorDouble tmpl_ThreeVector;
 
+/*  Single precision 3x3 matrix for linear transformations in R^3.            */
 typedef struct tmpl_ThreeByThreeMatrixFloat_Def {
     float dat[3][3];
 } tmpl_ThreeByThreeMatrixFloat;
 
+/*  Double precision 3x3 matrix for linear transformations in R^3.            */
 typedef struct tmpl_ThreeByThreeMatrixDouble_Def {
     double dat[3][3];
 } tmpl_ThreeByThreeMatrixDouble;
 
+/*  Long double precision 3x3 matrix for linear transformations in R^3.       */
 typedef struct tmpl_ThreeByThreeMatrixLongDouble_Def {
     long double dat[3][3];
 } tmpl_ThreeByThreeMatrixLongDouble;
 
+/*  Again, for clean code the double precision 3x3 matrix type is typedef'd   *
+ *  as tmpl_ThreeByThreeMatrix.                                               */
 typedef tmpl_ThreeByThreeMatrixDouble tmpl_ThreeByThreeMatrix;
 
-/*  Commonly used types of functions.                                         */
+/*  Functionals f:R^3 -> R at single, double, and long double precision.      */
 typedef float (*tmpl_3DFloat_Functional)(tmpl_ThreeVectorFloat);
 typedef double (*tmpl_3DDouble_Functional)(tmpl_ThreeVectorDouble);
 typedef long double (*tmpl_3DLDouble_Functional)(tmpl_ThreeVectorLongDouble);
 
+/*  Vector fields F:R^3 -> R^3 at single, double, and long double precision.  */
 typedef tmpl_ThreeVectorFloat
 (*tmpl_3DFloat_VectorField)(tmpl_ThreeVectorFloat);
 
@@ -54,6 +60,18 @@ extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Zero;
 extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Zero;
 extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Zero;
 
+extern const tmpl_ThreeVectorFloat tmpl_3DFloat_X_Hat;
+extern const tmpl_ThreeVectorDouble tmpl_3DDouble_X_Hat;
+extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_X_Hat;
+
+extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Y_Hat;
+extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Y_Hat;
+extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Y_Hat;
+
+extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Z_Hat;
+extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Z_Hat;
+extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_3DFloat_Add                                                      *
@@ -61,10 +79,10 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Zero;
  *      Computes the vector sum of two vectors in R^3 at single precision.    *
  *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A three dimensional vector.                                       *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another three dimensional vector.                                 *
+ *      P (tmpl_ThreeVectorFloat *):                                          *
+ *          A pointer to a three dimensional vector.                          *
+ *      Q (tmpl_ThreeVectorFloat *):                                          *
+ *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorFloat):                                          *
  *          The sum of P and Q, P + Q.                                        *
@@ -75,13 +93,16 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Zero;
  *          tmpl_three_vector_add_ldouble.c                                   *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Add(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q);
+tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
+                 const tmpl_ThreeVectorFloat *Q);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Add(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q);
+tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble *P,
+                  const tmpl_ThreeVectorDouble *Q);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q);
+tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
+                   const tmpl_ThreeVectorLongDouble *Q);
 
 /*  Less verbose macros for vector addition.                                  */
 #define tmpl_3D_Addf tmpl_3DFloat_Add
@@ -207,9 +228,9 @@ tmpl_3DLDouble_Dot_Product(tmpl_ThreeVectorLongDouble P,
  *      If P is the zero vector, the vector (NaN, NaN, NaN) is returned.      *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_Fast_normalize_float.c                          *
- *          tmpl_three_vector_Fast_normalize_double.c                         *
- *          tmpl_three_vector_Fast_normalize_ldouble.c                        *
+ *          tmpl_three_vector_fast_normalize_float.c                          *
+ *          tmpl_three_vector_fast_normalize_double.c                         *
+ *          tmpl_three_vector_fast_normalize_ldouble.c                        *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Fast_Normalize(tmpl_ThreeVectorFloat P);
@@ -260,9 +281,9 @@ extern long double tmpl_3DLDouble_Fast_Norm(tmpl_ThreeVectorLongDouble P);
  *          The L1 norm of P.                                                 *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_norm_float.c                                    *
- *          tmpl_three_vector_norm_double.c                                   *
- *          tmpl_three_vector_norm_ldouble.c                                  *
+ *          tmpl_three_vector_l1_norm_float.c                                 *
+ *          tmpl_three_vector_l1_norm_double.c                                *
+ *          tmpl_three_vector_l1_norm_ldouble.c                               *
  ******************************************************************************/
 extern float tmpl_3DFloat_L1_Norm(tmpl_ThreeVectorFloat P);
 extern double tmpl_3DDouble_L1_Norm(tmpl_ThreeVectorDouble P);
@@ -353,15 +374,31 @@ extern long double tmpl_3DLDouble_Norm(tmpl_ThreeVectorLongDouble P);
 #define tmpl_3DLDouble_L2_Norm tmpl_3DLDouble_Norm
 #define tmpl_3D_L2_Norm tmpl_3DDouble_Norm
 
-extern double tmpl_ThreeVector_X(tmpl_ThreeVector P);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Orthogonal                                               *
+ *  Purpose:                                                                  *
+ *      Returns a non-zero vector orthogonal to the input.                    *
+ *  Arguments:                                                                *
+ *      P (tmpl_ThreeVectorFloat):                                            *
+ *          A 3D vector.                                                      *
+ *  Output:                                                                   *
+ *      orth (tmpl_ThreeVectorFloat):                                         *
+ *          A non-zero vector orthogonal to the input.                        *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_orthogonal_float.c                              *
+ *          tmpl_three_vector_orthogonal_double.c                             *
+ *          tmpl_three_vector_orthogonal_ldouble.c                            *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Orthogonal(tmpl_ThreeVectorFloat P);
 
-extern double tmpl_ThreeVector_Y(tmpl_ThreeVector P);
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Orthogonal(tmpl_ThreeVectorDouble P);
 
-extern double tmpl_ThreeVector_Z(tmpl_ThreeVector P);
-
-extern double
-tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
-                                  unsigned int m, unsigned int n);
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Orthogonal(tmpl_ThreeVectorLongDouble P);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -380,21 +417,62 @@ tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
  *          The vector (x, y, z).                                             *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_norm_float.c                                    *
- *          tmpl_three_vector_norm_double.c                                   *
- *          tmpl_three_vector_norm_ldouble.c                                  *
+ *          tmpl_three_vector_rect_float.c                                    *
+ *          tmpl_three_vector_rect_double.c                                   *
+ *          tmpl_three_vector_rect_ldouble.c                                  *
  ******************************************************************************/
-extern tmpl_ThreeVectorFloat tmpl_3DFloat_Rect(float x, float y, float z);
-extern tmpl_ThreeVectorDouble tmpl_3DDouble_Rect(double x, double y, double z);
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Rect(float x, float y, float z);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Rect(double x, double y, double z);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Rect(long double x, long double y, long double z);
 
-extern tmpl_ThreeVector
-tmpl_ThreeVector_Scale(double a, tmpl_ThreeVector P);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Scale                                                    *
+ *  Purpose:                                                                  *
+ *      Multiply a 3D vector by a real number.                                *
+ *  Arguments:                                                                *
+ *      a (float):                                                            *
+ *          A real number.                                                    *
+ *      P (tmpl_ThreeVectorFloat):                                            *
+ *          A 3D vector.                                                      *
+ *  Output:                                                                   *
+ *      scaled (tmpl_ThreeVectorFloat):                                       *
+ *          The product a*P = a*(x, y, z) = (ax, ay, az).                     *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_scale_float.c                                   *
+ *          tmpl_three_vector_scale_double.c                                  *
+ *          tmpl_three_vector_scale_ldouble.c                                 *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Scale(float a, tmpl_ThreeVectorFloat P);
 
-extern tmpl_ThreeVector
-tmpl_Orthogonal_ThreeVector(tmpl_ThreeVector P);
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Scale(double a, tmpl_ThreeVectorDouble P);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Scale(long double a, tmpl_ThreeVectorLongDouble P);
+
+extern float tmpl_3DFloat_X(tmpl_ThreeVectorFloat P);
+extern double tmpl_3DDouble_X(tmpl_ThreeVectorDouble P);
+extern long double tmpl_3DLDouble_X(tmpl_ThreeVectorLongDouble P);
+
+extern float tmpl_3DFloat_Y(tmpl_ThreeVectorFloat P);
+extern double tmpl_3DDouble_Y(tmpl_ThreeVectorDouble P);
+extern long double tmpl_3DLDouble_Y(tmpl_ThreeVectorLongDouble P);
+
+extern float tmpl_3DFloat_Z(tmpl_ThreeVectorFloat P);
+extern double tmpl_3DDouble_Z(tmpl_ThreeVectorDouble P);
+extern long double tmpl_3DLDouble_Z(tmpl_ThreeVectorLongDouble P);
+
+extern double
+tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
+                                  unsigned int m, unsigned int n);
 
 #endif
 /*  End of include guard.                                                     */

@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -20,23 +20,17 @@
  *      Returns the y component of a three dimensional vector/spacial point.  *
  *      That is, given (x, y, z), return y.                                   *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for returning the y component of a three dimensional vector.     */
-double tmpl_ThreeVector_Y(tmpl_ThreeVector P)
+/*  Function for returning the x component of a three dimensional vector.     */
+long double tmpl_3DLDouble_Y(tmpl_ThreeVectorLongDouble P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double y;
-
-    /*  tmpl_ThreeVector is a struct consisting of a single double            *
-     *  array dat with three entries. The y component corresponds to the      *
-     *  first entry. Retrieve this and return.                                */
-    y = P.dat[1];
-    return y;
+    /*  The first coordinate of the dat array is the y-component.             */
+    return P.dat[1];
 }
-/*  End of tmpl_ThreeVector_Y.                                                */
+/*  End of tmpl_3DLDouble_Y.                                                  */

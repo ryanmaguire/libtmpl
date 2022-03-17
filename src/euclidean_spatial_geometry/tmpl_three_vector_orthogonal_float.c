@@ -27,37 +27,37 @@
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for computing an orthogonal vector to the given input.           */
-tmpl_ThreeVector
-tmpl_3DDouble_Orthogonal(tmpl_ThreeVector P)
+tmpl_ThreeVectorFloat
+tmpl_3DFloat_Orthogonal(tmpl_ThreeVectorFloat P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVector out;
+    tmpl_ThreeVectorFloat out;
 
     /*  If the x component is zero, (1,0,0) will be orthogonal to P since the *
      *  dot product will be 1*0 + 0*Py + 0*Pz = 0. Return (1,0,0).            */
-    if (P.dat[0] == 0.0)
+    if (P.dat[0] == 0.0F)
     {
-        out.dat[0] = 1.0;
-        out.dat[1] = 0.0;
-        out.dat[2] = 0.0;
+        out.dat[0] = 1.0F;
+        out.dat[1] = 0.0F;
+        out.dat[2] = 0.0F;
     }
     else
     {
         /*  Similarly, if the y component is zero, return (0,1,0).            */
-        if (P.dat[1] == 0.0)
+        if (P.dat[1] == 0.0F)
         {
-            out.dat[0] = 0.0;
-            out.dat[1] = 1.0;
-            out.dat[2] = 0.0;
+            out.dat[0] = 0.0F;
+            out.dat[1] = 1.0F;
+            out.dat[2] = 0.0F;
         }
 
         /*  If both the x and y components are non-zero, we can set the       *
          *  output to (1, -Px/Py, 0), which is orthogonal to P.               */
         else
         {
-            out.dat[0] = 1.0;
+            out.dat[0] = 1.0F;
             out.dat[1] = -P.dat[0]/P.dat[1];
-            out.dat[2] = 0.0;
+            out.dat[2] = 0.0F;
         }
         /*  End of if (Py == 0.0).                                            */
     }
