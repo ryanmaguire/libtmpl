@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -48,19 +48,19 @@
  *                                                                            *
  *      The macro tmpl_3D_Add is an alias for this function.                  *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_euclidean_spatial_geometry.h:                                    *
  *          Header containing ThreeVector typedef and the function prototype. *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
+ *                             A NOTE ON COMMENTS                             *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
- *                            A FRIENDLY WARNING                              *
+ *                             A FRIENDLY WARNING                             *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
  *  is used to compile this in make.sh uses gcc and has the                   *
@@ -71,7 +71,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
