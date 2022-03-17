@@ -1,10 +1,98 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  under the terms of the GNU General Public License as published by         *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                       tmpl_three_vector_add_to_double                      *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Contains code for performing vector addition at double precision.     *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_3DDouble_AddTo                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the vector sum of two vectors at double precision.           *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorDouble *):                                    *
+ *          A pointer to a vector in R^3. The sum will be stored here.        *
+ *      source (tmpl_ThreeVectorDouble *):                                    *
+ *          Another pointer to a vector in R^3.                               *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Use the definition of vector addition. If P = (Px, Py, Pz) and        *
+ *      Q = (Qx, Qy, Qz), then the vector sum P+Q has coordinates:            *
+ *          x = Px + Qx                                                       *
+ *          y = Py + Qy                                                       *
+ *          z = Pz + Qz                                                       *
+ *  Notes:                                                                    *
+ *      No checks for Infs or NaNs are performed.                             *
+ *                                                                            *
+ *      The macro tmpl_3D_AddTo is an alias for this function.                *
+ *                                                                            *
+ *      If tmpl_3DDouble_Add is the equivalent of the "+" operator for the    *
+ *      tmpl_ThreeVectorDouble struct, this is the equivalent of "+=". It is  *
+ *      about 3x faster (on the computers I've tested) then tmpl_3DDouble_Add.*
+ *      One could guess this is because tmpl_3DDouble_AddTo is passed by      *
+ *      reference and not by value.                                           *
+ *                                                                            *
+ *      No checks for Null pointers are performed.                            *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_euclidean_spatial_geometry.h:                                    *
+ *          Header containing ThreeVector typedef and the function prototype. *
+ ******************************************************************************
+ *                             A NOTE ON COMMENTS                             *
+ ******************************************************************************
+ *  It is anticipated that many users of this code will have experience in    *
+ *  either Python or IDL, but not C. Many comments are left to explain as     *
+ *  much as possible. Vagueness or unclear code should be reported to:        *
+ *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ ******************************************************************************
+ *                             A FRIENDLY WARNING                             *
+ ******************************************************************************
+ *  This code is compatible with the C89/C90 standard. The setup script that  *
+ *  is used to compile this in make.sh uses gcc and has the                   *
+ *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
+ *  use C99 features (built-in complex, built-in booleans, C++ style comments *
+ *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       March 15, 2022                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2022/17/02: Ryan Maguire                                                  *
+ *      Added doc-string and comments.                                        *
+ ******************************************************************************/
+
+/*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-void
-tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
-                    tmpl_ThreeVectorDouble *source)
+/*  Function for performing vector addition in R^3.                           */
+void tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
+                         tmpl_ThreeVectorDouble *source)
 {
     target->dat[0] += source->dat[0];
     target->dat[1] += source->dat[1];
     target->dat[2] += source->dat[2];
 }
+/*  End of tmpl_3DDouble_AddTo.                                               */
