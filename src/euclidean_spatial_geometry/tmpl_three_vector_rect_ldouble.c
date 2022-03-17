@@ -16,37 +16,33 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_ldouble                       *
+ *                       tmpl_three_vector_rect_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for performing vector addition at long double precision.*
+ *      Contains code for creating 3D vectors via Cartesian coordinates.      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DLDouble_Add                                                    *
+ *      tmpl_3DDouble_Rect                                                    *
  *  Purpose:                                                                  *
- *      Computes the vector sum of two vectors at long double precision.      *
+ *      Creates a long double-precision 3D vector from Cartesian coordinates. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorLongDouble):                                       *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorLongDouble):                                       *
- *          Another vector in R^3.                                            *
+ *      x (long double):                                                      *
+ *          The x coordinate of the output vector.                            *
+ *      y (long double):                                                      *
+ *          The y coordinate of the output vector.                            *
+ *      z (long double):                                                      *
+ *          The z coordinate of the output vector.                            *
  *  Output:                                                                   *
- *      sum (tmpl_ThreeVectorLongDouble):                                     *
- *          The vector sum P+Q.                                               *
+ *      V (tmpl_ThreeVectorLongDouble):                                       *
+ *          The vector (x, y, z).                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of vector addition. If P = (Px, Py, Pz) and        *
- *      Q = (Qx, Qy, Qz), then the vector sum P+Q has coordinates:            *
- *          x = Px + Qx                                                       *
- *          y = Py + Qy                                                       *
- *          z = Pz + Qz                                                       *
+ *      Set the components of V to x, y, and z.                               *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
- *                                                                            *
- *      The macro tmpl_3D_Addl is an alias for this function.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -73,24 +69,24 @@
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/03/02: Ryan Maguire                                                  *
- *      Removed function calls, added doc-string.                             *
+ *  2022/17/02: Ryan Maguire                                                  *
+ *      Added doc-string.                                                     *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  Function for adding 2 three-dimensional vectors.                          */
+/*  Function for returning the point (x, y, z) given three long doubles.      */
 tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q)
+tmpl_3DLDouble_Rect(long double x, long double y, long double z)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVectorLongDouble sum;
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_ThreeVectorLongDouble P;
 
-    /*  The sum of two vectors simply adds their components together.         */
-    sum.dat[0] = P.dat[0] + Q.dat[0];
-    sum.dat[1] = P.dat[1] + Q.dat[1];
-    sum.dat[2] = P.dat[2] + Q.dat[2];
-    return sum;
+    /*  Set the zeroth entry of P.dat to x, the first to y, and second to z.  */
+    P.dat[0] = x;
+    P.dat[1] = y;
+    P.dat[2] = z;
+    return P;
 }
-/*  End of tmpl_3DLDouble_Add.                                                */
+/*  End of tmpl_3DLDouble_Rect.                                               */

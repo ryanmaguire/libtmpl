@@ -90,6 +90,37 @@ tmpl_3DLDouble_Add(tmpl_ThreeVectorLongDouble P, tmpl_ThreeVectorLongDouble Q);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Ptr_Add_To                                               *
+ *  Purpose:                                                                  *
+ *      Adds the source vector to the target vector, the result of which is   *
+ *      stored in the target.                                                 *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat *):                                     *
+ *          A pointer to the first vector, the sum will be stored here.       *
+ *      source (tmpl_ThreeVectorFloat *):                                     *
+ *          A pointer to the vector to be added to target.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_norm_float.c                                    *
+ *          tmpl_three_vector_norm_double.c                                   *
+ *          tmpl_three_vector_norm_ldouble.c                                  *
+ ******************************************************************************/
+extern void
+tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
+                   tmpl_ThreeVectorFloat *source);
+
+extern void
+tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
+                    tmpl_ThreeVectorDouble *source);
+
+extern void
+tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
+                     tmpl_ThreeVectorLongDouble *source);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Cross_Product                                            *
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors in R^3 at single precision. *
@@ -331,37 +362,6 @@ extern double tmpl_ThreeVector_Z(tmpl_ThreeVector P);
 extern double
 tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
                                   unsigned int m, unsigned int n);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_3DFloat_Ptr_Add_To                                               *
- *  Purpose:                                                                  *
- *      Adds the source vector to the target vector, the result of which is   *
- *      stored in the target.                                                 *
- *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat *):                                     *
- *          A pointer to the first vector, the sum will be stored here.       *
- *      source (tmpl_ThreeVectorFloat *):                                     *
- *          A pointer to the vector to be added to target.                    *
- *  Output:                                                                   *
- *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_norm_float.c                                    *
- *          tmpl_three_vector_norm_double.c                                   *
- *          tmpl_three_vector_norm_ldouble.c                                  *
- ******************************************************************************/
-extern void
-tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
-                   tmpl_ThreeVectorFloat *source);
-
-extern void
-tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
-                    tmpl_ThreeVectorDouble *source);
-
-extern void
-tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
-                     tmpl_ThreeVectorLongDouble *source);
 
 /******************************************************************************
  *  Function:                                                                 *
