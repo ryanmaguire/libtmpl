@@ -152,10 +152,10 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
  *      Computes the cross product of two vectors in R^3 at single precision. *
  *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A three dimensional vector.                                       *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another three dimensional vector.                                 *
+ *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *          A pointer to a three dimensional vector.                          *
+ *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *          Another pointer to a  three dimensional vector.                   *
  *  Output:                                                                   *
  *      cross (tmpl_ThreeVectorFloat):                                        *
  *          The cross product of P and Q, PxQ, in that order.                 *
@@ -168,14 +168,16 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
  *          tmpl_three_vector_cross_product_ldouble.c                         *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q);
+tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat *P,
+                           const tmpl_ThreeVectorFloat *Q);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Cross_Product(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q);
+tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble *P,
+                            const tmpl_ThreeVectorDouble *Q);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Cross_Product(tmpl_ThreeVectorLongDouble P,
-                             tmpl_ThreeVectorLongDouble Q);
+tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
+                             const tmpl_ThreeVectorLongDouble *Q);
 
 /*  Less verbose macros for the cross product.                                */
 #define tmpl_Cross_Productf tmpl_3DFloat_Cross_Product

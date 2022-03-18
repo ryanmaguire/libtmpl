@@ -8,23 +8,17 @@ tmpl_Inverse_Orthographic_Projection_Torus(tmpl_TwoVector P, double r, double R)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     double x, y, z, threshold;
-    tmpl_ThreeVector out;
 
     /*  Extract the X and Y components from the point P.                      */
-    x = tmpl_TwoVector_X(P);
-    y = tmpl_TwoVector_Y(P);
+    x = P.dat[0];
+    y = P.dat[1];
 
     threshold = tmpl_Double_Sqrt(x*x + y*y) - R;
     threshold = r*r - threshold*threshold;
 
     if (threshold < 0.0)
-        out = tmpl_3DDouble_Rect(TMPL_NAN, TMPL_NAN, TMPL_NAN);
+        return tmpl_3DDouble_Rect(TMPL_NAN, TMPL_NAN, TMPL_NAN);
 
-    else
-    {
-        z = tmpl_Double_Sqrt(threshold);
-        out = tmpl_3DDouble_Rect(x, y, z);
-    }
-
-    return out;
+    z = tmpl_Double_Sqrt(threshold);
+    return tmpl_3DDouble_Rect(x, y, z);
 }
