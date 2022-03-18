@@ -18,9 +18,9 @@
  ******************************************************************************/
 #include "tmpl_vec3_vs_linasm.h"
 
-TEST1(float,
-      tmpl_ThreeVectorFloat,
-      v3D32_t,
-      tmpl_3DFloat_Add,
-      Vector3D_Add_flt32,
+TEST1(double,
+      tmpl_ThreeVectorDouble,
+      v3D64_t,
+      tmpl_3DDouble_Cross_Product,
+      Vector3D_VectorProduct_flt64,
       400000000ULL)
