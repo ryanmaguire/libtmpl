@@ -80,9 +80,10 @@
 
 /*  Function for computing the dot product of 2 three-vectors.                */
 double
-tmpl_3DDouble_Dot_Product(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q)
+tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble *P,
+                          const tmpl_ThreeVectorDouble *Q)
 {
     /*  Use the Euclidean dot product formula and return.                     */
-    return P.dat[0]*Q.dat[0] + P.dat[1]*Q.dat[1] + P.dat[2]*Q.dat[2];
+    return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1] + P->dat[2]*Q->dat[2];
 }
 /*  End of tmpl_3DDouble_Dot_Product.                                         */
