@@ -244,14 +244,16 @@ tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
  *          tmpl_three_vector_dot_product_ldouble.c                           *
  ******************************************************************************/
 extern float
-tmpl_3DFloat_Dot_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q);
+tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat *P,
+                         const tmpl_ThreeVectorFloat *Q);
 
 extern double
-tmpl_3DDouble_Dot_Product(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q);
+tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble *P,
+                          const tmpl_ThreeVectorDouble *Q);
 
 extern long double
-tmpl_3DLDouble_Dot_Product(tmpl_ThreeVectorLongDouble P,
-                           tmpl_ThreeVectorLongDouble Q);
+tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
+                           const tmpl_ThreeVectorLongDouble *Q);
 
 /*  Less verbose macros for the Euclidean dot product.                        */
 #define tmpl_3D_Dot_Productf tmpl_3DDFloat_Dot_Product
