@@ -145,7 +145,7 @@ int main(void)                                                                 \
     for (n = 0U; n < N; ++n)                                                   \
     {                                                                          \
         C[n] = A[n];                                                           \
-        Vector3D_Add_flt64(&C[n], &B[n]);                                      \
+        f1(&C[n], &B[n]);                                                      \
     }                                                                          \
     t2 = clock();                                                              \
     printf("linasm:  %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
