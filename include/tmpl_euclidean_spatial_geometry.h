@@ -79,9 +79,9 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
  *      Computes the vector sum of two vectors in R^3 at single precision.    *
  *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat *):                                          *
+ *      P (const tmpl_ThreeVectorFloat *):                                    *
  *          A pointer to a three dimensional vector.                          *
- *      Q (tmpl_ThreeVectorFloat *):                                          *
+ *      Q (const tmpl_ThreeVectorFloat *):                                    *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorFloat):                                          *
@@ -111,7 +111,7 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Ptr_Add_To                                               *
+ *      tmpl_3DFloat_AddTo                                                    *
  *  Purpose:                                                                  *
  *      Adds the source vector to the target vector, the result of which is   *
  *      stored in the target.                                                 *
@@ -124,21 +124,26 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
  *      None (void).                                                          *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_norm_float.c                                    *
- *          tmpl_three_vector_norm_double.c                                   *
- *          tmpl_three_vector_norm_ldouble.c                                  *
+ *          tmpl_three_vector_addto_float.c                                   *
+ *          tmpl_three_vector_addto_double.c                                  *
+ *          tmpl_three_vector_addto_ldouble.c                                 *
  ******************************************************************************/
 extern void
 tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
-                   tmpl_ThreeVectorFloat *source);
+                   const tmpl_ThreeVectorFloat *source);
 
 extern void
 tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
-                    tmpl_ThreeVectorDouble *source);
+                    const tmpl_ThreeVectorDouble *source);
 
 extern void
 tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
-                     tmpl_ThreeVectorLongDouble *source);
+                     const tmpl_ThreeVectorLongDouble *source);
+
+/*  Less verbose macros for vector addition.                                  */
+#define tmpl_3D_AddTof tmpl_3DFloat_AddTo
+#define tmpl_3D_AddTo tmpl_3DDouble_AddTo
+#define tmpl_3D_AddTol tmpl_3DLDouble_AddTo
 
 /******************************************************************************
  *  Function:                                                                 *

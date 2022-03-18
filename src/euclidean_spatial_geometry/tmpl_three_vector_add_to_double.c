@@ -30,7 +30,7 @@
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorDouble *):                                    *
  *          A pointer to a vector in R^3. The sum will be stored here.        *
- *      source (tmpl_ThreeVectorDouble *):                                    *
+ *      source (const tmpl_ThreeVectorDouble *):                              *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -49,9 +49,8 @@
  *                                                                            *
  *      If tmpl_3DDouble_Add is the equivalent of the "+" operator for the    *
  *      tmpl_ThreeVectorDouble struct, this is the equivalent of "+=". It is  *
- *      about 3x faster (on the computers I've tested) then tmpl_3DDouble_Add.*
- *      One could guess this is because tmpl_3DDouble_AddTo is passed by      *
- *      reference and not by value.                                           *
+ *      about 3x faster to do tmpl_3DDouble_AddTo(&P, &Q) instead of doing    *
+ *      P = tmpl_3DDouble_Add(&P, &Q).                                        *
  *                                                                            *
  *      No checks for Null pointers are performed.                            *
  ******************************************************************************
@@ -80,7 +79,7 @@
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/17/02: Ryan Maguire                                                  *
+ *  2022/03/17: Ryan Maguire                                                  *
  *      Added doc-string and comments.                                        *
  ******************************************************************************/
 
@@ -89,7 +88,7 @@
 
 /*  Function for performing vector addition in R^3.                           */
 void tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
-                         tmpl_ThreeVectorDouble *source)
+                         const tmpl_ThreeVectorDouble *source)
 {
     target->dat[0] += source->dat[0];
     target->dat[1] += source->dat[1];
