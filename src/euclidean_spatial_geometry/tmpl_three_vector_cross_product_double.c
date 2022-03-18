@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -29,10 +29,10 @@
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors at double precision.        *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorDouble):                                           *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorDouble):                                           *
- *          Another vector in R^3.                                            *
+ *      P (const tmpl_ThreeVectorDouble *):                                   *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorDouble *):                                   *
+ *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      cross (tmpl_ThreeVectorDouble):                                       *
  *          The cross product PxQ.                                            *
@@ -51,20 +51,25 @@
  *      PxQ = -QxP. The order of P and Q matters for this function.           *
  *                                                                            *
  *      The macro tmpl_Cross_Product is an alias for this function.           *
+ *                                                                            *
+ *      A 73% to 100% increase in performance (pending hardware and compiler  *
+ *      used) was found when passing by reference instead of by value.        *
+ *                                                                            *
+ *      No checks for NULL pointers are performed.                            *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_euclidean_spatial_geometry.h:                                    *
  *          Header containing ThreeVector typedef and the function prototype. *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
+ *                             A NOTE ON COMMENTS                             *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
- *                            A FRIENDLY WARNING                              *
+ *                             A FRIENDLY WARNING                             *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
  *  is used to compile this in make.sh uses gcc and has the                   *
@@ -75,10 +80,12 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *  2022/03/18: Ryan Maguire                                                  *
+ *      Changed function to pass by reference instead of by value.            *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
@@ -86,15 +93,16 @@
 
 /*  Function for computing the cross product of vectors at double precision.  */
 tmpl_ThreeVectorDouble
-tmpl_3DDouble_Cross_Product(tmpl_ThreeVectorDouble P, tmpl_ThreeVectorDouble Q)
+tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble *P,
+                            const tmpl_ThreeVectorDouble *Q)
 {
     /*  Declare a variable for the output.                                    */
     tmpl_ThreeVectorDouble cross;
 
     /*  Compute the components of the cross product PxQ.                      */
-    cross.dat[0] = P.dat[1]*Q.dat[2] - P.dat[2]*Q.dat[1];
-    cross.dat[1] = P.dat[2]*Q.dat[0] - P.dat[0]*Q.dat[2];
-    cross.dat[2] = P.dat[0]*Q.dat[1] - P.dat[1]*Q.dat[0];
+    cross.dat[0] = P->dat[1]*Q->dat[2] - P->dat[2]*Q->dat[1];
+    cross.dat[1] = P->dat[2]*Q->dat[0] - P->dat[0]*Q->dat[2];
+    cross.dat[2] = P->dat[0]*Q->dat[1] - P->dat[1]*Q->dat[0];
     return cross;
 }
 /*  End of tmpl_3DDouble_Cross_Product.                                       */
