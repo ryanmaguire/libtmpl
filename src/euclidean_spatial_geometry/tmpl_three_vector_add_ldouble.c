@@ -28,10 +28,10 @@
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at long double precision.      *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorLongDouble):                                       *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorLongDouble):                                       *
- *          Another vector in R^3.                                            *
+ *      P (const tmpl_ThreeVectorLongDouble *):                               *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorLongDouble *):                               *
+ *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorLongDouble):                                     *
  *          The vector sum P+Q.                                               *
@@ -47,6 +47,12 @@
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
  *      The macro tmpl_3D_Addl is an alias for this function.                 *
+ *                                                                            *
+ *      A 7% to 50% increase in performance was found (pending hardware and   *
+ *      compiler used) by passing tmpl_ThreeVectorLongDouble's by reference   *
+ *      instead of by value.                                                  *
+ *                                                                            *
+ *      No checks for Null pointers are performed.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -75,6 +81,8 @@
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *  2022/03/17: Ryan Maguire                                                  *
+ *      Changed function to pass by reference instead of by value.            *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */

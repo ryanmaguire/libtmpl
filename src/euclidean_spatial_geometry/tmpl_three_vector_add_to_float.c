@@ -30,7 +30,7 @@
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorFloat *):                                     *
  *          A pointer to a vector in R^3. The sum will be stored here.        *
- *      source (tmpl_ThreeVectorFloat *):                                     *
+ *      source (const tmpl_ThreeVectorFloat *):                               *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -45,13 +45,12 @@
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_AddTol is an alias for this function.               *
+ *      The macro tmpl_3D_AddTof is an alias for this function.               *
  *                                                                            *
  *      If tmpl_3DFloat_Add is the equivalent of the "+" operator for the     *
  *      tmpl_ThreeVectorFloat struct, this is the equivalent of "+=". It is   *
- *      about 3x faster (on the computers I've tested) then tmpl_3DFloat_Add. *
- *      One could guess this is because tmpl_3DFloat_AddTo is passed by       *
- *      reference and not by value.                                           *
+ *      about 3x faster to do tmpl_3DFloat_AddTo(&P, &Q) instead of doing     *
+ *      P = tmpl_3DFloat_Add(&P, &Q).                                         *
  *                                                                            *
  *      No checks for Null pointers are performed.                            *
  ******************************************************************************
@@ -80,7 +79,7 @@
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/17/02: Ryan Maguire                                                  *
+ *  2022/03/17: Ryan Maguire                                                  *
  *      Added doc-string and comments.                                        *
  ******************************************************************************/
 
@@ -89,7 +88,8 @@
 
 /*  Function for performing vector addition in R^3.                           */
 void
-tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target, tmpl_ThreeVectorFloat *source)
+tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
+                   const tmpl_ThreeVectorFloat *source)
 {
     target->dat[0] += source->dat[0];
     target->dat[1] += source->dat[1];
