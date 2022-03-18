@@ -186,6 +186,45 @@ tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_CrossWith                                                *
+ *  Purpose:                                                                  *
+ *      Computes the cross product of two vectors in R^3 at single precision. *
+ *      Similar functions are provided for double and long double precisions. *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat *):                                     *
+ *          A pointer to a three dimensional vector. The result of the cross  *
+ *          product is stored in this variable.                               *
+ *      source (const tmpl_ThreeVectorFloat *):                               *
+ *          Another pointer to a  three dimensional vector.                   *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      The cross product is anti-commutative. That is, PxQ = -QxP.           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/euclidean_spatial_geometry/                               *
+ *          tmpl_three_vector_cross_with_float.c                              *
+ *          tmpl_three_vector_cross_with_double.c                             *
+ *          tmpl_three_vector_cross_with_ldouble.c                            *
+ ******************************************************************************/
+extern void
+tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat *target,
+                       const tmpl_ThreeVectorFloat *source);
+
+extern void
+tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble *target,
+                        const tmpl_ThreeVectorDouble *source);
+
+extern void
+tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
+                         const tmpl_ThreeVectorLongDouble *source);
+
+/*  Less verbose macros for the cross product.                                */
+#define tmpl_CrossWithf tmpl_3DFloat_CrossWith
+#define tmpl_CrossWith tmpl_3DDouble_CrossWith
+#define tmpl_CrossWithl tmpl_3DLDouble_CrossWith
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Dot_Product                                              *
  *  Purpose:                                                                  *
  *      Computes the Euclidean dot product of two vector in R^3 at single     *
