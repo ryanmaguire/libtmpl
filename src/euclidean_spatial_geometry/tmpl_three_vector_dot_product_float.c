@@ -28,10 +28,10 @@
  *  Purpose:                                                                  *
  *      Computes the dot product of two vectors at single precision.          *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another vector in R^3.                                            *
+ *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      dot (float):                                                          *
  *          The dot product P . Q.                                            *
@@ -45,6 +45,8 @@
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
  *      The macro tmpl_3D_Dot_Productf is an alias for this function.         *
+ *                                                                            *
+ *      No checks for Null pointers are performed.                            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -73,15 +75,19 @@
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *  2022/03/21: Ryan Maguire                                                  *
+ *      Changed function to pass by reference instead of by value.            *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for computing the dot product of 2 three-vectors.                */
-float tmpl_3DFloat_Dot_Product(tmpl_ThreeVectorFloat P, tmpl_ThreeVectorFloat Q)
+float
+tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat *P,
+                         const tmpl_ThreeVectorFloat *Q)
 {
     /*  Use the Euclidean dot product formula and return.                     */
-    return P.dat[0]*Q.dat[0] + P.dat[1]*Q.dat[1] + P.dat[2]*Q.dat[2];
+    return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1] + P->dat[2]*Q->dat[2];
 }
 /*  End of tmpl_3DFloat_Dot_Product.                                          */

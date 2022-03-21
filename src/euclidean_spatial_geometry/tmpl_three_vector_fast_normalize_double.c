@@ -90,16 +90,42 @@
 /*  NaN is defined here.                                                      */
 #include <libtmpl/include/tmpl_math.h>
 
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
 /*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Fast_Normalize(tmpl_ThreeVectorDouble P)
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    const double rcpr_norm = 1.0 / tmpl_3DDouble_Norm(P);
+    const double rcpr_norm = 1.0 / tmpl_Double_Sqrt(P->dat[0]*P->dat[0] +
+                                                    P->dat[1]*P->dat[1] +
+                                                    P->dat[2]*P->dat[2]);
     tmpl_ThreeVectorDouble P_normalized;
 
-    P_normalized.dat[0] = P.dat[0] * rcpr_norm;
-    P_normalized.dat[1] = P.dat[1] * rcpr_norm;
-    P_normalized.dat[2] = P.dat[2] * rcpr_norm;
+    P_normalized.dat[0] = P->dat[0] * rcpr_norm;
+    P_normalized.dat[1] = P->dat[1] * rcpr_norm;
+    P_normalized.dat[2] = P->dat[2] * rcpr_norm;
     return P_normalized;
 }
 /*  End of tmpl_3DDouble_Fast_Normalize.                                      */
+
+#else
+
+#include <math.h>
+
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    const double rcpr_norm = 1.0 / sqrt(P->dat[0]*P->dat[0] +
+                                        P->dat[1]*P->dat[1] +
+                                        P->dat[2]*P->dat[2]);
+    tmpl_ThreeVectorDouble P_normalized;
+
+    P_normalized.dat[0] = P->dat[0] * rcpr_norm;
+    P_normalized.dat[1] = P->dat[1] * rcpr_norm;
+    P_normalized.dat[2] = P->dat[2] * rcpr_norm;
+    return P_normalized;
+}
+
+#endif

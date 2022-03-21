@@ -50,7 +50,7 @@
  *      PxQ = -QxP. The order of P and Q matters for this function.           *
  *                                                                            *
  *      If tmpl_3DLDouble_Cross_Product is the equivalent of the "x" operator *
- *      for the tmpl_ThreeVectoLongrDouble struct, this is the equivalent of  *
+ *      for the tmpl_ThreeVectoLongDouble struct, this is the equivalent of   *
  *      "x=". It is about 3x faster to do tmpl_3DLDouble_CrossWith(&P, &Q)    *
  *      instead of doing P = tmpl_3DLDouble_Cross_Product(&P, &Q).            *
  *                                                                            *

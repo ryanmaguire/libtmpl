@@ -28,10 +28,10 @@
  *  Purpose:                                                                  *
  *      Computes the dot product of two vectors at double precision.          *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorDouble):                                           *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorDouble):                                           *
- *          Another vector in R^3.                                            *
+ *      P (const tmpl_ThreeVectorDouble *):                                   *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorDouble *):                                   *
+ *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      dot (double):                                                         *
  *          The dot product P . Q.                                            *
@@ -45,6 +45,8 @@
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
  *      The macro tmpl_3D_Dot_Product is an alias for this function.          *
+ *                                                                            *
+ *      No checks for Null pointers are performed.                            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -73,6 +75,8 @@
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *  2022/03/21: Ryan Maguire                                                  *
+ *      Changed function to pass by reference instead of by value.            *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
