@@ -460,3 +460,127 @@ int main(void)                                                                 \
     free(Z);                                                                   \
     return 0;                                                                  \
 }
+
+#define TEST4(ctype, ttype, ltype, f0, f1, samples)                            \
+int main(void)                                                                 \
+{                                                                              \
+    ttype *X, *Y;                                                              \
+    struct ltype *A, *B;                                                       \
+    const unsigned long long int N = samples;                                  \
+    unsigned long long int n;                                                  \
+    clock_t t1, t2;                                                            \
+    long double x_max = 0.0L;                                                  \
+    long double y_max = 0.0L;                                                  \
+    long double z_max = 0.0L;                                                  \
+    long double x_rms = 0.0L;                                                  \
+    long double y_rms = 0.0L;                                                  \
+    long double z_rms = 0.0L;                                                  \
+    long double tmp = 0.0L;                                                    \
+                                                                               \
+    X = malloc(sizeof(*X) * N);                                                \
+                                                                               \
+    if (!X)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for X. Aborting.");              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    Y = malloc(sizeof(*Y) * N);                                                \
+                                                                               \
+    if (!Y)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for Y. Aborting.");              \
+        free(X);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    A = malloc(sizeof(*A) * N);                                                \
+                                                                               \
+    if (!A)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for A. Aborting.");              \
+        free(X);                                                               \
+        free(Y);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    B = malloc(sizeof(*B) * N);                                                \
+                                                                               \
+    if (!B)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for B. Aborting.");              \
+        free(X);                                                               \
+        free(Y);                                                               \
+        free(A);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    for (n = 0U; n < N; ++n)                                                   \
+    {                                                                          \
+        long double u0 = rand_real();                                          \
+        long double u1 = rand_real();                                          \
+        long double u2 = rand_real();                                          \
+                                                                               \
+        X[n].dat[0] = (ctype)u0;                                               \
+        X[n].dat[1] = (ctype)u1;                                               \
+        X[n].dat[2] = (ctype)u2;                                               \
+                                                                               \
+        A[n].x = (ctype)u0;                                                    \
+        A[n].y = (ctype)u1;                                                    \
+        A[n].z = (ctype)u2;                                                    \
+    }                                                                          \
+                                                                               \
+    printf(#f0 " vs. " #f1"\n");                                               \
+    t1 = clock();                                                              \
+    for (n = 0U; n < N; ++n)                                                   \
+        Y[n] = f0(&X[n]);                                                       \
+    t2 = clock();                                                              \
+    printf("libtmpl: %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
+                                                                               \
+    t1 = clock();                                                              \
+    for (n = 0U; n < N; ++n)                                                   \
+    {                                                                          \
+        B[n] = A[n];                                                           \
+        f1(&B[n]);                                                             \
+    }                                                                          \
+    t2 = clock();                                                              \
+    printf("linasm:  %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
+                                                                               \
+    for (n = 0U; n < N; ++n)                                                   \
+    {                                                                          \
+        tmp = fabsl((long double)(Y[n].dat[0] - B[n].x));                      \
+        x_rms += tmp*tmp;                                                      \
+                                                                               \
+        if (x_max < tmp)                                                       \
+            x_max = tmp;                                                       \
+                                                                               \
+        tmp = fabsl((long double)(Y[n].dat[1] - B[n].y));                      \
+        y_rms += tmp*tmp;                                                      \
+                                                                               \
+        if (y_max < tmp)                                                       \
+            y_max = tmp;                                                       \
+                                                                               \
+        tmp = fabsl((long double)(Y[n].dat[2] - B[n].z));                      \
+        z_rms += tmp*tmp;                                                      \
+                                                                               \
+        if (z_max < tmp)                                                       \
+            z_max = tmp;                                                       \
+    }                                                                          \
+                                                                               \
+    x_rms = sqrtl(x_rms / (long double)N);                                     \
+    y_rms = sqrtl(y_rms / (long double)N);                                     \
+    z_rms = sqrtl(z_rms / (long double)N);                                     \
+                                                                               \
+    printf("x max err: %Le\n", x_max);                                         \
+    printf("y max err: %Le\n", y_max);                                         \
+    printf("z max err: %Le\n", z_max);                                         \
+    printf("x rms err: %Le\n", x_rms);                                         \
+    printf("y rms err: %Le\n", y_rms);                                         \
+    printf("z rms err: %Le\n", z_rms);                                         \
+                                                                               \
+    free(A);                                                                   \
+    free(B);                                                                   \
+    free(X);                                                                   \
+    free(Y);                                                                   \
+    return 0;                                                                  \
+}
