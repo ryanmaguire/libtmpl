@@ -53,6 +53,34 @@
  *      instead of by value.                                                  *
  *                                                                            *
  *      No checks for Null pointers are performed.                            *
+ *                                                                            *
+ *  Accuracy and Performance:                                                 *
+ *                                                                            *
+ *      A time and accuracy test against linasm's 3D library produced the     *
+ *      following results:                                                    *
+ *                                                                            *
+ *          tmpl_3DFloat_Add vs. Vector3D_Add_flt32                           *
+ *          samples: 400000000                                                *
+ *          libtmpl: 2.337032 seconds                                         *
+ *          linasm:  2.484925 seconds                                         *
+ *          x max err: 0.000000e+00                                           *
+ *          y max err: 0.000000e+00                                           *
+ *          z max err: 0.000000e+00                                           *
+ *          x rms err: 0.000000e+00                                           *
+ *          y rms err: 0.000000e+00                                           *
+ *          z rms err: 0.000000e+00                                           *
+ *                                                                            *
+ *      These tests were performed with the following specs:                  *
+ *                                                                            *
+ *          2017 iMac                                                         *
+ *          CPU:  Intel Core i5-7500                                          *
+ *          MIN:  800.0000 MHz                                                *
+ *          MAX:  3800.0000 MHz                                               *
+ *          ARCH: x86_64                                                      *
+ *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
+ *          OS:   Ubuntu Budgie 20.04                                         *
+ *                                                                            *
+ *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
