@@ -61,8 +61,8 @@
  *                                                                            *
  *          tmpl_3DFloat_Add vs. Vector3D_Add_flt32                           *
  *          samples: 400000000                                                *
- *          libtmpl: 2.337032 seconds                                         *
- *          linasm:  2.484925 seconds                                         *
+ *          libtmpl: 2.146027 seconds                                         *
+ *          linasm:  2.388277 seconds                                         *
  *          x max err: 0.000000e+00                                           *
  *          y max err: 0.000000e+00                                           *
  *          z max err: 0.000000e+00                                           *

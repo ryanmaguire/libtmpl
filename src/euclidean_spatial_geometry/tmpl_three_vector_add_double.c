@@ -61,8 +61,8 @@
  *                                                                            *
  *          tmpl_3DDouble_Add vs. Vector3D_Add_flt64                          *
  *          samples: 400000000                                                *
- *          libtmpl: 3.963042 seconds                                         *
- *          linasm:  4.184613 seconds                                         *
+ *          libtmpl: 3.819373 seconds                                         *
+ *          linasm:  4.004308 seconds                                         *
  *          x max err: 0.000000e+00                                           *
  *          y max err: 0.000000e+00                                           *
  *          z max err: 0.000000e+00                                           *

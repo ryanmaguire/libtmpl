@@ -55,8 +55,8 @@
  *                                                                            *
  *          tmpl_3DFloat_Dot_Product vs. Vector3D_ScalarProduct_flt32         *
  *          samples: 400000000                                                *
- *          libtmpl: 1.422285 seconds                                         *
- *          linasm:  1.517113 seconds                                         *
+ *          libtmpl: 1.430367 seconds                                         *
+ *          linasm:  1.405905 seconds                                         *
  *          max err: 0.000000e+00                                             *
  *          rms err: 0.000000e+00                                             *
  *                                                                            *

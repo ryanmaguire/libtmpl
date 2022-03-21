@@ -65,8 +65,8 @@
  *                                                                            *
  *          tmpl_3DFloat_CrossWith vs. Vector3D_VectorProduct_flt32           *
  *          samples: 400000000                                                *
- *          libtmpl: 1.040431 seconds                                         *
- *          linasm:  1.018991 seconds                                         *
+ *          libtmpl: 1.014458 seconds                                         *
+ *          linasm:  0.977548 seconds                                         *
  *          x max err: 0.000000e+00                                           *
  *          y max err: 0.000000e+00                                           *
  *          z max err: 0.000000e+00                                           *
