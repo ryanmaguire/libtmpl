@@ -135,6 +135,7 @@ int main(void)                                                                 \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
+    printf("samples: %llu\n", N);                                              \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
         Z[n] = f0(&X[n], &Y[n]);                                               \
@@ -272,6 +273,7 @@ int main(void)                                                                 \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
+    printf("samples: %llu\n", N);                                              \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
         f0(&Y[n], &X[n]);                                                      \
@@ -426,6 +428,7 @@ int main(void)                                                                 \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
+    printf("samples: %llu\n", N);                                              \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
         Z[n] = f0(&X[n], &Y[n]);                                               \
@@ -531,9 +534,10 @@ int main(void)                                                                 \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
+    printf("samples: %llu\n", N);                                              \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        Y[n] = f0(&X[n]);                                                       \
+        Y[n] = f0(&X[n]);                                                      \
     t2 = clock();                                                              \
     printf("libtmpl: %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
