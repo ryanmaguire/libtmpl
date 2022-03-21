@@ -65,8 +65,8 @@
  *                                                                            *
  *          tmpl_3DDouble_CrossWith vs. Vector3D_VectorProduct_flt64          *
  *          samples: 400000000                                                *
- *          libtmpl: 1.247144 seconds                                         *
- *          linasm:  1.255139 seconds                                         *
+ *          libtmpl: 1.234255 seconds                                         *
+ *          linasm:  1.221312 seconds                                         *
  *          x max err: 0.000000e+00                                           *
  *          y max err: 0.000000e+00                                           *
  *          z max err: 0.000000e+00                                           *

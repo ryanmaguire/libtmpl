@@ -54,6 +54,34 @@
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
  *      If the vector is zero, (NaN, NaN, NaN) is returned.                   *
+ *                                                                            *
+ *  Accuracy and Performance:                                                 *
+ *                                                                            *
+ *      A time and accuracy test against linasm's 3D library produced the     *
+ *      following results:                                                    *
+ *                                                                            *
+ *          tmpl_3DDouble_Fast_Normalize vs. Vector3D_Normalize_flt64         *
+ *          samples: 400000000                                                *
+ *          libtmpl: 4.580978 seconds                                         *
+ *          linasm:  4.886208 seconds                                         *
+ *          x max err: 0.000000e+00                                           *
+ *          y max err: 0.000000e+00                                           *
+ *          z max err: 0.000000e+00                                           *
+ *          x rms err: 0.000000e+00                                           *
+ *          y rms err: 0.000000e+00                                           *
+ *          z rms err: 0.000000e+00                                           *
+ *                                                                            *
+ *      These tests were performed with the following specs:                  *
+ *                                                                            *
+ *          2017 iMac                                                         *
+ *          CPU:  Intel Core i5-7500                                          *
+ *          MIN:  800.0000 MHz                                                *
+ *          MAX:  3800.0000 MHz                                               *
+ *          ARCH: x86_64                                                      *
+ *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
+ *          OS:   Ubuntu Budgie 20.04                                         *
+ *                                                                            *
+ *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -90,6 +118,9 @@
 /*  NaN is defined here.                                                      */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Some implementations may inline the square root function from math.h.     *
+ *  This can double the efficiency of this routine. If the macro              *
+ *  TMPL_USE_MATH_ALGORITHMS is not set to 1, use sqrt from math.h instead.   */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Function that normalizes non-zero three dimensional vectors.              */
@@ -97,10 +128,10 @@ tmpl_ThreeVectorDouble
 tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_ThreeVectorDouble P_normalized;
     const double rcpr_norm = 1.0 / tmpl_Double_Sqrt(P->dat[0]*P->dat[0] +
                                                     P->dat[1]*P->dat[1] +
                                                     P->dat[2]*P->dat[2]);
-    tmpl_ThreeVectorDouble P_normalized;
 
     P_normalized.dat[0] = P->dat[0] * rcpr_norm;
     P_normalized.dat[1] = P->dat[1] * rcpr_norm;
@@ -110,22 +141,28 @@ tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P)
 /*  End of tmpl_3DDouble_Fast_Normalize.                                      */
 
 #else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS == 1.                               */
 
+/*  Some implementation inline the sqrt function from math.h. This can        *
+ *  drastically increase the performance of the computation. Use this.        */
 #include <math.h>
 
+/*  Function that normalizes non-zero three dimensional vectors.              */
 tmpl_ThreeVectorDouble
 tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_ThreeVectorDouble P_normalized;
     const double rcpr_norm = 1.0 / sqrt(P->dat[0]*P->dat[0] +
                                         P->dat[1]*P->dat[1] +
                                         P->dat[2]*P->dat[2]);
-    tmpl_ThreeVectorDouble P_normalized;
 
     P_normalized.dat[0] = P->dat[0] * rcpr_norm;
     P_normalized.dat[1] = P->dat[1] * rcpr_norm;
     P_normalized.dat[2] = P->dat[2] * rcpr_norm;
     return P_normalized;
 }
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS == 1.                               */
 
 #endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

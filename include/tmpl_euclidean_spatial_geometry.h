@@ -124,9 +124,9 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
  *      None (void).                                                          *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_addto_float.c                                   *
- *          tmpl_three_vector_addto_double.c                                  *
- *          tmpl_three_vector_addto_ldouble.c                                 *
+ *          tmpl_three_vector_add_to_float.c                                  *
+ *          tmpl_three_vector_add_to_double.c                                 *
+ *          tmpl_three_vector_add_to_ldouble.c                                *
  ******************************************************************************/
 extern void
 tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
@@ -230,10 +230,10 @@ tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
  *      Computes the Euclidean dot product of two vector in R^3 at single     *
  *      precision. Similar functions are provided for double and long double. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A three dimensional vector.                                       *
- *      Q (tmpl_ThreeVectorFloat):                                            *
- *          Another three dimensional vector.                                 *
+ *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *          A pointer to a three dimensional vector.                          *
+ *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
  *      dot (float):                                                          *
  *          The dot product of P and Q, P . Q.                                *
@@ -256,7 +256,7 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
                            const tmpl_ThreeVectorLongDouble *Q);
 
 /*  Less verbose macros for the Euclidean dot product.                        */
-#define tmpl_3D_Dot_Productf tmpl_3DDFloat_Dot_Product
+#define tmpl_3D_Dot_Productf tmpl_3DFloat_Dot_Product
 #define tmpl_3D_Dot_Product tmpl_3DDouble_Dot_Product
 #define tmpl_3D_Dot_Productl tmpl_3DLDoubble_Dot_Product
 
@@ -273,7 +273,19 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
  *      P_hat (tmpl_ThreeVectorFloat):                                        *
  *          The unit-normal of P.                                             *
  *  Notes:                                                                    *
- *      If P is the zero vector, the vector (NaN, NaN, NaN) is returned.      *
+ *      Depending on hardware and compiler used, this function is 5% to 60%   *
+ *      faster than tmpl_3DFloat_Normalize.                                   *
+ *                                                                            *
+ *      This function can not be used with vectors P such that                *
+ *      ||P|| > sqrt(FLT_MAX). On IEEE-754 compliant systems, this is about   *
+ *      sqrt(10^38) = 10^19. The intermediate computation of ||P||^2 will     *
+ *      overflow resulting in infinity.                                       *
+ *                                                                            *
+ *      No checks for NaN or Inf are performed.                               *
+ *                                                                            *
+ *      Most applications can use this instead of tmpl_3DFloat_Normalize and  *
+ *      enjoy a decent performance boost. If unsure, or if you know you will  *
+ *      be working with large vectors, use tmpl_3DFloat_Normalize.            *
  *  Source Code:                                                              *
  *      libtmpl/src/euclidean_spatial_geometry/                               *
  *          tmpl_three_vector_fast_normalize_float.c                          *
@@ -281,10 +293,10 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
  *          tmpl_three_vector_fast_normalize_ldouble.c                        *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Fast_Normalize(tmpl_ThreeVectorFloat P);
+tmpl_3DFloat_Fast_Normalize(const tmpl_ThreeVectorFloat *P);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Fast_Normalize(tmpl_ThreeVectorDouble P);
+tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Fast_Normalize(tmpl_ThreeVectorLongDouble P);
