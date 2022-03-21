@@ -91,15 +91,18 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorFloat tmpl_3DFloat_Fast_Normalize(tmpl_ThreeVectorFloat P)
+tmpl_ThreeVectorFloat
+tmpl_3DFloat_Fast_Normalize(const tmpl_ThreeVectorFloat *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    const float rcpr_norm = 1.0F / tmpl_3DFloat_Norm(P);
+    const float rcpr_norm = 1.0F / tmpl_Float_Sqrt(P->dat[0]*P->dat[0] +
+                                                   P->dat[1]*P->dat[1] +
+                                                   P->dat[2]*P->dat[2]);
     tmpl_ThreeVectorFloat P_normalized;
 
-    P_normalized.dat[0] = P.dat[0] * rcpr_norm;
-    P_normalized.dat[1] = P.dat[1] * rcpr_norm;
-    P_normalized.dat[2] = P.dat[2] * rcpr_norm;
+    P_normalized.dat[0] = P->dat[0] * rcpr_norm;
+    P_normalized.dat[1] = P->dat[1] * rcpr_norm;
+    P_normalized.dat[2] = P->dat[2] * rcpr_norm;
     return P_normalized;
 }
 /*  End of tmpl_3DFloat_Fast_Normalize.                                       */

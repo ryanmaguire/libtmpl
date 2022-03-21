@@ -28,10 +28,10 @@
  *  Purpose:                                                                  *
  *      Computes the dot product of two vectors at long double precision.     *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorLongDouble):                                       *
- *          A vector in R^3.                                                  *
- *      Q (tmpl_ThreeVectorLongDouble):                                       *
- *          Another vector in R^3.                                            *
+ *      P (const tmpl_ThreeVectorLongDouble *):                               *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorLongDouble *):                               *
+ *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      dot (long double):                                                    *
  *          The dot product P . Q.                                            *
@@ -45,6 +45,8 @@
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
  *      The macro tmpl_3D_Dot_Productl is an alias for this function.         *
+ *                                                                            *
+ *      No checks for Null pointers are performed.                            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -73,6 +75,8 @@
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *  2022/03/21: Ryan Maguire                                                  *
+ *      Changed function to pass by reference instead of by value.            *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
@@ -80,10 +84,10 @@
 
 /*  Function for computing the dot product of 2 three-vectors.                */
 long double
-tmpl_3DLDouble_Dot_Product(tmpl_ThreeVectorLongDouble P,
-                           tmpl_ThreeVectorLongDouble Q)
+tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
+                           const tmpl_ThreeVectorLongDouble *Q)
 {
     /*  Use the Euclidean dot product formula and return.                     */
-    return P.dat[0]*Q.dat[0] + P.dat[1]*Q.dat[1] + P.dat[2]*Q.dat[2];
+    return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1] + P->dat[2]*Q->dat[2];
 }
 /*  End of tmpl_3DLDouble_Dot_Product.                                        */
