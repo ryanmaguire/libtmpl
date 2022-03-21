@@ -47,6 +47,30 @@
  *      The macro tmpl_3D_Dot_Product is an alias for this function.          *
  *                                                                            *
  *      No checks for Null pointers are performed.                            *
+ *                                                                            *
+ *  Accuracy and Performance:                                                 *
+ *                                                                            *
+ *      A time and accuracy test against linasm's 3D library produced the     *
+ *      following results:                                                    *
+ *                                                                            *
+ *          tmpl_3DDouble_Dot_Product vs. Vector3D_ScalarProduct_flt64        *
+ *          samples: 400000000                                                *
+ *          libtmpl: 2.004610 seconds                                         *
+ *          linasm:  2.002810 seconds                                         *
+ *          max err: 0.000000e+00                                             *
+ *          rms err: 0.000000e+00                                             *
+ *                                                                            *
+ *      These tests were performed with the following specs:                  *
+ *                                                                            *
+ *          2017 iMac                                                         *
+ *          CPU:  Intel Core i5-7500                                          *
+ *          MIN:  800.0000 MHz                                                *
+ *          MAX:  3800.0000 MHz                                               *
+ *          ARCH: x86_64                                                      *
+ *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
+ *          OS:   Ubuntu Budgie 20.04                                         *
+ *                                                                            *
+ *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
