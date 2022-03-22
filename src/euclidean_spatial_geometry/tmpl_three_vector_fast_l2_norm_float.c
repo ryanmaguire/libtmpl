@@ -86,12 +86,57 @@
 /*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Check if the user requested TMPL algorithms only.                         */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+
 /*  Function for computing the length of three dimensional vectors.           */
-float tmpl_3DFloat_Fast_Norm(tmpl_ThreeVectorFloat P)
+float tmpl_3DFloat_Fast_L2_Norm(tmpl_ThreeVectorFloat *P)
 {
     /*  Use the pythagorean formula and return.                               */
-    return tmpl_Float_Sqrt(P.dat[0]*P.dat[0] +
-                           P.dat[1]*P.dat[1] +
-                           P.dat[2]*P.dat[2]);
+    return tmpl_Float_Sqrt(P->dat[0]*P->dat[0] +
+                           P->dat[1]*P->dat[1] +
+                           P->dat[2]*P->dat[2]);
 }
-/*  End of tmpl_3DFloat_Norm.                                                 */
+/*  End of tmpl_3DFloat_Fast_L2_Norm.                                         */
+
+#else
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+
+/*  Some implementations may inline the sqrt function, making it much more    *
+ *  efficient. Use this if TMPL_USE_MATH_ALGORITHMS is not set to 1.          */
+#include <math.h>
+
+/*  C99 and higher have sqrtf defined. C89 compilers may not. Microsoft has   *
+ *  sqrtf but does not define the __STDC_VERSION__ macro by default.          */
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
+    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
+
+/*  Function for computing the length of three dimensional vectors.           */
+float tmpl_3DFloat_Fast_L2_Norm(tmpl_ThreeVectorFloat *P)
+{
+    /*  Use the pythagorean formula and return.                               */
+    return sqrtf(P->dat[0]*P->dat[0] +
+                 P->dat[1]*P->dat[1] +
+                 P->dat[2]*P->dat[2]);
+}
+/*  End of tmpl_3DFloat_Fast_L2_Norm.                                         */
+
+#else
+/*  #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)            */
+
+/*  Function for computing the length of three dimensional vectors.           */
+float tmpl_3DFloat_Fast_L2_Norm(tmpl_ThreeVectorFloat *P)
+{
+    /*  Use the pythagorean formula and return.                               */
+    const double norm = sqrt((double)(P->dat[0]*P->dat[0] +
+                                      P->dat[1]*P->dat[1] +
+                                      P->dat[2]*P->dat[2]));
+    return (float)norm;
+}
+/*  End of tmpl_3DFloat_Fast_L2_Norm.                                         */
+
+#endif
+/*  #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)            */
+
+#endif
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */

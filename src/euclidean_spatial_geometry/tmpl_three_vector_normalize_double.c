@@ -90,31 +90,35 @@
 /*  NaN is defined here.                                                      */
 #include <libtmpl/include/tmpl_math.h>
 
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
+#include <math.h>
+#endif
+
 /*  It's faster to check for large inputs, and NaN/Inf, with IEEE754 support. */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
+tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double rcpr_norm, norm;
+    double rcpr_norm, norm, t, u, v, rcpr_t;
     tmpl_ThreeVectorDouble P_normalized;
     tmpl_IEEE754_Double wx, wy, wz;
 
     /*  Set the double parts of the unions to the components of the vector.   */
-    wx.r = P.dat[0];
-    wy.r = P.dat[1];
-    wz.r = P.dat[2];
+    wx.r = P->dat[0];
+    wy.r = P->dat[1];
+    wz.r = P->dat[2];
 
     /*  Check for large values.                                               */
-    if (wx.bits.expo > TMPL_DOUBLE_BIAS - 2U ||
-        wy.bits.expo > TMPL_DOUBLE_BIAS - 2U ||
-        wz.bits.expo > TMPL_DOUBLE_BIAS - 2U)
+    if (wx.bits.expo > 0x7FDU ||
+        wy.bits.expo > 0x7FDU ||
+        wz.bits.expo > 0x7FDU)
     {
         /*  Check for NaN or Inf.                                             */
-        if (wx.bits.expo == TMPL_DOUBLE_BIAS ||
-            wy.bits.expo == TMPL_DOUBLE_BIAS ||
-            wz.bits.expo == TMPL_DOUBLE_BIAS)
+        if (wx.bits.expo == 0x7FFU ||
+            wy.bits.expo == 0x7FFU ||
+            wz.bits.expo == 0x7FFU)
         {
             /*  If any component is NaN or Inf, the output is NaN.            */
             const double nanval = TMPL_NAN;
@@ -128,14 +132,57 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
          *  avoid overflow in the computation of ||P||.                       */
         else
         {
-            P.dat[0] *= 0.5;
-            P.dat[1] *= 0.5;
-            P.dat[2] *= 0.5;
+            wx.r *= 0.5;
+            wy.r *= 0.5;
+            wz.r *= 0.5;
         }
     }
 
     /*  Get the norm of the input vector P.                                   */
-    norm = tmpl_3DDouble_Norm(P);
+    wx.bits.sign = 0x00U;
+    wy.bits.sign = 0x00U;
+    wz.bits.sign = 0x00U;
+
+    if (wx.r < wy.r)
+    {
+        if (wy.r < wz.r)
+        {
+            t = wz.r;
+            u = wx.r;
+            v = wy.r;
+        }
+        else
+        {
+            t = wy.r;
+            u = wx.r;
+            v = wz.r;
+        }
+    }
+    else
+    {
+        if (wz.r < wx.r)
+        {
+            t = wx.r;
+            u = wy.r;
+            v = wz.r;
+        }
+        else
+        {
+            t = wz.r;
+            u = wx.r;
+            v = wy.r;
+        }
+    }
+
+    rcpr_t = 1.0 / t;
+    u = u*rcpr_t;
+    v = v*rcpr_t;
+
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 0
+    norm = t*sqrt(1.0 + u*u + v*v);
+#else
+    norm = t*tmpl_Double_Sqrt(1.0 + u*u + v*v);
+#endif
 
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0)
@@ -153,9 +200,9 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
         rcpr_norm = 1.0 / norm;
 
         /*  Compute the components of the normalized vector.                  */
-        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
-        P_normalized.dat[1] = P.dat[1]*rcpr_norm;
-        P_normalized.dat[2] = P.dat[2]*rcpr_norm;
+        P_normalized.dat[0] = P->dat[0]*rcpr_norm;
+        P_normalized.dat[1] = P->dat[1]*rcpr_norm;
+        P_normalized.dat[2] = P->dat[2]*rcpr_norm;
     }
     /*  End of if (norm == 0.0).                                              */
 
@@ -167,16 +214,16 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
 /*  Same algorithm without IEEE754 support.                                   */
 
 /*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
+tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double rcpr_norm, norm;
+    double rcpr_norm, norm, t, u, v, rcpr_t;
     tmpl_ThreeVectorDouble P_normalized;
 
     /*  Check if any of the components is NaN or Infinity.                    */
-    if (tmpl_Double_Is_NaN_Or_Inf(P.dat[0]) ||
-        tmpl_Double_Is_NaN_Or_Inf(P.dat[1]) ||
-        tmpl_Double_Is_NaN_Or_Inf(P.dat[2]))
+    if (tmpl_Double_Is_NaN_Or_Inf(P->dat[0]) ||
+        tmpl_Double_Is_NaN_Or_Inf(P->dat[1]) ||
+        tmpl_Double_Is_NaN_Or_Inf(P->dat[2]))
     {
         /*  If any component is NaN or Inf, the output is NaN.                */
         const double nanval = TMPL_NAN;
@@ -186,18 +233,60 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
         return P_normalized;
     }
 
+    P->dat[0] = tmpl_Double_Abs(P->dat[0]);
+    P->dat[1] = tmpl_Double_Abs(P->dat[1]);
+    P->dat[2] = tmpl_Double_Abs(P->dat[2]);
+
     /*  Check for large values.                                               */
-    if (P.dat[0] > 1.0E24 || P.dat[0] < -1.0E24 ||
-        P.dat[1] > 1.0E24 || P.dat[1] < -1.0E24 ||
-        P.dat[2] > 1.0E24 || P.dat[2] < -1.0E24)
+    if (P->dat[0] > 1.0E24 || P->dat[1] > 1.0E24 || P->dat[2] > 1.0E24)
     {
-        P.dat[0] *= 0.5;
-        P.dat[1] *= 0.5;
-        P.dat[2] *= 0.5;
+        P->dat[0] *= 0.5;
+        P->dat[1] *= 0.5;
+        P->dat[2] *= 0.5;
     }
 
     /*  Get the norm of the input vector P.                                   */
-    norm = tmpl_3DDouble_Norm(P);
+
+    if (P->dat[0] < P->dat[1])
+    {
+        if (P->dat[1] < P->dat[2])
+        {
+            t = P->dat[2];
+            u = P->dat[0];
+            v = P->dat[1];
+        }
+        else
+        {
+            t = P->dat[1];
+            u = P->dat[0];
+            v = P->dat[2];
+        }
+    }
+    else
+    {
+        if (P->dat[2] < P->dat[0])
+        {
+            t = P->dat[0];
+            u = P->dat[1];
+            v = P->dat[2];
+        }
+        else
+        {
+            t = P->dat[2];
+            u = P->dat[0];
+            v = P->dat[1];
+        }
+    }
+
+    rcpr_t = 1.0 / t;
+    u = u*rcpr_t;
+    v = v*rcpr_t;
+
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 0
+    norm = t*sqrt(1.0 + u*u + v*v);
+#else
+    norm = t*tmpl_Double_Sqrt(1.0 + u*u + v*v);
+#endif
 
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0)
@@ -215,9 +304,9 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
         rcpr_norm = 1.0 / norm;
 
         /*  Compute the components of the normalized vector.                  */
-        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
-        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
-        P_normalized.dat[0] = P.dat[0]*rcpr_norm;
+        P_normalized.dat[0] = P->dat[0]*rcpr_norm;
+        P_normalized.dat[1] = P->dat[1]*rcpr_norm;
+        P_normalized.dat[2] = P->dat[2]*rcpr_norm;
     }
     /*  End of if (norm == 0.0).                                              */
 
@@ -226,4 +315,3 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble P)
 /*  End of tmpl_3DDouble_Normalize.                                           */
 
 #endif
-/*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1. */

@@ -92,15 +92,15 @@
 
 /*  Function that normalizes non-zero three dimensional vectors.              */
 tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Fast_Normalize(tmpl_ThreeVectorLongDouble P)
+tmpl_3DLDouble_Fast_Normalize(tmpl_ThreeVectorLongDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    const long double rcpr_norm = 1.0L / tmpl_3DLDouble_Norm(P);
+    const long double rcpr_norm = 1.0L / tmpl_3DLDouble_L2_Norm(P);
     tmpl_ThreeVectorLongDouble P_normalized;
 
-    P_normalized.dat[0] = P.dat[0] * rcpr_norm;
-    P_normalized.dat[1] = P.dat[1] * rcpr_norm;
-    P_normalized.dat[2] = P.dat[2] * rcpr_norm;
+    P_normalized.dat[0] = P->dat[0] * rcpr_norm;
+    P_normalized.dat[1] = P->dat[1] * rcpr_norm;
+    P_normalized.dat[2] = P->dat[2] * rcpr_norm;
     return P_normalized;
 }
 /*  End of tmpl_3DLDouble_Fast_Normalize.                                     */

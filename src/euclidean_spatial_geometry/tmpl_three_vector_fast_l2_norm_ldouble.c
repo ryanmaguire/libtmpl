@@ -19,12 +19,13 @@
  *                        tmpl_three_vector_norm_double                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for the Euclidean norm at double precision.             *
+ *      Contains code for the Euclidean norm at double precision without      *
+ *      checking for overflows, and avoiding if-then nests and divisions.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DDouble_Norm                                                    *
+ *      tmpl_3DDouble_Fast_Norm                                               *
  *  Purpose:                                                                  *
  *      Computes the Euclidean norm, also called the L2 norm, of the input.   *
  *  Arguments:                                                                *
@@ -60,7 +61,10 @@
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_Dot_Product is an alias for this function.          *
+ *      Values larger than sqrt(DBL_MAX) will overflow, resulting in an inf   *
+ *      output. Use tmpl_3DDouble_Norm for large values.                      *
+ *                                                                            *
+ *      The macro tmpl_3D_Fast_Norm is an alias for this function.            *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -99,56 +103,57 @@
 /*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Check if the user requested TMPL algorithms only.                         */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+
 /*  Function for computing the length of three dimensional vectors.           */
-long double tmpl_3DLDouble_Norm(tmpl_ThreeVectorLongDouble P)
+long double tmpl_3DLDouble_Fast_L2_Norm(tmpl_ThreeVectorLongDouble *P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double x, y, z, t, u, v, rcpr_t;
-
-    x = tmpl_LDouble_Abs(P.dat[0]);
-    y = tmpl_LDouble_Abs(P.dat[1]);
-    z = tmpl_LDouble_Abs(P.dat[2]);
-
-    if (x < y)
-    {
-        if (y < z)
-        {
-            t = z;
-            u = x;
-            v = y;
-        }
-        else
-        {
-            t = y;
-            u = x;
-            v = z;
-        }
-    }
-    else
-    {
-        if (x < z)
-        {
-            t = z;
-            u = x;
-            v = y;
-        }
-        else
-        {
-            t = x;
-            u = x;
-            v = z;
-        }
-    }
-
-    if (t == 0.0L)
-        return 0.0L;
-
-    rcpr_t = 1.0L / t;
-    u *= rcpr_t;
-    v *= rcpr_t;
-
-    /*  Use the Pythagorean formula to compute the norm and return.           */
-    return t*tmpl_LDouble_Sqrt(1.0L + u*u + v*v);
+    /*  Use the pythagorean formula and return.                               */
+    return tmpl_LDouble_Sqrt(P->dat[0]*P->dat[0] +
+                             P->dat[1]*P->dat[1] +
+                             P->dat[2]*P->dat[2]);
 }
-/*  End of tmpl_3DDouble_Norm.                                                */
+/*  End of tmpl_3DLDouble_Fast_L2_Norm.                                       */
 
+#else
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+
+/*  Some implementations may inline the sqrt function, making it much more    *
+ *  efficient. Use this if TMPL_USE_MATH_ALGORITHMS is not set to 1.          */
+#include <math.h>
+
+/*  C99 and higher have sqrtl defined. C89 compilers may not. Microsoft has   *
+ *  sqrtl but does not define the __STDC_VERSION__ macro by default.          */
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
+    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
+
+/*  Function for computing the length of three dimensional vectors.           */
+long double tmpl_3DLDouble_Fast_L2_Norm(tmpl_ThreeVectorLongDouble *P)
+{
+    /*  Use the pythagorean formula and return.                               */
+    return sqrtl(P->dat[0]*P->dat[0] +
+                 P->dat[1]*P->dat[1] +
+                 P->dat[2]*P->dat[2]);
+}
+/*  End of tmpl_3DLDouble_Fast_L2_Norm.                                       */
+
+#else
+/*  #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)            */
+
+/*  Function for computing the length of three dimensional vectors.           */
+long double tmpl_3DLDouble_Fast_L2_Norm(tmpl_ThreeVectorLongDouble *P)
+{
+    /*  Use the pythagorean formula and return.                               */
+    const double norm = sqrt((double)(P->dat[0]*P->dat[0] +
+                                      P->dat[1]*P->dat[1] +
+                                      P->dat[2]*P->dat[2]));
+    return (long double)norm;
+}
+/*  End of tmpl_3DLDouble_Fast_L2_Norm.                                       */
+
+#endif
+/*  #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)            */
+
+#endif
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */

@@ -93,7 +93,7 @@ tmpl_3DLDouble_Normalize(tmpl_ThreeVectorLongDouble P)
     tmpl_ThreeVectorLongDouble P_normalized;
 
     /*  Get the norm of the input vector P.                                   */
-    const long double norm = tmpl_3DLDouble_Norm(P);
+    const long double norm = tmpl_3DLDouble_L2_Norm(&P);
 
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0L)

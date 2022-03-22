@@ -37,7 +37,7 @@ int main(void)
     double max_err = 0.0;
     double tmp = 0.0;
     double norm0, norm1;
-    unsigned int n;
+    unsigned int n, bad;
     clock_t t1, t2;
 
     P = malloc(sizeof(*P) * N);
@@ -77,31 +77,37 @@ int main(void)
 
     t1 = clock();
     for (n = 0U; n < N; ++n)
-        U0[n] = tmpl_3DDouble_Normalize(P[n]);
+        U0[n] = tmpl_3DDouble_Normalize(&P[n]);
     t2 = clock();
     printf("Normalize:      %f\n", (double)(t2 - t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (n = 0U; n < N; ++n)
-        U1[n] = tmpl_3DDouble_Fast_Normalize(P[n]);
+        U1[n] = tmpl_3DDouble_Fast_Normalize(&P[n]);
     t2 = clock();
     printf("Fast Normalize: %f\n", (double)(t2 - t1)/CLOCKS_PER_SEC);
 
+    bad = 0u;
     for (n = 0U; n < N; ++n)
     {
-        norm0 = tmpl_3DDouble_Norm(U0[n]);
-        norm1 = tmpl_3DDouble_Norm(U1[n]);
+        norm0 = tmpl_3DDouble_L2_Norm(&U0[n]);
+        norm1 = tmpl_3DDouble_L2_Norm(&U1[n]);
 
         tmp = fabs(norm0 - norm1);
         rms_err += tmp*tmp;
 
         if (max_err < tmp)
+        {
             max_err = tmp;
+            bad = n;
+        }
     }
 
     rms_err = sqrt(tmp / (double)N);
     printf("max err: %e\n", max_err);
     printf("rms err: %e\n", rms_err);
+    printf("(%f, %f, %f)\n(%f, %f, %f)\n", U0[bad].dat[0], U0[bad].dat[1], U0[bad].dat[2], U1[bad].dat[0], U1[bad].dat[1], U1[bad].dat[2]);
+    printf("%f\n%f\n", tmpl_3DDouble_L2_Norm(&U0[bad]), tmpl_3DDouble_L2_Norm(&U1[bad]));
 
     free(P);
     free(U0);
