@@ -100,14 +100,14 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for computing the length of three dimensional vectors.           */
-float tmpl_3DFloat_Norm(tmpl_ThreeVectorFloat P)
+double tmpl_3DDouble_L2_Norm(tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float x, y, z, t, u, v, rcpr_t;
+    double x, y, z, t, u, v, rcpr_t;
 
-    x = tmpl_Float_Abs(P.dat[0]);
-    y = tmpl_Float_Abs(P.dat[1]);
-    z = tmpl_Float_Abs(P.dat[2]);
+    x = tmpl_Double_Abs(P->dat[0]);
+    y = tmpl_Double_Abs(P->dat[1]);
+    z = tmpl_Double_Abs(P->dat[2]);
 
     if (x < y)
     {
@@ -135,20 +135,20 @@ float tmpl_3DFloat_Norm(tmpl_ThreeVectorFloat P)
         else
         {
             t = x;
-            u = x;
+            u = y;
             v = z;
         }
     }
 
-    if (t == 0.0F)
-        return 0.0F;
+    if (t == 0.0)
+        return 0.0;
 
-    rcpr_t = 1.0F / t;
+    rcpr_t = 1.0 / t;
     u *= rcpr_t;
     v *= rcpr_t;
 
     /*  Use the Pythagorean formula to compute the norm and return.           */
-    return t*tmpl_Float_Sqrt(1.0F + u*u + v*v);
+    return t*tmpl_Double_Sqrt(1.0 + u*u + v*v);
 }
-/*  End of tmpl_3DFloat_Norm.                                                 */
+/*  End of tmpl_3DDouble_L2_Norm.                                             */
 

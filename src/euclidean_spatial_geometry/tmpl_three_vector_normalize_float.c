@@ -135,7 +135,7 @@ tmpl_ThreeVectorFloat tmpl_3DFloat_Normalize(tmpl_ThreeVectorFloat P)
     }
 
     /*  Get the norm of the input vector P.                                   */
-    norm = tmpl_3DFloat_Norm(P);
+    norm = tmpl_3DFloat_L2_Norm(&P);
 
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0F)

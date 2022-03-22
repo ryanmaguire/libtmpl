@@ -16,7 +16,7 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
 
     /*  The radius of the sphere we'll be computing with is just the norm     *
      *  of the input ThreeVector u, so compute this.                          */
-    radius = tmpl_3DDouble_Norm(u);
+    radius = tmpl_3DDouble_L2_Norm(&u);
 
     /*  If the norm of P is greater than the radius the inverse stereographic *
      *  projection is undefined. We'll return Not-a-Number in this case.      */
@@ -24,11 +24,11 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
         return tmpl_3DDouble_Rect(TMPL_NAN, TMPL_NAN, TMPL_NAN);
 
     /*  Normalize the input u vector so that it lies on the sphere.           */
-    u_hat = tmpl_3DDouble_Normalize(u);
+    u_hat = tmpl_3DDouble_Normalize(&u);
 
     /*  Get a vector orthogonal to u and normalize it.                        */
     X = tmpl_3DDouble_Orthogonal(u);
-    X = tmpl_3DDouble_Normalize(X);
+    X = tmpl_3DDouble_Normalize(&X);
 
     /*  Compute the cross product of X and u, giving as an orthonormal        *
      *  basis of three dimensional space: (X, Y, u_hat).                      */
