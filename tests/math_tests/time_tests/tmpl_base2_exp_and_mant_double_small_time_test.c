@@ -31,8 +31,8 @@ static double rand_real(void)
 
 static void minmax(double *arr, unsigned int size)
 {
-    double min = INFINITY;
-    double max = -INFINITY;
+    double min = TMPL_INFINITY;
+    double max = -TMPL_INFINITY;
     unsigned int n;
 
     for (n = 0U; n < size; ++n)
@@ -75,7 +75,7 @@ int main(void)
 
     t1 = clock();
     for (n = 0U; n < N; ++n)
-        tmpl_Double_Base2_Exp_and_Mant(x[n], &y0[n], &n0[n]);
+        tmpl_Double_Base2_Mant_and_Exp(x[n], &y0[n], &n0[n]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2 - t1)/CLOCKS_PER_SEC);
 

@@ -1,7 +1,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
-void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
+void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
 {
     tmpl_IEEE754_Double w;
 
@@ -54,7 +54,7 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
 /*  This method does not assume IEEE-754 support, but instead of running in   *
  *  O(1) time, it runs in O(ln(m)), where m is the exponent of the input. So  *
  *  it roughly runs like O(ln(ln(max(|x|, |1/x|)))).                          */
-void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
+void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
 {
     /*  We'll compute the exponent using |x|, so compute this.                */
     double abs_x;
@@ -189,7 +189,7 @@ void tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo)
         *mant = -*mant;
 
 }
-/*  End of tmpl_Double_Base2_Exp_and_Mant.                                    */
+/*  End of tmpl_Double_Base2_Mant_And_Exp.                                    */
 
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1. */

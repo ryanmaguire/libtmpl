@@ -987,7 +987,7 @@ extern long double tmpl_LDouble_Cosh(long double x);
 
 
 extern void
-tmpl_Double_Base2_Exp_and_Mant(double x, double *mant, signed int *expo);
+tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo);
 
 /*  Aliases for the sine trig function found in math.h.                       */
 extern float tmpl_Float_Sin(float x);
