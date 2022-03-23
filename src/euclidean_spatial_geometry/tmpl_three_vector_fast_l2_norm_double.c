@@ -104,34 +104,22 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Check if the user requested TMPL algorithms only.                         */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
-
-/*  Function for computing the length of three dimensional vectors.           */
-double tmpl_3DDouble_Fast_L2_Norm(tmpl_ThreeVectorDouble *P)
-{
-    /*  Use the pythagorean formula and return.                               */
-    return tmpl_Double_Sqrt(P->dat[0]*P->dat[0] +
-                            P->dat[1]*P->dat[1] +
-                            P->dat[2]*P->dat[2]);
-}
-/*  End of tmpl_3DDouble_Fast_L2_Norm.                                        */
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
-
-/*  Some implementations may inline the sqrt function, making it much more    *
- *  efficient. Use this if TMPL_USE_MATH_ALGORITHMS is not set to 1.          */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
 #include <math.h>
+#endif
 
 /*  Function for computing the length of three dimensional vectors.           */
 double tmpl_3DDouble_Fast_L2_Norm(tmpl_ThreeVectorDouble *P)
 {
     /*  Use the pythagorean formula and return.                               */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
     return sqrt(P->dat[0]*P->dat[0] +
                 P->dat[1]*P->dat[1] +
                 P->dat[2]*P->dat[2]);
+#else
+    return tmpl_Double_Sqrt(P->dat[0]*P->dat[0] +
+                            P->dat[1]*P->dat[1] +
+                            P->dat[2]*P->dat[2]);
+#endif
 }
 /*  End of tmpl_3DDouble_Fast_L2_Norm.                                        */
-
-#endif
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
