@@ -102,8 +102,8 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
  *          tmpl_three_vector_add_double_small_time_test_vs_linasm.c          *
  *          tmpl_three_vector_add_float_huge_time_test_vs_linasm.c            *
  *          tmpl_three_vector_add_float_small_time_test_vs_linasm.c           *
- *          tmpl_three_vector_add_ldouble_huge_time_test.c.c                  *
- *          tmpl_three_vector_add_ldouble_small_time_test.c.c                 *
+ *          tmpl_three_vector_add_ldouble_huge_time_test.c                    *
+ *          tmpl_three_vector_add_ldouble_small_time_test.c                   *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
@@ -140,6 +140,19 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
  *          tmpl_three_vector_add_to_float.c                                  *
  *          tmpl_three_vector_add_to_double.c                                 *
  *          tmpl_three_vector_add_to_ldouble.c                                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/euclidean_spatial_geometry/                          *
+ *          tmpl_three_vector_add_to_double_example.c                         *
+ *          tmpl_three_vector_add_to_float_example.c                          *
+ *          tmpl_three_vector_add_to_ldouble_example.c                        *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
+ *          tmpl_three_vector_add_to_double_huge_time_test_vs_linasm.c        *
+ *          tmpl_three_vector_add_to_double_small_time_test_vs_linasm.c       *
+ *          tmpl_three_vector_add_to_float_huge_time_test_vs_linasm.c         *
+ *          tmpl_three_vector_add_to_float_small_time_test_vs_linasm.c        *
+ *          tmpl_three_vector_add_to_ldouble_huge_time_test.c                 *
+ *          tmpl_three_vector_add_to_ldouble_small_time_test.c                *
  ******************************************************************************/
 extern void
 tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
