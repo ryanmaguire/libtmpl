@@ -33,10 +33,22 @@ int main(void)
     const double x1 = 4.0;
     const double y1 = 5.0;
     const double z1 = 6.0;
+
+    /*  Create two vectors from the given real values above.                  */
     const tmpl_ThreeVector V0 = tmpl_3DDouble_Rect(x0, y0, z0);
     const tmpl_ThreeVector V1 = tmpl_3DDouble_Rect(x1, y1, z1);
-    const tmpl_ThreeVector sum = tmpl_3DDouble_Add(V0, V1);
-    const double
 
+    /*  Compute the vector sum of V0 and V1.                                  */
+    const tmpl_ThreeVector sum = tmpl_3DDouble_Add(&V0, &V1);
+
+    /*  Extract the component from the sum.                                   */
+    const double xs = tmpl_3DDouble_X(&sum);
+    const double ys = tmpl_3DDouble_Y(&sum);
+    const double zs = tmpl_3DDouble_Z(&sum);
+
+    /*  Print the result.                                                     */
+    printf("   (%f, %f, %f) +\n   (%f, %f, %f)\n = (%f, %f, %f)\n",
+           x0, y0, z0, x1, y1, z1, xs, ys, zs);
+    return 0;
 }
 /*  End of main.                                                              */
