@@ -23,32 +23,34 @@
 /*  printf found here.                                                        */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DDouble_Add.                      */
+/*  Function for showing basic use of tmpl_3DFloat_Add.                       */
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
-    const double x0 = 1.0;
-    const double y0 = 2.0;
-    const double z0 = 3.0;
-    const double x1 = 4.0;
-    const double y1 = 5.0;
-    const double z1 = 6.0;
+    const float x0 = 1.0F;
+    const float y0 = 2.0F;
+    const float z0 = 3.0F;
+    const float x1 = 4.0F;
+    const float y1 = 5.0F;
+    const float z1 = 6.0F;
 
     /*  Create two vectors from the given real values above.                  */
-    const tmpl_ThreeVector V0 = tmpl_3DDouble_Rect(x0, y0, z0);
-    const tmpl_ThreeVector V1 = tmpl_3DDouble_Rect(x1, y1, z1);
+    tmpl_ThreeVectorFloat V0 = tmpl_3DFloat_Rect(x0, y0, z0);
+    const tmpl_ThreeVectorFloat V1 = tmpl_3DFloat_Rect(x1, y1, z1);
 
     /*  Compute the vector sum of V0 and V1.                                  */
-    const tmpl_ThreeVector sum = tmpl_3DDouble_Add(&V0, &V1);
+    tmpl_3DFloat_AddTo(&V0, &V1);
 
     /*  Extract the components from the sum.                                  */
-    const double xs = tmpl_3DDouble_X(&sum);
-    const double ys = tmpl_3DDouble_Y(&sum);
-    const double zs = tmpl_3DDouble_Z(&sum);
+    const float xs = tmpl_3DFloat_X(&V0);
+    const float ys = tmpl_3DFloat_Y(&V0);
+    const float zs = tmpl_3DFloat_Z(&V0);
 
     /*  Print the result.                                                     */
     printf("   (%f, %f, %f) +\n   (%f, %f, %f)\n = (%f, %f, %f)\n",
-           x0, y0, z0, x1, y1, z1, xs, ys, zs);
+           (double)x0, (double)y0, (double)z0,
+           (double)x1, (double)y1, (double)z1,
+           (double)xs, (double)ys, (double)zs);
     return 0;
 }
 /*  End of main.                                                              */
