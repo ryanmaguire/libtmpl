@@ -23,7 +23,7 @@
 /*  printf found here.                                                        */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DDouble_Add.                      */
+/*  Function for showing basic use of tmpl_3DFloat_Add.                       */
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
@@ -41,7 +41,7 @@ int main(void)
     /*  Compute the vector sum of V0 and V1.                                  */
     const tmpl_ThreeVectorFloat sum = tmpl_3DFloat_Add(&V0, &V1);
 
-    /*  Extract the component from the sum.                                   */
+    /*  Extract the components from the sum.                                  */
     const float xs = tmpl_3DFloat_X(&sum);
     const float ys = tmpl_3DFloat_Y(&sum);
     const float zs = tmpl_3DFloat_Z(&sum);

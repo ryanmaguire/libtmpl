@@ -23,31 +23,31 @@
 /*  printf found here.                                                        */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DDouble_Add.                      */
+/*  Function for showing basic use of tmpl_3DLDouble_AddTo.                   */
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
-    const double x0 = 1.0;
-    const double y0 = 2.0;
-    const double z0 = 3.0;
-    const double x1 = 4.0;
-    const double y1 = 5.0;
-    const double z1 = 6.0;
+    const long double x0 = 1.0L;
+    const long double y0 = 2.0L;
+    const long double z0 = 3.0L;
+    const long double x1 = 4.0L;
+    const long double y1 = 5.0L;
+    const long double z1 = 6.0L;
 
     /*  Create two vectors from the given real values above.                  */
-    const tmpl_ThreeVector V0 = tmpl_3DDouble_Rect(x0, y0, z0);
-    const tmpl_ThreeVector V1 = tmpl_3DDouble_Rect(x1, y1, z1);
+    tmpl_ThreeVectorLongDouble V0 = tmpl_3DLDouble_Rect(x0, y0, z0);
+    const tmpl_ThreeVectorLongDouble V1 = tmpl_3DLDouble_Rect(x1, y1, z1);
 
     /*  Compute the vector sum of V0 and V1.                                  */
-    const tmpl_ThreeVector sum = tmpl_3DDouble_Add(&V0, &V1);
+    tmpl_3DLDouble_AddTo(&V0, &V1);
 
     /*  Extract the components from the sum.                                  */
-    const double xs = tmpl_3DDouble_X(&sum);
-    const double ys = tmpl_3DDouble_Y(&sum);
-    const double zs = tmpl_3DDouble_Z(&sum);
+    const long double xs = tmpl_3DLDouble_X(&V0);
+    const long double ys = tmpl_3DLDouble_Y(&V0);
+    const long double zs = tmpl_3DLDouble_Z(&V0);
 
     /*  Print the result.                                                     */
-    printf("   (%f, %f, %f) +\n   (%f, %f, %f)\n = (%f, %f, %f)\n",
+    printf("   (%Lf, %Lf, %Lf) +\n   (%Lf, %Lf, %Lf)\n = (%Lf, %Lf, %Lf)\n",
            x0, y0, z0, x1, y1, z1, xs, ys, zs);
     return 0;
 }
