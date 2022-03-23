@@ -33,24 +33,19 @@
 /*  Routine for computing the norm of the vector (1, 2, 3).                   */
 int main(void)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ThreeVectorDouble p;
-    double norm;
-
     /*  Set the x, y, and z values to 1, 2, and 3, respectively.              */
     const double x = 1.0;
     const double y = 2.0;
     const double z = 3.0;
 
     /*  Set p to the vector (x, y, z).                                        */
-    p = tmpl_3DDouble_Rect(x, y, z);
+    const tmpl_ThreeVectorDouble p = tmpl_3DDouble_Rect(x, y, z);
 
     /*  Compute the norm of p.                                                */
-    norm = tmpl_3DDouble_Norm(p);
+    const double norm = tmpl_3DDouble_L2_Norm(&p);
 
     /*  Print the result:                                                     */
     printf("||(%f, %f, %f)|| = %f\n", x, y, z, norm);
-
     return 0;
 }
 /*  End of main.                                                              */

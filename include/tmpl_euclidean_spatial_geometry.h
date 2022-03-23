@@ -91,6 +91,19 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
  *          tmpl_three_vector_add_float.c                                     *
  *          tmpl_three_vector_add_double.c                                    *
  *          tmpl_three_vector_add_ldouble.c                                   *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/euclidean_spatial_geometry/                          *
+ *          tmpl_three_vector_add_double_example.c                            *
+ *          tmpl_three_vector_add_float_example.c                             *
+ *          tmpl_three_vector_add_ldouble_example.c                           *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
+ *          tmpl_three_vector_add_double_huge_time_test_vs_linasm.c           *
+ *          tmpl_three_vector_add_double_small_time_test_vs_linasm.c          *
+ *          tmpl_three_vector_add_float_huge_time_test_vs_linasm.c            *
+ *          tmpl_three_vector_add_float_small_time_test_vs_linasm.c           *
+ *          tmpl_three_vector_add_ldouble_huge_time_test.c.c                  *
+ *          tmpl_three_vector_add_ldouble_small_time_test.c.c                 *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
@@ -371,9 +384,9 @@ extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
  *          tmpl_three_vector_norm_double.c                                   *
  *          tmpl_three_vector_norm_ldouble.c                                  *
  ******************************************************************************/
-extern float tmpl_3DFloat_L2_Norm(tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_L2_Norm(tmpl_ThreeVectorDouble *P);
-extern long double tmpl_3DLDouble_L2_Norm(tmpl_ThreeVectorLongDouble *P);
+extern float tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat *P);
+extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P);
+extern long double tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -512,17 +525,17 @@ tmpl_3DDouble_Scale(double a, tmpl_ThreeVectorDouble P);
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Scale(long double a, tmpl_ThreeVectorLongDouble P);
 
-extern float tmpl_3DFloat_X(tmpl_ThreeVectorFloat P);
-extern double tmpl_3DDouble_X(tmpl_ThreeVectorDouble P);
-extern long double tmpl_3DLDouble_X(tmpl_ThreeVectorLongDouble P);
+extern float tmpl_3DFloat_X(const tmpl_ThreeVectorFloat *P);
+extern double tmpl_3DDouble_X(const tmpl_ThreeVectorDouble *P);
+extern long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble *P);
 
-extern float tmpl_3DFloat_Y(tmpl_ThreeVectorFloat P);
-extern double tmpl_3DDouble_Y(tmpl_ThreeVectorDouble P);
-extern long double tmpl_3DLDouble_Y(tmpl_ThreeVectorLongDouble P);
+extern float tmpl_3DFloat_Y(const tmpl_ThreeVectorFloat *P);
+extern double tmpl_3DDouble_Y(const tmpl_ThreeVectorDouble *P);
+extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble *P);
 
-extern float tmpl_3DFloat_Z(tmpl_ThreeVectorFloat P);
-extern double tmpl_3DDouble_Z(tmpl_ThreeVectorDouble P);
-extern long double tmpl_3DLDouble_Z(tmpl_ThreeVectorLongDouble P);
+extern float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat *P);
+extern double tmpl_3DDouble_Z(const tmpl_ThreeVectorDouble *P);
+extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble *P);
 
 extern double
 tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,

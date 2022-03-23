@@ -28,9 +28,9 @@
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for returning the x component of a three dimensional vector.     */
-long double tmpl_3DLDouble_X(tmpl_ThreeVectorLongDouble P)
+long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble *P)
 {
     /*  The zeroth coordinate of the dat array is the x-component.            */
-    return P.dat[0];
+    return P->dat[0];
 }
 /*  End of tmpl_3DLDouble_X.                                                  */
