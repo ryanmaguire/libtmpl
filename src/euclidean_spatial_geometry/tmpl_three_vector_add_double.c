@@ -70,7 +70,7 @@
  *          y rms err: 0.000000e+00                                           *
  *          z rms err: 0.000000e+00                                           *
  *                                                                            *
- *      These tests were performed with the following specs:                  *
+ *      This test was performed with the following specs:                     *
  *                                                                            *
  *          2017 iMac                                                         *
  *          CPU:  Intel Core i5-7500                                          *
