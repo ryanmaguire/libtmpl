@@ -28,9 +28,9 @@
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for returning the z component of a three dimensional vector.     */
-float tmpl_3DFloat_Z(tmpl_ThreeVectorFloat P)
+float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat *P)
 {
     /*  The second coordinate of the dat array is the z-component.            */
-    return P.dat[2];
+    return P->dat[2];
 }
 /*  End of tmpl_3DFloat_Z.                                                    */

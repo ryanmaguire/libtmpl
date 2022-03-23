@@ -100,7 +100,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for computing the length of three dimensional vectors.           */
-double tmpl_3DDouble_L2_Norm(tmpl_ThreeVectorDouble *P)
+double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     double x, y, z, t, u, v, rcpr_t;

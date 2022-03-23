@@ -28,9 +28,9 @@
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 /*  Function for returning the x component of a three dimensional vector.     */
-float tmpl_3DFloat_X(tmpl_ThreeVectorFloat P)
+float tmpl_3DFloat_X(const tmpl_ThreeVectorFloat *P)
 {
     /*  The zeroth coordinate of the dat array is the x-component.            */
-    return P.dat[0];
+    return P->dat[0];
 }
 /*  End of tmpl_3DFloat_X.                                                    */
