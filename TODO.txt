@@ -98,3 +98,21 @@ tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z,
 extern tmpl_ComplexDouble
 tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
                                         tmpl_ComplexDouble w);
+
+2D Geometry
+    IsColinear function
+    MidPoint function
+    Center of 3 non-colinear points.
+    line struct
+    intersection of lines.
+
+3D Geometry:
+    AreCoplanar function
+    MidPoint function
+    Better orthogonal function (use quaternions)
+    Line struct
+	intersection of lines
+	Plane struct
+	intersection of planes
+	Center of 4 non-coplanar points.
+
