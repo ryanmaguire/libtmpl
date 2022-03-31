@@ -19,7 +19,7 @@
  *                        tmpl_three_vector_constants                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide commonly used constants vectors in R^3.                       *
+ *      Provide commonly used constant vectors in R^3.                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
