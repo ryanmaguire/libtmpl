@@ -34,7 +34,7 @@
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorFloat):                                          *
- *          The vector sum P+Q.                                               *
+ *          The vector sum P + Q.                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
