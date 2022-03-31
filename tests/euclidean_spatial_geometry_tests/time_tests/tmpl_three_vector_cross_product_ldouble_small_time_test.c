@@ -16,11 +16,6 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include "tmpl_vec3_vs_linasm.h"
+#include "tmpl_vec3_double_vs_ldouble.h"
 
-TEST2(float,
-      tmpl_ThreeVectorFloat,
-      v3D32_t,
-      tmpl_3DFloat_AddTo,
-      Vector3D_Add_flt32,
-      400000000ULL)
+TEST1(Cross_Product, 10000000ULL)
