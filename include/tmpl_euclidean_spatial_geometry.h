@@ -244,6 +244,19 @@ tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
  *          tmpl_three_vector_cross_with_float.c                              *
  *          tmpl_three_vector_cross_with_double.c                             *
  *          tmpl_three_vector_cross_with_ldouble.c                            *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/euclidean_spatial_geometry/                          *
+ *          tmpl_three_vector_cross_with_double_example.c                     *
+ *          tmpl_three_vector_cross_with_float_example.c                      *
+ *          tmpl_three_vector_cross_with_ldouble_example.c                    *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
+ *          tmpl_three_vector_cross_with_double_huge_time_test_vs_linasm.c    *
+ *          tmpl_three_vector_cross_with_double_small_time_test_vs_linasm.c   *
+ *          tmpl_three_vector_cross_with_float_huge_time_test_vs_linasm.c     *
+ *          tmpl_three_vector_cross_with_float_small_time_test_vs_linasm.c    *
+ *          tmpl_three_vector_cross_with_ldouble_huge_time_test.c             *
+ *          tmpl_three_vector_cross_with_ldouble_small_time_test.c            *
  ******************************************************************************/
 extern void
 tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat *target,
