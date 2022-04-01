@@ -24,8 +24,19 @@
 TARGET_LIB := libtmpl.so
 BUILD_DIR := ./build
 SRC_DIRS := ./src
+
+uname_p := $(shell uname -m)
+
+ifeq ($(uname_p),x86_64)
+SRCS := $(shell find $(SRC_DIRS) \
+		-not -name "tmpl_sqrt_double.c" -and \
+		-not -name "tmpl_sqrt_float.c" -and \
+		\( -name "*.c" -or -name "*x86_64.S" \))
+else
 SRCS := $(shell find $(SRC_DIRS) -name "*.c")
-OBJS := $(SRCS:%.c=$(BUILD_DIR)/%.o)
+endif
+
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 ifdef omp
@@ -48,9 +59,13 @@ include/tmpl_endianness.h: ./det_end.c
 $(TARGET_LIB): $(OBJS)
 	$(CC) $(OBJS) $(LFLAGS) -o $@ -lm
 
-$(BUILD_DIR)/%.o: %.c
+$(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.S.o: %.S
+	mkdir -p $(dir $@)
+	fasm $< $@
 
 clean:
 	rm -rf $(BUILD_DIR)
