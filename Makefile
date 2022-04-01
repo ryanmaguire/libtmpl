@@ -20,7 +20,6 @@
 #   Date:       August 31, 2021                                                #
 ################################################################################
 
-
 TARGET_LIB := libtmpl.so
 BUILD_DIR := ./build
 SRC_DIRS := ./src
@@ -28,10 +27,18 @@ SRC_DIRS := ./src
 uname_p := $(shell uname -m)
 
 ifeq ($(uname_p),x86_64)
+ifdef FASM
 SRCS := $(shell find $(SRC_DIRS) \
 		-not -name "tmpl_sqrt_double.c" -and \
 		-not -name "tmpl_sqrt_float.c" -and \
+		\( -name "*.c" -or -name "*x86_64.fasm" \))
+else
+SRCS := $(shell find $(SRC_DIRS) \
+		-not -name "tmpl_sqrt_double.c" -and \
+		-not -name "tmpl_sqrt_float.c" -and \
+		-not -name "tmpl_sqrt_ldouble.c" -and \
 		\( -name "*.c" -or -name "*x86_64.S" \))
+endif
 else
 SRCS := $(shell find $(SRC_DIRS) -name "*.c")
 endif
@@ -64,6 +71,10 @@ $(BUILD_DIR)/%.c.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.S.o: %.S
+	mkdir -p $(dir $@)
+	$(CC) $< -c -o $@
+
+$(BUILD_DIR)/%.fasm.o: %.fasm
 	mkdir -p $(dir $@)
 	fasm $< $@
 
