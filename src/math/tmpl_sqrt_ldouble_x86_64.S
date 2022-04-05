@@ -4,11 +4,12 @@
 #error "Wait a bit. Getting to this file soon."
 
 #elif defined(__APPLE__)
-.globl _tmpl_Double_Sqrt
+.globl _tmpl_LDouble_Sqrt
 .align 4,0x90;
 
-_tmpl_Double_Sqrt:
-    sqrtsd %xmm0, %xmm0
+_tmpl_LDouble_Sqrt:
+    fldt 8(%rsp)
+    fsqrt
     ret
 
 #else
