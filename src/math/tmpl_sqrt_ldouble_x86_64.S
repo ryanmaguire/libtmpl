@@ -1,17 +1,27 @@
-#include "tmpl_asm_x86_64.inc"
+#if defined(_WIN64)
 
-ENTRY(tmpl_LDouble_Sqrt)
-#ifndef _WIN64
-	fldt	8(%rsp)
-	fsqrt
+/*  Not yet. */
+#error "Wait a bit. Getting to this file soon."
+
+#elif defined(__APPLE__)
+.globl _tmpl_Double_Sqrt
+.align 4,0x90;
+
+_tmpl_Double_Sqrt:
+    sqrtsd %xmm0, %xmm0
+    ret
+
 #else
-    fldt    (%rdx)
+.text;
+.p2align 4,0x90;
+.globl tmpl_LDouble_Sqrt;
+.type tmpl_LDouble_Sqrt,@function;
+
+tmpl_LDouble_Sqrt:
+    fldt 8(%rsp)
     fsqrt
-    mov     %rcx,%rax
-    movq    $0x0,0x8(%rcx)
-    fstpt   (%rcx)
+    ret
 #endif
-	ret
 
 /* Enable stack protection */
 #if defined(__ELF__)

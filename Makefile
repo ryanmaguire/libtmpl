@@ -27,17 +27,30 @@ SRC_DIRS := ./src
 uname_p := $(shell uname -m)
 
 ifeq ($(uname_p),x86_64)
-ifdef FASM
-SRCS := $(shell find $(SRC_DIRS) \
-		-not -name "tmpl_sqrt_double.c" -and \
-		-not -name "tmpl_sqrt_float.c" -and \
-		\( -name "*.c" -or -name "*x86_64.fasm" \))
+
+# If the user does not want to use any assembly code (that is, C only) only
+# include .c files. Ignore all .S or .fasm files. For x86_64 computers this is
+# only advised if you do not have FASM or your C compiler cannot compile
+# assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
+ifdef NO_ASM
+SRCS := $(shell find $(SRC_DIRS) -name "*.c")
+
+# Some function for x86_64 are written in FASM, the Flat Assembler, and have
+# much better times than the default C code.
+else ifdef FASM
+SRCS := \
+	$(shell find $(SRC_DIRS) \
+	-not -name "tmpl_sqrt_double.c" -and \
+	-not -name "tmpl_sqrt_float.c" -and \
+	\( -name "*.c" -or -name "*x86_64.fasm" \))
+
 else
-SRCS := $(shell find $(SRC_DIRS) \
-		-not -name "tmpl_sqrt_double.c" -and \
-		-not -name "tmpl_sqrt_float.c" -and \
-		-not -name "tmpl_sqrt_ldouble.c" -and \
-		\( -name "*.c" -or -name "*x86_64.S" \))
+SRCS := \
+	$(shell find $(SRC_DIRS) \
+	-not -name "tmpl_sqrt_double.c" -and \
+	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and \
+	\( -name "*.c" -or -name "*x86_64.S" \))
 endif
 else
 SRCS := $(shell find $(SRC_DIRS) -name "*.c")
@@ -47,10 +60,10 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 ifdef omp
-	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG
+	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG -c
 	LFLAGS := -O3 -flto -fopenmp -shared
 else
-	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG
+	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
 	LFLAGS := -O3 -flto -shared
 endif
 
@@ -68,11 +81,11 @@ $(TARGET_LIB): $(OBJS)
 
 $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.S.o: %.S
 	mkdir -p $(dir $@)
-	$(CC) $< -c -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.fasm.o: %.fasm
 	mkdir -p $(dir $@)
