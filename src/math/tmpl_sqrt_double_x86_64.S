@@ -1,5 +1,4 @@
 #if defined(_WIN64)
-.code;
 .p2align 4,0x90;
 .globl tmpl_Double_Sqrt;
 .section .drectve;
@@ -13,7 +12,6 @@
 tmpl_Double_Sqrt:
         sqrtsd  %xmm0, %xmm0
         ret
-end
 
 #elif defined(__APPLE__)
 .globl _tmpl_Double_Sqrt

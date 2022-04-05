@@ -1,5 +1,4 @@
 #if defined(_WIN64)
-.code;
 .p2align 4,0x90;
 .globl tmpl_Float_Sqrt;
 .section .drectve;
@@ -13,7 +12,6 @@
 tmpl_Float_Sqrt:
         sqrtss  %xmm0, %xmm0
         ret
-end
 
 #elif defined(__APPLE__)
 .globl _tmpl_Float_Sqrt
