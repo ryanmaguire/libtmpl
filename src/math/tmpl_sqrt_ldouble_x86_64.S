@@ -1,6 +1,4 @@
 #if defined(_WIN64)
-
-.code;
 .p2align 4,0x90;
 .globl tmpl_LDouble_Sqrt;
 .section .drectve;
