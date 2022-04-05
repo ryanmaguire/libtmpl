@@ -44,6 +44,9 @@ SRCS := \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*x86_64.fasm" \))
 
+# The default is to use assembly code that GCC can understand. LLVM's clang and
+# the Portable C Compiler (PCC) are also able to compile this, tested on
+# Debian GNU/Linux 11.
 else
 SRCS := \
 	$(shell find $(SRC_DIRS) \
@@ -52,9 +55,16 @@ SRCS := \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
 	\( -name "*.c" -or -name "*x86_64.S" \))
 endif
+# End of ifdef NO_ASM.
+
+# Else for ifeq ($(uname_p),x86_64). Currently, only x86_64 assembly code is
+# supported. This may change in the future. The rest of the C code has been
+# tested on arm64, ppc64, mips, and many other architectures using emulation
+# and worked as expected.
 else
 SRCS := $(shell find $(SRC_DIRS) -name "*.c")
 endif
+# End of ifeq ($(uname_p),x86_64)
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
