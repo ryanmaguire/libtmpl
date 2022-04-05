@@ -64,19 +64,25 @@ endif
 # tested on arm64, ppc64, mips, and many other architectures using emulation
 # and worked as expected.
 else
+# Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
+
 SRCS := $(shell find $(SRC_DIRS) -name "*.c")
+
 endif
-# End of ifeq ($(uname_p),x86_64)
+# End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-ifdef omp
-	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG -c
-	LFLAGS := -O3 -flto -fopenmp -shared
+# Some functions make use of OpenMP with parallel for-loops. If using tmpyl,
+# the Python wrapper for libtmpl, it is advised to compile with OpenMP support
+# if possible.
+ifdef OMP
+CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG -c
+LFLAGS := -O3 -flto -fopenmp -shared -lm
 else
-	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
-	LFLAGS := -O3 -flto -shared
+CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
+LFLAGS := -O3 -flto -shared -lm
 endif
 
 .PHONY: clean install uninstall all
@@ -89,7 +95,7 @@ include/tmpl_endianness.h: ./det_end.c
 	rm -f det_end.out
 
 $(TARGET_LIB): $(OBJS)
-	$(CC) $(OBJS) $(LFLAGS) -o $@ -lm
+	$(CC) $(OBJS) $(LFLAGS) -o $@
 
 $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
