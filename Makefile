@@ -24,9 +24,11 @@ TARGET_LIB := libtmpl.so
 BUILD_DIR := ./build
 SRC_DIRS := ./src
 
-uname_p := $(shell uname -m)
+uname_m := $(shell uname -m)
 
-ifeq ($(uname_p),x86_64)
+# amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
+# if possible for performance boosts.
+ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64 computers this is
