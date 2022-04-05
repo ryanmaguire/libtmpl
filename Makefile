@@ -71,6 +71,41 @@ endif
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
+ifeq ($(OS), WINNT)
+
+ifeq ($(CC), cc)
+	CC := cl
+endif
+
+ifeq ($(CC), clang-cl)
+
+ifdef omp
+	CFLAGS := $(CFLAGS) -I..\ -O2 -flto -openmp -DNDEBUG -c
+	LFLAGS := -fuse-ld=llvm-lib -O2 -flto -openmp -shared
+else
+	CFLAGS := $(CFLAGS) -I..\ -O2 -flto -DNDEBUG -c
+	LFLAGS := -fuse-ld=llvm-lib -O2 -flto -shared
+endif
+# End of omp.
+
+else
+# Else for clang-cl.
+
+ifdef omp
+	CFLAGS := $(CFLAGS) /I..\ /O2 /GL /openmp /c
+	LFLAGS := /O2 /LTCG /openmp /out:libtmpl.lib
+else
+	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
+	LFLAGS := /O2 /LTCG /out:libtmpl.lib
+endif
+# End of omp.
+
+endif
+# End of clang-cl.
+
+else
+# Else for WINNT.
+
 ifdef omp
 	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG -c
 	LFLAGS := -O3 -flto -fopenmp -shared
@@ -78,6 +113,10 @@ else
 	CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
 	LFLAGS := -O3 -flto -shared
 endif
+# End of omp.
+
+endif
+# End of WINNT.
 
 .PHONY: clean install uninstall all
 
