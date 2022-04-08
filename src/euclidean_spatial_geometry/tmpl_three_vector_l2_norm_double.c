@@ -108,45 +108,66 @@
 #define absolute_value tmpl_Double_Abs
 #endif
 
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+
 #define BIG_SCALE 1.340780792994259709957402E+154
 #define RCPR_BIG_SCALE 7.458340731200206743290965E-155
-
-#define SMALL_SCALE 1.491668146240041348658193E-154
-#define RCPR_SMALL_SCALE 6.703903964971298549787012E+153
 
 /*  Function for computing the length of three dimensional vectors.           */
 double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Double w;
-    double rcpr_t;
     double x = absolute_value(P->dat[0]);
     double y = absolute_value(P->dat[1]);
     double z = absolute_value(P->dat[2]);
     w.r = (x < y ? (y < z ? z : y) : (x < z ? z : x));
 
-    if (w.bits.expo > TMPL_DOUBLE_BIAS + 0x200U)
+    if (w.bits.expo < TMPL_DOUBLE_BIAS + 0x200U)
     {
-        x *= RCPR_BIG_SCALE;
-        y *= RCPR_BIG_SCALE;
-        z *= RCPR_BIG_SCALE;
-        return BIG_SCALE * square_root(x*x + y*y + z*z);
+        if (w.bits.expo > 0x200U)
+            return square_root(x*x + y*y + z*z);
+
+        x *= BIG_SCALE;
+        y *= BIG_SCALE;
+        z *= BIG_SCALE;
+        return RCPR_BIG_SCALE * square_root(x*x + y*y + z*z);
     }
 
-    else if (w.bits.expo < 0x200U)
-    {
-        x *= RCPR_SMALL_SCALE;
-        y *= RCPR_SMALL_SCALE;
-        z *= RCPR_SMALL_SCALE;
-        return SMALL_SCALE * square_root(x*x + y*y + z*z);
-    }
-    else
-    {
-        /*  Use the Pythagorean formula to compute the norm and return.       */
-        return square_root(x*x + y*y + z*z);
-    }
+    x *= RCPR_BIG_SCALE;
+    y *= RCPR_BIG_SCALE;
+    z *= RCPR_BIG_SCALE;
+    return BIG_SCALE * square_root(x*x + y*y + z*z);
 }
 /*  End of tmpl_3DDouble_L2_Norm.                                             */
+
+#undef BIG_SCALE
+#undef RCPR_BIG_SCALE
+
+#else
+
+/*  Function for computing the length of three dimensional vectors.           */
+double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    double rcpr_t;
+    double x = absolute_value(P->dat[0]);
+    double y = absolute_value(P->dat[1]);
+    double z = absolute_value(P->dat[2]);
+    const double t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+
+    if (t == 0.0)
+        return 0.0;
+
+    rcpr_t = 1.0 / t;
+    x *= rcpr_t;
+    y *= rcpr_t;
+    z *= rcpr_t;
+    return t * square_root(x*x + y*y + z*z);
+}
+/*  End of tmpl_3DDouble_L2_Norm.                                             */
+
+#endif
 
 #undef square_root
 #undef absolute_value
