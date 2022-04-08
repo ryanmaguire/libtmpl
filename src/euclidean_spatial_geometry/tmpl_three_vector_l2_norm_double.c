@@ -112,22 +112,23 @@
 double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEEE754_Double w;
     double rcpr_t;
     double x = absolute_value(P->dat[0]);
     double y = absolute_value(P->dat[1]);
     double z = absolute_value(P->dat[2]);
-    const double t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+    w.r = (x < y ? (y < z ? z : y) : (x < z ? z : x));
 
-    if (t == 0.0)
-        return t;
+    if (w.bits.expo < TMPL_DOUBLE_BIAS + 0x200U)
+        return square_root(x*x + y*y + z*z);
 
-    rcpr_t = 1.0 / t;
+    rcpr_t = 1.0 / w.r;
     x *= rcpr_t;
     y *= rcpr_t;
     z *= rcpr_t;
 
     /*  Use the Pythagorean formula to compute the norm and return.           */
-    return t*square_root(x*x + y*y + z*z);
+    return w.r*square_root(x*x + y*y + z*z);
 }
 /*  End of tmpl_3DDouble_L2_Norm.                                             */
 
