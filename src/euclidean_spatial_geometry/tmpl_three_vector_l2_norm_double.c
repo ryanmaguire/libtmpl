@@ -99,40 +99,37 @@
 /*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Some implementations may inline the square root function from math.h.     *
- *  This can double the efficiency of this routine. If the macro              *
- *  TMPL_USE_MATH_ALGORITHMS is not set to 1, use sqrt from math.h instead.   */
 #if TMPL_USE_MATH_ALGORITHMS != 1
 #include <math.h>
+#define square_root sqrt
+#define absolute_value fabs
+#else
+#define square_root tmpl_Double_Sqrt
+#define absolute_value tmpl_Double_Abs
 #endif
 
 /*  Function for computing the length of three dimensional vectors.           */
 double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double x, y, z, t, rcpr_t;
+    double rcpr_t;
+    double x = absolute_value(P->dat[0]);
+    double y = absolute_value(P->dat[1]);
+    double z = absolute_value(P->dat[2]);
+    const double t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
 
-#if TMPL_USE_MATH_ALGORITHMS != 1
-    x = fabs(P->dat[0]);
-    y = fabs(P->dat[1]);
-    z = fabs(P->dat[2]);
-#else
-    x = tmpl_Double_Abs(P->dat[0]);
-    y = tmpl_Double_Abs(P->dat[1]);
-    z = tmpl_Double_Abs(P->dat[2]);
-#endif
+    if (t == 0.0)
+        return t;
 
-    t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
     rcpr_t = 1.0 / t;
     x *= rcpr_t;
     y *= rcpr_t;
     z *= rcpr_t;
 
     /*  Use the Pythagorean formula to compute the norm and return.           */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-    return t*sqrt(x*x + y*y + z*z);
-#else
-    return t*tmpl_Double_Sqrt(x*x + y*y + z*z);
-#endif
+    return t*square_root(x*x + y*y + z*z);
 }
 /*  End of tmpl_3DDouble_L2_Norm.                                             */
+
+#undef square_root
+#undef absolute_value
