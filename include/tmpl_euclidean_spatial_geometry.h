@@ -327,71 +327,6 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Fast_L2_Normalize                                        *
- *  Purpose:                                                                  *
- *      Computes the unit normal of a given non-zero vector at single         *
- *      precision. Similar functions are provided for double and long double. *
- *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A three dimensional non-zero vector.                              *
- *  Output:                                                                   *
- *      P_hat (tmpl_ThreeVectorFloat):                                        *
- *          The unit-normal of P.                                             *
- *  Notes:                                                                    *
- *      Depending on hardware and compiler used, this function is 5% to 60%   *
- *      faster than tmpl_3DFloat_Normalize.                                   *
- *                                                                            *
- *      This function can not be used with vectors P such that                *
- *      ||P|| > sqrt(FLT_MAX). On IEEE-754 compliant systems, this is about   *
- *      sqrt(10^38) = 10^19. The intermediate computation of ||P||^2 will     *
- *      overflow resulting in infinity.                                       *
- *                                                                            *
- *      No checks for NaN or Inf are performed.                               *
- *                                                                            *
- *      Most applications can use this instead of tmpl_3DFloat_Normalize and  *
- *      enjoy a decent performance boost. If unsure, or if you know you will  *
- *      be working with large vectors, use tmpl_3DFloat_Normalize.            *
- *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_fast_normalize_float.c                          *
- *          tmpl_three_vector_fast_normalize_double.c                         *
- *          tmpl_three_vector_fast_normalize_ldouble.c                        *
- ******************************************************************************/
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Fast_Normalize(const tmpl_ThreeVectorFloat *P);
-
-extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Fast_Normalize(const tmpl_ThreeVectorDouble *P);
-
-extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Fast_Normalize(tmpl_ThreeVectorLongDouble *P);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_3DFloat_Fast_L2_Norm                                             *
- *  Purpose:                                                                  *
- *      Computes the Euclidean L2 norm of a vector in R^3. This is defined by *
- *      the Pythagorean theorem as follows. If P = (x, y, z), we have:        *
- *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
- *      Functions for single, double, and long double precision are provided. *
- *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A three dimensional vector.                                       *
- *  Output:                                                                   *
- *      norm (float):                                                         *
- *          The Euclidean norm of P.                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_fast_norm_float.c                               *
- *          tmpl_three_vector_fast_norm_double.c                              *
- *          tmpl_three_vector_fast_norm_ldouble.c                             *
- ******************************************************************************/
-extern float tmpl_3DFloat_Fast_L2_Norm(tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_Fast_L2_Norm(tmpl_ThreeVectorDouble *P);
-extern long double tmpl_3DLDouble_Fast_L2_Norm(tmpl_ThreeVectorLongDouble *P);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_3DFloat_L1_Norm                                                  *
  *  Purpose:                                                                  *
  *      Computes the L1 norm of a vector in R^3 at single precision. This is  *
@@ -488,7 +423,7 @@ extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Normalize(tmpl_ThreeVectorFloat P);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble *P);
+tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Normalize(tmpl_ThreeVectorLongDouble P);

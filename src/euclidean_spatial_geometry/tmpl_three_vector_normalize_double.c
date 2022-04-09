@@ -87,128 +87,85 @@
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
-/*  NaN is defined here.                                                      */
+/*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
 
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
+/*  If the user has not requested tmpl algorithms, use functions from math.h. */
+#if TMPL_USE_MATH_ALGORITHMS != 1
 #include <math.h>
-#endif
 
-/*  It's faster to check for large inputs, and NaN/Inf, with IEEE754 support. */
+/*  Set macros for the square root and absolute value functions for later.    *
+ *  this avoids more checks for TMPL_USE_MATH_ALGORITHMS in the code.         */
+#define square_root sqrt
+#define absolute_value fabs
+
+#else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1                                */
+
+/*  If the user requested tmpl algorithm, alias the appropriate functions.    */
+#define square_root tmpl_Double_Sqrt
+#define absolute_value tmpl_Double_Abs
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/*  We can get a significant speed boost if IEEE-754 support is available.    */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble *P)
+/*  The values 2^512 and 2^-512, to double precision, stored as macros.       */
+#define BIG_SCALE 1.340780792994259709957402E+154
+#define RCPR_BIG_SCALE 7.458340731200206743290965E-155
+
+/*  Function for computing the length of three dimensional vectors.           */
+tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    double rcpr_norm, norm, t, u, v, rcpr_t;
-    tmpl_ThreeVectorDouble P_normalized;
-    tmpl_IEEE754_Double wx, wy, wz;
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_ThreeVectorDouble normalized;
+    tmpl_IEEE754_Double w;
+    double rcpr_norm;
 
-    /*  Set the double parts of the unions to the components of the vector.   */
-    wx.r = P->dat[0];
-    wy.r = P->dat[1];
-    wz.r = P->dat[2];
+    /*  Given P = (x, y, z), compute |x|, |y|, and |z|.                       */
+    double x = absolute_value(P->dat[0]);
+    double y = absolute_value(P->dat[1]);
+    double z = absolute_value(P->dat[2]);
 
-    /*  Check for large values.                                               */
-    if (wx.bits.expo > 0x7FDU ||
-        wy.bits.expo > 0x7FDU ||
-        wz.bits.expo > 0x7FDU)
+    /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
+     *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
+     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
+     *  c, set a to c, otherwise set a to b. Below we do this twice, setting  *
+     *  w.r to the maximum of |x|, |y|, and |z|.                              */
+    w.r = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+
+    /*  If all values are large, scale them by 2^-512.                        */
+    if (w.bits.expo > TMPL_DOUBLE_BIAS + 0x1FFU)
     {
-        /*  Check for NaN or Inf.                                             */
-        if (wx.bits.expo == 0x7FFU ||
-            wy.bits.expo == 0x7FFU ||
-            wz.bits.expo == 0x7FFU)
-        {
-            /*  If any component is NaN or Inf, the output is NaN.            */
-            const double nanval = TMPL_NAN;
-            P_normalized.dat[0] = nanval;
-            P_normalized.dat[1] = nanval;
-            P_normalized.dat[2] = nanval;
-            return P_normalized;
-        }
-
-        /*  At least one component is very large. Scale the result by 1/2 to  *
-         *  avoid overflow in the computation of ||P||.                       */
-        else
-        {
-            wx.r *= 0.5;
-            wy.r *= 0.5;
-            wz.r *= 0.5;
-        }
+        x *= BIG_SCALE;
+        y *= BIG_SCALE;
+        z *= BIG_SCALE;
     }
 
-    /*  Get the norm of the input vector P.                                   */
-    wx.bits.sign = 0x00U;
-    wy.bits.sign = 0x00U;
-    wz.bits.sign = 0x00U;
-
-    if (wx.r < wy.r)
+    /*  If all values are small, scale them by 2^512.                         */
+    else if (w.bits.expo < 0x20AU)
     {
-        if (wy.r < wz.r)
-        {
-            t = wz.r;
-            u = wx.r;
-            v = wy.r;
-        }
-        else
-        {
-            t = wy.r;
-            u = wx.r;
-            v = wz.r;
-        }
-    }
-    else
-    {
-        if (wz.r < wx.r)
-        {
-            t = wx.r;
-            u = wy.r;
-            v = wz.r;
-        }
-        else
-        {
-            t = wz.r;
-            u = wx.r;
-            v = wy.r;
-        }
+        x *= RCPR_BIG_SCALE;
+        y *= RCPR_BIG_SCALE;
+        z *= RCPR_BIG_SCALE;
     }
 
-    rcpr_t = 1.0 / t;
-    u = u*rcpr_t;
-    v = v*rcpr_t;
+    /*  Compute 1 / ||P||.                                                    */
+    rcpr_norm = 1.0 / square_root(x*x + y*y + z*z);
 
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 0
-    norm = t*sqrt(1.0 + u*u + v*v);
-#else
-    norm = t*tmpl_Double_Sqrt(1.0 + u*u + v*v);
-#endif
-
-    /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
-    if (norm == 0.0)
-    {
-        const double nanval = TMPL_NAN;
-        P_normalized.dat[0] = nanval;
-        P_normalized.dat[1] = nanval;
-        P_normalized.dat[2] = nanval;
-        return P_normalized;
-    }
-    else
-    {
-        /*  Compute the reciprocal of the norm. Precomputing a division and   *
-         *  using multiplication later is faster than repeated division.      */
-        rcpr_norm = 1.0 / norm;
-
-        /*  Compute the components of the normalized vector.                  */
-        P_normalized.dat[0] = P->dat[0]*rcpr_norm;
-        P_normalized.dat[1] = P->dat[1]*rcpr_norm;
-        P_normalized.dat[2] = P->dat[2]*rcpr_norm;
-    }
-    /*  End of if (norm == 0.0).                                              */
-
-    return P_normalized;
+    /*  Set P_hat to (x/||P||, y/||P||, z/||P||) and return.                  */
+    normalized.dat[0] = x*rcpr_norm;
+    normalized.dat[1] = y*rcpr_norm;
+    normalized.dat[2] = z*rcpr_norm;
+    return normalized;
 }
-/*  End of tmpl_3DDouble_Normalize.                                           */
+/*  End of tmpl_3DDouble_L2_Norm.                                             */
+
+/*  Undefine these macros in case someone wants to #include this file.        */
+#undef BIG_SCALE
+#undef RCPR_BIG_SCALE
 
 #else
 /*  Same algorithm without IEEE754 support.                                   */
