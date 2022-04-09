@@ -24,6 +24,23 @@ TARGET_LIB := libtmpl.so
 BUILD_DIR := ./build
 SRC_DIRS := ./src
 
+CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
+LFLAGS := -O3 -flto -shared -lm
+
+# Some functions make use of OpenMP with parallel for-loops. If using tmpyl,
+# the Python wrapper for libtmpl, it is advised to compile with OpenMP support
+# if possible.
+ifdef OMP
+overide CFLAGS := -fopenmp $(CFLAGS)
+overide LFLAGS := -fopenmp $(LFLAGS)
+endif
+
+ifdef NO_INLINE
+INLINE_EXCLUDE :=
+else
+INLINE_EXCLUDE := -not -name "tmpl_abs_double.c" -and
+endif
+
 uname_m := $(shell uname -m)
 
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
@@ -35,13 +52,13 @@ ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 # only advised if you do not have FASM or your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifdef NO_ASM
-SRCS := $(shell find $(SRC_DIRS) -name "*.c")
+SRCS := $(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) -name "*.c")
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 else ifdef FASM
 SRCS := \
-	$(shell find $(SRC_DIRS) \
+	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*x86_64.fasm" \))
@@ -51,7 +68,7 @@ SRCS := \
 # Debian GNU/Linux 11.
 else
 SRCS := \
-	$(shell find $(SRC_DIRS) \
+	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
@@ -66,7 +83,7 @@ endif
 else
 # Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
-SRCS := $(shell find $(SRC_DIRS) -name "*.c")
+SRCS := $(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) -name "*.c")
 
 endif
 # End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
@@ -74,25 +91,19 @@ endif
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-# Some functions make use of OpenMP with parallel for-loops. If using tmpyl,
-# the Python wrapper for libtmpl, it is advised to compile with OpenMP support
-# if possible.
-ifdef OMP
-CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -fopenmp -DNDEBUG -c
-LFLAGS := -O3 -flto -fopenmp -shared -lm
-else
-CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS := -O3 -flto -shared -lm
-endif
-
 .PHONY: clean install uninstall all
 
-all: include/tmpl_endianness.h $(TARGET_LIB)
+all: include/tmpl_inline.h include/tmpl_endianness.h $(TARGET_LIB)
 
 include/tmpl_endianness.h: ./det_end.c
 	$(CC) det_end.c -o det_end.out
 	./det_end.out
 	rm -f det_end.out
+
+include/tmpl_inline.h: ./det_inline.c
+	$(CC) det_inline.c -o det_inline.out
+	./det_inline.out
+	rm -f det_inline.out
 
 $(TARGET_LIB): $(OBJS)
 	$(CC) $(OBJS) $(LFLAGS) -o $@

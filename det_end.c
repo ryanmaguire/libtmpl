@@ -780,7 +780,7 @@ int main(void)
 
     /*  Create the file include/tmpl_endianness.h and return.                 */
     fprintf(fp, "/******************************************************************************\n");
-    fprintf(fp, " *                                 LICENSE                                    *\n");
+    fprintf(fp, " *                                  LICENSE                                   *\n");
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  This file is part of libtmpl.                                             *\n");
     fprintf(fp, " *                                                                            *\n");
@@ -800,7 +800,7 @@ int main(void)
     fprintf(fp, " *                              tmpl_endianness                               *\n");
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  Purpose:                                                                  *\n");
-    fprintf(fp, " *      This file is created by the det_enc.c file. It provides the macros    *\n");
+    fprintf(fp, " *      This file is created by the det_end.c file. It provides the macros    *\n");
     fprintf(fp, " *      TMPL_ENDIANNESS, TMPL_FLOAT_ENDIANNESS, TMPL_DOUBLE_ENDIANNESS, and   *\n");
     fprintf(fp, " *      TMPL_LDOUBLE_ENDIANNESS which are used by functions where the code is *\n");
     fprintf(fp, " *      endian specific and to check if IEEE-754 is supported.                *\n");

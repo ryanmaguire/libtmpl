@@ -100,6 +100,9 @@
 /*  Endianness macros are here.                                               */
 #include <libtmpl/include/tmpl_endianness.h>
 
+/*  Whether or not we're building with inline support is here.                */
+#include <libtmpl/include/tmpl_inline.h>
+
 /*  Set this to 1 to use libtmpl's version of libm. Set this to zero to have  *
  *  math.h included, using standard library functions instead. libtmpl's      *
  *  libm functions are quite fast and efficient, but most would prefer to use *
@@ -882,8 +885,26 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
  *      double abs_x:                                                         *
  *          The absolute value of x, |x|.                                     *
  ******************************************************************************/
-extern float tmpl_Float_Abs(float x);
+#if defined(TMPL_HAVE_INLINE) && TMPL_HAVE_INLINE == 1
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+static inline double tmpl_Double_Abs(double x)
+{
+    tmpl_IEEE754_Double w;
+    w.r = x;
+    w.bits.sign = 0x00U;
+    return w.r;
+}
+#else
+static inline double tmpl_Double_Abs(double x)
+{
+    return (x < 0.0 ? -x : x);
+}
+#endif
+#else
 extern double tmpl_Double_Abs(double x);
+#endif
+
+extern float tmpl_Float_Abs(float x);
 extern long double tmpl_LDouble_Abs(long double x);
 
 /******************************************************************************

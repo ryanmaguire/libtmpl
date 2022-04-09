@@ -22,6 +22,7 @@
 
 # This file is created by the make.sh script.
 include/tmpl_endianness.h
+include/tmpl_inline.h
 
 # Various filetypes to be excluded from LaTeX, C, C++, and Python output.
 # Plus a bunch of random ones GitHub recommended be in the .gitignore file.
