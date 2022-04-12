@@ -36,8 +36,10 @@ overide LFLAGS := -fopenmp $(LFLAGS)
 endif
 
 ifdef NO_INLINE
+INLINE_FLAG :=
 INLINE_EXCLUDE :=
 else
+INLINE_FLAG := -DTMPL_SET_INLINE_TRUE
 INLINE_EXCLUDE := -not -name "tmpl_abs_double.c" -and
 endif
 
@@ -101,7 +103,7 @@ include/tmpl_endianness.h: ./det_end.c
 	rm -f det_end.out
 
 include/tmpl_inline.h: ./det_inline.c
-	$(CC) det_inline.c -o det_inline.out
+	$(CC) $(INLINE_FLAG) det_inline.c -o det_inline.out
 	./det_inline.out
 	rm -f det_inline.out
 
@@ -123,6 +125,7 @@ $(BUILD_DIR)/%.fasm.o: %.fasm
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_endianness.h
+	rm -f include/tmpl_inline.h
 
 install:
 	mkdir -p /usr/local/include/libtmpl/include/
@@ -132,6 +135,7 @@ install:
 uninstall:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_endianness.h
+	rm -f include/tmpl_inline.h
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)
 

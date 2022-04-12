@@ -151,9 +151,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  This function may be inlined in tmpl_math.h. Do no compile if it is.      */
-#if defined(TMPL_HAVE_INLINE) && TMPL_HAVE_INLINE != 1
-
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
@@ -210,6 +207,3 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
-
-#endif
-/*  #if defined(TMPL_HAVE_INLINE) && TMPL_HAVE_INLINE != 1                    */
