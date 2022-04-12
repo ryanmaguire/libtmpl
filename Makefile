@@ -40,7 +40,10 @@ INLINE_FLAG :=
 INLINE_EXCLUDE :=
 else
 INLINE_FLAG := -DTMPL_SET_INLINE_TRUE
-INLINE_EXCLUDE := -not -name "tmpl_abs_double.c" -and
+INLINE_EXCLUDE := \
+	-not -name "tmpl_abs_double.c" -and \
+	-not -name "tmpl_abs_float.c" -and \
+	-not -name "tmpl_abs_ldouble.c" -and
 endif
 
 uname_m := $(shell uname -m)
