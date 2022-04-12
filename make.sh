@@ -37,6 +37,7 @@ STDVER="-std=c89"
 USEOMP=0
 INPLACE=0
 ExtraArgs=""
+USEINLINE=0
 
 for arg in "$@"; do
     if [ "$arg" == "" ]; then
@@ -49,6 +50,8 @@ for arg in "$@"; do
         USEOMP=1
     elif [ "$arg" == "-inplace" ]; then
         INPLACE=1
+    elif [ "$arg" == "-inline" ]; then
+        USELINE=1
     else
         ExtraArgs="$ExtraArgs ${arg#*=}"
     fi
@@ -60,6 +63,11 @@ fi
 
 if [ "$CC" == "clang" ]; then
     ExtraArgs="$ExtraArgs -Weverything -Wno-padded -Wno-float-equal"
+fi
+
+if [ $USELINE == 1 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_SET_INLINE_TRUE"
+    Exclude="tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
 fi
 
 # Name of the created Shared Object file (.so).
@@ -97,9 +105,11 @@ END_HEADER=./include/tmpl_endianness.h
 
 # C file for determining endianness and creating END_HEADER.
 DET_END_FILE=./det_end.c
+DET_INLINE_FILE=./det_inline.c
 
 # Name of the executable create by DET_END_FILE.
-DET_END_EXEC=det_end_out
+DET_END_EXEC=det_end.out
+DET_INLINE_EXEC=det_inline.out
 
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
@@ -122,9 +132,14 @@ if [ $INPLACE == 0 ]; then
 fi
 
 echo "Creating include/tmpl_endianness.h file..."
-$CC $DET_END_FILE -o $DET_END_EXEC
+$CC $STDVER $ExtraArgs $DET_END_FILE -o $DET_END_EXEC
 ./$DET_END_EXEC
 rm -f $DET_END_EXEC
+
+echo "Creating include/tmpl_inline.h file..."
+$CC $STDVER $ExtraArgs $DET_INLINE_FILE -o $DET_INLINE_EXEC
+./$DET_INLINE_EXEC
+rm -f $DET_INLINE_EXEC
 
 if [ $INPLACE == 0 ]; then
     echo "Copying include/ directory to /usr/local/include/libtmpl/..."
@@ -147,10 +162,15 @@ echo "    Extra Compiler Arguments:"
 echo "        $ExtraArgs"
 
 # Loop over all directories in src/ and compile all .c files.
-for dir in ./src/*; do
+for dir in src/*; do
     echo ""
     echo "    Compiling $dir"
     for filename in $dir/*.c; do
+        filename_without_path=$(basename -- $filename)
+        if [[ $Exclude == *"$filename_without_path"* ]]; then
+            continue;
+        fi
+
         echo "        Compiling: $filename"
         if !($CC $CompilerArgs $filename); then
             exit 1

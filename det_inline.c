@@ -62,17 +62,18 @@ int main(void)
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  Purpose:                                                                  *\n");
     fprintf(fp, " *      This file is created by the det_inline.c file. It provides the macro  *\n");
-    fprintf(fp, " *      TMPL_HAVE_INLINE which is used by functions where the code might be   *\n");
+    fprintf(fp, " *      TMPL_USE_INLINE which is used by functions where the code might be    *\n");
     fprintf(fp, " *      inlined to increase performance.                                      *\n");
     fprintf(fp, " ******************************************************************************/\n\n");
     fprintf(fp, "#ifndef TMPL_INLINE_H\n");
     fprintf(fp, "#define TMPL_INLINE_H\n\n");
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-    fprintf(fp, "#define TMPL_HAVE_INLINE 1\n");
+#ifdef TMPL_SET_INLINE_TRUE
+    fprintf(fp, "#define TMPL_USE_INLINE 1\n");
 #else
-    fprintf(fp, "#define TMPL_HAVE_INLINE 0\n");
+    fprintf(fp, "#define TMPL_USE_INLINE 0\n");
 #endif
+
     fprintf(fp, "#endif\n");
     fclose(fp);
     return 0;
