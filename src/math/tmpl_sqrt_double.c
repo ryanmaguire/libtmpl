@@ -550,7 +550,7 @@ double tmpl_Double_Sqrt(double x)
 
     /*  Set the exponent part b to the integral part of b/2 by bit shifting   *
      *  down by 1.                                                            */
-    w.bits.expo = (unsigned int)((signed int)w.bits.expo + (exponent >> 1));
+    w.bits.expo = (unsigned int)((signed int)w.bits.expo + (exponent >> 1)) & 0x7FFU;
 
     /*  If the exponent is odd, expo/2 is not an integer. Writing expo = 2k+1 *
      *  we have expo/2 = k + 1/2, so 2^{expo/2} = 2^{k+1/2} = 2^{k} * 2^{1/2} *
