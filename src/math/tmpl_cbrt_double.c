@@ -507,13 +507,13 @@ double tmpl_Double_Cbrt(double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     exponent = (exponent < 0 ? (exponent - 2)/3 : exponent/3);
-    w.bits.expo = (unsigned int)((signed int)w.bits.expo + exponent);
+    w.bits.expo = (unsigned int)((signed int)w.bits.expo + exponent) & 0x7FFU;
 
     /*  If expo mod 3 = 0, expo/3 is an integer so 2^(expo/3) is fine.        */
     if (parity == 0U)
         w.r *= table[ind];
 
-    /*  If expo mod 3 = 1, 2^(expo/) = 2^(floor(expo/3) + 1/3). Multiply by   *
+    /*  If expo mod 3 = 1, 2^(expo/3) = 2^(floor(expo/3) + 1/3). Multiply by  *
      *  the cubic root of 2.                                                  */
     else if (parity == 1U)
         w.r *= 1.2599210498948731647672106072782*table[ind];
