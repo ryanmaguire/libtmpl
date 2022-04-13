@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################################
-#                                  LICENSE                                     #
+#                                   LICENSE                                    #
 ################################################################################
 #   This file is part of libtmpl.                                              #
 #                                                                              #
@@ -33,39 +33,92 @@
 # Choose whatever C compiler you want. Tested with gcc, clang, tcc, and pcc
 # on GNU/Linux (Debian, Ubuntu, Fedora, and more) and FreeBSD 12.1.
 CC=cc
+
+# Version of C to be used. Change this with -std=cxx.
 STDVER="-std=c89"
+
+# Use of OpenMP, the multiprocessing API. Enable this with -omp.
 USEOMP=0
+
+# Build the file library in place and do no store any header or library files
+# in /usr/local/include/ and /usr/local/lib/, respectively. Use this if you
+# do not have sudo priviledges. Enable this with -inplace.
 INPLACE=0
-ExtraArgs=""
+
+# Use inline code for small functions (like absolute value). Can give a speed
+# boost, but makes that compiled library file a tiny bit bigger. Only works
+# with compilers supporting C99 (or higher) or the GNU inline extension.
+# Enable this with -inline.
 USEINLINE=0
 
+# You can pass extra arguments. Just add -MyArgument.
+ExtraArgs=""
+
+# Parse the inputs.
 for arg in "$@"; do
+
+    # If there are no more arguments, break out of this loop.
     if [ "$arg" == "" ]; then
         break
+
+    # Check if the user wants to use a different compiler.
     elif [[ "$arg" == *"-cc"* ]]; then
         CC=${arg#*=}
+
+    # Check if the user wants to use a different version of the C language.
     elif [[ "$arg" == *"-std"* ]]; then
         STDVER=$arg
+
+    # Check if OpenMP support is requested.
     elif [ "$arg" == "-omp" ]; then
         USEOMP=1
+
+    # Check if the user wants to build libtmpl in the libtmpl/ directory.
     elif [ "$arg" == "-inplace" ]; then
         INPLACE=1
+
+    # Check if the user wants to inline small functions.
     elif [ "$arg" == "-inline" ]; then
-        USELINE=1
+        USEINLINE=1
+
+    # Check for any extra arguments.
     else
         ExtraArgs="$ExtraArgs ${arg#*=}"
     fi
 done
 
+# Check for incompatible requests. inline can't be used with -std=c89/c90.
+if [ $USEINLINE == 1 ]; then
+    if [ "$STDVER" == "-std=c89" ]; then
+        echo "Error: inline mode cannot be used with C89."
+        echo "       Set -std to a version supporting inline."
+        exit 1
+    elif [ "$STDVER" == "-std=c90" ]; then
+        echo "Error: inline mode cannot be used with C90."
+        echo "       Set -std to a version supporting inline."
+        exit 1
+    fi
+fi
+
+# If OpenMP support is requested, add this to the extra arguments.
 if [ $USEOMP == 1 ]; then
     ExtraArgs="$ExtraArgs -fopenmp"
 fi
 
+# LLVM's clang has the -Weverything warning which enables every possible
+# warning. Padding warning's are unnecessary, as are warnings about comparing
+# floats for equality. All other warnings should be enabled.
 if [ "$CC" == "clang" ]; then
     ExtraArgs="$ExtraArgs -Weverything -Wno-padded -Wno-float-equal"
 fi
 
-if [ $USELINE == 1 ]; then
+# If we're inlining small functions, we must not also compile the files
+# containing these functions. The inline functions are defined in their
+# respective header files. Create an exclude list with all functions that
+# should not be compiled. The file det_inline.c creates a macro for libtmpl as
+# to whether or not inline support has been requested. Define the macro
+# TMPL_SET_INLINE_TRUE with -DTMPL_SET_INLINE_TRUE to enable this macro.
+if [ $USEINLINE == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_INLINE_TRUE"
     Exclude="tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
 fi
@@ -98,56 +151,65 @@ else
 fi
 
 # Location where the .h files will be stored.
-INCLUDE_TARGET=/usr/local/include/libtmpl
+INCLUDE_TARGET=/usr/local/include/libtmpl/include/
 
-# Name of the header file containing endianness info. We need to create this.
-END_HEADER=./include/tmpl_endianness.h
+# Header files that need to be created prior to building libtmpl.
+END_HEADER=include/tmpl_endianness.h
+INLINE_HEADER=include/tmpl_inline.h
 
-# C file for determining endianness and creating END_HEADER.
-DET_END_FILE=./det_end.c
-DET_INLINE_FILE=./det_inline.c
+# C files for creating these headers.
+DET_END_FILE=det_end.c
+DET_INLINE_FILE=det_inline.c
 
-# Name of the executable create by DET_END_FILE.
+# Name of the executables to create these headers.
 DET_END_EXEC=det_end.out
 DET_INLINE_EXEC=det_inline.out
 
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
-echo "Clearing older files..."
+echo "Clearing older files"
 rm -f *.so *.o *.obj *.lib
+
+# If the endianness header already exists, remove it.
 if [ -e "$END_HEADER" ]; then
     rm -f "$END_HEADER";
 fi
 
+# If the inline header already exists, remove it.
+if [ -e "$INLINE_HEADER" ]; then
+    rm -f "$INLINE_HEADER";
+fi
+
+# If we're not building libtmpl into libtmpl/, clear older files.
 if [ $INPLACE == 0 ]; then
+
+    # Clear older header files.
     if [ -d "$INCLUDE_TARGET" ]; then
-        echo "Clearing $INCLUDE_TARGET..."
+        echo "Clearing $INCLUDE_TARGET"
         sudo rm -rf "$INCLUDE_TARGET";
     fi
 
+    # Clear older library files.
     if [ -e "$SODIR/$SONAME" ]; then
-        echo "Erasing $SODIR/$SONAME..."
+        echo "Erasing $SODIR/$SONAME"
         sudo rm -f "$SODIR/$SONAME";
     fi
 fi
 
-echo "Creating include/tmpl_endianness.h file..."
+# Create the endianness header.
+echo "Creating $END_HEADER"
 $CC $STDVER $ExtraArgs $DET_END_FILE -o $DET_END_EXEC
 ./$DET_END_EXEC
 rm -f $DET_END_EXEC
 
-echo "Creating include/tmpl_inline.h file..."
+# Create the inline header.
+echo "Creating $INLINE_HEADER"
 $CC $STDVER $ExtraArgs $DET_INLINE_FILE -o $DET_INLINE_EXEC
 ./$DET_INLINE_EXEC
 rm -f $DET_INLINE_EXEC
 
-if [ $INPLACE == 0 ]; then
-    echo "Copying include/ directory to /usr/local/include/libtmpl/..."
-    sudo mkdir -p "$INCLUDE_TARGET/include/"
-    sudo cp ./include/*.h "$INCLUDE_TARGET/include/"
-fi
-
-echo "Compiling libtmpl..."
+echo ""
+echo "Compiling libtmpl"
 echo "    Compiler:"
 echo "        $CC"
 echo "    Version:"
@@ -184,12 +246,20 @@ if !($CC ./*.o $LinkerArgs); then
     exit 1
 fi
 
+# If inplace is set, we can't use sudo.
 if [ $INPLACE == 0 ]; then
-    echo "Moving to /usr/local/lib/libtmpl.so"
+
+    # Copy the header files to the appropriate directory.
+    echo "Copying include/ directory to $INCLUDE_TARGET"
+    sudo mkdir -p "$INCLUDE_TARGET"
+    sudo cp ./include/*.h "$INCLUDE_TARGET"
+
+    # Move the shared object file to the appropriate directory.
+    echo "Moving $SONAME to $SODIR"
     sudo mv $SONAME $SODIR
 fi
 
-echo "Cleaning up..."
+echo "Cleaning up"
 rm -f *.o
 
 echo "Done"
