@@ -1,5 +1,5 @@
 ################################################################################
-#                                  LICENSE                                     #
+#                                   LICENSE                                    #
 ################################################################################
 #   This file is part of libtmpl.                                              #
 #                                                                              #
@@ -24,16 +24,18 @@ TARGET_LIB := libtmpl.so
 BUILD_DIR := ./build
 SRC_DIRS := ./src
 
-CFLAGS := $(CFLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS := -O3 -flto -shared -lm
-
 # Some functions make use of OpenMP with parallel for-loops. If using tmpyl,
 # the Python wrapper for libtmpl, it is advised to compile with OpenMP support
 # if possible.
 ifdef OMP
-overide CFLAGS := -fopenmp $(CFLAGS)
-overide LFLAGS := -fopenmp $(LFLAGS)
+CFLAGS := -fopenmp -I../ -O3 -fPIC -flto -DNDEBUG -c
+LFLAGS := -fopenmp -O3 -flto -shared -lm
+else
+CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
+LFLAGS := -O3 -flto -shared -lm
 endif
+
+CWARN := -Wall -Wextra -Wpedantic
 
 ifdef NO_INLINE
 INLINE_FLAG :=
@@ -98,7 +100,7 @@ DEPS := $(OBJS:.o=.d)
 
 .PHONY: clean install uninstall all
 
-all: include/tmpl_inline.h include/tmpl_endianness.h $(TARGET_LIB)
+all: $(BUILD_DIR) include/tmpl_inline.h include/tmpl_endianness.h $(TARGET_LIB)
 
 include/tmpl_endianness.h: ./det_end.c
 	$(CC) det_end.c -o det_end.out
@@ -114,16 +116,37 @@ $(TARGET_LIB): $(OBJS)
 	$(CC) $(OBJS) $(LFLAGS) -o $@
 
 $(BUILD_DIR)/%.c.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@
+	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.S.o: %.S
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@
+	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.fasm.o: %.fasm
-	mkdir -p $(dir $@)
 	fasm $< $@
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)/src/bytes/
+	mkdir -p $(BUILD_DIR)/src/complex/
+	mkdir -p $(BUILD_DIR)/src/euclidean_planar_geometry/
+	mkdir -p $(BUILD_DIR)/src/euclidean_spatial_geometry/
+	mkdir -p $(BUILD_DIR)/src/fft/
+	mkdir -p $(BUILD_DIR)/src/graph_theory/
+	mkdir -p $(BUILD_DIR)/src/interpolate/
+	mkdir -p $(BUILD_DIR)/src/knots/
+	mkdir -p $(BUILD_DIR)/src/math/
+	mkdir -p $(BUILD_DIR)/src/number_theory/
+	mkdir -p $(BUILD_DIR)/src/numerical/
+	mkdir -p $(BUILD_DIR)/src/optics/
+	mkdir -p $(BUILD_DIR)/src/polynomial/
+	mkdir -p $(BUILD_DIR)/src/ppm/
+	mkdir -p $(BUILD_DIR)/src/rational/
+	mkdir -p $(BUILD_DIR)/src/special_functions/
+	mkdir -p $(BUILD_DIR)/src/spherical_geometry/
+	mkdir -p $(BUILD_DIR)/src/string/
+	mkdir -p $(BUILD_DIR)/src/svg/
+	mkdir -p $(BUILD_DIR)/src/vector/
+	mkdir -p $(BUILD_DIR)/src/void_pointer/
+	mkdir -p $(BUILD_DIR)/src/window_functions/
 
 clean:
 	rm -rf $(BUILD_DIR)
