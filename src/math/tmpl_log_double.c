@@ -289,10 +289,19 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  We can only implement this function if IEEE754 support is available. Also *
- *  only implement this if the user has requested libtmpl algorithms.         */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1 && \
-    defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+/*  Only implement this if the user requested it.                             */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Macros for 1/n for n = 2, 3, ..., 6, 7. These make the code look cleaner. */
+#define A0 2.0
+#define A1 0.666666666666666666666667
+#define A2 0.4
+#define A3 0.285714285714285714285714
+#define A4 0.222222222222222222222222
+#define A5 0.181818181818181818181818
+
+/*  If IEEE-754 support is available, use this. It's much faster.             */
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
 static double table[128] = {
     0.0,
@@ -556,14 +565,6 @@ static double rcpr[128] = {
     0.501960784313725490196078431372549020
 };
 
-/*  Macros for 1/n for n = 2, 3, ..., 6, 7. These make the code look cleaner. */
-#define A0 2.0
-#define A1 0.666666666666666666666667
-#define A2 0.4
-#define A3 0.285714285714285714285714
-#define A4 0.222222222222222222222222
-#define A5 0.181818181818181818181818
-
 /*  Function for computing natural log at double precision.                   */
 double tmpl_Double_Log(double x)
 {
@@ -706,6 +707,66 @@ double tmpl_Double_Log(double x)
     return tmpl_Natural_Log_of_Two*exponent + poly + table[ind];
 }
 /*  End of tmpl_Double_Log.                                                   */
+
+#else
+/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
+
+double tmpl_Double_Log(double x)
+{
+    double mantissa, poly, A, A_sq;
+    signed int exponent;
+
+    if (x < 0.0)
+        return TMPL_NAN;
+    else if (x == 0.0)
+        return -TMPL_INFINITY;
+    else if (tmpl_Double_Is_NaN_Or_Inf(x))
+        return x + x;
+    else if (0.875 < x && x < 1.125)
+    {
+        A = (x - 1.0)/(x + 1.0);
+        A_sq = A*A;
+
+        /*  Horner's method of polynomial computation reduces the number of   *
+         *  multiplications needed. Use this.                                 */
+        return A * (
+            A0 + A_sq * (
+                A1 + A_sq * (
+                    A2 + A_sq * (
+                        A3 + A_sq * (A4 + A_sq * A5)
+                    )
+                )
+            )
+        );
+    }
+
+    tmpl_Double_Base2_Mant_and_Exp(x, &mantissa, &exponent);
+
+    if (mantissa > 1.5)
+    {
+        mantissa *= 0.5;
+        exponent += 1;
+    }
+
+    A = (mantissa - 1.0) / (mantissa + 1.0);
+    A_sq = A*A;
+
+    poly = 0.095238095238095238 * A_sq + 0.10526315789473684;
+    poly =                 poly * A_sq + 0.11764705882352941;
+    poly =                 poly * A_sq + 0.13333333333333333;
+    poly =                 poly * A_sq + 0.15384615384615385;
+    poly =                 poly * A_sq + 0.18181818181818182;
+    poly =                 poly * A_sq + 0.22222222222222222;
+    poly =                 poly * A_sq + 0.28571428571428571;
+    poly =                 poly * A_sq + 0.40000000000000000;
+    poly =                 poly * A_sq + 0.66666666666666667;
+    poly =                 poly * A_sq + 2.0000000000000000;
+
+    return tmpl_Natural_Log_of_Two*exponent + A*poly;
+}
+
+#endif
+/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
 
 /*  undef all the macros in case someone wants to #include this file.         */
 #undef A0
