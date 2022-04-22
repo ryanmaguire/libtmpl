@@ -70,6 +70,7 @@ int main(void)
     n0 = malloc(sizeof(*n0) * N);
     n1 = malloc(sizeof(*n1) * N);
 
+    printf("tmpl_Double_Base2_Mant_and_Exp vs. frexp\n");
     for (n = 0U; n < N; ++n)
         x[n] = rand_real();
 
