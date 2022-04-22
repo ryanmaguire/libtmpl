@@ -102,28 +102,6 @@ float tmpl_Float_Copysign(float x, float y)
 }
 /*  End of tmpl_Float_Copysign.                                               */
 
-/*  Double precision copysign function.                                       */
-double tmpl_Double_Copysign(double x, double y)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double out;
-
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0)
-        out = -tmpl_Double_Abs(x);
-
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0 < y)
-        out = tmpl_Double_Abs(x);
-
-    /*  And lastly, if y is zero, return zero.                                */
-    else
-        out = 0.0;
-
-    return out;
-}
-/*  End of tmpl_Double_Copysign.                                       */
-
 /*  Long double precision copysign function.                                  */
 long double tmpl_LDouble_Copysign(long double x, long double y)
 {
