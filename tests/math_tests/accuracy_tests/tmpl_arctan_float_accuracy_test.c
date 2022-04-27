@@ -20,6 +20,6 @@
 
 int main(void)
 {
-    RUN_TEST(double, -1.0E7, 1.0E7, 10000000000ULL, tmpl_Double_Arctan, atan);
+    RUN_TEST(float, -1.0E7F, 1.0E7F, 10000000000ULL, tmpl_Float_Arctan, atanf);
     return 0;
 }
