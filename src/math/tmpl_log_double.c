@@ -107,7 +107,6 @@
  *      -std=c18 flags have been passed as well, and no problems were found.  *
  *      If any error or warnings arise on your platform, please report this.  *
  *                                                                            *
- *                                                                            *
  *  Accuracy and Performance:                                                 *
  *                                                                            *
  *      A time and accuracy test yields the following results versus glibc:   *

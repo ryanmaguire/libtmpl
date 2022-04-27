@@ -60,38 +60,68 @@
  *      +/- NaN (which is still NaN). This is because NaN always              *
  *      evaluates to false when a comparison is made (==, <, >, etc.).        *
  *                                                                            *
+ *  Accuracy and Performance:                                                 *
+ *                                                                            *
  *      A time and accuracy test against glibc yields the following:          *
  *                                                                            *
- *          Using IEEE-754 method:                                            *
+ *          Using IEEE-754 method, no inline:                                 *
  *                                                                            *
  *          tmpl_Double_Abs vs. fabs                                          *
  *          start:   -1.0000000000000000e+06                                  *
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
  *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 8.950290 seconds                                         *
- *          C:       7.323713 seconds                                         *
+ *          libtmpl: 7.087521 seconds                                         *
+ *          C:       4.070754 seconds                                         *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
  *          rms rel error: 0.0000000000000000e+00                             *
  *                                                                            *
- *          Using if-then method:                                             *
+ *          Using if-then method, no inline:                                  *
  *                                                                            *
  *          tmpl_Double_Abs vs. fabs                                          *
  *          start:   -1.0000000000000000e+06                                  *
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
  *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 9.523690 seconds                                         *
- *          C:       7.324468 seconds                                         *
+ *          libtmpl: 7.135024 seconds                                         *
+ *          C:       4.001758 seconds                                         *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
  *          rms rel error: 0.0000000000000000e+00                             *
  *                                                                            *
- *      fabs is a built-in function, so I doubt software will be able to get  *
- *      better performance.                                                   *
+ *          Using IEEE-754 method, inlined:                                   *
+ *                                                                            *
+ *          tmpl_Double_Abs vs. fabs                                          *
+ *          start:   -1.0000000000000000e+06                                  *
+ *          end:     1.0000000000000000e+06                                   *
+ *          samples: 2615628245                                               *
+ *          dx:      7.6463465472326707e-04                                   *
+ *          libtmpl: 3.166737 seconds                                         *
+ *          C:       3.985278 seconds                                         *
+ *          max abs error: 0.0000000000000000e+00                             *
+ *          max rel error: 0.0000000000000000e+00                             *
+ *          rms abs error: 0.0000000000000000e+00                             *
+ *          rms rel error: 0.0000000000000000e+00                             *
+ *                                                                            *
+ *          Using if-then method, inlined:                                    *
+ *                                                                            *
+ *          tmpl_Double_Abs vs. fabs                                          *
+ *          start:   -1.0000000000000000e+06                                  *
+ *          end:     1.0000000000000000e+06                                   *
+ *          samples: 2615628245                                               *
+ *          dx:      7.6463465472326707e-04                                   *
+ *          libtmpl: 3.166737 seconds                                         *
+ *          C:       3.985278 seconds                                         *
+ *          max abs error: 0.0000000000000000e+00                             *
+ *          max rel error: 0.0000000000000000e+00                             *
+ *          rms abs error: 0.0000000000000000e+00                             *
+ *          rms rel error: 0.0000000000000000e+00                             *
+ *                                                                            *
+ *      Since the absolute value function is so small, it is worth inlining.  *
+ *      This is the default behavior of the Makefile.                         *
  *                                                                            *
  *      These tests were performed with the following specs:                  *
  *                                                                            *
@@ -151,6 +181,9 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  This file is only compiled if inline support is not requested.            */
+#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
+
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
@@ -207,3 +240,6 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+
+#endif
+/*  End of #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.             */

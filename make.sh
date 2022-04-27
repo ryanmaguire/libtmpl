@@ -51,6 +51,9 @@ INPLACE=0
 # Enable this with -inline.
 USEINLINE=0
 
+# Whether or not to use libtmpl's implementation of libm.
+USEMATH=1
+
 # You can pass extra arguments. Just add -MyArgument.
 ExtraArgs=""
 
@@ -80,6 +83,9 @@ for arg in "$@"; do
     # Check if the user wants to inline small functions.
     elif [ "$arg" == "-inline" ]; then
         USEINLINE=1
+
+    elif [ "$arg" == "-nomath" ]; then
+        USEMATH=0
 
     # Check for any extra arguments.
     else
@@ -123,6 +129,10 @@ if [ $USEINLINE == 1 ]; then
     Exclude="tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
 fi
 
+if [ $USEMATH == 1 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MATH_TRUE"
+fi
+
 # Name of the created Shared Object file (.so).
 SONAME="libtmpl.so"
 
@@ -155,15 +165,15 @@ INCLUDE_TARGET=/usr/local/include/libtmpl/include/
 
 # Header files that need to be created prior to building libtmpl.
 END_HEADER=include/tmpl_endianness.h
-INLINE_HEADER=include/tmpl_inline.h
+CONFIG_HEADER=include/tmpl_config.h
 
 # C files for creating these headers.
 DET_END_FILE=det_end.c
-DET_INLINE_FILE=det_inline.c
+CONFIG_FILE=config.c
 
 # Name of the executables to create these headers.
 DET_END_EXEC=det_end.out
-DET_INLINE_EXEC=det_inline.out
+CONFIG_EXEC=config.out
 
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
@@ -175,9 +185,9 @@ if [ -e "$END_HEADER" ]; then
     rm -f "$END_HEADER";
 fi
 
-# If the inline header already exists, remove it.
-if [ -e "$INLINE_HEADER" ]; then
-    rm -f "$INLINE_HEADER";
+# If the config header already exists, remove it.
+if [ -e "$CONFIG_HEADER" ]; then
+    rm -f "$CONFIG_HEADER";
 fi
 
 # If we're not building libtmpl into libtmpl/, clear older files.
@@ -202,11 +212,11 @@ $CC $STDVER $ExtraArgs $DET_END_FILE -o $DET_END_EXEC
 ./$DET_END_EXEC
 rm -f $DET_END_EXEC
 
-# Create the inline header.
-echo "Creating $INLINE_HEADER"
-$CC $STDVER $ExtraArgs $DET_INLINE_FILE -o $DET_INLINE_EXEC
-./$DET_INLINE_EXEC
-rm -f $DET_INLINE_EXEC
+# Create the config header.
+echo "Creating $CONFIG_HEADER"
+$CC $STDVER $ExtraArgs $CONFIG_FILE -o $CONFIG_EXEC
+./$CONFIG_EXEC
+rm -f $CONFIG_EXEC
 
 echo ""
 echo "Compiling libtmpl"

@@ -21,13 +21,13 @@
 
 int main(void)
 {
-    /*  Open the file include/tmpl_inline.h using fopen and give the file     *
+    /*  Open the file include/tmpl_config.h using fopen and give the file     *
      *  write permissions. If using Windows, we'll need to use backslashes.   *
      *  Forward slashes fail to create the file.                              */
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
-    FILE *fp = fopen(".\\include\\tmpl_inline.h", "w");
+    FILE *fp = fopen(".\\include\\tmpl_config.h", "w");
 #else
-    FILE *fp = fopen("./include/tmpl_inline.h", "w");
+    FILE *fp = fopen("./include/tmpl_config.h", "w");
 #endif
 
     /*  If fopen fails, it returns NULL. Check that it did not.               */
@@ -39,7 +39,7 @@ int main(void)
         return -1;
     }
 
-    /*  Create the file include/tmpl_inline.h and return.                     */
+    /*  Create the file include/tmpl_config.h and return.                     */
     fprintf(fp, "/******************************************************************************\n");
     fprintf(fp, " *                                  LICENSE                                   *\n");
     fprintf(fp, " ******************************************************************************\n");
@@ -58,20 +58,28 @@ int main(void)
     fprintf(fp, " *  You should have received a copy of the GNU General Public License         *\n");
     fprintf(fp, " *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *\n");
     fprintf(fp, " ******************************************************************************\n");
-    fprintf(fp, " *                                tmpl_inline                                 *\n");
+    fprintf(fp, " *                                tmpl_config                                 *\n");
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  Purpose:                                                                  *\n");
-    fprintf(fp, " *      This file is created by the det_inline.c file. It provides the macro  *\n");
-    fprintf(fp, " *      TMPL_USE_INLINE which is used by functions where the code might be    *\n");
-    fprintf(fp, " *      inlined to increase performance.                                      *\n");
+    fprintf(fp, " *      This file is created by the config.c file. It provides the macros     *\n");
+    fprintf(fp, " *      TMPL_USE_INLINE, which is used by functions where the code might be   *\n");
+    fprintf(fp, " *      inlined to increase performance, and TMPL_USE_MATH_ALGORITHMS, which  *\n");
+    fprintf(fp, " *      determines if libtmpl's libm implementation should be used, or if the *\n");
+    fprintf(fp, " *      C standard library math.h should be used.                             *\n");
     fprintf(fp, " ******************************************************************************/\n\n");
-    fprintf(fp, "#ifndef TMPL_INLINE_H\n");
-    fprintf(fp, "#define TMPL_INLINE_H\n\n");
+    fprintf(fp, "#ifndef TMPL_CONFIG_H\n");
+    fprintf(fp, "#define TMPL_CONFIG_H\n\n");
 
 #ifdef TMPL_SET_INLINE_TRUE
     fprintf(fp, "#define TMPL_USE_INLINE 1\n");
 #else
     fprintf(fp, "#define TMPL_USE_INLINE 0\n");
+#endif
+
+#ifdef TMPL_SET_USE_MATH_TRUE
+    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 1\n");
+#else
+    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 0\n");
 #endif
 
     fprintf(fp, "#endif\n");

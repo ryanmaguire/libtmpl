@@ -20,9 +20,9 @@
 #   Date:       August 31, 2021                                                #
 ################################################################################
 
-# This file is created by the make.sh script.
+# These files are created by the make.sh script and Makefile.
 include/tmpl_endianness.h
-include/tmpl_inline.h
+include/tmpl_config.h
 
 # Various filetypes to be excluded from LaTeX, C, C++, and Python output.
 # Plus a bunch of random ones GitHub recommended be in the .gitignore file.
