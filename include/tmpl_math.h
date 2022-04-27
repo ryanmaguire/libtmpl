@@ -100,16 +100,11 @@
 /*  Endianness macros are here.                                               */
 #include <libtmpl/include/tmpl_endianness.h>
 
-/*  Whether or not we're building with inline support is here.                */
-#include <libtmpl/include/tmpl_inline.h>
+/*  Whether or not we're building with inline support is here and whether or  *
+ *  not we're using libtmpl's implementation of libm.                         */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Set this to 1 to use libtmpl's version of libm. Set this to zero to have  *
- *  math.h included, using standard library functions instead. libtmpl's      *
- *  libm functions are quite fast and efficient, but most would prefer to use *
- *  the libm provided by the implementation of the C standard library they    *
- *  are using, so this is set to 0 by default.                                */
-#define TMPL_USE_MATH_ALGORITHMS 1
-
+/*  If we're not using libtmpl's implementation of libm, include math.h.      */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
 #include <math.h>
 #endif

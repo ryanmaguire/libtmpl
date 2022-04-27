@@ -27,7 +27,7 @@ SONAME="libtmpl.so"
 SODIR="/usr/local/lib"
 INCLUDE_TARGET=/usr/local/include/libtmpl
 END_HEADER=include/tmpl_endianness.h
-INLINE_HEADER=include/tmpl_inline.h
+CONFIG_HEADER=include/tmpl_config.h
 
 echo "Removing libtmpl:"
 echo "    Clearing older files..."
@@ -39,8 +39,8 @@ if [ -e "$END_HEADER" ]; then
 fi
 
 echo "    Removing inline header file if it exists..."
-if [ -e "$INLINE_HEADER" ]; then
-    rm -f "$INLINE_HEADER";
+if [ -e "$CONFIG_HEADER" ]; then
+    rm -f "$CONFIG_HEADER";
 fi
 
 echo -e "    Removing include directory if it exists..."
