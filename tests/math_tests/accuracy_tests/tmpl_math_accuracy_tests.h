@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -58,8 +58,8 @@ do {                                                                           \
         {                                                                      \
             rms_rel += temp*temp;                                              \
                                                                                \
-          if (max_rel < temp)                                                  \
-              max_rel = temp;                                                  \
+            if (max_rel < temp)                                                \
+                max_rel = temp;                                                \
         }                                                                      \
     }                                                                          \
                                                                                \
@@ -70,4 +70,3 @@ do {                                                                           \
     printf("rms abs error: %.16Le\n", rms_abs);                                \
     printf("rms rel error: %.16Le\n", rms_rel);                                \
 } while (0)
-
