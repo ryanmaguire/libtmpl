@@ -26,7 +26,8 @@
 static inline long double rand_real(void)
 {
     int n = rand();
-    return (long double)n / (long double)(RAND_MAX);
+    long double x = (long double)n / (long double)(RAND_MAX);
+    return 2.0L*(x - 0.5L);
 }
 
 #define TEST1(ctype, ttype, ltype, f0, f1, samples)                            \
