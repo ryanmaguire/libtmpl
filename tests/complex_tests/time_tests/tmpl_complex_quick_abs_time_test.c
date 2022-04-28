@@ -25,4 +25,3 @@ TEST1(double,
       tmpl_CDouble_QuickAbs,
       cabs,
       10000000ULL)
-

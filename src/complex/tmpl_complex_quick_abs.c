@@ -128,6 +128,12 @@
  *      using large numbers but would prefer speed.                           *
  ******************************************************************************/
 
+/*  The TMPL_USE_INLINE macro is found here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
+
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -137,35 +143,26 @@
 /*  Single precision complex abs function (cabsf equivalent).                 */
 float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z)
 {
-    /*  Extract the real and imaginary parts from the input complex number.   */
-    const float real = tmpl_CFloat_Real_Part(z);
-    const float imag = tmpl_CFloat_Imag_Part(z);
-
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    return tmpl_Float_Sqrt(real*real + imag*imag);
+    return tmpl_Float_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
 }
 /*  End of tmpl_CFloat_QuickAbs.                                              */
 
 /*  Double precision complex abs function (cabs equivalent).                  */
 double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z)
 {
-    /*  Extract the real and imaginary parts from the input complex number.   */
-    const double real = tmpl_CDouble_Real_Part(z);
-    const double imag = tmpl_CDouble_Imag_Part(z);
-
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    return tmpl_Double_Sqrt(real*real + imag*imag);
+    return tmpl_Double_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
 }
 /*  End of tmpl_CDouble_QuickAbs.                                             */
 
 /*  Long double precision complex abs function (cabsl equivalent).            */
 long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z)
 {
-    /*  Extract the real and imaginary parts from the input complex number.   */
-    const long double real = tmpl_CLDouble_Real_Part(z);
-    const long double imag = tmpl_CLDouble_Imag_Part(z);
-
     /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    return tmpl_LDouble_Sqrt(real*real + imag*imag);
+    return tmpl_LDouble_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
 }
 /*  End of tmpl_CLDouble_QuickAbs.                                            */
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

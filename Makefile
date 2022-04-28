@@ -46,7 +46,8 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
 	-not -name "tmpl_abs_ldouble.c" -and \
-	-not -name "tmpl_complex_abs_squared.c" -and
+	-not -name "tmpl_complex_abs_squared.c" -and \
+	-not -name "tmpl_complex_quick_abs.c" -and
 endif
 
 ifdef NO_MATH
