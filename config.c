@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -17,8 +17,10 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
+/*  fprintf, FILE, fopen, and fclose all found here.                          */
 #include <stdio.h>
 
+/*  Function for creating tmpl_config.h containing macros for libtmpl.        */
 int main(void)
 {
     /*  Open the file include/tmpl_config.h using fopen and give the file     *
@@ -34,7 +36,7 @@ int main(void)
     if (!fp)
     {
         puts("Error Encountered: libtmpl\n"
-             "    det_inline.c\n"
+             "    config.c\n"
              "fopen returned NULL for FILE *fp. Aborting.\n");
         return -1;
     }
@@ -77,9 +79,9 @@ int main(void)
 #endif
 
 #ifdef TMPL_SET_USE_MATH_TRUE
-    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 1\n");
+    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 1\n\n");
 #else
-    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 0\n");
+    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 0\n\n");
 #endif
 
     fprintf(fp, "#endif\n");
