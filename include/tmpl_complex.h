@@ -80,6 +80,9 @@ extern "C" {
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 
+/*  The macro TMPL_USE_INLINE is found here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
  *  data structure containing a single array double dat[2];. If you are using *
  *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
@@ -204,9 +207,46 @@ extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
  *      libtmpl/tests/complex_tests/tmpl_complex_abs_squared_time_test.c      *
  *      libtmpl/tests/complex_tests/tmpl_complex_absl_squared_time_test.c     *
  ******************************************************************************/
+
+/*  This function is small enough that one may wish to inline it. This        *
+ *  results in about a 1.5x speed boost.                                      */
+
+#if TMPL_USE_INLINE == 1
+
+/*  Single precision abs squared function.                                    */
+static inline float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z)
+{
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
+}
+/*  End of tmpl_CFloat_Abs_Squared.                                           */
+
+/*  Double precision abs squared function.                                    */
+static inline double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z)
+{
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
+}
+/*  End of tmpl_CDouble_Abs_Squared.                                          */
+
+/*  Long double precision abs squared function.                               */
+static inline long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z)
+{
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
+}
+/*  End of tmpl_CLDouble_Abs_Squared.                                         */
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the external functions in src/complex/        */
 extern float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

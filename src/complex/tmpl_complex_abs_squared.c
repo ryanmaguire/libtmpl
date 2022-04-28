@@ -39,14 +39,7 @@
  *      abs_sq_z (float/double/long double):                                  *
  *          The square of the absolute value of z.                            *
  *  Called Functions:                                                         *
- *      tmpl_CFloat_Real_Part   (tmpl_complex.h)                              *
- *      tmpl_CDouble_Real_Part  (tmpl_complex.h)                              *
- *      tmpl_CLDouble_Real_Part (tmpl_complex.h)                              *
- *          Returns the real part of a complex number.                        *
- *      tmpl_CFloat_Imag_Part   (tmpl_complex.h)                              *
- *      tmpl_CDouble_Imag_Part  (tmpl_complex.h)                              *
- *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
- *          Returns the imaginary part of a complex number.                   *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Extract the real and imaginary parts of z and return x^2 + y^2.       *
  ******************************************************************************
@@ -70,7 +63,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -88,7 +81,15 @@
  *  2021/05/11: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
  *      No more changes unless something breaks.                              *
+ *  2022/04/28: Ryan Maguire                                                  *
+ *      Added this function as an optional inline function.                   *
  ******************************************************************************/
+
+/*  The TMPL_USE_INLINE macro is found here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
 
 /*  Where the prototypes are given and where complex types are defined.       */
 #include <libtmpl/include/tmpl_complex.h>
@@ -96,47 +97,26 @@
 /*  Single precision abs squared function.                                    */
 float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float real, imag, abs_sq;
-
-    /*  Extract the real and imaginary parts from the input complex number.   */
-    real = tmpl_CFloat_Real_Part(z);
-    imag = tmpl_CFloat_Imag_Part(z);
-
-    /*  |z|^2 = x^2 + y^2 so compute this.                                    */
-    abs_sq = real*real + imag*imag;
-    return abs_sq;
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
 }
 /*  End of tmpl_CFloat_Abs_Squared.                                           */
 
 /*  Double precision abs squared function.                                    */
 double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double real, imag, abs_sq;
-
-    /*  Extract the real and imaginary parts from the input complex number.   */
-    real = tmpl_CDouble_Real_Part(z);
-    imag = tmpl_CDouble_Imag_Part(z);
-
-    /*  |z|^2 = x^2 + y^2 so compute this.                                    */
-    abs_sq = real*real + imag*imag;
-    return abs_sq;
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
 }
 /*  End of tmpl_CDouble_Abs_Squared.                                          */
 
 /*  Long double precision abs squared function.                               */
 long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double real, imag, abs_sq;
-
-    /*  Extract the real and imaginary parts from the input complex number.   */
-    real = tmpl_CLDouble_Real_Part(z);
-    imag = tmpl_CLDouble_Imag_Part(z);
-
-    /*  |z|^2 = x^2 + y^2 so compute this.                                    */
-    abs_sq = real*real + imag*imag;
-    return abs_sq;
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
 }
 /*  End of tmpl_CLDouble_Abs_Squared.                                         */
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
