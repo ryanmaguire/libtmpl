@@ -83,6 +83,25 @@ extern "C" {
 /*  The macro TMPL_USE_INLINE is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/tmpl_math.h>
+
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+#define square_rootf tmpl_Float_Sqrt
+#define square_root tmpl_Double_Sqrt
+#define square_rootl tmpl_LDouble_Sqrt
+
+#else
+
+#define square_rootf sqrtf
+#define square_root sqrt
+#define square_rootl sqrtl
+
+#endif
+
+#endif
+
 /*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
  *  data structure containing a single array double dat[2];. If you are using *
  *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
@@ -1095,9 +1114,27 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
  *  Tests:                                                                    *
  *      libtmpl/tests/complex_tests/tmpl_complex_quick_abs_time_test.c        *
  ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+static inline float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z)
+{
+    return square_rootf(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+}
+
+static inline double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z)
+{
+    return square_root(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+}
+
+static inline long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z)
+{
+    return square_rootl(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+}
+
+#else
 extern float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1405,6 +1442,10 @@ tmpl_CDouble_Tanh(tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
+
+#undef square_rootf
+#undef square_root
+#undef square_rootl
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
