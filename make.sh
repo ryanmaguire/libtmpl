@@ -164,27 +164,19 @@ fi
 # Location where the .h files will be stored.
 INCLUDE_TARGET=/usr/local/include/libtmpl/include/
 
-# Header files that need to be created prior to building libtmpl.
-END_HEADER=include/tmpl_endianness.h
+# Header file that needs to be created prior to building libtmpl.
 CONFIG_HEADER=include/tmpl_config.h
 
-# C files for creating these headers.
-DET_END_FILE=det_end.c
+# C file for creating this header.
 CONFIG_FILE=config.c
 
-# Name of the executables to create these headers.
-DET_END_EXEC=det_end.out
+# Name of the executable to create this header.
 CONFIG_EXEC=config.out
 
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
 echo "Clearing older files"
 rm -f *.so *.o *.obj *.lib
-
-# If the endianness header already exists, remove it.
-if [ -e "$END_HEADER" ]; then
-    rm -f "$END_HEADER";
-fi
 
 # If the config header already exists, remove it.
 if [ -e "$CONFIG_HEADER" ]; then
@@ -206,12 +198,6 @@ if [ $INPLACE == 0 ]; then
         sudo rm -f "$SODIR/$SONAME";
     fi
 fi
-
-# Create the endianness header.
-echo "Creating $END_HEADER"
-$CC $STDVER $ExtraArgs $DET_END_FILE -o $DET_END_EXEC
-./$DET_END_EXEC
-rm -f $DET_END_EXEC
 
 # Create the config header.
 echo "Creating $CONFIG_HEADER"

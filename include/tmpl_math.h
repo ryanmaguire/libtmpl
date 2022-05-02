@@ -58,10 +58,11 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- *  2.) tmpl_endianness.h:                                                    *
+ *  2.) tmpl_config.h:                                                        *
  *          Header file containing the endianness of your system. This file   *
- *          is built with det_end.c in libtmpl/. The Makefile automatically   *
- *          runs this, as does the make.sh script.                            *
+ *          is built with config.c in libtmpl/. The Makefile automatically    *
+ *          runs this, as does the make.sh script. This also contains the     *
+ *          TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.              *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
  ******************************************************************************
@@ -97,11 +98,9 @@
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Endianness macros are here.                                               */
-#include <libtmpl/include/tmpl_endianness.h>
-
 /*  Whether or not we're building with inline support is here and whether or  *
- *  not we're using libtmpl's implementation of libm.                         */
+ *  not we're using libtmpl's implementation of libm. Endianness macros are   *
+ *  also found here.                                                          */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  If we're not using libtmpl's implementation of libm, include math.h.      */
@@ -207,7 +206,7 @@
  *                                                                            *
  ******************************************************************************/
 
-/*  Check if TMPL_FLOAT_ENDIANNESS was defined in tmpl_endianness.h. It       *
+/*  Check if TMPL_FLOAT_ENDIANNESS was defined in tmpl_config.h. It           *
  *  should be unless there was a problem when building libtmpl.               */
 #if !defined(TMPL_FLOAT_ENDIANNESS)
 

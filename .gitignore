@@ -21,7 +21,6 @@
 ################################################################################
 
 # These files are created by the make.sh script and Makefile.
-include/tmpl_endianness.h
 include/tmpl_config.h
 
 # Various filetypes to be excluded from LaTeX, C, C++, and Python output.
