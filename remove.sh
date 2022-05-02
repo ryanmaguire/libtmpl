@@ -26,19 +26,13 @@
 SONAME="libtmpl.so"
 SODIR="/usr/local/lib"
 INCLUDE_TARGET=/usr/local/include/libtmpl
-END_HEADER=include/tmpl_endianness.h
 CONFIG_HEADER=include/tmpl_config.h
 
 echo "Removing libtmpl:"
 echo "    Clearing older files..."
 rm -f *.so *.o *.obj *.lib
 
-echo "    Removing endianness header file if it exists..."
-if [ -e "$END_HEADER" ]; then
-    rm -f "$END_HEADER";
-fi
-
-echo "    Removing inline header file if it exists..."
+echo "    Removing config header file if it exists..."
 if [ -e "$CONFIG_HEADER" ]; then
     rm -f "$CONFIG_HEADER";
 fi

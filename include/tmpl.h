@@ -23,7 +23,7 @@
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_bytes.h>
 #include <libtmpl/include/tmpl_complex.h>
-#include <libtmpl/include/tmpl_endianness.h>
+#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 #include <libtmpl/include/tmpl_fft.h>

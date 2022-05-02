@@ -108,12 +108,7 @@ DEPS := $(OBJS:.o=.d)
 
 .PHONY: clean install uninstall all
 
-all: $(BUILD_DIR) include/tmpl_config.h include/tmpl_endianness.h $(TARGET_LIB)
-
-include/tmpl_endianness.h: ./det_end.c
-	$(CC) det_end.c -o det_end.out
-	./det_end.out
-	rm -f det_end.out
+all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
 
 include/tmpl_config.h: ./config.c
 	$(CC) $(INLINE_FLAG) $(MATH_FLAG) config.c -o config.out
@@ -158,7 +153,6 @@ $(BUILD_DIR):
 
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f include/tmpl_endianness.h
 	rm -f include/tmpl_config.h
 
 install:
@@ -168,7 +162,6 @@ install:
 
 uninstall:
 	rm -rf $(BUILD_DIR)
-	rm -f include/tmpl_endianness.h
 	rm -f include/tmpl_config.h
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)
