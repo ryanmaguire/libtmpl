@@ -35,7 +35,7 @@
  *      sqrt_x (double):                                                      *
  *          The square root of x at double precision.                         *
  *  Called Functions:                                                         *
- *      fsqrt                                                                 *
+ *      vsqrt                                                                 *
  *  Method:                                                                   *
  *      For arm7l (armel/armhf) machines sqrt is a built-in function.         *
  ******************************************************************************
