@@ -87,10 +87,11 @@ Options to pass to `make`
 4. `NO_ASM=1`
 > Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
 > machines. Some functions, like `sqrt`, can be handle efficiently in assembly
-> code. If you wish to use only C code, set this open (not recommended).
+> code. If you wish to use only C code, set this option (not recommended).
 5. `FASM=1`
 > Use the flat assembler instead of the assembly language used by `gcc` and
-> `clang`. You must have `fasm` installed to use this.
+> `clang`. You must have `fasm` installed to use this. This option is ignored
+> if `NO_ASM=1` is set.
 6. `CC=cc`
 > The C compiler you use. On Debian GNU/Linux and derivatives (Ubuntu, etc.)
 > `gcc`, `clang`, `tcc`, and `pcc` have all been tested and work as expected.
