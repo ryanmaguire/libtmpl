@@ -42,8 +42,8 @@ IF %1 == clang GOTO MakeClang
     SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
 
     :: Create include\tmpl_endianness.h
-    clang-cl det_end.c -o det.exe
-    det.exe
+    clang-cl config.c -o config.exe
+    config.exe
     del *.exe *.obj
 
     :: Compile the library.
@@ -55,8 +55,8 @@ IF %1 == clang GOTO MakeClang
 :MakeCL
 
     :: Create include\tmpl_endianness.h
-    cl det_end.c /link /out:det.exe
-    det.exe
+    cl config.c /link /out:config.exe
+    config.exe
     del *.exe *.obj
 
     :: Compile the library.
