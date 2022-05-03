@@ -66,12 +66,11 @@
 .type   tmpl_Double_Sqrt, %function
 
 tmpl_Double_Sqrt:
-        vcmp.f64        d0, #0
-        vmov.f64        d7, d0
-        vmrs    APSR_nzcv, FPSCR
-        bmi     .L10
-        vsqrt.f64       d0, d7
-        bx      lr
+        vcmp.f64    d0, #0
+        vmov.f64    d7, d0
+        vmrs        APSR_nzcv, FPSCR
+        vsqrt.f64   d0, d7
+        bx          lr
 
 .size   tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
 
