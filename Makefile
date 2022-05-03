@@ -58,20 +58,21 @@ endif
 
 uname_m := $(shell uname -m)
 
-# amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
-# if possible for performance boosts.
-ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
-
 # If the user does not want to use any assembly code (that is, C only) only
-# include .c files. Ignore all .S or .fasm files. For x86_64 computers this is
-# only advised if you do not have FASM or your C compiler cannot compile
+# include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
+# and armv7l (armhf) this is only advised if your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifdef NO_ASM
 SRCS := $(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) -name "*.c")
 
+# Else for ifdef NO_ASM
+# amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
+# if possible for performance boosts.
+else ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
+
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
-else ifdef FASM
+ifdef FASM
 SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
@@ -89,10 +90,11 @@ SRCS := \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
 	\( -name "*.c" -or -name "*x86_64.S" \))
 endif
-# End of ifdef NO_ASM.
+# End of ifdef FASM.
 
+# Else for ifdef NO_ASM
+# Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64))
-# Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
@@ -100,8 +102,9 @@ SRCS := \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*aarch64.S" \))
 
+# Else for ifdef NO_ASM
+# Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
-# Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
@@ -115,12 +118,12 @@ SRCS := \
 # code has been tested on ppc64, mips, and many other architectures using
 # emulation and worked as expected.
 else
-# Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
+# For all other architectures, use only C code. No assembly.
 SRCS := $(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) -name "*.c")
 
+# End of ifdef NO_ASM.
 endif
-# End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
