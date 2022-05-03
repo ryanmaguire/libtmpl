@@ -47,12 +47,6 @@ and no C99/C11 or GCC extensions are used. It compiles with C99 and C11/C18
 compilers, so it is more fitting to say it is written in the intersection of
 these standards.
 
-The ``extras/`` folder contains a plethora of code for recreational purposes
-(random walks, fractals, raytracing, and more). These files are **not** part
-of libtmpl and are not compiled via the Makefile or the ``make.sh`` script.
-Most of the files in ``extras/`` are written in C, but some are in C++, Python,
-Sage, and the rare Mathematica file may appear, and some files use C99 tools.
-
 The ``examples/`` folder contains examples of all of the functions in the
 library and shows basic usage of these tools.
 
