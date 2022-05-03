@@ -69,7 +69,8 @@ Options to pass to `make`
 2.  `NO_INLINE=1`
 > Do not use any inline code. This results in a slightly
 > smaller `libtmpl.so` file, but several functions become significantly
-> slower (not recommended).
+> slower (not recommended). If your compiler does not support `C99` or higher,
+> and does not support the `gcc` `inline` extension, enable this option.
 3.  `NO_MATH=1`
 > Do not use `libtmpl`'s implementation of `libm`, the C
 > standard library for mathematical tools, instead using your compilers
