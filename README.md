@@ -106,14 +106,14 @@ If you did not install libtmpl to `/usr/local/lib`, try:
 ```
 export LD_LIBRARY_PATH="/path/to/libtmpl:$LD_LIBRARY_PATH"
 ```
+To remove all build and `.so` files, run:
+```
+make clean
+```
 To uninstall, run:
 ```
 sudo make uninstall
 ```
-### Warnings
-Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option
-will result in an error. Homebrew has versions of clang and gcc that do support
-OpenMP.
 
 ## Installation (Windows) <a name="InstallWindows"></a>
 Run the batch script `make.bat`.
