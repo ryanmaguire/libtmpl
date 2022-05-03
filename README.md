@@ -75,7 +75,7 @@ Options to pass to `make`
 > Do not use `libtmpl`'s implementation of `libm`, the C
 > standard library for mathematical tools, instead using your compilers
 > implementation. This may be recommended. Tests against `glibc`,
-> FreeBSD's C library, and `MSVC`'s implementation of `libm` show that
+> `FreeBSD libc`, and `MSVC`'s implementation of `libm` show that
 > `libtmpl` can be significantly faster (all functions have benchmarks in the
 > `tests/` directory and you may see for yourself), but this has only been
 > tested on the architectures supported by the Debian GNU/Linux operating
