@@ -91,10 +91,19 @@ SRCS := \
 endif
 # End of ifdef NO_ASM.
 
-# Else for ifeq ($(uname_p),x86_64). Currently, only x86_64 assembly code is
-# supported. This may change in the future. The rest of the C code has been
-# tested on arm64, ppc64, mips, and many other architectures using emulation
-# and worked as expected.
+else ifeq ($(uname_m),$(filter $(uname_m),aarch64))
+# Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
+
+SRCS := \
+	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
+	-not -name "tmpl_sqrt_double.c" -and \
+	-not -name "tmpl_sqrt_float.c" -and \
+	\( -name "*.c" -or -name "*aarch64.S" \))
+
+# Else for ifeq ($(uname_p),x86_64). Currently, only x86_64/amd64 and aarch64
+# assembly code is supported. This may change in the future. The rest of the C
+# code has been tested on ppc64, mips, and many other architectures using
+# emulation and worked as expected.
 else
 # Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
