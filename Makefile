@@ -100,14 +100,14 @@ SRCS := \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*aarch64.S" \))
 
-else ifeq ($(uname_m),$(filter $(uname_m),arm7l))
+else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 # Else for ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
-	\( -name "*.c" -or -name "*arm7l.S" \))
+	\( -name "*.c" -or -name "*armv7l.S" \))
 
 # Else for ifeq ($(uname_p),x86_64). Only amd64/x86_64 and aarch64/arm7l have
 # assembly code support. This may change in the future. The rest of the C
