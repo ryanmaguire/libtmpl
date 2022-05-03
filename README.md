@@ -86,6 +86,12 @@ Options to pass to `make`
 5. `FASM=1`
 > Use the flat assembler instead of the assembly language used by `gcc` and
 > `clang`. You must have `fasm` installed to use this.
+6. `CC=cc`
+> The C compiler you use. On Debian GNU/Linux and derivatives (Ubuntu, etc.)
+> `gcc`, `clang`, `tcc`, and `pcc` have all been tested and work as expected.
+> For `tcc` and `pcc` you **MUST** either pass the `NO_ASM=1` option since these
+> compilers do not support assembly language, or use `FASM=1` if you have
+> `fasm` installed.
 Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
 ```
 sudo make install
