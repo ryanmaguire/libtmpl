@@ -35,7 +35,7 @@
  *      sqrt_x (float):                                                       *
  *          The square root of x at single precision.                         *
  *  Called Functions:                                                         *
- *      fsqrt                                                                 *
+ *      vsqrt                                                                 *
  *  Method:                                                                   *
  *      For arm7l (armel/armhf) machines sqrt is a built-in function.         *
  ******************************************************************************
