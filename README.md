@@ -75,13 +75,14 @@ Options to pass to `make`
 > standard library for mathematical tools, instead using your compilers
 > implementation. This may be recommended. Tests against `glibc`,
 > FreeBSD's C library, and `MSVC`'s implementation of `libm` show that
-> `libtmpl` can be significantly faster (See benchmarks for `cbrt` vs
-> `tmpl_Double_Crt`), but this has only been tested on the architectures
-> supported by the Debian GNU/Linux operating system. Users of other
-> architectures may wish to use their default `libm`. Also, if your compiler
-> does not support the `IEEE-754` standard (most do), or support type-punning
-> for `union`, the portable algorithms are much slower. In this instances you
-> may wish to use the default `libm`.
+> `libtmpl` can be significantly faster (all functions have benchmarks in the
+> `tests/` directory and you may see for yourself), but this has only been
+> tested on the architectures supported by the Debian GNU/Linux operating
+> system. Users of other architectures may wish to use their default `libm`.
+> Also, if your compiler does not support the `IEEE-754` standard (most do),
+> or does not support type-punning for `union`, the portable algorithms
+> (algorithms that do not use `IEEE-754` or type-punning) are much slower. In
+> these instances you may wish to use the default `libm`.
 4. `NO_ASM=1`
 > Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
 > machines. Some functions, like `sqrt`, can be handle efficiently in assembly
