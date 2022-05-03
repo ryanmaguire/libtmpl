@@ -73,7 +73,8 @@ Options to pass to `make`
 > smaller `libtmpl.so` file, but several functions become significantly
 > slower (not recommended). If your compiler does not support `C99` or higher,
 > and does not support the `gcc` `inline` extension, enable this option.
-3.  `NO_MATH=1`
+
+`NO_MATH=1`
 > Do not use `libtmpl`'s implementation of `libm`, the C
 > standard library for mathematical tools, instead using your compilers
 > implementation. This may be recommended. Tests against `glibc`,
@@ -86,15 +87,18 @@ Options to pass to `make`
 > or does not support type-punning for `union`, the portable algorithms
 > (algorithms that do not use `IEEE-754` or type-punning) are much slower. In
 > these instances you may wish to use the default `libm`.
-4. `NO_ASM=1`
+
+`NO_ASM=1`
 > Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
 > machines. Some functions, like `sqrt`, can be handle efficiently in assembly
 > code. If you wish to use only C code, set this option (not recommended).
-5. `FASM=1`
+
+`FASM=1`
 > Use the flat assembler instead of the assembly language used by `gcc` and
 > `clang`. You must have `fasm` installed to use this. This option is ignored
 > if `NO_ASM=1` is set.
-6. `CC=cc`
+
+`CC=cc`
 > The C compiler you use. On Debian GNU/Linux and derivatives (Ubuntu, etc.)
 > `gcc`, `clang`, `tcc`, and `pcc` have all been tested and work as expected.
 > For `tcc` and `pcc` you **MUST** either pass the `NO_ASM=1` option since these
