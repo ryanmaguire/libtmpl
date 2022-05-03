@@ -37,7 +37,7 @@
  *  Called Functions:                                                         *
  *      vsqrt                                                                 *
  *  Method:                                                                   *
- *      For arm7l (armel/armhf) machines sqrt is a built-in function.         *
+ *      For armv7l (armel/armhf) machines sqrt is a built-in function.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 3, 2022                                                   *
