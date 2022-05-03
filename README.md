@@ -136,9 +136,9 @@ directories. This has been tested using a Windows 10 virtual machine and it
 worked as expected.
 
 # Language Bindings <a name="bindings"></a>
-Language bindings, or *wrappers*, are provided for `C++`, `Python` (2 and 3),
+Language bindings, or *wrappers*, are provided for `C++`, `Python`,
 and `IDL` (also the Free/Open-Source implementation `GDL`). All bindings require
-`libtmpl` being build beforehand. The source code used to live in this
+`libtmpl` being built beforehand. The source codes used to live in this
 repository, but have since moved to their own for easier management. These
 can be found via the following links.
 
