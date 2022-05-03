@@ -99,9 +99,9 @@ Options to pass to `make`
 `CC=cc`
 > The C compiler you use. On Debian GNU/Linux and derivatives (Ubuntu, etc.)
 > `gcc`, `clang`, `tcc`, and `pcc` have all been tested and work as expected.
-> For `tcc` and `pcc` you **MUST** either pass the `NO_ASM=1` option since these
-> compilers do not support assembly language, or use `FASM=1` if you have
-> `fasm` installed.
+> For `tcc` you **MUST** either pass the `NO_ASM=1` option since this compiler
+> (as of this writing) does not support assembly language, or use
+> `FASM=1` if you have `fasm` installed.
 
 Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
 ```
