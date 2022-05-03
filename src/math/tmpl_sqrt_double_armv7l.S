@@ -43,23 +43,38 @@
  *  Date:       May 3, 2022                                                   *
  ******************************************************************************/
 
+.arch armv7-a
+.eabi_attribute 28, 1
+.eabi_attribute 20, 1
+.eabi_attribute 21, 1
+.eabi_attribute 23, 3
+.eabi_attribute 24, 1
+.eabi_attribute 25, 1
+.eabi_attribute 26, 2
+.eabi_attribute 30, 2
+.eabi_attribute 34, 1
+.eabi_attribute 18, 4
 .text
-.p2align  2
+.align  1
+.p2align 2,,3
 .global tmpl_Double_Sqrt
+.arch armv7-a
+.syntax unified
+.thumb
+.thumb_func
+.fpu vfpv3-d16
 .type   tmpl_Double_Sqrt, %function
 
 tmpl_Double_Sqrt:
-    .fnstart
-    vsqrt.f64   d16, d0
-    vcmp.f64    d16, d16
-    vmrs        APSR_nzcv, fpscr
-    vmovvc.f64  d0, d16
-    bxvc        lr
+        vcmp.f64        d0, #0
+        vmov.f64        d7, d0
+        vmrs    APSR_nzcv, FPSCR
+        bmi     .L10
+        vsqrt.f64       d0, d7
+        bx      lr
 
-.size	tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
-.cantunwind
-.fnend
+.size   tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
 
 #if defined(__ELF__)
-.section	".note.GNU-stack","",%progbits
+.section        .note.GNU-stack,"",%progbits
 #endif
