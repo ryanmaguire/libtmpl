@@ -61,8 +61,8 @@ Run the Makefile with (`FreeBSD` users should use `gmake`):
 make
 ```
 Options to pass to `make`:
-1.  `OMP=1`
-: Compile with `OpenMP` support (highly recommended).
+>  `OMP=1`
+>> Compile with `OpenMP` support (highly recommended).
 2.  `NO_INLINE=1`
 : Do not use any inline code. This results in a slightly
 : smaller `libtmpl.so` file, but several functions become significantly
