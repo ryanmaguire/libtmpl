@@ -154,6 +154,7 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
+	rm -f $(TARGET_LIB)
 
 install:
 	mkdir -p /usr/local/include/libtmpl/include/
@@ -163,6 +164,7 @@ install:
 uninstall:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
+	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)
 
