@@ -92,6 +92,7 @@ Options to pass to `make`
 > For `tcc` and `pcc` you **MUST** either pass the `NO_ASM=1` option since these
 > compilers do not support assembly language, or use `FASM=1` if you have
 > `fasm` installed.
+
 Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
 ```
 sudo make install
