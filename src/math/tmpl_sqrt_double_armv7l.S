@@ -49,13 +49,14 @@
 .type   tmpl_Double_Sqrt, %function
 
 tmpl_Double_Sqrt:
-        vsqrt.f64   d16, d0
-        vcmp.f64    d16, d16
-        vmrs        APSR_nzcv, fpscr
-        vmovvc.f64  d0, d16
-        bxvc        lr
+    .fnstart
+    vsqrt.f64   d16, d0
+    vcmp.f64    d16, d16
+    vmrs        APSR_nzcv, fpscr
+    vmovvc.f64  d0, d16
+    bxvc        lr
 
-.size	myfunc, .Lfunc_end0-myfunc
+.size	tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
 .cantunwind
 .fnend
 

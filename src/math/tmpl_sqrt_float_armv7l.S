@@ -50,13 +50,14 @@
 .code	32
 
 tmpl_Float_Sqrt:
+    .fnstart
 	vsqrt.f32	s2, s0
 	vcmp.f32	s2, s2
 	vmrs	    PSR_nzcv, fpscr
 	vmovvc.f32	s0, s2
 	bxvc	    lr
 
-.size	tmpl_Float_Sqrt, .Lfunc_end0-tmpl_Float_Sqrt
+.size	tmpl_Float_Sqrt, .-tmpl_Float_Sqrt
 .cantunwind
 .fnend
 
