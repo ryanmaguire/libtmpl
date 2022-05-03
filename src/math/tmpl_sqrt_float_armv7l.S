@@ -66,12 +66,11 @@
 .type   tmpl_Float_Sqrt, %function
 
 tmpl_Float_Sqrt:
-        vcmp.f32        s0, #0
-        vmov.f32        s15, s0
-        vmrs    APSR_nzcv, FPSCR
-        bmi     .L10
-        vsqrt.f32       s0, s15
-        bx      lr
+        vcmp.f32    s0, #0
+        vmov.f32    s15, s0
+        vmrs        APSR_nzcv, FPSCR
+        vsqrt.f32   s0, s15
+        bx          lr
 
 .size   tmpl_Float_Sqrt, .-tmpl_Float_Sqrt
 
