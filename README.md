@@ -25,9 +25,7 @@
     1. [The Mathematicians Programming Library](#TheMathProgLib)
     2. [Installation (Unix-Like)](#InstallUnix)
     3. [Installation (Windows)](#InstallWindows)
-2. [tmpyl (Python Wrapper)](#tmpyl)
-    1. [Installation](#InstallUnixtmpyl)
-3. [tmppl (C++ Wrapper)](#tmppl)
+2. [Language Bindings (C++, Python, IDL)](#bindings)
 4. [License](#license)
 
 # libtmpl
@@ -137,35 +135,18 @@ It does not copy the `include/` directory or the library to any system
 directories. This has been tested using a Windows 10 virtual machine and it
 worked as expected.
 
-# tmpyl
-`tmpyl` is a Python Extension module written using the Python-C API. It can be
-installed once libtmpl has been built. It is compatible with both Python 2 and
-Python 3. If numpy is available, tmpyl can be built with numpy support. This
-allows one to pass arrays to libtmpl functions. The `setup.py` script will
-determine this for you, and no extra effort is needed.
+# Language Bindings <a name="bindings"></a>
+Language bindings, or *wrappers*, are provided for `C++`, `Python` (2 and 3),
+and `IDL` (also the Free/Open-Source implementation `GDL`). All bindings require
+`libtmpl` being build beforehand. The source code used to live in this
+repository, but have since moved to their own for easier management. These
+can be found via the following links.
 
-## Installation <a name="InstallUnixtmpyl"></a>
-The easiest way to install tmpyl is with pip.
-Navigate to the `tmpyl` directory of this repository and run:
-```
-pip install .
-```
-**If you installed libtmpl with the inplace methods, pip will not work.**
-You can use python itself. Replace `pythonx` with either `python2`,
-`python3`, or `python`, depending on what you have installed.
-```
-sudo pythonx setup.py install
-```
-If you lack sudo privileges, run:
-```
-pythonx setup.py install
-```
-The `.so` file will be placed in `tmpyl/build/lib/`. Move this file to wherever
-you wish, just make sure it is in your `PATH` in order to import `tmpyl`.
+[C++ (libtmppl)](https://github.com/ryanmaguire/libtmppl)
 
-# tmppl
-`tmppl` is the C++ wrapper for `libtmpl`. There is a Makefile in the
-`tmppl/` directory that builds it.
+[Python (libtmpyl)](https://github.com/ryanmaguire/libtmpyl)
+
+[IDL (libtmpidl)](https://github.com/ryanmaguire/libtmpidl)
 
 # License
     libtmpl is free software: you can redistribute it and/or modify it
