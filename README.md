@@ -63,26 +63,26 @@ make
 Options to pass to `make`:
 >  `OMP=1`
 >> Compile with `OpenMP` support (highly recommended).
-2.  `NO_INLINE=1`
-: Do not use any inline code. This results in a slightly
-: smaller `libtmpl.so` file, but several functions become significantly
-: slower (not recommended).
-3.  `NO_MATH=1`
-> Do not use `libtmpl`'s implementation of `libm`, the C
-> standard library for mathematical tools, instead using your compilers
-> implementation. This may be recommended. Tests against `glibc`,
-> FreeBSD's C library, and `MSVC`'s implementation of `libm` show that
-> `libtmpl` can be significantly faster (See benchmarks for `cbrt` vs
-> `tmpl_Double_Crt`), but this has only been tested on the architectures
-> supported by the Debian GNU/Linux operating system. Users of other
-> architectures may wish to use their default `libm`.
-4. `NO_ASM=1`
-> Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
-> machines. Some functions, like `sqrt`, can be handle efficiently in assembly
-> code. If you wish to use only C code, set this open (not recommended).
-5. `FASM=1`
-> Use the flat assembler instead of the assembly language used by `gcc` and
-> `clang`. You must have `fasm` installed to use this.
+>  `NO_INLINE=1`
+>> Do not use any inline code. This results in a slightly
+>> smaller `libtmpl.so` file, but several functions become significantly
+>> slower (not recommended).
+>  `NO_MATH=1`
+>> Do not use `libtmpl`'s implementation of `libm`, the C
+>> standard library for mathematical tools, instead using your compilers
+>> implementation. This may be recommended. Tests against `glibc`,
+>> FreeBSD's C library, and `MSVC`'s implementation of `libm` show that
+>> `libtmpl` can be significantly faster (See benchmarks for `cbrt` vs
+>> `tmpl_Double_Crt`), but this has only been tested on the architectures
+>> supported by the Debian GNU/Linux operating system. Users of other
+>> architectures may wish to use their default `libm`.
+> `NO_ASM=1`
+>> Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
+>> machines. Some functions, like `sqrt`, can be handle efficiently in assembly
+>> code. If you wish to use only C code, set this open (not recommended).
+> `FASM=1`
+>> Use the flat assembler instead of the assembly language used by `gcc` and
+>> `clang`. You must have `fasm` installed to use this.
 Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
 ```
 sudo make install
