@@ -107,6 +107,7 @@ SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and \
 	\( -name "*.c" -or -name "*armv7l.S" \))
 
 # Else for ifeq ($(uname_p),x86_64). Only amd64/x86_64 and aarch64/arm7l have
