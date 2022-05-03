@@ -62,7 +62,10 @@ make
 ```
 Options to pass to `make`
 1.  `OMP=1`
-> Compile with `OpenMP` support (highly recommended).
+> Compile with `OpenMP` support (highly recommended). **WARNING**
+> Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp`
+> option will result in an error. Homebrew has versions of clang and gcc that
+> do support OpenMP.
 2.  `NO_INLINE=1`
 > Do not use any inline code. This results in a slightly
 > smaller `libtmpl.so` file, but several functions become significantly
