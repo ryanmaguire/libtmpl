@@ -51,7 +51,23 @@ library and shows basic usage of these tools.
 The ``tests/`` folder contains time tests and accuracy tests of ``libtmpl``
 versus other libraries. To run these tests will require these libraries being
 available. Running these tests is **not** required, and they are mostly for
-internal use and to verify the algorithms implemented in libtmpl.
+internal use and to verify the algorithms implemented in libtmpl. There are
+three types of time tests for each function, ``small``, ``medium``, and
+``huge``. ``small`` is used for emulated architectures
+(``aarch64``, ``armv7l``, ``ppc64el``, ``powerpc``, ``mipsel64``, ``mipsel``,
+``mips``, ``i386``, ``risc-v``, and ``s390x``). These files run tests on
+10,000,000 samples for the given function. ``medium`` is for use on computers
+with at least 16GB memory. I use ``medium`` tests on a MacBook Air 2021 using
+the ``armv8`` architecture (The M1's) loaned from the Dartmouth Math Department
+to test ``arm`` code natively, instead of via emulation. These files run tests
+on 632,035,970 samples (3 ``double`` arrays of this size take about 14GB).
+The ``huge`` tests require at least 64GB memory. I run these tests on my
+personal computers which are all ``x86_64/amd64``. These files run tests on
+2,615,628,245 samples (3 ``double`` arrays of this size take about 62GB).
+In addition to time tests there are accuracy tests. These tests sample a lot
+more points (10,000,000,000) since the samples are not saved in memory.
+An individual accuracy test can take a minute or more, but samples a wider
+range of values. Lastly, there are unit tests for many functions.
 
 ## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
 Run the Makefile with (`FreeBSD` users should use `gmake`):
@@ -85,6 +101,12 @@ Options to pass to `make`
 > or does not support type-punning for `union`, the portable algorithms
 > (algorithms that do not use `IEEE-754` or type-punning) are much slower. In
 > these instances you may wish to use the default `libm`.
+
+`NO_IEEE=1`
+> Disable use of the `IEEE` formats for `float` and `double`. The `config.c`
+> file should detect if your compiler supports this, and type-punning for
+> `union`, so you should not need to set this option manually
+> (not recommended).
 
 `NO_ASM=1`
 > Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
