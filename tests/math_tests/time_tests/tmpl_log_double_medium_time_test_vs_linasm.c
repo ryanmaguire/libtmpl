@@ -17,10 +17,16 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <linasm/Math.h>
 
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double, 1.0E-4, 1.0E4, 632035970ULL, tmpl_Double_Sqrt, sqrt);
+    RUN_TEST(double,
+             1.0E-4,
+             1.0E4,
+             632035970ULL,
+             tmpl_Double_Log,
+             Math_Log_flt64);
     return 0;
 }

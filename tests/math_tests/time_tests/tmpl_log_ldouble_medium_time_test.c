@@ -16,11 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+
 #include "tmpl_math_time_tests.h"
 
 int main(void)
 {
     /*  type, start, end, number of samples, libtmpl function, C function.    */
-    RUN_TEST(double, 1.0E-4, 1.0E4, 632035970ULL, tmpl_Double_Sqrt, sqrt);
+    RUN_TEST(long double, 1.0E-4L, 1.0E4L, 632035970ULL, tmpl_LDouble_Log, logl);
     return 0;
 }
