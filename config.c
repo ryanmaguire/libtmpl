@@ -99,6 +99,9 @@ typedef enum tmpl_integer_endianness_def {
     tmpl_integer_unknown_endian
 } tmpl_integer_endianness;
 
+/*  If the user does not want IEEE support, these enum's are not needed.      */
+#ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
+
 /*  IEEE-754 does not specify the endianness of float. It is usually the      *
  *  same as the endianness of integers, but this is not required. Unknown     *
  *  is returned if the function could not determine how float is implemented. */
@@ -132,6 +135,9 @@ typedef enum tmpl_ldouble_type_def {
     tmpl_ldouble_128_bit_doubledouble_big_endian,
     tmpl_ldouble_unknown
 } tmpl_ldouble_type;
+
+#endif
+/*  End of #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                              */
 
 /*  Function for determining the endianness of integer data types.            */
 static tmpl_integer_endianness tmpl_det_int_end(void)
@@ -259,6 +265,9 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
         return tmpl_integer_unknown_endian;
 }
 /*  End of tmpl_det_int_end.                                                  */
+
+/*  If the user does not want IEEE support, these functions are not used.     */
+#ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
 
 /*  Function for determining how float is implemented.                        */
 static tmpl_float_type tmpl_det_float_type(void)
@@ -897,3 +906,116 @@ int main(void)
 }
 /*  End of main.                                                              */
 
+#else
+/*  Else for #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                            */
+
+/*  Function for creating include/tmpl_config.h.                              */
+int main(void)
+{
+    /*  IEEE support not requested, only computed endianness of integers.     */
+    tmpl_integer_endianness int_type = tmpl_det_int_end();
+
+    /*  Open the file include/tmpl_config.h using fopen and give the file     *
+     *  write permissions. If using Windows, we'll need to usebackslashes.    *
+     *  Forward slashes fail to create the file.                              */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    FILE *fp = fopen(".\\include\\tmpl_config.h", "w");
+#else
+    FILE *fp = fopen("./include/tmpl_config.h", "w");
+#endif
+
+    /*  If fopen fails, it returns NULL. Check that it did not.               */
+    if (!fp)
+    {
+        puts("Error Encountered: libtmpl\n"
+             "    det_end.c\n"
+             "fopen returned NULL for FILE *fp. Aborting.\n");
+        return -1;
+    }
+
+    /*  Create the file include/tmpl_config.h and return.                     */
+    fprintf(fp, "/******************************************************************************\n");
+    fprintf(fp, " *                                  LICENSE                                   *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  This file is part of libtmpl.                                             *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is free software: you can redistribute it and/or modify           *\n");
+    fprintf(fp, " *  it under the terms of the GNU General Public License as published by      *\n");
+    fprintf(fp, " *  the Free Software Foundation, either version 3 of the License, or         *\n");
+    fprintf(fp, " *  (at your option) any later version.                                       *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is distributed in the hope that it will be useful,                *\n");
+    fprintf(fp, " *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *\n");
+    fprintf(fp, " *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *\n");
+    fprintf(fp, " *  GNU General Public License for more details.                              *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  You should have received a copy of the GNU General Public License         *\n");
+    fprintf(fp, " *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *                                tmpl_config                                 *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  Purpose:                                                                  *\n");
+    fprintf(fp, " *      This file is created by the config.c file. It provides the macros     *\n");
+    fprintf(fp, " *      TMPL_ENDIANNESS, TMPL_FLOAT_ENDIANNESS, TMPL_DOUBLE_ENDIANNESS, and   *\n");
+    fprintf(fp, " *      TMPL_LDOUBLE_ENDIANNESS which are used by functions where the code is *\n");
+    fprintf(fp, " *      endian specific and to check if IEEE-754 is supported. It also        *\n");
+    fprintf(fp, " *      provides the macros TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS      *\n");
+    fprintf(fp, " *      determine if inline functions should be used, and if libtmpl's        *\n");
+    fprintf(fp, " *      implementation of libm should be used.                                *\n");
+    fprintf(fp, " ******************************************************************************/\n\n");
+    fprintf(fp, "#ifndef TMPL_CONFIG_H\n");
+    fprintf(fp, "#define TMPL_CONFIG_H\n\n");
+    fprintf(fp, "#define TMPL_BIG_ENDIAN 0\n");
+    fprintf(fp, "#define TMPL_LITTLE_ENDIAN 1\n");
+    fprintf(fp, "#define TMPL_MIXED_ENDIAN 2\n");
+    fprintf(fp, "#define TMPL_UNKNOWN_ENDIAN 3\n\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN 0\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT_BIG_ENDIAN 1\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN 2\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN 3\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN 4\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN 5\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN 6\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN 7\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN 8\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN 9\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 10\n\n");
+
+    /*  Print the integer endianness to the header file.                      */
+    if (int_type == tmpl_integer_little_endian)
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_LITTLE_ENDIAN\n");
+    else if (int_type == tmpl_integer_big_endian)
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_BIG_ENDIAN\n");
+    else if (int_type == tmpl_integer_mixed_endian)
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_MIXED_ENDIAN\n");
+    else
+        fprintf(fp, "#define TMPL_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+
+    /*  IEEE support not requested, set all of these to unknown.              */
+    fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+    fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
+
+#ifdef TMPL_SET_INLINE_TRUE
+    fprintf(fp, "\n#define TMPL_USE_INLINE 1\n");
+#else
+    fprintf(fp, "\n#define TMPL_USE_INLINE 0\n");
+#endif
+
+#ifdef TMPL_SET_USE_MATH_TRUE
+    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 1\n");
+#else
+    fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 0\n");
+#endif
+
+    /*  Print the end of the include guard.                                   */
+    fprintf(fp, "\n#endif\n");
+
+    /*  Close the file and return.                                            */
+    fclose(fp);
+    return 0;
+}
+/*  End of main.                                                              */
+
+#endif
+/*  End of #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                              */
