@@ -43,6 +43,17 @@
  *  Date:       May 3, 2022                                                   *
  ******************************************************************************/
 
+#ifdef __APPLE__
+.section	__TEXT,__text,regular,pure_instructions
+.globl	_tmpl_Double_Sqrt
+.p2align	2
+
+_tmpl_Double_Sqrt:
+	fsqrt	d0, d0
+	ret
+
+#else
+
 .text
 .align  2
 .global tmpl_Double_Sqrt
@@ -57,3 +68,6 @@ tmpl_Double_Sqrt:
 #if defined(__ELF__)
 .section .note.GNU-stack,"",@progbits
 #endif
+
+#endif
+/* End of #ifdef __APPLE__ */

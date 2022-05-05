@@ -94,7 +94,7 @@ endif
 
 # Else for ifdef NO_ASM
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
-else ifeq ($(uname_m),$(filter $(uname_m),aarch64))
+else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
 SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
