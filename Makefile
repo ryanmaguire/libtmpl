@@ -56,6 +56,12 @@ else
 MATH_FLAG := -DTMPL_SET_USE_MATH_TRUE
 endif
 
+ifdef NO_IEEE
+IEEE_FLAG := -DTMPL_SET_TMPL_USE_IEEE_FALSE
+else
+IEEE_FLAG :=
+endif
+
 uname_m := $(shell uname -m)
 
 # If the user does not want to use any assembly code (that is, C only) only
@@ -133,7 +139,7 @@ DEPS := $(OBJS:.o=.d)
 all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
 
 include/tmpl_config.h: ./config.c
-	$(CC) $(INLINE_FLAG) $(MATH_FLAG) config.c -o config.out
+	$(CC) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) config.c -o config.out
 	./config.out
 	rm -f config.out
 

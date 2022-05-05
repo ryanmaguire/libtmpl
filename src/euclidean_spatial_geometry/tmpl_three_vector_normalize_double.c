@@ -171,79 +171,30 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
 /*  Same algorithm without IEEE754 support.                                   */
 
 /*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(tmpl_ThreeVectorDouble *P)
+tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double rcpr_norm, norm, t, u, v, rcpr_t;
+    double rcpr_norm, norm, t, rcpr_t;
     tmpl_ThreeVectorDouble P_normalized;
 
-    /*  Check if any of the components is NaN or Infinity.                    */
-    if (tmpl_Double_Is_NaN_Or_Inf(P->dat[0]) ||
-        tmpl_Double_Is_NaN_Or_Inf(P->dat[1]) ||
-        tmpl_Double_Is_NaN_Or_Inf(P->dat[2]))
-    {
-        /*  If any component is NaN or Inf, the output is NaN.                */
-        const double nanval = TMPL_NAN;
-        P_normalized.dat[0] = nanval;
-        P_normalized.dat[1] = nanval;
-        P_normalized.dat[2] = nanval;
-        return P_normalized;
-    }
+    /*  Given P = (x, y, z), compute |x|, |y|, and |z|.                       */
+    double x = absolute_value(P->dat[0]);
+    double y = absolute_value(P->dat[1]);
+    double z = absolute_value(P->dat[2]);
 
-    P->dat[0] = tmpl_Double_Abs(P->dat[0]);
-    P->dat[1] = tmpl_Double_Abs(P->dat[1]);
-    P->dat[2] = tmpl_Double_Abs(P->dat[2]);
-
-    /*  Check for large values.                                               */
-    if (P->dat[0] > 1.0E24 || P->dat[1] > 1.0E24 || P->dat[2] > 1.0E24)
-    {
-        P->dat[0] *= 0.5;
-        P->dat[1] *= 0.5;
-        P->dat[2] *= 0.5;
-    }
+    /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
+     *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
+     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
+     *  c, set a to c, otherwise set a to b. Below we do this twice, setting  *
+     *  w.r to the maximum of |x|, |y|, and |z|.                              */
+    t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
 
     /*  Get the norm of the input vector P.                                   */
-
-    if (P->dat[0] < P->dat[1])
-    {
-        if (P->dat[1] < P->dat[2])
-        {
-            t = P->dat[2];
-            u = P->dat[0];
-            v = P->dat[1];
-        }
-        else
-        {
-            t = P->dat[1];
-            u = P->dat[0];
-            v = P->dat[2];
-        }
-    }
-    else
-    {
-        if (P->dat[2] < P->dat[0])
-        {
-            t = P->dat[0];
-            u = P->dat[1];
-            v = P->dat[2];
-        }
-        else
-        {
-            t = P->dat[2];
-            u = P->dat[0];
-            v = P->dat[1];
-        }
-    }
-
     rcpr_t = 1.0 / t;
-    u = u*rcpr_t;
-    v = v*rcpr_t;
-
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 0
-    norm = t*sqrt(1.0 + u*u + v*v);
-#else
-    norm = t*tmpl_Double_Sqrt(1.0 + u*u + v*v);
-#endif
+    x *= rcpr_t;
+    y *= rcpr_t;
+    z *= rcpr_t;
+    norm = t*square_root(x*x + y*y + z*z);
 
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0)

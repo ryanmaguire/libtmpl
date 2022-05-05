@@ -71,8 +71,8 @@
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
  *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 7.087521 seconds                                         *
- *          C:       4.070754 seconds                                         *
+ *          libtmpl: 6.568381 seconds                                         *
+ *          C:       3.232928 seconds                                         *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
@@ -85,8 +85,8 @@
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
  *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 7.135024 seconds                                         *
- *          C:       4.001758 seconds                                         *
+ *          libtmpl: 6.731640 seconds                                         *
+ *          C:       3.227992 seconds                                         *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
@@ -99,8 +99,8 @@
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
  *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 3.166737 seconds                                         *
- *          C:       3.985278 seconds                                         *
+ *          libtmpl: 2.966662 seconds                                         *
+ *          C:       3.243483 seconds                                         *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
@@ -113,8 +113,8 @@
  *          end:     1.0000000000000000e+06                                   *
  *          samples: 2615628245                                               *
  *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 3.166737 seconds                                         *
- *          C:       3.985278 seconds                                         *
+ *          libtmpl: 3.139752 seconds                                         *
+ *          C:       3.236421 seconds                                         *
  *          max abs error: 0.0000000000000000e+00                             *
  *          max rel error: 0.0000000000000000e+00                             *
  *          rms abs error: 0.0000000000000000e+00                             *
@@ -137,9 +137,11 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_USE_INLINE macro.                     *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  2.) math.h:                                                               *
+ *  3.) math.h:                                                               *
  *          Only included if libtmpl algorithms have not been requested. This *
  *          file contains the fabs function.                                  *
  ******************************************************************************
@@ -176,13 +178,19 @@
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
  *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
+ *  2022/05/05: Ryan Maguire                                                  *
+ *      Adding inline support. This is about 2x faster. It is now the default *
+ *      configuration in the Makefile.                                        *
  ******************************************************************************/
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  This file is only compiled if inline support is not requested.            */
 #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
+
+/*  Header file where the prototype for the function is defined.              */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
