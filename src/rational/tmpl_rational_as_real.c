@@ -60,7 +60,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
@@ -68,34 +68,34 @@
 #include <libtmpl/include/tmpl_rational.h>
 
 /*  Function for converting a rational number to a float.                     */
-float tmpl_RationalNumber_As_Float(tmpl_RationalNumber p)
+float tmpl_RationalNumber_As_Float(const tmpl_RationalNumber *p)
 {
     /*  Convert the numerator and denominator into floats and return          *
      *  the quotient of the two.                                              */
-    float numer = (float)p.numerator;
-    float denom = (float)p.denominator;
+    float numer = (float)p->numerator;
+    float denom = (float)p->denominator;
     return numer/denom;
 }
 /*  End of tmpl_RationalNumber_As_Float.                                      */
 
 /*  Function for converting a rational number to a double.                    */
-double tmpl_RationalNumber_As_Double(tmpl_RationalNumber p)
+double tmpl_RationalNumber_As_Double(const tmpl_RationalNumber *p)
 {
     /*  Convert the numerator and denominator into doubles and return         *
      *  the quotient of the two.                                              */
-    double numer = (double)p.numerator;
-    double denom = (double)p.denominator;
+    double numer = (double)p->numerator;
+    double denom = (double)p->denominator;
     return numer/denom;
 }
 /*  End of tmpl_RationalNumber_As_Double.                                     */
 
 /*  Function for converting a rational number to a long double.               */
-long double tmpl_RationalNumber_As_LDouble(tmpl_RationalNumber p)
+long double tmpl_RationalNumber_As_LDouble(const tmpl_RationalNumber *p)
 {
     /*  Convert the numerator and denominator into long doubles and return    *
      *  the quotient of the two.                                              */
-    long double numer = (long double)p.numerator;
-    long double denom = (long double)p.denominator;
+    long double numer = (long double)p->numerator;
+    long double denom = (long double)p->denominator;
     return numer/denom;
 }
 /*  End of tmpl_RationalNumber_As_LDouble.                                    */

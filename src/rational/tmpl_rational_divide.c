@@ -60,7 +60,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
@@ -69,14 +69,15 @@
 
 /*  Function for dividing rational numbers.                                   */
 tmpl_RationalNumber
-tmpl_RationalNumber_Divide(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Divide(const tmpl_RationalNumber *p,
+                           const tmpl_RationalNumber *q)
 {
     /*  Declare necessary variables.                                          */
     tmpl_RationalNumber quot;
 
     /*  Multiply numerator with denominator, and denominator with numerator.  */
-    quot.numerator = p.numerator * q.denominator;
-    quot.denominator = p.denominator * q.numerator;
+    quot.numerator = p->numerator * q->denominator;
+    quot.denominator = p->denominator * q->numerator;
     return quot;
 }
 /*  End of tmpl_RationalNumber_Divide.                                        */

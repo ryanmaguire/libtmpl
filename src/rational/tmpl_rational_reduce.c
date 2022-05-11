@@ -65,10 +65,11 @@
 
 /*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
+#include <stdlib.h>
 
 /*  Function for reducing a rational number.                                  */
 tmpl_RationalNumber
-tmpl_RationalNumber_Reduce(tmpl_RationalNumber p)
+tmpl_RationalNumber_Reduce(const tmpl_RationalNumber *p)
 {
     /*  Declare variables for the reduction.                                  */
     signed long int reduced_numer, reduced_denom;
@@ -78,23 +79,15 @@ tmpl_RationalNumber_Reduce(tmpl_RationalNumber p)
     signed long int GCD, abs_numer, abs_denom;
 
     /*  If the denominator is zero, return.                                   */
-    if (p.denominator == 0L)
-        return p;
+    if (p->denominator == 0L)
+        return *p;
 
     /*  If the numerator is zero, reduce to (0, 1).                           */
-    else if (p.numerator == 0L)
-        return tmpl_RationalNumber_Create(0L, 1L);
+    else if (p->numerator == 0L)
+        return tmpl_RationalNumber_Zero;
 
-    /*  If not, get the absolute values of the numerator and denominator.     */
-    if (p.numerator >= 0L)
-        abs_numer = p.numerator;
-    else
-        abs_numer = -p.numerator;
-
-    if (p.denominator >= 0L)
-        abs_denom = p.denominator;
-    else
-        abs_denom = -p.denominator;
+    abs_numer = (p->numerator > 0L ? p->numerator : -p->numerator);
+    abs_denom = (p->denominator > 0L ? p->denominator : -p->denominator);
 
     /*  Get the GCD.                                                          */
     while(abs_numer != abs_denom)
@@ -107,11 +100,11 @@ tmpl_RationalNumber_Reduce(tmpl_RationalNumber p)
     GCD = abs_numer;
 
     /*  Compute the reduction of p.                                           */
-    reduced_numer = p.numerator / GCD;
-    reduced_denom = p.denominator / GCD;
+    reduced_numer = p->numerator / GCD;
+    reduced_denom = p->denominator / GCD;
 
     /*  Have the numerator be signed, and the denominator unsigned.           */
-    if (p.denominator >= 0L)
+    if (p->denominator >= 0L)
         return tmpl_RationalNumber_Create(reduced_numer, reduced_denom);
     else
         return tmpl_RationalNumber_Create(-reduced_numer, -reduced_denom);
