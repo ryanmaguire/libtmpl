@@ -60,7 +60,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
@@ -69,7 +69,8 @@
 
 /*  Function for adding two rational numbers.                                 */
 tmpl_RationalNumber
-tmpl_RationalNumber_Add(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Add(const tmpl_RationalNumber *p,
+                        const tmpl_RationalNumber *q)
 {
     /*  Declare a variable for the sum.                                       */
     tmpl_RationalNumber sum;
@@ -79,8 +80,8 @@ tmpl_RationalNumber_Add(tmpl_RationalNumber p, tmpl_RationalNumber q)
      *      -  +  -  =  --  +  --  =  -------                                 *
      *      b     d     bd     bd       bd                                    *
      *  This is the so-called "cross-multiply" rule.                          */
-    sum.numerator = p.denominator * q.numerator + p.numerator * q.denominator;
-    sum.denominator = p.denominator * q.denominator;
+    sum.numerator = p->denominator*q->numerator + p->numerator*q->denominator;
+    sum.denominator = p->denominator*q->denominator;
     return sum;
 }
 /*  End of tmpl_RationalNumber_Add.                                           */

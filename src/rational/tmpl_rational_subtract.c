@@ -69,7 +69,8 @@
 
 /*  Function for subtracting two rational numbers.                            */
 tmpl_RationalNumber
-tmpl_RationalNumber_Subtract(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Subtract(const tmpl_RationalNumber *p,
+                             const tmpl_RationalNumber *q)
 {
     /*  Declare a variable for the difference.                                */
     tmpl_RationalNumber diff;
@@ -79,8 +80,8 @@ tmpl_RationalNumber_Subtract(tmpl_RationalNumber p, tmpl_RationalNumber q)
      *      -  -  -  =  --  -  --  =  -------                                 *
      *      b     d     bd     bd       bd                                    *
      *  This is the so-called "cross-multiply" rule.                          */
-    diff.numerator = p.denominator * q.numerator - p.numerator * q.denominator;
-    diff.denominator = p.denominator * q.denominator;
+    diff.numerator = q->denominator*p->numerator - q->numerator*p->denominator;
+    diff.denominator = p->denominator*q->denominator;
     return diff;
 }
 /*  End of tmpl_RationalNumber_Subtract.                                      */

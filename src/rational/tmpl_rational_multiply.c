@@ -60,7 +60,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 24, 2021                                                 *
  ******************************************************************************/
 
@@ -69,14 +69,15 @@
 
 /*  Function for multiplying rational numbers.                                */
 tmpl_RationalNumber
-tmpl_RationalNumber_Multiply(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Multiply(const tmpl_RationalNumber *p,
+                             const tmpl_RationalNumber *q)
 {
     /*  Declare necessary variables.                                          */
     tmpl_RationalNumber prod;
 
     /*  Multiply numerator with numerator, and denominator with denominator.  */
-    prod.numerator = p.numerator * q.numerator;
-    prod.denominator = p.denominator * q.denominator;
+    prod.numerator = p->numerator * q->numerator;
+    prod.denominator = p->denominator * q->denominator;
     return prod;
 }
 /*  End of tmpl_RationalNumber_Multiply.                                      */

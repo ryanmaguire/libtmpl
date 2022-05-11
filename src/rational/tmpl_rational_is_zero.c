@@ -75,11 +75,9 @@
 
 /*  Function for checking if a rational number is zero.                       */
 tmpl_Bool
-tmpl_RationalNumber_Is_Zero(tmpl_RationalNumber p)
+tmpl_RationalNumber_Is_Zero(const tmpl_RationalNumber *p)
 {
-    if (p.denominator == 0L)
-        return tmpl_False;
-    else if (p.numerator == 0L)
+    if (p->numerator == 0L && p->denominator != 0L)
         return tmpl_True;
     else
         return tmpl_False;

@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,12 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_polynomial                                *
+ *                              tmpl_polynomial                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide data types for working with polynomials.                      *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
@@ -33,14 +33,14 @@
  *  4.) stdio.h:                                                              *
  *          Standard C header file containing the FILE data type.             *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
+ *                             A NOTE ON COMMENTS                             *
  ******************************************************************************
  *  It is anticipated that many users of this code will have experience in    *
  *  either Python or IDL, but not C. Many comments are left to explain as     *
  *  much as possible. Vagueness or unclear code should be reported to:        *
  *  https://github.com/ryanmaguire/libtmpl/issues                             *
  ******************************************************************************
- *                            A FRIENDLY WARNING                              *
+ *                             A FRIENDLY WARNING                             *
  ******************************************************************************
  *  This code is compatible with the C89/C90 standard. The setup script that  *
  *  is used to compile this in make.sh uses gcc and has the                   *
@@ -51,7 +51,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 15, 2021                                                 *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
@@ -75,8 +75,7 @@
 /*  The FILE data type is found here.                                         */
 #include <stdio.h>
 
-/*  Data type for working with elements of Z[x]. That is, polynomials with    *
- *  integer coefficients.                                                     */
+/*  Polynomials with integer coefficients, elements of Z[x].                  */
 typedef struct tmpl_PolynomialZ_Def {
 
     /*  A pointer to a SIGNED long int array containing the coefficients.     */
@@ -102,53 +101,10 @@ typedef struct tmpl_PolynomialZ_Def {
     char *error_message;
 } tmpl_PolynomialZ;
 
-/*  Data type for working with elements of Z[x] that are of a high degree     *
- *  where most of the coefficients are zero. This method saves on memory.     */
-typedef struct tmpl_SparsePolynomialZ_Def {
-
-    /*  A pointer to all of the terms. The degree of the terms is stored in   *
-     *  the next pointer.                                                     */
-    signed long int *terms;
-
-    /*  A pointer for the degrees of all of the terms.                        */
-    unsigned long int *degree_of_term;
-
-    /*  The number of non-zero terms.                                         */
-    unsigned long int number_of_terms;
-
-    /*  Boolean for keeping track of the terms pointer.                       */
-    tmpl_Bool terms_can_be_freed;
-
-    /*  Boolean for keeping track of errors.                                  */
-    tmpl_Bool error_occurred;
-
-    /*  And an error message in case an error does occur.                     */
-    char *error_message;
-} tmpl_SparsePolynomialZ;
-
-/*  Data type for matrices of polynomials in Z[x].                            */
-typedef struct tmpl_PolynomialZMatrix_Def {
-
-    /*  An array of polynomials, representing the matrix.                     */
-    tmpl_PolynomialZ *data;
-
-    /*  The number of rows and columns, respectively.                         */
-    unsigned long int number_of_rows;
-    unsigned long int number_of_columns;
-
-    /*  Boolean for keeping track of the data pointer.                        */
-    tmpl_Bool data_can_be_freed;
-
-    /*  Boolean for keeping track of errors.                                  */
-    tmpl_Bool error_occurred;
-
-    /*  And an error message in case an error does occur.                     */
-    char *error_message;
-} tmpl_PolynomialZMatrix;
-
+/*  Polynomials with rational coefficients, elements of Q[x].                 */
 typedef struct tmpl_PolynomialQ_Def {
 
-    /*  A pointer to an array containing the coefficients.                    */
+    /*  A pointer to a rational number array containing the coefficients.     */
     tmpl_RationalNumber *coeffs;
 
     /*  The number of elements in the coeffs array.                           */
@@ -171,9 +127,10 @@ typedef struct tmpl_PolynomialQ_Def {
     char *error_message;
 } tmpl_PolynomialQ;
 
+/*  Polynomials with real coefficients, elements of R[x].                     */
 typedef struct tmpl_PolynomialR_Def {
 
-    /*  A pointer to an array containing the coefficients.                    */
+    /*  A pointer to a real number array containing the coefficients.         */
     double *coeffs;
 
     /*  The number of elements in the coeffs array.                           */
@@ -196,9 +153,10 @@ typedef struct tmpl_PolynomialR_Def {
     char *error_message;
 } tmpl_PolynomialR;
 
+/*  Polynomials with complex coefficients, elements of R[x].                  */
 typedef struct tmpl_PolynomialC_Def {
 
-    /*  A pointer to an array containing the coefficients.                    */
+    /*  A pointer to a complex number array containing the coefficients.      */
     tmpl_ComplexDouble *coeffs;
 
     /*  The number of elements in the coeffs array.                           */
@@ -221,6 +179,206 @@ typedef struct tmpl_PolynomialC_Def {
     char *error_message;
 } tmpl_PolynomialC;
 
+/*  Data type for working with elements of Z[x] that are of a high degree     *
+ *  where most of the coefficients are zero. This method saves on memory.     */
+typedef struct tmpl_SparsePolynomialZ_Def {
+
+    /*  A pointer to all of the terms. The degree of the terms is stored in   *
+     *  the next pointer.                                                     */
+    signed long int *terms;
+
+    /*  A pointer for the degrees of all of the terms.                        */
+    unsigned long int *degree_of_term;
+
+    /*  The number of non-zero terms.                                         */
+    unsigned long int number_of_terms;
+
+    /*  Boolean for keeping track of the terms pointer.                       */
+    tmpl_Bool terms_can_be_freed;
+
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_SparsePolynomialZ;
+
+/*  Data type for working with elements of Q[x] that are of a high degree     *
+ *  where most of the coefficients are zero. This method saves on memory.     */
+typedef struct tmpl_SparsePolynomialQ_Def {
+
+    /*  A pointer to all of the terms. The degree of the terms is stored in   *
+     *  the next pointer.                                                     */
+    tmpl_RationalNumber *terms;
+
+    /*  A pointer for the degrees of all of the terms.                        */
+    unsigned long int *degree_of_term;
+
+    /*  The number of non-zero terms.                                         */
+    unsigned long int number_of_terms;
+
+    /*  Boolean for keeping track of the terms pointer.                       */
+    tmpl_Bool terms_can_be_freed;
+
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_SparsePolynomialQ;
+
+/*  Data type for working with elements of R[x] that are of a high degree     *
+ *  where most of the coefficients are zero. This method saves on memory.     */
+typedef struct tmpl_SparsePolynomialR_Def {
+
+    /*  A pointer to all of the terms. The degree of the terms is stored in   *
+     *  the next pointer.                                                     */
+    double *terms;
+
+    /*  A pointer for the degrees of all of the terms.                        */
+    unsigned long int *degree_of_term;
+
+    /*  The number of non-zero terms.                                         */
+    unsigned long int number_of_terms;
+
+    /*  Boolean for keeping track of the terms pointer.                       */
+    tmpl_Bool terms_can_be_freed;
+
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_SparsePolynomialR;
+
+/*  Data type for working with elements of C[x] that are of a high degree     *
+ *  where most of the coefficients are zero. This method saves on memory.     */
+typedef struct tmpl_SparsePolynomialC_Def {
+
+    /*  A pointer to all of the terms. The degree of the terms is stored in   *
+     *  the next pointer.                                                     */
+    tmpl_ComplexDouble *terms;
+
+    /*  A pointer for the degrees of all of the terms.                        */
+    unsigned long int *degree_of_term;
+
+    /*  The number of non-zero terms.                                         */
+    unsigned long int number_of_terms;
+
+    /*  Boolean for keeping track of the terms pointer.                       */
+    tmpl_Bool terms_can_be_freed;
+
+    /*  Boolean for keeping track of the entire polynomial.                   */
+    tmpl_Bool poly_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_SparsePolynomialC;
+
+/*  Data type for matrices of polynomials in Z[x].                            */
+typedef struct tmpl_PolynomialZMatrix_Def {
+
+    /*  An array of polynomials, representing the matrix.                     */
+    tmpl_PolynomialZ *data;
+
+    /*  The number of rows and columns, respectively.                         */
+    unsigned long int number_of_rows;
+    unsigned long int number_of_columns;
+
+    /*  Boolean for keeping track of the data pointer.                        */
+    tmpl_Bool data_can_be_freed;
+
+    /*  Boolean for keeping track of the entire matrix.                       */
+    tmpl_Bool matrix_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_PolynomialZMatrix;
+
+/*  Data type for matrices of polynomials in Q[x].                            */
+typedef struct tmpl_PolynomialQMatrix_Def {
+
+    /*  An array of polynomials, representing the matrix.                     */
+    tmpl_PolynomialQ *data;
+
+    /*  The number of rows and columns, respectively.                         */
+    unsigned long int number_of_rows;
+    unsigned long int number_of_columns;
+
+    /*  Boolean for keeping track of the data pointer.                        */
+    tmpl_Bool data_can_be_freed;
+
+    /*  Boolean for keeping track of the entire matrix.                       */
+    tmpl_Bool matrix_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_PolynomialQMatrix;
+
+/*  Data type for matrices of polynomials in R[x].                            */
+typedef struct tmpl_PolynomialRMatrix_Def {
+
+    /*  An array of polynomials, representing the matrix.                     */
+    tmpl_PolynomialR *data;
+
+    /*  The number of rows and columns, respectively.                         */
+    unsigned long int number_of_rows;
+    unsigned long int number_of_columns;
+
+    /*  Boolean for keeping track of the data pointer.                        */
+    tmpl_Bool data_can_be_freed;
+
+    /*  Boolean for keeping track of the entire matrix.                       */
+    tmpl_Bool matrix_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_PolynomialRMatrix;
+
+/*  Data type for matrices of polynomials in C[x].                            */
+typedef struct tmpl_PolynomialCMatrix_Def {
+
+    /*  An array of polynomials, representing the matrix.                     */
+    tmpl_PolynomialC *data;
+
+    /*  The number of rows and columns, respectively.                         */
+    unsigned long int number_of_rows;
+    unsigned long int number_of_columns;
+
+    /*  Boolean for keeping track of the data pointer.                        */
+    tmpl_Bool data_can_be_freed;
+
+    /*  Boolean for keeping track of the entire matrix.                       */
+    tmpl_Bool matrix_can_be_freed;
+
+    /*  Boolean for keeping track of errors.                                  */
+    tmpl_Bool error_occurred;
+
+    /*  And an error message in case an error does occur.                     */
+    char *error_message;
+} tmpl_PolynomialCMatrix;
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_PolynomialZ_Calloc                                               *
@@ -239,10 +397,7 @@ typedef struct tmpl_PolynomialC_Def {
  *      If malloc fails this function returns NULL. If calloc fails, the      *
  *      pointer has the error_occurred Boolean set to True.                   *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_calloc.c                     *
- *      libtmpl/src/polynomial/tmpl_polynomial_q_calloc.c                     *
- *      libtmpl/src/polynomial/tmpl_polynomial_r_calloc.c                     *
- *      libtmpl/src/polynomial/tmpl_polynomial_c_calloc.c                     *
+ *      libtmpl/src/polynomial/tmpl_polynomial_calloc.c                       *
  ******************************************************************************/
 extern tmpl_PolynomialZ *
 tmpl_PolynomialZ_Calloc(unsigned long int number_of_coeffs);
@@ -271,10 +426,7 @@ tmpl_PolynomialC_Calloc(unsigned long int number_of_coeffs);
  *  Notes:                                                                    *
  *      If malloc fails this function returns NULL.                           *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_create_empty.c               *
- *      libtmpl/src/polynomial/tmpl_polynomial_q_create_empty.c               *
- *      libtmpl/src/polynomial/tmpl_polynomial_r_create_empty.c               *
- *      libtmpl/src/polynomial/tmpl_polynomial_c_create_empty.c               *
+ *      libtmpl/src/polynomial/tmpl_polynomial_create_empty.c                 *
  ******************************************************************************/
 extern tmpl_PolynomialZ *tmpl_PolynomialZ_Create_Empty(void);
 extern tmpl_PolynomialQ *tmpl_PolynomialQ_Create_Empty(void);
@@ -298,7 +450,7 @@ extern tmpl_PolynomialC *tmpl_PolynomialC_Create_Empty(void);
  *      This function should always be called when done with a polynomial     *
  *      to avoid memory leaks.                                                *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_destroy.c                    *
+ *      libtmpl/src/polynomial/tmpl_polynomial_destroy.c                      *
  ******************************************************************************/
 extern void tmpl_PolynomialZ_Destroy(tmpl_PolynomialZ **poly_ptr);
 extern void tmpl_PolynomialQ_Destroy(tmpl_PolynomialQ **poly_ptr);
@@ -561,5 +713,34 @@ extern void
 tmpl_PolynomialZ_Scale(tmpl_PolynomialZ *poly,
                        signed long int scale,
                        tmpl_PolynomialZ *prod);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_PolynomialZ_ScaleSelf                                            *
+ *  Purpose:                                                                  *
+ *      Multiply a polynomial by an integer.                                  *
+ *  Arguments:                                                                *
+ *      poly (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial.                                        *
+ *      scale (signed long int):                                              *
+ *          The integer the polynomial is multiplied with.                    *
+ *      prod (tmpl_PolynomialZ *):                                            *
+ *          The product of poly and scale.                                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
+ ******************************************************************************/
+extern void
+tmpl_PolynomialZ_ScaleSelf(tmpl_PolynomialZ *poly, signed long int scale);
+
+extern void
+tmpl_PolynomialQ_ScaleSelf(tmpl_PolynomialQ *poly, tmpl_RationalNumber scale);
+
+extern void
+tmpl_PolynomialR_ScaleSelf(tmpl_PolynomialR *poly, double scale);
+
+extern void
+tmpl_PolynomialC_ScaleSelf(tmpl_PolynomialC *poly, tmpl_ComplexDouble scale);
 
 #endif

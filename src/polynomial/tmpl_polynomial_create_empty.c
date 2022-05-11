@@ -16,24 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_polynomial_r_create_empty                       *
+ *                       tmpl_polynomial_c_create_empty                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Code for creating a polynomial in R[x] with all pointers set to NULL  *
+ *      Code for creating a polynomial in C[x] with all pointers set to NULL  *
  *      and all variables set to their zero values.                           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_PolynomialR_Create_Empty                                         *
+ *      tmpl_PolynomialC_Create_Empty                                         *
  *  Purpose:                                                                  *
- *      Creates a pointer to a polynomial in R[x] with coeffs set to NULL,    *
+ *      Creates a pointer to a polynomial in C[x] with coeffs set to NULL,    *
  *      error_occurred set to false, error_message set to NULL, min_degree to *
  *      0, number_of_coeffs set to 0, and coeffs_can_be_freed set to false.   *
  *  Arguments:                                                                *
  *      None (void).                                                          *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialR *):                                            *
+ *      poly (tmpl_PolynomialC *):                                            *
  *          A polynomial with its coeffs pointer set to NULL.                 *
  *  Called Functions:                                                         *
  *      malloc (stdlib.h):                                                    *
@@ -76,36 +76,69 @@
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Function prototype is declared here.                                      */
+/*  tmpl_strdup function declared here.                                       */
+#include <libtmpl/include/tmpl_string.h>
+
+/*  Rational numbers found here.                                              */
+#include <libtmpl/include/tmpl_rational.h>
+
+/*  Complex numbers found here.                                               */
+#include <libtmpl/include/tmpl_complex.h>
+
+/*  Function prototypes are given here.                                       */
 #include <libtmpl/include/tmpl_polynomial.h>
 
 /*  malloc found here.                                                        */
 #include <stdlib.h>
 
-/*  Function for creating a polynomial with coeffs set to NULL.               */
-tmpl_PolynomialR *tmpl_PolynomialR_Create_Empty(void)
-{
-    /*  Allocate memory with malloc. Per every coding standard one can find,  *
-     *  the result of malloc is not cast. Malloc returns a void pointer which *
-     *  is safely promoted to the type of poly.                               */
-    tmpl_PolynomialR *poly = malloc(sizeof(*poly));
+/*  Make sure this macro name is available. It should be anyways.             */
+#ifdef TMPL_POLYNOMIAL_EMPTY_FUNC
+#undef TMPL_POLYNOMIAL_EMPTY_FUNC
+#endif
 
-    /*  Check if malloc failed. It returns NULL if it does.                   */
-    if (poly == NULL)
-        return NULL;
-
-    /*  Otherwise, set the default values for the polynomial.                 */
-    poly->coeffs = NULL;
-    poly->error_occurred = tmpl_False;
-    poly->error_message = NULL;
-    poly->min_degree = 0UL;
-    poly->number_of_coeffs = 0UL;
-
-    /*  malloc was successful, set poly_can_be_freed to true.                 */
-    poly->poly_can_be_freed = tmpl_True;
-
-    /*  coeffs is set to NULL. This cannot be safely freed.                   */
-    poly->coeffs_can_be_freed = tmpl_False;
-    return poly;
+/******************************************************************************
+ *  Macro for defining the create_empty functions for Z/Q/R/C[x].             *
+ *  Arguments:                                                                *
+ *      type:                                                                 *
+ *          The data type of the polynomial (the polynomial's typedef).       *
+ *      fname:                                                                *
+ *          The name of the function the macro defines.                       *
+ ******************************************************************************/
+#define TMPL_POLYNOMIAL_EMPTY_FUNC(type, fname)                                \
+                                                                               \
+/*  Function for creating a polynomial with all coefficients set to zero.    */\
+type *fname(void)                                                              \
+{                                                                              \
+    /*  Allocate memory with malloc. Per every coding standard one can find, */\
+    /*  the result of malloc is not cast. Malloc returns a void pointer      */\
+    /*  which is safely promoted to the type of poly.                        */\
+    type *poly = malloc(sizeof(*poly));                                        \
+                                                                               \
+    /*  Check if malloc failed. It returns NULL if it does.                  */\
+    if (poly == NULL)                                                          \
+        return NULL;                                                           \
+                                                                               \
+    /*  Otherwise, set the default values for the polynomial.                */\
+    poly->coeffs = NULL;                                                       \
+    poly->error_occurred = tmpl_False;                                         \
+    poly->error_message = NULL;                                                \
+    poly->min_degree = 0UL;                                                    \
+    poly->number_of_coeffs = 0UL;                                              \
+                                                                               \
+    /*  malloc was successful, set poly_can_be_freed to true.                */\
+    poly->poly_can_be_freed = tmpl_True;                                       \
+                                                                               \
+    /*  coeffs is set to NULL. This cannot be safely freed.                  */\
+    poly->coeffs_can_be_freed = tmpl_False;                                    \
+    return poly;                                                               \
 }
-/*  End of tmpl_PolynomialR_Create_Empty.                                     */
+/*  End of TMPL_POLYNOMIAL_EMPTY_FUNC.                                        */
+
+/*  Define all of the create_empty functions using the macro.                 */
+TMPL_POLYNOMIAL_EMPTY_FUNC(tmpl_PolynomialZ, tmpl_PolynomialZ_Create_Empty)
+TMPL_POLYNOMIAL_EMPTY_FUNC(tmpl_PolynomialQ, tmpl_PolynomialQ_Create_Empty)
+TMPL_POLYNOMIAL_EMPTY_FUNC(tmpl_PolynomialR, tmpl_PolynomialR_Create_Empty)
+TMPL_POLYNOMIAL_EMPTY_FUNC(tmpl_PolynomialC, tmpl_PolynomialC_Create_Empty)
+
+/*  Undefine the macro in case someone wants to #include this file directly.  */
+#undef TMPL_POLYNOMIAL_EMPTY_FUNC

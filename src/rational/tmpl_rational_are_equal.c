@@ -75,9 +75,10 @@
 
 /*  Function for checking if two rational numbers are equal.                  */
 tmpl_Bool
-tmpl_RationalNumber_Are_Equal(tmpl_RationalNumber p, tmpl_RationalNumber q)
+tmpl_RationalNumber_Are_Equal(const tmpl_RationalNumber *p,
+                              const tmpl_RationalNumber *q)
 {
-    if (p.numerator * q.denominator == p.denominator * q.numerator)
+    if (p->numerator * q->denominator == p->denominator * q->numerator)
         return tmpl_True;
     else
         return tmpl_False;
