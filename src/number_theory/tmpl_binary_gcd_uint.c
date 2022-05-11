@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -18,50 +18,44 @@
  ******************************************************************************
  *  Computes the GCD of two non-negative integers.                            *
  ******************************************************************************
- *  Author: Ryan Maguire, Dartmouth College                                   *
+ *  Author: Ryan Maguire                                                      *
  *  Date:   2021/07/29                                                        *
  ******************************************************************************/
 
 #include <libtmpl/include/tmpl_number_theory.h>
 
-unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
-{
-    unsigned int m_zeros, n_zeros, k;
-
-    if (m == 0U)
-        return n;
-    else if (n == 0U)
-        return m;
-
-    m_zeros = tmpl_UInt_Trailing_Zeros(m);
-    n_zeros = tmpl_UInt_Trailing_Zeros(n);
-
-    m = m >> m_zeros;
-    n = n >> n_zeros;
-
-    if (m_zeros < n_zeros)
-        k = m_zeros;
-    else
-        k = n_zeros;
-
-    while (1)
-    {
-        if (m > n)
-        {
-            m -= n;
-            if (m == 0)
-                return n << k;
-
-            m >>= tmpl_UInt_Trailing_Zeros(m);
-        }
-        else
-        {
-            n -= m;
-            if (n == 0)
-                return m << k;
-
-            n >>= tmpl_UInt_Trailing_Zeros(n);
-        }
-    }
+#define CREATE_GCD_FUNC(type, name)                                            \
+type tmpl_##name##_GCD(type m, type n)                                         \
+{                                                                              \
+    unsigned int m_zeros, n_zeros;                                             \
+    type tmp;                                                                  \
+                                                                               \
+    if (m == 0U)                                                               \
+        return n;                                                              \
+    else if (n == 0U)                                                          \
+        return m;                                                              \
+                                                                               \
+    m_zeros = tmpl_##name##_Trailing_Zeros(m);                                 \
+    n_zeros = tmpl_##name##_Trailing_Zeros(n);                                 \
+                                                                               \
+    m = m >> m_zeros;                                                          \
+    n = n >> n_zeros;                                                          \
+                                                                               \
+    while (m != n)                                                             \
+    {                                                                          \
+        if (n > m)                                                             \
+        {                                                                      \
+            tmp = m;                                                           \
+            m = n;                                                             \
+            n = tmp;                                                           \
+        }                                                                      \
+                                                                               \
+        m -= n;                                                                \
+        tmpl_##name##_Remove_Trailing_Zeros(&m);                               \
+    }                                                                          \
+    m = m << (m_zeros < n_zeros ? m_zeros : n_zeros);                          \
+    return m;                                                                  \
 }
 
+CREATE_GCD_FUNC(unsigned int, UInt)
+CREATE_GCD_FUNC(unsigned long int, ULong)
