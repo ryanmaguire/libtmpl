@@ -91,6 +91,7 @@ SRCS := \
 else
 SRCS := \
 	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
+	-not -name "tmpl_trailing_zeros.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
