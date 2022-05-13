@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_trailing_zeros_short                          *
+ *                          tmpl_trailing_zeros_long                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the number of trailing zeros, in binary, of an integer.      *
@@ -24,13 +24,13 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Short_Trailing_Zeros                                             *
+ *      tmpl_Long_Trailing_Zeros                                              *
  *  Purpose:                                                                  *
- *      Given a short n, returns the number of trailing zeros for the         *
+ *      Given a long int n, returns the number of trailing zeros for the      *
  *      binary representation of n. Ex. If n = 8, then in binary n = 1000_2,  *
  *      so the number of trailing zeros is 3.                                 *
  *  Arguments:                                                                *
- *      n (short int):                                                        *
+ *      n (long int):                                                         *
  *          An integer.                                                       *
  *  Output:                                                                   *
  *      zeros (int):                                                          *
@@ -38,7 +38,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      If unsigned short is 16, 32, or 64 bit, use a simple O(1) algorithm to*
+ *      If unsigned long is 32 or 64 bit, use a simple O(1) algorithm to      *
  *      compute the number of trailing zeros. If not, a portable algorithm is *
  *      implemented, though it is slightly slower, O(ln(n)).                  *
  *                                                                            *
@@ -54,20 +54,20 @@
  *      other types of representations, and hence these haven't been tested.  *
  *  Performance and Accuracy:                                                 *
  *      C code (this file):                                                   *
- *          tmpl_Short_Trailing_Zeros vs. bfs_func                            *
+ *          tmpl_Long_Trailing_Zeros vs. bfs_func                             *
  *          samples:        10000000                                          *
- *          libtmpl:        0.022636                                          *
- *          glibc:          0.021905                                          *
- *          glibc (inline): 0.014317                                          *
+ *          libtmpl:        0.029737                                          *
+ *          glibc:          0.021084                                          *
+ *          glibc (inline): 0.011646                                          *
  *          rms error:      0.000000e+00                                      *
  *          max error:      0.000000e+00                                      *
  *                                                                            *
- *      x86_64 / amd64 assembly (tmpl_trailing_zeros_short_x86_64.S):         *
- *          tmpl_Short_Trailing_Zeros vs. bfs_func                            *
+ *      x86_64 / amd64 assembly (tmpl_trailing_zeros_long_x86_64.S):          *
+ *          tmpl_Long_Trailing_Zeros vs. bfs_func                             *
  *          samples:        10000000                                          *
- *          libtmpl:        0.028132                                          *
- *          glibc:          0.023110                                          *
- *          glibc (inline): 0.014039                                          *
+ *          libtmpl:        0.024756                                          *
+ *          glibc:          0.023566                                          *
+ *          glibc (inline): 0.012156                                          *
  *          rms error:      0.000000e+00                                      *
  *          max error:      0.000000e+00                                      *
  *                                                                            *
@@ -82,7 +82,7 @@
  *                                                                            *
  *      Performance will of course vary on different systems.                 *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_number_theory.h:                                                 *
  *          Header where the function prototype is defined.                   *
@@ -97,62 +97,14 @@
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_number_theory.h>
 
-/*  Size of unsigned short int here.                                          */
+/*  Size of unsigned long int here.                                           */
 #include <limits.h>
 
-/*  The C standard requires short to be at LEAST 16 bits. It usually is.      */
-#if USHRT_MAX == 0xFFFF
-
-/*  16-bit trailing-zeros function.                                           */
-int tmpl_Short_Trailing_Zeros(short int n)
-{
-    /*  Variable for the number of trailing zeros.                            */
-    int bits = 0U;
-
-    /*  We want the largest value N such that n >> N (n bit-shift to the      *
-     *  right N times) does not erase any non-zeros. To avoid sign issues,    *
-     *  first convert n to a non-negative number.                             */
-    if (n < 0)
-        n = -n;
-
-    /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
-    {
-        /*  Set the upper 8 bits to zero and see if the number ends up being  *
-         *  zero. If yes, there are at least 8 trailing zeros.                */
-        if (!(n & 0xFF))
-        {
-            bits += 8;
-            n >>= 8;
-        }
-
-        /*  The next four bits in the number.                                 */
-        if (!(n & 0x0F))
-        {
-            bits += 4;
-            n >>= 4;
-        }
-
-        /*  Next two bits.                                                    */
-        if (!(n & 0x03))
-        {
-            bits += 2;
-            n >>= 2;
-        }
-
-        /*  The last bit of n.                                                */
-        if (!(n & 0x01))
-            bits += 1;
-    }
-    return bits;
-}
-/*  End of tmpl_Short_Trailing_Zeros.                                         */
-
-/*  32-bit short is rarer.                                                    */
-#elif USHRT_MAX == 0xFFFFFFFF
+/*  The C standard requires long to be at LEAST 32 bits.                      */
+#if ULONG_MAX == 0xFFFFFFFFU
 
 /*  32-bit trailing-zeros function.                                           */
-int tmpl_Short_Trailing_Zeros(short int n)
+int tmpl_Long_Trailing_Zeros(long int n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -160,11 +112,11 @@ int tmpl_Short_Trailing_Zeros(short int n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
+    if (n < 0L)
         n = -n;
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (n != 0L)
     {
         /*  Set the upper 16 bits to zero and see if the number ends up being *
          *  zero. If yes, there are at least 16 trailing zeros.               */
@@ -201,13 +153,13 @@ int tmpl_Short_Trailing_Zeros(short int n)
     }
     return bits;
 }
-/*  End of tmpl_Short_Trailing_Zeros.                                         */
+/*  End of tmpl_Long_Trailing_Zeros.                                          */
 
-/*  Essentially non-existent, 64-bit short.                                   */
-#elif USHRT_MAX == 0xFFFFFFFFFFFFFFFF
+/*  64-bit is common on Unix-like (Linux, FreeBSD, macOS).                    */
+#elif ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
 
 /*  64-bit trailing-zeros function.                                           */
-int tmpl_Short_Trailing_Zeros(short int n)
+int tmpl_Long_Trailing_Zeros(long int n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -215,11 +167,11 @@ int tmpl_Short_Trailing_Zeros(short int n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
+    if (n < 0L)
         n = -n;
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (n != 0L)
     {
         /*  Set the upper 32 bits to zero and see if the number ends up being *
          *  zero. If yes, there are at least 32 trailing zeros.               */
@@ -263,14 +215,14 @@ int tmpl_Short_Trailing_Zeros(short int n)
     }
     return bits;
 }
-/*  End of tmpl_Short_Trailing_Zeros.                                         */
+/*  End of tmpl_Long_Trailing_Zeros.                                          */
 
-/*  This is for exotic systems. The C standard requires short to be at least  *
- *  16 bits wide, so we can loop through the bits of the input 16 at a time.  */
+/*  This is for exotic systems. The C standard requires long to be at least   *
+ *  32 bits wide, so we can loop through the bits of the input 32 at a time.  */
 #else
 
 /*  Portable trailing-zeros function.                                         */
-int tmpl_Short_Trailing_Zeros(short int n)
+int tmpl_Long_Trailing_Zeros(long int n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -278,14 +230,21 @@ int tmpl_Short_Trailing_Zeros(short int n)
     /*  We want the largest value N such that n >> N (n bit-shift to the      *
      *  right N times) does not erase any non-zeros. To avoid sign issues,    *
      *  first convert n to a non-negative number.                             */
-    if (n < 0)
+    if (n < 0L)
         n = -n;
 
     /*  If n is zero, return 0. That is, 0 has no trailing zeros.             */
-    if (n != 0)
+    if (n != 0L)
     {
-        /*  Keep zeroing out the lower 16 bits and shifting the number.       */
-        while (!(n & 0xFFFF))
+        /*  Keep zeroing out the lower 32 bits and shifting the number.       */
+        while (!(n & 0xFFFFFFFF))
+        {
+            bits += 32;
+            n >>= 32;
+        }
+
+        /*  Do the next 16 bits of the number.                                */
+        if (!(n & 0xFFFF))
         {
             bits += 16;
             n >>= 16;
@@ -318,7 +277,7 @@ int tmpl_Short_Trailing_Zeros(short int n)
     }
     return bits;
 }
-/*  End of tmpl_Short_Trailing_Zeros.                                         */
+/*  End of tmpl_Int_Trailing_Zeros.                                           */
 
 #endif
-/*  End of #if USHRT_MAX == 0xFFFF.                                           */
+/*  End of #if ULONG_MAX == 0xFFFFFFFF.                                       */
