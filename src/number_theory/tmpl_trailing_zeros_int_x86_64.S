@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -15,52 +15,23 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *  Computes the GCD of two non-negative integers.                            *
- ******************************************************************************
- *  Author: Ryan Maguire, Dartmouth College                                   *
- *  Date:   2021/07/29                                                        *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_number_theory.h>
+.text
+.p2align 4
+.globl  tmpl_Int_Trailing_Zeros
+.type   tmpl_Int_Trailing_Zeros, @function
 
-int tmpl_Int_GCD(int m, int n)
-{
-    int m_zeros, n_zeros, tmp;
+tmpl_Int_Trailing_Zeros:
+        xorl        %ecx, %ecx
+        movl        %edi, %eax
+        rep bsfl    %edi, %ecx
+        testl       %edi, %edi
+        cmovne      %ecx, %eax
+        ret
 
-    if (m == 0)
-        return n;
-    else if (n == 0)
-        return m;
+.size   tmpl_Int_Trailing_Zeros, .-tmpl_Int_Trailing_Zeros
 
-    if (m < 0)
-        m = -m;
-
-    if (n < 0)
-        n = -n;
-
-    m_zeros = tmpl_Int_Trailing_Zeros(m);
-    n_zeros = tmpl_Int_Trailing_Zeros(n);
-
-    m = m >> m_zeros;
-    n = n >> n_zeros;
-
-    m = m >> m_zeros;
-    n = n >> n_zeros;
-
-    while (m != n)
-    {
-        if (n > m)
-        {
-            tmp = m;
-            m = n;
-            n = tmp;
-        }
-
-        m -= n;
-        m >>= tmpl_Int_Trailing_Zeros(m);
-    }
-    m = m << (m_zeros < n_zeros ? m_zeros : n_zeros);
-    return m;
-}
-
+#if defined(__ELF__)
+.section        .note.GNU-stack,"",@progbits
+#endif
