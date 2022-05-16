@@ -19,9 +19,4 @@
 
 #include "tmpl_complex_time_tests.h"
 
-TEST1(double,
-      tmpl_ComplexDouble,
-      complex double,
-      tmpl_CDouble_QuickAbs,
-      cabs,
-      10000000ULL)
+TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_QuickAbs, cabs)

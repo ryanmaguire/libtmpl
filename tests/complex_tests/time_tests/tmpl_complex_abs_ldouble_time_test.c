@@ -16,12 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-
 #include "tmpl_complex_time_tests.h"
 
 TEST1(long double,
       tmpl_ComplexLongDouble,
       complex long double,
       tmpl_CLDouble_Abs,
-      cabsl,
-      10000000ULL)
+      cabsl)

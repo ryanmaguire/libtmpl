@@ -24,6 +24,28 @@
 #include <complex.h>
 #include <time.h>
 
+#ifdef _MSC_VER
+
+#include <windows.h>
+static unsigned long long int memsize()
+{
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx(&status);
+    return (unsigned long long int)status.ullTotalPhys;
+}
+
+#else
+
+#include <unistd.h>
+static unsigned long long memsize()
+{
+    long pages = sysconf(_SC_PHYS_PAGES);
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    return (unsigned long long int)(pages * page_size);
+}
+#endif
+
 static inline long double rand_real(void)
 {
     int n = rand();
@@ -31,13 +53,17 @@ static inline long double rand_real(void)
     return 2.0L*(x - 0.5L);
 }
 
-#define TEST1(ftype, ttype, ctype, f0, f1, samples)                            \
+#define MAX2(a, b) ((a) > (b) ? (a) : (b))
+#define MAX3(a, b, c) MAX2((a), MAX2((b), (c)))
+#define NSAMPS(a, b, c) (memsize()/(2ULL*MAX3(sizeof(a), sizeof(b), sizeof(c))))
+
+#define TEST1(ftype, ttype, ctype, f0, f1)                                     \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X;                                                                  \
     ctype *A;                                                                  \
     ftype *Y, *B;                                                              \
-    const unsigned long long int N = samples;                                  \
+    const unsigned long long int N = NSAMPS(ftype, ttype, ctype) / 4UL;        \
     unsigned long long int n;                                                  \
     clock_t t1, t2;                                                            \
     long double max_err = 0.0L;                                                \

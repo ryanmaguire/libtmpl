@@ -16,12 +16,6 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-
 #include "tmpl_complex_time_tests.h"
 
-TEST1(float,
-      tmpl_ComplexFloat,
-      complex float,
-      tmpl_CFloat_Abs,
-      cabsf,
-      10000000ULL)
+TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs, cabsf)
