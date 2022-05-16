@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-
 #include "tmpl_complex_time_tests.h"
 
 static double complex_abs_squared(complex double z)
@@ -30,5 +29,4 @@ TEST1(double,
       tmpl_ComplexDouble,
       complex double,
       tmpl_CDouble_Abs_Squared,
-      complex_abs_squared,
-      10000000ULL)
+      complex_abs_squared)
