@@ -23,4 +23,4 @@ static inline int bfs_func(int n)
     return (n == 0 ? 0 : __builtin_ffs(n) - 1);
 }
 
-TEST1(int, int, tmpl_Int_Trailing_Zeros, bfs_func, 10000000UL)
+TEST1(int, int, tmpl_Int_Trailing_Zeros, bfs_func)

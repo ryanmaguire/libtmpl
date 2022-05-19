@@ -18,8 +18,9 @@
  ******************************************************************************/
 #include "tmpl_number_theory_vs_glibc.h"
 
-TEST1(unsigned short int,
-      int,
-      tmpl_UShort_Trailing_Zeros,
-      __builtin_ctz,
-      10000000UL)
+static inline int bfs_func(unsigned short n)
+{
+    return (n == 0 ? 0 : __builtin_ctz(n));
+}
+
+TEST1(unsigned short int, int, tmpl_UShort_Trailing_Zeros, bfs_func)

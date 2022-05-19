@@ -18,4 +18,4 @@
  ******************************************************************************/
 #include "tmpl_number_theory_vs_boost.hpp"
 
-TEST1(unsigned long int, tmpl_ULong_GCD, boost::integer::gcd, 2548546304UL/100UL)
+TEST1(unsigned long int, tmpl_ULong_GCD, boost::integer::gcd)
