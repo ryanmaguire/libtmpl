@@ -28,25 +28,43 @@ static double time_as_double(clock_t a, clock_t b)
     return t / (double)(CLOCKS_PER_SEC);
 }
 
-#define TEST1(intype, outtype, f0, f1, N)                                      \
+#ifdef _MSC_VER
+#include <windows.h>
+static size_t memsize()
+{
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx(&status);
+    return (size_t)status.ullTotalPhys;
+}
+#else
+#include <unistd.h>
+static size_t memsize()
+{
+    long pages = sysconf(_SC_PHYS_PAGES);
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    return (size_t)(pages * page_size);
+}
+#endif
+
+#define MAX2(a, b) ((a) > (b) ? (a) : (b))
+#define NSAMPS(a, b) (memsize()/(2ULL*MAX2(sizeof(a), sizeof(b))))
+
+#define TEST1(intype, outtype, f0, f1)                                         \
                                                                                \
 static intype random_int(void)                                                 \
 {                                                                              \
     int a = rand();                                                            \
-                                                                               \
-    while (a == 0)                                                             \
-    {                                                                          \
-        a = rand();                                                            \
-    }                                                                          \
-                                                                               \
-    return (intype)(a);                                                        \
+    intype b = (intype)(a);                                                    \
+    return b;                                                                  \
 }                                                                              \
                                                                                \
 int main(void)                                                                 \
 {                                                                              \
     intype *A, *X;                                                             \
     outtype *B, *Y;                                                            \
-    unsigned long int n;                                                       \
+    size_t n;                                                                  \
+    const size_t N = NSAMPS(intype, outtype) / 4ULL;                           \
     clock_t t1, t2;                                                            \
     double tmp;                                                                \
     double max = 0.0;                                                          \
@@ -57,7 +75,7 @@ int main(void)                                                                 \
     Y = malloc(sizeof(*Y)*N);                                                  \
                                                                                \
     printf(#f0 " vs. " #f1 "\n");                                              \
-    printf("samples: %lu\n", N);                                               \
+    printf("samples: %zu\n", N);                                               \
                                                                                \
     for (n = 0UL; n < N; ++n)                                                  \
         A[n] = X[n] = random_int();                                            \

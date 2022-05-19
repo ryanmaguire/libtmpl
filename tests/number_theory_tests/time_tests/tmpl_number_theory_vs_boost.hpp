@@ -24,7 +24,29 @@
 
 extern "C" {
 #include <libtmpl/include/tmpl_number_theory.h>
+#ifdef _MSC_VER
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 }
+
+#ifdef _MSC_VER
+static size_t memsize()
+{
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx(&status);
+    return static_cast<size_t>(status.ullTotalPhys);
+}
+#else
+static size_t memsize()
+{
+    long pages = sysconf(_SC_PHYS_PAGES);
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    return static_cast<size_t>(pages * page_size);
+}
+#endif
 
 static double time_as_double(clock_t a, clock_t b)
 {
@@ -32,7 +54,8 @@ static double time_as_double(clock_t a, clock_t b)
     return t / static_cast<double>(CLOCKS_PER_SEC);
 }
 
-#define TEST1(type, f0, f1, N)                                                 \
+#define NSAMPS(a) (memsize()/(2*sizeof(a)))
+#define TEST1(type, f0, f1)                                                    \
                                                                                \
 static type random_int(void)                                                   \
 {                                                                              \
@@ -54,6 +77,8 @@ int main(void)                                                                 \
     type tmp;                                                                  \
     type max = 0;                                                              \
     double rms = 0.0;                                                          \
+    double tmpd;                                                               \
+    const size_t N = NSAMPS(type) / 6;                                         \
     A = static_cast<type *>(std::malloc(sizeof(*A)*N));                        \
     B = static_cast<type *>(std::malloc(sizeof(*B)*N));                        \
     C = static_cast<type *>(std::malloc(sizeof(*C)*N));                        \
@@ -85,7 +110,8 @@ int main(void)                                                                 \
     for (n = 0UL; n < N; ++n)                                                  \
     {                                                                          \
         tmp = (Z[n] < C[n] ? C[n] - Z[n] : Z[n] - C[n]);                       \
-        rms += tmp*tmp;                                                        \
+        tmpd = static_cast<double>(tmp);                                       \
+        rms += tmpd*tmpd;                                                      \
         if (max < tmp)                                                         \
             max = tmp;                                                         \
     }                                                                          \
@@ -100,68 +126,5 @@ int main(void)                                                                 \
     std::free(X);                                                              \
     std::free(Y);                                                              \
     std::free(Z);                                                              \
-    return 0;                                                                  \
-}
-
-#define TEST2(f, op, N)                                                        \
-int main(void)                                                                 \
-{                                                                              \
-    tmpl_RationalNumber *A, *B;                                                \
-    boost_rational *X, *Y;                                                     \
-    unsigned long int n;                                                       \
-    clock_t t1, t2;                                                            \
-    double tmp;                                                                \
-    double max = 0.0;                                                          \
-    double rms = 0.0;                                                          \
-    A = static_cast<tmpl_RationalNumber *>(std::malloc(sizeof(*A)*N));         \
-    B = static_cast<tmpl_RationalNumber *>(std::malloc(sizeof(*B)*N));         \
-    X = static_cast<boost_rational *>(std::malloc(sizeof(*X)*N));              \
-    Y = static_cast<boost_rational *>(std::malloc(sizeof(*Y)*N));              \
-                                                                               \
-    std::printf(#f " vs. boost/rational " #op "\n");                           \
-    std::printf("samples: %lu\n", N);                                          \
-                                                                               \
-    for (n = 0UL; n < N; ++n)                                                  \
-    {                                                                          \
-        signed long int a = random_int();                                      \
-        signed long int b = random_int();                                      \
-        signed long int c = random_int();                                      \
-        signed long int d = random_int();                                      \
-        A[n] = tmpl_RationalNumber_Create(a, b);                               \
-        B[n] = tmpl_RationalNumber_Create(c, d);                               \
-        X[n] = boost_rational(a, b);                                           \
-        Y[n] = boost_rational(c, d);                                           \
-    }                                                                          \
-                                                                               \
-    t1 = std::clock();                                                         \
-    for (n = 0; n < N; ++n)                                                    \
-        f(&A[n], &B[n]);                                                       \
-    t2 = std::clock();                                                         \
-    printf("libtmpl: %f\n", time_as_double(t1, t2));                           \
-                                                                               \
-    t1 = std::clock();                                                         \
-    for (n = 0; n < N; ++n)                                                    \
-        X[n] op Y[n];                                                          \
-    t2 = std::clock();                                                         \
-    printf("boost:   %f\n", time_as_double(t1, t2));                           \
-                                                                               \
-    for (n = 0UL; n < N; ++n)                                                  \
-    {                                                                          \
-        double x = boost::rational_cast<double>(X[n]);                         \
-        double y = tmpl_RationalNumber_As_Double(&A[n]);                       \
-        tmp = std::fabs((x - y)/y);                                            \
-        rms += tmp*tmp;                                                        \
-        if (max < tmp)                                                         \
-            max = tmp;                                                         \
-    }                                                                          \
-                                                                               \
-    rms = std::sqrt(rms / static_cast<double>(N));                             \
-    printf("rms error: %e\n", rms);                                            \
-    printf("max error: %e\n", max);                                            \
-                                                                               \
-    std::free(A);                                                              \
-    std::free(B);                                                              \
-    std::free(X);                                                              \
-    std::free(Y);                                                              \
     return 0;                                                                  \
 }

@@ -18,8 +18,4 @@
  ******************************************************************************/
 #include "tmpl_number_theory_vs_glibc.h"
 
-TEST1(unsigned long int,
-      int,
-      tmpl_ULong_Trailing_Zeros,
-      __builtin_ctzl,
-      10000000UL)
+TEST1(unsigned long int, int, tmpl_ULong_Trailing_Zeros, __builtin_ctzl)
