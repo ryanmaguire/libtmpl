@@ -45,11 +45,11 @@
 /*  Else for #if defined(__has_builtin).                                      */
 
 /*  Microsoft's compiler has _BitScanForward, which does the same thing.      */
-unsigned int __inline trailing_zeros(unsigned int n)
+unsigned long int __inline trailing_zeros(unsigned long int n)
 {
-    unsigned int trailing_zero = 0U;
-    _BitScanForward(&trailing_zero, n);
-    return zeros;
+    unsigned long int trailing_zeros = 0U;
+    _BitScanForward(&trailing_zeros, n);
+    return trailing_zeros;
 }
 
 #else
