@@ -37,15 +37,13 @@ static size_t memsize()
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
-    return static_cast<size_t>(1000ULL*status.ullTotalPhys);
+    return static_cast<size_t>(1000ULL*status.ullAvailPhys);
 }
 #else
 static size_t memsize()
 {
-    long pages = sysconf(_SC_PHYS_PAGES);
+    long pages = sysconf(_SC_AVPHYS_PAGES);
     long page_size = sysconf(_SC_PAGE_SIZE);
-    std::printf("%zu\n", static_cast<size_t>(pages * page_size));
-std::printf("%zu\n", static_cast<size_t>(page_size));
     return static_cast<size_t>(pages * page_size);
 }
 #endif
@@ -56,7 +54,7 @@ static double time_as_double(clock_t a, clock_t b)
     return t / static_cast<double>(CLOCKS_PER_SEC);
 }
 
-#define NSAMPS(a) (memsize()/(2*sizeof(a)))
+#define NSAMPS(a) (3*memsize()/(4*sizeof(a)))
 #define TEST1(type, f0, f1)                                                    \
                                                                                \
 static type random_int(void)                                                   \
@@ -82,11 +80,56 @@ int main(void)                                                                 \
     double tmpd;                                                               \
     const size_t N = NSAMPS(type) / 6;                                         \
     A = static_cast<type *>(std::malloc(sizeof(*A)*N));                        \
+    if (!A)                                                                    \
+    {                                                                          \
+    	std::puts("Malloc failed for B. Aborting.");                           \
+    	return -1;                                                             \
+    }                                                                          \
     B = static_cast<type *>(std::malloc(sizeof(*B)*N));                        \
+    if (!B)                                                                    \
+    {                                                                          \
+    	std::puts("Malloc failed for B. Aborting.");                           \
+    	std::free(A);                                                          \
+    	return -1;                                                             \
+    }                                                                          \
     C = static_cast<type *>(std::malloc(sizeof(*C)*N));                        \
+    if (!C)                                                                    \
+    {                                                                          \
+    	std::puts("Malloc failed for C. Aborting.");                           \
+    	std::free(A);                                                          \
+    	std::free(B);                                                          \
+    	return -1;                                                             \
+    }                                                                          \
     X = static_cast<type *>(std::malloc(sizeof(*X)*N));                        \
+    if (!X)                                                                    \
+    {                                                                          \
+    	std::puts("Malloc failed for X. Aborting.");                           \
+    	std::free(A);                                                          \
+    	std::free(B);                                                          \
+    	std::free(C);                                                          \
+    	return -1;                                                             \
+    }                                                                          \
     Y = static_cast<type *>(std::malloc(sizeof(*Y)*N));                        \
+    if (!Y)                                                                    \
+    {                                                                          \
+    	std::puts("Malloc failed for Y. Aborting.");                           \
+    	std::free(A);                                                          \
+    	std::free(B);                                                          \
+    	std::free(C);                                                          \
+    	std::free(X);                                                          \
+    	return -1;                                                             \
+    }                                                                          \
     Z = static_cast<type *>(std::malloc(sizeof(*Z)*N));                        \
+    if (!Z)                                                                    \
+    {                                                                          \
+    	std::puts("Malloc failed for Z. Aborting.");                           \
+    	std::free(A);                                                          \
+    	std::free(B);                                                          \
+    	std::free(C);                                                          \
+    	std::free(X);                                                          \
+    	std::free(Y);                                                          \
+    	return -1;                                                             \
+    }                                                                          \
                                                                                \
     std::printf(#f0 " vs. " #f1 "\n");                                         \
     std::printf("samples: %zu\n", N);                                          \
