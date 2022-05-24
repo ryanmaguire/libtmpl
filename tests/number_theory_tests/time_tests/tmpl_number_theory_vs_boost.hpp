@@ -37,13 +37,15 @@ static size_t memsize()
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
-    return static_cast<size_t>(status.ullTotalPhys);
+    return static_cast<size_t>(1000ULL*status.ullTotalPhys);
 }
 #else
 static size_t memsize()
 {
     long pages = sysconf(_SC_PHYS_PAGES);
     long page_size = sysconf(_SC_PAGE_SIZE);
+    std::printf("%zu\n", static_cast<size_t>(pages * page_size));
+std::printf("%zu\n", static_cast<size_t>(page_size));
     return static_cast<size_t>(pages * page_size);
 }
 #endif
@@ -87,7 +89,7 @@ int main(void)                                                                 \
     Z = static_cast<type *>(std::malloc(sizeof(*Z)*N));                        \
                                                                                \
     std::printf(#f0 " vs. " #f1 "\n");                                         \
-    std::printf("samples: %lu\n", N);                                          \
+    std::printf("samples: %zu\n", N);                                          \
                                                                                \
     for (n = 0UL; n < N; ++n)                                                  \
     {                                                                          \
