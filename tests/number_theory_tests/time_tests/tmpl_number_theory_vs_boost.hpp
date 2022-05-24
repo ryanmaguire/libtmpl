@@ -37,7 +37,7 @@ static size_t memsize()
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
-    return static_cast<size_t>(1000ULL*status.ullAvailPhys);
+    return static_cast<size_t>(status.ullAvailPhys);
 }
 #else
 static size_t memsize()
