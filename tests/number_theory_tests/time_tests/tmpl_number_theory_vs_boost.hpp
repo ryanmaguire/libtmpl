@@ -42,7 +42,7 @@ static size_t memsize()
 #else
 static size_t memsize()
 {
-    long pages = sysconf(_SC_AVPHYS_PAGES);
+    long pages = sysconf(_SC_PHYS_PAGES);
     long page_size = sysconf(_SC_PAGE_SIZE);
     return static_cast<size_t>(pages * page_size);
 }
