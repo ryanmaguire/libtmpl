@@ -101,6 +101,36 @@
  *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
  *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
  *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
+ *      Using a Windows 10 virtual machine (same specs) with GNOME Boxes:     *
+ *      Building libtmpl with MSVC, Binary GCD                                *
+ *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
+ *          samples: 23401941                                                 *
+ *          libtmpl: 0.640000                                                 *
+ *          boost:   1.522000                                                 *
+ *          rms error: 0.000000e+00                                           *
+ *          max error: 0.000000e+00                                           *
+ *      Building libtmpl with LLVM's clang, Binary GCD                        *
+ *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
+ *          samples: 23401941                                                 *
+ *          libtmpl: 0.630000                                                 *
+ *          boost:   0.893000                                                 *
+ *          rms error: 0.000000e+00                                           *
+ *          max error: 0.000000e+00                                           *
+ *      Using a FreeBSD 13 virtual machine (same specs) with GNOME Boxes:     *
+ *      Building libtmpl with LLVM's clang, Binary GCD                        *
+ *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
+ *          samples: 1073462016                                               *
+ *          libtmpl: 59.601562                                                *
+ *          boost:   83.625000                                                *
+ *          rms error: 0.000000e+00                                           *
+ *          max error: 0.000000e+00                                           *
+ *      Building libtmpl with GCC, Binary GCD                                 *
+ *          tmpl_UInt_GCD vs. boost::integer::gcd                             *
+ *          samples: 1073462016                                               *
+ *          libtmpl: 73.781250                                                *
+ *          boost:   53.984375                                                *
+ *          rms error: 0.000000e+00                                           *
+ *          max error: 0.000000e+00                                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
