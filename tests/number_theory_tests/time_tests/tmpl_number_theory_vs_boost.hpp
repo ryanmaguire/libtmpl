@@ -54,7 +54,7 @@ static double time_as_double(clock_t a, clock_t b)
     return t / static_cast<double>(CLOCKS_PER_SEC);
 }
 
-#define NSAMPS(a) (3*memsize()/(4*sizeof(a)))
+#define NSAMPS(a) (memsize()/(2*sizeof(a)))
 #define TEST1(type, f0, f1)                                                    \
                                                                                \
 static type random_int(void)                                                   \
