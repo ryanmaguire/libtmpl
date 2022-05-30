@@ -466,13 +466,13 @@ long double tmpl_LDouble_Log(long double x)
         if (w.r == 0.0L)
             return -TMPL_INFINITYL;
 
-        /*  Non-zero subnormal number. Normalize by multiplying by 2^52,      *
-         *  which is 4.503599627370496 x 10^15.                               */
-        w.r *= 4.503599627370496E15L;
+        /*  Non-zero subnormal number. Normalize by multiplying by 2^63,      *
+         *  which is 9.223372036854775808 x 10^18.                            */
+        w.r *= 9.223372036854775808E18L;
 
         /*  Compute the exponent. Since we multiplied by 2^52, subtract 52    *
          *  from the value.                                                   */
-        exponent = w.bits.expo - TMPL_DOUBLE_BIAS - 52;
+        exponent = w.bits.expo - TMPL_LDOUBLE_BIAS - 63;
     }
 
     /*  NaN or positive infinity. Simply return the input.                    */
