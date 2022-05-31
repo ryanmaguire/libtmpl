@@ -42,7 +42,7 @@ static size_t memsize()
     return (size_t)(pages * page_size);
 }
 #endif
-#define NSAMPS(a) (3*memsize()/(5*sizeof(a)))
+#define NSAMPS(a) (4*memsize()/(5*sizeof(a)))
 #else
 #define NSAMPS(a) 30000000
 #endif
