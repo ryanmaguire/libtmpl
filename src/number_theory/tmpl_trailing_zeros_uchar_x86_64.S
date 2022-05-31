@@ -17,6 +17,20 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
+/*  Clang on intel-based Apple computers supports the following.              */
+#if defined(__APPLE__)
+
+.globl _tmpl_UChar_Trailing_Zeros
+.align 4,0x90;
+
+_tmpl_UChar_Trailing_Zeros:
+        movzbl    %dil, %eax
+        rep bsfl  %eax, %eax
+        ret
+
+/*  GCC, clang, and PCC support the following on GNU/Linux and FreeBSD.       */
+#else
+
 .text
 .p2align 4
 .globl  tmpl_UChar_Trailing_Zeros
@@ -28,6 +42,9 @@ tmpl_UChar_Trailing_Zeros:
         ret
 
 .size   tmpl_UChar_Trailing_Zeros, .-tmpl_UChar_Trailing_Zeros
+
+#endif
+/*  End of #if defined(__APPLE__).                                            */
 
 #if defined(__ELF__)
 .section        .note.GNU-stack,"",@progbits
