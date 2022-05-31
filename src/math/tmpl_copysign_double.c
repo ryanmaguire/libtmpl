@@ -1,6 +1,10 @@
 
 #include <libtmpl/include/tmpl_math.h>
 
+/*  This file is only compiled if inline support is not requested.            */
+#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
+
+/*  With IEEE-754 support we can skip if-then statements.                     */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Double precision copysign function.                                       */
@@ -35,3 +39,7 @@ double tmpl_Double_Copysign(double x, double y)
 /*  End of tmpl_Double_Copysign.                                              */
 
 #endif
+/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
+
+#endif
+/*  End of #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.             */

@@ -24,9 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Abs:                                                *
- *      tmpl_Double_Abs:                                               *
- *      tmpl_LDouble_Abs:                                              *
+ *      tmpl_LDouble_Copysign:                                                *
  *  Purpose:                                                                  *
  *      Computes the product of sgn(y) with |x|.                              *
  *          copysign(x, y) = sgn(y) * |x|                                     *
@@ -65,7 +63,7 @@
  *  use C99 features (built-in complex, built-in booleans, C++ style comments *
  *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       December 8, 2020                                              *
  ******************************************************************************
  *                             Revision History                               *
@@ -77,30 +75,36 @@
 /*  Header file where the prototypes for these functions are defined.         */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Copysign is not required in C89, so we provide the algorithm for          *
- *  double, float, and long double inputs.                                    */
+/*  This file is only compiled if inline support is not requested.            */
+#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
 
-/*  Float precision copysign function.                                        */
-float tmpl_Float_Copysign(float x, float y)
+/*  64-bit double, 80-bit extended, and 128-bit quadruple implementations of  *
+ *  long double all have a "sign" bit. We can just copy this from y to x.     *
+ *  double-double is a bit more complicated.                                  */
+#if \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
+
+/*  Double precision copysign function.                                       */
+long double tmpl_LDouble_Copysign(long double x, long double y)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float out;
+    tmpl_IEEE754_LDouble wx, wy;
 
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0F)
-        out = -tmpl_Float_Abs(x);
-
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0F < y)
-        out = tmpl_Float_Abs(x);
-
-    /*  And lastly, if y is zero, return zero.                                */
-    else
-        out = 0.0F;
-
-    return out;
+    wx.r = x;
+    wy.r = y;
+    wx.bits.sign = wy.bits.sign;
+    return wx.r;
 }
-/*  End of tmpl_Float_Copysign.                                               */
+/*  End of tmpl_LDouble_Copysign.                                             */
+
+#else
+/*  No IEEE-754 support, or double-double implemented. Use portable method.   */
 
 /*  Long double precision copysign function.                                  */
 long double tmpl_LDouble_Copysign(long double x, long double y)
@@ -122,4 +126,10 @@ long double tmpl_LDouble_Copysign(long double x, long double y)
 
     return out;
 }
-/*  End of tmpl_LDouble_Copysign.                                      */
+/*  End of tmpl_LDouble_Copysign.                                             */
+
+#endif
+/*  End of check for TMPL_LDOUBLE_ENDIANNESS.                                 */
+
+#endif
+/*  End of #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.             */

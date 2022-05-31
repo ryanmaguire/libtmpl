@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -41,11 +41,12 @@ int main(void)
 {
     /*  Declare necessary variables.                                          */
     double temp, x, y;
-    unsigned long int m, n;
+    double *z0, *z1;
+    size_t m, n;
     clock_t t1, t2;
 
     /*  We'll do our time test with a square of 1000x1000 points.             */
-    const unsigned long int N = 1000L;
+    const size_t N = 1000L;
 
     /*  We'll have the variables range from -10 to 10.                        */
     const double start = -10.0;
@@ -59,9 +60,22 @@ int main(void)
     double max_err = 0.0;
 
     /*  Allocate memory for the two pointers we've declared.                  */
-    double *z0 = malloc(sizeof(*z0) * N * N);
-    double *z1 = malloc(sizeof(*z1) * N * N);
+    z0 = malloc(sizeof(*z0) * N * N);
 
+    if (!z0)
+    {
+        puts("malloc returned NULL for z0. Aborting.");
+        return -1;
+    }
+
+    z1 = malloc(sizeof(*z1) * N * N);
+
+    if (!z1)
+    {
+        puts("malloc returned NULL for z1. Aborting.");
+        free(z0);
+        return -1;
+    }
 
     /*  Set x and y to the starting value and grab the current time.          */
     x = start;
@@ -78,6 +92,7 @@ int main(void)
         }
         /*  End of y for-loop.                                                */
         x += dx;
+        y = start;
     }
     /*  End of x for-loop.                                                    */
 
@@ -87,7 +102,7 @@ int main(void)
     /*  t2-t1 is the number of clock cycles that have passed between grabbing *
      *  t1 and t2. To convert this to second, use the macro CLOCKS_PER_SEC    *
      *  provided in time.h.                                                   */
-    printf("C99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
+    printf("C99:     %f\n", (double)(t2-t1)/(double)CLOCKS_PER_SEC);
 
     /*  Restart the computation for the libtmpl function.                     */
     x = start;
@@ -105,19 +120,20 @@ int main(void)
             y += dy;
         }
         x += dx;
+        y = start;
     }
 
     /*  Grab the time again.                                                  */
     t2 = clock();
 
     /*  Print out how long it took for libtmpl to compute.                    */
-    printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
+    printf("libtmpl: %f\n", (double)(t2-t1)/(double)CLOCKS_PER_SEC);
 
     /*  NOTE:                                                                 *
-     *      Without the following comparison of the two pointers y0 and y1,   *
+     *      Without the following comparison of the two pointers z0 and z1,   *
      *      some compilers may see the above computations as redundant with   *
      *      optimization on, and skip them. The resulting times will be close *
-     *      to zero for both fabs and tmpl_Double_Abs.                        */
+     *      to zero for both copysign and tmpl_Double_Copysign.               */
 
     /*  Compute the maximum absolute error between libtmpl and C99.           */
     for (m=0; m<N; ++m)
@@ -132,10 +148,10 @@ int main(void)
                 max_err = temp;
         }
     }
-    /*  End of for loop computing |y0-y1|.                                    */
+    /*  End of for loop computing |z0-z1|.                                    */
 
-    /*  Print out the error to 16 decimals (assumes 64-bit precision).        */
-    printf("max error: %.16f\n", max_err);
+    /*  Print out the maximum absolute error. Relative error not computed.    */
+    printf("max error: %.8e\n", max_err);
 
     /*  Free the pointers we've malloc'd.                                     */
     free(z0);
