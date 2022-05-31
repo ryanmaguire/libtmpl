@@ -1135,9 +1135,154 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
  *      double z:                                                             *
  *          The value sgn(y) * |x|.                                           *
  ******************************************************************************/
+
+/*  These functions are small enough that it's worth-while inlining them.     */
+#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+
+/*  With IEEE-754 support we can skip if-then statements.                     */
+#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
+
+/*  Single precision copysign function.                                       */
+static inline float tmpl_Float_Copysign(float x, float y)
+{
+    tmpl_IEEE754_Float wx, wy;
+
+    wx.r = x;
+    wy.r = y;
+    wx.bits.sign = wy.bits.sign;
+    return wx.r;
+}
+/*  End of tmpl_Float_Copysign.                                               */
+
+#else
+/*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1        */
+
+/*  Float precision copysign function.                                        */
+static inline float tmpl_Float_Copysign(float x, float y)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    float out;
+
+    /*  If y is negative, compute -|x|.                                       */
+    if (y < 0.0F)
+        out = -tmpl_Float_Abs(x);
+
+    /*  If y is positive, compute |x|.                                        */
+    else if (0.0F < y)
+        out = tmpl_Float_Abs(x);
+
+    /*  And lastly, if y is zero, return zero.                                */
+    else
+        out = 0.0F;
+
+    return out;
+}
+/*  End of tmpl_Float_Copysign.                                               */
+
+#endif
+/*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.       */
+
+/*  With IEEE-754 support we can skip if-then statements.                     */
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+
+/*  Double precision copysign function.                                       */
+static inline double tmpl_Double_Copysign(double x, double y)
+{
+    tmpl_IEEE754_Double wx, wy;
+
+    wx.r = x;
+    wy.r = y;
+    wx.bits.sign = wy.bits.sign;
+    return wx.r;
+}
+/*  End of tmpl_Double_Copysign.                                              */
+
+#else
+/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1      */
+
+/*  Double precision copysign function.                                       */
+static inline double tmpl_Double_Copysign(double x, double y)
+{
+    /*  If y is negative, compute -|x|.                                       */
+    if (y < 0.0)
+        return -tmpl_Double_Abs(x);
+
+    /*  If y is positive, compute |x|.                                        */
+    else if (0.0 < y)
+        return tmpl_Double_Abs(x);
+
+    /*  And lastly, if y is zero, return x.                                   */
+    else
+        return x;
+}
+/*  End of tmpl_Double_Copysign.                                              */
+
+#endif
+/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
+
+/*  64-bit double, 80-bit extended, and 128-bit quadruple implementations of  *
+ *  long double all have a "sign" bit. We can just copy this from y to x.     *
+ *  double-double is a bit more complicated.                                  */
+#if \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
+
+/*  Double precision copysign function.                                       */
+static inline long double tmpl_LDouble_Copysign(long double x, long double y)
+{
+    tmpl_IEEE754_LDouble wx, wy;
+
+    wx.r = x;
+    wy.r = y;
+    wx.bits.sign = wy.bits.sign;
+    return wx.r;
+}
+/*  End of tmpl_LDouble_Copysign.                                             */
+
+#else
+/*  No IEEE-754 support, or double-double implemented. Use portable method.   */
+
+/*  Long double precision copysign function.                                  */
+static inline long double tmpl_LDouble_Copysign(long double x, long double y)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    long double out;
+
+    /*  If y is negative, compute -|x|.                                       */
+    if (y < 0.0L)
+        out = -tmpl_LDouble_Abs(x);
+
+    /*  If y is positive, compute |x|.                                        */
+    else if (0.0L < y)
+        out = tmpl_LDouble_Abs(x);
+
+    /*  And lastly, if y is zero, return zero.                                */
+    else
+        out = 0.0L;
+
+    return out;
+}
+/*  End of tmpl_LDouble_Copysign.                                             */
+
+#endif
+/*  End of check for TMPL_LDOUBLE_ENDIANNESS.                                 */
+
+#else
+/*  End of #if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1               */
+
+/*  No inline support requested.                                              */
 extern float tmpl_Float_Copysign(float x, float y);
 extern double tmpl_Double_Copysign(double x, double y);
 extern long double tmpl_LDouble_Copysign(long double x, long double y);
+
+#endif
+/*  End of #if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1.              */
 
 /******************************************************************************
  *  Function:                                                                 *
