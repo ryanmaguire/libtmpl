@@ -31,7 +31,7 @@ static size_t memsize(void)
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
-    return (size_t)(1024ULL * status.ullTotalPhys);
+    return (size_t)(status.ullTotalPhys);
 }
 #else
 #include <unistd.h>
