@@ -23,7 +23,7 @@
 #include <time.h>
 #include <float.h>
 
-#ifndef TMPL_USING_CHROOT
+#ifndef TMPL_NSAMPS
 #ifdef _MSC_VER
 #include <windows.h>
 static size_t memsize(void)
@@ -44,7 +44,7 @@ static size_t memsize(void)
 #endif
 #define NSAMPS(a) (4*memsize()/(5*sizeof(a)))
 #else
-#define NSAMPS(a) 60000000
+#define NSAMPS(a) TMPL_NSAMPS
 #endif
 
 #define RAND_REAL(type, val)                                                   \
