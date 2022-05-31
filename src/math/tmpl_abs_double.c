@@ -51,89 +51,14 @@
  *      The absolute value can be computed by setting s to 0. Note, this      *
  *      method will work for NaN and inf, and the output will be              *
  *      "positive" NaN and positive infinity, respectively.                   *
- *                                                                            *
  *      If IEEE-754 is not supported, an if-then statement to check if the    *
  *      input is positive, returning x for non-negative and -x otherwise.     *
- *                                                                            *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
  *      +/- NaN (which is still NaN). This is because NaN always              *
  *      evaluates to false when a comparison is made (==, <, >, etc.).        *
  *                                                                            *
- *  Accuracy and Performance:                                                 *
- *                                                                            *
- *      A time and accuracy test against glibc yields the following:          *
- *                                                                            *
- *          Using IEEE-754 method, no inline:                                 *
- *                                                                            *
- *          tmpl_Double_Abs vs. fabs                                          *
- *          start:   -1.0000000000000000e+06                                  *
- *          end:     1.0000000000000000e+06                                   *
- *          samples: 2615628245                                               *
- *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 6.568381 seconds                                         *
- *          C:       3.232928 seconds                                         *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *          Using if-then method, no inline:                                  *
- *                                                                            *
- *          tmpl_Double_Abs vs. fabs                                          *
- *          start:   -1.0000000000000000e+06                                  *
- *          end:     1.0000000000000000e+06                                   *
- *          samples: 2615628245                                               *
- *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 6.731640 seconds                                         *
- *          C:       3.227992 seconds                                         *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *          Using IEEE-754 method, inlined:                                   *
- *                                                                            *
- *          tmpl_Double_Abs vs. fabs                                          *
- *          start:   -1.0000000000000000e+06                                  *
- *          end:     1.0000000000000000e+06                                   *
- *          samples: 2615628245                                               *
- *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 2.966662 seconds                                         *
- *          C:       3.243483 seconds                                         *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *          Using if-then method, inlined:                                    *
- *                                                                            *
- *          tmpl_Double_Abs vs. fabs                                          *
- *          start:   -1.0000000000000000e+06                                  *
- *          end:     1.0000000000000000e+06                                   *
- *          samples: 2615628245                                               *
- *          dx:      7.6463465472326707e-04                                   *
- *          libtmpl: 3.139752 seconds                                         *
- *          C:       3.236421 seconds                                         *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *      Since the absolute value function is so small, it is worth inlining.  *
- *      This is the default behavior of the Makefile.                         *
- *                                                                            *
- *      These tests were performed with the following specs:                  *
- *                                                                            *
- *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MIN:  2200.0000 MHz                                               *
- *          MAX:  4672.0698 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
- *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
- *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
+ *      Benchmarks can be found at the end of this file.                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -144,21 +69,6 @@
  *  3.) math.h:                                                               *
  *          Only included if libtmpl algorithms have not been requested. This *
  *          file contains the fabs function.                                  *
- ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                             A FRIENDLY WARNING                             *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -251,3 +161,76 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /*  End of #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.             */
+
+/******************************************************************************
+ *                                 BENCHMARKS                                 *
+ ******************************************************************************
+ *  Using IEEE-754 method, no inline:                                         *
+ *      tmpl_Double_Abs vs. fabs                                              *
+ *      start:   -1.0000000000000000e+06                                      *
+ *      end:     1.0000000000000000e+06                                       *
+ *      samples: 2248155955                                                   *
+ *      dx:      8.8961799805387608e-04                                       *
+ *      libtmpl: 4.963484 seconds                                             *
+ *      C:       2.536102 seconds                                             *
+ *      max abs error: 0.0000000000000000e+00                                 *
+ *      max rel error: 0.0000000000000000e+00                                 *
+ *      rms abs error: 0.0000000000000000e+00                                 *
+ *      rms rel error: 0.0000000000000000e+00                                 *
+ *                                                                            *
+ *  Using if-then method, no inline:                                          *
+ *      tmpl_Double_Abs vs. fabs                                              *
+ *      start:   -1.0000000000000000e+06                                      *
+ *      end:     1.0000000000000000e+06                                       *
+ *      samples: 2248155955                                                   *
+ *      dx:      8.8961799805387608e-04                                       *
+ *      libtmpl: 4.990012 seconds                                             *
+ *      C:       2.526875 seconds                                             *
+ *      max abs error: 0.0000000000000000e+00                                 *
+ *      max rel error: 0.0000000000000000e+00                                 *
+ *      rms abs error: 0.0000000000000000e+00                                 *
+ *      rms rel error: 0.0000000000000000e+00                                 *
+ *                                                                            *
+ *  Using IEEE-754 method, inlined:                                           *
+ *      tmpl_Double_Abs vs. fabs                                              *
+ *      start:   -1.0000000000000000e+06                                      *
+ *      end:     1.0000000000000000e+06                                       *
+ *      samples: 2248155955                                                   *
+ *      dx:      8.8961799805387608e-04                                       *
+ *      libtmpl: 2.506179 seconds                                             *
+ *      C:       2.525563 seconds                                             *
+ *      max abs error: 0.0000000000000000e+00                                 *
+ *      max rel error: 0.0000000000000000e+00                                 *
+ *      rms abs error: 0.0000000000000000e+00                                 *
+ *      rms rel error: 0.0000000000000000e+00                                 *
+ *                                                                            *
+ *  Using if-then method, inlined:                                            *
+ *      tmpl_Double_Abs vs. fabs                                              *
+ *      start:   -1.0000000000000000e+06                                      *
+ *      end:     1.0000000000000000e+06                                       *
+ *      samples: 2248155955                                                   *
+ *      dx:      8.8961799805387608e-04                                       *
+ *      libtmpl: 2.688390 seconds                                             *
+ *      C:       2.531980 seconds                                             *
+ *      max abs error: 0.0000000000000000e+00                                 *
+ *      max rel error: 0.0000000000000000e+00                                 *
+ *      rms abs error: 0.0000000000000000e+00                                 *
+ *      rms rel error: 0.0000000000000000e+00                                 *
+ *                                                                            *
+ *  Since the absolute value function is so small, it is worth inlining.      *
+ *  This is the default behavior of the Makefile.                             *
+ *                                                                            *
+ *  These tests were performed with the following specs:                      *
+ *                                                                            *
+ *      CPU:  AMD Ryzen 3900 12-core                                          *
+ *      MIN:  2200.0000 MHz                                                   *
+ *      MAX:  4672.0698 MHz                                                   *
+ *      ARCH: x86_64                                                          *
+ *      RAM:  Ripjaw DDR4-3600 16GBx4                                         *
+ *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
+ *      OS:   Debian 11 (Bullseye) GNU/LINUX                                  *
+ *                                                                            *
+ *  Performance will of course vary on different systems.                     *
+ *  Other architectures and operating systems have been tested via emulation, *
+ *  virtual machines, and equipment loaned from the Dartmouth Math Department.*
+ ******************************************************************************/
