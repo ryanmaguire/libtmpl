@@ -91,6 +91,8 @@
  *  2022/05/05: Ryan Maguire                                                  *
  *      Adding inline support. This is about 2x faster. It is now the default *
  *      configuration in the Makefile.                                        *
+ *  2022/05/31: Ryan Maguire                                                  *
+ *      Added benchmarks.                                                     *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -183,10 +185,9 @@ double tmpl_Double_Abs(double x)
  *      MAX:  4672.0698 MHz                                                   *
  *      RAM:  Ripjaw DDR4-3600 16GBx4                                         *
  *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
+ *      ARCH: x86_64                                                          *
  *      OS:   Debian 11 (Bullseye) GNU/LINUX                                  *
- ******************************************************************************
- *  ARCH: x86_64                                                              *
- *  COMPILERS:                                                                *
+ *  Compilers:                                                                *
  *      Debian clang version 11.0.1-2                                         *
  *      gcc (Debian 10.2.1-6) 10.2.1 20210110                                 *
  *      tcc version 0.9.27 (x86_64 Linux)                                     *
@@ -194,66 +195,33 @@ double tmpl_Double_Abs(double x)
  ******************************************************************************
  *  IEEE-754 method             not inlined      | inlined                    *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   4.963484 seconds | 2.506179 seconds           *
+ *      libtmpl (clang build):  4.963484 seconds | 2.506179 seconds           *
  *      clang:                  2.536102 seconds | 2.525563 seconds           *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build)     5.422638 seconds | 2.726815 seconds           *
+ *      libtmpl (gcc build):    5.422638 seconds | 2.726815 seconds           *
  *      gcc:                    2.632450 seconds | 2.625470 seconds           *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (pcc build)     15.24091 seconds | 15.50274 seconds           *
+ *      libtmpl (pcc build):    15.24091 seconds | 15.50274 seconds           *
  *      pcc:                     5.02499 seconds |  5.46952 seconds           *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (tcc build)     17.28096 seconds | 16.79033 seconds           *
+ *      libtmpl (tcc build):    17.28096 seconds | 16.79033 seconds           *
  *      tcc:                     7.19646 seconds |  6.95061 seconds           *
  *  ------------------------------------------------------------------------  *
  *  If-Then method              not inlined      | inlined                    *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   4.990012 seconds | 2.688390 seconds           *
+ *      libtmpl (clang build):  4.990012 seconds | 2.688390 seconds           *
  *      clang:                  2.526875 seconds | 2.531980 seconds           *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build)     5.378256 seconds | 2.733715 seconds           *
+ *      libtmpl (gcc build):    5.378256 seconds | 2.733715 seconds           *
  *      gcc:                    2.659658 seconds | 2.642936 seconds           *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (pcc build)     5.708692 seconds | 3.214009 seconds           *
+ *      libtmpl (pcc build):    5.708692 seconds | 3.214009 seconds           *
  *      pcc:                    5.009721 seconds | 5.510774 seconds           *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (tcc build)     8.084143 seconds | 7.593651 seconds           *
+ *      libtmpl (tcc build):    8.084143 seconds | 7.593651 seconds           *
  *      tcc:                    7.203836 seconds | 7.081540 seconds           *
  *  ------------------------------------------------------------------------  *
  ******************************************************************************
- *  ARCH: aarch64 (Emulated via chroot)                                       *
- *  COMPILERS:                                                                *
- *      Debian clang version 11.0.1-2                                         *
- *      gcc (Debian 10.2.1-6) 10.2.1 20210110                                 *
- *      tcc version 0.9.27 (AArch64 Linux)                                    *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   38.31731 seconds | 6.368922 seconds           *
- *      clang:                   6.05944 seconds | 5.986012 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build)     15.81969 seconds | 7.224735 seconds           *
- *      gcc:                     6.76426 seconds | 6.773479 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (tcc build)     53.83217 seconds | 55.09154 seconds           *
- *      tcc:                    46.80939 seconds | 47.20698 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   45.23494 seconds | 11.68556 seconds           *
- *      clang:                   5.93732 seconds |  5.93398 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build)     47.31801 seconds | 15.79024 seconds           *
- *      gcc:                     6.72181 seconds |  6.76404 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (tcc build)     83.92462 seconds | 66.74302 seconds           *
- *      tcc:                    47.92783 seconds | 47.02266 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************/
-
-/******************************************************************************
- *                                 BENCHMARKS                                 *
- ******************************************************************************
  *  Test Parameters:                                                          *
  *      tmpl_Double_Abs vs. fabs                                              *
  *      start:   -1.0000000000000000e+06                                      *
@@ -270,63 +238,21 @@ double tmpl_Double_Abs(double x)
  *      Apple MacBook Air, 2020                                               *
  *      CPU:  Apple M1                                                        *
  *      RAM:  LPDDR4, 16GB                                                    *
+ *      ARCH: arm64                                                           *
  *      OS:   macOS Monterey, 12.3                                            *
- ******************************************************************************
- *  ARCH: arm64                                                               *
- *  COMPILERS:                                                                *
+ *  Compilers:                                                                *
  *      Apple clang version 12.0.5 (clang-1205.0.22.9)                        *
  ******************************************************************************
  *  IEEE-754 method             not inlined      | inlined                    *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   1.034541 seconds | 0.433286 seconds           *
+ *      libtmpl (clang build):  1.034541 seconds | 0.433286 seconds           *
  *      clang:                  0.537182 seconds | 0.595746 seconds           *
  *  ------------------------------------------------------------------------  *
  *  If-Then method              not inlined      | inlined                    *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   1.034140 seconds | 0.437655 seconds           *
+ *      libtmpl (clang build):  1.034140 seconds | 0.437655 seconds           *
  *      clang:                  0.522405 seconds | 0.509519 seconds           *
  *  ------------------------------------------------------------------------  *
- ******************************************************************************/
-
-/******************************************************************************
- *                                 BENCHMARKS                                 *
- ******************************************************************************
- *  Test Parameters:                                                          *
- *      tmpl_Double_Abs vs. fabs                                              *
- *      start:   -1.0000000000000000e+06                                      *
- *      end:      1.0000000000000000e+06                                      *
- *      samples:  572882306                                                   *
- *      dx:       3.4911184706758946e-03                                      *
- *  Test Results:                                                             *
- *      max abs error: 0.0000000000000000e+00                                 *
- *      max rel error: 0.0000000000000000e+00                                 *
- *      rms abs error: 0.0000000000000000e+00                                 *
- *      rms rel error: 0.0000000000000000e+00                                 *
- ******************************************************************************
- *  Specs:                                                                    *
- *      Apple MacBook Air, 2020                                               *
- *      CPU:  Apple M1                                                        *
- *      RAM:  LPDDR4, 16GB                                                    *
- *      OS:   macOS Monterey, 12.3                                            *
- ******************************************************************************
- *  ARCH: arm64                                                               *
- *  COMPILERS:                                                                *
- *      Apple clang version 12.0.5 (clang-1205.0.22.9)                        *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   1.034541 seconds | 0.433286 seconds           *
- *      clang:                  0.537182 seconds | 0.595746 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   1.034140 seconds | 0.437655 seconds           *
- *      clang:                  0.522405 seconds | 0.509519 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************/
-
-/******************************************************************************
- *                                 BENCHMARKS                                 *
  ******************************************************************************
  *  Test Parameters:                                                          *
  *      tmpl_Double_Abs vs. fabs                                              *
@@ -344,20 +270,101 @@ double tmpl_Double_Abs(double x)
  *      Apple MacBook Pro Retina, 2015                                        *
  *      CPU:  2.2 GHz Quad-Core Intel Core i7                                 *
  *      RAM:  16GB 1600MHz DDR3                                               *
+ *      ARCH: x86_64                                                          *
  *      OS:   macOS Big Sur, 11.6.5                                           *
- ******************************************************************************
- *  ARCH: x86_64                                                              *
- *  COMPILERS:                                                                *
+ *  Compilers:                                                                *
  *      Apple clang version 13.0.0 (clang-1300.0.29.30)                       *
  ******************************************************************************
  *  IEEE-754 method             not inlined      | inlined                    *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   2.960274 seconds | 2.076615 seconds           *
+ *      libtmpl (clang build):  2.960274 seconds | 2.076615 seconds           *
  *      clang:                  2.307846 seconds | 2.516832 seconds           *
  *  ------------------------------------------------------------------------  *
  *  If-Then method              not inlined      | inlined                    *
  *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build)   3.086965 seconds | 2.225832 seconds           *
+ *      libtmpl (clang build):  3.086965 seconds | 2.225832 seconds           *
  *      clang:                  2.119420 seconds | 2.125722 seconds           *
+ *  ------------------------------------------------------------------------  *
+ ******************************************************************************
+ *  Test Parameters:                                                          *
+ *      tmpl_Double_Abs vs. fabs                                              *
+ *      start:   -1.0000000000000000e+06                                      *
+ *      end:      1.0000000000000000e+06                                      *
+ *      samples:  1146459067                                                  *
+ *      dx:       1.7445018819847670e-03                                      *
+ *  Test Results:                                                             *
+ *      max abs error: 0.0000000000000000e+00                                 *
+ *      max rel error: 0.0000000000000000e+00                                 *
+ *      rms abs error: 0.0000000000000000e+00                                 *
+ *      rms rel error: 0.0000000000000000e+00                                 *
+ ******************************************************************************
+ *  Specs:                                                                    *
+ *      CPU:  AMD Ryzen 9 3900X 12-Core Processor                             *
+ *      MIN:  2200.0000 MHz                                                   *
+ *      MAX:  4672.0698 MHz                                                   *
+ *      RAM:  Ripjaw DDR4-3600 16GBx2                                         *
+ *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
+ *      ARCH: x86_64                                                          *
+ *      OS:   Windows 10 (GNOME Boxes Virtual Machine)                        *
+ *  Compilers:                                                                *
+ *      Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64   *
+ *      clang version 13.0.1 x86_64-pc-windows-msvc                           *
+ ******************************************************************************
+ *  IEEE-754 method             not inlined      | inlined                    *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (MSVC build):   3.120000 seconds | 7.963000 seconds           *
+ *      MSVC:                   2.536000 seconds | 2.461000 seconds           *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (clang build):  3.349000 seconds | 1.995000 seconds           *
+ *      clang:                  2.764000 seconds | 3.132000 seconds           *
+ *  ------------------------------------------------------------------------  *
+ *  If-Then method              not inlined      | inlined                    *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (MSVC build):   3.283000 seconds | 2.253000 seconds           *
+ *      MSVC:                   3.040000 seconds | 2.911000 seconds           *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (clang build):  2.404000 seconds | 2.266000 seconds           *
+ *      clang:                  3.020000 seconds | 3.331000 seconds           *
+ *  ------------------------------------------------------------------------  *
+ ******************************************************************************
+ *  Test Parameters:                                                          *
+ *      tmpl_Double_Abs vs. fabs                                              *
+ *      start:   -1.0000000000000000e+06                                      *
+ *      end:      1.0000000000000000e+06                                      *
+ *      samples:  1145026150                                                  *
+ *      dx:       1.7466849992901908e-03                                      *
+ *  Test Results:                                                             *
+ *      max abs error: 0.0000000000000000e+00                                 *
+ *      max rel error: 0.0000000000000000e+00                                 *
+ *      rms abs error: 0.0000000000000000e+00                                 *
+ *      rms rel error: 0.0000000000000000e+00                                 *
+ ******************************************************************************
+ *  Specs:                                                                    *
+ *      CPU:  AMD Ryzen 9 3900X 12-Core Processor                             *
+ *      MIN:  2200.0000 MHz                                                   *
+ *      MAX:  4672.0698 MHz                                                   *
+ *      RAM:  Ripjaw DDR4-3600 16GBx2                                         *
+ *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
+ *      ARCH: x86_64                                                          *
+ *      OS:   FreeBSD 13.1 (GNOME Boxes Virtual Machine)                      *
+ *  Compilers:                                                                *
+ *      FreeBSD clang version 13.0.0                                          *
+ *      gcc FreeBSD Ports Collection 10.3.0                                   *
+ ******************************************************************************
+ *  IEEE-754 method             not inlined      | inlined                    *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (clang build):  3.531250 seconds | 2.007812 seconds           *
+ *      clang:                  2.015625 seconds | 2.046875 seconds           *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (gcc build):    3.718750 seconds | 2.234375 seconds           *
+ *      gcc:                    2.023438 seconds | 2.007812 seconds           *
+ *  ------------------------------------------------------------------------  *
+ *  If-Then method              not inlined      | inlined                    *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (clang build):  3.757812 seconds | 2.281250 seconds           *
+ *      clang:                  2.031260 seconds | 2.046875 seconds           *
+ *  ------------------------------------------------------------------------  *
+ *      libtmpl (gcc build):    3.914620 seconds | 2.156250 seconds           *
+ *      gcc:                    2.078125 seconds | 2.085938 seconds           *
  *  ------------------------------------------------------------------------  *
  ******************************************************************************/
