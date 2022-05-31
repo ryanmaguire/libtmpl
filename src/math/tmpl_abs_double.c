@@ -271,16 +271,19 @@ double tmpl_Double_Abs(double x)
  *                                                                            *
  *  These tests were performed with the following specs:                      *
  *                                                                            *
- *      CPU:      AMD Ryzen 3900 12-core                                      *
- *      MIN:      2200.0000 MHz                                               *
- *      MAX:      4672.0698 MHz                                               *
- *      ARCH:     x86_64                                                      *
- *      RAM:      Ripjaw DDR4-3600 16GBx4                                     *
- *      MB:       Gigabyte Aorus x570 Elite WiFi                              *
- *      OS:       Debian 11 (Bullseye) GNU/LINUX                              *
+ *      CPU:  AMD Ryzen 3900 12-core                                          *
+ *      MIN:  2200.0000 MHz                                                   *
+ *      MAX:  4672.0698 MHz                                                   *
+ *      ARCH: x86_64                                                          *
+ *      RAM:  Ripjaw DDR4-3600 16GBx4                                         *
+ *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
+ *      OS:   Debian 11 (Bullseye) GNU/LINUX                                  *
  *                                                                            *
  *      COMPILERS:                                                            *
  *          Debian clang version 11.0.1-2                                     *
+ *          gcc (Debian 10.2.1-6) 10.2.1 20210110                             *
+ *          tcc version 0.9.27 (x86_64 Linux)                                 *
+ *          Portable C Compiler 1.2.0.DEVEL 20200630 for x86_64-pc-linux-gnu  *
  *                                                                            *
  *  Performance will of course vary on different systems.                     *
  ******************************************************************************/
