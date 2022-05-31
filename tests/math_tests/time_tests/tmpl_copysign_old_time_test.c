@@ -46,7 +46,7 @@ int main(void)
     clock_t t1, t2;
 
     /*  We'll do our time test with a square of 1000x1000 points.             */
-    const size_t N = 1000L;
+    const size_t N = 10000L;
 
     /*  We'll have the variables range from -10 to 10.                        */
     const double start = -10.0;
