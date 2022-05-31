@@ -1160,22 +1160,8 @@ static inline float tmpl_Float_Copysign(float x, float y)
 /*  Float precision copysign function.                                        */
 static inline float tmpl_Float_Copysign(float x, float y)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float out;
-
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0F)
-        out = -tmpl_Float_Abs(x);
-
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0F < y)
-        out = tmpl_Float_Abs(x);
-
-    /*  And lastly, if y is zero, return zero.                                */
-    else
-        out = 0.0F;
-
-    return out;
+    x = tmpl_Float_Abs(x);
+    return (y < 0.0F ? -x : x);
 }
 /*  End of tmpl_Float_Copysign.                                               */
 
@@ -1203,17 +1189,8 @@ static inline double tmpl_Double_Copysign(double x, double y)
 /*  Double precision copysign function.                                       */
 static inline double tmpl_Double_Copysign(double x, double y)
 {
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0)
-        return -tmpl_Double_Abs(x);
-
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0 < y)
-        return tmpl_Double_Abs(x);
-
-    /*  And lastly, if y is zero, return x.                                   */
-    else
-        return x;
+    x = tmpl_Double_Abs(x);
+    return (y < 0.0 ? -x : x);
 }
 /*  End of tmpl_Double_Copysign.                                              */
 
@@ -1251,22 +1228,8 @@ static inline long double tmpl_LDouble_Copysign(long double x, long double y)
 /*  Long double precision copysign function.                                  */
 static inline long double tmpl_LDouble_Copysign(long double x, long double y)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double out;
-
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0L)
-        out = -tmpl_LDouble_Abs(x);
-
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0L < y)
-        out = tmpl_LDouble_Abs(x);
-
-    /*  And lastly, if y is zero, return zero.                                */
-    else
-        out = 0.0L;
-
-    return out;
+    x = tmpl_LDouble_Abs(x);
+    return (y < 0.0L ? -x : x);
 }
 /*  End of tmpl_LDouble_Copysign.                                             */
 

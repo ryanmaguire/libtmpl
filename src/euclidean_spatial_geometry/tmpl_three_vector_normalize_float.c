@@ -179,7 +179,7 @@ tmpl_ThreeVectorFloat tmpl_3DFloat_Normalize(tmpl_ThreeVectorFloat P)
         tmpl_Float_Is_NaN_Or_Inf(P.dat[2]))
     {
         /*  If any component is NaN or Inf, the output is NaN.                */
-        const float nanval = TMPL_NAN;
+        const float nanval = TMPL_NANF;
         P_normalized.dat[0] = nanval;
         P_normalized.dat[1] = nanval;
         P_normalized.dat[2] = nanval;
@@ -202,7 +202,7 @@ tmpl_ThreeVectorFloat tmpl_3DFloat_Normalize(tmpl_ThreeVectorFloat P)
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0F)
     {
-        const float nanval = TMPL_NAN;
+        const float nanval = TMPL_NANF;
         P_normalized.dat[0] = nanval;
         P_normalized.dat[1] = nanval;
         P_normalized.dat[2] = nanval;

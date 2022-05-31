@@ -54,6 +54,9 @@ USEINLINE=0
 # Whether or not to use libtmpl's implementation of libm.
 USEMATH=1
 
+# Use of the IEEE-754 floating point format.
+USEIEEE=1
+
 # You can pass extra arguments. Just add -MyArgument.
 ExtraArgs=""
 
@@ -86,6 +89,9 @@ for arg in "$@"; do
 
     elif [ "$arg" == "-nomath" ]; then
         USEMATH=0
+
+    elif [ "$arg" == "-noieee" ]; then
+        USEIEEE=0
 
     # Check for any extra arguments.
     else
@@ -134,6 +140,10 @@ fi
 
 if [ $USEMATH == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MATH_TRUE"
+fi
+
+if [ $USEIEEE == 0 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_SET_TMPL_USE_IEEE_FALSE"
 fi
 
 # Name of the created Shared Object file (.so).
