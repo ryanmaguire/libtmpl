@@ -37,6 +37,33 @@
 /*  Needed for malloc.                                                        */
 #include <stdlib.h>
 
+#ifndef TMPL_USING_CHROOT
+#ifdef _MSC_VER
+#include <windows.h>
+static size_t memsize()
+{
+    MEMORYSTATUSEX status;
+    double out;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx(&status);
+    out = sqrt((double)status.ullTotalPhys);
+    return (size_t)out;
+}
+#else
+#include <unistd.h>
+static size_t memsize()
+{
+    long pages = sysconf(_SC_PHYS_PAGES);
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    double out = sqrt((double)(pages * page_size));
+    return (size_t)out;
+}
+#endif
+#define NSAMPS(a) (4*memsize()/(5*sizeof(a)))
+#else
+#define NSAMPS(a) 1000
+#endif
+
 int main(void)
 {
     /*  Declare necessary variables.                                          */
@@ -46,7 +73,7 @@ int main(void)
     clock_t t1, t2;
 
     /*  We'll do our time test with a square of 1000x1000 points.             */
-    const size_t N = 10000L;
+    const size_t N = NSAMPS(double);
 
     /*  We'll have the variables range from -10 to 10.                        */
     const double start = -10.0;
@@ -76,6 +103,9 @@ int main(void)
         free(z0);
         return -1;
     }
+
+    printf("tmpl_Double_Copysign vs. copysign\n");
+    printf("samples: %zu\n", N*N);
 
     /*  Set x and y to the starting value and grab the current time.          */
     x = start;
