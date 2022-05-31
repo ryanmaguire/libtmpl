@@ -26,7 +26,7 @@
 #ifndef TMPL_USING_CHROOT
 #ifdef _MSC_VER
 #include <windows.h>
-static size_t memsize()
+static size_t memsize(void)
 {
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
@@ -35,7 +35,7 @@ static size_t memsize()
 }
 #else
 #include <unistd.h>
-static size_t memsize()
+static size_t memsize(void)
 {
     long pages = sysconf(_SC_PHYS_PAGES);
     long page_size = sysconf(_SC_PAGE_SIZE);
