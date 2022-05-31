@@ -100,7 +100,7 @@ int main(void)                                                                 \
     printf(#f0 " vs. " #f1 "\n");                                              \
     printf("start:   %.16Le\n", (long double)start);                           \
     printf("end:     %.16Le\n", (long double)end);                             \
-    printf("samples: %zu\n", N);                                              \
+    printf("samples: %zu\n", N);                                               \
     printf("dx:      %.16Le\n", (long double)dx);                              \
                                                                                \
     x[0] = start;                                                              \
