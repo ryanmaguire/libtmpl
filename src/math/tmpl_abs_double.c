@@ -167,70 +167,120 @@ double tmpl_Double_Abs(double x)
  ******************************************************************************
  *  Using IEEE-754 method, no inline:                                         *
  *      tmpl_Double_Abs vs. fabs                                              *
+ *      -----------------------------------------                             *
  *      start:   -1.0000000000000000e+06                                      *
  *      end:     1.0000000000000000e+06                                       *
  *      samples: 2248155955                                                   *
  *      dx:      8.8961799805387608e-04                                       *
- *      libtmpl: 4.963484 seconds                                             *
- *      C:       2.536102 seconds                                             *
+ *      -----------------------------------------                             *
  *      max abs error: 0.0000000000000000e+00                                 *
  *      max rel error: 0.0000000000000000e+00                                 *
  *      rms abs error: 0.0000000000000000e+00                                 *
  *      rms rel error: 0.0000000000000000e+00                                 *
+ *      -----------------------------------------                             *
+ *      libtmpl: 4.963484 seconds (clang build)                               *
+ *      clang:   2.536102 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 5.422638 seconds (gcc build)                                 *
+ *      gcc:     2.632450 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 15.24091 seconds (pcc build)                                 *
+ *      pcc:     5.024999 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 17.28096 seconds (tcc build)                                 *
+ *      tcc:     7.196464 seconds                                             *
+ *      -----------------------------------------                             *
  *                                                                            *
  *  Using if-then method, no inline:                                          *
  *      tmpl_Double_Abs vs. fabs                                              *
+ *      -----------------------------------------                             *
  *      start:   -1.0000000000000000e+06                                      *
  *      end:     1.0000000000000000e+06                                       *
  *      samples: 2248155955                                                   *
  *      dx:      8.8961799805387608e-04                                       *
- *      libtmpl: 4.990012 seconds                                             *
- *      C:       2.526875 seconds                                             *
+ *      -----------------------------------------                             *
  *      max abs error: 0.0000000000000000e+00                                 *
  *      max rel error: 0.0000000000000000e+00                                 *
  *      rms abs error: 0.0000000000000000e+00                                 *
  *      rms rel error: 0.0000000000000000e+00                                 *
+ *      -----------------------------------------                             *
+ *      libtmpl: 4.990012 seconds (clang build)                               *
+ *      clang:   2.526875 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 5.378256 seconds (gcc build)                                 *
+ *      gcc:     2.659658 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 5.708692 seconds (pcc build)                                 *
+ *      pcc:     5.009721 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 8.084143 seconds (tcc build)                                 *
+ *      tcc:     7.203836 seconds                                             *
+ *      -----------------------------------------                             *
  *                                                                            *
  *  Using IEEE-754 method, inlined:                                           *
  *      tmpl_Double_Abs vs. fabs                                              *
+ *      -----------------------------------------                             *
  *      start:   -1.0000000000000000e+06                                      *
  *      end:     1.0000000000000000e+06                                       *
  *      samples: 2248155955                                                   *
  *      dx:      8.8961799805387608e-04                                       *
- *      libtmpl: 2.506179 seconds                                             *
- *      C:       2.525563 seconds                                             *
+ *      -----------------------------------------                             *
  *      max abs error: 0.0000000000000000e+00                                 *
  *      max rel error: 0.0000000000000000e+00                                 *
  *      rms abs error: 0.0000000000000000e+00                                 *
  *      rms rel error: 0.0000000000000000e+00                                 *
+ *      -----------------------------------------                             *
+ *      libtmpl: 2.506179 seconds (clang build)                               *
+ *      clang:   2.525563 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 2.726815 seconds (gcc build)                                 *
+ *      gcc:     2.625470 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 15.50274 seconds (pcc build)                                 *
+ *      pcc:     5.469525 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 16.79033 seconds (tcc build)                                 *
+ *      tcc:     6.950610 seconds                                             *
+ *      -----------------------------------------                             *
  *                                                                            *
  *  Using if-then method, inlined:                                            *
  *      tmpl_Double_Abs vs. fabs                                              *
+ *      -----------------------------------------                             *
  *      start:   -1.0000000000000000e+06                                      *
  *      end:     1.0000000000000000e+06                                       *
  *      samples: 2248155955                                                   *
  *      dx:      8.8961799805387608e-04                                       *
- *      libtmpl: 2.688390 seconds                                             *
- *      C:       2.531980 seconds                                             *
+ *      -----------------------------------------                             *
  *      max abs error: 0.0000000000000000e+00                                 *
  *      max rel error: 0.0000000000000000e+00                                 *
  *      rms abs error: 0.0000000000000000e+00                                 *
  *      rms rel error: 0.0000000000000000e+00                                 *
- *                                                                            *
- *  Since the absolute value function is so small, it is worth inlining.      *
- *  This is the default behavior of the Makefile.                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 2.688390 seconds (clang build)                               *
+ *      C:       2.531980 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 2.733715 seconds (gcc build)                                 *
+ *      gcc:     2.642936 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 3.214009 seconds (pcc build)                                 *
+ *      pcc:     5.510774 seconds                                             *
+ *      -----------------------------------------                             *
+ *      libtmpl: 7.593651 seconds (tcc build)                                 *
+ *      tcc:     7.081540 seconds                                             *
+ *      -----------------------------------------                             *
  *                                                                            *
  *  These tests were performed with the following specs:                      *
  *                                                                            *
- *      CPU:  AMD Ryzen 3900 12-core                                          *
- *      MIN:  2200.0000 MHz                                                   *
- *      MAX:  4672.0698 MHz                                                   *
- *      ARCH: x86_64                                                          *
- *      RAM:  Ripjaw DDR4-3600 16GBx4                                         *
- *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
- *      OS:   Debian 11 (Bullseye) GNU/LINUX                                  *
+ *      CPU:      AMD Ryzen 3900 12-core                                      *
+ *      MIN:      2200.0000 MHz                                               *
+ *      MAX:      4672.0698 MHz                                               *
+ *      ARCH:     x86_64                                                      *
+ *      RAM:      Ripjaw DDR4-3600 16GBx4                                     *
+ *      MB:       Gigabyte Aorus x570 Elite WiFi                              *
+ *      OS:       Debian 11 (Bullseye) GNU/LINUX                              *
+ *                                                                            *
+ *      COMPILERS:                                                            *
+ *          Debian clang version 11.0.1-2                                     *
  *                                                                            *
  *  Performance will of course vary on different systems.                     *
- *  Other architectures and operating systems have been tested via emulation, *
- *  virtual machines, and equipment loaned from the Dartmouth Math Department.*
  ******************************************************************************/
