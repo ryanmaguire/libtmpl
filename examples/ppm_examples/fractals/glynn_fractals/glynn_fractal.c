@@ -69,7 +69,7 @@ int main(void)
                     break;
             }
 
-            tmpl_Write_PPM_Color(fp, tmpl_RGB_Linear_Gradient((double)n, 0, maxIterations-1));
+            tmpl_PPM_Write_Color(fp, tmpl_PPM_Linear_Gradient((double)n, 0, maxIterations-1));
         }
     }
     return 0;

@@ -25,7 +25,7 @@ int main(void)
     unsigned int maxIterations = 256;
     tmpl_ComplexDouble z, e, mu;
 
-    const unsigned int size = 4*2048U;
+    const unsigned int size = 2048U;
     double red, green, blue;
     unsigned char r, g, b;
 
@@ -86,7 +86,7 @@ int main(void)
             g = (unsigned char)(255*green);
             b = (unsigned char)(255*blue);
 
-            tmpl_Write_PPM_Color_From_Values(r, g, b, fp);
+            tmpl_PPM_Write_Color_From_Values(fp, r, g, b);
         }
     }
     return 0;
