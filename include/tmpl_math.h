@@ -63,6 +63,10 @@
  *          is built with config.c in libtmpl/. The Makefile automatically    *
  *          runs this, as does the make.sh script. This also contains the     *
  *          TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.              *
+ *  3.) math.h:                                                               *
+ *          C standard library for math functions. This is only included if   *
+ *          TMPL_USE_MATH_ALGORITHMS is not set to one. The Makefile and      *
+ *          make.sh file set this macro to one by default.                    *
  ******************************************************************************
  *                             A NOTE ON COMMENTS                             *
  ******************************************************************************
@@ -74,7 +78,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/09/12: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
@@ -89,6 +93,8 @@
  *    exponent functions.                                                     *
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
+ *  2022/09/04: Ryan Maguire                                                  *
+ *      Moved abs and copysign inline functions to their own files.           *
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
@@ -103,10 +109,19 @@
  *  also found here.                                                          */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  This macro should be defined in tmpl_config.h. If not, there's an error.  */
+#if !defined(TMPL_USE_MATH_ALGORITHMS)
+
+/*  Abort compiling.                                                          */
+#error "tmpl_math.h: TMPL_USE_MATH_ALGORITHMS is undefined."
+
+/*  Check if libtmpl's implementation of libm is being used, or not.          */
+#elif TMPL_USE_MATH_ALGORITHMS != 1
+
 /*  If we're not using libtmpl's implementation of libm, include math.h.      */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
 #include <math.h>
 #endif
+/*  End of #if !defined(TMPL_USE_MATH_ALGORITHMS).                            */
 
 /*  The following comment block explains the IEEE-754 format. Those who know  *
  *  the format can skip it.                                                   */
