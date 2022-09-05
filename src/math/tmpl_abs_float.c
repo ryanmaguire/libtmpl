@@ -59,74 +59,16 @@
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
  *      +/- NaN (which is still NaN). This is because NaN always              *
  *      evaluates to false when a comparison is made (==, <, >, etc.).        *
- *                                                                            *
- *      A time and accuracy test against glibc yields the following:          *
- *                                                                            *
- *          Using IEEE-754 method:                                            *
- *                                                                            *
- *          tmpl_Float_Abs vs. fabsf                                          *
- *          start:   -1.0000000000000000e+06                                  *
- *          end:     1.0000000000000000e+06                                   *
- *          samples: 5220285568                                               *
- *          dx:      3.8312081596814096e-04                                   *
- *          libtmpl: 13.610260 seconds                                        *
- *          C:       10.325856 seconds                                        *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *          Using if-then method:                                             *
- *                                                                            *
- *          tmpl_Float_Abs vs. fabsf                                          *
- *          start:   -1.0000000000000000e+06                                  *
- *          end:     1.0000000000000000e+06                                   *
- *          samples: 5220285568                                               *
- *          dx:      3.8312081596814096e-04                                   *
- *          libtmpl: 14.481908 seconds                                        *
- *          C:       10.715710 seconds                                        *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *      fabsf is a built-in function, so I doubt software will be able to get *
- *      better performance.                                                   *
- *                                                                            *
- *      These tests were performed with the following specs:                  *
- *                                                                            *
- *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MIN:  2200.0000 MHz                                               *
- *          MAX:  4672.0698 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
- *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
- *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_USE_INLINE macro.                     *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  2.) math.h:                                                               *
+ *  3.) math.h:                                                               *
  *          Only included if libtmpl algorithms have not been requested. This *
  *          file contains the fabs function.                                  *
- ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                             A FRIENDLY WARNING                             *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -144,7 +86,15 @@
  *  2022/03/01: Ryan Maguire                                                  *
  *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
  *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *
+ *  2022/09/05: Ryan Maguire                                                  *
+ *      Added inline version.                                                 *
  ******************************************************************************/
+
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
 
 /*  Header file where the prototypes for the function is defined.             */
 #include <libtmpl/include/tmpl_math.h>
@@ -224,3 +174,6 @@ float tmpl_Float_Abs(float x)
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+
+#endif
+/*  #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.                    */
