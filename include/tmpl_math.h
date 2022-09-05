@@ -68,13 +68,6 @@
  *          TMPL_USE_MATH_ALGORITHMS is not set to one. The Makefile and      *
  *          make.sh file set this macro to one by default.                    *
  ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
@@ -785,6 +778,8 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *  Output:                                                                   *
  *      double abs_x:                                                         *
  *          The absolute value of x, |x|.                                     *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
  *  Source Code:                                                              *
  *      libtmpl/src/math/tmpl_abs_float.c                                     *
  *      libtmpl/src/math/tmpl_abs_double.c                                    *
