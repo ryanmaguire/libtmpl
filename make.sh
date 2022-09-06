@@ -201,13 +201,13 @@ if [ $INPLACE == 0 ]; then
     # Clear older header files.
     if [ -d "$INCLUDE_TARGET" ]; then
         echo "Clearing $INCLUDE_TARGET"
-        sudo rm -rf "$INCLUDE_TARGET";
+        rm -rf "$INCLUDE_TARGET";
     fi
 
     # Clear older library files.
     if [ -e "$SODIR/$SONAME" ]; then
         echo "Erasing $SODIR/$SONAME"
-        sudo rm -f "$SODIR/$SONAME";
+        rm -f "$SODIR/$SONAME";
     fi
 fi
 
@@ -260,12 +260,12 @@ if [ $INPLACE == 0 ]; then
 
     # Copy the header files to the appropriate directory.
     echo "Copying include/ directory to $INCLUDE_TARGET"
-    sudo mkdir -p "$INCLUDE_TARGET"
-    sudo cp ./include/*.h "$INCLUDE_TARGET"
+    mkdir -p "$INCLUDE_TARGET"
+    cp ./include/*.h "$INCLUDE_TARGET"
 
     # Move the shared object file to the appropriate directory.
     echo "Moving $SONAME to $SODIR"
-    sudo mv $SONAME $SODIR
+    mv $SONAME $SODIR
 fi
 
 echo "Cleaning up"
