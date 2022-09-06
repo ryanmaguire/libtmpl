@@ -39,13 +39,12 @@ fi
 
 echo -e "    Removing include directory if it exists..."
 if [ -d "$INCLUDE_TARGET" ]; then
-    sudo rm -rf "$INCLUDE_TARGET";
+    rm -rf "$INCLUDE_TARGET";
 fi
 
 echo "    Removing shared object file if it exists..."
 if [ -e "$SODIR/$SONAME" ]; then
-    sudo rm -f "$SODIR/$SONAME";
+    rm -f "$SODIR/$SONAME";
 fi
 
 echo "libtmpl removed."
-
