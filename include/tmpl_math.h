@@ -63,18 +63,15 @@
  *          is built with config.c in libtmpl/. The Makefile automatically    *
  *          runs this, as does the make.sh script. This also contains the     *
  *          TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.              *
- ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ *  3.) math.h:                                                               *
+ *          C standard library for math functions. This is only included if   *
+ *          TMPL_USE_MATH_ALGORITHMS is not set to one. The Makefile and      *
+ *          make.sh file set this macro to one by default.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/09/12: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
@@ -89,6 +86,8 @@
  *    exponent functions.                                                     *
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
+ *  2022/09/04: Ryan Maguire                                                  *
+ *      Moved abs and copysign inline functions to their own files.           *
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including it twice.                */
@@ -103,10 +102,19 @@
  *  also found here.                                                          */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  This macro should be defined in tmpl_config.h. If not, there's an error.  */
+#if !defined(TMPL_USE_MATH_ALGORITHMS)
+
+/*  Abort compiling.                                                          */
+#error "tmpl_math.h: TMPL_USE_MATH_ALGORITHMS is undefined."
+
+/*  Check if libtmpl's implementation of libm is being used, or not.          */
+#elif TMPL_USE_MATH_ALGORITHMS != 1
+
 /*  If we're not using libtmpl's implementation of libm, include math.h.      */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS != 1
 #include <math.h>
 #endif
+/*  End of #if !defined(TMPL_USE_MATH_ALGORITHMS).                            */
 
 /*  The following comment block explains the IEEE-754 format. Those who know  *
  *  the format can skip it.                                                   */
@@ -770,6 +778,30 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *  Output:                                                                   *
  *      double abs_x:                                                         *
  *          The absolute value of x, |x|.                                     *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_abs_float.c                                     *
+ *      libtmpl/src/math/tmpl_abs_double.c                                    *
+ *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
+ *      libtmpl/include/tmpl_math_abs_inline.h (inline version)               *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
+ *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
+ *      libtmpl/examples/math_examples/tmpl_abs_ldouble_example.c             *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/math_tests/unit_tests/                                  *
+ *          tmpl_abs_float_unit_test_001.c                                    *
+ *          tmpl_abs_double_unit_test_001.c                                   *
+ *          tmpl_abs_ldouble_unit_test_001.c                                  *
+ *      libtmpl/tests/math_tests/time_tests/                                  *
+ *          tmpl_abs_float_time_test.c                                        *
+ *          tmpl_abs_double_time_test.c                                       *
+ *          tmpl_abs_ldouble_time_test.c                                      *
+ *      libtmpl/tests/math_tests/accuracy_tests/                              *
+ *          tmpl_abs_float_accuracy_test.c                                    *
+ *          tmpl_abs_double_accuracy_test.c                                   *
+ *          tmpl_abs_ldouble_accuracy_test.c                                  *
  ******************************************************************************/
 
 /*  The absolute value function is small enough that a user may want to       *
