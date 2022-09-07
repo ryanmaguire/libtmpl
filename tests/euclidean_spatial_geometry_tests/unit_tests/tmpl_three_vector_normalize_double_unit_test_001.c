@@ -25,8 +25,8 @@
 int main(void)
 {
     tmpl_ThreeVectorDouble P = tmpl_3DDouble_Rect(DBL_MAX, DBL_MAX, DBL_MAX);
-    tmpl_ThreeVectorDouble u = tmpl_3DDouble_Normalize(P);
-    const double norm = tmpl_3DDouble_Norm(u);
+    tmpl_ThreeVectorDouble u = tmpl_3DDouble_Normalize(&P);
+    const double norm = tmpl_3DDouble_L2_Norm(&u);
 
     if (fabs(norm - 1.0) > 10.0*DBL_EPSILON)
         puts("FAIL");
