@@ -18,17 +18,4 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 
-#if 0
-static inline tmpl_ComplexDouble
-ahh(const tmpl_ComplexDouble *z0, const tmpl_ComplexDouble *z1)
-{
-    tmpl_ComplexDouble sum;
-    sum.dat[0] = z0->dat[0] + z1->dat[0];
-    sum.dat[1] = z0->dat[1] + z1->dat[1];
-    return sum;
-}
-
-TEST2(double, tmpl_ComplexDouble, complex double, ahh, +)
-#else
-TEST3(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Add, +)
-#endif
+TEST4(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_AddTo, +=)

@@ -61,25 +61,12 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_complex.h:                                                       *
+ *  1.) tmpl_config.h:                                                        *
+ *          Contains the TMPL_USE_INLINE macro.                               *
+ *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -95,7 +82,15 @@
  *  2021/05/11: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
  *      No more changes unless something breaks.                              *
+ *  2022/09/08: Ryan Maguire                                                  *
+ *      Greatly simplified code. Added inline support.                        *
  ******************************************************************************/
+
+/*  TMPL_USE_INLINE found here.                                               */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE != 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -110,22 +105,10 @@ tmpl_ComplexFloat tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexFloat sum;
-    float real0, real1;
-    float imag0, imag1;
-    float sum_re, sum_im;
-
-    /*  Extract the real and imaginary parts from the inputs.                 */
-    real0 = tmpl_CFloat_Real_Part(z0);
-    real1 = tmpl_CFloat_Real_Part(z1);
-    imag0 = tmpl_CFloat_Imag_Part(z0);
-    imag1 = tmpl_CFloat_Imag_Part(z1);
 
     /*  The sum of two complex numbers simply adds their components.          */
-    sum_re = real0 + real1;
-    sum_im = imag0 + imag1;
-
-    /*  Create the output from sum_re and sum_im and return.                  */
-    sum = tmpl_CFloat_Rect(sum_re, sum_im);
+    sum.dat[0] = z0.dat[0] + z1.dat[0];
+    sum.dat[1] = z0.dat[1] + z1.dat[1];
     return sum;
 }
 /*  End of tmpl_CFloat_Add.                                                   */
@@ -136,22 +119,10 @@ tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexDouble sum;
-    double real0, real1;
-    double imag0, imag1;
-    double sum_re, sum_im;
-
-    /*  Extract the real and imaginary parts from the inputs.                 */
-    real0 = tmpl_CDouble_Real_Part(z0);
-    real1 = tmpl_CDouble_Real_Part(z1);
-    imag0 = tmpl_CDouble_Imag_Part(z0);
-    imag1 = tmpl_CDouble_Imag_Part(z1);
 
     /*  The sum of two complex numbers simply adds their components.          */
-    sum_re = real0 + real1;
-    sum_im = imag0 + imag1;
-
-    /*  Create the output from sum_re and sum_im and return.                  */
-    sum = tmpl_CDouble_Rect(sum_re, sum_im);
+    sum.dat[0] = z0.dat[0] + z1.dat[0];
+    sum.dat[1] = z0.dat[1] + z1.dat[1];
     return sum;
 }
 /*  End of tmpl_CDouble_Add.                                                  */
@@ -162,22 +133,13 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexLongDouble sum;
-    long double real0, real1;
-    long double imag0, imag1;
-    long double sum_re, sum_im;
-
-    /*  Extract the real and imaginary parts from the inputs.                 */
-    real0 = tmpl_CLDouble_Real_Part(z0);
-    real1 = tmpl_CLDouble_Real_Part(z1);
-    imag0 = tmpl_CLDouble_Imag_Part(z0);
-    imag1 = tmpl_CLDouble_Imag_Part(z1);
 
     /*  The sum of two complex numbers simply adds their components.          */
-    sum_re = real0 + real1;
-    sum_im = imag0 + imag1;
-
-    /*  Create the output from sum_re and sum_im and return.                  */
-    sum = tmpl_CLDouble_Rect(sum_re, sum_im);
+    sum.dat[0] = z0.dat[0] + z1.dat[0];
+    sum.dat[1] = z0.dat[1] + z1.dat[1];
     return sum;
 }
 /*  End of tmpl_CLDouble_Add.                                                 */
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

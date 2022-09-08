@@ -30,27 +30,12 @@
  *  1.) tmpl_bool.h:                                                          *
  *      Header file containing Booleans.                                      *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *                                EXAMPLES                                    *
  ******************************************************************************
  *  Examples of all of the functions can be found in:                         *
  *      libtmpl/examples/complex_examples/                                    *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 2, 2021                                              *
  ******************************************************************************
  *                             Revision History                               *
@@ -65,6 +50,8 @@
  *      Edited file for use in libtmpl.                                       *
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
+ *  2022/09/08: Ryan Maguire                                                  *
+ *      Adding inline support for lots of functions.                          *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -83,32 +70,13 @@ extern "C" {
 /*  The macro TMPL_USE_INLINE is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/tmpl_math.h>
-
-#if TMPL_USE_MATH_ALGORITHMS == 1
-
-#define square_rootf tmpl_Float_Sqrt
-#define square_root tmpl_Double_Sqrt
-#define square_rootl tmpl_LDouble_Sqrt
-
-#else
-
-#define square_rootf sqrtf
-#define square_root sqrt
-#define square_rootl sqrtl
-
-#endif
-
-#endif
-
 /*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
  *  data structure containing a single array double dat[2];. If you are using *
  *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
  *  if you have a pointer tmpl_ComplexDouble *z; and another pointer          *
  *  gsl_complex *w; you can safely cast via:                                  *
- *      z = (tmpl_ComplexDouble *)&w;                                         *
- *  And similarly we can do w = (gsl_complex *)&z;                            */
+ *      z = (tmpl_ComplexDouble *)w;                                          *
+ *  And similarly we can do w = (gsl_complex *)z;                             */
 typedef struct tmpl_ComplexDouble_Def {
     double dat[2];
 } tmpl_ComplexDouble;
@@ -158,7 +126,7 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Infinity(void);
  *      ships with Debian GNU/Linux 10 (Buster). More recent versions, such   *
  *      as the one that comes with Debian GNU/Linux 11 (Bullseye) can handle  *
  *      these expressions. At any rate, LLVM's clang and GNU's GCC can both   *
- *      compile these expressions, as can PCC (the Portable Compiler).        */
+ *      compile these expressions, as can PCC (the Portable C Compiler).      */
 
 /*  Complex NaN, defined as NaN + i NaN.                                      */
 extern tmpl_ComplexFloat tmpl_CFloat_NaN(void);
@@ -229,32 +197,10 @@ extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 
 /*  This function is small enough that one may wish to inline it. This        *
  *  results in about a 1.5x speed boost.                                      */
-
 #if TMPL_USE_INLINE == 1
 
-/*  Single precision abs squared function.                                    */
-static inline float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z)
-{
-    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
-    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
-}
-/*  End of tmpl_CFloat_Abs_Squared.                                           */
-
-/*  Double precision abs squared function.                                    */
-static inline double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z)
-{
-    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
-    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
-}
-/*  End of tmpl_CDouble_Abs_Squared.                                          */
-
-/*  Long double precision abs squared function.                               */
-static inline long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z)
-{
-    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
-    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
-}
-/*  End of tmpl_CLDouble_Abs_Squared.                                         */
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/tmpl_complex_abs_squared_inline.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -296,6 +242,16 @@ extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
  *      libtmpl/tests/complex_tests/tmpl_complex_add_time_test.c              *
  *      libtmpl/tests/complex_tests/tmpl_complex_addl_time_test.c             *
  ******************************************************************************/
+
+/*  This function is small enough that one may wish to inline it. This        *
+ *  results in about a 2x speed boost.                                        */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/tmpl_complex_add_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
@@ -304,6 +260,41 @@ tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_AddTo                                                    *
+ *  Purpose:                                                                  *
+ *      Add two complex numbers.                                              *
+ *  Arguments:                                                                *
+ *      tmpl_ComplexDouble *z:                                                *
+ *          A complex number. The sum is stored here.                         *
+ *      const tmpl_ComplexDouble *w:                                          *
+ *          Another complex number.                                           *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+
+/*  This function is small enough that one may wish to inline it. This        *
+ *  results in about a 1.5x speed boost.                                      */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline version of the function found here.                                */
+#include <libtmpl/include/tmpl_complex_addto_inline.h>
+
+#else
+extern void
+tmpl_CFloat_AddTo(tmpl_ComplexFloat *z, const tmpl_ComplexFloat *w);
+
+extern void
+tmpl_CDouble_AddTo(tmpl_ComplexDouble *z, const tmpl_ComplexDouble *w);
+
+extern void
+tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1114,27 +1105,21 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
  *  Tests:                                                                    *
  *      libtmpl/tests/complex_tests/tmpl_complex_quick_abs_time_test.c        *
  ******************************************************************************/
+
+/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
-static inline float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z)
-{
-    return square_rootf(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
-}
 
-static inline double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z)
-{
-    return square_root(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
-}
-
-static inline long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z)
-{
-    return square_rootl(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
-}
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/tmpl_complex_quick_abs_inline.h>
 
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
 extern float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1442,10 +1427,6 @@ tmpl_CDouble_Tanh(tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
-
-#undef square_rootf
-#undef square_root
-#undef square_rootl
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
