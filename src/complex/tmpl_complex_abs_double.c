@@ -262,10 +262,9 @@ double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
     double x = absolute_value(z.dat[0]);
     double y = absolute_value(z.dat[1]);
 
-    /*  Compute the maximum of |x| and |y| and store it in the double         *
-     *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
-     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
-     *  c, set a to c, otherwise set a to b.                                  */
+    /*  Compute the maximum of |x| and |y|. This syntax from the C language   *
+     *  is a bit strange. a = (b < c ? c : b) says if b is less than c, set a *
+     *  to c, otherwise set a to b.                                           */
     const double t = (x < y ? y : x);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
