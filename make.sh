@@ -135,7 +135,8 @@ if [ $USEINLINE == 1 ]; then
     Exclude="tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
     Exclude="$Exclude tmpl_complex_abs_squared.c tmpl_complex_quick_abs.c"
     Exclude="$Exclude tmpl_copysign_float.c tmpl_copysign_double.c"
-    Exclude="$Exclude tmpl_copysign_ldouble.c"
+    Exclude="$Exclude tmpl_copysign_ldouble.c tmpl_complex_add.c"
+    Exclude="$Exclude tmpl_complex_addto.c"
 fi
 
 if [ $USEMATH == 1 ]; then
