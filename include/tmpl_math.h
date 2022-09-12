@@ -866,6 +866,25 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
  *  Output:                                                                   *
  *      double atan_x:                                                        *
  *          The inverse tangent of x, tan^-1(x).                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arctan_float.c                                  *
+ *      libtmpl/src/math/tmpl_arctan_double.c                                 *
+ *      libtmpl/src/math/tmpl_arctan_ldouble.c                                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_arctan_float_example.c            *
+ *      libtmpl/examples/math_examples/tmpl_arctan_double_example.c           *
+ *      libtmpl/examples/math_examples/tmpl_arctan_ldouble_example.c          *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/math_tests/time_tests/                                  *
+ *          tmpl_arctan_float_time_test.c                                     *
+ *          tmpl_arctan_double_time_test.c                                    *
+ *          tmpl_arctan_ldouble_time_test.c                                   *
+ *      libtmpl/tests/math_tests/accuracy_tests/                              *
+ *          tmpl_arctan_float_accuracy_test.c                                 *
+ *          tmpl_arctan_double_accuracy_test.c                                *
+ *          tmpl_arctan_ldouble_accuracy_test.c                               *
  ******************************************************************************/
 extern float tmpl_Float_Arctan(float x);
 extern double tmpl_Double_Arctan(double x);
