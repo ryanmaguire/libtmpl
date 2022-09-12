@@ -48,6 +48,7 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_abs_ldouble.c" -and \
 	-not -name "tmpl_complex_abs_squared.c" -and \
 	-not -name "tmpl_complex_add.c" -and \
+	-not -name "tmpl_complex_addto.c" -and \
 	-not -name "tmpl_complex_quick_abs.c" -and \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
