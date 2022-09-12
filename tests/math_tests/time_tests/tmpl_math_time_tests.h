@@ -44,7 +44,7 @@ static size_t memsize(void)
 #endif
 #define NSAMPS(a) (4*memsize()/(5*sizeof(a)))
 #else
-#define NSAMPS(a) TMPL_NSAMPS
+#define NSAMPS(a) (size_t)TMPL_NSAMPS
 #endif
 
 #define RAND_REAL(type, val)                                                   \
