@@ -17,9 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_accuracy_tests.h"
-
-int main(void)
-{
-    RUN_TEST(double, 1.0E-7, 1.0E7, 10000000000ULL, tmpl_Double_Log, log);
-    return 0;
-}
+RUN_TEST(double, 1.0E-7, 1.0E7, 1E8, tmpl_Double_Log, log)

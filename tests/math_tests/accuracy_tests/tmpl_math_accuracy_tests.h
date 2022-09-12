@@ -16,31 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-
 #include <libtmpl/include/tmpl_math.h>
 #include <stdio.h>
 #include <math.h>
 
 #define RUN_TEST(type, begin, finish, samples, f0, f1)                         \
-do {                                                                           \
+int main(void)                                                                 \
+{                                                                              \
     long double max_abs = 0.0L;                                                \
     long double max_rel = 0.0L;                                                \
     long double rms_rel = 0.0L;                                                \
     long double rms_abs = 0.0L;                                                \
     long double temp;                                                          \
     type x, y0, y1;                                                            \
-    unsigned long int n;                                                       \
+    unsigned long long int n;                                                  \
                                                                                \
     const type start = (type)begin;                                            \
     const type end = (type)finish;                                             \
     const unsigned long long int N = (unsigned long long int)samples;          \
     const type dx = (end - start) / (type)N;                                   \
+    const type zero = (type)0;                                                 \
                                                                                \
     printf(#f0 " vs. " #f1 "\n");                                              \
-    printf("start:   %.16Le\n", (long double)start);                           \
-    printf("end:     %.16Le\n", (long double)end);                             \
+    printf("start:   %.8Le\n", (long double)start);                            \
+    printf("end:     %.8Le\n", (long double)end);                              \
     printf("samples: %llu\n", N);                                              \
-    printf("dx:      %.16Le\n", (long double)dx);                              \
+    printf("dx:      %.8Le\n", (long double)dx);                               \
                                                                                \
     x = start;                                                                 \
     for (n = 0UL; n < N; ++n)                                                  \
@@ -52,10 +53,9 @@ do {                                                                           \
         if (max_abs < temp)                                                    \
             max_abs = temp;                                                    \
                                                                                \
-        temp = fabsl((long double)((y0 - y1) / y1));                           \
-                                                                               \
-        if (y1 != 0)                                                           \
+        if (y1 != zero)                                                        \
         {                                                                      \
+            temp = fabsl((long double)((y0 - y1) / y1));                       \
             rms_rel += temp*temp;                                              \
                                                                                \
             if (max_rel < temp)                                                \
@@ -65,8 +65,8 @@ do {                                                                           \
                                                                                \
     rms_rel = sqrtl(rms_rel / (long double)N);                                 \
     rms_abs = sqrtl(rms_abs / (long double)N);                                 \
-    printf("max abs error: %.16Le\n", max_abs);                                \
-    printf("max rel error: %.16Le\n", max_rel);                                \
-    printf("rms abs error: %.16Le\n", rms_abs);                                \
-    printf("rms rel error: %.16Le\n", rms_rel);                                \
-} while (0)
+    printf("max abs error: %.8Le\n", max_abs);                                 \
+    printf("max rel error: %.8Le\n", max_rel);                                 \
+    printf("rms abs error: %.8Le\n", rms_abs);                                 \
+    printf("rms rel error: %.8Le\n", rms_rel);                                 \
+}
