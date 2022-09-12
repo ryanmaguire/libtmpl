@@ -18,11 +18,5 @@
  ******************************************************************************/
 #include "tmpl_math_plots.h"
 #include <math.h>
-
-PLOT_DIFF(tmpl_Double_Arctan,
-          atan,
-          double,
-          -10.0,
-          10.0,
-          10000ULL,
+PLOT_DIFF(tmpl_Double_Arctan, atan, double, 0.0, 10.0, 1E4,
           "tmpl_arctan_double_diff_plot.ps")
