@@ -27,7 +27,7 @@ int main(void)                                                                 \
 {                                                                              \
     const type start = begin;                                                  \
     const type end = finish;                                                   \
-    const unsigned long long int N = samples;                                  \
+    const size_t N = (size_t)samples;                                          \
     const type dx = (end - start) / (type)N;                                   \
     type x = start;                                                            \
     FILE *fp = fopen("data.txt", "w");                                         \
@@ -58,7 +58,7 @@ int main(void)                                                                 \
 {                                                                              \
     const type start = begin;                                                  \
     const type end = finish;                                                   \
-    const unsigned long long int N = samples;                                  \
+    const size_t N = (size_t)samples;                                          \
     const type dx = (end - start) / (type)N;                                   \
     type x = start;                                                            \
     FILE *fp = fopen("data.txt", "w");                                         \

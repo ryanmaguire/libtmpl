@@ -17,10 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_plots.h"
-
-PLOT_FUNC(tmpl_Double_Arctan,
-          double,
-          -10.0,
-          10.0,
-          100000ULL,
+PLOT_FUNC(tmpl_Double_Arctan, double, -10.0, 10.0, 1E4,
           "tmpl_arctan_double_plot.ps")
