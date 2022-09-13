@@ -73,13 +73,15 @@
  *                                                                            *
  *      where s is the sign, m the mantissa, and e the exponent, extract the  *
  *      value e. Precompute 7 values of atan(v) and use the value e to index  *
- *      this list (e varies from -3 to 3, corresponding to 0.125 to 8). Values*
+ *      this list (e varies from -3 to 3, corresponding to 0.125 to 8. For    *
+ *      e < -3 we have |x| < 0.125, so use the MacLaurin series. For e > 3 we *
+ *      have |x| > 8, so use the asymptotic expansion). Values of |x| lying   *
  *      between 2^e and 2^{e+1} will use these precomputed values in the      *
  *      formula above from Abramowitz and Stegun. Because of this we can skip *
  *      most of the if-then statements used in the portable method.           *
  *                                                                            *
  *      The following values were obtained via guess-and-check to reduce the  *
- *      relative error to below 2 * 10^-16.                                   *
+ *      relative error to below 2 * 10^-16 ~= 2^-52 = double epsilon.         *
  *                                                                            *
  *                                     u - v                                  *
  *          atan(u) = atan(v) + atan( -------- )                              *
