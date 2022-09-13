@@ -36,13 +36,10 @@
  *  Called Functions:                                                         *
  *      None if IEEE-754 support is available.                                *
  *      If not, the following are called.                                     *
- *                                                                            *
  *          tmpl_Float_Is_NaN (tmpl_math.h)                                   *
  *              Determines if a float is NaN.                                 *
  *          tmpl_Float_Is_Inf (tmpl_math.h)                                   *
  *              Determines if a float is infinity.                            *
- *                                                                            *
- *      If tmpl math algorithms are not requested, atanf from math.h is used. *
  *  Method:                                                                   *
  *      Check if the input is is NaN or infinity. Return NaN if it is         *
  *      NaN, and sign(x) * pi / 2 if it is +/- infinity.                      *
@@ -109,9 +106,6 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file where the function prototype is given.                *
- *  2.) math.h:                                                               *
- *          Header file containing atan. Only included if libtmpl algorithms  *
- *          are not requested.                                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 09, 2021                                            *
@@ -373,16 +367,6 @@ float tmpl_Float_Arctan(float x)
 
 #endif
 /*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.       */
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */
-
-#include <math.h>
-
-float tmpl_Float_Arctan(float x)
-{
-    return atanf(x);
-}
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */

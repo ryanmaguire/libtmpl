@@ -19,6 +19,9 @@
 
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Only implement this if the user requested libtmpl algorithms.             */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+
 /*  Check for IEEE-754 long double support.                                   */
 #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
 
@@ -281,4 +284,5 @@ long double tmpl_LDouble_Arctan(long double x)
 #undef A15
 #undef A16
 
+#endif
 #endif

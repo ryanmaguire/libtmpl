@@ -88,6 +88,10 @@
  *      simply use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.     *
  *  2022/09/05: Ryan Maguire                                                  *
  *      Added inline version.                                                 *
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Remove math.h version (fabsf alias). This version is now a macro for  *
+ *      the fabsf function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
+ *      is set to zero).                                                      *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -138,39 +142,7 @@ float tmpl_Float_Abs(float x)
 /*  End of tmpl_Float_Abs.                                                    */
 
 #endif
-/*  End of #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.*/
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
-
-/*  math.h provides the fabsf function in C99 and higher.                     */
-#include <math.h>
-
-/*  C99 and higher have fabsf defined. C89 compilers may not. Microsoft has   *
- *  fabsf but does not define the __STDC_VERSION__ macro by default.          */
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
-    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
-
-/*  Single precision absolute value function (fabsf equivalent).              */
-float tmpl_Float_Abs(float x)
-{
-    return fabsf(x);
-}
-/*  End of tmpl_Float_Abs.                                                    */
-
-#else
-/*  C89 implementations are not required to provide fabsf.                    */
-
-/*  Single precision absolute value function (fabsf equivalent).              */
-float tmpl_Float_Abs(float x)
-{
-    double abs_x = fabs((double)x);
-    return (float)abs_x;
-}
-/*  End of tmpl_Float_Abs.                                                    */
-
-#endif
-/*  #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L              */
+/*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
