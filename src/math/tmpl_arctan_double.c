@@ -36,13 +36,10 @@
  *  Called Functions:                                                         *
  *      None if IEEE-754 support is available.                                *
  *      If not, the following are called.                                     *
- *                                                                            *
  *          tmpl_Double_Is_NaN (tmpl_math.h)                                  *
  *              Determines if a double is NaN.                                *
  *          tmpl_Double_Is_Inf (tmpl_math.h)                                  *
  *              Determines if a double is infinity.                           *
- *                                                                            *
- *      If tmpl math algorithms are not requested, atan from math.h is used.  *
  *  Method:                                                                   *
  *      Check if the input is is NaN or infinity. Return NaN if it is         *
  *      NaN, and sign(x) * pi / 2 if it is +/- infinity.                      *
@@ -110,9 +107,6 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file where the function prototype is given.                *
- *  2.) math.h:                                                               *
- *          Header file containing atan. Only included if libtmpl algorithms  *
- *          are not requested.                                                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 09, 2021                                            *
@@ -451,19 +445,6 @@ double tmpl_Double_Arctan(double x)
 
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1. */
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */
-
-/*  C89 has atan defined in math.h. Use this.                                 */
-#include <math.h>
-
-/*  Double precision inverse tangent (atan equivalent).                       */
-double tmpl_Double_Arctan(double x)
-{
-    return atan(x);
-}
-/*  End of tmpl_Double_Arctan.                                                */
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */

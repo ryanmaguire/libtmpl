@@ -82,6 +82,10 @@
  *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
  *  2022/09/12: Ryan Maguire                                                  *
  *      Added inline support.                                                 *
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Remove math.h version (fabsl alias). This version is now a macro for  *
+ *      the fabsl function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
+ *      is set to zero).                                                      *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -152,38 +156,6 @@ long double tmpl_LDouble_Abs(long double x)
 
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1*/
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
-
-/*  math.h provides the fabsl function in C99 and higher.                     */
-#include <math.h>
-
-/*  C99 and higher have fabsl defined. C89 compilers may not. Microsoft has   *
- *  fabsl but does not define the __STDC_VERSION__ macro by default.          */
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
-    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
-
-/*  Long double precision absolute value function (fabsl equivalent).         */
-long double tmpl_LDouble_Abs(long double x)
-{
-    return fabsl(x);
-}
-/*  End of tmpl_LDouble_Abs.                                                  */
-
-#else
-/*  C89 implementations are not required to provide fabsl.                    */
-
-/*  Long double precision absolute value function (fabsl equivalent).         */
-long double tmpl_LDouble_Abs(long double x)
-{
-    double abs_x = fabs((double)x);
-    return (long double)abs_x;
-}
-/*  End of tmpl_LDouble_Abs.                                                  */
-
-#endif
-/*  #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L              */
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */

@@ -111,6 +111,16 @@
 /*  Check if libtmpl's implementation of libm is being used, or not.          */
 #elif TMPL_USE_MATH_ALGORITHMS != 1
 
+/*  C99 or higher is required if libtmpl algorithms are not used. C89 does    *
+ *  not require float or long double versions of various math functions,      *
+ *  whereas libtmpl makes frequent use of these. If your implementation does  *
+ *  not support C99 or higher, rebuild libtmpl with TMPL_USE_MATH_ALGORITHMS  *
+ *  set to 1.                                                                 */
+#if !(defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) && \
+    !(defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
+#error "tmpl math algorithms not requested but C99 math functions unavailable."
+#endif
+
 /*  If we're not using libtmpl's implementation of libm, include math.h.      */
 #include <math.h>
 #endif
@@ -846,10 +856,16 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *          tmpl_abs_ldouble_accuracy_test.c                                  *
  ******************************************************************************/
 
+/*  Alias functions to fabs from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Abs fabsf
+#define tmpl_Double_Abs fabs
+#define tmpl_LDouble_Abs fabsl
+
 /*  The absolute value function is small enough that a user may want to       *
  *  inline it. The result of inlining gives a surprising 2x speed boost. The  *
  *  absolute value function is not computationally expensive regardless.      */
-#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+#elif defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
 #include <libtmpl/include/tmpl_math_abs_inline.h>
@@ -928,9 +944,17 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
  *          tmpl_arctan_double_accuracy_test.c                                *
  *          tmpl_arctan_ldouble_accuracy_test.c                               *
  ******************************************************************************/
+
+/*  Alias functions to atan from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Arctan atanf
+#define tmpl_Double_Arctan atan
+#define tmpl_LDouble_Arctan atanl
+#else
 extern float tmpl_Float_Arctan(float x);
 extern double tmpl_Double_Arctan(double x);
 extern long double tmpl_LDouble_Arctan(long double x);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

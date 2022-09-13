@@ -38,8 +38,7 @@
  *      abs_x (double):                                                       *
  *          The absolute value of x.                                          *
  *  Called Functions:                                                         *
- *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
- *      been requested. fabs from math.h otherwise.                           *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, set the sign bit of the             *
  *      input to 0. A 64-bit double is represented by:                        *
@@ -66,9 +65,6 @@
  *          Header file containing TMPL_USE_INLINE macro.                     *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) math.h:                                                               *
- *          Only included if libtmpl algorithms have not been requested. This *
- *          file contains the fabs function.                                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -93,6 +89,10 @@
  *      configuration in the Makefile.                                        *
  *  2022/05/31: Ryan Maguire                                                  *
  *      Added benchmarks.                                                     *
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Remove math.h version (fabs alias). This version is now a macro for   *
+ *      the fabs function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS is *
+ *      set to zero).                                                         *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -144,19 +144,6 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /* End of #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1*/
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
-
-/*  math.h provides the fabs function.                                        */
-#include <math.h>
-
-/*  Double precision absolute value function (fabs equivalent).               */
-double tmpl_Double_Abs(double x)
-{
-    return fabs(x);
-}
-/*  End of tmpl_Double_Abs.                                                   */
 
 #endif
 /*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
