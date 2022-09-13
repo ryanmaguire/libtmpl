@@ -52,7 +52,7 @@ INPLACE=0
 USEINLINE=0
 
 # Whether or not to use libtmpl's implementation of libm.
-USEMATH=1
+c=1
 
 # Use of the IEEE-754 floating point format.
 USEIEEE=1
@@ -141,6 +141,10 @@ fi
 
 if [ $USEMATH == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MATH_TRUE"
+else
+    Exclude="$Exclude tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arctan_double.c tmpl_arctan_float.c"
+    Exclude="$Exclude tmpl_arctan_ldouble.c"
 fi
 
 if [ $USEIEEE == 0 ]; then

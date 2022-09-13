@@ -57,8 +57,16 @@ endif
 
 ifdef NO_MATH
 MATH_FLAG :=
+MATH_EXCLUDE := \
+	-not -name "tmpl_abs_double.c" -and \
+	-not -name "tmpl_abs_float.c" -and \
+	-not -name "tmpl_abs_ldouble.c" -and \
+	-not -name "tmpl_arctan_double.c" -and \
+	-not -name "tmpl_arctan_float.c" -and \
+	-not -name "tmpl_arctan_ldouble.c" -and
 else
 MATH_FLAG := -DTMPL_SET_USE_MATH_TRUE
+MATH_EXCLUDE :=
 endif
 
 ifdef NO_IEEE
@@ -67,6 +75,8 @@ else
 IEEE_FLAG :=
 endif
 
+EXCLUDE := $(INLINE_EXCLUDE) $(MATH_EXCLUDE)
+
 uname_m := $(shell uname -m)
 
 # If the user does not want to use any assembly code (that is, C only) only
@@ -74,7 +84,7 @@ uname_m := $(shell uname -m)
 # and armv7l (armhf) this is only advised if your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifdef NO_ASM
-SRCS := $(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) -name "*.c")
+SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) -name "*.c")
 
 # Else for ifdef NO_ASM
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
@@ -85,7 +95,7 @@ else ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 # much better times than the default C code.
 ifdef FASM
 SRCS := \
-	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
+	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*x86_64.fasm" \))
@@ -95,7 +105,7 @@ SRCS := \
 # Debian GNU/Linux 11.
 else
 SRCS := \
-	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
+	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_trailing_zeros_char.c" -and \
 	-not -name "tmpl_trailing_zeros_int.c" -and \
 	-not -name "tmpl_trailing_zeros_long.c" -and \
@@ -116,7 +126,7 @@ endif
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
 SRCS := \
-	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
+	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*aarch64.S" \))
@@ -126,7 +136,7 @@ SRCS := \
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
 SRCS := \
-	$(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) \
+	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
@@ -139,7 +149,7 @@ SRCS := \
 else
 
 # For all other architectures, use only C code. No assembly.
-SRCS := $(shell find $(SRC_DIRS) $(INLINE_EXCLUDE) -name "*.c")
+SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) -name "*.c")
 
 # End of ifdef NO_ASM.
 endif
