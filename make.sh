@@ -52,7 +52,7 @@ INPLACE=0
 USEINLINE=0
 
 # Whether or not to use libtmpl's implementation of libm.
-c=1
+USEMATH=1
 
 # Use of the IEEE-754 floating point format.
 USEIEEE=1
