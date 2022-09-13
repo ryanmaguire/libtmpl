@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_arctan_float                               *
+ *                             tmpl_arctan_float                              *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the arc-tangent function at single precision.                *
@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Arctan:                                                    *
  *  Purpose:                                                                  *
- *      Computes atan(x).                                                     *
+ *      Computes atan(x), the inverse tangent function.                       *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
@@ -34,58 +34,230 @@
  *      atan_x (float):                                                       *
  *          The arc-tangent of x.                                             *
  *  Called Functions:                                                         *
- *      tmpl_Float_Is_NaN (tmpl_math.h)                                       *
- *          Determines if a float is NaN.                                     *
- *      tmpl_Float_Is_Inf (tmpl_math.h)                                       *
- *          Determines if a float is infinity.                                *
+ *      None if IEEE-754 support is available.                                *
+ *      If not, the following are called.                                     *
+ *                                                                            *
+ *          tmpl_Float_Is_NaN (tmpl_math.h)                                   *
+ *              Determines if a float is NaN.                                 *
+ *          tmpl_Float_Is_Inf (tmpl_math.h)                                   *
+ *              Determines if a float is infinity.                            *
+ *                                                                            *
+ *      If tmpl math algorithms are not requested, atanf from math.h is used. *
  *  Method:                                                                   *
- *      First, use the fact that atan(x) is odd to reduce to the case x >= 0. *
- *      For small values, use a polynomial. For values in certain ranges, use *
- *      formula 4.4.34 from Abramowitz and Stegun to reduce the argument to a *
- *      smaller value. This formula states that:                              *
+ *      Check if the input is is NaN or infinity. Return NaN if it is         *
+ *      NaN, and sign(x) * pi / 2 if it is +/- infinity.                      *
+ *                                                                            *
+ *      Next, use the fact that atan(x) is odd to reduce to the case          *
+ *      x >= 0. For small values, use the MacLaurin series. For values in     *
+ *      certain ranges, use formula 4.4.34 from Abramowitz and Stegun to      *
+ *      reduce the argument to a smaller value. This formula states that:     *
  *                                                                            *
  *                                     u - v                                  *
  *          atan(u) - atan(v) = atan( -------- )                              *
  *                                     1 + uv                                 *
  *                                                                            *
- *      In particular:                                                        *
+ *      With the portable method, use the following:                          *
  *          x in [0.0,    0.4375)  polynomial.                                *
  *          x in [0.4375, 0.6875)  u = x, v = 1/2, reduce and use polynomial. *
  *          x in [0.6875, 1.1875)  u = x, v = 1, reduce and use polynomial.   *
  *          x in [1.1875, 2.4375)  u = x, v = 3/2, reduce and use polynomial. *
  *          x in [2.4375, inf)     atan(x) = pi/2 + atan(-1/x).               *
- *  NOTE:                                                                     *
+ *                                                                            *
+ *      x > 2.4375 uses the asymptotic expansion, a polynomial in 1/x. This   *
+ *      converges very quickly to pi/2 as x gets larger.                      *
+ *                                                                            *
+ *      The IEEE-754 method can get a big speed boost. Extract the exponent   *
+ *      of the input x. That is, given:                                       *
+ *                                                                            *
+ *          x = s * 1.m * 2^e                                                 *
+ *                                                                            *
+ *      where s is the sign, m the mantissa, and e the exponent, extract the  *
+ *      value e. Precompute 7 values of atan(v) and use the value e to index  *
+ *      this list (e varies from -3 to 3, corresponding to 0.125 to 8. For    *
+ *      e < -3 we have |x| < 0.125, so use the MacLaurin series. For e > 3 we *
+ *      have |x| > 8, so use the asymptotic expansion). Values of |x| lying   *
+ *      between 2^e and 2^{e+1} will use these precomputed values in the      *
+ *      formula above from Abramowitz and Stegun. Because of this we can skip *
+ *      most of the if-then statements used in the portable method.           *
+ *                                                                            *
+ *      The following values were obtained via guess-and-check to reduce the  *
+ *      relative error to below 10^-7 ~= 2^-23 = single epsilon.              *
+ *                                                                            *
+ *                                     u - v                                  *
+ *          atan(u) = atan(v) + atan( -------- )                              *
+ *                                     1 + uv                                 *
+ *                                                                            *
+ *          x in [0.0, 1/8) u = x, v = 0.18, reduce and use polynomial.       *
+ *          x in [1/8, 1/4) u = x, v = 0.35, reduce and use polynomial.       *
+ *          x in [1/4, 1/2) u = x, v = 0.72, reduce and use polynomial.       *
+ *          x in [1/2, 1)   u = x, v = 1.35, reduce and use polynomial.       *
+ *          x in [1, 2)     u = x, v = 2.50, reduce and use polynomial.       *
+ *          x in [2, 4)     u = x, v = 4.00, reduce and use polynomial.       *
+ *          x in [4, 8)     u = x, v = 8.00, reduce and use polynomial.       *
+ *          x >= 8          atan(x) = pi/2 + atan(-1/x).                      *
+ *                                                                            *
+ *      Very small values need the first 8 terms of the MacLaurin series.     *
+ *      Very large values need 6 terms of the asymptotic expansion. All other *
+ *      intervals need the first 9 terms.                                     *
+ *                                                                            *
+ *  Notes:                                                                    *
  *      There are three special cases. If the input is NaN, the output will   *
  *      also be NaN. If the input is positive infinity, the limit is used and *
  *      pi/2 is returned. If the input is negative infinity, the limit is     *
- *      used and -pi/2 is returned.                                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file where the function prototype is given.                *
+ *  2.) math.h:                                                               *
+ *          Header file containing atan. Only included if libtmpl algorithms  *
+ *          are not requested.                                                *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       September 09, 2021                                            *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Added IEEE-754 version. This yields a 2x speed boost.                 *
  ******************************************************************************/
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Only implement this if the user requested libtmpl algorithms.             */
+#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Check for IEEE-754 support.                                               */
+#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
+
+/*  Coefficients for the computation of the polynomial approximation. The     *
+ *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
+#define A00 3.33333333333329318027E-01F
+#define A01 -1.99999999998764832476E-01F
+#define A02 1.42857142725034663711E-01F
+#define A03 -1.11111104054623557880E-01F
+
+/*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
+static float tmpl_float_arctan_maclaurin_series(float x)
+{
+    /*  Declare necessary variables.                                          */
+    const float x_sq = x*x;
+
+    /*  Use Horner's method to compute the polynomial. The signs of the       *
+     *  coefficients oscillate.                                               */
+    return x*(1.0F - x_sq*(A00 + x_sq*(A01 + x_sq*(A02 + x_sq*A03))));
+}
+/*  End of tmpl_float_arctan_maclaurin_series.                                */
+
+/*  This function computes arctan(x) via the asymptotic expansion.            */
+static float tmpl_float_arctan_large_vals(float x)
+{
+    /*  Declare necessary variables.                                          */
+    const float arg = -1.0F / x;
+    const float arg_sq = arg*arg;
+
+    /*  Use Horner's method to compute the polynomial. The signs of the       *
+     *  coefficients oscillate.                                               */
+    return arg*(1.0F - arg_sq*(A00 + arg_sq*(A01 + arg_sq*A02)));
+}
+/*  End of tmpl_float_arctan_large_vals.                                      */
+
+/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
+ *                                                                            *
+ *                                     u - v                                  *
+ *          atan(u) = atan(v) + atan( -------- )                              *
+ *                                     1 + uv                                 *
+ *                                                                            *
+ *  The values v and atan(v) are pre-computed below for the calculation.      */
+static const float tmpl_atan_float_v[7] = {
+    0.18F,
+    0.35F,
+    0.72F,
+    1.35F,
+    2.5F,
+    4.0F,
+    8.0F
+};
+
+static const float tmpl_atan_float_atan_of_v[7] = {
+    0.178092938231197549667920F,
+    0.336674819386727181396699F,
+    0.624023052976756847589791F,
+    0.933247528656203869893663F,
+    1.19028994968253173292773F,
+    1.32581766366803246505924F,
+    1.44644133224813518419997F
+};
+
+/*  Single precision inverse tangent (atanf equivalent).                      */
+float tmpl_Float_Arctan(float x)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_IEEE754_Float w;
+    float arg, out, v, atan_v;
+    unsigned int ind;
+
+    /*  Set the float part of the word to the input.                          */
+    w.r = x;
+
+    /*  Special cases, NaN and INF.                                           */
+    if (w.bits.expo == 0xFFU)
+    {
+        /*  Check if the input is NaN. If it is, simply return the input.     */
+        if ((w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
+            return x;
+
+        /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
+        if (w.bits.sign)
+            return tmpl_Pi_By_Two_F;
+        else
+            return -tmpl_Pi_By_Two_F;
+    }
+
+    /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */
+    else if (w.bits.expo < TMPL_FLOAT_BIAS - 3U)
+    {
+        const float x_sq = x*x;
+        return x*(1.0F - x_sq*(A00 + x_sq*(A01 + x_sq*A02)));
+    }
+
+    /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
+    w.bits.sign = 0x00U;
+
+    /*  For |x| > 8, use the asymptotic expansion.                            */
+    if (w.bits.expo > TMPL_FLOAT_BIAS + 3U)
+    {
+        out = tmpl_Pi_By_Two_F + tmpl_float_arctan_large_vals(w.r);
+        return (x < 0.0F ? -out : out);
+    }
+
+    /*  The exponent tells us the index for the tables tmpl_atan_float_v and  *
+     *  tmpl_atan_float_atan_of_v that correspond to x. The index is simply   *
+     *  the exponent plus three (since the lowest value is 1/8 = 2^-3, we     *
+     *  need to shift up by 3). The exponent has a bias, per the IEEE-754     *
+     *  format, so we must subtract this off to get the correct index.        */
+    ind = (w.bits.expo + 3U) - TMPL_FLOAT_BIAS;
+    v = tmpl_atan_float_v[ind];
+    atan_v = tmpl_atan_float_atan_of_v[ind];
+
+    /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
+    arg = (w.r - v) / (1.0F + w.r*v);
+    out = atan_v + tmpl_float_arctan_maclaurin_series(arg);
+
+    /*  Use the fact that atan is an odd function to complete the computation.*/
+    return (x < 0.0F ? -out : out);
+}
+/*  End of tmpl_Float_Arctan.                                                 */
+
+/*  Undefine all of the macros.                                               */
+#undef A00
+#undef A01
+#undef A02
+#undef A03
+
+#else
+/*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.       */
 
 /*  Precompute atan(1/2), atan(1), and atan(3/2).                             */
 #define ATAN_OF_ONE_HALF 0.46364760900080611621425623146121440202853705F
@@ -195,12 +367,22 @@ float tmpl_Float_Arctan(float x)
 #undef ATAN_A02
 #undef ATAN_A03
 #undef ATAN_A04
-#undef ATAN_A05
-#undef ATAN_A06
-#undef ATAN_A07
-#undef ATAN_A08
-#undef ATAN_A09
-#undef ATAN_A10
 #undef ATAN_OF_ONE_HALF
 #undef ATAN_OF_ONE
 #undef ATAN_OF_THREE_HALFS
+
+#endif
+/*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.       */
+
+#else
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */
+
+#include <math.h>
+
+float tmpl_Float_Arctan(float x)
+{
+    return atanf(x);
+}
+
+#endif
+/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */
