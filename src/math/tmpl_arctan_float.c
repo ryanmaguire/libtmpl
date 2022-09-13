@@ -202,7 +202,7 @@ float tmpl_Float_Arctan(float x)
     w.r = x;
 
     /*  Special cases, NaN and INF.                                           */
-    if (w.bits.expo == 0xFFU)
+    if (w.bits.expo == TMPL_FLOAT_NANINF_EXP)
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
         if ((w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
@@ -210,9 +210,9 @@ float tmpl_Float_Arctan(float x)
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (w.bits.sign)
-            return tmpl_Pi_By_Two_F;
-        else
             return -tmpl_Pi_By_Two_F;
+        else
+            return tmpl_Pi_By_Two_F;
     }
 
     /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */

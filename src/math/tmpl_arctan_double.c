@@ -233,7 +233,7 @@ double tmpl_Double_Arctan(double x)
     w.r = x;
 
     /*  Special cases, NaN and INF.                                           */
-    if (w.bits.expo == 0x7FFU)
+    if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
         if ((w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
@@ -241,9 +241,9 @@ double tmpl_Double_Arctan(double x)
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (w.bits.sign)
-            return tmpl_Pi_By_Two;
-        else
             return -tmpl_Pi_By_Two;
+        else
+            return tmpl_Pi_By_Two;
     }
 
     /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */

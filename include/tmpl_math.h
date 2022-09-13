@@ -234,6 +234,9 @@
 /*  32-bit single precision bias is 127.                                      */
 #define TMPL_FLOAT_BIAS 0x7F
 
+/*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
+#define TMPL_FLOAT_NANINF_EXP 0xFF
+
 /*  To access the binary representation of a floating point number, we use    *
  *  unions. Unions allow us to have different data types share the same block *
  *  of memory. If we have a union of a floating point and an integer, and then*
@@ -275,6 +278,9 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  32-bit single precision bias is 127.                                      */
 #define TMPL_FLOAT_BIAS 0x7F
 
+/*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
+#define TMPL_FLOAT_NANINF_EXP 0xFF
+
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
  *  to swap the order of the bit-field in the union.                          */
@@ -314,6 +320,9 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_DOUBLE_BIAS 0x3FF
 
+/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
+#define TMPL_DOUBLE_NANINF_EXP 0x7FF
+
 /*  Same idea as the union used for float, but for a 64-bit double.           */
 typedef union tmpl_IEEE754_Double_Def {
     struct {
@@ -335,6 +344,9 @@ typedef union tmpl_IEEE754_Double_Def {
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_DOUBLE_BIAS 0x3FF
+
+/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
+#define TMPL_DOUBLE_NANINF_EXP 0x7FF
 
 /*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
  *  endianness. See the above comments for information on this data type.     */
@@ -379,6 +391,9 @@ typedef union tmpl_IEEE754_Double_Def {
 /*  64-bit long double precision has exponent bias of 1,023.                  */
 #define TMPL_LDOUBLE_BIAS 0x3FF
 
+/*  The exponent that corresponds to NaN/infinity for 64-bit long double.     */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
+
 /*  MIPS little endian uses the same structure as double, 64 bit. The         *
  *  Microsoft compiler MSVC also uses this for x86_64.                        */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -402,6 +417,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  64-bit long double precision has exponent bias of 1,023.                  */
 #define TMPL_LDOUBLE_BIAS 0x3FF
 
+/*  The exponent that corresponds to NaN/infinity for 64-bit long double.     */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
+
 /*  MIPS for big endian. PowerPC and S390 also implement long double          *
  *  using this style, which is the same as double.                            */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -424,6 +442,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  80-bit extended precision has exponent bias of 16,383.                    */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
 
 /*  The i386 architecture uses a 96-bit implementation. This uses the         *
  *  80-bit extended precision with 16 bits of padding.                        */
@@ -452,6 +473,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  80-bit extended precision has exponent bias of 16,383.                    */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
 
+/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+
 /*  Big endian version of i386 method.                                        */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -477,6 +501,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  80-bit extended precision has exponent bias of 16,383.                    */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
+
+/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
 
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
@@ -515,6 +542,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  80-bit extended precision has exponent bias of 16,383.                    */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
 
+/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+
 /*  Big endian version of the amd64 method. GCC uses this for ia64.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -543,6 +573,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  128-bit quadruple precision has exponent bias of 16,383.                  */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
 
+/*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+
 /*  aarch64 uses the 128-bit quadruple precision for long double.             */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -568,6 +601,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  128-bit quadruple precision has exponent bias of 16,383.                  */
 #define TMPL_LDOUBLE_BIAS 0x3FFF
 
+/*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+
 /*  Similar to aarch64, but with big endianness.                              */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -592,6 +628,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  128-bit double-double has exponent bias of 1,023, same as double.         */
 #define TMPL_LDOUBLE_BIAS 0x3FF
+
+/*  The exponent that corresponds to NaN/infinity for 64-bit double double.   */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
 
 /*  Double-double representation. Literally two doubles stacked together.     */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -628,6 +667,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  128-bit double-double has exponent bias of 1,023, same as double.         */
 #define TMPL_LDOUBLE_BIAS 0x3FF
+
+/*  The exponent that corresponds to NaN/infinity for 64-bit double double.   */
+#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
 typedef union tmpl_IEEE754_LDouble_Def {
