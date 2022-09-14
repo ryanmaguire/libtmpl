@@ -86,7 +86,7 @@
  *      libtmpl/src/number_theory/tmpl_trailing_zeros_int.c                   *
  *      libtmpl/src/number_theory/tmpl_trailing_zeros_long.c                  *
  ******************************************************************************/
-extern int tmpl_Char_Trailing_Zeros(char n);
+extern int tmpl_Char_Trailing_Zeros(signed char n);
 extern int tmpl_Short_Trailing_Zeros(short int n);
 extern int tmpl_Int_Trailing_Zeros(int n);
 extern int tmpl_Long_Trailing_Zeros(long int n);
@@ -156,7 +156,7 @@ extern int tmpl_ULong_Trailing_Zeros(unsigned long int n);
  *          tmpl_remove_trailing_zeros_uint_time_test.c                       *
  *          tmpl_remove_trailing_zeros_ulong_time_test.c                      *
  ******************************************************************************/
-extern char tmpl_Char_GCD(char m, char n);
+extern char tmpl_Char_GCD(signed char m, signed char n);
 extern short int tmpl_Short_GCD(short int m, short int n);
 extern int tmpl_Int_GCD(int m, int n);
 extern long int tmpl_Long_GCD(long int m, long int n);

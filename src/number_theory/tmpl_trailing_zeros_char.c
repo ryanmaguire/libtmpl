@@ -104,7 +104,7 @@
 #if UCHAR_MAX == 0xFFU
 
 /*  8-bit trailing-zeros function.                                            */
-int tmpl_Char_Trailing_Zeros(char n)
+int tmpl_Char_Trailing_Zeros(signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -145,7 +145,7 @@ int tmpl_Char_Trailing_Zeros(char n)
 #elif UCHAR_MAX == 0xFFFFU
 
 /*  16-bit trailing-zeros function.                                           */
-int tmpl_Char_Trailing_Zeros(char n)
+int tmpl_Char_Trailing_Zeros(signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0U;
@@ -193,7 +193,7 @@ int tmpl_Char_Trailing_Zeros(char n)
 #elif UCHAR_MAX == 0xFFFFFFFFU
 
 /*  32-bit trailing-zeros function.                                           */
-int tmpl_Char_Trailing_Zeros(char n)
+int tmpl_Char_Trailing_Zeros(signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -248,7 +248,7 @@ int tmpl_Char_Trailing_Zeros(char n)
 #elif UCHAR_MAX == 0xFFFFFFFFFFFFFFFFU
 
 /*  64-bit trailing-zeros function.                                           */
-int tmpl_Char_Trailing_Zeros(char n)
+int tmpl_Char_Trailing_Zeros(signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;
@@ -312,7 +312,7 @@ int tmpl_Char_Trailing_Zeros(char n)
 #else
 
 /*  Portable trailing zeros function.                                         */
-int tmpl_Char_Trailing_Zeros(char n)
+int tmpl_Char_Trailing_Zeros(signed char n)
 {
     /*  Variable for the number of trailing zeros.                            */
     int bits = 0;

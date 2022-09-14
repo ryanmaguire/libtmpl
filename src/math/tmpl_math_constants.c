@@ -48,94 +48,133 @@
 #endif
 
 /*  sqrt( 1 / (2 pi) )                                                        */
-const float tmpl_Sqrt_One_By_Two_Pi_F = 0.398942280F;
-const double tmpl_Sqrt_One_By_Two_Pi = 0.3989422804014326779;
-const long double tmpl_Sqrt_One_By_Two_Pi_L = 0.3989422804014326779399461L;
+const float
+tmpl_Sqrt_One_By_Two_Pi_F = 0.3989422804014326779399460599343818684759F;
+
+const double
+tmpl_Sqrt_One_By_Two_Pi = 0.3989422804014326779399460599343818684759;
+
+const long double
+tmpl_Sqrt_One_By_Two_Pi_L = 0.3989422804014326779399460599343818684759L;
 
 /*  sqrt( pi / 8 )                                                            */
-const float tmpl_Sqrt_Pi_By_Eight_F       = 0.626657069F;
-const double tmpl_Sqrt_Pi_By_Eight        = 0.62665706865775012;
-const long double tmpl_Sqrt_Pi_By_Eight_L = 0.6266570686577501256039413L;
+const float
+tmpl_Sqrt_Pi_By_Eight_F = 0.6266570686577501256039413212027613132517F;
+
+const double
+tmpl_Sqrt_Pi_By_Eight = 0.6266570686577501256039413212027613132517;
+
+const long double
+tmpl_Sqrt_Pi_By_Eight_L = 0.6266570686577501256039413212027613132517L;
 
 /*  sqrt( pi / 2 )                                                            */
-const float tmpl_Sqrt_Pi_By_Two_F       = 1.253314137F;
-const double tmpl_Sqrt_Pi_By_Two        = 1.25331413731550025;
-const long double tmpl_Sqrt_Pi_By_Two_L = 1.2533141373155002512078830L;
+const float tmpl_Sqrt_Pi_By_Two_F = 1.253314137315500251207882642405522626503F;
+const double tmpl_Sqrt_Pi_By_Two = 1.253314137315500251207882642405522626503;
+
+const long double
+tmpl_Sqrt_Pi_By_Two_L = 1.253314137315500251207882642405522626503L;
 
 /*  sqrt( 1 / pi )                                                            */
-const float tmpl_Sqrt_One_By_Pi_F       = 0.564189584F;
-const double tmpl_Sqrt_One_By_Pi        = 0.56418958354775628;
-const long double tmpl_Sqrt_One_By_Pi_L = 0.5641895835477562869480795L;
+const float tmpl_Sqrt_One_By_Pi_F = 0.5641895835477562869480794515607725858441F;
+const double tmpl_Sqrt_One_By_Pi = 0.5641895835477562869480794515607725858441;
+
+const long double
+tmpl_Sqrt_One_By_Pi_L = 0.5641895835477562869480794515607725858441L;
 
 /*  sqrt( 2 / pi )                                                            */
-const float tmpl_Sqrt_Two_By_Pi_F       = 0.797884561F;
-const double tmpl_Sqrt_Two_By_Pi        = 0.79788456080286535;
-const long double tmpl_Sqrt_Two_By_Pi_L = 0.7978845608028653558798921L;
+const float tmpl_Sqrt_Two_By_Pi_F = 0.7978845608028653558798921198687637369517F;
+const double tmpl_Sqrt_Two_By_Pi = 0.7978845608028653558798921198687637369517;
+
+const long double
+tmpl_Sqrt_Two_By_Pi_L = 0.7978845608028653558798921198687637369517L;
 
 /*  2 / sqrt( pi )                                                            */
-const float tmpl_Two_By_Sqrt_Pi_F       = 1.128379167F;
-const double tmpl_Two_By_Sqrt_Pi        = 1.12837916709551257;
-const long double tmpl_Two_By_Sqrt_Pi_L = 1.1283791670955125738961590L;
+const float tmpl_Two_By_Sqrt_Pi_F = 1.128379167095512573896158903121545171688F;
+const double tmpl_Two_By_Sqrt_Pi = 1.128379167095512573896158903121545171688;
+
+const long double
+tmpl_Two_By_Sqrt_Pi_L = 1.128379167095512573896158903121545171688L;
 
 /*  pi / 2                                                                    */
-const float tmpl_Pi_By_Two_F       = 1.570796327F;
-const double tmpl_Pi_By_Two        = 1.57079632679489661;
-const long double tmpl_Pi_By_Two_L = 1.5707963267948966192313220L;
+const float tmpl_Pi_By_Two_F = 1.570796326794896619231321691639751442099F;
+const double tmpl_Pi_By_Two = 1.570796326794896619231321691639751442099;
+const long double tmpl_Pi_By_Two_L = 1.570796326794896619231321691639751442099L;
 
 /*  3 pi / 4                                                                  */
-const float tmpl_Three_Pi_By_Four_F       = 2.356194490F;
-const double tmpl_Three_Pi_By_Four        = 2.35619449019234492;
-const long double tmpl_Three_Pi_By_Four_L = 2.3561944901923449288469830L;
+const float
+tmpl_Three_Pi_By_Four_F = 2.356194490192344928846982537459627163148F;
+
+const double
+tmpl_Three_Pi_By_Four = 2.356194490192344928846982537459627163148;
+
+const long double
+tmpl_Three_Pi_By_Four_L = 2.356194490192344928846982537459627163148L;
 
 /*  pi / 4                                                                    */
-const float tmpl_Pi_By_Four_F       = 0.785398163F;
-const double tmpl_Pi_By_Four        = 0.78539816339744830;
-const long double tmpl_Pi_By_Four_L = 0.7853981633974483096156608L;
+const float tmpl_Pi_By_Four_F = 0.7853981633974483096156608458198757210493F;
+const double tmpl_Pi_By_Four = 0.7853981633974483096156608458198757210493;
+
+const long double
+tmpl_Pi_By_Four_L = 0.7853981633974483096156608458198757210493L;
 
 /*  pi                                                                        */
-const float tmpl_One_Pi_F       = 3.141592654F;
-const double tmpl_One_Pi        = 3.14159265358979323;
-const long double tmpl_One_Pi_L = 3.1415926535897932384626430L;
+const float tmpl_One_Pi_F = 3.141592653589793238462643383279502884197F;
+const double tmpl_One_Pi = 3.141592653589793238462643383279502884197;
+const long double tmpl_One_Pi_L = 3.141592653589793238462643383279502884197L;
 
 /*  2 pi                                                                      */
-const float tmpl_Two_Pi_F       = 6.283185307F;
-const double tmpl_Two_Pi        = 6.28318530717958647;
-const long double tmpl_Two_Pi_L = 6.2831853071795864769252870L;
+const float tmpl_Two_Pi_F = 6.283185307179586476925286766559005768394F;
+const double tmpl_Two_Pi = 6.283185307179586476925286766559005768394;
+const long double tmpl_Two_Pi_L = 6.283185307179586476925286766559005768394L;
 
 /*  sqrt( 2 )                                                                 */
-const float tmpl_Sqrt_Two_F       = 1.414213562F;
-const double tmpl_Sqrt_Two        = 1.41421356237309504;
-const long double tmpl_Sqrt_Two_L = 1.4142135623730950488016890L;
+const float tmpl_Sqrt_Two_F = 1.414213562373095048801688724209698078570F;
+const double tmpl_Sqrt_Two = 1.414213562373095048801688724209698078570;
+const long double tmpl_Sqrt_Two_L = 1.414213562373095048801688724209698078570L;
 
 /*  e = exp( 1 )                                                              */
-const float tmpl_Euler_E_F       = 2.718281828F;
-const double tmpl_Euler_E        = 2.71828182845904523;
-const long double tmpl_Euler_E_L = 2.7182818284590452353602875L;
+const float tmpl_Euler_E_F = 2.718281828459045235360287471352662497757F;
+const double tmpl_Euler_E = 2.718281828459045235360287471352662497757;
+const long double tmpl_Euler_E_L = 2.718281828459045235360287471352662497757L;
 
 /*  1 / e = exp( -1 )                                                         */
-const float tmpl_Rcpr_Euler_E_F       = 0.367879441F;
-const double tmpl_Rcpr_Euler_E        = 0.36787944117144232;
-const long double tmpl_Rcpr_Euler_E_L = 0.3678794411714423215955238L;
+const float tmpl_Rcpr_Euler_E_F = 0.3678794411714423215955237701614608674458F;
+const double tmpl_Rcpr_Euler_E = 0.3678794411714423215955237701614608674458;
+
+const long double
+tmpl_Rcpr_Euler_E_L = 0.3678794411714423215955237701614608674458L;
 
 /*  log_e( 2 ) = ln( 2 )                                                      */
-const float tmpl_Natural_Log_of_Two_F       = 0.693147181F;
-const double tmpl_Natural_Log_of_Two        = 0.69314718055994531;
-const long double tmpl_Natural_Log_of_Two_L = 0.6931471805599453094172321L;
+const float
+tmpl_Natural_Log_of_Two_F = 0.6931471805599453094172321214581765680755F;
+
+const double
+tmpl_Natural_Log_of_Two = 0.6931471805599453094172321214581765680755;
+
+const long double
+tmpl_Natural_Log_of_Two_L = 0.6931471805599453094172321214581765680755L;
 
 /*  log_e( 10 ) = ln( 10 )                                                    */
-const float tmpl_Natural_Log_of_Ten_F       = 2.302585093F;
-const double tmpl_Natural_Log_of_Ten        = 2.30258509299404568;
-const long double tmpl_Natural_Log_of_Ten_L = 2.3025850929940456840179910L;
+const float
+tmpl_Natural_Log_of_Ten_F = 2.302585092994045684017991454684364207601F;
+
+const double
+tmpl_Natural_Log_of_Ten = 2.302585092994045684017991454684364207601;
+
+const long double
+tmpl_Natural_Log_of_Ten_L = 2.302585092994045684017991454684364207601L;
 
 /*  pi / 180                                                                  */
-const float tmpl_Deg_to_Rad_F       = 1.745329251E-2F;
-const double tmpl_Deg_to_Rad        = 1.74532925199432957E-2;
-const long double tmpl_Deg_to_Rad_L = 1.74532925199432957692369076E-2L;
+const float tmpl_Deg_to_Rad_F = 1.745329251994329576923690768488612713443E-2F;
+const double tmpl_Deg_to_Rad = 1.745329251994329576923690768488612713443E-2;
+
+const long double
+tmpl_Deg_to_Rad_L = 1.745329251994329576923690768488612713443E-2L;
 
 /*  180 / pi                                                                  */
-const float tmpl_Rad_to_Deg_F       = 57.295779513F;
-const double tmpl_Rad_to_Deg        = 57.29577951308232087;
-const long double tmpl_Rad_to_Deg_L = 57.29577951308232087679815481L;
+const float tmpl_Rad_to_Deg_F = 57.2957795130823208767981548141051703324F;
+const double tmpl_Rad_to_Deg = 57.2957795130823208767981548141051703324;
+const long double tmpl_Rad_to_Deg_L = 57.2957795130823208767981548141051703324L;
 
 #if TMPL_HAS_IEEE754_FLOAT == 1
 const float tmpl_Min_Float_Base_E = -85.1956484408F;
