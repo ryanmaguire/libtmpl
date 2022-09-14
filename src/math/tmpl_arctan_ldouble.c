@@ -517,11 +517,6 @@ static const long double tmpl_ldouble_atan_n_by_8[129] = {
     1.5083775167989392707573425786542463284923E0L
 };
 
-
-/* arctan t = t + t^3 p(t^2) / q(t^2)
-   |t| <= 0.09375
-   peak relative error 5.3e-37 */
-
 static const long double tmpl_ldouble_arctan_numer_coeffs[5] = {
     -4.283708356338736809269381409828726405572E1L,
     -8.636132499244548540964557273544599863825E1L,
@@ -558,8 +553,6 @@ static long double tmpl_ldouble_arctan_rational_approx(long double x)
     return x * (1.0L + numer/denom);
 }
 
-#include <stdlib.h>
-
 /*  Long double precision inverse tangent (atanl equivalent).                 */
 long double tmpl_LDouble_Arctan(long double x)
 {
@@ -585,13 +578,14 @@ long double tmpl_LDouble_Arctan(long double x)
             return tmpl_Pi_By_Two_L;
     }
 
+    /*  Avoid underflow. If |x| < 2^-52, atan(x) = x to quadruple precision.  */
     else if (w.bits.expo < TMPL_LDOUBLE_BIAS - 52U)
         return x;
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
     w.bits.sign = 0x00U;
 
-    /*  For |x| > 8, use the asymptotic expansion.                            */
+    /*  For |x| > 16, use the asymptotic expansion.                           */
     if (w.bits.expo > TMPL_LDOUBLE_BIAS + 3U)
     {
         out = tmpl_Pi_By_Two_L + tmpl_ldouble_arctan_rational_approx(-1.0L/w.r);
