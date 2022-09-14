@@ -165,6 +165,26 @@ static double tmpl_double_arctan_maclaurin_series(double x)
 }
 /*  End of tmpl_double_arctan_maclaurin_series.                               */
 
+static double tmpl_double_arctan_small_vals(double x)
+{
+    const double x_sq = x*x;
+    return  x * (
+        1.0 - x_sq * (
+            A00 + x_sq * (
+                A01 + x_sq * (
+                    A02 + x_sq * (
+                        A03 + x_sq * (
+                            A04 + x_sq * (
+                                A05 + x_sq * A06
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    );
+}
+
 /*  This function computes arctan(x) via the asymptotic expansion.            */
 static double tmpl_double_arctan_large_vals(double x)
 {
@@ -242,24 +262,7 @@ double tmpl_Double_Arctan(double x)
 
     /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */
     else if (w.bits.expo < TMPL_DOUBLE_BIAS - 3U)
-    {
-        const double x_sq = x*x;
-        return  x * (
-            1.0 - x_sq * (
-                A00 + x_sq * (
-                    A01 + x_sq * (
-                        A02 + x_sq * (
-                            A03 + x_sq * (
-                                A04 + x_sq * (
-                                    A05 + x_sq * A06
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        );
-    }
+        return tmpl_double_arctan_small_vals(x);
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
     w.bits.sign = 0x00U;
