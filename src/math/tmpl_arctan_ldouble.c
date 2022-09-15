@@ -177,7 +177,7 @@ long double tmpl_LDouble_Arctan(long double x)
     if (w.bits.expo > TMPL_LDOUBLE_BIAS + 3U)
     {
         out = tmpl_Pi_By_Two_L + tmpl_ldouble_arctan_large_vals(w.r);
-        return (x < 0.0 ? -out : out);
+        return (x < 0.0L ? -out : out);
     }
 
     /*  The exponent tells us the index for the tables tmpl_atan_double_v and *
@@ -600,7 +600,7 @@ long double tmpl_LDouble_Arctan(long double x)
 
     n = (unsigned int)(8.0L*w.r + 0.25L);
     t = 0.125L * (long double)n;
-    t = (w.r - t) / (1.0 + w.r*t);
+    t = (w.r - t) / (1.0L + w.r*t);
     out = tmpl_ldouble_atan_n_by_8[n] + tmpl_ldouble_arctan_rational_approx(t);
     return (x < 0.0L ? -out : out);
 }
@@ -651,7 +651,7 @@ long double tmpl_LDouble_Arctan(long double x)
 
     n = (unsigned int)(8.0L*w.r + 0.25L);
     t = 0.125L * (long double)n;
-    t = (w.r - t) / (1.0 + w.r*t);
+    t = (w.r - t) / (1.0L + w.r*t);
     out = tmpl_ldouble_atan_n_by_8[n] + tmpl_ldouble_arctan_rational_approx(t);
     return (x < 0.0L ? -out : out);
 }
