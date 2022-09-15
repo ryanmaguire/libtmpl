@@ -132,8 +132,8 @@ int main(void)                                                                 \
         {                                                                      \
             rms_rel += temp*temp;                                              \
                                                                                \
-          if (max_rel < temp)                                                  \
-              max_rel = temp;                                                  \
+            if (max_rel < temp)                                                \
+                max_rel = temp;                                                \
         }                                                                      \
     }                                                                          \
                                                                                \
