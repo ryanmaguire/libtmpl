@@ -224,7 +224,7 @@ long double tmpl_LDouble_Arctan(long double x)
  *  2^-63 ~= 10^-19. RMS error is ~0.3 ULP based on sampling between +/- 1E6. */
 
 /*  Taylor series centered at x0 = 0 for atan(x).                             */
-static long double tmpl_double_arctan_maclaurin_series(long double x)
+static long double tmpl_ldouble_arctan_maclaurin_series(long double x)
 {
     /*  The Taylor series for atan(x) is in terms of x^{2n+1}. Compute the    *
      *  square of x and use this for the series.                              */
@@ -248,7 +248,7 @@ static long double tmpl_double_arctan_maclaurin_series(long double x)
      *  by the input gives us the correct result.                             */
     return x*out;
 }
-/*  End of tmpl_double_arctan_maclaurin_series.                               */
+/*  End of tmpl_ldouble_arctan_maclaurin_series.                              */
 
 /*  Asymptotic expansion for atan(x). This works well for large values.       */
 static long double tmpl_ldouble_arctan_large_vals(long double x)
@@ -369,7 +369,7 @@ long double tmpl_LDouble_Arctan(long double x)
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (w.r - v) / (1.0L + w.r*v);
-    out = atan_v + tmpl_double_arctan_maclaurin_series(arg);
+    out = atan_v + tmpl_ldouble_arctan_maclaurin_series(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
     return (x < 0.0L ? -out : out);
@@ -378,11 +378,11 @@ long double tmpl_LDouble_Arctan(long double x)
 
 /******************************************************************************
  *                        128 BIT QUADRUPLE PRECISION                         *
+ *                                    and                                     *
+ *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
  ******************************************************************************/
 
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
+#else
 
 /* arctan(k/8), k = 0, ..., 128 */
 static const long double tmpl_ldouble_atan_n_by_8[129] = {
@@ -553,6 +553,12 @@ static long double tmpl_ldouble_arctan_rational_approx(long double x)
     return x * (1.0L + numer/denom);
 }
 
+/*  The only difference in the code for quadruple and double-double precision *
+ *  is how the bits of a long double are extracted.                           */
+#if \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
+
 /*  Long double precision inverse tangent (atanl equivalent).                 */
 long double tmpl_LDouble_Arctan(long double x)
 {
@@ -601,8 +607,58 @@ long double tmpl_LDouble_Arctan(long double x)
 /*  End of tmpl_LDouble_Arctan.                                               */
 
 #else
+/*  This part is for double-double precision.                                 */
 
-/*  Double-double not implemented yet.                                        */
+/*  Long double precision inverse tangent (atanl equivalent).                 */
+long double tmpl_LDouble_Arctan(long double x)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_IEEE754_LDouble w;
+    long double out, t;
+    unsigned int n;
+
+    /*  Set the long double part of the word to the input.                    */
+    w.r = x;
+
+    /*  Special cases, NaN and INF.                                           */
+    if (w.bits.expoa == TMPL_LDOUBLE_NANINF_EXP)
+    {
+        /*  Check if the input is NaN. If it is, simply return the input.     */
+        if ((w.bits.man0a != 0x0U || w.bits.man1a != 0x0U))
+            return x;
+
+        /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
+        if (w.bits.signa)
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  Avoid underflow. If |x| < 2^-52, atan(x) = x to quadruple precision.  */
+    else if (w.bits.expoa < TMPL_LDOUBLE_BIAS - 52U)
+        return x;
+
+    /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
+    w.bits.signb = w.bits.signa ^ w.bits.signb;
+    w.bits.signa = 0x0U;
+
+    /*  For |x| > 16, use the asymptotic expansion.                           */
+    if (w.bits.expoa > TMPL_LDOUBLE_BIAS + 3U)
+    {
+        out = tmpl_Pi_By_Two_L + tmpl_ldouble_arctan_rational_approx(-1.0L/w.r);
+        return (x < 0.0L ? -out : out);
+    }
+
+    n = (unsigned int)(8.0L*w.r + 0.25L);
+    t = 0.125L * (long double)n;
+    t = (w.r - t) / (1.0 + w.r*t);
+    out = tmpl_ldouble_atan_n_by_8[n] + tmpl_ldouble_arctan_rational_approx(t);
+    return (x < 0.0L ? -out : out);
+}
+/*  End of tmpl_LDouble_Arctan.                                               */
+
+#endif
+/*  End of difference between double-double and quadruple precisions.         */
 
 #endif
 /*  #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN */
