@@ -123,91 +123,6 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Check for IEEE-754 support.                                               */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
-
-/*  Coefficients for the computation of the polynomial approximation. The     *
- *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
-#define A00 3.33333333333329318027E-01
-#define A01 -1.99999999998764832476E-01
-#define A02 1.42857142725034663711E-01
-#define A03 -1.11111104054623557880E-01
-#define A04 9.09088713343650656196E-02
-#define A05 -7.69187620504482999495E-02
-#define A06 6.66107313738753120669E-02
-#define A07 -5.83357013379057348645E-02
-
-/*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
-static double tmpl_double_arctan_maclaurin_series(double x)
-{
-    /*  Declare necessary variables.                                          */
-    const double x_sq = x*x;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return x * (
-        1.0 - x_sq * (
-            A00 + x_sq * (
-                A01 + x_sq * (
-                    A02 + x_sq * (
-                        A03 + x_sq * (
-                            A04 + x_sq * (
-                                A05 + x_sq * (
-                                    A06 + x_sq * A07
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
-}
-/*  End of tmpl_double_arctan_maclaurin_series.                               */
-
-static double tmpl_double_arctan_small_vals(double x)
-{
-    const double x_sq = x*x;
-    return  x * (
-        1.0 - x_sq * (
-            A00 + x_sq * (
-                A01 + x_sq * (
-                    A02 + x_sq * (
-                        A03 + x_sq * (
-                            A04 + x_sq * (
-                                A05 + x_sq * A06
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
-}
-
-/*  This function computes arctan(x) via the asymptotic expansion.            */
-static double tmpl_double_arctan_large_vals(double x)
-{
-    /*  Declare necessary variables.                                          */
-    const double arg = -1.0 / x;
-    const double arg_sq = arg*arg;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return arg * (
-        1.0 - arg_sq * (
-            A00 + arg_sq * (
-                A01 + arg_sq * (
-                    A02 + arg_sq * (
-                        A03 + arg_sq * A04
-                    )
-                )
-            )
-        )
-    );
-}
-/*  End of tmpl_double_arctan_large_vals.                                     */
-
 /*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
  *                                                                            *
  *                                     u - v                                  *
@@ -215,7 +130,8 @@ static double tmpl_double_arctan_large_vals(double x)
  *                                     1 + uv                                 *
  *                                                                            *
  *  The values v and atan(v) are pre-computed below for the calculation.      */
-static const double tmpl_atan_double_v[7] = {
+static const double tmpl_atan_double_v[8] = {
+    0.05,
     0.18,
     0.35,
     0.72,
@@ -225,7 +141,8 @@ static const double tmpl_atan_double_v[7] = {
     8.0
 };
 
-static const double tmpl_atan_double_atan_of_v[7] = {
+static const double tmpl_atan_double_atan_of_v[8] = {
+    0.0499583957219427614100063,
     0.178092938231197549667920,
     0.336674819386727181396699,
     0.624023052976756847589791,
@@ -234,6 +151,9 @@ static const double tmpl_atan_double_atan_of_v[7] = {
     1.32581766366803246505924,
     1.44644133224813518419997
 };
+
+/*  Check for IEEE-754 support.                                               */
+#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Double precision inverse tangent (atan equivalent).                       */
 double tmpl_Double_Arctan(double x)
@@ -260,9 +180,23 @@ double tmpl_Double_Arctan(double x)
             return tmpl_Pi_By_Two;
     }
 
-    /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */
-    else if (w.bits.expo < TMPL_DOUBLE_BIAS - 3U)
-        return tmpl_double_arctan_small_vals(x);
+    /*  Small values, |x| < 1/16. Use the MacLaurin series to 6 terms.        */
+    else if (w.bits.expo < TMPL_DOUBLE_BIAS - 4U)
+    {
+        const double x_sq = x*x;
+        return x * (
+            1.0 + x_sq * (
+                -3.33333333333329318027E-01 + x_sq * (
+                    1.99999999998764832476E-01 + x_sq * (
+                        -1.42857142725034663711E-01 + x_sq * (
+                            1.11111104054623557880E-01 + x_sq *
+                                -9.09088713343650656196E-02
+                        )
+                    )
+                )
+            )
+        );
+    }
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
     w.bits.sign = 0x00U;
@@ -270,181 +204,99 @@ double tmpl_Double_Arctan(double x)
     /*  For |x| > 8, use the asymptotic expansion.                            */
     if (w.bits.expo > TMPL_DOUBLE_BIAS + 3U)
     {
-        out = tmpl_Pi_By_Two + tmpl_double_arctan_large_vals(w.r);
+        out = tmpl_Double_Arctan_Asymptotic(w.r);
         return (x < 0.0 ? -out : out);
     }
 
     /*  The exponent tells us the index for the tables tmpl_atan_double_v and *
      *  tmpl_atan_double_atan_of_v that correspond to x. The index is simply  *
-     *  the exponent plus three (since the lowest value is 1/8 = 2^-3, we     *
-     *  need to shift up by 3). The exponent has a bias, per the IEEE-754     *
+     *  the exponent plus four (since the lowest value is 1/16 = 2^-4, we     *
+     *  need to shift up by 4). The exponent has a bias, per the IEEE-754     *
      *  format, so we must subtract this off to get the correct index.        */
-    ind = (w.bits.expo + 3U) - TMPL_DOUBLE_BIAS;
+    ind = (w.bits.expo + 4U) - TMPL_DOUBLE_BIAS;
     v = tmpl_atan_double_v[ind];
     atan_v = tmpl_atan_double_atan_of_v[ind];
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (w.r - v) / (1.0 + w.r*v);
-    out = atan_v + tmpl_double_arctan_maclaurin_series(arg);
+    out = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
     return (x < 0.0 ? -out : out);
 }
 /*  End of tmpl_Double_Arctan.                                                */
 
-/*  Undefine all of the macros.                                               */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-#undef A07
-
 #else
 /*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     *
  *  Portable version of arctan function.                                      */
-
-/*  Precompute atan(1/2), atan(1), and atan(3/2).                             */
-#define ATAN_OF_ONE_HALF 0.46364760900080611621425623146121440202853705
-#define ATAN_OF_ONE 0.78539816339744830961566084581987572104929234
-#define ATAN_OF_THREE_HALFS 0.98279372324732906798571061101466601449687745
-
-/*  Coefficients for the computation of the polynomial approximation. The     *
- *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
-#define A00 3.33333333333329318027E-01
-#define A01 -1.99999999998764832476E-01
-#define A02 1.42857142725034663711E-01
-#define A03 -1.11111104054623557880E-01
-#define A04 9.09088713343650656196E-02
-#define A05 -7.69187620504482999495E-02
-#define A06 6.66107313738753120669E-02
-#define A07 -5.83357013379057348645E-02
-#define A08 4.97687799461593236017E-02
-#define A09 -3.65315727442169155270E-02
-#define A10 1.62858201153657823623E-02
-
-/*  This function computes arctan(x) via a Taylor series for small |x|.       */
-static double tmpl_double_arctan_small_vals(double x)
-{
-    /*  Declare necessary variables.                                          */
-    const double x_sq = x*x;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return x * (
-        1.0 - x_sq * (
-            A00 + x_sq * (
-                A01 + x_sq * (
-                    A02 + x_sq * (
-                        A03 + x_sq * (
-                            A04 + x_sq * (
-                                A05 + x_sq * (
-                                    A06 + x_sq * (
-                                        A07 + x_sq * (
-                                            A08 + x_sq * (
-                                                A09 + x_sq * A10
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
-}
-/*  End of tmpl_double_arctan_small_vals.                                     */
 
 /*  Double precision inverse tangent (atan equivalent).                       */
 double tmpl_Double_Arctan(double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double arg, sgn_x;
+    double abs_x, arg, out, v, atan_v;
+    unsigned int ind;
 
-    /*  If the input is NaN, return NaN.                                      */
+    /*  Special cases, NaN and INF.                                           */
     if (tmpl_Double_Is_NaN(x))
         return x;
+    else if (tmpl_Double_Is_Inf(x))
+        return (x < 0.0 ? -tmpl_Pi_By_Two : tmpl_Pi_By_Two);
 
-    /*  atan(x) has limits of +/- pi/2 as |x| -> infinity. Check for this.    */
-    if (tmpl_Double_Is_Inf(x))
-    {
-        if (x > 0.0)
-            return tmpl_Pi_By_Two;
-        else
-            return -tmpl_Pi_By_Two;
-    }
+    abs_x = tmpl_Double_Abs(x);
 
-    /*  For all other x, use the fact that atan is an odd function to reduce  *
-     *  to the case of x >= 0.                                                */
-    if (x < 0.0)
+    /*  Small values, |x| < 1/16. Use the MacLaurin series to 6 terms.        */
+    if (abs_x < 0.0625)
     {
-        sgn_x = -1.0;
-        arg = -x;
+        const double x_sq = x*x;
+        return x * (
+            1.0 + x_sq * (
+                -3.33333333333329318027E-01 + x_sq * (
+                    1.99999999998764832476E-01 + x_sq * (
+                        -1.42857142725034663711E-01 + x_sq * (
+                            1.11111104054623557880E-01 + x_sq *
+                                -9.09088713343650656196E-02
+                        )
+                    )
+                )
+            )
+        );
     }
+    else if (abs_x < 0.125)
+        ind = 0U;
+    else if (abs_x < 0.25)
+        ind = 1U;
+    else if (abs_x < 0.5)
+        ind = 2U;
+    else if (abs_x < 1.0)
+        ind = 3U;
+    else if (abs_x < 2.0)
+        ind = 4U;
+    else if (abs_x < 4.0)
+        ind = 5U;
+    else if (abs_x < 8.0)
+        ind = 6U;
+    else if (abs_x < 16.0)
+        ind = 7U;
+
+    /*  For |x| > 16, use the asymptotic expansion.                           */
     else
     {
-        sgn_x = 1.0;
-        arg = x;
+        out = tmpl_Double_Arctan_Asymptotic(abs_x);
+        return (x < 0.0 ? -out : out);
     }
 
-    /*  For small values, use the polynomial provided above.                  */
-    if (arg < 0.4375)
-        return sgn_x * tmpl_double_arctan_small_vals(arg);
+    v = tmpl_atan_double_v[ind];
+    atan_v = tmpl_atan_double_atan_of_v[ind];
 
-    /*  Following Abramowitz and Stegun, equation 4.4.34, we can reduce the   *
-     *  argument to a smaller value using:                                    *
-     *      atan(x) - atan(y) = atan((x - y) / (1 + xy)) (mod pi).            */
-    else if (arg < 0.6875)
-    {
-        /*  Use the above formula with atan(1/2).                             */
-        arg = (2.0 * arg - 1.0) / (2.0 + arg);
-        return sgn_x * (ATAN_OF_ONE_HALF + tmpl_double_arctan_small_vals(arg));
-    }
+    /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
+    arg = (abs_x - v) / (1.0 + abs_x*v);
+    out = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
 
-    /*  Same reduction, but with 1 instead of 1/2.                            */
-    else if (arg < 1.1875)
-    {
-        arg = (arg - 1.0) / (arg + 1.0);
-        return sgn_x * (ATAN_OF_ONE + tmpl_double_arctan_small_vals(arg));
-    }
-
-    /*  Same reduction, but with 3/2 instead of 1.                            */
-    else if (arg < 2.4375)
-    {
-        arg = (2.0 * arg - 3.0) / (2.0 + 3.0 * arg);
-        return sgn_x*(ATAN_OF_THREE_HALFS + tmpl_double_arctan_small_vals(arg));
-    }
-
-    /*  For larger values, the expansion at infinity is sufficient. We use    *
-     *  the polynomial for small values with input -1 / arg and precompute    *
-     *  atan(infinity), which is pi / 2.                                      */
-    else
-    {
-        arg = -1.0 / arg;
-        return sgn_x * (tmpl_Pi_By_Two + tmpl_double_arctan_small_vals(arg));
-    }
+    /*  Use the fact that atan is an odd function to complete the computation.*/
+    return (x < 0.0 ? -out : out);
 }
 /*  End of tmpl_Double_Arctan.                                                */
-
-/*  Undefine all of the macros.                                               */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-#undef A07
-#undef A08
-#undef A09
-#undef A10
-#undef ATAN_OF_ONE_HALF
-#undef ATAN_OF_ONE
-#undef ATAN_OF_THREE_HALFS
 
 #endif
 /*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1. */

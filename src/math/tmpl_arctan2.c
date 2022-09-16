@@ -95,16 +95,6 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <math.h>
 
-/*  The "double" version of atan2 is defined in both C89 and C99 math.h so we *
- *  only need to alias this function.                                         */
-
-/*  Double precision 2-dimensional arctan function (atan2 equivalent).        */
-double tmpl_Double_Arctan2(double y, double x)
-{
-    return atan2(y, x);
-}
-/*  End of tmpl_Double_Arctan2.                                               */
-
 /*  Check if we have C99 math.h or not.                                       */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 

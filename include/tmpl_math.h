@@ -958,6 +958,62 @@ extern long double tmpl_LDouble_Arctan(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Arctan_Asymptotic                                         *
+ *  Purpose:                                                                  *
+ *      Compute the asymptotic expansion of arctan for large positive values. *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double atan_x:                                                        *
+ *          The inverse tangent of x, tan^-1(x).                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well. Only accurate *
+ *      for large positive values. Use tmpl_Double_Arctan if you are unsure.  *
+ ******************************************************************************/
+
+/*  This function is small enough that it is definitely worth inlining.       */
+#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+
+/*  inline versions found here.                                               */
+#include <libtmpl/include/tmpl_math_arctan_asymptotic_inline.h>
+
+#else
+extern float tmpl_Float_Arctan_Asymptotic(float x);
+extern double tmpl_Double_Arctan_Asymptotic(double x);
+extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arctan_Maclaurin                                          *
+ *  Purpose:                                                                  *
+ *      Compute the Maclaurin series for arctan for small real numbers.       *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double atan_x:                                                        *
+ *          The inverse tangent of x, tan^-1(x).                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well. Only accurate *
+ *      for small values. Use tmpl_Double_Arctan if you are unsure.           *
+ ******************************************************************************/
+
+/*  This function is small enough that it is definitely worth inlining.       */
+#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+
+/*  inline versions found here.                                               */
+#include <libtmpl/include/tmpl_math_arctan_maclaurin_inline.h>
+
+#else
+extern float tmpl_Float_Arctan_Maclaurin(float x);
+extern double tmpl_Double_Arctan_Maclaurin(double x);
+extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Base2_Mant_and_Exp                                        *
  *  Purpose:                                                                  *
  *      Given a real number x, compute the numbers m and e such that          *
