@@ -57,6 +57,9 @@ USEMATH=1
 # Use of the IEEE-754 floating point format.
 USEIEEE=1
 
+# Files to be excluded (added later based on USEINLINE and USEMATH.
+Exclude=""
+
 # You can pass extra arguments. Just add -MyArgument.
 ExtraArgs=""
 
@@ -132,10 +135,21 @@ fi
 # TMPL_SET_INLINE_TRUE with -DTMPL_SET_INLINE_TRUE to enable this macro.
 if [ $USEINLINE == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_INLINE_TRUE"
-    Exclude="tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
-    Exclude="$Exclude tmpl_complex_abs_squared.c tmpl_complex_quick_abs.c"
-    Exclude="$Exclude tmpl_copysign_float.c tmpl_copysign_double.c"
-    Exclude="$Exclude tmpl_copysign_ldouble.c tmpl_complex_add.c"
+    Exclude="$Exclude tmpl_abs_double.c"
+    Exclude="$Exclude tmpl_abs_float.c"
+    Exclude="$Exclude tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arctan_asymptotic_double.c"
+    Exclude="$Exclude tmpl_arctan_asymptotic_float.c"
+    Exclude="$Exclude tmpl_arctan_asymptotic_ldouble.c"
+    Exclude="$Exclude tmpl_arctan_maclaurin_double.c"
+    Exclude="$Exclude tmpl_arctan_maclaurin_float.c"
+    Exclude="$Exclude tmpl_arctan_maclaurin_ldouble.c"
+    Exclude="$Exclude tmpl_complex_abs_squared.c"
+    Exclude="$Exclude tmpl_complex_quick_abs.c"
+    Exclude="$Exclude tmpl_copysign_float.c"
+    Exclude="$Exclude tmpl_copysign_double.c"
+    Exclude="$Exclude tmpl_copysign_ldouble.c"
+    Exclude="$Exclude tmpl_complex_add.c"
     Exclude="$Exclude tmpl_complex_addto.c"
 fi
 
