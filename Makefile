@@ -52,6 +52,9 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_arctan_maclaurin_double.c" -and \
 	-not -name "tmpl_arctan_maclaurin_float.c" -and \
 	-not -name "tmpl_arctan_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_arctan_pade_double.c" -and \
+	-not -name "tmpl_arctan_pade_float.c" -and \
+	-not -name "tmpl_arctan_pade_ldouble.c" -and \
 	-not -name "tmpl_complex_abs_squared.c" -and \
 	-not -name "tmpl_complex_add.c" -and \
 	-not -name "tmpl_complex_addto.c" -and \
