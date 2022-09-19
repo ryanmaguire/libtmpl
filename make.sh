@@ -144,6 +144,9 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_arctan_maclaurin_double.c"
     Exclude="$Exclude tmpl_arctan_maclaurin_float.c"
     Exclude="$Exclude tmpl_arctan_maclaurin_ldouble.c"
+    Exclude="$Exclude tmpl_arctan_pade_double.c"
+    Exclude="$Exclude tmpl_arctan_pade_float.c"
+    Exclude="$Exclude tmpl_arctan_pade_ldouble.c"
     Exclude="$Exclude tmpl_complex_abs_squared.c"
     Exclude="$Exclude tmpl_complex_quick_abs.c"
     Exclude="$Exclude tmpl_copysign_float.c"
@@ -156,8 +159,11 @@ fi
 if [ $USEMATH == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MATH_TRUE"
 else
-    Exclude="$Exclude tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
-    Exclude="$Exclude tmpl_arctan_double.c tmpl_arctan_float.c"
+    Exclude="$Exclude tmpl_abs_double.c"
+    Exclude="$Exclude tmpl_abs_float.c"
+    Exclude="$Exclude tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arctan_double.c"
+    Exclude="$Exclude tmpl_arctan_float.c"
     Exclude="$Exclude tmpl_arctan_ldouble.c"
 fi
 

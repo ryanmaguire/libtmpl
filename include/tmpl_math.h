@@ -998,6 +998,9 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well. Only accurate *
  *      for small values. Use tmpl_Double_Arctan if you are unsure.           *
+ *      The absolute error goes like x^19 / 19. For |x| < 0.1 this is bounded *
+ *      by 10^-17. For |x| < 0.5 this is bounded by 10^-7. For |x| < 1 this   *
+ *      bounded by 3 x 10^-2. Do not use for larger values.                   *
  ******************************************************************************/
 
 /*  This function is small enough that it is definitely worth inlining.       */
@@ -1010,6 +1013,36 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 extern float tmpl_Float_Arctan_Maclaurin(float x);
 extern double tmpl_Double_Arctan_Maclaurin(double x);
 extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arctan_Pade                                               *
+ *  Purpose:                                                                  *
+ *      Compute the Pade approximation of order (11, 11) for arctan.          *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double atan_x:                                                        *
+ *          The inverse tangent of x, tan^-1(x).                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *      Very good for |x| < 1 (relative error bounded by 10^-9). For |x| < 6  *
+ *      the relative error is bounded by 3 x 10^-2. This approximation is     *
+ *      significantly faster than atan (math.h) and tmpl_Double_Arctan.       *
+ ******************************************************************************/
+
+/*  This function is a rational function that is worth inlining.              */
+#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+
+/*  inline versions found here.                                               */
+#include <libtmpl/include/tmpl_math_arctan_pade_inline.h>
+
+#else
+extern float tmpl_Float_Arctan_Pade(float x);
+extern double tmpl_Double_Arctan_Pade(double x);
+extern long double tmpl_LDouble_Arctan_Pade(long double x);
 #endif
 
 /******************************************************************************
