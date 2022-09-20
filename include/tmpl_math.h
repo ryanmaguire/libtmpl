@@ -102,6 +102,11 @@
  *  also found here.                                                          */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  This macro should be defined. If not, abort compiling.                    */
+#if !defined(TMPL_USE_INLINE)
+#error "tmpl_math.h: TMPL_USE_INLINE is undefined."
+#endif
+
 /*  This macro should be defined in tmpl_config.h. If not, there's an error.  */
 #if !defined(TMPL_USE_MATH_ALGORITHMS)
 
@@ -865,13 +870,11 @@ extern const long double tmpl_Min_LDouble_Base_E;
 /*  The absolute value function is small enough that a user may want to       *
  *  inline it. The result of inlining gives a surprising 2x speed boost. The  *
  *  absolute value function is not computationally expensive regardless.      */
-#elif defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+#elif TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
 #include <libtmpl/include/tmpl_math_abs_inline.h>
-
 #else
-/*  Else for #if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1.            */
 
 /*  Inline not requested, use the external functions in src/math.             */
 extern float tmpl_Float_Abs(float x);
@@ -879,7 +882,7 @@ extern double tmpl_Double_Abs(double x);
 extern long double tmpl_LDouble_Abs(long double x);
 
 #endif
-/*  End of #if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1.              */
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -973,11 +976,10 @@ extern long double tmpl_LDouble_Arctan(long double x);
  ******************************************************************************/
 
 /*  This function is small enough that it is definitely worth inlining.       */
-#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+#if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
 #include <libtmpl/include/tmpl_math_arctan_asymptotic_inline.h>
-
 #else
 extern float tmpl_Float_Arctan_Asymptotic(float x);
 extern double tmpl_Double_Arctan_Asymptotic(double x);
@@ -1004,11 +1006,10 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
  ******************************************************************************/
 
 /*  This function is small enough that it is definitely worth inlining.       */
-#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+#if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
 #include <libtmpl/include/tmpl_math_arctan_maclaurin_inline.h>
-
 #else
 extern float tmpl_Float_Arctan_Maclaurin(float x);
 extern double tmpl_Double_Arctan_Maclaurin(double x);
@@ -1034,15 +1035,43 @@ extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
  ******************************************************************************/
 
 /*  This function is a rational function that is worth inlining.              */
-#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+#if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
 #include <libtmpl/include/tmpl_math_arctan_pade_inline.h>
-
 #else
 extern float tmpl_Float_Arctan_Pade(float x);
 extern double tmpl_Double_Arctan_Pade(double x);
 extern long double tmpl_LDouble_Arctan_Pade(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arctan_Very_Small                                         *
+ *  Purpose:                                                                  *
+ *      Compute the Maclaurin series of arctan for very small |x|. Used for   *
+ *      avoiding underflow when computing atan(x).                            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double atan_x:                                                        *
+ *          The inverse tangent of x, tan^-1(x).                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well. Only good for *
+ *      small values. tmpl_Double_Arctan uses this function for |x| < 1/8. It *
+ *      is accurate to 2 x 10^-16 relative error in this range.               *
+ ******************************************************************************/
+
+/*  This function is a rational function that is worth inlining.              */
+#if TMPL_USE_INLINE == 1
+
+/*  inline versions found here.                                               */
+#include <libtmpl/include/tmpl_math_arctan_very_small_inline.h>
+#else
+extern float tmpl_Float_Arctan_Very_Small(float x);
+extern double tmpl_Double_Arctan_Very_Small(double x);
+extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
 #endif
 
 /******************************************************************************
@@ -1105,21 +1134,17 @@ extern long double tmpl_LDouble_Cbrt(long double x);
  ******************************************************************************/
 
 /*  These functions are small enough that it's worth-while inlining them.     */
-#if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1
+#if TMPL_USE_INLINE == 1
 
 /*  Inline support to copysign found here.                                    */
 #include <libtmpl/include/tmpl_math_copysign_inline.h>
-
 #else
-/*  End of #if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1               */
 
 /*  No inline support requested.                                              */
 extern float tmpl_Float_Copysign(float x, float y);
 extern double tmpl_Double_Copysign(double x, double y);
 extern long double tmpl_LDouble_Copysign(long double x, long double y);
-
 #endif
-/*  End of #if defined(TMPL_USE_INLINE) && TMPL_USE_INLINE == 1.              */
 
 /******************************************************************************
  *  Function:                                                                 *
