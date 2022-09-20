@@ -34,6 +34,12 @@
 #ifndef TMPL_MATH_COMPLEX_ABS_SQUARED_INLINE_H
 #define TMPL_MATH_COMPLEX_ABS_SQUARED_INLINE_H
 
+/*  TMPL_USE_INLINE macro found here.                                         */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
+
 /*  Complex data types declared here.                                         */
 #include <libtmpl/include/tmpl_complex.h>
 
@@ -60,6 +66,9 @@ static inline long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z)
     return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
 }
 /*  End of tmpl_CLDouble_Abs_Squared.                                         */
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

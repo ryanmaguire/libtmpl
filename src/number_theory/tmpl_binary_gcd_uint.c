@@ -385,3 +385,4 @@ unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
 
 /*  #undef the macro in case someone wants to #include this file.             */
 #undef TMPL_GCD_ALGORITHM
+#undef trailing_zeros

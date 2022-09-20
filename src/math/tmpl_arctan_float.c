@@ -127,62 +127,12 @@
 
 /*  Coefficients for the computation of the polynomial approximation. The     *
  *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
-#define A00 3.33333333333329318027E-01F
-#define A01 -1.99999999998764832476E-01F
-#define A02 1.42857142725034663711E-01F
-#define A03 -1.11111104054623557880E-01F
+#define A0 (1.0F)
+#define A1 (-3.33333333333329318027E-01F)
+#define A2 (1.99999999998764832476E-01F)
+#define A3 (-1.42857142725034663711E-01F)
 
-/*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
-static float tmpl_float_arctan_maclaurin_series(float x)
-{
-    /*  Declare necessary variables.                                          */
-    const float x_sq = x*x;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return x*(1.0F - x_sq*(A00 + x_sq*(A01 + x_sq*(A02 + x_sq*A03))));
-}
-/*  End of tmpl_float_arctan_maclaurin_series.                                */
-
-/*  This function computes arctan(x) via the asymptotic expansion.            */
-static float tmpl_float_arctan_large_vals(float x)
-{
-    /*  Declare necessary variables.                                          */
-    const float arg = -1.0F / x;
-    const float arg_sq = arg*arg;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return arg*(1.0F - arg_sq*(A00 + arg_sq*(A01 + arg_sq*A02)));
-}
-/*  End of tmpl_float_arctan_large_vals.                                      */
-
-/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
- *                                                                            *
- *                                     u - v                                  *
- *          atan(u) = atan(v) + atan( -------- )                              *
- *                                     1 + uv                                 *
- *                                                                            *
- *  The values v and atan(v) are pre-computed below for the calculation.      */
-static const float tmpl_atan_float_v[7] = {
-    0.18F,
-    0.35F,
-    0.72F,
-    1.35F,
-    2.5F,
-    4.0F,
-    8.0F
-};
-
-static const float tmpl_atan_float_atan_of_v[7] = {
-    0.178092938231197549667920F,
-    0.336674819386727181396699F,
-    0.624023052976756847589791F,
-    0.933247528656203869893663F,
-    1.19028994968253173292773F,
-    1.32581766366803246505924F,
-    1.44644133224813518419997F
-};
+#include <libtmpl/include/tmpl_math_arctan_tables.h>
 
 /*  Single precision inverse tangent (atanf equivalent).                      */
 float tmpl_Float_Arctan(float x)
@@ -212,8 +162,8 @@ float tmpl_Float_Arctan(float x)
     /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */
     else if (w.bits.expo < TMPL_FLOAT_BIAS - 3U)
     {
-        const float x_sq = x*x;
-        return x*(1.0F - x_sq*(A00 + x_sq*(A01 + x_sq*A02)));
+        const float x2 = x*x;
+        return x*(A0 + x2*(A1 + x2*(A2 + x2*A3)));
     }
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
@@ -222,7 +172,7 @@ float tmpl_Float_Arctan(float x)
     /*  For |x| > 8, use the asymptotic expansion.                            */
     if (w.bits.expo > TMPL_FLOAT_BIAS + 3U)
     {
-        out = tmpl_Pi_By_Two_F + tmpl_float_arctan_large_vals(w.r);
+        out = tmpl_Float_Arctan_Asymptotic(w.r);
         return (x < 0.0F ? -out : out);
     }
 
@@ -237,7 +187,7 @@ float tmpl_Float_Arctan(float x)
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (w.r - v) / (1.0F + w.r*v);
-    out = atan_v + tmpl_float_arctan_maclaurin_series(arg);
+    out = atan_v + tmpl_Float_Arctan_Maclaurin(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
     return (x < 0.0F ? -out : out);
@@ -245,10 +195,10 @@ float tmpl_Float_Arctan(float x)
 /*  End of tmpl_Float_Arctan.                                                 */
 
 /*  Undefine all of the macros.                                               */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
+#undef A0
+#undef A1
+#undef A2
+#undef A3
 
 #else
 /*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.       */
@@ -257,32 +207,6 @@ float tmpl_Float_Arctan(float x)
 #define ATAN_OF_ONE_HALF 0.46364760900080611621425623146121440202853705F
 #define ATAN_OF_ONE 0.78539816339744830961566084581987572104929234F
 #define ATAN_OF_THREE_HALFS 0.98279372324732906798571061101466601449687745F
-
-/*  Coefficients for the computation of the polynomial approximation. The     *
- *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
-#define ATAN_A00 3.3333328366E-01F
-#define ATAN_A01 1.9999158382E-01F
-#define ATAN_A02 1.4253635705E-01F
-#define ATAN_A03 1.0648017377E-01F
-#define ATAN_A04 6.1687607318E-02F
-
-/*  This function computes arctan(x) via a Taylor series for small |x|.       */
-static float tmpl_arctan_small_vals(float x)
-{
-    /*  Declare necessary variables.                                          */
-    float x_sq = x*x;
-    float out;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    out = ATAN_A04 * x_sq - ATAN_A03;
-    out = out * x_sq + ATAN_A02;
-    out = out * x_sq - ATAN_A01;
-    out = out * x_sq + ATAN_A00;
-    out = x*(1.0F - x_sq * out);
-    return out;
-}
-/*  End of tmpl_arctan_small_vals.                                            */
 
 /*  Single precision inverse tangent.                                         */
 float tmpl_Float_Arctan(float x)
@@ -318,7 +242,7 @@ float tmpl_Float_Arctan(float x)
 
     /*  For small values, use the polynomial provided above.                  */
     if (arg < 0.4375F)
-        return sgn_x * tmpl_arctan_small_vals(arg);
+        return sgn_x * tmpl_Float_Arctan_Maclaurin(arg);
 
     /*  Following Abramowitz and Stegun, equation 4.4.34, we can reduce the   *
      *  argument to a smaller value using:                                    *
@@ -327,21 +251,21 @@ float tmpl_Float_Arctan(float x)
     {
         /*  Use the above formula with atan(1/2).                             */
         arg = (2.0F * arg - 1.0F) / (2.0F + arg);
-        return sgn_x * (ATAN_OF_ONE_HALF + tmpl_arctan_small_vals(arg));
+        return sgn_x * (ATAN_OF_ONE_HALF + tmpl_Float_Arctan_Maclaurin(arg));
     }
 
     /*  Same reduction, but with 1 instead of 1/2.                            */
     else if (arg < 1.1875F)
     {
         arg = (arg - 1.0F) / (arg + 1.0F);
-        return sgn_x * (ATAN_OF_ONE + tmpl_arctan_small_vals(arg));
+        return sgn_x * (ATAN_OF_ONE + tmpl_Float_Arctan_Maclaurin(arg));
     }
 
     /*  Same reduction, but with 3/2 instead of 1.                            */
     else if (arg < 2.4375F)
     {
         arg = (2.0F * arg - 3.0F) / (2.0F + 3.0F * arg);
-        return sgn_x * (ATAN_OF_THREE_HALFS + tmpl_arctan_small_vals(arg));
+        return sgn_x * (ATAN_OF_THREE_HALFS + tmpl_Float_Arctan_Maclaurin(arg));
     }
 
     /*  For larger values, the expansion at infinity is sufficient. We use    *
@@ -350,17 +274,12 @@ float tmpl_Float_Arctan(float x)
     else
     {
         arg = -1.0F / arg;
-        return sgn_x * (tmpl_Pi_By_Two_F + tmpl_arctan_small_vals(arg));
+        return sgn_x * (tmpl_Pi_By_Two_F + tmpl_Float_Arctan_Maclaurin(arg));
     }
 }
 /*  End of tmpl_Float_Arctan.                                                 */
 
 /*  Undefine all of the macros.                                               */
-#undef ATAN_A00
-#undef ATAN_A01
-#undef ATAN_A02
-#undef ATAN_A03
-#undef ATAN_A04
 #undef ATAN_OF_ONE_HALF
 #undef ATAN_OF_ONE
 #undef ATAN_OF_THREE_HALFS

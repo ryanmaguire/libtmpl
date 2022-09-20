@@ -302,7 +302,7 @@
 /*  If IEEE-754 support is available, use this. It's much faster.             */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
-static double table[128] = {
+static double tmpl_double_log_table[128] = {
     0.0,
     0.00778214044205494894746290006113676368,
     0.0155041865359652541508540460424468359,
@@ -433,7 +433,7 @@ static double table[128] = {
     0.689233281238808980324914337814603903
 };
 
-static double rcpr[128] = {
+static double tmpl_double_log_rcpr_table[128] = {
     1.0,
     0.992248062015503875968992248062015504,
     0.984615384615384615384615384615384615,
@@ -681,7 +681,7 @@ double tmpl_Double_Log(double x)
     ind = (ind << 3U) + (w.bits.man1 >> 13U);
 
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
-    s = w.r*rcpr[ind];
+    s = w.r*tmpl_double_log_rcpr_table[ind];
 
     /*  The Taylor series of log(1+x) for small x has very poor convergence.  *
      *  Using the alternating series test, the error is like 1/N where N is   *
@@ -703,7 +703,7 @@ double tmpl_Double_Log(double x)
     poly = A * (A0 + A_sq * (A1 + A_sq * A2));
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two*exponent + poly + table[ind];
+    return tmpl_Natural_Log_of_Two*exponent + poly + tmpl_double_log_table[ind];
 }
 /*  End of tmpl_Double_Log.                                                   */
 

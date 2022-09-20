@@ -7,6 +7,8 @@
 /*  Check for IEEE-754 support.                                               */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
 
+#include <libtmpl/include/tmpl_math_arctan_tables.h>
+
 /*  Coefficients for the computation of the polynomial approximation. The     *
  *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
 #define A00 3.33333333333329318027E-01
@@ -17,34 +19,6 @@
 #define A05 -7.69187620504482999495E-02
 #define A06 6.66107313738753120669E-02
 #define A07 -5.83357013379057348645E-02
-
-/*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
-static double tmpl_double_arctan_maclaurin_series(double x)
-{
-    /*  Declare necessary variables.                                          */
-    const double x_sq = x*x;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return x * (
-        1.0 - x_sq * (
-            A00 + x_sq * (
-                A01 + x_sq * (
-                    A02 + x_sq * (
-                        A03 + x_sq * (
-                            A04 + x_sq * (
-                                A05 + x_sq * (
-                                    A06 + x_sq * A07
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
-}
-/*  End of tmpl_double_arctan_maclaurin_series.                               */
 
 static double tmpl_double_arctan_small_vals(double x)
 {
@@ -65,56 +39,6 @@ static double tmpl_double_arctan_small_vals(double x)
         )
     );
 }
-
-/*  This function computes arctan(x) via the asymptotic expansion.            */
-static double tmpl_double_arctan_large_vals(double x)
-{
-    /*  Declare necessary variables.                                          */
-    const double arg = -1.0 / x;
-    const double arg_sq = arg*arg;
-
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return arg * (
-        1.0 - arg_sq * (
-            A00 + arg_sq * (
-                A01 + arg_sq * (
-                    A02 + arg_sq * (
-                        A03 + arg_sq * A04
-                    )
-                )
-            )
-        )
-    );
-}
-/*  End of tmpl_double_arctan_large_vals.                                     */
-
-/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
- *                                                                            *
- *                                     u - v                                  *
- *          atan(u) = atan(v) + atan( -------- )                              *
- *                                     1 + uv                                 *
- *                                                                            *
- *  The values v and atan(v) are pre-computed below for the calculation.      */
-static const double tmpl_atan_double_v[7] = {
-    0.18,
-    0.35,
-    0.72,
-    1.35,
-    2.5,
-    4.0,
-    8.0
-};
-
-static const double tmpl_atan_double_atan_of_v[7] = {
-    0.178092938231197549667920,
-    0.336674819386727181396699,
-    0.624023052976756847589791,
-    0.933247528656203869893663,
-    1.19028994968253173292773,
-    1.32581766366803246505924,
-    1.44644133224813518419997
-};
 
 /*  Double precision inverse tangent (atan equivalent).                       */
 double tmpl_Double_Arctan2(double y, double x)
@@ -196,7 +120,7 @@ double tmpl_Double_Arctan2(double y, double x)
 
     /*  For |x| > 8, use the asymptotic expansion.                            */
     else if (w.bits.expo > TMPL_DOUBLE_BIAS + 3U)
-        out = tmpl_Pi_By_Two + tmpl_double_arctan_large_vals(w.r);
+        out = tmpl_Double_Arctan_Asymptotic(w.r);
 
     else
     {
@@ -204,7 +128,7 @@ double tmpl_Double_Arctan2(double y, double x)
         v = tmpl_atan_double_v[ind];
         atan_v = tmpl_atan_double_atan_of_v[ind];
         arg = (w.r - v) / (1.0 + w.r*v);
-        out = atan_v + tmpl_double_arctan_maclaurin_series(arg);
+        out = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
     }
 
     /*  Use the fact that atan is an odd function to complete the computation.*/

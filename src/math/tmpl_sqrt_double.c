@@ -194,7 +194,7 @@
     defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  The values sqrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-static double table[128] = {
+static double tmpl_double_sqrt_table[128] = {
     1.0000000000000000000000000000000,
     1.0038986502630631587814157208459,
     1.0077822185373187065458266537880,
@@ -326,7 +326,7 @@ static double table[128] = {
 };
 
 /*  The values 1/(1 + k/128) for k = 0, 1, ..., 126, 127.                     */
-static double rcpr[128] = {
+static double tmpl_double_sqrt_rcpr_table[128] = {
     1.0000000000000000000000000000000,
     0.99224806201550387596899224806202,
     0.98461538461538461538461538461538,
@@ -543,7 +543,7 @@ double tmpl_Double_Sqrt(double x)
     ind = (ind << 3U) + (w.bits.man1 >> 13U);
 
     /*  Compute s = u/t - 1 via s = u * (1/t) - 1 using the array rcpr.       */
-    w.r = w.r*rcpr[ind] - 1.0;
+    w.r = w.r*tmpl_double_sqrt_rcpr_table[ind] - 1.0;
 
     /*  Compute the polynomial to the first few terms via Horner's method.    */
     w.r = 1.0 + w.r*(0.5 + w.r*(-0.125 + 0.0625*w.r));
@@ -558,9 +558,9 @@ double tmpl_Double_Sqrt(double x)
      *  sqrt(2) in the case that exponent is odd. Also, multiply the result   *
      *  sqrt(u/t) by sqrt(t) using the table, giving us sqrt(u).              */
     if (exponent % 2)
-        w.r *= 1.4142135623730950488016887242097*table[ind];
+        w.r *= 1.4142135623730950488016887242097*tmpl_double_sqrt_table[ind];
     else
-        w.r *= table[ind];
+        w.r *= tmpl_double_sqrt_table[ind];
 
     /*  Apply 1 iteration of Newton's method and return.                      */
     return 0.5*(w.r + x/w.r);

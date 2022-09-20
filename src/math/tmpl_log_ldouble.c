@@ -150,7 +150,7 @@
 #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1 && \
     defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
-static long double table[128] = {
+static long double tmpl_ldouble_log_table[128] = {
     0.0L,
     0.00778214044205494894746290006113676368L,
     0.0155041865359652541508540460424468359L,
@@ -281,7 +281,7 @@ static long double table[128] = {
     0.689233281238808980324914337814603903L
 };
 
-static long double rcpr[128] = {
+static long double tmpl_ldouble_rcpr_table[128] = {
     1.0L,
     0.992248062015503875968992248062015504L,
     0.984615384615384615384615384615384615L,
@@ -560,7 +560,7 @@ long double tmpl_LDouble_Log(long double x)
     ind = w.bits.man0 >> 8U;
 #endif
 
-    s = w.r*rcpr[ind];
+    s = w.r*tmpl_ldouble_rcpr_table[ind];
     A = (s - 1.0L) / (s + 1.0L);
     A_sq = A*A;
 
@@ -579,7 +579,8 @@ long double tmpl_LDouble_Log(long double x)
 #endif
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_L*exponent + poly + table[ind];
+    return tmpl_Natural_Log_of_Two_L*exponent + poly +
+        tmpl_ldouble_log_table[ind];
 }
 /*  End of tmpl_LDouble_Log.                                                  */
 
@@ -606,7 +607,7 @@ long double tmpl_LDouble_Log(long double x)
     ind = w.bits.man0a;
     ind = (ind << 3U) + (w.bits.man1a >> 13U);
 
-    s = xhi.r*rcpr[ind];
+    s = xhi.r*tmpl_ldouble_rcpr_table[ind];
     A = (s - 1.0L) / (s + 1.0L);
     A_sq = A*A;
 
@@ -626,7 +627,8 @@ long double tmpl_LDouble_Log(long double x)
     );
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb + table[ind];
+    return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb +
+        tmpl_ldouble_log_table[ind];
 }
 #endif
 /*  End of if for double double.                                              */

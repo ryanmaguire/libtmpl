@@ -1,6 +1,12 @@
 #ifndef TMPL_MATH_ARCTAN_PADE_INLINE_H
 #define TMPL_MATH_ARCTAN_PADE_INLINE_H
 
+/*  TMPL_USE_INLINE macro found here.                                         */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
+
 #define P4 -6.786553005040399998383191660502584872333E-03F
 #define P3 -1.073552227908707342586157269925514065275E-01F
 #define P2 -4.461152882205513784461152882205513784461E-01F
@@ -98,3 +104,7 @@ static inline long double tmpl_LDouble_Arctan_Pade(long double x)
 #undef Q0
 
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */

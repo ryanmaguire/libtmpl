@@ -46,14 +46,14 @@
 #ifndef TMPL_MATH_ABS_INLINE_H
 #define TMPL_MATH_ABS_INLINE_H
 
-/*  TMPL_USE_MATH_ALGORITHMS macro found here.                                */
+/*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  IEEE-754 data types and macros found here.                                */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  Use tmpl algorithms, or use the functions in math.h.                      */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  If IEEE-754 support is available we can get a slight speed boost by       *
  *  setting the appropriate bit to zero, as opposed to an if-then statement.  */
@@ -168,61 +168,10 @@ static inline long double tmpl_LDouble_Abs(long double x)
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
 #endif
-/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
-
-#else
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */
-
-/*  Double precision absolute value function (fabs equivalent).               */
-static inline double tmpl_Double_Abs(double x)
-{
-    return fabs(x);
-}
-/*  End of tmpl_Double_Abs.                                                   */
-
-/*  C99 and higher have fabsf defined. C89 compilers may not. Microsoft has   *
- *  fabsf but does not define the __STDC_VERSION__ macro by default.          */
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
-    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
-
-/*  Single precision absolute value function (fabsf equivalent).              */
-static inline float tmpl_Float_Abs(float x)
-{
-    return fabsf(x);
-}
-/*  End of tmpl_Float_Abs.                                                    */
-
-/*  Long double precision absolute value function (fabsl equivalent).         */
-static inline long double tmpl_LDouble_Abs(long double x)
-{
-    return fabsl(x);
-}
-/*  End of tmpl_LDouble_Abs.                                                  */
-
-#else
-/*  C89 implementations are not required to provide fabsf.                    */
-
-/*  Single precision absolute value function (fabsf equivalent).              */
-static inline float tmpl_Float_Abs(float x)
-{
-    double abs_x = fabs((double)x);
-    return (float)abs_x;
-}
-/*  End of tmpl_Float_Abs.                                                    */
-
-/*  Long double precision absolute value function (fabsl equivalent).         */
-static inline long double tmpl_LDouble_Abs(long double x)
-{
-    double abs_x = fabs((double)x);
-    return (long double)abs_x;
-}
-/*  End of tmpl_LDouble_Abs.                                                  */
+/*  #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1.   */
 
 #endif
-/*  #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L              */
-
-#endif
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1.   */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
