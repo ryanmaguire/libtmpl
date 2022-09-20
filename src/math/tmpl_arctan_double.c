@@ -155,21 +155,7 @@ double tmpl_Double_Arctan(double x)
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to 6 terms.        */
     else if (w.bits.expo < TMPL_DOUBLE_BIAS - 4U)
-    {
-        const double x_sq = x*x;
-        return x * (
-            1.0 + x_sq * (
-                -3.33333333333329318027E-01 + x_sq * (
-                    1.99999999998764832476E-01 + x_sq * (
-                        -1.42857142725034663711E-01 + x_sq * (
-                            1.11111104054623557880E-01 + x_sq *
-                                -9.09088713343650656196E-02
-                        )
-                    )
-                )
-            )
-        );
-    }
+        return tmpl_Double_Arctan_Very_Small(x);
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
     w.bits.sign = 0x00U;
@@ -220,21 +206,7 @@ double tmpl_Double_Arctan(double x)
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to 6 terms.        */
     if (abs_x < 0.0625)
-    {
-        const double x_sq = x*x;
-        return x * (
-            1.0 + x_sq * (
-                -3.33333333333329318027E-01 + x_sq * (
-                    1.99999999998764832476E-01 + x_sq * (
-                        -1.42857142725034663711E-01 + x_sq * (
-                            1.11111104054623557880E-01 + x_sq *
-                                -9.09088713343650656196E-02
-                        )
-                    )
-                )
-            )
-        );
-    }
+        return tmpl_Double_Arctan_Very_Small(x);
     else if (abs_x < 0.125)
         ind = 0U;
     else if (abs_x < 0.25)
