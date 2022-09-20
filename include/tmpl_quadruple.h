@@ -17,6 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
+#ifndef TMPL_QUADRUPLE_H
+#define TMPL_QUADRUPLE_H
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -47,6 +50,4 @@ extern tmpl_Bool tmpl_Quadruple_Is_Positive(tmpl_Quadruple x);
 extern tmpl_Bool tmpl_Quadruple_Is_Negative(tmpl_Quadruple x);
 
 extern tmpl_Quadruple tmpl_Quadruple_Add(tmpl_Quadruple x, tmpl_Quadruple y);
-
-
-
+#endif

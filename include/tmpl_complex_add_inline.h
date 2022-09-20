@@ -34,6 +34,12 @@
 #ifndef TMPL_MATH_COMPLEX_ADD_INLINE_H
 #define TMPL_MATH_COMPLEX_ADD_INLINE_H
 
+/*  TMPL_USE_INLINE macro found here.                                         */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
+
 /*  Complex data types declared here.                                         */
 #include <libtmpl/include/tmpl_complex.h>
 
@@ -72,6 +78,9 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return sum;
 }
 /*  End of tmpl_CLDouble_Abs_Squared.                                         */
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

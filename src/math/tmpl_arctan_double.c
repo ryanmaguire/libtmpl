@@ -123,34 +123,7 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
- *                                                                            *
- *                                     u - v                                  *
- *          atan(u) = atan(v) + atan( -------- )                              *
- *                                     1 + uv                                 *
- *                                                                            *
- *  The values v and atan(v) are pre-computed below for the calculation.      */
-static const double tmpl_atan_double_v[8] = {
-    0.05,
-    0.18,
-    0.35,
-    0.72,
-    1.35,
-    2.5,
-    4.0,
-    8.0
-};
-
-static const double tmpl_atan_double_atan_of_v[8] = {
-    0.0499583957219427614100063,
-    0.178092938231197549667920,
-    0.336674819386727181396699,
-    0.624023052976756847589791,
-    0.933247528656203869893663,
-    1.19028994968253173292773,
-    1.32581766366803246505924,
-    1.44644133224813518419997
-};
+#include <libtmpl/include/tmpl_math_arctan_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1

@@ -95,3 +95,5 @@ unsigned long int tmpl_ULong_GCD(unsigned long int m, unsigned long int n)
     return m;
 }
 /*  End of tmpl_ULong_GCD.                                                    */
+
+#undef trailing_zeros

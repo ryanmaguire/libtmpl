@@ -201,7 +201,7 @@
     defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Table of the values log(1 + k/128) for k = 0, 1, ..., 126, 127.           */
-static float table[128] = {
+static float tmpl_float_log_table[128] = {
     0.0F,
     0.00778214044205494894746290006113676368F,
     0.0155041865359652541508540460424468359F,
@@ -333,7 +333,7 @@ static float table[128] = {
 };
 
 /*  Table of the values 1 / (1 + k/128) for k = 0, 1, ..., 126, 127.          */
-static float rcpr[128] = {
+static float tmpl_float_log_rcpr_table[128] = {
     1.0F,
     0.992248062015503875968992248062015504F,
     0.984615384615384615384615384615384615F,
@@ -572,7 +572,7 @@ float tmpl_Float_Log(float x)
      *  array. man0 is 7 bits wide, so we just need this number.              */
 
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
-    s = w.r*rcpr[w.bits.man0];
+    s = w.r*tmpl_float_log_rcpr_table[w.bits.man0];
 
     /*  The Taylor series of log(1+x) for small x has very poor convergence.  *
      *  Using the alternating series test, the error is like 1/N where N is   *
@@ -590,7 +590,8 @@ float tmpl_Float_Log(float x)
     A = 2.0F*(s - 1.0F) / (s + 1.0F);
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_F*(float)exponent + A + table[w.bits.man0];
+    return tmpl_Natural_Log_of_Two_F*(float)exponent + A +
+        tmpl_float_log_table[w.bits.man0];
 }
 /*  End of tmpl_Float_Log.                                                    */
 

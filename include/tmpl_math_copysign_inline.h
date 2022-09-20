@@ -46,8 +46,11 @@
 #ifndef TMPL_MATH_COPYSIGN_INLINE_H
 #define TMPL_MATH_COPYSIGN_INLINE_H
 
-/*  TMPL_USE_MATH_ALGORITHMS macro found here.                                */
+/*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  IEEE-754 data types and macros found here.                                */
 #include <libtmpl/include/tmpl_math.h>
@@ -148,6 +151,9 @@ static inline long double tmpl_LDouble_Copysign(long double x, long double y)
 
 #endif
 /*  End of check for TMPL_LDOUBLE_ENDIANNESS.                                 */
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

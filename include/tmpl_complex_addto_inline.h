@@ -1,5 +1,12 @@
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ADDTO_H
 #define TMPL_COMPLEX_ADDTO_H
+
+/*  TMPL_USE_INLINE macro found here.                                         */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 #include <libtmpl/include/tmpl_complex.h>
 
@@ -26,4 +33,9 @@ tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w)
     z->dat[0] += w->dat[0];
     z->dat[1] += w->dat[1];
 }
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */

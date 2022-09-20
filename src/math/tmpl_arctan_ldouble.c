@@ -268,7 +268,7 @@ static long double tmpl_ldouble_arctan_large_vals(long double x)
 /*  End of tmpl_ldouble_arctan_large_vals.                                    */
 
 /*  For very small values we need fewer terms to get with 1 ULP.              */
-static long double tmpl_ldoule_arctan_small_vals(long double x)
+static long double tmpl_ldouble_arctan_small_vals(long double x)
 {
     /*  The Taylor series for atan(x) is in terms of x^{2n+1}. Compute the    *
      *  square of x and use this for the series.                              */
@@ -288,7 +288,7 @@ static long double tmpl_ldoule_arctan_small_vals(long double x)
      *  by the input gives us the correct result.                             */
     return x*out;
 }
-/*  End of tmpl_ldoule_arctan_small_vals.                                     */
+/*  End of tmpl_ldouble_arctan_small_vals.                                    */
 
 /*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
  *                                                                            *
@@ -346,7 +346,7 @@ long double tmpl_LDouble_Arctan(long double x)
 
     /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */
     else if (w.bits.expo < TMPL_LDOUBLE_BIAS - 4U)
-        return tmpl_ldoule_arctan_small_vals(x);
+        return tmpl_ldouble_arctan_small_vals(x);
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
     w.bits.sign = 0x00U;

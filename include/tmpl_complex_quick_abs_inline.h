@@ -45,53 +45,35 @@
 #ifndef TMPL_MATH_COMPLEX_QUICK_ABS_INLINE_H
 #define TMPL_MATH_COMPLEX_QUICK_ABS_INLINE_H
 
-/*  TMPL_USE_MATH_ALGORITHMS macro found here.                                */
+/*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Use tmpl algorithms, or use the functions in math.h.                      */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  IEEE-754 data types and macros found here.                                */
 #include <libtmpl/include/tmpl_math.h>
 
-#define square_rootf tmpl_Float_Sqrt
-#define square_root tmpl_Double_Sqrt
-#define square_rootl tmpl_LDouble_Sqrt
-
-/*  tmpl algorithms not requested. Use libm functions.                        */
-#else
-
-/*  Square root functions found here.                                         */
-#include <math.h>
-
-/*  If inline support is available, sqrtf and sqrtl should be as well since   *
- *  these are all C99 extensions.                                             */
-#define square_rootf sqrtf
-#define square_root sqrt
-#define square_rootl sqrtl
-
-#endif
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+/*  Complex data types and function prototypes found here.                    */
+#include <libtmpl/include/tmpl_complex.h>
 
 static inline float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z)
 {
-    return square_rootf(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+    return tmpl_Float_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
 }
 
 static inline double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z)
 {
-    return square_root(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+    return tmpl_Double_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
 }
 
 static inline long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z)
 {
-    return square_rootl(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+    return tmpl_LDouble_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
 }
 
-/*  Undefine these macro in case someone wants to include this file elsewhere.*/
-#undef square_rootf
-#undef square_root
-#undef square_rootl
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
