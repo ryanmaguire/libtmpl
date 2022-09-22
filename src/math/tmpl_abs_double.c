@@ -99,16 +99,16 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  This file is only compiled if inline support is not requested.            */
-#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
+#if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Only implement this if the user requested libtmpl algorithms.             */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 support.                                               */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
@@ -128,7 +128,7 @@ double tmpl_Double_Abs(double x)
 /*  End of tmpl_Double_Abs.                                                   */
 
 #else
-/*  Else #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1 *
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                *
  *  Lacking IEEE-754 support, an if-then statement works and is is portable.  */
 
 /*  Double precision absolute value function (fabs equivalent).               */
@@ -143,13 +143,13 @@ double tmpl_Double_Abs(double x)
 /*  End of tmpl_Double_Abs.                                                   */
 
 #endif
-/* End of #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1*/
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 #endif
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
-/*  End of #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.             */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
 
 /******************************************************************************
  *                                 BENCHMARKS                                 *
