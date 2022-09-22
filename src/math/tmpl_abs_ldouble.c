@@ -38,8 +38,7 @@
  *      abs_x (long double):                                                  *
  *          The absolute value of x.                                          *
  *  Called Functions:                                                         *
- *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
- *      been requested. fabsl or fabs from math.h otherwise.                  *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, simply set the sign bit of the      *
  *      input to 0.                                                           *
@@ -58,9 +57,6 @@
  *          Header file containing TMPL_USE_INLINE macro.                     *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) math.h:                                                               *
- *          Only included if libtmpl algorithms have not been requested. This *
- *          file contains the fabs function.                                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -92,16 +88,16 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  This file is only compiled if inline support is not requested.            */
-#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
+#if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Only implement this if the user requested libtmpl algorithms.             */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 long double support.                                   */
-#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)
@@ -140,7 +136,7 @@ long double tmpl_LDouble_Abs(long double x)
 /*  End of tmpl_LDouble_Abs.                                                  */
 
 #else
-/*  For #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1*
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               *
  *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
@@ -155,10 +151,10 @@ long double tmpl_LDouble_Abs(long double x)
 /*  End of tmpl_LDouble_Abs.                                                  */
 
 #endif
-/*  End #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1*/
+/*  End if #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
 #endif
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
-/*  End of #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.             */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
