@@ -8,7 +8,8 @@
  *                                     1 + uv                                 *
  *                                                                            *
  *  The values v and atan(v) are pre-computed below for the calculation.      */
-static const float tmpl_atan_float_v[7] = {
+static const float tmpl_atan_float_v[8] = {
+    0.05F,
     0.18F,
     0.35F,
     0.72F,
@@ -18,7 +19,8 @@ static const float tmpl_atan_float_v[7] = {
     8.0F
 };
 
-static const float tmpl_atan_float_atan_of_v[7] = {
+static const float tmpl_atan_float_atan_of_v[8] = {
+    0.0499583957219427614100063F,
     0.178092938231197549667920F,
     0.336674819386727181396699F,
     0.624023052976756847589791F,

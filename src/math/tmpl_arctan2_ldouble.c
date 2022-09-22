@@ -98,16 +98,6 @@
 /*  Check if we have C99 math.h or not.                                       */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
-/*  C99 provides float and long double support for their math functions, so   *
- *  simply use to these.                                                      */
-
-/*  Single precision 2-dimensional arctan function (atan2f equivalent).       */
-float tmpl_Float_Arctan2(float y, float x)
-{
-    return atan2f(y, x);
-}
-/*  End of tmpl_Float_Arctan2.                                                */
-
 /*  Long double precision 2-dimensional arctan function (atan2l equivalent).  */
 long double tmpl_LDouble_Arctan2(long double y, long double x)
 {
@@ -117,17 +107,6 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
 
 #else
 /*  Else statement for #if __TMPL_HAS_C99_MATH_H__ == 0.                      */
-
-/*  C89 math.h does not have atan2f or atan2l, so we'll need to provide these *
- *  to make the code forward compatible.                                      */
-
-/*  Single precision 2-dimensional arctan function (atan2f equivalent).       */
-float tmpl_Float_Arctan2(float y, float x)
-{
-    /*  Cast "x" and "y" as doubles to atan2, and cast the output as a float. */
-    return (float)atan2((double)y, (double)x);
-}
-/*  End of tmpl_Float_Arctan2.                                                */
 
 /*  Long double precision 2-dimensional arctan function (atan2l equivalent).  */
 long double tmpl_LDouble_Arctan2(long double y, long double x)

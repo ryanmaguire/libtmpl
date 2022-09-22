@@ -153,7 +153,7 @@ float tmpl_Float_Arctan(float x)
     }
 
     /*  Small values, |x| < 1/8. Use the MacLaurin series to 8 terms.         */
-    else if (w.bits.expo < TMPL_FLOAT_BIAS - 3U)
+    else if (w.bits.expo < TMPL_FLOAT_BIAS - 4U)
         return tmpl_Float_Arctan_Very_Small(x);
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
@@ -171,7 +171,7 @@ float tmpl_Float_Arctan(float x)
      *  the exponent plus three (since the lowest value is 1/8 = 2^-3, we     *
      *  need to shift up by 3). The exponent has a bias, per the IEEE-754     *
      *  format, so we must subtract this off to get the correct index.        */
-    ind = (w.bits.expo + 3U) - TMPL_FLOAT_BIAS;
+    ind = (w.bits.expo + 4U) - TMPL_FLOAT_BIAS;
     v = tmpl_atan_float_v[ind];
     atan_v = tmpl_atan_float_atan_of_v[ind];
 
