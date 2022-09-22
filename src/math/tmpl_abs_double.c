@@ -129,7 +129,7 @@ double tmpl_Double_Abs(double x)
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                *
- *  Lacking IEEE-754 support, an if-then statement works and is is portable.  */
+ *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
