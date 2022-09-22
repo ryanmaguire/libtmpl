@@ -151,7 +151,7 @@ long double tmpl_LDouble_Abs(long double x)
 /*  End of tmpl_LDouble_Abs.                                                  */
 
 #endif
-/*  End if #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
