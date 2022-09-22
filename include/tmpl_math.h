@@ -963,9 +963,15 @@ extern long double tmpl_LDouble_Abs(long double x);
  *      along the negative x axis. Because of this, use of this function      *
  *      in complex routines results in actual branch cuts.                    *
  ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Arctan2 atan2f
+#define tmpl_Double_Arctan2 atan2
+#define tmpl_LDouble_Arctan2 atan2l
+#else
 extern float tmpl_Float_Arctan2(float y, float x);
 extern double tmpl_Double_Arctan2(double y, double x);
 extern long double tmpl_LDouble_Arctan2(long double y, long double x);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
