@@ -36,7 +36,7 @@
  *      frequently used nonetheless. It also provides many mathematical       *
  *      constants at float, double, and long double precisions.               *
  *                                                                            *
- *      NOTE:                                                                 *
+ *      Notes:                                                                *
  *          There is no real portable way to implement infinity in strictly   *
  *          compliant ISO C. Compilers implementing the IEEE-754 format have  *
  *          a way of supporting infinity, but compilers that don't may not.   *
@@ -644,7 +644,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  128-bit double-double has exponent bias of 1,023, same as double.         */
 #define TMPL_LDOUBLE_BIAS 0x3FF
 
-/*  The exponent that corresponds to NaN/infinity for 64-bit double double.   */
+/*  The exponent that corresponds to NaN/infinity for 64-bit double-double.   */
 #define TMPL_LDOUBLE_NANINF_EXP 0x7FF
 
 /*  Double-double representation. Literally two doubles stacked together.     */
@@ -667,7 +667,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int signb : 1;
     } bits;
 
-    /*  The two double making up r. r = d[0] + d[1].                          */
+    /*  The two doubles making up r. r = d[0] + d[1].                         */
     double d[2];
 
     /*  The long double the bits represent.                                   */
@@ -683,7 +683,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  128-bit double-double has exponent bias of 1,023, same as double.         */
 #define TMPL_LDOUBLE_BIAS 0x3FF
 
-/*  The exponent that corresponds to NaN/infinity for 64-bit double double.   */
+/*  The exponent that corresponds to NaN/infinity for 64-bit double-double.   */
 #define TMPL_LDOUBLE_NANINF_EXP 0x7FF
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
@@ -706,7 +706,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int man3b : 16;
     } bits;
 
-    /*  The two double making up r. r = d[0] + d[1].                          */
+    /*  The two doubles making up r. r = d[0] + d[1].                         */
     double d[2];
 
     /*  The long double the bits represent.                                   */
@@ -721,6 +721,57 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 #endif
 /*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
+
+/*  Sanity check for all of the above code. The following macros should be    *
+ *  defined. Abort compiling if not.                                          */
+#ifndef TMPL_HAS_IEEE754_FLOAT
+#error "tmpl_math.h: TMPL_HAS_IEEE754_FLOAT undefined."
+#endif
+
+#ifndef TMPL_HAS_IEEE754_DOUBLE
+#error "tmpl_math.h: TMPL_HAS_IEEE754_DOUBLE undefined."
+#endif
+
+#ifndef TMPL_HAS_IEEE754_LDOUBLE
+#error "tmpl_math.h: TMPL_HAS_IEEE754_LDOUBLE undefined."
+#endif
+
+/*  If IEEE-754 support for float does exist, the following macros should be  *
+ *  set. Another sanity check, make sure they are.                            */
+#if TMPL_HAS_IEEE754_FLOAT == 1
+#ifndef TMPL_FLOAT_BIAS
+#error "tmpl_math.h: TMPL_FLOAT_BIAS undefined."
+#endif
+
+#ifndef TMPL_FLOAT_NANINF_EXP
+#error "tmpl_math.h: TMPL_FLOAT_NANINF_EXP undefined."
+#endif
+#endif
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
+
+/*  Same sanity check for double precision macros.                            */
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+#ifndef TMPL_DOUBLE_BIAS
+#error "tmpl_math.h: TMPL_DOUBLE_BIAS undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_NANINF_EXP
+#error "tmpl_math.h: TMPL_DOUBLE_NANINF_EXP undefined."
+#endif
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+
+/*  Lastly, sanity check for long double versions of these macros.            */
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
+#ifndef TMPL_LDOUBLE_BIAS
+#error "tmpl_math.h: TMPL_LDOUBLE_BIAS undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_NANINF_EXP
+#error "tmpl_math.h: TMPL_LDOUBLE_NANINF_EXP undefined."
+#endif
+#endif
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
 /* Declare Miscellaneous Constants.                                           */
 

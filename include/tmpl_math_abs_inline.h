@@ -31,13 +31,6 @@
  *          runs this, as does the make.sh script. This also contains the     *
  *          TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.              *
  ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 4, 2022                                             *
  ******************************************************************************/
@@ -57,9 +50,9 @@
 
 /*  If IEEE-754 support is available we can get a slight speed boost by       *
  *  setting the appropriate bit to zero, as opposed to an if-then statement.  */
-#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
-/*  Single precision absolute value function.                                 */
+/*  Single precision absolute value function (fabsf equivalent).              */
 static inline float tmpl_Float_Abs(float x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -77,22 +70,26 @@ static inline float tmpl_Float_Abs(float x)
 /*  End of tmpl_Float_Abs.                                                    */
 
 #else
-/*  #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.       */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
-/*  Single precision absolute value function.                                 */
+/*  Single precision absolute value function (fabsf equivalent).              */
 static inline float tmpl_Float_Abs(float x)
 {
-    return (x < 0.0F ? -x : x);
+    /*  Lacking IEEE-754 support, an if-then statement works.                 */
+    if (x < 0.0F)
+        return -x;
+    else
+        return x;
 }
 /*  End of tmpl_Float_Abs.                                                    */
 
 #endif
-/*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1.   */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 /*  Same idea for double precision.                                           */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  Double precision absolute value function.                                 */
+/*  Double precision absolute value function (fabs equivalent).               */
 static inline double tmpl_Double_Abs(double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -110,21 +107,26 @@ static inline double tmpl_Double_Abs(double x)
 /*  End of tmpl_Double_Abs.                                                   */
 
 #else
-/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /*  Double precision absolute value function.                                 */
 static inline double tmpl_Double_Abs(double x)
 {
-    return (x < 0.0 ? -x : x);
+    /*  Lacking IEEE-754 support, an if-then statement works.                 */
+    if (x < 0.0)
+        return -x;
+    else
+        return x;
 }
 /*  End of tmpl_Double_Abs.                                                   */
 
 #endif
-/*  #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1.     */
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
-#if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1
+/*  Lastly, long double version.                                              */
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
 
-/*  Long double precision absolute value function.                            */
+/*  Long double precision absolute value function (fabsl equivalent).         */
 static inline long double tmpl_LDouble_Abs(long double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -154,21 +156,27 @@ static inline long double tmpl_LDouble_Abs(long double x)
     w.bits.signb = w.bits.signa ^ w.bits.signb;
     w.bits.signa = 0x0U;
 #endif
+
+    /*  Return the long double part of the word.                              */
     return w.r;
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
 
 #else
-/*  No IEEE-754 support. Use if-then statement to compute |x|.                */
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
 
-/*  Long double precision absolute value function.                            */
+/*  Long double precision absolute value function (fabsl equivalent).         */
 static inline long double tmpl_LDouble_Abs(long double x)
 {
-    return (x < 0.0L ? -x : x);
+    /*  Lacking IEEE-754 support, an if-then statement works.                 */
+    if (x < 0.0L)
+        return -x;
+    else
+        return x;
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
 #endif
-/*  #if defined(TMPL_HAS_IEEE754_LDOUBLE) && TMPL_HAS_IEEE754_LDOUBLE == 1.   */
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
