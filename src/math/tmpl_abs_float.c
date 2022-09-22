@@ -38,8 +38,7 @@
  *      abs_x (float):                                                        *
  *          The absolute value of x.                                          *
  *  Called Functions:                                                         *
- *      None if IEEE-754 support is available and/or libtmpl algorithms have  *
- *      been requested. fabsf or fabs from math.h otherwise.                  *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, set the sign bit of the             *
  *      input to 0. A 32-bit float is represented by:                         *
@@ -66,9 +65,6 @@
  *          Header file containing TMPL_USE_INLINE macro.                     *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) math.h:                                                               *
- *          Only included if libtmpl algorithms have not been requested. This *
- *          file contains the fabs function.                                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -98,16 +94,16 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  This file is only compiled if inline support is not requested.            */
-#if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1
+#if TMPL_USE_INLINE != 1
 
-/*  Header file where the prototypes for the function is defined.             */
+/*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Only implement this if the user requested libtmpl algorithms.             */
-#if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
+#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 support.                                               */
-#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
@@ -127,8 +123,8 @@ float tmpl_Float_Abs(float x)
 /*  End of tmpl_Float_Abs.                                                    */
 
 #else
-/*  Else #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1   *
- *  Lacking IEEE-754 support, an if-then statement works and is is portable.  */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 *
+ *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
@@ -142,10 +138,10 @@ float tmpl_Float_Abs(float x)
 /*  End of tmpl_Float_Abs.                                                    */
 
 #endif
-/*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
-/*  #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1    */
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
-/*  #if !defined(TMPL_USE_INLINE) || TMPL_USE_INLINE != 1.                    */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
