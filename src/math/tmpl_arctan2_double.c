@@ -46,6 +46,10 @@
  *      tmpl_Double_Arctan_Very_Small   (tmpl_math.h):                        *
  *          Computes the inverse tangent of small numbers using a Maclaurin   *
  *          series. Accurate for values smaller than 1/16.                    *
+ *      tmpl_Double_Is_NaN              (tmpl_math.h):                        *
+ *          Determines if a double is Not-a-number.                           *
+ *      tmpl_Double_Is_Inf              (tmpl_math.h):                        *
+ *          Determines if a double is infinity.                               *
  *  Method:                                                                   *
  *      Depends on one of several cases:                                      *
  *          y zero:                                                           *
