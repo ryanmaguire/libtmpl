@@ -22,14 +22,13 @@
 static inline float tmpl_Float_Arctan_Asymptotic(float x)
 {
     /*  Declare necessary variables.                                          */
-    const float arg = 1.0F / x;
-    const float arg_sq = arg*arg;
+    const float z = 1.0F / x;
+    const float z2 = z*z;
 
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
-    return tmpl_Pi_By_Two_F - arg*(A0 + arg_sq*(A1 + arg_sq*(A2 + arg_sq*A3)));
+    /*  Use Horner's method to compute the polynomial.                        */
+    return tmpl_Pi_By_Two_F - z*(A0 + z2*(A1 + z2*(A2 + z2*A3)));
 }
-/*  End of tmpl_float_arctan_large_vals.                                      */
+/*  End of tmpl_Float_Arctan_Asymptotic.                                      */
 
 #undef A0
 #undef A1
@@ -43,27 +42,18 @@ static inline float tmpl_Float_Arctan_Asymptotic(float x)
 #define A4  1.11111104054623557880E-01
 #define A5 -9.09088713343650656196E-02
 
+/*  Double precision asymptotic expansion for the inverse tangent function.   */
 static inline double tmpl_Double_Arctan_Asymptotic(double x)
 {
     /*  Declare necessary variables.                                          */
-    const double arg = 1.0 / x;
-    const double arg_sq = arg*arg;
+    const double z = 1.0 / x;
+    const double z2 = z*z;
 
-    /*  Use Horner's method to compute the polynomial. The signs of the       *
-     *  coefficients oscillate.                                               */
+    /*  Use Horner's method to compute the polynomial.                        */
     return tmpl_Pi_By_Two -
-        arg * (
-            A0 + arg_sq * (
-                A1 + arg_sq * (
-                    A2 + arg_sq * (
-                        A3 + arg_sq * (
-                            A4 + arg_sq * A5
-                        )
-                    )
-                )
-            )
-        );
+           z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*A5)))));
 }
+/*  End of tmpl_Double_Arctan_Asymptotic.                                     */
 
 
 #undef A0

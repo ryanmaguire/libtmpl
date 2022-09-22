@@ -16,35 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_arctan_asymptotic_double                        *
+ *                        tmpl_arctan_maclaurin_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the asymptotic expansion of atan(x) at double precision.     *
+ *      Computes the Maclaurin series of atan(x) at single precision.         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Arctan_Asymptotic                                         *
+ *      tmpl_Float_Arctan_Maclaurin                                           *
  *  Purpose:                                                                  *
- *      Computes the asymptotic expansion of atan(x) for large positive x.    *
+ *      Computes the Maclaurin series of atan(x) for small values x.          *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      atan_x (double):                                                      *
- *          The asymptotic expansion of x.                                    *
+ *      atan_x (float):                                                       *
+ *          The Maclaurin series of atan(x).                                  *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute the reciprocal of x, and the square of this, and use Horner's *
- *      method to efficiently evaluate the polynomial.                        *
+ *      Use Horner's method to evaluate the polynomial.                       *
  *  Notes:                                                                    *
- *      Only accurate for large POSITIVE values. For x > 16, this function    *
- *      is accurate to double precision (10^-16 relative error). The closer   *
- *      the input is to 0, the worse the error.                               *
- *                                                                            *
- *      This function can be used for large negative values via:              *
- *          atan(x) ~= -tmpl_Double_Arctan_Asymptotic(-x).                    *
+ *      Only accurate for small values. For |x| < 1/32, this function         *
+ *      is accurate to single precision (10^-8 relative error). The larger    *
+ *      the input is, the worse the error. By the alternating series theorem, *
+ *      the absolute error is bounded by (1/11)*|x|^11.                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -54,12 +51,7 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 20, 2022                                            *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2022/09/22: Ryan Maguire                                                  *
- *      Added license.                                                        *
+ *  Date:       September 22, 2022                                            *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -71,35 +63,29 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 11 in terms of  1 / x^2.                                        */
-#define A0 (1.00000000000000000000E00)
-#define A1 (-3.33333333333329318027E-01)
-#define A2 (1.99999999998764832476E-01)
-#define A3 (-1.42857142725034663711E-01)
-#define A4 (1.11111104054623557880E-01)
-#define A5 (-9.09088713343650656196E-02)
+/*  Coefficients for the Maclaurin series, 1/(2n+1). The expansion is a
+ *  polynomial of degree 9 in terms of x^{2n+1}.                              */
+#define A0 (1.00000000000000000000F)
+#define A1 (-3.33333333333329318027E-01F)
+#define A2 (1.99999999998764832476E-01F)
+#define A3 (-1.42857142725034663711E-01F)
+#define A4 (1.11111104054623557880E-01F)
 
-/*  Asymptotic expansion for the inverse tangent function.                    */
-double tmpl_Double_Arctan_Asymptotic(double x)
+/*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
+float tmpl_Float_Arctan_Maclaurin(float x)
 {
     /*  Declare necessary variables.                                          */
-    const double z = 1.0 / x;
-    const double z2 = z*z;
-
-    /*  Use Horner's method to compute the polynomial.                        */
-    return tmpl_Pi_By_Two -
-           z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*A5)))));
+    const float x2 = x*x;
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
 }
-/*  End of tmpl_Double_Arctan_Asymptotic.                                     */
+/*  End of tmpl_Float_Arctan_Maclaurin.                                       */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine these in case someone wants to #include this file.               */
 #undef A0
 #undef A1
 #undef A2
 #undef A3
 #undef A4
-#undef A5
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
