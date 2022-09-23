@@ -143,7 +143,7 @@ double tmpl_Double_Arctan(double x)
     if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
-        if ((w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
+        if (w.bits.man0 || w.bits.man1 || w.bits.man2 || w.bits.man3)
             return x;
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
@@ -153,18 +153,23 @@ double tmpl_Double_Arctan(double x)
             return tmpl_Pi_By_Two;
     }
 
-    /*  Small values, |x| < 1/16. Use the MacLaurin series to 6 terms.        */
+    /*  Small values, |x| < 1/32. Use the MacLaurin series to 6 terms.        */
     else if (w.bits.expo < TMPL_DOUBLE_BIAS - 4U)
         return tmpl_Double_Arctan_Very_Small(x);
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
     w.bits.sign = 0x00U;
 
-    /*  For |x| > 8, use the asymptotic expansion.                            */
+    /*  For |x| > 16, use the asymptotic expansion.                           */
     if (w.bits.expo > TMPL_DOUBLE_BIAS + 3U)
     {
         out = tmpl_Double_Arctan_Asymptotic(w.r);
-        return (x < 0.0 ? -out : out);
+
+        /*  Use the fact that atan is odd to complete the computation.        */
+        if (x < 0.0)
+            return -out;
+        else
+            return out;
     }
 
     /*  The exponent tells us the index for the tables tmpl_atan_double_v and *
@@ -181,7 +186,10 @@ double tmpl_Double_Arctan(double x)
     out = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
-    return (x < 0.0 ? -out : out);
+    if (x < 0.0)
+        return -out;
+    else
+        return out;
 }
 /*  End of tmpl_Double_Arctan.                                                */
 
