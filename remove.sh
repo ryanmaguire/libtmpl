@@ -27,6 +27,7 @@ SONAME="libtmpl.so"
 SODIR="/usr/local/lib"
 INCLUDE_TARGET=/usr/local/include/libtmpl
 CONFIG_HEADER=include/tmpl_config.h
+INTEGER_HEADER=include/tmpl_integer.h
 
 echo "Removing libtmpl:"
 echo "    Clearing older files..."
@@ -35,6 +36,11 @@ rm -f *.so *.o *.obj *.lib
 echo "    Removing config header file if it exists..."
 if [ -e "$CONFIG_HEADER" ]; then
     rm -f "$CONFIG_HEADER";
+fi
+
+echo "    Removing integer header file if it exists..."
+if [ -e "$INTEGER_HEADER" ]; then
+    rm -f "$INTEGER_HEADER";
 fi
 
 echo -e "    Removing include directory if it exists..."
