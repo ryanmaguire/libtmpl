@@ -73,9 +73,14 @@ MATH_EXCLUDE := \
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
 	-not -name "tmpl_abs_ldouble.c" -and \
+	-not -name "tmpl_arctan2_double.c" -and \
+	-not -name "tmpl_arctan2_float.c" -and \
+	-not -name "tmpl_arctan2_ldouble.c" -and \
 	-not -name "tmpl_arctan_double.c" -and \
 	-not -name "tmpl_arctan_float.c" -and \
-	-not -name "tmpl_arctan_ldouble.c" -and
+	-not -name "tmpl_arctan_ldouble.c" -and \
+	-not -name "tmpl_floor_double.c" -and \
+	-not -name "tmpl_floor_float.c" -and
 else
 MATH_FLAG := -DTMPL_SET_USE_MATH_TRUE
 MATH_EXCLUDE :=
@@ -130,6 +135,7 @@ SRCS := \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
 	-not -name "tmpl_floor_double.c" -and \
+	-not -name "tmpl_floor_float.c" -and \
 	\( -name "*.c" -or -name "*x86_64.S" \))
 endif
 # End of ifdef FASM.

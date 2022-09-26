@@ -91,7 +91,10 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
-/*  Header file where the prototypes for these functions are defined.         */
+/*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
+
+#if TMPL_USE_MATH_ALGORITHMS == 1
 #include <libtmpl/include/tmpl_math.h>
 #include <math.h>
 
@@ -119,3 +122,6 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
 
 #endif
 /*  End of #if __TMPL_HAS_C99_MATH_H__ == 0                                   */
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

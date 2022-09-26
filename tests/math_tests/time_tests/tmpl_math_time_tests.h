@@ -167,6 +167,7 @@ int main(void)                                                                 \
     long double expo_max_abs = 0.0L;                                           \
     long double tmp;                                                           \
     int n_tmp;                                                                 \
+    const type zero = (type)0;                                                 \
                                                                                \
     x = malloc(sizeof(*x) * N);                                                \
                                                                                \
@@ -246,11 +247,15 @@ int main(void)                                                                 \
         if (mant_max_abs < tmp)                                                \
             mant_max_abs = tmp;                                                \
                                                                                \
-        tmp /= (long double)y1[n];                                             \
-        mant_rms_rel += tmp*tmp;                                               \
+        if (y1[n] != zero)                                                     \
+        {                                                                      \
+            tmp /= (long double)y1[n];                                         \
+            mant_rms_rel += tmp*tmp;                                           \
                                                                                \
-        if (mant_max_rel < tmp)                                                \
-            mant_max_rel = tmp;                                                \
+            if (mant_max_rel < tmp)                                            \
+                mant_max_rel = tmp;                                            \
+        }                                                                      \
+                                                                               \
                                                                                \
         n_tmp = abs(n0[n] - n1[n]);                                            \
         tmp = (long double)n_tmp;                                              \
@@ -260,11 +265,14 @@ int main(void)                                                                 \
             expo_max_abs = tmp;                                                \
                                                                                \
         n_tmp = abs(n1[n]);                                                    \
-        tmp = tmp / (long double)n_tmp;                                        \
-        expo_rms_rel += tmp*tmp;                                               \
+        if (n_tmp != 0)                                                        \
+        {                                                                      \
+            tmp = tmp / (long double)n_tmp;                                    \
+            expo_rms_rel += tmp*tmp;                                           \
                                                                                \
-        if (expo_max_rel < tmp)                                                \
-            expo_max_rel = tmp;                                                \
+            if (expo_max_rel < tmp)                                            \
+                expo_max_rel = tmp;                                            \
+        }                                                                      \
     }                                                                          \
                                                                                \
     mant_rms_abs = sqrtl(mant_rms_abs / (long double)N);                       \
