@@ -795,7 +795,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
 /*  Else for #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                            */
 
 /*  Function for creating include/tmpl_config.h.                              */
-int main(void)
+static int make_config_h(void)
 {
     /*  Compute the various endian types from the above functions.            */
     tmpl_integer_endianness int_type = tmpl_det_int_end();
@@ -962,4 +962,148 @@ int main(void)
     fclose(fp);
     return 0;
 }
-/*  End of main.                                                              */
+/*  End of make_config_h.                                                     */
+
+/*  Function for creating include/tmpl_integer.h.                             */
+static int make_integer_h(void)
+{
+    /*  Open the file include/tmpl_integer.h using fopen and give the file    *
+     *  write permissions. If using Windows, we'll need to use backslashes.   *
+     *  Forward slashes fail to create the file.                              */
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    FILE *fp = fopen(".\\include\\tmpl_integer.h", "w");
+#else
+    FILE *fp = fopen("./include/tmpl_integer.h", "w");
+#endif
+
+    /*  If fopen fails, it returns NULL. Check that it did not.               */
+    if (!fp)
+    {
+        puts("Error Encountered: libtmpl\n"
+             "    config.c\n"
+             "fopen returned NULL for FILE *fp. Aborting.\n");
+        return -1;
+    }
+
+    /*  Create the file include/tmpl_config.h and return.                     */
+    fprintf(fp, "/******************************************************************************\n");
+    fprintf(fp, " *                                  LICENSE                                   *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  This file is part of libtmpl.                                             *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is free software: you can redistribute it and/or modify           *\n");
+    fprintf(fp, " *  it under the terms of the GNU General Public License as published by      *\n");
+    fprintf(fp, " *  the Free Software Foundation, either version 3 of the License, or         *\n");
+    fprintf(fp, " *  (at your option) any later version.                                       *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is distributed in the hope that it will be useful,                *\n");
+    fprintf(fp, " *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *\n");
+    fprintf(fp, " *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *\n");
+    fprintf(fp, " *  GNU General Public License for more details.                              *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  You should have received a copy of the GNU General Public License         *\n");
+    fprintf(fp, " *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *                                tmpl_integer                                *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  Purpose:                                                                  *\n");
+    fprintf(fp, " *      This file is created by the config.c file. It provides macros         *\n");
+    fprintf(fp, " *      for fixed-width integers for 8, 16, 32, and 64 bits, as well as       *\n");
+    fprintf(fp, " *      typedefs, if such data types exist on your platform.                  *\n");
+    fprintf(fp, " ******************************************************************************/\n\n");
+    fprintf(fp, "#ifndef TMPL_INTEGER_H\n");
+    fprintf(fp, "#define TMPL_INTEGER_H\n\n");
+
+#ifdef TMPL_SET_NO_INT
+    fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n");
+    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 0\n");
+    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 0\n");
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
+
+#else
+/*  Else of #ifdef TMPL_SET_NO_INT.                                           */
+
+#if UCHAR_MAX == 0xFF
+    fprintf(fp, "#define TMPL_HAS_8_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned char tmpl_UInt8;\n");
+    fprintf(fp, "typedef signed char tmpl_SInt8;\n");
+#else
+    fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n");
+#endif
+
+    fprintf(fp, "\n");
+
+#if USHRT_MAX == 0xFFFF
+    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned short int tmpl_UInt16;\n");
+    fprintf(fp, "typedef signed short int tmpl_SInt16;\n");
+#elif UINT_MAX == 0xFFFF
+    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned int tmpl_UInt16;\n");
+    fprintf(fp, "typedef signed int tmpl_SInt16;\n");
+#else
+    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 0\n");
+#endif
+
+    fprintf(fp, "\n");
+
+#if USHRT_MAX == 0xFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned short int tmpl_UInt32;\n");
+    fprintf(fp, "typedef signed short int tmpl_SInt32;\n");
+#elif UINT_MAX == 0xFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned int tmpl_UInt32;\n");
+    fprintf(fp, "typedef signed int tmpl_SInt32;\n");
+#elif ULONG_MAX == 0xFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned long int tmpl_UInt32;\n");
+    fprintf(fp, "typedef signed long int tmpl_SInt32;\n");
+#else
+    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 0\n");
+#endif
+
+    fprintf(fp, "\n");
+
+#if USHRT_MAX == 0xFFFFFFFFFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned short int tmpl_UInt64;\n");
+    fprintf(fp, "typedef signed short int tmpl_SInt64;\n");
+#elif UINT_MAX == 0xFFFFFFFFFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned int tmpl_UInt64;\n");
+    fprintf(fp, "typedef signed int tmpl_SInt64;\n");
+#elif ULONG_MAX == 0xFFFFFFFFFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned long int tmpl_UInt64;\n");
+    fprintf(fp, "typedef signed long int tmpl_SInt64;\n");
+#else
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
+    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
+#if ULLONG_MAX 0xFFFFFFFFFFFFFFFF
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+    fprintf(fp, "typedef unsigned long long int tmpl_UInt64;\n");
+    fprintf(fp, "typedef signed long long int tmpl_SInt64;\n");
+#else
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
+#endif
+#else
+    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
+#endif
+#endif
+#endif
+/*  End of #ifdef TMPL_SET_NO_INT.                                            */
+
+    fprintf(fp, "\n#endif\n");
+    return 0;
+}
+
+/*  Function for creating tmpl_config.h and tmpl_integer.h.                   */
+int main(void)
+{
+    if (make_config_h() < 0)
+        return -1;
+    if (make_integer_h() < 0)
+        return -1;
+    return 0;
+}
