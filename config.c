@@ -1080,7 +1080,7 @@ static int make_integer_h(void)
 #else
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
     (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
-#if ULLONG_MAX 0xFFFFFFFFFFFFFFFF
+#if ULLONG_MAX == 0xFFFFFFFFFFFFFFFF
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned long long int tmpl_UInt64;\n");
     fprintf(fp, "typedef signed long long int tmpl_SInt64;\n");
