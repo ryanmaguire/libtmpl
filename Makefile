@@ -129,6 +129,7 @@ SRCS := \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
+	-not -name "tmpl_floor_double.c" -and \
 	\( -name "*.c" -or -name "*x86_64.S" \))
 endif
 # End of ifdef FASM.
@@ -217,6 +218,7 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
+	rm -f include/tmpl_integer.h
 	rm -f $(TARGET_LIB)
 
 install:
@@ -227,6 +229,7 @@ install:
 uninstall:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
+	rm -f include/tmpl_integer.h
 	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)
