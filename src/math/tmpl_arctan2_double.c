@@ -123,11 +123,14 @@
  *      Added license, comments, and description of algorithm.                *
  ******************************************************************************/
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Lookup table of precomputed arctan values found here.                     */
 #include <libtmpl/include/tmpl_math_arctan_tables.h>

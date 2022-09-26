@@ -1354,9 +1354,15 @@ tmpl_Falling_Factorial(unsigned int x, unsigned int N);
  *      double floor_x:                                                       *
  *          The floor function evaluated at x.                                *
  ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Floor floorf
+#define tmpl_Double_Floor floor
+#define tmpl_LDouble_Floor floorl
+#else
 extern float tmpl_Float_Floor(float x);
 extern double tmpl_Double_Floor(double x);
 extern long double tmpl_LDouble_Floor(long double x);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

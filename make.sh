@@ -168,9 +168,14 @@ else
     Exclude="$Exclude tmpl_abs_double.c"
     Exclude="$Exclude tmpl_abs_float.c"
     Exclude="$Exclude tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arctan2_double.c"
+    Exclude="$Exclude tmpl_arctan2_float.c"
+    Exclude="$Exclude tmpl_arctan2_ldouble.c"
     Exclude="$Exclude tmpl_arctan_double.c"
     Exclude="$Exclude tmpl_arctan_float.c"
     Exclude="$Exclude tmpl_arctan_ldouble.c"
+    Exclude="$Exclude tmpl_floor_double.c"
+    Exclude="$Exclude tmpl_floor_float.c"
 fi
 
 if [ $USEIEEE == 0 ]; then
