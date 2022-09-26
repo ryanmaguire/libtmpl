@@ -96,6 +96,9 @@ for arg in "$@"; do
     elif [ "$arg" == "-noieee" ]; then
         USEIEEE=0
 
+    elif [ "$arg" == "-noint" ]; then
+        USEINT=0
+
     # Check for any extra arguments.
     else
         ExtraArgs="$ExtraArgs ${arg#*=}"
@@ -172,6 +175,10 @@ fi
 
 if [ $USEIEEE == 0 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_TMPL_USE_IEEE_FALSE"
+fi
+
+if [ $USEINT == 0 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_SET_NO_INT"
 fi
 
 # Name of the created Shared Object file (.so).
