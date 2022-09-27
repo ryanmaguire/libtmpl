@@ -146,6 +146,8 @@ else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
 SRCS := \
 	$(shell find $(SRC_DIRS) $(EXCLUDE) \
+	-not -name "tmpl_floor_double.c" -and \
+	-not -name "tmpl_floor_float.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	\( -name "*.c" -or -name "*aarch64.S" \))
