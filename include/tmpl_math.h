@@ -1564,6 +1564,46 @@ extern long double tmpl_LDouble_Sin(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Sin_Pade                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the Pade approximant of the sine function sin(x).            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/tmpl_math_sine_pade_inline.h>
+#else
+extern float tmpl_Float_Sin_Pade(float x);
+extern double tmpl_Double_Sin_Pade(double x);
+extern long double tmpl_LDouble_Sin_Pade(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sin_Pade_Pi                                               *
+ *  Purpose:                                                                  *
+ *      Computes the Pade approximant of the sine centered at pi.             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/tmpl_math_sine_pade_pi_inline.h>
+#else
+extern float tmpl_Float_Sin_Pade_Pi(float x);
+extern double tmpl_Double_Sin_Pade_Pi(double x);
+extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Sinh                                                      *
  *  Purpose:                                                                  *
  *      Computes the hyperbolic sine function sinh(x).                        *
