@@ -160,6 +160,12 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_copysign_ldouble.c"
     Exclude="$Exclude tmpl_complex_add.c"
     Exclude="$Exclude tmpl_complex_addto.c"
+    Exclude="$Exclude tmpl_sin_pade_double.c"
+    Exclude="$Exclude tmpl_sin_pade_float.c"
+    Exclude="$Exclude tmpl_sin_pade_ldouble.c"
+    Exclude="$Exclude tmpl_sin_pade_pi_double.c"
+    Exclude="$Exclude tmpl_sin_pade_pi_float.c"
+    Exclude="$Exclude tmpl_sin_pade_pi_ldouble.c"
 fi
 
 if [ $USEMATH == 1 ]; then
