@@ -64,7 +64,13 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_complex_quick_abs.c" -and \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
-	-not -name "tmpl_copysign_ldouble.c" -and
+	-not -name "tmpl_copysign_ldouble.c" -and \
+	-not -name "tmpl_sine_pade_double.c" -and \
+	-not -name "tmpl_sine_pade_float.c" -and \
+	-not -name "tmpl_sine_pade_ldouble.c" -and \
+	-not -name "tmpl_sine_pade_pi_double.c" -and \
+	-not -name "tmpl_sine_pade_pi_float.c" -and \
+	-not -name "tmpl_sine_pade_pi_ldouble.c" -and
 endif
 
 ifdef NO_MATH
