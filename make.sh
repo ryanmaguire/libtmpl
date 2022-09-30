@@ -280,6 +280,13 @@ echo "        $ExtraArgs"
 
 # Loop over all directories in src/ and compile all .c files.
 for dir in src/*; do
+
+    # sysdeps only has assembly code. Skip this.
+
+    if [[ $dir == *"sysdeps"* ]]; then
+        continue;
+    fi
+
     echo ""
     echo "    Compiling $dir"
     for filename in $dir/*.c; do

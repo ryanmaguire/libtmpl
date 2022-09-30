@@ -23,4 +23,4 @@ static inline double fmod2(double x)
     return fmod(x, 2.0);
 }
 
-TEST1(double, -1.0E4, 1.0E4, tmpl_Double_Mod_2, fmod2)
+TEST1(double, -1.0E6, 1.0E6, tmpl_Double_Mod_2, fmod2)
