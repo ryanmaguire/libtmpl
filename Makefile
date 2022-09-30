@@ -98,6 +98,12 @@ else
 IEEE_FLAG :=
 endif
 
+ifdef NO_INT
+INT_FLAG := -DTMPL_SET_NO_INT
+else
+INT_FLAG :=
+endif
+
 EXCLUDE := $(INLINE_EXCLUDE) $(MATH_EXCLUDE)
 
 uname_m := $(shell uname -m)
@@ -184,12 +190,14 @@ endif
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
+ALLCFLAGS := $(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG)
+
 .PHONY: clean install uninstall all
 
 all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
 
 include/tmpl_config.h: ./config.c
-	$(CC) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) config.c -o config.out
+	$(CC) $(ALLCFLAGS) config.c -o config.out
 	./config.out
 	rm -f config.out
 

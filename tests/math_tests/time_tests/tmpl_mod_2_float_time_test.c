@@ -23,4 +23,4 @@ static inline float fmod2f(float x)
     return fmodf(x, 2.0F);
 }
 
-TEST1(float, -1.0E4F, 1.0E4F, tmpl_Float_Mod_2, fmod2f)
+TEST1(float, -1.0E6F, 1.0E6F, tmpl_Float_Mod_2, fmod2f)
