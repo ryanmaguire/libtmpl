@@ -19,7 +19,13 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#ifdef USEOPENLIBM
+#include <openlibm/include/openlibm_math.h>
+#else
 #include <math.h>
+#endif
+
 #include <time.h>
 #include <float.h>
 
