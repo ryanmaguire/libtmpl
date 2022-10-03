@@ -193,7 +193,7 @@ double tmpl_Double_Mod_2(double x)
          *  now -leading, so set this. We need to add the bias back, so the   *
          *  final exponent is TMPL_DOUBLE_BIAS - leading.                     */
         if (word64.n & 0x0010000000000000)
-            word64.w.bits.expo = TMPL_DOUBLE_BIAS - leading;
+            word64.w.bits.expo = (TMPL_DOUBLE_BIAS - leading) & 0x7FF;
 
         /*  In this case the number was an even integer to begin with.        *
          *  The result is zero.                                               */
