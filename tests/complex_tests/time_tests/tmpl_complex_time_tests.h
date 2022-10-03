@@ -69,6 +69,7 @@ int main(void)                                                                 \
     long double max_err = 0.0L;                                                \
     long double rel_err = 0.0L;                                                \
     long double tmp = 0.0L;                                                    \
+    const ftype zero = (ftype)0;                                               \
                                                                                \
     X = malloc(sizeof(*X) * N);                                                \
                                                                                \
@@ -135,11 +136,14 @@ int main(void)                                                                 \
                                                                                \
     for (n = 0U; n < N; ++n)                                                   \
     {                                                                          \
-        tmp = fabsl((long double)(Y[n] - B[n]));                               \
-        rel_err += tmp*tmp;                                                    \
+        if (B[n] != zero)                                                      \
+        {                                                                      \
+            tmp = fabsl((long double)((Y[n] - B[n])/B[n]));                    \
+            rel_err += tmp*tmp;                                                \
                                                                                \
-        if (max_err < tmp)                                                     \
-            max_err = tmp;                                                     \
+            if (max_err < tmp)                                                 \
+                max_err = tmp;                                                 \
+        }                                                                      \
     }                                                                          \
                                                                                \
     rel_err = sqrtl(rel_err / (long double)N);                                 \
