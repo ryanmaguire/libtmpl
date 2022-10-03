@@ -165,9 +165,13 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
  *      libtmpl/tests/complex_tests/tmpl_complex_abs_time_test.c              *
  *      libtmpl/tests/complex_tests/tmpl_complex_absl_time_test.c             *
  ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/tmpl_complex_abs_inline.h>
+#else
 extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_complex_abs                               *
+ *                         tmpl_complex_abs_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex modulus (absolute value).        *
@@ -24,8 +24,6 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Abs:                                                      *
- *      tmpl_CDouble_Abs:                                                     *
  *      tmpl_CLDouble_Abs:                                                    *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
@@ -33,7 +31,7 @@
  *          |z| = |x + iy| = sqrt(x^2 + y^2)                                  *
  *                                                                            *
  *      Because x^2 and y^2 are computed as intermediate steps, this method   *
- *      will overflow for values greater than sqrt(DBL_MAX). The safe way to  *
+ *      will overflow for values greater than sqrt(LDBL_MAX). The safe way to *
  *      do this is via:                                                       *
  *                                                                            *
  *          |z| = |x| sqrt(1+(y/x)^2)                                         *
@@ -42,63 +40,35 @@
  *                                                                            *
  *          |z| = |y| sqrt(1 + (x/y)^2)                                       *
  *                                                                            *
- *      otherwise. This is about 1.3-1.5x slower. The faster, naive method    *
- *      is implemented in tmpl_CDouble_QuickAbs, but may overflow for large   *
- *      values. This method avoids overflows at intermediate steps.           *
+ *      otherwise. This is about 1.3-1.5x slower. If IEEE-754 support is      *
+ *      available, we need only check if max(|x|, |y|) is in the range        *
+ *      (2^-512, 2^512), scaling by a constant if not. This is about as fast  *
+ *      as the naive method.                                                  *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexFloat/ComplexDouble/ComplexLongDouble):                *
+ *      z (tmpl_ComplexLongDouble):                                           *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      abs_z (float/double/long double):                                     *
+ *      abs_z (long double):                                                  *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Float_Abs          (tmpl_math.h)                                 *
- *      tmpl_Double_Abs         (tmpl_math.h)                                 *
- *      tmpl_LDouble_Abs        (tmpl_math.h)                                 *
+ *      tmpl_LDouble_Abs     (tmpl_math.h)                                    *
  *          Computes the absolute value of a real number.                     *
- *      tmpl_Float_Sqrt         (tmpl_math.h)                                 *
- *      tmpl_Double_Sqrt        (tmpl_math.h)                                 *
- *      tmpl_LDouble_Sqrt       (tmpl_math.h)                                 *
- *          Computes the square root of a float/double/long double.           *
- *      tmpl_CFloat_Real_Part   (tmpl_complex.h)                              *
- *      tmpl_CDouble_Real_Part  (tmpl_complex.h)                              *
- *      tmpl_CLDouble_Real_Part (tmpl_complex.h)                              *
- *          Returns the real part of a complex number.                        *
- *      tmpl_CFloat_Imag_Part   (tmpl_complex.h)                              *
- *      tmpl_CDouble_Imag_Part  (tmpl_complex.h)                              *
- *      tmpl_CLDouble_Imag_Part (tmpl_complex.h)                              *
- *          Returns the imaginary part of a complex number.                   *
- *  Method:                                                                   *
- *      Extract the real and imaginary parts of z, label as z = x + iy.       *
- *      determine a = min(|x|, |y|) and b = max(|x|, |y|), returning the      *
- *      value b*sqrt(1 + (a/b)^2).                                            *
+ *      tmpl_LDouble_Sqrt    (tmpl_math.h)                                    *
+ *          Computes the square root of a real number.                        *
  *  Notes:                                                                    *
  *      This code is a fork of the code I wrote for rss_ringoccs.             *
  *      librssringoccs is also released under GPL3.                           *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          TMPL_USE_INLINE macro found here.                                 *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
- *  2.) tmpl_complex.h:                                                       *
+ *  3.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                             Revision History                               *
@@ -125,7 +95,18 @@
  *      Complex numbers with a magnitude greater than sqrt(DBL_MAX) will      *
  *      overflow, even though they shouldn't for a proper implementation.     *
  *      This has been fixed, albeit at the expense of speed.                  *
+ *  2022/04/28: Ryan Maguire                                                  *
+ *      Changed algorithm to incorporate IEEE-754 tricks. 1.4x speed up.      *
  ******************************************************************************/
+
+/*  The TMPL_USE_INLINE macro is found here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
+
+/*  TMPL_USE_INLINE found here.                                               */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -133,34 +114,118 @@
 /*  Where the prototypes are given and where complex types are defined.       */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Long double precision complex abs function (cabsl equivalent).            */
+/*  We can get a significant speed boost if IEEE-754 support is available.    */
+#if TMPL_HAS_IEEE754_LDOUBLE == 1 && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+#define TMPL_BIG_SCALE (1.340780792994259709957402E+154)
+#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965E-155)
+#define TMPL_EXPO_HIGH (TMPL_LDOUBLE_BIAS + 0x200U)
+#define TMPL_EXPO_LOW (TMPL_LDOUBLE_BIAS - 0x1E6U)
+
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+
+#define TMPL_BIG_SCALE (1.090748135619415929462984244733E2466L)
+#define TMPL_RCPR_BIG_SCALE (9.16801933777423582810706196024E-2467L)
+#define TMPL_EXPO_TOO_HIGH (TMPL_LDOUBLE_BIAS + 0x2000U)
+#define TMPL_EXPO_TOO_LOW (TMPL_LDOUBLE_BIAS - 0x1FE0U)
+
+#else
+#define TMPL_BIG_SCALE (1.090748135619415929462984244733E2466L)
+#define TMPL_RCPR_BIG_SCALE (9.16801933777423582810706196024E-2467L)
+#define TMPL_EXPO_TOO_HIGH (TMPL_LDOUBLE_BIAS + 0x2000U)
+#define TMPL_EXPO_TOO_LOW (TMPL_LDOUBLE_BIAS - 0x1FC8U)
+#endif
+
+/*  Function for computing the magnitude, or modulus, of a complex number.    */
 long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
 {
-    /*  Extract the absolute values of the real and imaginary parts from the  *
-     *  input complex number.                                                 */
-    const long double abs_real = tmpl_LDouble_Abs(tmpl_CLDouble_Real_Part(z));
-    const long double abs_imag = tmpl_LDouble_Abs(tmpl_CLDouble_Imag_Part(z));
-    long double s, t;
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEEE754_LDouble w;
 
-    /*  Special case, to avoid division by zero.                              */
-    if (abs_real == 0.0L)
-        return abs_imag;
-    else if (abs_imag == 0.0L)
-        return abs_real;
+    /*  Given z = x + iy = (x, y), compute |x| and |y|.                       */
+    long double x = tmpl_LDouble_Abs(z.dat[0]);
+    long double y = tmpl_LDouble_Abs(z.dat[1]);
 
-    /*  Compute the max of |real| and |imag|.                                 */
-    if (abs_real < abs_imag)
-    {
-        t = abs_imag;
-        s = abs_real / abs_imag;
-    }
+    if (x < y)
+        w.r = y;
     else
+        w.r = x;
+
+    if (w.bits.expo < TMPL_EXPO_TOO_HIGH)
     {
-        t = abs_real;
-        s = abs_imag / abs_real;
+        if (w.bits.expo > TMPL_EXPO_TOO_LOW)
+            return tmpl_LDouble_Sqrt(x*x + y*y);
+
+        x *= TMPL_BIG_SCALE;
+        y *= TMPL_BIG_SCALE;
+        return TMPL_RCPR_BIG_SCALE * tmpl_LDouble_Sqrt(x*x + y*y);
     }
 
-    /*  The absolute value is new t * sqrt(1 + s^2). Compute this.            */
-    return t*tmpl_LDouble_Sqrt(1.0L + s*s);
+    x *= TMPL_RCPR_BIG_SCALE;
+    y *= TMPL_RCPR_BIG_SCALE;
+    return TMPL_BIG_SCALE * tmpl_LDouble_Sqrt(x*x + y*y);
 }
 /*  End of tmpl_CLDouble_Abs.                                                 */
+
+/*  Undefine these macros in case someone wants to #include this file.        */
+#undef TMPL_BIG_SCALE
+#undef TMPL_RCPR_BIG_SCALE
+#undef TMPL_EXPO_TOO_HIGH
+#undef TMPL_EXPO_TOO_LOW
+
+#else
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+
+/*  Lacking IEEE-754 support, we can use the standard trick to avoid          *
+ *  underflows and overflows that is used in the hypot (hypotenuse) functions.*
+ *  This is about 1.4x slower than the method above, but is portable. The     *
+ *  reason for the slowness is above we multiply by constants, whereas this   *
+ *  algorithm requires divisions and multiplications by non-constants.        */
+
+/*  Function for computing the magnitude, or modulus, of a complex number.    */
+long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    long double rcpr_t;
+
+    /*  Given z = x + iy = (x, y), compute |x| and |y|.                       */
+    long double x = tmpl_LDouble_Abs(z.dat[0]);
+    long double y = tmpl_LDouble_Abs(z.dat[1]);
+
+    /*  Compute the maximum of |x| and |y|. This syntax from the C language   *
+     *  is a bit strange. a = (b < c ? c : b) says if b is less than c, set a *
+     *  to c, otherwise set a to b.                                           */
+    const long double t = (x < y ? y : x);
+
+    /*  Division by zero is generally viewed as bad. If the max of |x| and    *
+     *  |z| is zero, |z| = 0. Return this.                                    */
+    if (t == 0.0L)
+        return 0.0L;
+
+    /*  Precompute 1/t to turn 2 divisions into 1 division and 2 products.    */
+    rcpr_t = 1.0L / t;
+
+    /*  Scale x and y by 1/t.                                                 */
+    x *= rcpr_t;
+    y *= rcpr_t;
+
+    /*  |z| can safely be computed as |z| = t * sqrt((x/t)^2 + (y/t)^2)       *
+     *  without risk of underflow or overflow.                                */
+    return t * tmpl_LDouble_Sqrt(x*x + y*y);
+}
+/*  End of tmpl_CLDouble_Abs.                                                 */
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
