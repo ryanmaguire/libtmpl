@@ -66,9 +66,11 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          TMPL_USE_INLINE macro found here.                                 *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
- *  2.) tmpl_complex.h:                                                       *
+ *  3.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -101,6 +103,12 @@
  *  2022/04/28: Ryan Maguire                                                  *
  *      Changed algorithm to incorporate IEEE-754 tricks. 1.4x speed up.      *
  ******************************************************************************/
+
+/*  The TMPL_USE_INLINE macro is found here.                                  */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -217,3 +225,6 @@ double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
