@@ -193,7 +193,7 @@ float tmpl_Float_Mod_2(float x)
          *  now -leading, so set this. We need to add the bias back, so the   *
          *  final exponent is TMPL_FLOAT_BIAS - leading.                      */
         if (word32.n & 0x00800000)
-            word32.w.bits.expo = TMPL_FLOAT_BIAS - leading;
+            word32.w.bits.expo = (TMPL_FLOAT_BIAS - leading) & 0xFF;
 
         /*  In this case the number was an even integer to begin with.        *
          *  The result is zero.                                               */
