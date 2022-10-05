@@ -110,7 +110,7 @@ for arg in "$@"; do
     elif [ "$arg" == "-remove" ]; then
         SONAME="libtmpl.so"
         SODIR="/usr/local/lib"
-        INCLUDE_TARGET=/usr/local/include/libtmpl
+        INCLUDE_TARGET=/usr/local/include/libtmpl/
         CONFIG_HEADER=include/tmpl_config.h
         INTEGER_HEADER=include/tmpl_integer.h
 
@@ -268,7 +268,7 @@ else
 fi
 
 # Location where the .h files will be stored.
-INCLUDE_TARGET=/usr/local/include/libtmpl/include/
+INCLUDE_TARGET=/usr/local/include/libtmpl/
 
 # Header file that needs to be created prior to building libtmpl.
 CONFIG_HEADER=include/tmpl_config.h
@@ -399,7 +399,7 @@ if [ $INPLACE == 0 ]; then
     # Copy the header files to the appropriate directory.
     echo "Copying include/ directory to $INCLUDE_TARGET"
     mkdir -p "$INCLUDE_TARGET"
-    cp ./include/*.h "$INCLUDE_TARGET"
+    cp -r ./include/ "$INCLUDE_TARGET"
 
     # Move the shared object file to the appropriate directory.
     echo "Moving $SONAME to $SODIR"
