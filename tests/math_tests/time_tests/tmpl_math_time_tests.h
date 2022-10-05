@@ -418,3 +418,143 @@ int main(void)                                                                 \
     free(z1);                                                                  \
     return 0;                                                                  \
 }
+
+#define TEST4(type, begin, finish, f0, f1)                                     \
+int main(void)                                                                 \
+{                                                                              \
+    long double max_abs_y = 0.0L;                                              \
+    long double max_rel_y = 0.0L;                                              \
+    long double rms_rel_y = 0.0L;                                              \
+    long double rms_abs_y = 0.0L;                                              \
+    long double max_abs_z = 0.0L;                                              \
+    long double max_rel_z = 0.0L;                                              \
+    long double rms_rel_z = 0.0L;                                              \
+    long double rms_abs_z = 0.0L;                                              \
+    long double tempy, tempz;                                                  \
+    type *x, *y0, *y1, *z0, *z1;                                               \
+    unsigned long int n;                                                       \
+    clock_t t1, t2;                                                            \
+                                                                               \
+    const type start = (type)begin;                                            \
+    const type end = (type)finish;                                             \
+    const size_t N = NSAMPS(type) / 3;                                         \
+    const type dx = (end - start) / (type)N;                                   \
+                                                                               \
+    x = malloc(sizeof(*x) * N);                                                \
+                                                                               \
+    if (!x)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for x. Aborting.");              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    y0 = malloc(sizeof(*y0) * N);                                              \
+                                                                               \
+    if (!y0)                                                                   \
+    {                                                                          \
+        puts("malloc failed and returned NULL for y0. Aborting.");             \
+        free(x);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    y1 = malloc(sizeof(*y1) * N);                                              \
+                                                                               \
+    if (!y1)                                                                   \
+    {                                                                          \
+        puts("malloc failed and returned NULL for y1. Aborting.");             \
+        free(x);                                                               \
+        free(y0);                                                              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    z0 = malloc(sizeof(*z0) * N);                                              \
+                                                                               \
+    if (!z0)                                                                   \
+    {                                                                          \
+        puts("malloc failed and returned NULL for z0. Aborting.");             \
+        free(x);                                                               \
+        free(y0);                                                              \
+        free(y1);                                                              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    z1 = malloc(sizeof(*z1) * N);                                              \
+                                                                               \
+    if (!z1)                                                                   \
+    {                                                                          \
+        puts("malloc failed and returned NULL for z1. Aborting.");             \
+        free(x);                                                               \
+        free(y0);                                                              \
+        free(y1);                                                              \
+        free(z0);                                                              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    printf(#f0 " vs. " #f1 "\n");                                              \
+    printf("start:   %.16Le\n", (long double)start);                           \
+    printf("end:     %.16Le\n", (long double)end);                             \
+    printf("samples: %zu\n", N);                                               \
+    printf("dx:      %.16Le\n", (long double)dx);                              \
+                                                                               \
+    x[0] = start;                                                              \
+    for (n = 1UL; n < N; ++n)                                                  \
+        x[n] = x[n-1] + dx;                                                    \
+                                                                               \
+    t1 = clock();                                                              \
+    for (n = 0UL; n < N; ++n)                                                  \
+        f0(x[n], &y0[n], &z0[n]);                                              \
+    t2 = clock();                                                              \
+    printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    t1 = clock();                                                              \
+    for (n = 0UL; n < N; ++n)                                                  \
+        f1(x[n], &y1[n], &z1[n]);                                              \
+    t2 = clock();                                                              \
+    printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    for (n = 0UL; n < N; ++n)                                                  \
+    {                                                                          \
+        tempy = fabsl((long double)(y0[n] - y1[n]));                           \
+        tempz = fabsl((long double)(z0[n] - z1[n]));                           \
+        rms_abs_y += tempy*tempy;                                              \
+        if (max_abs_y < tempy)                                                 \
+            max_abs_y = tempy;                                                 \
+                                                                               \
+        if (y1[n] != 0)                                                        \
+        {                                                                      \
+            tempy = fabsl((long double)((y0[n] - y1[n]) / y1[n]));             \
+            rms_rel_y += tempy*tempy;                                          \
+                                                                               \
+            if (max_rel_y < tempy)                                             \
+                max_rel_y = tempy;                                             \
+        }                                                                      \
+                                                                               \
+        if (z1[n] != 0)                                                        \
+        {                                                                      \
+            tempz = fabsl((long double)((z0[n] - z1[n]) / z1[n]));             \
+            rms_rel_z += tempz*tempz;                                          \
+                                                                               \
+            if (max_rel_z < tempz)                                             \
+                max_rel_z = tempz;                                             \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    rms_rel_y = sqrtl(rms_rel_y / (long double)N);                             \
+    rms_abs_y = sqrtl(rms_abs_y / (long double)N);                             \
+    rms_rel_z = sqrtl(rms_rel_z / (long double)N);                             \
+    rms_abs_z = sqrtl(rms_abs_z / (long double)N);                             \
+    printf("max y abs error: %.16Le\n", max_abs_y);                            \
+    printf("max y rel error: %.16Le\n", max_rel_y);                            \
+    printf("rms y abs error: %.16Le\n", rms_abs_y);                            \
+    printf("rms y rel error: %.16Le\n", rms_rel_y);                            \
+    printf("max z abs error: %.16Le\n", max_abs_z);                            \
+    printf("max z rel error: %.16Le\n", max_rel_z);                            \
+    printf("rms z abs error: %.16Le\n", rms_abs_z);                            \
+    printf("rms z rel error: %.16Le\n", rms_rel_z);                            \
+    free(x);                                                                   \
+    free(y0);                                                                  \
+    free(y1);                                                                  \
+    free(z0);                                                                  \
+    free(z1);                                                                  \
+    return 0;                                                                  \
+}

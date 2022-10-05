@@ -1,16 +1,28 @@
+#include <libtmpl/include/tmpl_config.h>
+
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
 #include <libtmpl/include/tmpl_math.h>
+
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 float tmpl_Float_Cos(float x)
 {
-    float arg, sgn_x, abs_x, cx, cdx, sx, sdx, dx, dx_sq;
-    unsigned int arg_100_int;
+    const double in = (double)x;
+    const double out = tmpl_Double_Cos(in);
+    return (float)out;
+}
 
-    if (x >= 0.0F)
-        abs_x = x;
-    else
-        abs_x = -x;
+#else
 
-    arg = tmpl_Float_Mod_2(abs_x * 0.31830988618379067153776752674502872406F);
+#include <libtmpl/include/math_inline/tmpl_math_sincos_data_float.h>
+
+float tmpl_Float_Cos(float x)
+{
+    float arg, sgn_x, cx, cdx, sx, sdx, dx, dx_sq;
+    unsigned int arg_128_int;
+
+    arg = tmpl_Float_Mod_2(tmpl_Float_Abs(x) * tmpl_One_By_Pi_F);
 
     if (arg >= 1.0F)
     {
@@ -20,12 +32,12 @@ float tmpl_Float_Cos(float x)
     else
         sgn_x = 1.0F;
 
-    arg_100_int = (unsigned int)(100.0F*arg);
-    dx = arg - 0.01F*(float)arg_100_int;
+    arg_128_int = (unsigned int)(128.0F*arg);
+    dx = arg - 0.0078125F*(float)arg_128_int;
     dx_sq = dx*dx;
 
-    sx  = tmpl_Float_Sin_Lookup_Table[arg_100_int];
-    cx  = tmpl_Float_Cos_Lookup_Table[arg_100_int];
+    sx  = tmpl_Float_Sin_Lookup_Table[arg_128_int];
+    cx  = tmpl_Float_Cos_Lookup_Table[arg_128_int];
 
     sdx = 2.550164039877345443856178F * dx_sq - 5.167712780049970029246053F;
     sdx = sdx * dx_sq + 3.141592653589793238462643F;
@@ -36,3 +48,7 @@ float tmpl_Float_Cos(float x)
 
     return sgn_x * (cdx*cx - sx*sdx);
 }
+
+#endif
+
+#endif

@@ -128,7 +128,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Lookup table of precomputed arctan values found here.                     */
-#include <libtmpl/include/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math_inline/tmpl_math_arctan_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1

@@ -88,6 +88,11 @@ const double tmpl_Sqrt_Two_By_Pi = 0.7978845608028653558798921198687637369517;
 const long double
 tmpl_Sqrt_Two_By_Pi_L = 0.7978845608028653558798921198687637369517L;
 
+/*  1 / pi.                                                                   */
+const float tmpl_One_By_Pi_F = 0.318309886183790671537767526745028724068F;
+const double tmpl_One_By_Pi = 0.318309886183790671537767526745028724068;
+const long double tmpl_One_By_Pi_L = 0.318309886183790671537767526745028724068L;
+
 /*  2 / sqrt( pi )                                                            */
 const float tmpl_Two_By_Sqrt_Pi_F = 1.128379167095512573896158903121545171688F;
 const double tmpl_Two_By_Sqrt_Pi = 1.128379167095512573896158903121545171688;
