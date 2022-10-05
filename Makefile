@@ -73,7 +73,8 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_sin_pade_ldouble.c" -and \
 	-not -name "tmpl_sin_pade_pi_double.c" -and \
 	-not -name "tmpl_sin_pade_pi_float.c" -and \
-	-not -name "tmpl_sin_pade_pi_ldouble.c" -and
+	-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
+	-not -name "tmpl_sin_very_small_double.c" -and
 endif
 
 ifdef NO_MATH
@@ -88,8 +89,10 @@ MATH_EXCLUDE := \
 	-not -name "tmpl_arctan_double.c" -and \
 	-not -name "tmpl_arctan_float.c" -and \
 	-not -name "tmpl_arctan_ldouble.c" -and \
+	-not -name "tmpl_cos_double.c" -and \
 	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and
+	-not -name "tmpl_floor_float.c" -and \
+	-not -name "tmpl_sin_double.c" -and
 else
 MATH_FLAG := -DTMPL_SET_USE_MATH_TRUE
 MATH_EXCLUDE :=
@@ -161,10 +164,14 @@ else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
 SRCS := \
 	$(shell find $(SRC_DIRS) $(EXCLUDE) \
+	-not -name "tmpl_cos_double.c" -and \
+	-not -name "tmpl_cos_float.c" -and \
 	-not -name "tmpl_floor_double.c" -and \
 	-not -name "tmpl_floor_float.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sin_double.c" -and \
+	-not -name "tmpl_sin_float.c" -and \
 	\( -name "*.c" -or -name "*aarch64.S" \))
 
 # Else for ifdef NO_ASM
@@ -219,8 +226,6 @@ $(BUILD_DIR)/%.fasm.o: %.fasm
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/bytes/
 	mkdir -p $(BUILD_DIR)/src/complex/
-	mkdir -p $(BUILD_DIR)/src/euclidean_planar_geometry/
-	mkdir -p $(BUILD_DIR)/src/euclidean_spatial_geometry/
 	mkdir -p $(BUILD_DIR)/src/fft/
 	mkdir -p $(BUILD_DIR)/src/graph_theory/
 	mkdir -p $(BUILD_DIR)/src/interpolate/
@@ -236,6 +241,8 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/spherical_geometry/
 	mkdir -p $(BUILD_DIR)/src/string/
 	mkdir -p $(BUILD_DIR)/src/svg/
+	mkdir -p $(BUILD_DIR)/src/vec2/
+	mkdir -p $(BUILD_DIR)/src/vec3/
 	mkdir -p $(BUILD_DIR)/src/vector/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/

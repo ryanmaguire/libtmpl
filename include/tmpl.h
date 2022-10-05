@@ -24,7 +24,7 @@
 #include <libtmpl/include/tmpl_bytes.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
+#include <libtmpl/include/tmpl_vec2.h>
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 #include <libtmpl/include/tmpl_fft.h>
 #include <libtmpl/include/tmpl_graph_theory.h>

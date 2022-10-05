@@ -1,7 +1,7 @@
 #ifndef TMPL_INVERSIVE_H
 #define TMPL_INVERSIVE_H
 
-#include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
+#include <libtmpl/include/tmpl_vec2.h>
 
 extern tmpl_TwoVector
 kissvg_InversiveGeometry_Point_Inverse(tmpl_Circle2D *C, tmpl_TwoVector P);

@@ -27,25 +27,10 @@
  *          Standard C library containing the FILE data type.                 *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file defining Booleans.                                    *
- *  3.) tmpl_euclidean_planar_geometry.h:                                     *
+ *  3.) tmpl_vec2.h:                                                          *
  *          Header file providing two-dimensional vectors.                    *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 19, 2021                                                 *
  ******************************************************************************/
 
@@ -60,7 +45,7 @@
 #include <libtmpl/include/tmpl_bool.h>
 
 /*  2D vectors found here.                                                    */
-#include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
+#include <libtmpl/include/tmpl_vec2.h>
 
 /*  Enumerated list of arrow types. Currently only three are provided, which  *
  *  are modeled after the tikz arrows. A no-arrow option is also provided. If *

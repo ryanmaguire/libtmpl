@@ -800,6 +800,11 @@ extern const float tmpl_Sqrt_Two_By_Pi_F;
 extern const double tmpl_Sqrt_Two_By_Pi;
 extern const long double tmpl_Sqrt_Two_By_Pi_L;
 
+/*  1 / pi.                                                                   */
+extern const float tmpl_One_By_Pi_F;
+extern const double tmpl_One_By_Pi;
+extern const long double tmpl_One_By_Pi_L;
+
 /*  2 / sqrt( pi )                                                            */
 extern const float tmpl_Two_By_Sqrt_Pi_F;
 extern const double tmpl_Two_By_Sqrt_Pi;
@@ -892,7 +897,7 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *      libtmpl/src/math/tmpl_abs_float.c                                     *
  *      libtmpl/src/math/tmpl_abs_double.c                                    *
  *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
- *      libtmpl/include/tmpl_math_abs_inline.h (inline version)               *
+ *      libtmpl/include/math_inline/tmpl_math_abs_inline.h (inline version)   *
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
  *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
@@ -924,7 +929,7 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/tmpl_math_abs_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_abs_inline.h>
 #else
 
 /*  Inline not requested, use the external functions in src/math.             */
@@ -1036,7 +1041,7 @@ extern long double tmpl_LDouble_Arctan(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/tmpl_math_arctan_asymptotic_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_arctan_asymptotic_inline.h>
 #else
 extern float tmpl_Float_Arctan_Asymptotic(float x);
 extern double tmpl_Double_Arctan_Asymptotic(double x);
@@ -1066,7 +1071,7 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/tmpl_math_arctan_maclaurin_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_arctan_maclaurin_inline.h>
 #else
 extern float tmpl_Float_Arctan_Maclaurin(float x);
 extern double tmpl_Double_Arctan_Maclaurin(double x);
@@ -1095,7 +1100,7 @@ extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/tmpl_math_arctan_pade_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_arctan_pade_inline.h>
 #else
 extern float tmpl_Float_Arctan_Pade(float x);
 extern double tmpl_Double_Arctan_Pade(double x);
@@ -1124,7 +1129,7 @@ extern long double tmpl_LDouble_Arctan_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/tmpl_math_arctan_very_small_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_arctan_very_small_inline.h>
 #else
 extern float tmpl_Float_Arctan_Very_Small(float x);
 extern double tmpl_Double_Arctan_Very_Small(double x);
@@ -1194,7 +1199,7 @@ extern long double tmpl_LDouble_Cbrt(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support to copysign found here.                                    */
-#include <libtmpl/include/tmpl_math_copysign_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_copysign_inline.h>
 #else
 
 /*  No inline support requested.                                              */
@@ -1231,9 +1236,15 @@ extern long double tmpl_LDouble_Cosh(long double x);
  *      double cos_x:                                                         *
  *          The cosine of x, cos(x).                                          *
  ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS == 1
 extern float tmpl_Float_Cos(float x);
 extern double tmpl_Double_Cos(double x);
 extern long double tmpl_LDouble_Cos(long double x);
+#else
+#define tmpl_Float_Cos cosf
+#define tmpl_Double_Cos cos
+#define tmpl_LDouble_Cos cosl
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1558,9 +1569,34 @@ extern long double tmpl_LDouble_Sinc(long double x);
  *      double sin_x:                                                         *
  *          The sine of x.                                                    *
  ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS == 1
 extern float tmpl_Float_Sin(float x);
 extern double tmpl_Double_Sin(double x);
 extern long double tmpl_LDouble_Sin(long double x);
+#else
+#define tmpl_Float_Sin sinf
+#define tmpl_Double_Sin sin
+#define tmpl_LDouble_Sin sinl
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sin_Very_Small                                            *
+ *  Purpose:                                                                  *
+ *      Computes the sine function sin(x) using the Maclaurin series for      *
+ *      very small inputs.                                                    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math_inline/tmpl_math_sin_very_small_inline.h>
+#else
+extern double tmpl_Double_Sin_Very_Small(double x);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1575,7 +1611,7 @@ extern long double tmpl_LDouble_Sin(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/tmpl_math_sine_pade_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_sine_pade_inline.h>
 #else
 extern float tmpl_Float_Sin_Pade(float x);
 extern double tmpl_Double_Sin_Pade(double x);
@@ -1595,12 +1631,33 @@ extern long double tmpl_LDouble_Sin_Pade(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/tmpl_math_sine_pade_pi_inline.h>
+#include <libtmpl/include/math_inline/tmpl_math_sine_pade_pi_inline.h>
 #else
 extern float tmpl_Float_Sin_Pade_Pi(float x);
 extern double tmpl_Double_Sin_Pade_Pi(double x);
 extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
 #endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinCos                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the point on a circle corresponding to a given angle.        *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number.                                                    *
+ *      double *x_ptr;                                                        *
+ *          A pointer to the x-coordinate of the point on the circle.         *
+ *      double *y_ptr;                                                        *
+ *          A pointer to the y-coordinate of the point on the circle.         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinCos(float t, float *cos_t, float *sin_t);
+extern void tmpl_Double_SinCos(double t, double *cos_t, double *sin_t);
+
+extern void
+tmpl_LDouble_SinCos(long double t, long double *cos_t, long double *sin_t);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1694,14 +1751,6 @@ tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
                                     unsigned int degree,
                                     unsigned int deriv,
                                     long double x);
-
-extern const float tmpl_Float_Cos_Lookup_Table[100];
-extern const double tmpl_Double_Cos_Lookup_Table[100];
-extern const long double tmpl_LDouble_Cos_Lookup_Table[100];
-
-extern const float tmpl_Float_Sin_Lookup_Table[100];
-extern const double tmpl_Double_Sin_Lookup_Table[100];
-extern const long double tmpl_LDouble_Sin_Lookup_Table[100];
 
 extern float
 tmpl_Max_Float(float *arr, unsigned long n_elements);

@@ -57,6 +57,11 @@ USEMATH=1
 # Use of the IEEE-754 floating point format.
 USEIEEE=1
 
+# Compile the entire library by #include'ing all files into one translation
+# unit. The compiler get's to the see the entire library at once and make many
+# optimizations.
+MAKEMONSTER=0
+
 # Files to be excluded (added later based on USEINLINE and USEMATH.
 Exclude=""
 
@@ -98,6 +103,43 @@ for arg in "$@"; do
 
     elif [ "$arg" == "-noint" ]; then
         USEINT=0
+
+    elif [ "$arg" == "-monster" ]; then
+        MAKEMONSTER=1
+
+    elif [ "$arg" == "-remove" ]; then
+        SONAME="libtmpl.so"
+        SODIR="/usr/local/lib"
+        INCLUDE_TARGET=/usr/local/include/libtmpl
+        CONFIG_HEADER=include/tmpl_config.h
+        INTEGER_HEADER=include/tmpl_integer.h
+
+        echo "Removing libtmpl:"
+        echo "    Clearing older files..."
+        rm -f *.so *.o *.obj *.lib
+
+        echo "    Removing config header file if it exists..."
+        if [ -e "$CONFIG_HEADER" ]; then
+            rm -f "$CONFIG_HEADER";
+        fi
+
+        echo "    Removing integer header file if it exists..."
+        if [ -e "$INTEGER_HEADER" ]; then
+            rm -f "$INTEGER_HEADER";
+        fi
+
+        echo -e "    Removing include directory if it exists..."
+        if [ -d "$INCLUDE_TARGET" ]; then
+            rm -rf "$INCLUDE_TARGET";
+        fi
+
+        echo "    Removing shared object file if it exists..."
+        if [ -e "$SODIR/$SONAME" ]; then
+            rm -f "$SODIR/$SONAME";
+        fi
+
+        echo "libtmpl removed."
+        exit 1
 
     # Check for any extra arguments.
     else
@@ -169,6 +211,7 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_sin_pade_pi_double.c"
     Exclude="$Exclude tmpl_sin_pade_pi_float.c"
     Exclude="$Exclude tmpl_sin_pade_pi_ldouble.c"
+    Exclude="$Exclude tmpl_sin_very_small_double.c"
 fi
 
 if [ $USEMATH == 1 ]; then
@@ -183,8 +226,10 @@ else
     Exclude="$Exclude tmpl_arctan_double.c"
     Exclude="$Exclude tmpl_arctan_float.c"
     Exclude="$Exclude tmpl_arctan_ldouble.c"
+    Exclude="$Exclude tmpl_cos_double.c"
     Exclude="$Exclude tmpl_floor_double.c"
     Exclude="$Exclude tmpl_floor_float.c"
+    Exclude="$Exclude tmpl_sin_double.c"
 fi
 
 if [ $USEIEEE == 0 ]; then
@@ -281,34 +326,71 @@ echo "        $CArgs5"
 echo "    Extra Compiler Arguments:"
 echo "        $ExtraArgs"
 
-# Loop over all directories in src/ and compile all .c files.
-for dir in src/*; do
+if [ $MAKEMONSTER == 1 ]; then
+    touch monster.c
 
-    # sysdeps only has assembly code. Skip this.
+    for file in include/*.h; do
+        echo "#include \"$file\"" >> monster.c;
+    done
 
-    if [[ $dir == *"sysdeps"* ]]; then
-        continue;
-    fi
+    for dir in src/*/; do
 
-    echo ""
-    echo "    Compiling $dir"
-    for filename in $dir/*.c; do
-        filename_without_path=$(basename -- $filename)
-        if [[ $Exclude == *"$filename_without_path"* ]]; then
+        # sysdeps only has assembly code. Skip this.
+        if [[ $dir == *"sysdeps"* ]]; then
             continue;
         fi
 
-        echo "        Compiling: $filename"
-        if !($CC $CompilerArgs $filename); then
-            exit 1
-        fi
+        for filename in $dir*.c; do
+            filename_without_path=$(basename -- $filename)
+            if [[ $Exclude == *"$filename_without_path"* ]]; then
+                continue;
+            fi
+            echo "#include \"$filename\"" >> monster.c;
+        done
     done
-done
 
-echo ""
-echo "Building libtmpl Shared Object (.so file)"
-if !($CC ./*.o $LinkerArgs); then
-    exit 1
+    echo "Compiling libtmpl..."
+    if !($CC $CompilerArgs monster.c); then
+        exit 1
+    fi
+
+    echo "Building libtmpl Shared Object (.so file)"
+    if !($CC ./*.o $LinkerArgs); then
+        exit 1
+    fi
+
+    rm -f *.o
+    rm -f monster.c
+else
+
+    # Loop over all directories in src/ and compile all .c files.
+    for dir in src/*; do
+
+        # sysdeps only has assembly code. Skip this.
+        if [[ $dir == *"sysdeps"* ]]; then
+            continue;
+        fi
+
+        echo ""
+        echo "    Compiling $dir"
+        for filename in $dir/*.c; do
+            filename_without_path=$(basename -- $filename)
+            if [[ $Exclude == *"$filename_without_path"* ]]; then
+                continue;
+            fi
+
+            echo "        Compiling: $filename"
+            if !($CC $CompilerArgs $filename); then
+                exit 1
+            fi
+        done
+    done
+
+    echo ""
+    echo "Building libtmpl Shared Object (.so file)"
+    if !($CC ./*.o $LinkerArgs); then
+        exit 1
+    fi
 fi
 
 # If inplace is set, we can't use sudo.

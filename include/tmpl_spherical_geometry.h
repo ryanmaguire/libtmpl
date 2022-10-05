@@ -2,7 +2,7 @@
 #ifndef TMPL_SPHERICAL_GEOMETRY_H
 #define TMPL_SPHERICAL_GEOMETRY_H
 
-#include <libtmpl/include/tmpl_euclidean_planar_geometry.h>
+#include <libtmpl/include/tmpl_vec2.h>
 #include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
 
 

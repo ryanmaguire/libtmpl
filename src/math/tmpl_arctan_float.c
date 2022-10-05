@@ -125,7 +125,7 @@
 /*  Check for IEEE-754 support.                                               */
 #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
 
-#include <libtmpl/include/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math_inline/tmpl_math_arctan_tables.h>
 
 /*  Single precision inverse tangent (atanf equivalent).                      */
 float tmpl_Float_Arctan(float x)
