@@ -141,6 +141,7 @@ SRCS := \
 else
 SRCS := \
 	$(shell find $(SRC_DIRS) $(EXCLUDE) \
+	-not -name "tmpl_cos_double.c" -and \
 	-not -name "tmpl_trailing_zeros_char.c" -and \
 	-not -name "tmpl_trailing_zeros_int.c" -and \
 	-not -name "tmpl_trailing_zeros_long.c" -and \
@@ -149,6 +150,7 @@ SRCS := \
 	-not -name "tmpl_trailing_zeros_uchar.c" -and \
 	-not -name "tmpl_trailing_zeros_ulong.c" -and \
 	-not -name "tmpl_trailing_zeros_ushort.c" -and \
+	-not -name "tmpl_sin_double.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
@@ -261,8 +263,8 @@ clean:
 	rm -f $(TARGET_LIB)
 
 install:
-	mkdir -p /usr/local/include/libtmpl/include/
-	cp ./include/*.h /usr/local/include/libtmpl/include/
+	mkdir -p /usr/local/include/libtmpl/
+	cp -r ./include/ /usr/local/include/libtmpl/
 	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
 
 uninstall:
