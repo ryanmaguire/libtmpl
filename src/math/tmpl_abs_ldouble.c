@@ -113,7 +113,7 @@
  *  2022/09/12: Ryan Maguire                                                  *
  *      Added inline support.                                                 *
  *  2022/09/13: Ryan Maguire                                                  *
- *      Remove math.h version (fabsl alias). This version is now a macro for  *
+ *      Removed math.h version (fabsl alias). This version is now a macro for *
  *      the fabsl function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
  *      is set to zero).                                                      *
  ******************************************************************************/
