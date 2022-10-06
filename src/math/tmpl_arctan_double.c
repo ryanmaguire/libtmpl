@@ -123,7 +123,7 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if defined(TMPL_USE_MATH_ALGORITHMS) && TMPL_USE_MATH_ALGORITHMS == 1
 
-#include <libtmpl/include/math_inline/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math/tmpl_math_arctan_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1

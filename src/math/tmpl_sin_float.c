@@ -15,7 +15,7 @@ float tmpl_Float_Sin(float x)
 
 #else
 
-#include <libtmpl/include/math_inline/tmpl_math_sincos_data_float.h>
+#include <libtmpl/include/math/tmpl_math_sincos_data_float.h>
 
 float tmpl_Float_Sin(float x)
 {

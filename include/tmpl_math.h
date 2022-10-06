@@ -897,7 +897,7 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *      libtmpl/src/math/tmpl_abs_float.c                                     *
  *      libtmpl/src/math/tmpl_abs_double.c                                    *
  *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
- *      libtmpl/include/math_inline/tmpl_math_abs_inline.h (inline version)   *
+ *      libtmpl/include/math/tmpl_math_abs_inline.h (inline version)          *
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
  *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
@@ -929,7 +929,7 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math_inline/tmpl_math_abs_inline.h>
+#include <libtmpl/include/math/tmpl_math_abs_inline.h>
 #else
 
 /*  Inline not requested, use the external functions in src/math.             */
@@ -1041,7 +1041,7 @@ extern long double tmpl_LDouble_Arctan(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math_inline/tmpl_math_arctan_asymptotic_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_inline.h>
 #else
 extern float tmpl_Float_Arctan_Asymptotic(float x);
 extern double tmpl_Double_Arctan_Asymptotic(double x);
@@ -1071,7 +1071,7 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math_inline/tmpl_math_arctan_maclaurin_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_inline.h>
 #else
 extern float tmpl_Float_Arctan_Maclaurin(float x);
 extern double tmpl_Double_Arctan_Maclaurin(double x);
@@ -1100,7 +1100,7 @@ extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math_inline/tmpl_math_arctan_pade_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_pade_inline.h>
 #else
 extern float tmpl_Float_Arctan_Pade(float x);
 extern double tmpl_Double_Arctan_Pade(double x);
@@ -1129,7 +1129,7 @@ extern long double tmpl_LDouble_Arctan_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math_inline/tmpl_math_arctan_very_small_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_very_small_inline.h>
 #else
 extern float tmpl_Float_Arctan_Very_Small(float x);
 extern double tmpl_Double_Arctan_Very_Small(double x);
@@ -1199,7 +1199,7 @@ extern long double tmpl_LDouble_Cbrt(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support to copysign found here.                                    */
-#include <libtmpl/include/math_inline/tmpl_math_copysign_inline.h>
+#include <libtmpl/include/math/tmpl_math_copysign_inline.h>
 #else
 
 /*  No inline support requested.                                              */
@@ -1593,7 +1593,7 @@ extern long double tmpl_LDouble_Sin(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math_inline/tmpl_math_sin_very_small_inline.h>
+#include <libtmpl/include/math/tmpl_math_sin_very_small_inline.h>
 #else
 extern double tmpl_Double_Sin_Very_Small(double x);
 #endif
@@ -1611,7 +1611,7 @@ extern double tmpl_Double_Sin_Very_Small(double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math_inline/tmpl_math_sine_pade_inline.h>
+#include <libtmpl/include/math/tmpl_math_sine_pade_inline.h>
 #else
 extern float tmpl_Float_Sin_Pade(float x);
 extern double tmpl_Double_Sin_Pade(double x);
@@ -1631,7 +1631,7 @@ extern long double tmpl_LDouble_Sin_Pade(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math_inline/tmpl_math_sine_pade_pi_inline.h>
+#include <libtmpl/include/math/tmpl_math_sine_pade_pi_inline.h>
 #else
 extern float tmpl_Float_Sin_Pade_Pi(float x);
 extern double tmpl_Double_Sin_Pade_Pi(double x);

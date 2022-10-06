@@ -36,76 +36,93 @@
  *      theta (double):                                                       *
  *          The angle, between -pi and pi, the point (x, y) makes with the    *
  *          x axis.                                                           *
- *  Called Functions:                                                         *
- *      tmpl_Double_Arctan_Asymptotic   (tmpl_math.h):                        *
- *          Computes the asymptotic expansion of the inverse tangent function *
- *          for large positive real numbers. Very accurate for x > 16.        *
- *      tmpl_Double_Arctan_Maclaurin    (tmpl_math.h):                        *
- *          Computes the inverse tangent using a Maclaurin series. More terms *
- *          are used in this function than tmpl_Double_Arctan_Very_Small.     *
- *      tmpl_Double_Arctan_Very_Small   (tmpl_math.h):                        *
- *          Computes the inverse tangent of small numbers using a Maclaurin   *
- *          series. Accurate for values smaller than 1/16.                    *
- *      tmpl_Double_Is_NaN              (tmpl_math.h):                        *
- *          Determines if a double is Not-a-number.                           *
- *      tmpl_Double_Is_Inf              (tmpl_math.h):                        *
- *          Determines if a double is infinity.                               *
- *  Method:                                                                   *
- *      Depends on one of several cases:                                      *
- *          y zero:                                                           *
- *              x positive:                                                   *
- *                  return 0.                                                 *
- *              x negative:                                                   *
- *                  return Pi.                                                *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_Double_Arctan_Asymptotic (tmpl_math.h):                      *
+ *              Computes the asymptotic expansion of arctan for large         *
+ *              positive real numbers. Very accurate for x > 16.              *
+ *          tmpl_Double_Arctan_Maclaurin (tmpl_math.h):                       *
+ *              Computes the Maclaurin series of arctan. More terms are used  *
+ *              in this function than tmpl_Double_Arctan_Very_Small.          *
+ *          tmpl_Double_Arctan_Very_Small (tmpl_math.h):                      *
+ *              Computes the inverse tangent of small numbers using a         *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
+ *      Method:                                                               *
+ *          Depends on one of several cases:                                  *
+ *              y zero:                                                       *
+ *                  x positive:                                               *
+ *                      return 0.                                             *
+ *                  x negative:                                               *
+ *                      return Pi.                                            *
+ *                  x zero:                                                   *
+ *                      return 0.                                             *
+ *                  x NaN:                                                    *
+ *                      return NaN.                                           *
  *              x zero:                                                       *
- *                  return 0.                                                 *
- *              x NaN:                                                        *
- *                  return NaN.                                               *
- *          x zero:                                                           *
- *              y positive:                                                   *
- *                  return pi/2.                                              *
- *              x negative:                                                   *
- *                  return -pi/2.                                             *
- *              x NaN:                                                        *
- *                  return NaN.                                               *
- *          y infinite:                                                       *
- *              x finite:                                                     *
- *                  pi/2 if y is positive, -pi/2 if y is negative.            *
- *              x infinite:                                                   *
- *                  pi/4 if x and y are positive.                             *
- *                  -pi/4 if x positive, y negative.                          *
- *                  3pi/4 if x negative, y positive.                          *
- *                  -3pi/4 if x and y negative.                               *
- *              x NaN:                                                        *
- *                  return NaN.                                               *
- *          x infinite:                                                       *
- *              y finite:                                                     *
- *                  0 if y is positive, pi if y is negative.                  *
- *              y NaN:                                                        *
- *                  return NaN.                                               *
+ *                  y positive:                                               *
+ *                      return pi/2.                                          *
+ *                  y negative:                                               *
+ *                      return -pi/2.                                         *
+ *                  y NaN:                                                    *
+ *                      return NaN.                                           *
  *              y infinite:                                                   *
- *                  See previous cases.                                       *
- *          x and y finite:                                                   *
- *              Reduce y to positive via:                                     *
- *                  atan2(y, x) = -atan2(-y, x)                               *
- *              Reduce x to positive via:                                     *
- *                  atan2(y, x) = pi - atan2(y, -x)                           *
- *              Given x and y positive, compute atan(z), z = y/x:             *
- *                  For very small values of z, use the Maclaurin series to   *
- *                  the first few terms.                                      *
+ *                  x finite:                                                 *
+ *                      pi/2 if y is positive, -pi/2 if y is negative.        *
+ *                  x infinite:                                               *
+ *                      pi/4 if x and y are positive.                         *
+ *                      -pi/4 if x positive, y negative.                      *
+ *                      3pi/4 if x negative, y positive.                      *
+ *                      -3pi/4 if x and y negative.                           *
+ *                  x NaN:                                                    *
+ *                      return NaN.                                           *
+ *              x infinite:                                                   *
+ *                  y finite:                                                 *
+ *                      0 if y is positive, pi if y is negative.              *
+ *                  y NaN:                                                    *
+ *                      return NaN.                                           *
+ *                  y infinite:                                               *
+ *                      See previous cases.                                   *
+ *              x and y finite:                                               *
+ *                  Reduce y to positive via:                                 *
+ *                      atan2(y, x) = -atan2(-y, x)                           *
+ *                  Reduce x to positive via:                                 *
+ *                      atan2(y, x) = pi - atan2(y, -x)                       *
+ *                  Given x and y positive, compute atan(z), z = y/x:         *
+ *                      For very small values of z, use the Maclaurin series  *
+ *                      to the first few terms.                               *
  *                                                                            *
- *                  For values less than 16, use formula 4.4.34 from          *
- *                  Abramowitz and Stegun to reduce the argument to a smaller *
- *                  value. This formula states that:                          *
+ *                      For values less than 16, use formula 4.4.34 from      *
+ *                      Abramowitz and Stegun to reduce the argument to a     *
+ *                      smaller value. This formula states that:              *
  *                                                                            *
- *                                                 u - v                      *
- *                      atan(u) - atan(v) = atan( -------- )                  *
- *                                                 1 + uv                     *
+ *                                                     u - v                  *
+ *                          atan(u) - atan(v) = atan( -------- )              *
+ *                                                     1 + uv                 *
  *                                                                            *
- *                  Use a lookup table for atan(v) with precomputed values.   *
- *                  Reduce and use a Maclaurin series.                        *
+ *                      Use a lookup table for atan(v) with precomputed       *
+ *                      values. Reduce and use a Maclaurin series.            *
+ *                      The index of the lookup table is computed via the     *
+ *                      exponent of the double.                               *
  *                                                                            *
- *                  For larger values, use the asmyptotic expansion.          *
+ *                      For larger values, use the asmyptotic expansion.      *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_Double_Arctan_Asymptotic (tmpl_math.h):                      *
+ *              Computes the asymptotic expansion of arctan for large         *
+ *              positive real numbers. Very accurate for x > 16.              *
+ *          tmpl_Double_Arctan_Maclaurin (tmpl_math.h):                       *
+ *              Computes the Maclaurin series of arctan. More terms are used  *
+ *              in this function than tmpl_Double_Arctan_Very_Small.          *
+ *          tmpl_Double_Arctan_Very_Small (tmpl_math.h):                      *
+ *              Computes the inverse tangent of small numbers using a         *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
+ *          tmpl_Double_Is_NaN (tmpl_math.h):                                 *
+ *              Determines if a double is Not-a-number.                       *
+ *          tmpl_Double_Is_Inf (tmpl_math.h):                                 *
+ *              Determines if a double is infinity.                           *
+ *      Method:                                                               *
+ *          Same as IEEE-754 method, except the index of the lookup table is  *
+ *          computed via if-then statements to narrow down the range of x.    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -113,6 +130,8 @@
  *          Header file containing TMPL_USE_INLINE macro.                     *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
+ *  3.) tmpl_math_arctan_tables.h:                                            *
+ *          Header file containing pre-computed values of arctan(x).          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 15, 2022                                            *
@@ -133,10 +152,14 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Lookup table of precomputed arctan values found here.                     */
-#include <libtmpl/include/math_inline/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math/tmpl_math_arctan_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
+
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
 
 /*  Double precision inverse tangent (atan2 equivalent).                      */
 double tmpl_Double_Arctan2(double y, double x)

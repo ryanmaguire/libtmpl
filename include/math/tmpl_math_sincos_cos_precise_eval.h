@@ -1,10 +1,9 @@
-#ifndef TMPL_MATH_SINCOS_SIN_PRECISE_EVAL_H
-#define TMPL_MATH_SINCOS_SIN_PRECISE_EVAL_H
+#ifndef TMPL_MATH_SINCOS_COS_PRECISE_EVAL_H
+#define TMPL_MATH_SINCOS_COS_PRECISE_EVAL_H
 
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math_inline/tmpl_math_sincos_data_double.h>
-#include <libtmpl/include/math_inline/tmpl_math_sincos_sin_precise_small.h>
+#include <libtmpl/include/math/tmpl_math_sincos_data_double.h>
 
 #define S0 (1.0)
 #define S1 (-1.66666666666664880952546298448555E-01)
@@ -17,33 +16,27 @@
 #define TMPL_BIG_NUMBER (5.2776558133248E13)
 
 TMPL_INLINE_DECL
-double tmpl_Double_Sin_Precise_Eval(double x, double dx)
+double tmpl_Double_Cos_Precise_Eval(double x, double dx)
 {
-    double xold = x;
-    double x2, s, sn, ssn, c, cs, ccs, cor;
     tmpl_IEEE754_Double w;
+    double x2, s, sn, ssn, c, cs, ccs, cor;
     unsigned int k;
-    const double abs_x = tmpl_Double_Abs(x);
 
-    if (abs_x < 0.126)
-        return tmpl_Double_Sin_Precise_Small(x, dx);
-
-    if (x <= 0)
+    if (x < 0)
         dx = -dx;
 
-    w.r = TMPL_BIG_NUMBER + abs_x;
-    x = abs_x - (w.r - TMPL_BIG_NUMBER);
-
+    w.r = TMPL_BIG_NUMBER + tmpl_Double_Abs(x);
+    x = tmpl_Double_Abs(x) - (w.r - TMPL_BIG_NUMBER) + dx;
     x2 = x*x;
-    s = x*(S0 + dx + x2*(S1 + x2*S2));
-    c = x*dx + x2*(C0 + x2*(C1 + x2*C2));
+    s = x*(S0 + x2*(S1 + x2*S2));
+    c = x2*(C0 + x2*(C1 + x2*C2));
     k = (w.bits.man3 << 2U) & 0xFFFF;
     sn = tmpl_Double_SinCos_Table[k];
     ssn = tmpl_Double_SinCos_Table[k + 1];
     cs = tmpl_Double_SinCos_Table[k + 2];
     ccs = tmpl_Double_SinCos_Table[k + 3];
-    cor = (ssn + s * ccs - sn * c) + cs * s;
-    return tmpl_Double_Copysign (sn + cor, xold);
+    cor = (ccs - s * ssn - cs * c) - sn * s;
+    return cs + cor;
 }
 
 #undef S0
@@ -53,4 +46,5 @@ double tmpl_Double_Sin_Precise_Eval(double x, double dx)
 #undef C1
 #undef C2
 #undef TMPL_BIG_NUMBER
+
 #endif
