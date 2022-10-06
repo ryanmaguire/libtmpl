@@ -37,23 +37,37 @@
  *  Output:                                                                   *
  *      abs_x (float):                                                        *
  *          The absolute value of x.                                          *
- *  Called Functions:                                                         *
- *      None.                                                                 *
- *  Method:                                                                   *
- *      If IEEE-754 support is available, set the sign bit of the             *
- *      input to 0. A 32-bit float is represented by:                         *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Set the sign bit to 0. A 32-bit float is represented by:          *
  *                                                                            *
- *          s   eeeeeeee    xxxxxxxxxxxxxxxxxxxxxxx                           *
- *          -   --------    -----------------------                           *
- *        sign  exponent           mantissa                                   *
+ *              s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                            *
+ *              - -------- -----------------------                            *
+ *           sign exponent        mantissa                                    *
  *                                                                            *
- *      The absolute value can be computed by setting s to 0. Note, this      *
- *      method will work for NaN and inf, and the output will be              *
- *      "positive" NaN and positive infinity, respectively.                   *
- *                                                                            *
- *      If IEEE-754 is not supported, an if-then statement to check if the    *
- *      input is positive, returning x for non-negative and -x otherwise.     *
- *                                                                            *
+ *          The absolute value can be computed by setting s to 0. Note, this  *
+ *          method will work for NaN and inf, and the output will be          *
+ *          "positive" NaN and positive infinity, respectively.               *
+ *      Error:                                                                *
+ *          Based on 2,103,916,953 samples with -10^6 < x < 10^6.             *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Use an if-then statement to check if the input is positive,       *
+ *          returning x for non-negative and -x otherwise.                    *
+ *      Error:                                                                *
+ *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
  *      +/- NaN (which is still NaN). This is because NaN always              *
@@ -105,6 +119,10 @@
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
 {
@@ -123,8 +141,13 @@ float tmpl_Float_Abs(float x)
 /*  End of tmpl_Float_Abs.                                                    */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 *
- *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Single precision absolute value function (fabsf equivalent).              */
 float tmpl_Float_Abs(float x)
