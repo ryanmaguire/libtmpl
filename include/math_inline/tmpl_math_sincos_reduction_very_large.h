@@ -37,7 +37,7 @@ TMPL_INLINE_DECL
 unsigned int
 tmpl_Double_SinCos_Reduction_Very_Large(double x, double *a, double *aa)
 {
-    signed int k;
+    unsigned int k;
     tmpl_IEEE754_Double u, gor;
     double r[6], s, t, sum, b, bb, sum1, sum2, b1, bb1, b2, bb2, x1, x2, t1, t2;
 
@@ -50,11 +50,11 @@ tmpl_Double_SinCos_Reduction_Very_Large(double x, double *a, double *aa)
     gor.r = t576;
 
     if (u.bits.expo < 450U)
-        k = 0;
+        k = 0U;
     else
     {
-        k = ((signed int)u.bits.expo - 450)/24;
-        gor.bits.expo -= 24*k;
+        k = (u.bits.expo - 450U)/24U;
+        gor.bits.expo -= (24U*k & 0x7FF);
     }
 
     r[0] = x1*toverp[k]*gor.r;
@@ -100,11 +100,11 @@ tmpl_Double_SinCos_Reduction_Very_Large(double x, double *a, double *aa)
     gor.r = t576;
 
     if (u.bits.expo < 450U)
-        k = 0;
+        k = 0U;
     else
     {
-        k = ((signed int)u.bits.expo - 450)/24;
-        gor.bits.expo -= 24*k;
+        k = (u.bits.expo - 450U)/24U;
+        gor.bits.expo -= (24U*k & 0x7FF);
     }
 
     r[0] = x2*toverp[k]*gor.r;
@@ -176,8 +176,8 @@ tmpl_Double_SinCos_Reduction_Very_Large(double x, double *a, double *aa)
     t = (b - s) + bb;
     *a = s;
     *aa = t;
-    k = (int)sum & 3;
-    return (unsigned int)k; /* return quater of unit circle */
+    k = (unsigned int)((int)sum & 3);
+    return k; /* return quater of unit circle */
 }
 
 #endif
