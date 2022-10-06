@@ -63,7 +63,7 @@
  *          Use an if-then statement to check if the input is positive,       *
  *          returning x for non-negative and -x otherwise.                    *
  *      Error:                                                                *
- *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *          Based on 2,103,916,953 samples with -10^6 < x < 10^6.             *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -99,7 +99,7 @@
  *  2022/09/05: Ryan Maguire                                                  *
  *      Added inline version.                                                 *
  *  2022/09/13: Ryan Maguire                                                  *
- *      Remove math.h version (fabsf alias). This version is now a macro for  *
+ *      Removed math.h version (fabsf alias). This version is now a macro for *
  *      the fabsf function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
  *      is set to zero).                                                      *
  ******************************************************************************/

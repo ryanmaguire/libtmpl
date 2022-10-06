@@ -104,7 +104,7 @@
  *  2022/05/31: Ryan Maguire                                                  *
  *      Added benchmarks.                                                     *
  *  2022/09/13: Ryan Maguire                                                  *
- *      Remove math.h version (fabs alias). This version is now a macro for   *
+ *      Removed math.h version (fabs alias). This version is now a macro for  *
  *      the fabs function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS is *
  *      set to zero).                                                         *
  ******************************************************************************/
