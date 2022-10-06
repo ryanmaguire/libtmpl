@@ -270,7 +270,7 @@ double tmpl_Double_Arctan2(double y, double x)
     w.r = wy.r / wx.r;
     w.bits.sign = 0x00U;
 
-    /*  Small values, |z| < 1/32. Use the MacLaurin series to 6 terms.        */
+    /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
     if (w.bits.expo < TMPL_DOUBLE_BIAS - 4U)
         out = tmpl_Double_Arctan_Very_Small(w.r);
 
