@@ -3,14 +3,14 @@
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math_inline/tmpl_math_sincos_data_double.h>
+#include <libtmpl/include/math/tmpl_math_sincos_data_double.h>
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-#include <libtmpl/include/math_inline/tmpl_math_sincos_sin_precise_eval.h>
-#include <libtmpl/include/math_inline/tmpl_math_sincos_cos_precise_eval.h>
-#include <libtmpl/include/math_inline/tmpl_math_sincos_reduction.h>
-#include <libtmpl/include/math_inline/tmpl_math_sincos_reduction_very_large.h>
+#include <libtmpl/include/math/tmpl_math_sincos_sin_precise_eval.h>
+#include <libtmpl/include/math/tmpl_math_sincos_cos_precise_eval.h>
+#include <libtmpl/include/math/tmpl_math_sincos_reduction.h>
+#include <libtmpl/include/math/tmpl_math_sincos_reduction_very_large.h>
 
 #define TMPL_PI_BY_TWO_LOW_HALF (6.123233995736766035868820147292E-17)
 
