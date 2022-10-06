@@ -46,7 +46,7 @@
  *              in this function than tmpl_Double_Arctan_Very_Small.          *
  *          tmpl_Double_Arctan_Very_Small (tmpl_math.h):                      *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/16.      *
+ *              Maclaurin series. Accurate for values smaller than 1/32.      *
  *      Method:                                                               *
  *          Depends on one of several cases:                                  *
  *              y zero:                                                       *
@@ -102,11 +102,19 @@
  *                      Use a lookup table for atan(v) with precomputed       *
  *                      values. Reduce and use a Maclaurin series.            *
  *                      The index of the lookup table is computed via the     *
- *                      exponent of the double.                               *
+ *                      exponent of the double z.                             *
  *                                                                            *
  *                      For larger values, use the asmyptotic expansion.      *
+ *      Error:                                                                *
+ *          Based on 788,968,857 random samples with -100 < |x|, |y| < 100.   *
+ *              max relative error: 4.4955987686353023e-16                    *
+ *              rms relative error: 9.2214263529102684e-17                    *
+ *              max absolute error: 4.4408920985006262e-16                    *
+ *              rms absolute error: 1.6454528697674011e-16                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
+ *          tmpl_Double_Abs (tmpl_math.h):                                    *
+ *              Computes the absolute value of a real number.                 *
  *          tmpl_Double_Arctan_Asymptotic (tmpl_math.h):                      *
  *              Computes the asymptotic expansion of arctan for large         *
  *              positive real numbers. Very accurate for x > 16.              *
@@ -115,14 +123,20 @@
  *              in this function than tmpl_Double_Arctan_Very_Small.          *
  *          tmpl_Double_Arctan_Very_Small (tmpl_math.h):                      *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/16.      *
+ *              Maclaurin series. Accurate for values smaller than 1/32.      *
  *          tmpl_Double_Is_NaN (tmpl_math.h):                                 *
- *              Determines if a double is Not-a-number.                       *
+ *              Determines if a double is Not-a-Number.                       *
  *          tmpl_Double_Is_Inf (tmpl_math.h):                                 *
  *              Determines if a double is infinity.                           *
  *      Method:                                                               *
  *          Same as IEEE-754 method, except the index of the lookup table is  *
  *          computed via if-then statements to narrow down the range of x.    *
+ *      Error:                                                                *
+ *          Based on 788,968,857 random samples with -100 < |x|, |y| < 100.   *
+ *              max relative error: 4.4955987686353023e-16                    *
+ *              rms relative error: 9.2214263529102684e-17                    *
+ *              max absolute error: 4.4408920985006262e-16                    *
+ *              rms absolute error: 1.6454528697674011e-16                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -201,9 +215,13 @@ double tmpl_Double_Arctan2(double y, double x)
 
         /*  y is finite and x is infinite. The angle is 0 or pi.              */
         if (wx.bits.sign)
-            return tmpl_One_Pi;
+            w.r = tmpl_One_Pi;
         else
-            return 0.0;
+            w.r = 0.0;
+
+        /*  Preserve the sign of y.                                           */
+        w.bits.sign = wy.bits.sign;
+        return w.r;
     }
 
     /*  Check if y is infinite or NaN.                                        */
@@ -295,7 +313,9 @@ double tmpl_Double_Arctan2(double y, double x)
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
-/*  Portable implementation of atan2.                                         */
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
 
 /*  Double precision inverse tangent (atan2 equivalent).                      */
 double tmpl_Double_Arctan2(double y, double x)
@@ -333,7 +353,7 @@ double tmpl_Double_Arctan2(double y, double x)
             return 0.0;
     }
 
-    /*  Check if y is infinite or NaN.                                        */
+    /*  Check if y is infinite.                                               */
     else if (tmpl_Double_Is_Inf(y))
     {
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
@@ -375,7 +395,9 @@ double tmpl_Double_Arctan2(double y, double x)
         goto TMPL_DOUBLE_ARCTAN_FINISH;
     }
 
-    /*  Otherwise compute the greatest power of two less than z.              */
+    /*  Otherwise compute the greatest power of two less than z. To compute   *
+     *  the index of the lookup table, take this value and add 4 to it. Store *
+     *  the answer in "ind" and find this value by checking the range of z.   */
     else if (z < 0.125)
         ind = 0U;
     else if (z < 0.25)
@@ -393,7 +415,7 @@ double tmpl_Double_Arctan2(double y, double x)
     else if (z < 16.0)
         ind = 7U;
 
-    /*  For |x| > 16, use the asymptotic expansion.                           */
+    /*  For z > 16, use the asymptotic expansion.                             */
     else
     {
         out = tmpl_Double_Arctan_Asymptotic(z);
