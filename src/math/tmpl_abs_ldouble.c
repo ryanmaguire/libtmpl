@@ -37,15 +37,49 @@
  *  Output:                                                                   *
  *      abs_x (long double):                                                  *
  *          The absolute value of x.                                          *
- *  Called Functions:                                                         *
- *      None.                                                                 *
- *  Method:                                                                   *
- *      If IEEE-754 support is available, simply set the sign bit of the      *
- *      input to 0.                                                           *
- *                                                                            *
- *      If IEEE-754 is not supported, an if-then statement to check if the    *
- *      input is positive, returning x for non-negative and -x otherwise.     *
- *                                                                            *
+ *  64-bit Double / 80-bit Extended / 128-bit Quadruple Versions:             *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          The absolute value can be computed by setting s to 0. Note, this  *
+ *          method will work for NaN and inf, and the output will be          *
+ *          "positive" NaN and positive infinity, respectively.               *
+ *      Error:                                                                *
+ *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
+ *  128-bit Double-Double Version:                                            *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Given:                                                            *
+ *              x = x_hi + x_lo                                               *
+ *          we compute:                                                       *
+ *              abs_x = abs_hi + abs_lo                                       *
+ *          as follows. If x_hi and x_lo have the same sign, then:            *
+ *              |x_hi + x_lo| = |x_hi| + |x_lo|                               *
+ *          so abs_hi = |x_hi| and abs_lo = |x_lo|. If x_hi and x_lo have     *
+ *          different signs, then:                                            *
+ *              |x_hi + x_lo| = |x_hi| - |x_lo|                               *
+ *          So abs_hi = |x_hi| and abs_lo = -|x_lo|. In both cases,           *
+ *          abs_hi = |x_hi|. To compute this we just set the sign bit of x_hi *
+ *          to zero. abs_lo depends on whether x_hi and x_lo have the same    *
+ *          sign. This can be computed via the exclusive or, or XOR. The sign *
+ *          of abs_lo is the exclusive or of the signs of x_hi and x_lo.      *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Use an if-then statement to check if the input is positive,       *
+ *          returning x for non-negative and -x otherwise.                    *
+ *      Error:                                                                *
+ *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
  *      +/- NaN (which is still NaN). This is because NaN always              *
@@ -99,6 +133,16 @@
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
+/*  64-bit double, 80-bit extended, and 128-bit quadruple implementations     *
+ *  of long double use the same idea: Set the sign bit to zero. The           *
+ *  double-double implementation of long double needs to be more careful.     */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN && \
+    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
+ ******************************************************************************/
+
 /*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)
 {
@@ -108,15 +152,29 @@ long double tmpl_LDouble_Abs(long double x)
     /*  Set the long double part of w to the input.                           */
     w.r = x;
 
-    /*  64-bit double, 80-bit extended, and 128-bit quadruple implementations *
-     *  of long double use the same idea: Set the sign bit to zero. The       *
-     *  double-double implementation of long double needs to be more careful. */
-#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN \
-    && TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
-
     /*  Set the sign bit to 0, indicating positive.                           */
     w.bits.sign = 0x0U;
+
+    /*  Return the long double part of the union.                             */
+    return w.r;
+}
+/*  End of tmpl_LDouble_Abs.                                                  */
+
 #else
+/*  Else for 64-bit double / 80-bit extended / 128-bit quadruple versions.    */
+
+/******************************************************************************
+ *                       128-bit Double-Double Version                        *
+ ******************************************************************************/
+
+/*  Long double precision absolute value function (fabsl equivalent).         */
+long double tmpl_LDouble_Abs(long double x)
+{
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_IEEE754_LDouble w;
+
+    /*  Set the long double part of w to the input.                           */
+    w.r = x;
 
     /*  For double-double we have x = xhi + xlo. Define                       *
      *  abs_x = |x| = abs_xhi + abs_xlo. If xhi and xlo have the same sign,   *
@@ -128,16 +186,23 @@ long double tmpl_LDouble_Abs(long double x)
      *  exlusive or, also called XOR, of the signs of xhi and xlo. Use this.  */
     w.bits.signb = w.bits.signa ^ w.bits.signb;
     w.bits.signa = 0x0U;
-#endif
 
     /*  Return the long double part of the union.                             */
     return w.r;
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
 
+#endif
+/*  End of 128-bit double-double version.                                     */
+
 #else
-/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               *
- *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Long double precision absolute value function (fabsl equivalent).         */
 long double tmpl_LDouble_Abs(long double x)

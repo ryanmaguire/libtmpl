@@ -37,27 +37,41 @@
  *  Output:                                                                   *
  *      abs_x (double):                                                       *
  *          The absolute value of x.                                          *
- *  Called Functions:                                                         *
- *      None.                                                                 *
- *  Method:                                                                   *
- *      If IEEE-754 support is available, set the sign bit of the             *
- *      input to 0. A 64-bit double is represented by:                        *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Set the sign bit to 0. A 64-bit double is represented by:         *
  *                                                                            *
- *        s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  *
- *        - ----------- ----------------------------------------------------  *
- *      sign exponent                mantissa                                 *
+ *          s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*
+ *          - ----------- ----------------------------------------------------*
+ *         sign exponent                mantissa                              *
  *                                                                            *
- *      The absolute value can be computed by setting s to 0. Note, this      *
- *      method will work for NaN and inf, and the output will be              *
- *      "positive" NaN and positive infinity, respectively.                   *
- *      If IEEE-754 is not supported, an if-then statement to check if the    *
- *      input is positive, returning x for non-negative and -x otherwise.     *
+ *          The absolute value can be computed by setting s to 0. Note, this  *
+ *          method will work for NaN and inf, and the output will be          *
+ *          "positive" NaN and positive infinity, respectively.               *
+ *      Error:                                                                *
+ *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
+ *      Method:                                                               *
+ *          Use an if-then statement to check if the input is positive,       *
+ *          returning x for non-negative and -x otherwise.                    *
+ *      Error:                                                                *
+ *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
  *  Notes:                                                                    *
  *      If IEEE-754 is not supported and if the input is NaN one may get      *
  *      +/- NaN (which is still NaN). This is because NaN always              *
  *      evaluates to false when a comparison is made (==, <, >, etc.).        *
- *                                                                            *
- *      Benchmarks can be found at the end of this file.                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -110,6 +124,10 @@
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
 {
@@ -128,8 +146,13 @@ double tmpl_Double_Abs(double x)
 /*  End of tmpl_Double_Abs.                                                   */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                *
- *  Lacking IEEE-754 support, an if-then statement works and is portable.     */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
 
 /*  Double precision absolute value function (fabs equivalent).               */
 double tmpl_Double_Abs(double x)
@@ -150,208 +173,3 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
-
-/******************************************************************************
- *                                 BENCHMARKS                                 *
- ******************************************************************************
- *  Test Parameters:                                                          *
- *      tmpl_Double_Abs vs. fabs                                              *
- *      start:   -1.0000000000000000e+06                                      *
- *      end:      1.0000000000000000e+06                                      *
- *      samples:  2248155955                                                  *
- *      dx:       8.8961799805387608e-04                                      *
- *  Test Results:                                                             *
- *      max abs error: 0.0000000000000000e+00                                 *
- *      max rel error: 0.0000000000000000e+00                                 *
- *      rms abs error: 0.0000000000000000e+00                                 *
- *      rms rel error: 0.0000000000000000e+00                                 *
- ******************************************************************************
- *  Specs:                                                                    *
- *      CPU:  AMD Ryzen 9 3900X 12-Core Processor                             *
- *      MIN:  2200.0000 MHz                                                   *
- *      MAX:  4672.0698 MHz                                                   *
- *      RAM:  Ripjaw DDR4-3600 16GBx4                                         *
- *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
- *      ARCH: x86_64                                                          *
- *      OS:   Debian 11 (Bullseye) GNU/LINUX                                  *
- *  Compilers:                                                                *
- *      Debian clang version 11.0.1-2                                         *
- *      gcc (Debian 10.2.1-6) 10.2.1 20210110                                 *
- *      tcc version 0.9.27 (x86_64 Linux)                                     *
- *      Portable C Compiler 1.2.0.DEVEL 20200630 for x86_64-pc-linux-gnu      *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  4.963484 seconds | 2.506179 seconds           *
- *      clang:                  2.536102 seconds | 2.525563 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build):    5.422638 seconds | 2.726815 seconds           *
- *      gcc:                    2.632450 seconds | 2.625470 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (pcc build):    15.24091 seconds | 15.50274 seconds           *
- *      pcc:                     5.02499 seconds |  5.46952 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (tcc build):    17.28096 seconds | 16.79033 seconds           *
- *      tcc:                     7.19646 seconds |  6.95061 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  4.990012 seconds | 2.688390 seconds           *
- *      clang:                  2.526875 seconds | 2.531980 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build):    5.378256 seconds | 2.733715 seconds           *
- *      gcc:                    2.659658 seconds | 2.642936 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (pcc build):    5.708692 seconds | 3.214009 seconds           *
- *      pcc:                    5.009721 seconds | 5.510774 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (tcc build):    8.084143 seconds | 7.593651 seconds           *
- *      tcc:                    7.203836 seconds | 7.081540 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************
- *  Test Parameters:                                                          *
- *      tmpl_Double_Abs vs. fabs                                              *
- *      start:   -1.0000000000000000e+06                                      *
- *      end:      1.0000000000000000e+06                                      *
- *      samples:  572882306                                                   *
- *      dx:       3.4911184706758946e-03                                      *
- *  Test Results:                                                             *
- *      max abs error: 0.0000000000000000e+00                                 *
- *      max rel error: 0.0000000000000000e+00                                 *
- *      rms abs error: 0.0000000000000000e+00                                 *
- *      rms rel error: 0.0000000000000000e+00                                 *
- ******************************************************************************
- *  Specs:                                                                    *
- *      Apple MacBook Air, 2020                                               *
- *      CPU:  Apple M1                                                        *
- *      RAM:  LPDDR4, 16GB                                                    *
- *      ARCH: arm64                                                           *
- *      OS:   macOS Monterey, 12.3                                            *
- *  Compilers:                                                                *
- *      Apple clang version 12.0.5 (clang-1205.0.22.9)                        *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  1.034541 seconds | 0.433286 seconds           *
- *      clang:                  0.537182 seconds | 0.595746 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  1.034140 seconds | 0.437655 seconds           *
- *      clang:                  0.522405 seconds | 0.509519 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************
- *  Test Parameters:                                                          *
- *      tmpl_Double_Abs vs. fabs                                              *
- *      start:   -1.0000000000000000e+06                                      *
- *      end:      1.0000000000000000e+06                                      *
- *      samples:  572882306                                                   *
- *      dx:       3.4911184706758946e-03                                      *
- *  Test Results:                                                             *
- *      max abs error: 0.0000000000000000e+00                                 *
- *      max rel error: 0.0000000000000000e+00                                 *
- *      rms abs error: 0.0000000000000000e+00                                 *
- *      rms rel error: 0.0000000000000000e+00                                 *
- ******************************************************************************
- *  Specs:                                                                    *
- *      Apple MacBook Pro Retina, 2015                                        *
- *      CPU:  2.2 GHz Quad-Core Intel Core i7                                 *
- *      RAM:  16GB 1600MHz DDR3                                               *
- *      ARCH: x86_64                                                          *
- *      OS:   macOS Big Sur, 11.6.5                                           *
- *  Compilers:                                                                *
- *      Apple clang version 13.0.0 (clang-1300.0.29.30)                       *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  2.960274 seconds | 2.076615 seconds           *
- *      clang:                  2.307846 seconds | 2.516832 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  3.086965 seconds | 2.225832 seconds           *
- *      clang:                  2.119420 seconds | 2.125722 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************
- *  Test Parameters:                                                          *
- *      tmpl_Double_Abs vs. fabs                                              *
- *      start:   -1.0000000000000000e+06                                      *
- *      end:      1.0000000000000000e+06                                      *
- *      samples:  1146459067                                                  *
- *      dx:       1.7445018819847670e-03                                      *
- *  Test Results:                                                             *
- *      max abs error: 0.0000000000000000e+00                                 *
- *      max rel error: 0.0000000000000000e+00                                 *
- *      rms abs error: 0.0000000000000000e+00                                 *
- *      rms rel error: 0.0000000000000000e+00                                 *
- ******************************************************************************
- *  Specs:                                                                    *
- *      CPU:  AMD Ryzen 9 3900X 12-Core Processor                             *
- *      MIN:  2200.0000 MHz                                                   *
- *      MAX:  4672.0698 MHz                                                   *
- *      RAM:  Ripjaw DDR4-3600 16GBx2                                         *
- *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
- *      ARCH: x86_64                                                          *
- *      OS:   Windows 10 (GNOME Boxes Virtual Machine)                        *
- *  Compilers:                                                                *
- *      Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64   *
- *      clang version 13.0.1 x86_64-pc-windows-msvc                           *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (MSVC build):   3.120000 seconds | 7.963000 seconds           *
- *      MSVC:                   2.536000 seconds | 2.461000 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  3.349000 seconds | 1.995000 seconds           *
- *      clang:                  2.764000 seconds | 3.132000 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (MSVC build):   3.283000 seconds | 2.253000 seconds           *
- *      MSVC:                   3.040000 seconds | 2.911000 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  2.404000 seconds | 2.266000 seconds           *
- *      clang:                  3.020000 seconds | 3.331000 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************
- *  Test Parameters:                                                          *
- *      tmpl_Double_Abs vs. fabs                                              *
- *      start:   -1.0000000000000000e+06                                      *
- *      end:      1.0000000000000000e+06                                      *
- *      samples:  1145026150                                                  *
- *      dx:       1.7466849992901908e-03                                      *
- *  Test Results:                                                             *
- *      max abs error: 0.0000000000000000e+00                                 *
- *      max rel error: 0.0000000000000000e+00                                 *
- *      rms abs error: 0.0000000000000000e+00                                 *
- *      rms rel error: 0.0000000000000000e+00                                 *
- ******************************************************************************
- *  Specs:                                                                    *
- *      CPU:  AMD Ryzen 9 3900X 12-Core Processor                             *
- *      MIN:  2200.0000 MHz                                                   *
- *      MAX:  4672.0698 MHz                                                   *
- *      RAM:  Ripjaw DDR4-3600 16GBx2                                         *
- *      MB:   Gigabyte Aorus x570 Elite WiFi                                  *
- *      ARCH: x86_64                                                          *
- *      OS:   FreeBSD 13.1 (GNOME Boxes Virtual Machine)                      *
- *  Compilers:                                                                *
- *      FreeBSD clang version 13.0.0                                          *
- *      gcc FreeBSD Ports Collection 10.3.0                                   *
- ******************************************************************************
- *  IEEE-754 method             not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  3.531250 seconds | 2.007812 seconds           *
- *      clang:                  2.015625 seconds | 2.046875 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build):    3.718750 seconds | 2.234375 seconds           *
- *      gcc:                    2.023438 seconds | 2.007812 seconds           *
- *  ------------------------------------------------------------------------  *
- *  If-Then method              not inlined      | inlined                    *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (clang build):  3.757812 seconds | 2.281250 seconds           *
- *      clang:                  2.031260 seconds | 2.046875 seconds           *
- *  ------------------------------------------------------------------------  *
- *      libtmpl (gcc build):    3.914620 seconds | 2.156250 seconds           *
- *      gcc:                    2.078125 seconds | 2.085938 seconds           *
- *  ------------------------------------------------------------------------  *
- ******************************************************************************/
