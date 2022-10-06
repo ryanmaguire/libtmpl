@@ -35,12 +35,12 @@ static inline float tmpl_Float_Arctan_Asymptotic(float x)
 #undef A2
 #undef A3
 
-#define A0  1.00000000000000000000
-#define A1 -3.33333333333329318027E-01
-#define A2  1.99999999998764832476E-01
-#define A3 -1.42857142725034663711E-01
-#define A4  1.11111104054623557880E-01
-#define A5 -9.09088713343650656196E-02
+#define A0 (1.00000000000000000000000000000E+00)
+#define A1 (-3.33333333333333333333333333333E-01)
+#define A2 (2.00000000000000000000000000000E-01)
+#define A3 (-1.42857142857142857142857142857E-01)
+#define A4 (1.11111111111111111111111111111E-01)
+#define A5 (-9.09090909090909090909090909090E-02)
 
 /*  Double precision asymptotic expansion for the inverse tangent function.   */
 static inline double tmpl_Double_Arctan_Asymptotic(double x)
