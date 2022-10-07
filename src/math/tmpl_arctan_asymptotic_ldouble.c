@@ -54,7 +54,7 @@
  *      Only accurate for large POSITIVE values. For x > 16, this function    *
  *      is accurate to quadruple precision (10^-34 relative error) (the       *
  *      64-bit version is accurate to double precision, 10^-16 relative error,*
- *      for x > 16). The closure the input is to zero, the worse the error.   *
+ *      for x > 16). The closer the input is to zero, the worse the error.    *
  *                                                                            *
  *      This function can be used for large negative values via:              *
  *          atan(x) ~= -tmpl_Double_Arctan_Asymptotic(-x).                    *
