@@ -37,11 +37,20 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
+ *                                                                            *
+ *                      infty                                                 *
+ *                      -----                                                 *
+ *                      \         (-1)^n                                      *
+ *          atan(x) =   /        -------- * x^{2n+1}                          *
+ *                      -----    (2n + 1)                                     *
+ *                      n = 0                                                 *
+ *                                                                            *
+ *      Use the first 9 terms (0 <= n <= 8) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for small values. For |x| < 1/32, this function         *
- *      is accurate to double precision (10^-8 relative error). The larger    *
+ *      Only accurate for small values. For |x| < 0.15 this function is       *
+ *      accurate to double precision (10^-16 relative error). The larger      *
  *      the input is, the worse the error. By the alternating series theorem, *
- *      the absolute error is bounded by (1/11)*|x|^11.                       *
+ *      the absolute error is bounded by (1/19)*|x|^19.                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

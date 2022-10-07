@@ -37,9 +37,18 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
+ *                                                                            *
+ *                      infty                                                 *
+ *                      -----                                                 *
+ *                      \         (-1)^n                                      *
+ *          atan(x) =   /        -------- * x^{2n+1}                          *
+ *                      -----    (2n + 1)                                     *
+ *                      n = 0                                                 *
+ *                                                                            *
+ *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for small values. For |x| < 1/32, this function         *
- *      is accurate to single precision (10^-8 relative error). The larger    *
+ *      Only accurate for small values. For |x| < 0.25 this function is       *
+ *      accurate to single precision (10^-8 relative error). The larger       *
  *      the input is, the worse the error. By the alternating series theorem, *
  *      the absolute error is bounded by (1/11)*|x|^11.                       *
  ******************************************************************************
@@ -65,17 +74,19 @@
 
 /*  Coefficients for the Maclaurin series, 1/(2n+1). The expansion is a
  *  polynomial of degree 9 in terms of x^{2n+1}.                              */
-#define A0 (1.00000000000000000000F)
-#define A1 (-3.33333333333329318027E-01F)
-#define A2 (1.99999999998764832476E-01F)
-#define A3 (-1.42857142725034663711E-01F)
-#define A4 (1.11111104054623557880E-01F)
+#define A0 (1.00000000000000000000000000000E+00F)
+#define A1 (-3.33333333333333333333333333333E-01F)
+#define A2 (2.00000000000000000000000000000E-01F)
+#define A3 (-1.42857142857142857142857142857E-01F)
+#define A4 (1.11111111111111111111111111111E-01F)
 
 /*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
 float tmpl_Float_Arctan_Maclaurin(float x)
 {
     /*  Declare necessary variables.                                          */
     const float x2 = x*x;
+
+    /*  Use Horner's method to evaluate the polynomial.                       */
     return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
 }
 /*  End of tmpl_Float_Arctan_Maclaurin.                                       */
