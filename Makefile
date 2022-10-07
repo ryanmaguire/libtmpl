@@ -252,12 +252,16 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/vector/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
+ifdef FASM
+	mkdir -p $(BUILD_DIR)/src/sysdeps/fasm/
+else ifndef NO_ASM
 ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 	mkdir -p $(BUILD_DIR)/src/sysdeps/x86_64/
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 	mkdir -p $(BUILD_DIR)/src/sysdeps/aarch64/
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 	mkdir -p $(BUILD_DIR)/src/sysdeps/armv7l/
+endif
 endif
 
 clean:
