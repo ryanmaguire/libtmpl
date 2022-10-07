@@ -39,7 +39,7 @@
  *      Use Horner's method to evaluate the polynomials for the numerator     *
  *      and denominator.                                                      *
  *                                                                            *
- *          atan(x) - x    a0*x + a1*x^3 + a2*x^5 + a3*x^7 + a4*x^9 + a5*x^11 *
+ *          atan(x) - x     a0 + a1*x^2 + a2*x^4 + a3*x^6 + a4*x^8 + a5*x^10  *
  *          ----------- ~= -------------------------------------------------- *
  *               x           1 + b1*x^2 + b2*x^4 + b3*x^6 + b4*x^8 + b5*x^10  *
  *                                                                            *
