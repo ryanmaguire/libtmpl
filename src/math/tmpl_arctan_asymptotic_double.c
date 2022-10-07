@@ -38,6 +38,15 @@
  *  Method:                                                                   *
  *      Compute the reciprocal of x, and the square of this, and use Horner's *
  *      method to efficiently evaluate the polynomial.                        *
+ *                                                                            *
+ *                             infty                                          *
+ *                             -----                                          *
+ *                    pi       \         (-1)^n        1                      *
+ *          atan(x) ~ ---  -   /       --------- * ---------     x --> infty  *
+ *                     2       -----    (2n + 1)    x^{2n+1}                  *
+ *                             n = 0                                          *
+ *                                                                            *
+ *      Use the first 6 terms (0 <= n <= 5) of this expansion to compute.     *
  *  Notes:                                                                    *
  *      Only accurate for large POSITIVE values. For x > 16, this function    *
  *      is accurate to double precision (10^-16 relative error). The closer   *
@@ -72,7 +81,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 11 in terms of  1 / x. The coefficients are (-1)^n / (2n+1).    */
+ *  of degree 11 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1).*/
 #define A0 (1.00000000000000000000000000000E+00)
 #define A1 (-3.33333333333333333333333333333E-01)
 #define A2 (2.00000000000000000000000000000E-01)
