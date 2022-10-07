@@ -38,6 +38,15 @@
  *  Method:                                                                   *
  *      Compute the reciprocal of x, and the square of this, and use Horner's *
  *      method to efficiently evaluate the polynomial.                        *
+ *                                                                            *
+ *                             infty                                          *
+ *                             -----                                          *
+ *                    pi       \         (-1)^n        1                      *
+ *          atan(x) ~ ---  -   /       --------- * ---------     x --> infty  *
+ *                     2       -----    (2n + 1)    x^{2n+1}                  *
+ *                             n = 0                                          *
+ *                                                                            *
+ *      Use the first 4 terms (0 <= n <= 3) of this expansion to compute.     *
  *  Notes:                                                                    *
  *      Only accurate for large POSITIVE values. For x > 16, this function    *
  *      is accurate to single precision (10^-8 relative error). The closer    *
@@ -67,11 +76,11 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 7 in terms of  1 / x^2.                                         */
-#define A0 (1.0F)
-#define A1 (-3.33333333333329318027E-01F)
-#define A2 (1.99999999998764832476E-01F)
-#define A3 (-1.42857142725034663711E-01F)
+ *  of degree 7 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
+#define A0 (1.00000000000000000000000000000E+00F)
+#define A1 (-3.33333333333333333333333333333E-01F)
+#define A2 (2.00000000000000000000000000000E-01F)
+#define A3 (-1.42857142857142857142857142857E-01F)
 
 /*  This function computes arctan(x) via the asymptotic expansion.            */
 float tmpl_Float_Arctan_Asymptotic(float x)
