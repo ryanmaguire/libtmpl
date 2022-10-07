@@ -50,12 +50,15 @@
  *  80-Bit Extended / 128-Bit Quadruple / 128-Bit Double-Double / Portable:   *
  *      Use the first 12 terms (0 <= n <= 11) of this expansion to compute.   *
  *  Notes:                                                                    *
- *      Only accurate for small values. For |x| < 1/8 this function is        *
- *      accurate to quadruple precision (10^-34 relative error) (for the      *
+ *      Only accurate for small values. For |x| < 0.15 this function is       *
+ *      accurate to extended precision (10^-19 relative error) (for the       *
  *      64-bit version it is accurate to double precision, 10^-16, for        *
  *      |x| < 0.15). The larger the input is, the worse the error. By the     *
  *      alternating series theorem, the absolute error is bounded by          *
  *      (1/25)*|x|^25, or (1/19)*|x|^19 for the 64-bit version.               *
+ *                                                                            *
+ *      If you need quadruple precision, use the Pade approximation. The      *
+ *      Maclaurin series needs a lot of terms to get 10^-34 relative error.   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
