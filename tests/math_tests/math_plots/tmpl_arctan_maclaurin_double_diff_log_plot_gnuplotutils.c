@@ -16,5 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include "tmpl_math_time_tests.h"
-TEST1(double, 0.0, 0.15, tmpl_Double_Arctan_Maclaurin, atan)
+#include "tmpl_math_plots.h"
+#include <math.h>
+PLOT_LOGDIFF(tmpl_Double_Arctan_Maclaurin, atan, double, 0.0, 0.5, 1E3,
+             "tmpl_atan_maclaurin_double_logdiff_plot.ps")
