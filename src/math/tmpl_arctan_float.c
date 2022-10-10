@@ -142,7 +142,7 @@ float tmpl_Float_Arctan(float x)
     if (w.bits.expo == TMPL_FLOAT_NANINF_EXP)
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
-        if ((w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
+        if (TMPL_FLOAT_IS_NAN(w))
             return x;
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
