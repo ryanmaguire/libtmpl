@@ -330,6 +330,11 @@ echo "    Extra Compiler Arguments:"
 echo "        $ExtraArgs"
 
 if [ $MAKEMONSTER == 1 ]; then
+
+    if [ -e "monster.c" ]; then
+        rm -f monster.c;
+    fi
+
     touch monster.c
 
     for file in include/*.h; do

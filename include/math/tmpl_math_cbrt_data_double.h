@@ -1,5 +1,5 @@
-#ifndef TMPL_MATH_CBRT_LOOKUP_TABLE_H
-#define TMPL_MATH_CBRT_LOOKUP_TABLE_H
+#ifndef TMPL_MATH_CBRT_DATA_DOUBLE_H
+#define TMPL_MATH_CBRT_DATA_DOUBLE_H
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
 static double tmpl_double_cbrt_lookup_table[128] = {

@@ -17,5 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-
 TEST1(double, 1.0, 2.0, tmpl_Double_Cbrt_Pade, cbrt)

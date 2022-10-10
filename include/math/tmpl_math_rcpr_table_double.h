@@ -1,5 +1,5 @@
-#ifndef TMPL_MATH_RCPR_TABLE_H
-#define TMPL_MATH_RCPR_TABLE_H
+#ifndef TMPL_MATH_RCPR_TABLE_DOUBLE_H
+#define TMPL_MATH_RCPR_TABLE_DOUBLE_H
 
 /*  The values 1/(1 + k/128) for k = 0, 1, ..., 126, 127.                     */
 static double tmpl_double_rcpr_table[128] = {
