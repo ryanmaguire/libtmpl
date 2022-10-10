@@ -143,7 +143,7 @@ double tmpl_Double_Arctan(double x)
     if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
-        if (w.bits.man0 || w.bits.man1 || w.bits.man2 || w.bits.man3)
+        if (TMPL_DOUBLE_IS_NAN(w))
             return x;
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */

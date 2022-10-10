@@ -90,9 +90,8 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-#define CBRT_2 (1.2599210498948731647672106072782F)
+#define CBRT_2    (1.2599210498948731647672106072782F)
 #define CBRT_2_SQ (1.5874010519681994747517056392722F)
-#define ONE_THIRD (0.333333333333333333333333333333F)
 
 static const float tmpl_float_cbrt_data[3] = {1.0F, CBRT_2, CBRT_2_SQ};
 
@@ -221,6 +220,8 @@ float tmpl_Float_Cbrt(float x)
 #else
 /*  Else for TMPL_HAS_IEEE754_FLOAT.                                          */
 
+#define ONE_THIRD (3.333333333333333333333333E-01F)
+
 float tmpl_Float_Cbrt(float x)
 {
     signed int expo, parity;
@@ -258,13 +259,14 @@ float tmpl_Float_Cbrt(float x)
 }
 /*  End of tmpl_Float_Cbrt.                                                   */
 
+#undef ONE_THIRD
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef CBRT_2
 #undef CBRT_2_SQ
-#undef ONE_THIRD
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

@@ -247,11 +247,21 @@
 #define TMPL_HAS_IEEE754_FLOAT 1
 
 /*  32-bit single precision bias is 127.                                      */
-#define TMPL_FLOAT_BIAS 0x7F
-#define TMPL_FLOAT_UBIAS 0x7FU
+#define TMPL_FLOAT_BIAS (0x7F)
+#define TMPL_FLOAT_UBIAS (0x7FU)
 
 /*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
-#define TMPL_FLOAT_NANINF_EXP 0xFF
+#define TMPL_FLOAT_NANINF_EXP (0xFF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_FLOAT_MANTISSA_LENGTH (23)
+#define TMPL_FLOAT_MANTISSA_ULENGTH (23U)
+
+/*  The value 2^23, used to normalize subnormal/denormal values.              */
+#define TMPL_FLOAT_NORMALIZE (8.388608E+06F)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
 
 /*  To access the binary representation of a floating point number, we use    *
  *  unions. Unions allow us to have different data types share the same block *
@@ -292,11 +302,21 @@ typedef union tmpl_IEEE754_Float_Def {
 #define TMPL_HAS_IEEE754_FLOAT 1
 
 /*  32-bit single precision bias is 127.                                      */
-#define TMPL_FLOAT_BIAS 0x7F
-#define TMPL_FLOAT_UBIAS 0x7FU
+#define TMPL_FLOAT_BIAS (0x7F)
+#define TMPL_FLOAT_UBIAS (0x7FU)
 
 /*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
-#define TMPL_FLOAT_NANINF_EXP 0xFF
+#define TMPL_FLOAT_NANINF_EXP (0xFF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_FLOAT_MANTISSA_LENGTH (23)
+#define TMPL_FLOAT_MANTISSA_ULENGTH (23U)
+
+/*  The value 2**23, used to normalize subnormal/denormal values.             */
+#define TMPL_FLOAT_NORMALIZE (8.388608E+06F)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
 
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
@@ -335,11 +355,22 @@ typedef union tmpl_IEEE754_Float_Def {
 #define TMPL_HAS_IEEE754_DOUBLE 1
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
-#define TMPL_DOUBLE_BIAS 0x3FF
-#define TMPL_DOUBLE_UBIAS 0x3FFU
+#define TMPL_DOUBLE_BIAS (0x3FF)
+#define TMPL_DOUBLE_UBIAS (0x3FFU)
 
 /*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
-#define TMPL_DOUBLE_NANINF_EXP 0x7FF
+#define TMPL_DOUBLE_NANINF_EXP (0x7FF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_DOUBLE_MANTISSA_LENGTH (52)
+#define TMPL_DOUBLE_MANTISSA_ULENGTH (52U)
+
+/*  The value 2**52, used to normalize subnormal/denormal values.             */
+#define TMPL_DOUBLE_NORMALIZE (4.503599627370496E+15)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_DOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
 
 /*  Same idea as the union used for float, but for a 64-bit double.           */
 typedef union tmpl_IEEE754_Double_Def {
@@ -361,11 +392,22 @@ typedef union tmpl_IEEE754_Double_Def {
 #define TMPL_HAS_IEEE754_DOUBLE 1
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
-#define TMPL_DOUBLE_BIAS 0x3FF
-#define TMPL_DOUBLE_UBIAS 0x3FFU
+#define TMPL_DOUBLE_BIAS (0x3FF)
+#define TMPL_DOUBLE_UBIAS (0x3FFU)
 
 /*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
-#define TMPL_DOUBLE_NANINF_EXP 0x7FF
+#define TMPL_DOUBLE_NANINF_EXP (0x7FF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_DOUBLE_MANTISSA_LENGTH (52)
+#define TMPL_DOUBLE_MANTISSA_ULENGTH (52U)
+
+/*  The value 2**52, used to normalize subnormal/denormal values.             */
+#define TMPL_DOUBLE_NORMALIZE (4.503599627370496E+15)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_DOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
 
 /*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
  *  endianness. See the above comments for information on this data type.     */
@@ -407,11 +449,19 @@ typedef union tmpl_IEEE754_Double_Def {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
-/*  64-bit long double precision has exponent bias of 1,023.                  */
-#define TMPL_LDOUBLE_BIAS 0x3FF
+/*  64-bit double precision has exponent bias of 1,023.                       */
+#define TMPL_LDOUBLE_BIAS (0x3FF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFU)
 
-/*  The exponent that corresponds to NaN/infinity for 64-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
+/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
+
+/*  The value 2**52, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
 /*  MIPS little endian uses the same structure as double, 64 bit. The         *
  *  Microsoft compiler MSVC also uses this for x86_64.                        */
@@ -433,11 +483,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
-/*  64-bit long double precision has exponent bias of 1,023.                  */
-#define TMPL_LDOUBLE_BIAS 0x3FF
+/*  64-bit double precision has exponent bias of 1,023.                       */
+#define TMPL_LDOUBLE_BIAS (0x3FF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFU)
 
-/*  The exponent that corresponds to NaN/infinity for 64-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
+/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
+
+/*  The value 2**52, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
 /*  MIPS for big endian. PowerPC and S390 also implement long double          *
  *  using this style, which is the same as double.                            */
@@ -460,10 +518,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
 
 /*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
+
+/*  The value 2**63, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
 /*  The i386 architecture uses a 96-bit implementation. This uses the         *
  *  80-bit extended precision with 16 bits of padding.                        */
@@ -490,10 +556,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
 
 /*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
+
+/*  The value 2**63, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
 /*  Big endian version of i386 method.                                        */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -519,10 +593,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
 
 /*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
+
+/*  The value 2**63, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
@@ -559,10 +641,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
 
 /*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
+
+/*  The value 2**63, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
 /*  Big endian version of the amd64 method. GCC uses this for ia64.           */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -590,10 +680,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
 
 /*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
 #define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
+
+/*  The value 2**112, used to normalize subnormal/denormal values.            */
+#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
 
 /*  aarch64 uses the 128-bit quadruple precision for long double.             */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -618,10 +716,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS 0x3FFF
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
 
 /*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
 #define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
+
+/*  The value 2**112, used to normalize subnormal/denormal values.            */
+#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
 
 /*  Similar to aarch64, but with big endianness.                              */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -646,10 +752,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  128-bit double-double has exponent bias of 1,023, same as double.         */
-#define TMPL_LDOUBLE_BIAS 0x3FF
+#define TMPL_LDOUBLE_BIAS (0x3FF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFU)
 
-/*  The exponent that corresponds to NaN/infinity for 64-bit double-double.   */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
+/*  The exponent that corresponds to NaN/infinity for 128-bit double-double.  */
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
+
+/*  The value 2**52, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
 /*  Double-double representation. Literally two doubles stacked together.     */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -685,10 +799,18 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #define TMPL_HAS_IEEE754_LDOUBLE 1
 
 /*  128-bit double-double has exponent bias of 1,023, same as double.         */
-#define TMPL_LDOUBLE_BIAS 0x3FF
+#define TMPL_LDOUBLE_BIAS (0x3FF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFU)
 
-/*  The exponent that corresponds to NaN/infinity for 64-bit double-double.   */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FF
+/*  The exponent that corresponds to NaN/infinity for 128-bit double-double.  */
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
+
+/*  The value 2**52, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
 typedef union tmpl_IEEE754_LDouble_Def {

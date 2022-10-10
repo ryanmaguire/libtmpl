@@ -191,14 +191,14 @@ double tmpl_Double_Arctan2(double y, double x)
     if (wx.bits.expo == TMPL_DOUBLE_NANINF_EXP)
     {
         /*  Check if x is NaN. If it is, return NaN.                          */
-        if (wx.bits.man0 || wx.bits.man1 || wx.bits.man2 || wx.bits.man3)
+        if (TMPL_DOUBLE_IS_NAN(wx))
             return x;
 
         /*  x is infinity. Check if y is NaN or Inf.                          */
         if (wy.bits.expo == TMPL_DOUBLE_NANINF_EXP)
         {
             /*  Check if y is NaN. If it is, return NaN.                      */
-            if (wy.bits.man0 || wy.bits.man1 || wy.bits.man2 || wy.bits.man3)
+            if (TMPL_DOUBLE_IS_NAN(wy))
                 return y;
 
             /*  Both x and y are infinity. 4 special cases corresponding to   *

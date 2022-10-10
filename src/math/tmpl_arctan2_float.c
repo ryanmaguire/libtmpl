@@ -186,14 +186,14 @@ float tmpl_Float_Arctan2(float y, float x)
     if (wx.bits.expo == TMPL_FLOAT_NANINF_EXP)
     {
         /*  Check if x is NaN. If it is, return NaN.                          */
-        if (wx.bits.man0 || wx.bits.man1)
+        if (TMPL_FLOAT_IS_NAN(wx))
             return x;
 
         /*  x is infinity. Check if y is NaN or Inf.                          */
         if (wy.bits.expo == TMPL_FLOAT_NANINF_EXP)
         {
             /*  Check if y is NaN. If it is, return NaN.                      */
-            if (wy.bits.man0 || wy.bits.man1)
+            if (TMPL_FLOAT_IS_NAN(wy))
                 return y;
 
             /*  Both x and y are infinity. 4 special cases corresponding to   *
