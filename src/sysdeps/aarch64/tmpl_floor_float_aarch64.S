@@ -1,11 +1,11 @@
 #ifdef __APPLE__
-.section	__TEXT,__text,regular,pure_instructions
-.globl	_tmpl_Float_Floor
-.p2align	2
+.section  __TEXT,__text,regular,pure_instructions
+.globl    _tmpl_Float_Floor
+.p2align  2
 
 _tmpl_Float_Floor:
-	frintm  s0, s0
-	ret
+    frintm  s0, s0
+    ret
 
 #else
 

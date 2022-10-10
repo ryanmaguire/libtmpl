@@ -105,13 +105,13 @@ double tmpl_Double_Floor(double x)
     i = ((word64.i >> 52U) & 0x7FFU) - 0x3FFU;
     j = 0x000fffffffffffffl >> i;
 
-	if ((word64.i & j) == 0)
-	    return x;
+    if ((word64.i & j) == 0)
+        return x;
 
-	if (word64.w.bits.sign)
-	    word64.i += 0x0010000000000000 >> i;
+    if (word64.w.bits.sign)
+        word64.i += 0x0010000000000000 >> i;
 
-	word64.i &= ~j;
+    word64.i &= ~j;
     return word64.w.r;
 }
 /*  End of tmpl_Double_Floor.                                                 */

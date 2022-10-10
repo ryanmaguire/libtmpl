@@ -1,9 +1,9 @@
 #if defined(__APPLE__)
-.globl  _tmpl_LDouble_Cos
-.p2align        4, 0x90
+.globl    _tmpl_LDouble_Cos
+.p2align  4, 0x90
 
 _tmpl_LDouble_Cos:
-	jmp     cosl@PLT
+    jmp    cosl@PLT
 
 #else
 .text
@@ -12,7 +12,7 @@ _tmpl_LDouble_Cos:
 .type   tmpl_LDouble_Cos, @function
 
 tmpl_LDouble_Cos:
-        jmp     cosl@PLT
+    jmp    cosl@PLT
 
 .size   tmpl_LDouble_Cos, .-tmpl_LDouble_Cos
 #endif
