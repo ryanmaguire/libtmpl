@@ -92,9 +92,9 @@
 .endef;
 
 tmpl_LDouble_Sqrt:
-	fldt 8(%rsp)
-	fsqrt
-	ret
+    fldt 8(%rsp)
+    fsqrt
+    ret
 
 /*  Apple x86_64 machines. Works with clang and gcc.                          */
 #elif defined(__APPLE__)

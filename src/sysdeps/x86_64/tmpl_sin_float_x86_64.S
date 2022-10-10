@@ -1,9 +1,9 @@
 #if defined(__APPLE__)
-.globl  _tmpl_Float_Sin
-.p2align        4, 0x90
+.globl    _tmpl_Float_Sin
+.p2align  4, 0x90
 
 _tmpl_Float_Sin:
-	jmp     sinf@PLT
+    jmp    sinf@PLT
 
 #else
 .text

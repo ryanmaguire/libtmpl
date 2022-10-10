@@ -58,6 +58,9 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_arctan_very_small_double.c" -and \
 	-not -name "tmpl_arctan_very_small_float.c" -and \
 	-not -name "tmpl_arctan_very_small_ldouble.c" -and \
+	-not -name "tmpl_cbrt_pade_double.c" -and \
+	-not -name "tmpl_cbrt_pade_float.c" -and \
+	-not -name "tmpl_cbrt_pade_ldouble.c" -and \
 	-not -name "tmpl_complex_abs_double.c" -and \
 	-not -name "tmpl_complex_abs_float.c" -and \
 	-not -name "tmpl_complex_abs_ldouble.c" -and \

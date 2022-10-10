@@ -18,4 +18,4 @@
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
 
-TEST1(double, 1.0, 1.0E6, tmpl_Double_Cbrt, cbrt)
+TEST1(double, -2.225073858507E-308, 2.225073858507E-308, tmpl_Double_Cbrt, cbrt)

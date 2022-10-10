@@ -334,6 +334,7 @@ typedef union tmpl_IEEE754_Float_Def {
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_DOUBLE_BIAS 0x3FF
+#define TMPL_DOUBLE_UBIAS 0x3FFU
 
 /*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
 #define TMPL_DOUBLE_NANINF_EXP 0x7FF
@@ -359,6 +360,7 @@ typedef union tmpl_IEEE754_Double_Def {
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_DOUBLE_BIAS 0x3FF
+#define TMPL_DOUBLE_UBIAS 0x3FFU
 
 /*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
 #define TMPL_DOUBLE_NANINF_EXP 0x7FF
@@ -1181,6 +1183,26 @@ extern long double tmpl_LDouble_Cbrt(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Cbrt_Pade                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the (7, 7) Pade approximant of cbrt(x) at x = 1.              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cbrt_x:                                                        *
+ *          The cube root of x, x^{1/3}.                                      *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_math_cbrt_pade_inline.h>
+#else
+extern float tmpl_Float_Cbrt_Pade(float x);
+extern double tmpl_Double_Cbrt_Pade(double x);
+extern long double tmpl_LDouble_Cbrt_Pade(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Copysign                                                  *
  *  Purpose:                                                                  *
  *      Given two numbers x and y, returns a value that has the magnitude of  *
@@ -1540,6 +1562,22 @@ extern long double tmpl_LDouble_NaN(void);
 extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
 extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
 extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Pow2                                                      *
+ *  Purpose:                                                                  *
+ *      Computes an integer power of 2.                                       *
+ *  Arguments:                                                                *
+ *      signed int expo:                                                      *
+ *          An, the power of 2.                                               *
+ *  Output:                                                                   *
+ *      double pow2_expo:                                                     *
+ *          The value 2^expo.                                                 *
+ ******************************************************************************/
+extern float tmpl_Float_Pow2(signed int expo);
+extern double tmpl_Double_Pow2(signed int expo);
+extern long double tmpl_LDouble_Pow2(signed int expo);
 
 /******************************************************************************
  *  Function:                                                                 *

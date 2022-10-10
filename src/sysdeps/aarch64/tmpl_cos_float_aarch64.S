@@ -4,7 +4,7 @@
 .p2align  2
 
 _tmpl_Float_Cos:
-        b       _cosf
+    b       _cosf
 
 #else
 
