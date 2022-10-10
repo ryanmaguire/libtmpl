@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_cbrt_double                              *
+ *                              tmpl_cbrt_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing cubic roots at double precision.          *
+ *      Contains code for computing cubic roots at single precision.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cbrt                                                      *
+ *      tmpl_Float_Cbrt                                                       *
  *  Purpose:                                                                  *
  *      Computes y = cbrt(x), the unique number y such that x = y^3.          *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cbrt_x (double):                                                      *
- *          The cubic root of x at double precision.                          *
+ *      cbrt_x (float):                                                       *
+ *          The cubic root of x at single precision.                          *
  *  Called Functions:                                                         *
  *      None if IEEE-754 support is available and libtmpl algorithms have     *
  *      been requested. cbrt from math.h otherwise.                           *
@@ -60,21 +60,7 @@
  *            = cbrt(1 + s)             with s = u/t - 1.                     *
  *            ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                             *
  *                                                                            *
- *      y is now accurate to at least 8 decimals. We can double this to at    *
- *      least 16 decimals using 1 iteration of Newton's method. We have:      *
- *                                                                            *
- *                y ~ cbrt(x)                                                 *
- *          y^3 - x ~ 0                                                       *
- *             f(y) = y^3 - x                                                 *
- *            f'(y) = 3y^2                                                    *
- *                                                                            *
- *      Apply Newton's method for 1 iteration:                                *
- *                                                                            *
- *              out = y - f(y)/f'(y)                                          *
- *                  = y - (y^{3} - x)/(3y^{2})                                *
- *                  = (3y^{3} - y^{3} + x)/(3y^{2})                           *
- *                  = (2y^{3} + x)/(3y^{2})                                   *
- *                  = 0.3333*(2y + x/y^2)                                     *
+ *      y is now accurate to at least 8 decimals.                             *
  *                                                                            *
  *      Lastly, since 2^{b/3} is not an integer for some values of b write    *
  *      b = 3k + r, with r = 0, 1, 2. Then 2^{b/3} is 2^{k}2^{r/3}. If r = 0  *
@@ -104,26 +90,26 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-#define CBRT_2 (1.2599210498948731647672106072782)
-#define CBRT_2_SQ (1.5874010519681994747517056392722)
-#define ONE_THIRD (0.333333333333333333333333333333)
+#define CBRT_2 (1.2599210498948731647672106072782F)
+#define CBRT_2_SQ (1.5874010519681994747517056392722F)
+#define ONE_THIRD (0.333333333333333333333333333333F)
 
-static const double tmpl_double_cbrt_data[3] = {1.0, CBRT_2, CBRT_2_SQ};
+static const float tmpl_float_cbrt_data[3] = {1.0F, CBRT_2, CBRT_2_SQ};
 
 /*  Check for IEEE-754 support. This is significantly faster.                 */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_double.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_data_float.h>
 
 /*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_double.h>
+#include <libtmpl/include/math/tmpl_math_rcpr_table_float.h>
 
-/*  Function for computing square roots at double precision.                  */
-double tmpl_Double_Cbrt(double x)
+/*  Function for computing square roots at single precision.                  */
+float tmpl_Float_Cbrt(float x)
 {
-    /*  Union of a double and the bits representing a double.                 */
-    tmpl_IEEE754_Double w, tmp;
+    /*  Union of a float and the bits representing a float.                   */
+    tmpl_IEEE754_Float w, tmp;
 
     /*  Integer for indexing the arrays defined above.                        */
     unsigned int ind;
@@ -134,7 +120,7 @@ double tmpl_Double_Cbrt(double x)
     /*  Variable for storing the exponent mod 3.                              */
     unsigned int parity;
 
-    /*  Set the double part of the union to the input.                        */
+    /*  Set the float part of the union to the input.                         */
     w.r = x;
 
     /*  Save the sign of x by copying w into tmp.                             */
@@ -147,42 +133,42 @@ double tmpl_Double_Cbrt(double x)
     if (w.bits.expo == 0x00U)
     {
         /*  cbrt(0) = 0.0.                                                    */
-        if (w.r == 0.0)
+        if (w.r == 0.0F)
             return x;
 
-        /*  Non-zero subnormal number. Normalize by multiplying by 2^52,      *
-         *  which is 4.503599627370496 x 10^15.                               */
-        w.r *= 4.503599627370496E15;
+        /*  Non-zero subnormal number. Normalize by multiplying by 2^23,      *
+         *  which is 8.388608 x 10^6.                                         */
+        w.r *= 8.388608E6F;
 
-        /*  The parity is computed by expo mod 3. We have added 52 to the     *
-         *  exponent to normalize the input, but 52 mod 2 is 1, not 0. Add 2  *
-         *  to expo, and subtract 2 from exponent (in a few lines) to ensure  *
+        /*  The parity is computed by expo mod 3. We have added 23 to the     *
+         *  exponent to normalize the input, but 23 mod 2 is 3, not 0. Add 1  *
+         *  to expo, and subtract 1 from exponent (in a few lines) to ensure  *
          *  the parity variable is correctly computed.                        */
-        w.bits.expo += 2U;
+        w.bits.expo += 1U;
 
-        /*  Compute the exponent. Since we multiplied by 2^52, subtract 52    *
-         *  from the value. We also added 2 to expo, so subtract 2 more. To   *
+        /*  Compute the exponent. Since we multiplied by 2^23, subtract 23    *
+         *  from the value. We also added 1 to expo, so subtract 1 more. To   *
          *  compute the correctly rounded exponent after division by 3, add 2 *
-         *  more to the value before dividing. The total is adding 56 to the  *
+         *  more to the value before dividing. The total is adding 26 to the  *
          *  input. Shift by the bias to get the correct exponent for the word.*/
-        exponent = TMPL_DOUBLE_UBIAS - ((TMPL_DOUBLE_UBIAS-w.bits.expo)+56U)/3U;
+        exponent = TMPL_FLOAT_UBIAS - ((TMPL_FLOAT_UBIAS-w.bits.expo)+26U)/3U;
     }
 
     /*  NaN or infinity. Return the input.                                    */
-    else if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+    else if (w.bits.expo == TMPL_FLOAT_NANINF_EXP)
         return x;
 
     /*  Normal number. Compute the exponent. This is the bits of the exponent *
      *  part of the union minus the bias.                                     */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-        exponent = TMPL_DOUBLE_UBIAS - (TMPL_DOUBLE_UBIAS-w.bits.expo+2U)/3U;
+    else if (w.bits.expo < TMPL_FLOAT_UBIAS)
+        exponent = TMPL_FLOAT_UBIAS - (TMPL_FLOAT_UBIAS-w.bits.expo+2U)/3U;
     else
-        exponent = TMPL_DOUBLE_UBIAS + (w.bits.expo-TMPL_DOUBLE_UBIAS)/3U;
+        exponent = TMPL_FLOAT_UBIAS + (w.bits.expo-TMPL_FLOAT_UBIAS)/3U;
 
     /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
      *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
-    parity = w.bits.expo % 3U;
-    w.bits.expo = TMPL_DOUBLE_UBIAS;
+    parity = (w.bits.expo+2U) % 3U;
+    w.bits.expo = TMPL_FLOAT_UBIAS;
 
     /*  We compute cbrt(x) via:                                               *
      *                                                                        *
@@ -216,40 +202,34 @@ double tmpl_Double_Cbrt(double x)
      *  man1, the next part of the mantissa.                                  */
     ind = w.bits.man0;
 
-    /*  Obtain the last 3 bits of man1 by shifting down 13 bits. man1 is 16   *
-     *  bits wide.                                                            */
-    ind = (ind << 3U) + (w.bits.man1 >> 13U);
-
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
-    w.r = w.r*tmpl_double_rcpr_table[ind];
+    w.r = w.r*tmpl_float_rcpr_table[ind];
 
     /*  Compute the Taylor series to the first few terms.                     */
-    w.r = tmpl_Double_Cbrt_Taylor(w.r);
+    w.r = tmpl_Float_Cbrt_Taylor(w.r);
 
     /*  Get the correctly rounded down integer exponent/3.                    */
-    w.bits.expo = exponent & 0x7FFU;
-    w.r *= tmpl_double_cbrt_data[parity]*tmpl_double_cbrt_lookup_table[ind];
+    w.bits.expo = exponent & 0xFFU;
+    w.r *= tmpl_float_cbrt_data[parity]*tmpl_float_cbrt_lookup_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
-
-    /*  Apply 1 iteration of Newton's method and return.                      */
-    return ONE_THIRD*(2.0*w.r + x/(w.r*w.r));
+    return w.r;
 }
-/*  End of tmpl_Double_Cbrt.                                                  */
+/*  End of tmpl_Float_Cbrt.                                                   */
 
 #else
-/*  Else for TMPL_HAS_IEEE754_DOUBLE.                                         */
+/*  Else for TMPL_HAS_IEEE754_FLOAT.                                          */
 
-double tmpl_Double_Cbrt(double x)
+float tmpl_Float_Cbrt(float x)
 {
     signed int expo, parity;
-    double mant, out;
+    float mant, out;
 
-    if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_Float_Is_NaN_Or_Inf(x))
         return x;
 
-    tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
+    tmpl_Float_Base2_Mant_and_Exp(x, &mant, &expo);
 
     if (expo < 0)
     {
@@ -266,20 +246,20 @@ double tmpl_Double_Cbrt(double x)
         expo = expo/3;
     }
 
-    out = tmpl_Double_Cbrt_Pade(mant);
-    out = out*tmpl_Double_Pow2(expo);
-    out = out*tmpl_double_cbrt_data[parity];
+    out = tmpl_Float_Cbrt_Pade(mant);
+    out = out*tmpl_Float_Pow2(expo);
+    out = out*tmpl_float_cbrt_data[parity];
 
-    if (x < 0.0)
+    if (x < 0.0F)
         out = -out;
 
     /*  Apply 1 iteration of Newton's method and return.                      */
-    return ONE_THIRD*(2.0*out + x/(out*out));
+    return ONE_THIRD*(2.0F*out + x/(out*out));
 }
-/*  End of tmpl_Double_Cbrt.                                                  */
+/*  End of tmpl_Float_Cbrt.                                                   */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef CBRT_2

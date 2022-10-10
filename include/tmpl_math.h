@@ -248,6 +248,7 @@
 
 /*  32-bit single precision bias is 127.                                      */
 #define TMPL_FLOAT_BIAS 0x7F
+#define TMPL_FLOAT_UBIAS 0x7FU
 
 /*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
 #define TMPL_FLOAT_NANINF_EXP 0xFF
@@ -292,6 +293,7 @@ typedef union tmpl_IEEE754_Float_Def {
 
 /*  32-bit single precision bias is 127.                                      */
 #define TMPL_FLOAT_BIAS 0x7F
+#define TMPL_FLOAT_UBIAS 0x7FU
 
 /*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
 #define TMPL_FLOAT_NANINF_EXP 0xFF
@@ -1199,6 +1201,26 @@ extern long double tmpl_LDouble_Cbrt(long double x);
 extern float tmpl_Float_Cbrt_Pade(float x);
 extern double tmpl_Double_Cbrt_Pade(double x);
 extern long double tmpl_LDouble_Cbrt_Pade(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cbrt_Taylor                                               *
+ *  Purpose:                                                                  *
+ *      Compute the Taylor series of cbrt(x) at x = 1.                        *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cbrt_x:                                                        *
+ *          The cube root of x, x^{1/3}.                                      *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_math_cbrt_taylor_inline.h>
+#else
+extern float tmpl_Float_Cbrt_Taylor(float x);
+extern double tmpl_Double_Cbrt_Taylor(double x);
+extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
 #endif
 
 /******************************************************************************
