@@ -61,6 +61,9 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_cbrt_pade_double.c" -and \
 	-not -name "tmpl_cbrt_pade_float.c" -and \
 	-not -name "tmpl_cbrt_pade_ldouble.c" -and \
+	-not -name "tmpl_cbrt_taylor_double.c" -and \
+	-not -name "tmpl_cbrt_taylor_float.c" -and \
+	-not -name "tmpl_cbrt_taylor_ldouble.c" -and \
 	-not -name "tmpl_complex_abs_double.c" -and \
 	-not -name "tmpl_complex_abs_float.c" -and \
 	-not -name "tmpl_complex_abs_ldouble.c" -and \
