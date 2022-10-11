@@ -16,26 +16,37 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#if defined(__APPLE__)
-.globl    _tmpl_Double_Sin
-.p2align  4, 0x90
 
-_tmpl_Double_Sin:
-    jmp    sin@PLT
+/*  The following code works with Apple's M1 chip. Tested with Apple's        *
+ *  version of clang.                                                         */
+#ifdef __APPLE__
+.section __TEXT,__text,regular,pure_instructions
+.globl   _tmpl_LDouble_Cos
+.p2align 2
+
+_tmpl_LDouble_Cos:
+    b    _cosl
 
 #else
+/*  Else of #ifdef __APPLE__.                                                 */
+
+/*  The following works with GCC and LLVM's clang on GNU/Linux platforms. Not *
+ *  tested on anything else.                                                  */
 .text
-.p2align 4
-.globl  tmpl_Double_Sin
-.type   tmpl_Double_Sin, @function
+.align  2
+.global tmpl_LDouble_Cos
+.type   tmpl_LDouble_Cos, %function
 
-tmpl_Double_Sin:
-        jmp     sin@PLT
+tmpl_LDouble_Cos:
+    b    cosl
 
-.size   tmpl_Double_Sin, .-tmpl_Double_Sin
+.size   tmpl_LDouble_Cos, .-tmpl_LDouble_Cos
+
 #endif
+/*  End of #ifdef __APPLE__.                                                  */
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)
 .section .note.GNU-stack,"",%progbits
 #endif
+/*  End of #if defined(__ELF__).                                              */

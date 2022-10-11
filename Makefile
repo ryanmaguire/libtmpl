@@ -161,11 +161,15 @@ SRCS := \
 	-not -name "tmpl_sin_double.c" -and \
 	-not -name "tmpl_sin_float.c" -and \
 	-not -name "tmpl_sin_ldouble.c" -and \
+	-not -name "tmpl_sincos_double.c" -and \
+	-not -name "tmpl_sincos_float.c" -and \
+	-not -name "tmpl_sincos_ldouble.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
 	-not -name "tmpl_floor_double.c" -and \
 	-not -name "tmpl_floor_float.c" -and \
+	-not -name "tmpl_floor_ldouble.c" -and \
 	\( -name "*.c" -or -name "*x86_64.S" \))
 endif
 # End of ifdef FASM.
@@ -178,12 +182,19 @@ SRCS := \
 	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_cos_double.c" -and \
 	-not -name "tmpl_cos_float.c" -and \
+	-not -name "tmpl_cos_ldouble.c" -and \
 	-not -name "tmpl_floor_double.c" -and \
 	-not -name "tmpl_floor_float.c" -and \
+	-not -name "tmpl_floor_ldouble.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and \
 	-not -name "tmpl_sin_double.c" -and \
 	-not -name "tmpl_sin_float.c" -and \
+	-not -name "tmpl_sin_ldouble.c" -and \
+	-not -name "tmpl_sincos_double.c" -and \
+	-not -name "tmpl_sincos_float.c" -and \
+	-not -name "tmpl_sincos_ldouble.c" -and \
 	\( -name "*.c" -or -name "*aarch64.S" \))
 
 # Else for ifdef NO_ASM

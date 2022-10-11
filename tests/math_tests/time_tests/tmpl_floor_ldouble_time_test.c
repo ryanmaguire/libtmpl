@@ -3,8 +3,8 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  under the terms of the GNU General Public License as published by         *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -16,26 +16,5 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#if defined(__APPLE__)
-.globl    _tmpl_Double_Sin
-.p2align  4, 0x90
-
-_tmpl_Double_Sin:
-    jmp    sin@PLT
-
-#else
-.text
-.p2align 4
-.globl  tmpl_Double_Sin
-.type   tmpl_Double_Sin, @function
-
-tmpl_Double_Sin:
-        jmp     sin@PLT
-
-.size   tmpl_Double_Sin, .-tmpl_Double_Sin
-#endif
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
+#include "tmpl_math_time_tests.h"
+TEST1(long double, -1.0E6L, 1.0E6L, tmpl_LDouble_Floor, floorl)

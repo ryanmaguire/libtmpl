@@ -16,23 +16,34 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#if defined(__APPLE__)
-.globl    _tmpl_Double_Sin
-.p2align  4, 0x90
-
-_tmpl_Double_Sin:
-    jmp    sin@PLT
+#ifdef __APPLE__
 
 #else
 .text
 .p2align 4
-.globl  tmpl_Double_Sin
-.type   tmpl_Double_Sin, @function
+.globl  tmpl_Float_SinCos
+.type   tmpl_Float_SinCos, @function
 
-tmpl_Double_Sin:
-        jmp     sin@PLT
+tmpl_Float_SinCos:
+        pushq   %rbp
+        movq    %rdi, %rbp
+        pushq   %rbx
+        movq    %rsi, %rbx
+        subq    $24, %rsp
+        leaq    12(%rsp), %rdi
+        leaq    8(%rsp), %rsi
+        call    sincosf@PLT
+        movss   12(%rsp), %xmm0
+        movss   %xmm0, 0(%rbp)
+        movss   8(%rsp), %xmm0
+        movss   %xmm0, (%rbx)
+        addq    $24, %rsp
+        popq    %rbx
+        popq    %rbp
+        ret
 
-.size   tmpl_Double_Sin, .-tmpl_Double_Sin
+.size   tmpl_Float_SinCos, .-tmpl_Float_SinCos
+
 #endif
 
 /* Enable stack protection.                                                   */
