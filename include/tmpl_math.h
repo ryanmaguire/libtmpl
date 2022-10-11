@@ -1835,11 +1835,11 @@ extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Float_SinCos(float t, float *cos_t, float *sin_t);
-extern void tmpl_Double_SinCos(double t, double *cos_t, double *sin_t);
+extern void tmpl_Float_SinCos(float t, float *sin_t, float *cos_t);
+extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
 
 extern void
-tmpl_LDouble_SinCos(long double t, long double *cos_t, long double *sin_t);
+tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
 
 /******************************************************************************
  *  Function:                                                                 *

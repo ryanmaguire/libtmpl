@@ -21,7 +21,7 @@
 .p2align  4, 0x90
 
 _tmpl_LDouble_Sin:
-    jmp    sin@PLT
+    jmp    _sinl
 
 #else
 .text
