@@ -319,7 +319,7 @@ clean:
 
 install:
 	mkdir -p /usr/local/include/libtmpl/
-	cp -r ./include/ /usr/local/include/libtmpl/
+	cp -r ./include /usr/local/include/libtmpl/
 	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
 
 uninstall:
