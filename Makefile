@@ -116,8 +116,6 @@ else
 INT_FLAG :=
 endif
 
-EXCLUDE := $(INLINE_EXCLUDE) $(MATH_EXCLUDE)
-
 uname_m := $(shell uname -m)
 
 # If the user does not want to use any assembly code (that is, C only) only
@@ -125,31 +123,48 @@ uname_m := $(shell uname -m)
 # and armv7l (armhf) this is only advised if your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifdef NO_ASM
-SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) -name "*.c")
+BUILTIN_EXCLUDE :=
+BUILTIN_INCLUDE :=
+ASM_INCLUDE :=
+ASM_EXCLUDE :=
 
 # Else for ifdef NO_ASM
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
 else ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
+ifdef NO_BUILTIN
+BUILTIN_INCLUDE :=
+BUILTIN_EXCLUDE :=
+else
+BUILTIN_INCLUDE := -wholename "./src/builtins/x86_64/*.S" -or
+BUILTIN_EXCLUDE := \
+	-not -name "tmpl_cos_double.c" -and \
+	-not -name "tmpl_cos_float.c" -and \
+	-not -name "tmpl_cos_ldouble.c" -and \
+	-not -name "tmpl_sin_double.c" -and \
+	-not -name "tmpl_sin_float.c" -and \
+	-not -name "tmpl_sin_ldouble.c" -and \
+	-not -name "tmpl_sincos_double.c" -and \
+	-not -name "tmpl_sincos_float.c" -and \
+	-not -name "tmpl_sincos_ldouble.c" -and
+endif
+
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
-SRCS := \
-	$(shell find $(SRC_DIRS) $(EXCLUDE) \
+ASM_INCLUDE := -wholename "./src/sysdeps/fasm/*.fasm" -or
+ASM_EXCLUDE := \
 	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
-	\( -name "*.c" -or -name "*x86_64.fasm" \))
+	-not -name "tmpl_sqrt_float.c" -and
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to compile this, tested on
 # Debian GNU/Linux 11.
 else
-SRCS := \
-	$(shell find $(SRC_DIRS) $(EXCLUDE) \
-	-not -name "tmpl_cos_double.c" -and \
-	-not -name "tmpl_cos_float.c" -and \
-	-not -name "tmpl_cos_ldouble.c" -and \
+
+ASM_INCLUDE := -wholename "./src/sysdeps/x86_64/*.S" -or
+ASM_EXCLUDE := \
 	-not -name "tmpl_trailing_zeros_char.c" -and \
 	-not -name "tmpl_trailing_zeros_int.c" -and \
 	-not -name "tmpl_trailing_zeros_long.c" -and \
@@ -158,19 +173,12 @@ SRCS := \
 	-not -name "tmpl_trailing_zeros_uchar.c" -and \
 	-not -name "tmpl_trailing_zeros_ulong.c" -and \
 	-not -name "tmpl_trailing_zeros_ushort.c" -and \
-	-not -name "tmpl_sin_double.c" -and \
-	-not -name "tmpl_sin_float.c" -and \
-	-not -name "tmpl_sin_ldouble.c" -and \
-	-not -name "tmpl_sincos_double.c" -and \
-	-not -name "tmpl_sincos_float.c" -and \
-	-not -name "tmpl_sincos_ldouble.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and \
 	-not -name "tmpl_floor_double.c" -and \
 	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and \
-	\( -name "*.c" -or -name "*x86_64.S" \))
+	-not -name "tmpl_floor_ldouble.c" -and
 endif
 # End of ifdef FASM.
 
@@ -178,30 +186,40 @@ endif
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
-SRCS := \
-	$(shell find $(SRC_DIRS) $(EXCLUDE) \
+ifdef NO_BUILTIN
+BUILTIN_INCLUDE :=
+BUILTIN_EXCLUDE :=
+else
+BUILTIN_INCLUDE := -wholename "./src/builtins/x86_64/*.S" -or
+BUILTIN_EXCLUDE := \
 	-not -name "tmpl_cos_double.c" -and \
 	-not -name "tmpl_cos_float.c" -and \
 	-not -name "tmpl_cos_ldouble.c" -and \
-	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and \
-	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and \
 	-not -name "tmpl_sin_double.c" -and \
 	-not -name "tmpl_sin_float.c" -and \
 	-not -name "tmpl_sin_ldouble.c" -and \
 	-not -name "tmpl_sincos_double.c" -and \
 	-not -name "tmpl_sincos_float.c" -and \
-	-not -name "tmpl_sincos_ldouble.c" -and \
-	\( -name "*.c" -or -name "*aarch64.S" \))
+	-not -name "tmpl_sincos_ldouble.c" -and
+endif
+
+ASM_INCLUDE := -wholename "./src/sysdeps/aarch64/*.S" -or
+ASM_EXCLUDE := \
+	-not -name "tmpl_floor_double.c" -and \
+	-not -name "tmpl_floor_float.c" -and \
+	-not -name "tmpl_floor_ldouble.c" -and \
+	-not -name "tmpl_sqrt_double.c" -and \
+	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and
 
 # Else for ifdef NO_ASM
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
-SRCS := \
+BUILTIN_EXCLUDE :=
+BUILTIN_INCLUDE :=
+ASM_INCLUDE := -wholename "sysdeps/armv7l/*.S"
+ASM_EXCLUDE :=
 	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
@@ -215,10 +233,17 @@ SRCS := \
 else
 
 # For all other architectures, use only C code. No assembly.
-SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) -name "*.c")
+BUILTIN_EXCLUDE :=
+BUILTIN_INCLUDE :=
+ASM_INCLUDE :=
+ASM_EXCLUDE :=
 
 # End of ifdef NO_ASM.
 endif
+
+ALLINCLUDE := \( $(ASM_INCLUDE) $(BUILTIN_INCLUDE) -name "*.c" \)
+EXCLUDE := $(ASM_EXCLUDE) $(BUILTIN_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE)
+SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(ALLINCLUDE))
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
@@ -271,11 +296,20 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 ifdef FASM
 	mkdir -p $(BUILD_DIR)/src/sysdeps/fasm/
+ifndef NO_BUILTIN
+	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
+endif
 else ifndef NO_ASM
 ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 	mkdir -p $(BUILD_DIR)/src/sysdeps/x86_64/
+ifndef NO_BUILTIN
+	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
+endif
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 	mkdir -p $(BUILD_DIR)/src/sysdeps/aarch64/
+ifndef NO_BUILTIN
+	mkdir -p $(BUILD_DIR)/src/builtins/aarch64/
+endif
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 	mkdir -p $(BUILD_DIR)/src/sysdeps/armv7l/
 endif
