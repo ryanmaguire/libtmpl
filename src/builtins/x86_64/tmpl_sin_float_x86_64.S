@@ -21,7 +21,7 @@
 .p2align  4, 0x90
 
 _tmpl_Float_Sin:
-    jmp    sinf@PLT
+    jmp    _sinf
 
 #else
 .text

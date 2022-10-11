@@ -21,7 +21,7 @@
 .p2align  4, 0x90
 
 _tmpl_Float_Cos:
-    jmp    cosf@PLT
+    jmp    _cosf
 
 #else
 .text

@@ -17,6 +17,20 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #if defined(__APPLE__)
+.globl    _tmpl_LDouble_Floor
+.p2align  4, 0x90
+
+_tmpl_LDouble_Floor:
+        fnstcw  -10(%rsp)
+        fldt    8(%rsp)
+        movzwl  -10(%rsp), %eax
+        andb    $-13, %ah
+        orb     $4, %ah
+        movw    %ax, -12(%rsp)
+        fldcw   -12(%rsp)
+        frndint
+        fldcw   -10(%rsp)
+        ret
 
 #else
 .text;

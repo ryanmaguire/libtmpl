@@ -17,6 +17,23 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #ifdef __APPLE__
+.globl    _tmpl_Float_SinCos
+.p2align  4, 0x90
+
+_tmpl_Float_SinCos:
+        pushq   %rbp
+        movq    %rsp, %rbp
+        pushq   %r14
+        pushq   %rbx
+        movq    %rsi, %r14
+        movq    %rdi, %rbx
+        callq   ___sincosf_stret
+        movss   %xmm0, (%rbx)
+        extractps       $1, %xmm0, (%r14)
+        popq    %rbx
+        popq    %r14
+        popq    %rbp
+        retq
 
 #else
 .text

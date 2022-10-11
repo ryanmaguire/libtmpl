@@ -21,7 +21,7 @@
 .p2align  4, 0x90
 
 _tmpl_Double_Cos:
-    jmp    cos@PLT
+    jmp    _cos
 
 #else
 .text

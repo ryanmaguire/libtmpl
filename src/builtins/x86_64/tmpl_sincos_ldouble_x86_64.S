@@ -17,6 +17,32 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #ifdef __APPLE__
+.globl    _tmpl_LDouble_SinCos
+.p2align  4, 0x90
+
+_tmpl_LDouble_SinCos:
+        pushq   %rbp
+        movq    %rsp, %rbp
+        pushq   %r14
+        pushq   %rbx
+        subq    $32, %rsp
+        movq    %rsi, %r14
+        movq    %rdi, %rbx
+        fldt    16(%rbp)
+        fld     %st(0)
+        fstpt   -28(%rbp)
+        fstpt   (%rsp)
+        callq   _sinl
+        fstpt   (%rbx)
+        fldt    -28(%rbp)
+        fstpt   (%rsp)
+        callq   _cosl
+        fstpt   (%r14)
+        addq    $32, %rsp
+        popq    %rbx
+        popq    %r14
+        popq    %rbp
+        retq
 
 #else
 .text

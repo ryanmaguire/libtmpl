@@ -437,7 +437,7 @@ int main(void)                                                                 \
                                                                                \
     const type start = (type)begin;                                            \
     const type end = (type)finish;                                             \
-    const size_t N = NSAMPS(type) / 3;                                         \
+    const size_t N = NSAMPS(type) / 5;                                         \
     const type dx = (end - start) / (type)N;                                   \
                                                                                \
     x = malloc(sizeof(*x) * N);                                                \

@@ -17,6 +17,23 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #ifdef __APPLE__
+.globl    _tmpl_Double_SinCos
+.p2align  4, 0x90
+
+_tmpl_Double_SinCos:
+        pushq   %rbp
+        movq    %rsp, %rbp
+        pushq   %r14
+        pushq   %rbx
+        movq    %rsi, %r14
+        movq    %rdi, %rbx
+        callq   ___sincos_stret
+        movsd   %xmm0, (%rbx)
+        movsd   %xmm1, (%r14)
+        popq    %rbx
+        popq    %r14
+        popq    %rbp
+        retq
 
 #else
 .text
