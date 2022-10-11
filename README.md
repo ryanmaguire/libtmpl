@@ -48,26 +48,10 @@ these standards.
 The ``examples/`` folder contains examples of all of the functions in the
 library and shows basic usage of these tools.
 
-The ``tests/`` folder contains time tests and accuracy tests of ``libtmpl``
-versus other libraries. To run these tests will require these libraries being
+The ``tests/`` folder contains time and accuracy tests of ``libtmpl`` against
+other libraries. To run these tests will require these libraries being
 available. Running these tests is **not** required, and they are mostly for
-internal use and to verify the algorithms implemented in libtmpl. There are
-three types of time tests for each function, ``small``, ``medium``, and
-``huge``. ``small`` is used for emulated architectures
-(``aarch64``, ``armv7l``, ``ppc64el``, ``powerpc``, ``mipsel64``, ``mipsel``,
-``mips``, ``i386``, ``risc-v``, and ``s390x``). These files run tests on
-10,000,000 samples for the given function. ``medium`` is for use on computers
-with at least 16GB memory. I use ``medium`` tests on a MacBook Air 2021 using
-the ``armv8`` architecture (The M1's) loaned from the Dartmouth Math Department
-to test ``arm`` code natively, instead of via emulation. These files run tests
-on 632,035,970 samples (3 ``double`` arrays of this size take about 14GB).
-The ``huge`` tests require at least 64GB memory. I run these tests on my
-personal computers which are all ``x86_64/amd64``. These files run tests on
-2,615,628,245 samples (3 ``double`` arrays of this size take about 62GB).
-In addition to time tests there are accuracy tests. These tests sample a lot
-more points (10,000,000,000) since the samples are not saved in memory.
-An individual accuracy test can take a minute or more, but samples a wider
-range of values. Lastly, there are unit tests for many functions.
+internal use and to verify the algorithms implemented in libtmpl.
 
 ## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
 Run the Makefile with (`FreeBSD` users should use `gmake`):
@@ -109,9 +93,16 @@ Options to pass to `make`
 > (not recommended).
 
 `NO_ASM=1`
-> Only applicable is `NO_MATH` is not set, and only for `x86_64/amd64`
+> Only applicable is `NO_MATH` is not set, and for `x86_64/amd64/arm64/armv7l`
 > machines. Some functions, like `sqrt`, can be handle efficiently in assembly
 > code. If you wish to use only C code, set this option (not recommended).
+
+`NO_BUILTIN=1`
+> Only applicable is `NO_MATH` and `NO_ASM` are not set, and only for
+> `x86_64/amd64/arm64` machines. If you are using `gcc`, `clang`, or `pcc`,
+> you can take adventage of several built-in functions like `sincos`. This is
+> handled in assmebly code. If you're not using glibc, or a compiler that has
+> these built-in functions, set this option (not recommended).
 
 `FASM=1`
 > Use the flat assembler instead of the assembly language used by `gcc` and
