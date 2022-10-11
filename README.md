@@ -101,7 +101,7 @@ Options to pass to `make`
 > Only applicable is `NO_MATH` and `NO_ASM` are not set, and only for
 > `x86_64/amd64/arm64` machines. If you are using `gcc`, `clang`, or `pcc`,
 > you can take adventage of several built-in functions like `sincos`. This is
-> handled in assmebly code. If you're not using glibc, or a compiler that has
+> handled in assembly code. If you're not using a compiler that has
 > these built-in functions, set this option (not recommended).
 
 `FASM=1`
