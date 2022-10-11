@@ -123,8 +123,8 @@ uname_m := $(shell uname -m)
 # and armv7l (armhf) this is only advised if your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifdef NO_ASM
-BUILTIN_EXCLUDE :=
 BUILTIN_INCLUDE :=
+BUILTIN_EXCLUDE :=
 ASM_INCLUDE :=
 ASM_EXCLUDE :=
 
@@ -190,41 +190,39 @@ ifdef NO_BUILTIN
 BUILTIN_INCLUDE :=
 BUILTIN_EXCLUDE :=
 else
-BUILTIN_INCLUDE := -wholename "./src/builtins/x86_64/*.S" -or
+BUILTIN_INCLUDE := -wholename "./src/builtins/aarch64/*.S" -or
 BUILTIN_EXCLUDE := \
 	-not -name "tmpl_cos_double.c" -and \
 	-not -name "tmpl_cos_float.c" -and \
 	-not -name "tmpl_cos_ldouble.c" -and \
+	-not -name "tmpl_floor_ldouble.c" -and \
 	-not -name "tmpl_sin_double.c" -and \
 	-not -name "tmpl_sin_float.c" -and \
 	-not -name "tmpl_sin_ldouble.c" -and \
 	-not -name "tmpl_sincos_double.c" -and \
 	-not -name "tmpl_sincos_float.c" -and \
-	-not -name "tmpl_sincos_ldouble.c" -and
+	-not -name "tmpl_sincos_ldouble.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and
 endif
 
 ASM_INCLUDE := -wholename "./src/sysdeps/aarch64/*.S" -or
 ASM_EXCLUDE := \
 	-not -name "tmpl_floor_double.c" -and \
 	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and
 
 # Else for ifdef NO_ASM
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
-BUILTIN_EXCLUDE :=
 BUILTIN_INCLUDE :=
-ASM_INCLUDE := -wholename "sysdeps/armv7l/*.S"
+BUILTIN_EXCLUDE :=
+ASM_INCLUDE := -wholename "./src/sysdeps/armv7l/*.S" -or
 ASM_EXCLUDE :=
-	$(shell find $(SRC_DIRS) $(EXCLUDE) \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and \
-	\( -name "*.c" -or -name "*armv7l.S" \))
+	-not -name "tmpl_sqrt_ldouble.c" -and
 
 # Else for ifeq ($(uname_p),x86_64). Only amd64/x86_64 and aarch64/arm7l have
 # assembly code support. This may change in the future. The rest of the C
@@ -241,14 +239,12 @@ ASM_EXCLUDE :=
 # End of ifdef NO_ASM.
 endif
 
-ALLINCLUDE := \( $(ASM_INCLUDE) $(BUILTIN_INCLUDE) -name "*.c" \)
+ALLCFLAGS := $(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG)
+INCLUDE := \( $(ASM_INCLUDE) $(BUILTIN_INCLUDE) -name "*.c" \)
 EXCLUDE := $(ASM_EXCLUDE) $(BUILTIN_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE)
-SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(ALLINCLUDE))
-
+SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
-
-ALLCFLAGS := $(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG)
 
 .PHONY: clean install uninstall all
 
