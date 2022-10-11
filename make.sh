@@ -346,8 +346,10 @@ if [ $MAKEMONSTER == 1 ]; then
 
     for dir in src/*/; do
 
-        # sysdeps only has assembly code. Skip this.
-        if [[ $dir == *"sysdeps"* ]]; then
+        # assembly and buitlins only has assembly code. Skip this.
+        if [[ $dir == *"assembly"* ]]; then
+            continue;
+        elif [[ $dir == *"builtins"* ]]; then
             continue;
         fi
 
@@ -377,8 +379,10 @@ else
     # Loop over all directories in src/ and compile all .c files.
     for dir in src/*; do
 
-        # sysdeps only has assembly code. Skip this.
-        if [[ $dir == *"sysdeps"* ]]; then
+        # assembly and buitlins only has assembly code. Skip this.
+        if [[ $dir == *"assembly"* ]]; then
+            continue;
+        elif [[ $dir == *"builtins"* ]]; then
             continue;
         fi
 

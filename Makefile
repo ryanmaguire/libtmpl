@@ -153,7 +153,7 @@ endif
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
-ASM_INCLUDE := -wholename "./src/sysdeps/fasm/*.fasm" -or
+ASM_INCLUDE := -wholename "./src/assembly/fasm/*.fasm" -or
 ASM_EXCLUDE := \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and
@@ -163,7 +163,7 @@ ASM_EXCLUDE := \
 # Debian GNU/Linux 11.
 else
 
-ASM_INCLUDE := -wholename "./src/sysdeps/x86_64/*.S" -or
+ASM_INCLUDE := -wholename "./src/assembly/x86_64/*.S" -or
 ASM_EXCLUDE := \
 	-not -name "tmpl_trailing_zeros_char.c" -and \
 	-not -name "tmpl_trailing_zeros_int.c" -and \
@@ -205,7 +205,7 @@ BUILTIN_EXCLUDE := \
 	-not -name "tmpl_sqrt_ldouble.c" -and
 endif
 
-ASM_INCLUDE := -wholename "./src/sysdeps/aarch64/*.S" -or
+ASM_INCLUDE := -wholename "./src/assembly/aarch64/*.S" -or
 ASM_EXCLUDE := \
 	-not -name "tmpl_floor_double.c" -and \
 	-not -name "tmpl_floor_float.c" -and \
@@ -218,7 +218,7 @@ else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
 BUILTIN_INCLUDE :=
 BUILTIN_EXCLUDE :=
-ASM_INCLUDE := -wholename "./src/sysdeps/armv7l/*.S" -or
+ASM_INCLUDE := -wholename "./src/assembly/armv7l/*.S" -or
 ASM_EXCLUDE :=
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
@@ -291,23 +291,23 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 ifdef FASM
-	mkdir -p $(BUILD_DIR)/src/sysdeps/fasm/
+	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
 ifndef NO_BUILTIN
 	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
 endif
 else ifndef NO_ASM
 ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
-	mkdir -p $(BUILD_DIR)/src/sysdeps/x86_64/
+	mkdir -p $(BUILD_DIR)/src/assembly/x86_64/
 ifndef NO_BUILTIN
 	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
 endif
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
-	mkdir -p $(BUILD_DIR)/src/sysdeps/aarch64/
+	mkdir -p $(BUILD_DIR)/src/assembly/aarch64/
 ifndef NO_BUILTIN
 	mkdir -p $(BUILD_DIR)/src/builtins/aarch64/
 endif
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
-	mkdir -p $(BUILD_DIR)/src/sysdeps/armv7l/
+	mkdir -p $(BUILD_DIR)/src/assembly/armv7l/
 endif
 endif
 
