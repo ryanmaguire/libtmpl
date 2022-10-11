@@ -43,6 +43,8 @@
  *  Date:       May 3, 2022                                                   *
  ******************************************************************************/
 
+/*  The following code works with Apple's M1 chip. Tested with Apple's        *
+ *  version of clang.                                                         */
 #ifdef __APPLE__
 
 .section  __TEXT,__text,regular,pure_instructions
@@ -54,7 +56,10 @@ _tmpl_Float_Sqrt:
     ret
 
 #else
+/*  Else of #ifdef __APPLE__.                                                 */
 
+/*  The following works with GCC and LLVM's clang on GNU/Linux platforms. Not *
+ *  tested on anything else.                                                  */
 .text
 .align  2
 .global tmpl_Float_Sqrt
@@ -66,9 +71,11 @@ tmpl_Float_Sqrt:
 
 .size   tmpl_Float_Sqrt, .-tmpl_Float_Sqrt
 
-#if defined(__ELF__)
-.section .note.GNU-stack,"",@progbits
 #endif
+/*  End of #ifdef __APPLE__.                                                  */
 
+/* Enable stack protection.                                                   */
+#if defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
 #endif
-/* End of __APPLE__ */
+/*  End of #if defined(__ELF__).                                              */
