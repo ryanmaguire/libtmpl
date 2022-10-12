@@ -188,14 +188,14 @@ double tmpl_Double_Arctan2(double y, double x)
     wy.r = y;
 
     /*  Special cases, NaN and INF.                                           */
-    if (wx.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(wx))
     {
         /*  Check if x is NaN. If it is, return NaN.                          */
         if (TMPL_DOUBLE_IS_NAN(wx))
             return x;
 
         /*  x is infinity. Check if y is NaN or Inf.                          */
-        if (wy.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+        if (TMPL_DOUBLE_IS_NAN_OR_INF(wy))
         {
             /*  Check if y is NaN. If it is, return NaN.                      */
             if (TMPL_DOUBLE_IS_NAN(wy))
@@ -225,10 +225,10 @@ double tmpl_Double_Arctan2(double y, double x)
     }
 
     /*  Check if y is infinite or NaN.                                        */
-    else if (wy.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+    else if (TMPL_DOUBLE_IS_NAN_OR_INF(wy))
     {
         /*  We've already checked that x is finite. Check if y is NaN.        */
-        if (wy.bits.man0 || wy.bits.man1 || wy.bits.man2 || wy.bits.man3)
+        if (TMPL_DOUBLE_IS_NAN(wy))
             return y;
 
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */

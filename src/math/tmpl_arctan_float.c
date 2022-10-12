@@ -139,7 +139,7 @@ float tmpl_Float_Arctan(float x)
     w.r = x;
 
     /*  Special cases, NaN and INF.                                           */
-    if (w.bits.expo == TMPL_FLOAT_NANINF_EXP)
+    if (TMPL_FLOAT_IS_NAN_OR_INF(w))
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
         if (TMPL_FLOAT_IS_NAN(w))
