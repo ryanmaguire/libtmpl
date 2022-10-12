@@ -1,9 +1,9 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,112 +16,598 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           rss_ringoccs_arctan2                             *
+ *                            tmpl_arctan2_ldouble                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the 2-dimensional inverse tangent        *
- *      function. This computes the angle between the point (x,y) and (1,0)   *
- *      in the Cartesian plane.                                               *
- *  NOTE:                                                                     *
- *      By convention dating back to (at least) the 1970s, Arctan2 takes the  *
- *      input as (y,x), not (x,y). i.e. the first argument is the y           *
- *      component and the second argument is the x component. This is contrary*
- *      to most 2 dimensional functions that want their inputs as (x,y).      *
- *      This is probably because we are trying to compute tan^-1(y/x) but     *
- *      need to be careful about the signs of y and x, so we write            *
- *      arctan(y,x).                                                          *
- *                                                                            *
- *      This returns a number between -pi and pi, so there is a "branch cut"  *
- *      along the negative x axis. Because of this, use of this function      *
- *      in complex routines results in actual branch cuts.                    *
+ *      Compute the angle the point (x, y) makes with the x axis.             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Arctan2:                                                   *
- *      tmpl_Double_Arctan2:                                                  *
- *      tmpl_LDouble_Arctan2:                                                 *
+ *      tmpl_LDouble_Arctan2                                                  *
  *  Purpose:                                                                  *
- *      Computes arctangent of a point in the plane.                          *
+ *      Computes the angle the point (x, y) makes with the x axis.            *
  *  Arguments:                                                                *
- *      y (float/double/long double):                                         *
- *          A real number, the y component of a point in the plane.           *
- *      x (float/double/long double):                                         *
- *          A real number, the x component of a point in the plane.           *
+ *      y (long double):                                                      *
+ *          A real number, the vertical component of the point.               *
+ *      x (long double):                                                      *
+ *          A real number, the horizontal component of the point.             *
  *  Output:                                                                   *
- *      arctan_xy (float/double/long double):                                 *
- *          The angle made between the point (x, y) and (1, 0) in radians.    *
- *  Method:                                                                   *
- *      Passes arguments to atan2f, atan2, atan2l if available, and converts  *
- *      the arguments to doubles and passes them to atan2 if not.             *
- *  Notes:                                                                    *
- *      It is not assumed you have a C99 compliant compiler. If you do and    *
- *      would like to use those library functions, set the macro              *
- *      __TMPL_HAS_C99_MATH_H__ to 1 in rss_ringoccs_configs.h.               *
+ *      theta (long double):                                                  *
+ *          The angle, between -pi and pi, the point (x, y) makes with the    *
+ *          x axis.                                                           *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
+ *              Computes the absolute value of a real number.                 *
+ *          tmpl_LDouble_Arctan_Asymptotic (tmpl_math.h):                     *
+ *              Computes the asymptotic expansion of arctan for large         *
+ *              positive real numbers. Very accurate for x > 16.              *
+ *          tmpl_LDouble_Arctan_Maclaurin (tmpl_math.h):                      *
+ *              Computes the Maclaurin series of arctan. More terms are used  *
+ *              in this function than tmpl_LDouble_Arctan_Very_Small.         *
+ *          tmpl_LDouble_Arctan_Very_Small (tmpl_math.h):                     *
+ *              Computes the inverse tangent of small numbers using a         *
+ *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *      Method:                                                               *
+ *          Depends on one of several cases:                                  *
+ *              y zero:                                                       *
+ *                  x positive:                                               *
+ *                      return 0.                                             *
+ *                  x negative:                                               *
+ *                      return Pi.                                            *
+ *                  x zero:                                                   *
+ *                      return 0.                                             *
+ *                  x NaN:                                                    *
+ *                      return NaN.                                           *
+ *              x zero:                                                       *
+ *                  y positive:                                               *
+ *                      return pi/2.                                          *
+ *                  y negative:                                               *
+ *                      return -pi/2.                                         *
+ *                  y NaN:                                                    *
+ *                      return NaN.                                           *
+ *              y infinite:                                                   *
+ *                  x finite:                                                 *
+ *                      pi/2 if y is positive, -pi/2 if y is negative.        *
+ *                  x infinite:                                               *
+ *                      pi/4 if x and y are positive.                         *
+ *                      -pi/4 if x positive, y negative.                      *
+ *                      3pi/4 if x negative, y positive.                      *
+ *                      -3pi/4 if x and y negative.                           *
+ *                  x NaN:                                                    *
+ *                      return NaN.                                           *
+ *              x infinite:                                                   *
+ *                  y finite:                                                 *
+ *                      0 if y is positive, pi if y is negative.              *
+ *                  y NaN:                                                    *
+ *                      return NaN.                                           *
+ *                  y infinite:                                               *
+ *                      See previous cases.                                   *
+ *              x and y finite:                                               *
+ *                  Reduce y to positive via:                                 *
+ *                      atan2(y, x) = -atan2(-y, x)                           *
+ *                  Reduce x to positive via:                                 *
+ *                      atan2(y, x) = pi - atan2(y, -x)                       *
+ *                  Given x and y positive, compute atan(z), z = y/x:         *
+ *                      For very small values of z, use the Maclaurin series  *
+ *                      to the first few terms.                               *
+ *                                                                            *
+ *                      For values less than 16, use formula 4.4.34 from      *
+ *                      Abramowitz and Stegun to reduce the argument to a     *
+ *                      smaller value. This formula states that:              *
+ *                                                                            *
+ *                                                     u - v                  *
+ *                          atan(u) - atan(v) = atan( -------- )              *
+ *                                                     1 + uv                 *
+ *                                                                            *
+ *                      Use a lookup table for atan(v) with precomputed       *
+ *                      values. Reduce and use a Maclaurin series.            *
+ *                      The index of the lookup table is computed via the     *
+ *                      exponent of the long double z.                        *
+ *                                                                            *
+ *                      For larger values, use the asmyptotic expansion.      *
+ *      Error:                                                                *
+ *          Based on 394,484,428 random samples with -100 < |x|, |y| < 100.   *
+ *              max relative error: 2.1682630157549489e-19                    *
+ *              rms relative error: 3.9719504311123539e-20                    *
+ *              max absolute error: 2.1684043449710089e-19                    *
+ *              rms absolute error: 7.2247868870500588e-20                    *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
+ *              Computes the absolute value of a real number.                 *
+ *          tmpl_LDouble_Arctan_Asymptotic (tmpl_math.h):                     *
+ *              Computes the asymptotic expansion of arctan for large         *
+ *              positive real numbers. Very accurate for x > 16.              *
+ *          tmpl_LDouble_Arctan_Maclaurin (tmpl_math.h):                      *
+ *              Computes the Maclaurin series of arctan. More terms are used  *
+ *              in this function than tmpl_LDouble_Arctan_Very_Small.         *
+ *          tmpl_LDouble_Arctan_Very_Small (tmpl_math.h):                     *
+ *              Computes the inverse tangent of small numbers using a         *
+ *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *          tmpl_LDouble_Is_NaN (tmpl_math.h):                                *
+ *              Determines if a long double is Not-a-Number.                  *
+ *          tmpl_LDouble_Is_Inf (tmpl_math.h):                                *
+ *              Determines if a long double is infinity.                      *
+ *      Method:                                                               *
+ *          Same as IEEE-754 method, except the index of the lookup table is  *
+ *          computed via if-then statements to narrow down the range of x.    *
+ *      Error:                                                                *
+ *          Based on 394,484,428 random samples with -100 < |x|, |y| < 100.   *
+ *              max relative error: 2.1682630157549489e-19                    *
+ *              rms relative error: 3.9719504311123539e-20                    *
+ *              max absolute error: 2.1684043449710089e-19                    *
+ *              rms absolute error: 7.2247868870500588e-20                    *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) rss_ringoccs_math.h:                                                  *
- *          This file provides compatibility between the two standard math.h  *
- *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
- *          provides aliases for the functions, and if C89 math.h is used     *
- *          it defines the functions missing in the earlier version.          *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_USE_INLINE macro.                     *
+ *  2.) tmpl_math.h:                                                          *
+ *          Header file with the functions prototype.                         *
+ *  3.) tmpl_math_arctan_tables.h:                                            *
+ *          Header file containing pre-computed values of arctan(x).          *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       September 15, 2022                                            *
  ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
+ *                              Revision History                              *
  ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
- *  Date:       November 1, 2020                                              *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/12/08 (Ryan Maguire):                                                *
- *      Frozen for v1.3.                                                      *
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Added license, comments, and description of algorithm.                *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
-#include <math.h>
 
-/*  Check if we have C99 math.h or not.                                       */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+/*  Lookup table of precomputed arctan values found here.                     */
+#include <libtmpl/include/math/tmpl_math_arctan_tables.h>
 
-/*  Long double precision 2-dimensional arctan function (atan2l equivalent).  */
+/*  Check for IEEE-754 support.                                               */
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
+
+/******************************************************************************
+ *                          64 BIT DOUBLE PRECISION                           *
+ *                                    and                                     *
+ *                         80 BIT EXTENDED PRECISION                          *
+ ******************************************************************************/
+
+#if \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+
+/*  Long double precision inverse tangent (atan2 equivalent).                 */
 long double tmpl_LDouble_Arctan2(long double y, long double x)
 {
-    return atan2l(y, x);
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_IEEE754_LDouble wx, wy, w;
+    long double arg, out, v, atan_v;
+    unsigned int ind;
+
+    /*  Set the long double part of the words to the two inputs.              */
+    wx.r = x;
+    wy.r = y;
+
+    /*  Special cases, NaN and INF.                                           */
+    if (TMPL_LDOUBLE_IS_NAN_OR_INF(wx))
+    {
+        /*  Check if x is NaN. If it is, return NaN.                          */
+        if (TMPL_LDOUBLE_IS_NAN(wx))
+            return x;
+
+        /*  x is infinity. Check if y is NaN or Inf.                          */
+        if (TMPL_LDOUBLE_IS_NAN_OR_INF(wy))
+        {
+            /*  Check if y is NaN. If it is, return NaN.                      */
+            if (TMPL_LDOUBLE_IS_NAN(wy))
+                return y;
+
+            /*  Both x and y are infinity. 4 special cases corresponding to   *
+             *  North-East, North-West, South-West, and South-East.           */
+            if (!TMPL_LDOUBLE_IS_NEGATIVE(wx) &&
+                !TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return tmpl_Pi_By_Four_L;
+            else if (TMPL_LDOUBLE_IS_NEGATIVE(wx) &&
+                     !TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return tmpl_Three_Pi_By_Four_L;
+            else if (TMPL_LDOUBLE_IS_NEGATIVE(wx) &&
+                     TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return -tmpl_Three_Pi_By_Four_L;
+            else
+                return -tmpl_Pi_By_Four_L;
+        }
+
+        /*  y is finite and x is infinite. The angle is 0 or pi.              */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wx))
+            w.r = tmpl_One_Pi_L;
+        else
+            w.r = 0.0L;
+
+        /*  Preserve the sign of y.                                           */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+            return -w.r;
+        else
+            return w.r;
+    }
+
+    /*  Check if y is infinite or NaN.                                        */
+    else if (TMPL_LDOUBLE_IS_NAN_OR_INF(wy))
+    {
+        /*  We've already checked that x is finite. Check if y is NaN.        */
+        if (TMPL_LDOUBLE_IS_NAN(wy))
+            return y;
+
+        /*  y is infinite and x is finite. The angle is +/- pi/2.             */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  Next special case, y = 0.                                             */
+    else if (y == 0.0L)
+    {
+        /*  If x is negative, return Pi.                                      */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wx))
+        {
+            /*  Preserve the sign of y. If y is a negative zero, return -Pi.  */
+            if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return -tmpl_One_Pi_L;
+            else
+                return tmpl_One_Pi_L;
+        }
+
+        /*  Otherwise, return 0. To preserve the sign of y, return y.         */
+        else
+            return y;
+    }
+
+    /*  Lastly, the case where x is zero to avoid division-by-zero.           */
+    else if (x == 0.0L)
+    {
+        /*  y is not zero, so the answer is +/- pi/2.                         */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  We have z = y/x. Reduce to x and y positive by computing |z|.         */
+    w.r = tmpl_LDouble_Abs(wy.r / wx.r);
+
+    /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_BIAS - 4U)
+        out = tmpl_LDouble_Arctan_Very_Small(w.r);
+
+    /*  For |z| > 16, use the asymptotic expansion.                           */
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_BIAS + 3U)
+        out = tmpl_LDouble_Arctan_Asymptotic(w.r);
+
+    /*  Otherwise use the lookup table to reduce. Note we have reduced to the *
+     *  case where -4 <= expo <= 3, where expo is the exponent of z.          */
+    else
+    {
+        /*  The table is indexed by values near 0.0625, 0.125, 0.25, 0.5, 1,  *
+         *  2, 4, and 8. The index thus corresponds to 4 + expo, where expo   *
+         *  is the exponent of the number z. Compute this. The exponent       *
+         *  in the IEEE-754 representation of a number is offset by a bias.   *
+         *  Subtract off this bias to compute the actual index.               */
+        ind = (TMPL_LDOUBLE_EXPO_BITS(w) + 4U) - TMPL_LDOUBLE_BIAS;
+
+        /*  Get the corresponding values from the lookup tables.              */
+        v = tmpl_atan_ldouble_v[ind];
+        atan_v = tmpl_atan_ldouble_atan_of_v[ind];
+
+        /*  Use 4.4.34 from Abramowitz and Stegun to compute the new argument.*/
+        arg = (w.r - v) / (1.0L + w.r*v);
+        out = atan_v + tmpl_LDouble_Arctan_Maclaurin(arg);
+    }
+
+    /*  Reduce to the case where x > 0 via atan2(y, -x) = pi - atan2(y, x).   */
+    if (TMPL_LDOUBLE_IS_NEGATIVE(wx))
+        out = tmpl_One_Pi_L - out;
+
+    /*  Reduce to y > 0 via atan2(-y, x) = -atan2(y, x).                      */
+    if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+        return -out;
+    else
+        return out;
 }
-/*  End of tmpl_LDouble_Arctan2.                                              */
+/*  End of tmpl_LDouble_Arctan.                                               */
 
 #else
-/*  Else statement for #if __TMPL_HAS_C99_MATH_H__ == 0.                      */
+/*  Else for 64-bit double / 80-bit extended precision versions.              */
 
-/*  Long double precision 2-dimensional arctan function (atan2l equivalent).  */
+/******************************************************************************
+ *                        128 BIT QUADRUPLE PRECISION                         *
+ *                                    and                                     *
+ *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
+ ******************************************************************************/
+
+/*  To get quadruple or double-double precision, the Taylor series is too     *
+ *  slow. Instead, the Pade approximant is used after reducing the argument.  */
+
+/*  Long double precision inverse tangent (atan2 equivalent).                 */
 long double tmpl_LDouble_Arctan2(long double y, long double x)
 {
-    /*  Cast "x" and "y" as doubles to atan2, and cast the output as a        *
-     *  long double.                                                          */
-    return (long double)atan2((double)y, (double)x);
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_IEEE754_LDouble wx, wy, w;
+    long double arg, out, v, atan_v;
+    unsigned int ind;
+
+    /*  Set the long double part of the words to the two inputs.              */
+    wx.r = x;
+    wy.r = y;
+
+    /*  Special cases, NaN and INF.                                           */
+    if (TMPL_LDOUBLE_IS_NAN_OR_INF(wx))
+    {
+        /*  Check if x is NaN. If it is, return NaN.                          */
+        if (TMPL_LDOUBLE_IS_NAN(wx))
+            return x;
+
+        /*  x is infinity. Check if y is NaN or Inf.                          */
+        if (TMPL_LDOUBLE_IS_NAN_OR_INF(wy))
+        {
+            /*  Check if y is NaN. If it is, return NaN.                      */
+            if (TMPL_LDOUBLE_IS_NAN(wy))
+                return y;
+
+            /*  Both x and y are infinity. 4 special cases corresponding to   *
+             *  North-East, North-West, South-West, and South-East.           */
+            if (!TMPL_LDOUBLE_IS_NEGATIVE(wx) &&
+                !TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return tmpl_Pi_By_Four_L;
+            else if (TMPL_LDOUBLE_IS_NEGATIVE(wx) &&
+                     !TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return tmpl_Three_Pi_By_Four_L;
+            else if (TMPL_LDOUBLE_IS_NEGATIVE(wx) &&
+                     TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return -tmpl_Three_Pi_By_Four_L;
+            else
+                return -tmpl_Pi_By_Four_L;
+        }
+
+        /*  y is finite and x is infinite. The angle is 0 or pi.              */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wx))
+            w.r = tmpl_One_Pi_L;
+        else
+            w.r = 0.0L;
+
+        /*  Preserve the sign of y.                                           */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+            return -w.r;
+        else
+            return w.r;
+    }
+
+    /*  Check if y is infinite or NaN.                                        */
+    else if (TMPL_LDOUBLE_IS_NAN_OR_INF(wy))
+    {
+        /*  We've already checked that x is finite. Check if y is NaN.        */
+        if (TMPL_LDOUBLE_IS_NAN(wy))
+            return y;
+
+        /*  y is infinite and x is finite. The angle is +/- pi/2.             */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  Next special case, y = 0.                                             */
+    else if (y == 0.0L)
+    {
+        /*  If x is negative, return Pi.                                      */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wx))
+        {
+            /*  Preserve the sign of y. If y is a negative zero, return -Pi.  */
+            if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+                return -tmpl_One_Pi_L;
+            else
+                return tmpl_One_Pi_L;
+        }
+
+        /*  Otherwise, return 0. To preserve the sign of y, return y.         */
+        else
+            return y;
+    }
+
+    /*  Lastly, the case where x is zero to avoid division-by-zero.           */
+    else if (x == 0.0L)
+    {
+        /*  y is not zero, so the answer is +/- pi/2.                         */
+        if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  We have z = y/x. Reduce to x and y positive by computing |z|.         */
+    w.r = tmpl_LDouble_Abs(wy.r / wx.r);
+
+    /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_BIAS - 4U)
+        out = tmpl_LDouble_Arctan_Very_Small(w.r);
+
+    /*  For |z| > 16, use the asymptotic expansion.                           */
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_BIAS + 3U)
+        out = tmpl_LDouble_Arctan_Asymptotic(w.r);
+
+    /*  For smaller values use the Pade approximant after reducing.           */
+    else
+    {
+        n = (unsigned int)(8.0L*w.r + 0.25L);
+        t = 0.125L * (long double)n;
+        t = (w.r - t) / (1.0L + w.r*t);
+        out = tmpl_ldouble_atan_n_by_8[n] + tmpl_LDouble_Arctan_Pade(t);
+    }
+
+    /*  Reduce to the case where x > 0 via atan2(y, -x) = pi - atan2(y, x).   */
+    if (TMPL_LDOUBLE_IS_NEGATIVE(wx))
+        out = tmpl_One_Pi_L - out;
+
+    /*  Reduce to y > 0 via atan2(-y, x) = -atan2(y, x).                      */
+    if (TMPL_LDOUBLE_IS_NEGATIVE(wy))
+        return -out;
+    else
+        return out;
 }
-/*  End of tmpl_LDouble_Arctan2.                                              */
+/*  End of tmpl_LDouble_Arctan.                                               */
 
 #endif
-/*  End of #if __TMPL_HAS_C99_MATH_H__ == 0                                   */
+/*  End of double-double / quadruple precision versions.                      */
+
+#else
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Long double precision inverse tangent (atan2l equivalent).                */
+long double tmpl_LDouble_Arctan2(long double y, long double x)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    long double z, arg, out, v, atan_v;
+    unsigned int ind;
+
+    /*  Special cases, NaN and INF.                                           */
+    if (tmpl_LDouble_Is_NaN(x))
+        return x;
+    else if (tmpl_LDouble_Is_NaN(y))
+        return y;
+    else if (tmpl_LDouble_Is_Inf(x))
+    {
+        /*  x is infinity. Check if y is infinity as well.                    */
+        if (tmpl_LDouble_Is_Inf(y))
+        {
+            /*  Both x and y are infinity. 4 special cases corresponding to   *
+             *  North-East, North-West, South-West, and South-East.           */
+            if (x > 0.0L && y > 0.0L)
+                return tmpl_Pi_By_Four_L;
+            else if (x < 0.0L && y > 0.0L)
+                return tmpl_Three_Pi_By_Four_L;
+            else if (x < 0.0L && y < 0.0L)
+                return -tmpl_Three_Pi_By_Four_L;
+            else
+                return -tmpl_Pi_By_Four_L;
+        }
+
+        /*  y is finite and x is infinite. The angle is 0 or pi.              */
+        if (x < 0.0L)
+            return tmpl_One_Pi_L;
+        else
+            return 0.0L;
+    }
+
+    /*  Check if y is infinite.                                               */
+    else if (tmpl_LDouble_Is_Inf(y))
+    {
+        /*  y is infinite and x is finite. The angle is +/- pi/2.             */
+        if (x < 0.0L)
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  Next special case, y = 0.                                             */
+    else if (y == 0.0L)
+    {
+        /*  If x is negative, return Pi.                                      */
+        if (x < 0.0L)
+            return tmpl_One_Pi_L;
+
+        /*  Otherwise, return 0. To preserve the sign of y, return y.         */
+        else
+            return y;
+    }
+
+    /*  Lastly, the case where x is zero to avoid division-by-zero.           */
+    else if (x == 0.0L)
+    {
+        /*  y is not zero, so the answer is +/- pi/2.                         */
+        if (y < 0.0L)
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
+
+    /*  We have z = y/x. Reduce by computing the absolute value of this.      */
+    z = tmpl_LDouble_Abs(y / x);
+
+    /*  For small values, z < 1/32, use the Maclaurin series to a few terms.  */
+    if (z < 0.0625L)
+    {
+        out = tmpl_LDouble_Arctan_Very_Small(z);
+        goto TMPL_LDOUBLE_ARCTAN_FINISH;
+    }
+
+    /*  Otherwise compute the greatest power of two less than z. To compute   *
+     *  the index of the lookup table, take this value and add 4 to it. Store *
+     *  the answer in "ind" and find this value by checking the range of z.   */
+    else if (z < 0.125L)
+        ind = 0U;
+    else if (z < 0.25L)
+        ind = 1U;
+    else if (z < 0.5L)
+        ind = 2U;
+    else if (z < 1.0L)
+        ind = 3U;
+    else if (z < 2.0L)
+        ind = 4U;
+    else if (z < 4.0L)
+        ind = 5U;
+    else if (z < 8.0L)
+        ind = 6U;
+    else if (z < 16.0L)
+        ind = 7U;
+
+    /*  For z > 16, use the asymptotic expansion.                             */
+    else
+    {
+        out = tmpl_LDouble_Arctan_Asymptotic(z);
+        goto TMPL_LDOUBLE_ARCTAN_FINISH;
+    }
+
+    /*  Use the lookup table for arctan. Get the pre-computed values.         */
+    v = tmpl_atan_ldouble_v[ind];
+    atan_v = tmpl_atan_ldouble_atan_of_v[ind];
+
+    /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
+    arg = (z - v) / (1.0L + z*v);
+    out = atan_v + tmpl_LDouble_Arctan_Maclaurin(arg);
+
+    /*  Last step, perform the argument reduction. We computed |y/x| at the   *
+     *  start but have not changed x or y so their signs are untouched.       *
+     *  Inspect the signs of each to finish the computation.                  */
+TMPL_LDOUBLE_ARCTAN_FINISH:
+
+    /*  Reduce to x > 0 via atan2(y, x) = pi - atan2(y, -x).                  */
+    if (x < 0.0L)
+        out = tmpl_One_Pi_L - out;
+
+    /*  Reduce to y > 0 via atan2(y, x) = -atan2(-y, x).                      */
+    if (y < 0.0L)
+        return -out;
+    else
+        return out;
+}
+/*  End of tmpl_LDouble_Arctan.                                               */
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
