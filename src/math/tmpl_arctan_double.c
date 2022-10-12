@@ -140,7 +140,7 @@ double tmpl_Double_Arctan(double x)
     w.r = x;
 
     /*  Special cases, NaN and INF.                                           */
-    if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
     {
         /*  Check if the input is NaN. If it is, simply return the input.     */
         if (TMPL_DOUBLE_IS_NAN(w))

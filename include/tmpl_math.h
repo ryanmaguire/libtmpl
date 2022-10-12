@@ -260,6 +260,9 @@
 /*  The value 2^23, used to normalize subnormal/denormal values.              */
 #define TMPL_FLOAT_NORMALIZE (8.388608E+06F)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_FLOAT_IS_NAN_OR_INF(w) ((w).bits.expo == 0xFFU)
+
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
 
@@ -315,6 +318,9 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  The value 2**23, used to normalize subnormal/denormal values.             */
 #define TMPL_FLOAT_NORMALIZE (8.388608E+06F)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_FLOAT_IS_NAN_OR_INF(w) ((w).bits.expo == 0xFFU)
+
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
 
@@ -368,6 +374,9 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  The value 2**52, used to normalize subnormal/denormal values.             */
 #define TMPL_DOUBLE_NORMALIZE (4.503599627370496E+15)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_DOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
+
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_DOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
@@ -404,6 +413,9 @@ typedef union tmpl_IEEE754_Double_Def {
 
 /*  The value 2**52, used to normalize subnormal/denormal values.             */
 #define TMPL_DOUBLE_NORMALIZE (4.503599627370496E+15)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_DOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
 
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_DOUBLE_IS_NAN(w) \
@@ -463,6 +475,19 @@ typedef union tmpl_IEEE754_Double_Def {
 /*  The value 2**52, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
 /*  MIPS little endian uses the same structure as double, 64 bit. The         *
  *  Microsoft compiler MSVC also uses this for x86_64.                        */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -497,6 +522,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  The value 2**52, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
 /*  MIPS for big endian. PowerPC and S390 also implement long double          *
  *  using this style, which is the same as double.                            */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -530,6 +568,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  The value 2**63, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
 /*  The i386 architecture uses a 96-bit implementation. This uses the         *
  *  80-bit extended precision with 16 bits of padding.                        */
@@ -569,6 +620,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  The value 2**63, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
 /*  Big endian version of i386 method.                                        */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -605,6 +669,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  The value 2**63, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
@@ -654,6 +731,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  The value 2**63, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
 /*  Big endian version of the amd64 method. GCC uses this for ia64.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -693,6 +783,20 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  The value 2**112, used to normalize subnormal/denormal values.            */
 #define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
+  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
 /*  aarch64 uses the 128-bit quadruple precision for long double.             */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -729,6 +833,20 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  The value 2**112, used to normalize subnormal/denormal values.            */
 #define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
 
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
+  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
 /*  Similar to aarch64, but with big endianness.                              */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
@@ -764,6 +882,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  The value 2**52, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expoa == 0x7FFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0a || (w).bits.man1a || (w).bits.man2a || (w).bits.man3a))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expoa)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.signa)
 
 /*  Double-double representation. Literally two doubles stacked together.     */
 typedef union tmpl_IEEE754_LDouble_Def {
@@ -811,6 +942,19 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 /*  The value 2**52, used to normalize subnormal/denormal values.             */
 #define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expoa == 0x7FFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0a || (w).bits.man1a || (w).bits.man2a || (w).bits.man3a))
+
+/*  Macro for examining the exponent bits of a long double.                   */
+#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expoa)
+
+/*  Macro for examining the sign bit of a long double.                        */
+#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.signa)
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
 typedef union tmpl_IEEE754_LDouble_Def {
