@@ -116,6 +116,12 @@ Options to pass to `make`
 > (as of this writing) does not support assembly language, or use
 > `FASM=1` if you have `fasm` installed.
 
+`EXTRA_FLAGS=`
+> Any extra compiler flags you wish to pass. For example, with `CC=clang` you
+> can pass `EXTRA_FLAGS="-Weverything -Wno-padded -Wno-float-equal"` to see if
+> `libtmpl` builds with all flags (except `-Wpadded` and `-Wfloat-equal`)
+> enabled.
+
 Afterwords, if you would like to install libtmpl in `/usr/local/lib`, run:
 ```
 sudo make install
