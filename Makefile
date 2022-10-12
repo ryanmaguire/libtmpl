@@ -35,7 +35,7 @@ CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
 LFLAGS := -O3 -flto -shared -lm
 endif
 
-CWARN := -Wall -Wextra -Wpedantic
+CWARN := -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
 
 ifdef NO_INLINE
 INLINE_FLAG :=
