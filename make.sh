@@ -57,6 +57,9 @@ USEMATH=1
 # Use of the IEEE-754 floating point format.
 USEIEEE=1
 
+# Whether or not to attempt to find fixed-width integers.
+USEINT=1
+
 # Compile the entire library by #include'ing all files into one translation
 # unit. The compiler get's to the see the entire library at once and make many
 # optimizations.

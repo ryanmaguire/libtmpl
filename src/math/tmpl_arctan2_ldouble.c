@@ -343,8 +343,8 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_LDouble wx, wy, w;
-    long double arg, out, v, atan_v;
-    unsigned int ind;
+    long double out, t;
+    unsigned int n;
 
     /*  Set the long double part of the words to the two inputs.              */
     wx.r = x;
@@ -437,15 +437,15 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     /*  We have z = y/x. Reduce to x and y positive by computing |z|.         */
     w.r = tmpl_LDouble_Abs(wy.r / wx.r);
 
-    /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
-    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_BIAS - 4U)
-        out = tmpl_LDouble_Arctan_Very_Small(w.r);
+    /*  Avoid underflow. If |x| < 2^-52, atan(x) = x to quadruple precision.  */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_BIAS - 52U)
+        out = w.r;
 
-    /*  For |z| > 16, use the asymptotic expansion.                           */
+    /*  For |x| > 16, use the asymptotic expansion.                           */
     else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_BIAS + 3U)
-        out = tmpl_LDouble_Arctan_Asymptotic(w.r);
+        out = tmpl_Pi_By_Two_L - tmpl_LDouble_Arctan_Pade(1.0L/w.r);
 
-    /*  For smaller values use the Pade approximant after reducing.           */
+    /*  Otherwise reduce and use the Pade approximant.                        */
     else
     {
         n = (unsigned int)(8.0L*w.r + 0.25L);

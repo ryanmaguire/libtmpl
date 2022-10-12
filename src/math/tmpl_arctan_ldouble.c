@@ -118,8 +118,6 @@ long double tmpl_LDouble_Arctan(long double x)
 }
 /*  End of tmpl_LDouble_Arctan.                                               */
 
-
-
 #else
 /*  Else for 64-bit double and 80-bit extended precision methods.             */
 
