@@ -1015,6 +1015,12 @@ static int make_integer_h(void)
     fprintf(fp, " ******************************************************************************/\n\n");
     fprintf(fp, "#ifndef TMPL_INTTYPE_H\n");
     fprintf(fp, "#define TMPL_INTTYPE_H\n\n");
+    fprintf(fp, "#include <libtmpl/include/tmpl_integer.h>\n\n");
+#ifdef ULLONG_MAX
+    fprintf(fp, "#define TMPL_HAS_LONGLONG 1\n\n");
+#else
+    fprintf(fp, "#define TMPL_HAS_LONGLONG 0\n\n");
+#endif
 
 #ifdef TMPL_SET_NO_INT
     fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n");
@@ -1029,6 +1035,10 @@ static int make_integer_h(void)
     fprintf(fp, "#define TMPL_HAS_8_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned char tmpl_UInt8;\n");
     fprintf(fp, "typedef signed char tmpl_SInt8;\n");
+    fprintf(fp, "#define tmpl_UInt8_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt8_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt8_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt8_Leading_Zeros TMPL_CHAR_LEADING_ZEROS\n");
 #else
     fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n");
 #endif
@@ -1039,10 +1049,18 @@ static int make_integer_h(void)
     fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned short int tmpl_UInt16;\n");
     fprintf(fp, "typedef signed short int tmpl_SInt16;\n");
+    fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt16_Leading_Zeros TMPL_SHORT_LEADING_ZEROS\n");
 #elif UINT_MAX == 0xFFFF
     fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned int tmpl_UInt16;\n");
     fprintf(fp, "typedef signed int tmpl_SInt16;\n");
+    fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt16_Leading_Zeros TMPL_INT_LEADING_ZEROS\n");
 #else
     fprintf(fp, "#define TMPL_HAS_16_BIT_INT 0\n");
 #endif
@@ -1053,14 +1071,26 @@ static int make_integer_h(void)
     fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned short int tmpl_UInt32;\n");
     fprintf(fp, "typedef signed short int tmpl_SInt32;\n");
+    fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt32_Leading_Zeros TMPL_SHORT_LEADING_ZEROS\n");
 #elif UINT_MAX == 0xFFFFFFFF
     fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned int tmpl_UInt32;\n");
     fprintf(fp, "typedef signed int tmpl_SInt32;\n");
+    fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt32_Leading_Zeros TMPL_INT_LEADING_ZEROS\n");
 #elif ULONG_MAX == 0xFFFFFFFF
     fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned long int tmpl_UInt32;\n");
     fprintf(fp, "typedef signed long int tmpl_SInt32;\n");
+    fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt32_Leading_Zeros TMPL_LONG_LEADING_ZEROS\n");
 #else
     fprintf(fp, "#define TMPL_HAS_32_BIT_INT 0\n");
 #endif
@@ -1071,28 +1101,47 @@ static int make_integer_h(void)
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned short int tmpl_UInt64;\n");
     fprintf(fp, "typedef signed short int tmpl_SInt64;\n");
+    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Leading_Zeros TMPL_SHORT_LEADING_ZEROS\n");
 #elif UINT_MAX == 0xFFFFFFFFFFFFFFFF
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned int tmpl_UInt64;\n");
     fprintf(fp, "typedef signed int tmpl_SInt64;\n");
+    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Leading_Zeros TMPL_INT_LEADING_ZEROS\n");
 #elif ULONG_MAX == 0xFFFFFFFFFFFFFFFF
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned long int tmpl_UInt64;\n");
     fprintf(fp, "typedef signed long int tmpl_SInt64;\n");
-#else
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || \
-    (defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER))
+    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Leading_Zeros TMPL_LONG_LEADING_ZEROS\n");
+#elif defined(ULLONG_MAX)
+
 #if ULLONG_MAX == 0xFFFFFFFFFFFFFFFF
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
     fprintf(fp, "typedef unsigned long long int tmpl_UInt64;\n");
     fprintf(fp, "typedef signed long long int tmpl_SInt64;\n");
+
+    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULLONG_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LLONG_TRAILING_ZEROS\n");
+    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULLONG_LEADING_ZEROS\n");
+    fprintf(fp, "#define tmpl_SInt64_Leading_Zeros TMPL_LLONG_LEADING_ZEROS\n");
 #else
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
 #endif
+/*  End of #if ULLONG_MAX == 0xFFFFFFFFFFFFFFFF.                              */
+
 #else
     fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
 #endif
-#endif
+/*  End of #if USHRT_MAX == 0xFFFFFFFFFFFFFFFF.                               */
+
 #endif
 /*  End of #ifdef TMPL_SET_NO_INT.                                            */
 
