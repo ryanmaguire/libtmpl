@@ -252,7 +252,7 @@ extern unsigned int tmpl_UIntVector_GCD(tmpl_UIntVector *arr);
  ******************************************************************************/
 extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
-/*  Macros for taking advantage of several builtin's differenta compilers     *
+/*  Macros for taking advantage of several builtin's different compilers      *
  *  may have. GCC and clang support __builtin_ctz and more.                   */
 #if defined(__has_builtin)
 
@@ -307,7 +307,7 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 #elif defined(_MSC_VER)
 /*  Else for #if defined(__has_builtin).                                      */
 
-/*  Microsoft's compiler has _BitScanForward, which does the same thing.      */
+/*  Microsoft's compiler has _BitScanForward, equivalent to trailing zeros.   */
 unsigned int __inline TMPL_UINT_TRAILING_ZEROS(unsigned int n)
 {
     unsigned int trailing_zeros = 0U;
@@ -323,7 +323,7 @@ unsigned long int __inline TMPL_ULONG_TRAILING_ZEROS(unsigned long int n)
     return trailing_zeros;
 }
 
-/*  Microsoft's compiler has _BitScanReverse, which does the same thing.      */
+/*  Microsoft's compiler has _BitScanReverse, equivalent to leading zeros.    */
 unsigned int __inline TMPL_UINT_LEADING_ZEROS(unsigned int n)
 {
     unsigned int leading_zeros = 0U;
@@ -359,6 +359,15 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
 
 #endif
 /*  End of #if defined(__has_builtin).                                        */
+
+#define TMPL_UCHAR_TRAILING_ZEROS tmpl_UChar_Trailing_Zeros
+#define TMPL_USHORT_TRAILING_ZEROS tmpl_UShort_Trailing_Zeros
+#define TMPL_CHAR_TRAILING_ZEROS tmpl_Char_Trailing_Zeros
+#define TMPL_SHORT_TRAILING_ZEROS tmpl_Short_Trailing_Zeros
+#define TMPL_UCHAR_LEADING_ZEROS tmpl_UChar_Leading_Zeros
+#define TMPL_USHORT_LEADING_ZEROS tmpl_UShort_Leading_Zeros
+#define TMPL_CHAR_LEADING_ZEROS tmpl_Char_Leading_Zeros
+#define TMPL_SHORT_LEADING_ZEROS tmpl_Short_Leading_Zeros
 
 #endif
 /*  End of include guard.                                                     */
