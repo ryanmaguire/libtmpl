@@ -87,8 +87,7 @@ long int tmpl_Long_GCD(long int m, long int n)
         m -= n;
 
         /*  Remove all trailing zeros from m, ensuring m is odd. Since m != n *
-         *  we are guaranteed the m - n is positive, meaning __builtin_ffs    *
-         *  will not cause undefined behavior if it is being used.            */
+         *  we are guaranteed that m - n is positive.                         */
         m >>= TMPL_LONG_TRAILING_ZEROS(m);
     }
 

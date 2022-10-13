@@ -186,7 +186,7 @@ double tmpl_Double_Mod_2(double x)
          *  1.xxx, not 0.1xxx, so shift one more to the left. The result is   *
          *  shifting by the number of leading zeros minus 12 plus 1, so shift *
          *  by the number of leading zeros minus 11.                          */
-        leading = (unsigned int)__builtin_clzll(word64.n) - 11U;
+        leading = (unsigned int)tmpl_UInt64_Leading_Zeros(word64.n) - 11U;
         word64.n = word64.n << leading;
 
         /*  If the 52nd bit is 1, we have 1.xxx as desired. The exponent is   *
