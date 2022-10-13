@@ -69,9 +69,9 @@
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_UChar_Trailing_Zeros                                             *
+ *      tmpl_UChar_Leading_Zeros                                              *
  *  Purpose:                                                                  *
- *      Computes the number of trailing zeros for unsigned integers. Similar  *
+ *      Computes the number of leading zeros for unsigned integers. Similar   *
  *      functions are provided for short, int, and long. The number zero is a *
  *      special case and zero is returned.                                    *
  *  Arguments:                                                                *
@@ -79,28 +79,12 @@
  *          An unsigned integer.                                              *
  *  Output:                                                                   *
  *      zeros (int):                                                          *
- *          The number of trailing zeros in the binary representation of n.   *
- *  Source Code:                                                              *
- *      libtmpl/src/integer/tmpl_trailing_zeros_uchar.c                       *
- *      libtmpl/src/integer/tmpl_trailing_zeros_ushort.c                      *
- *      libtmpl/src/integer/tmpl_trailing_zeros_uint.c                        *
- *      libtmpl/src/integer/tmpl_trailing_zeros_ulong.c                       *
- *  Examples:                                                                 *
- *      libtmpl/examples/integer/tmpl_trailing_zeros_uchar_example.c          *
- *      libtmpl/examples/integer/tmpl_trailing_zeros_ushort_example.c         *
- *      libtmpl/examples/integer/tmpl_trailing_zeros_uint_example.c           *
- *      libtmpl/examples/integer/tmpl_trailing_zeros_ulong_example.c          *
- *  Tests:                                                                    *
- *      libtmpl/tests/integer/time_tests/                                     *
- *          tmpl_trailing_zeros_uchar_time_test.c                             *
- *          tmpl_trailing_zeros_ushort_time_test.c                            *
- *          tmpl_trailing_zeros_uint_time_test.c                              *
- *          tmpl_trailing_zeros_ulong_time_test.c                             *
+ *          The number of leading zeros in the binary representation of n.    *
  ******************************************************************************/
-extern int tmpl_UChar_Trailing_Zeros(unsigned char n);
-extern int tmpl_UShort_Trailing_Zeros(unsigned short int n);
-extern int tmpl_UInt_Trailing_Zeros(unsigned int n);
-extern int tmpl_ULong_Trailing_Zeros(unsigned long int n);
+extern int tmpl_UChar_Leading_Zeros(unsigned char n);
+extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
+extern int tmpl_UInt_Leading_Zeros(unsigned int n);
+extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
