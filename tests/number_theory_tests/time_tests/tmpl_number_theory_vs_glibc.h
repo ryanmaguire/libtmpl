@@ -28,27 +28,30 @@ static double time_as_double(clock_t a, clock_t b)
     return t / (double)(CLOCKS_PER_SEC);
 }
 
+#ifndef TMPL_NSAMPS
 #ifdef _MSC_VER
 #include <windows.h>
-static size_t memsize()
+static size_t memsize(void)
 {
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
-    return (size_t)status.ullTotalPhys;
+    return (size_t)(status.ullTotalPhys);
 }
 #else
 #include <unistd.h>
-static size_t memsize()
+static size_t memsize(void)
 {
     long pages = sysconf(_SC_PHYS_PAGES);
     long page_size = sysconf(_SC_PAGE_SIZE);
     return (size_t)(pages * page_size);
 }
 #endif
-
 #define MAX2(a, b) ((a) > (b) ? (a) : (b))
 #define NSAMPS(a, b) (memsize()/(2ULL*MAX2(sizeof(a), sizeof(b))))
+#else
+#define NSAMPS(a, a) (size_t)TMPL_NSAMPS
+#endif
 
 #define TEST1(intype, outtype, f0, f1)                                         \
                                                                                \
