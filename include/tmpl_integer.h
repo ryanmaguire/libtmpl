@@ -339,11 +339,6 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
     return leading_zeros;
 }
 
-#define TMPL_INT_TRAILING_ZEROS tmpl_Int_Trailing_Zeros
-#define TMPL_LONG_TRAILING_ZEROS tmpl_Long_Trailing_Zeros
-#define TMPL_INT_LEADING_ZEROS tmpl_Int_Leading_Zeros
-#define TMPL_LONG_LEADING_ZEROS tmpl_Long_Leading_Zeros
-
 #else
 /*  Else for #if defined(__has_builtin).                                      */
 
@@ -354,8 +349,6 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
 #define TMPL_LONG_TRAILING_ZEROS tmpl_Long_Trailing_Zeros
 #define TMPL_UINT_LEADING_ZEROS tmpl_UInt_Leading_Zeros
 #define TMPL_ULONG_LEADING_ZEROS tmpl_ULong_Leading_Zeros
-#define TMPL_INT_LEADING_ZEROS tmpl_Int_Leading_Zeros
-#define TMPL_LONG_LEADING_ZEROS tmpl_Long_Leading_Zeros
 
 #endif
 /*  End of #if defined(__has_builtin).                                        */
@@ -366,8 +359,6 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
 #define TMPL_SHORT_TRAILING_ZEROS tmpl_Short_Trailing_Zeros
 #define TMPL_UCHAR_LEADING_ZEROS tmpl_UChar_Leading_Zeros
 #define TMPL_USHORT_LEADING_ZEROS tmpl_UShort_Leading_Zeros
-#define TMPL_CHAR_LEADING_ZEROS tmpl_Char_Leading_Zeros
-#define TMPL_SHORT_LEADING_ZEROS tmpl_Short_Leading_Zeros
 
 #endif
 /*  End of include guard.                                                     */
