@@ -966,16 +966,16 @@ static int make_config_h(void)
 }
 /*  End of make_config_h.                                                     */
 
-/*  Function for creating include/tmpl_integer.h.                             */
+/*  Function for creating include/tmpl_inttype.h.                             */
 static int make_integer_h(void)
 {
-    /*  Open the file include/tmpl_integer.h using fopen and give the file    *
+    /*  Open the file include/tmpl_inttype.h using fopen and give the file    *
      *  write permissions. If using Windows, we'll need to use backslashes.   *
      *  Forward slashes fail to create the file.                              */
 #if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
-    FILE *fp = fopen(".\\include\\tmpl_integer.h", "w");
+    FILE *fp = fopen(".\\include\\tmpl_inttype.h", "w");
 #else
-    FILE *fp = fopen("./include/tmpl_integer.h", "w");
+    FILE *fp = fopen("./include/tmpl_inttype.h", "w");
 #endif
 
     /*  If fopen fails, it returns NULL. Check that it did not.               */
@@ -1006,15 +1006,15 @@ static int make_integer_h(void)
     fprintf(fp, " *  You should have received a copy of the GNU General Public License         *\n");
     fprintf(fp, " *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *\n");
     fprintf(fp, " ******************************************************************************\n");
-    fprintf(fp, " *                                tmpl_integer                                *\n");
+    fprintf(fp, " *                                tmpl_inttype                                *\n");
     fprintf(fp, " ******************************************************************************\n");
     fprintf(fp, " *  Purpose:                                                                  *\n");
     fprintf(fp, " *      This file is created by the config.c file. It provides macros         *\n");
     fprintf(fp, " *      for fixed-width integers for 8, 16, 32, and 64 bits, as well as       *\n");
     fprintf(fp, " *      typedefs, if such data types exist on your platform.                  *\n");
     fprintf(fp, " ******************************************************************************/\n\n");
-    fprintf(fp, "#ifndef TMPL_INTEGER_H\n");
-    fprintf(fp, "#define TMPL_INTEGER_H\n\n");
+    fprintf(fp, "#ifndef TMPL_INTTYPE_H\n");
+    fprintf(fp, "#define TMPL_INTTYPE_H\n\n");
 
 #ifdef TMPL_SET_NO_INT
     fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n");
@@ -1100,7 +1100,7 @@ static int make_integer_h(void)
     return 0;
 }
 
-/*  Function for creating tmpl_config.h and tmpl_integer.h.                   */
+/*  Function for creating tmpl_config.h and tmpl_inttype.h.                   */
 int main(void)
 {
     if (make_config_h() < 0)

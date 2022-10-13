@@ -75,7 +75,7 @@
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  If 64-bit integers are available, we can make the code shorter.           */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  Check for 64-bit integer support.                                         */
 #if TMPL_HAS_64_BIT_INT == 1
