@@ -31,21 +31,28 @@ extern "C" {
 #endif
 }
 
+#ifndef TMPL_NSAMPS
 #ifdef _MSC_VER
-static size_t memsize()
+#include <windows.h>
+static size_t memsize(void)
 {
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
     GlobalMemoryStatusEx(&status);
-    return static_cast<size_t>(status.ullAvailPhys);
+    return (size_t)(status.ullTotalPhys);
 }
 #else
-static size_t memsize()
+#include <unistd.h>
+static size_t memsize(void)
 {
     long pages = sysconf(_SC_PHYS_PAGES);
     long page_size = sysconf(_SC_PAGE_SIZE);
-    return static_cast<size_t>(pages * page_size);
+    return (size_t)(pages * page_size);
 }
+#endif
+#define NSAMPS(a) (4*memsize()/(5*sizeof(a)))
+#else
+#define NSAMPS(a) (size_t)TMPL_NSAMPS
 #endif
 
 static double time_as_double(clock_t a, clock_t b)
@@ -54,7 +61,6 @@ static double time_as_double(clock_t a, clock_t b)
     return t / static_cast<double>(CLOCKS_PER_SEC);
 }
 
-#define NSAMPS(a) (memsize()/(2*sizeof(a)))
 #define TEST1(type, f0, f1)                                                    \
                                                                                \
 static type random_int(void)                                                   \
