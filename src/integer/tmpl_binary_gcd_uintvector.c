@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  libtmpl is free software: you can redistribute it and/or modify it        *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -15,38 +15,42 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *  Computes the GCD of two non-negative integers.                            *
+ ******************************************************************************
+ *  Author: Ryan Maguire, Dartmouth College                                   *
+ *  Date:   2021/07/29                                                        *
  ******************************************************************************/
 
-#ifndef TMPL_H
-#define TMPL_H
-
-#include <libtmpl/include/tmpl_bool.h>
-#include <libtmpl/include/tmpl_bytes.h>
-#include <libtmpl/include/tmpl_complex.h>
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
-#include <libtmpl/include/tmpl_fft.h>
-#include <libtmpl/include/tmpl_graph_theory.h>
-#include <libtmpl/include/tmpl_integer.h>
-#include <libtmpl/include/tmpl_inttype.h>
-#include <libtmpl/include/tmpl_interpolate.h>
-#include <libtmpl/include/tmpl_inversive_geometry.h>
-#include <libtmpl/include/tmpl_knots.h>
-#include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_matrix.h>
-#include <libtmpl/include/tmpl_numerical.h>
-#include <libtmpl/include/tmpl_optics.h>
-#include <libtmpl/include/tmpl_polynomial.h>
-#include <libtmpl/include/tmpl_ppm.h>
-#include <libtmpl/include/tmpl_quadruple.h>
-#include <libtmpl/include/tmpl_rational.h>
-#include <libtmpl/include/tmpl_special_functions.h>
-#include <libtmpl/include/tmpl_spherical_geometry.h>
-#include <libtmpl/include/tmpl_string.h>
-#include <libtmpl/include/tmpl_svg.h>
-#include <libtmpl/include/tmpl_vec2.h>
 #include <libtmpl/include/tmpl_vector.h>
-#include <libtmpl/include/tmpl_void_pointer.h>
-#include <libtmpl/include/tmpl_window_functions.h>
+#include <libtmpl/include/tmpl_integer.h>
 
-#endif
+unsigned int tmpl_UIntVector_GCD(tmpl_UIntVector *arr)
+{
+    unsigned long int n;
+    unsigned int gcd;
+
+    if (!arr)
+        return 0U;
+
+    if (arr->error_occurred)
+        return 0U;
+
+    if (!arr->data)
+        return 0U;
+
+    if (arr->length == 0UL)
+        return 0U;
+
+    if (arr->length == 1UL)
+        return arr->data[0];
+    else
+        gcd = tmpl_UInt_GCD(arr->data[0], arr->data[1]);
+
+    for (n = 2UL; n < arr->length; ++n)
+        gcd = tmpl_UInt_GCD(gcd, arr->data[n]);
+
+    return gcd;
+}
+/*  End of tmpl_UIntVector_GCD.                                               */
 

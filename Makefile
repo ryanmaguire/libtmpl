@@ -272,10 +272,10 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/complex/
 	mkdir -p $(BUILD_DIR)/src/fft/
 	mkdir -p $(BUILD_DIR)/src/graph_theory/
+	mkdir -p $(BUILD_DIR)/src/integer/
 	mkdir -p $(BUILD_DIR)/src/interpolate/
 	mkdir -p $(BUILD_DIR)/src/knots/
 	mkdir -p $(BUILD_DIR)/src/math/
-	mkdir -p $(BUILD_DIR)/src/number_theory/
 	mkdir -p $(BUILD_DIR)/src/numerical/
 	mkdir -p $(BUILD_DIR)/src/optics/
 	mkdir -p $(BUILD_DIR)/src/polynomial/
@@ -314,7 +314,7 @@ endif
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
-	rm -f include/tmpl_integer.h
+	rm -f include/tmpl_inttype.h
 	rm -f $(TARGET_LIB)
 
 install:
@@ -325,7 +325,7 @@ install:
 uninstall:
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
-	rm -f include/tmpl_integer.h
+	rm -f include/tmpl_inttype.h
 	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)

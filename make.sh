@@ -115,7 +115,7 @@ for arg in "$@"; do
         SODIR="/usr/local/lib"
         INCLUDE_TARGET=/usr/local/include/libtmpl/
         CONFIG_HEADER=include/tmpl_config.h
-        INTEGER_HEADER=include/tmpl_integer.h
+        INTEGER_HEADER=include/tmpl_inttype.h
 
         echo "Removing libtmpl:"
         echo "    Clearing older files..."

@@ -49,9 +49,6 @@
  *  1.) tmpl_knots.h:                                                         *
  *          Header containing the function prototype and typedef's for        *
  *          virtual knots and Gauss tuples.                                   *
- *  2.) tmpl_integer.h:                                                       *
- *          Header file containing fixed-width integer data types for 32-bit  *
- *          and 64-bit integers.                                              *
  *  3.) stdio.h:                                                              *
  *          Standard C library header file containing printf.                 *
  *  4.) stdlib.h:                                                             *

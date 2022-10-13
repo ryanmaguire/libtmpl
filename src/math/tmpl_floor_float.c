@@ -62,7 +62,7 @@
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  If 32-bit integers are available, we can make the code shorter.           */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  Check for 32-bit integer support.                                         */
 #if TMPL_HAS_32_BIT_INT == 1

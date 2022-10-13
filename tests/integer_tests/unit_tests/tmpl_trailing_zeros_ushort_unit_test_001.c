@@ -16,37 +16,26 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-
-#ifndef TMPL_H
-#define TMPL_H
-
-#include <libtmpl/include/tmpl_bool.h>
-#include <libtmpl/include/tmpl_bytes.h>
-#include <libtmpl/include/tmpl_complex.h>
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
-#include <libtmpl/include/tmpl_fft.h>
-#include <libtmpl/include/tmpl_graph_theory.h>
+#include <stdio.h>
 #include <libtmpl/include/tmpl_integer.h>
-#include <libtmpl/include/tmpl_inttype.h>
-#include <libtmpl/include/tmpl_interpolate.h>
-#include <libtmpl/include/tmpl_inversive_geometry.h>
-#include <libtmpl/include/tmpl_knots.h>
-#include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_matrix.h>
-#include <libtmpl/include/tmpl_numerical.h>
-#include <libtmpl/include/tmpl_optics.h>
-#include <libtmpl/include/tmpl_polynomial.h>
-#include <libtmpl/include/tmpl_ppm.h>
-#include <libtmpl/include/tmpl_quadruple.h>
-#include <libtmpl/include/tmpl_rational.h>
-#include <libtmpl/include/tmpl_special_functions.h>
-#include <libtmpl/include/tmpl_spherical_geometry.h>
-#include <libtmpl/include/tmpl_string.h>
-#include <libtmpl/include/tmpl_svg.h>
-#include <libtmpl/include/tmpl_vec2.h>
-#include <libtmpl/include/tmpl_vector.h>
-#include <libtmpl/include/tmpl_void_pointer.h>
-#include <libtmpl/include/tmpl_window_functions.h>
 
-#endif
+int main(void)
+{
+    unsigned short int x = 3U;
+    unsigned short int y = 4U;
 
+    if (tmpl_UShort_Trailing_Zeros(x) != 0)
+    {
+        puts("FAIL");
+        return -1;
+    }
+
+    if (tmpl_UShort_Trailing_Zeros(y) != 2)
+    {
+        puts("FAIL");
+        return -1;
+    }
+
+    puts("PASS");
+    return 0;
+}

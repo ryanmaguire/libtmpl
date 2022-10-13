@@ -61,7 +61,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_integer.h:                                                       *
+ *  1.) tmpl_inttype.h:                                                       *
  *          Header file containing TMPL_HAS_64_BIT_INT macro.                 *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
@@ -77,7 +77,7 @@
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  TMPL_HAS_64_BIT_INT macro found here. tmpl_UInt64 is here if available.   */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  We can get a speed boost if 64-bit int is available.                      */
 #if TMPL_HAS_64_BIT_INT == 1
