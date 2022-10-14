@@ -258,7 +258,7 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 /*  Count-Trailing-Zeros for unsigned int.                                    */
 #if __has_builtin(__builtin_ctz)
-#define TMPL_UINT_TRAILING_ZEROS(n) ((n) == 0 ? 0 : __builtin_ctz((n)))
+#define TMPL_UINT_TRAILING_ZEROS(n) ((n) == 0U ? 0 : __builtin_ctz((n)))
 #else
 #define TMPL_UINT_TRAILING_ZEROS tmpl_UInt_Trailing_Zeros
 #endif
@@ -266,7 +266,7 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 /*  Count-Trailing-Zeros for unsigned long int.                               */
 #if __has_builtin(__builtin_ctzl)
-#define TMPL_ULONG_TRAILING_ZEROS(n) ((n) == 0L ? 0L : __builtin_ctzl((n)))
+#define TMPL_ULONG_TRAILING_ZEROS(n) ((n) == 0UL ? 0L : __builtin_ctzl((n)))
 #else
 #define TMPL_ULONG_TRAILING_ZEROS tmpl_ULong_Trailing_Zeros
 #endif
@@ -290,7 +290,7 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 /*  Count-Leading-Zeros for unsigned int.                                     */
 #if __has_builtin(__builtin_clz)
-#define TMPL_UINT_LEADING_ZEROS(n) ((n) == 0 ? 0 : __builtin_clz((n)))
+#define TMPL_UINT_LEADING_ZEROS(n) ((n) == 0U ? 0 : __builtin_clz((n)))
 #else
 #define TMPL_UINT_LEADING_ZEROS tmpl_UInt_Leading_Zeros
 #endif
@@ -298,11 +298,41 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 /*  Count-Leading-Zeros for unsigned long int.                                */
 #if __has_builtin(__builtin_clzl)
-#define TMPL_ULONG_LEADING_ZEROS(n) ((n) == 0L ? 0L : __builtin_clzl((n)))
+#define TMPL_ULONG_LEADING_ZEROS(n) ((n) == 0UL ? 0L : __builtin_clzl((n)))
 #else
 #define TMPL_ULONG_LEADING_ZEROS tmpl_ULong_Leading_Zeros
 #endif
 /*  End of #if __has_builtin(__builtin_clzl).                                 */
+
+/*  Macros for long long function if long long is available.                  */
+#if TMPL_HAS_LONGLONG == 1
+
+/*  Count-Trailing-Zeros for unsigned long long int.                          */
+#if __has_builtin(__builtin_ctzll)
+#define TMPL_ULLONG_TRAILING_ZEROS(n) ((n) == 0ULL ? 0LL : __builtin_ctzll((n)))
+#else
+#define TMPL_ULLONG_TRAILING_ZEROS tmpl_ULLong_Trailing_Zeros
+#endif
+/*  End of #if __has_builtin(__builtin_ctzll).                                */
+
+/*  Count-Trailing-Zeros for signed long long int.                            */
+#if __has_builtin(__builtin_ffsll)
+#define TMPL_LLONG_TRAILING_ZEROS(n) ((n) == 0LL ? 0LL:__builtin_ffsll((n))-1LL)
+#else
+#define TMPL_LLONG_TRAILING_ZEROS tmpl_LLong_Trailing_Zeros
+#endif
+/*  End of #if __has_builtin(__builtin_ffsl).                                 */
+
+/*  Count-Leading-Zeros for unsigned long long int.                           */
+#if __has_builtin(__builtin_clzll)
+#define TMPL_ULLONG_LEADING_ZEROS(n) ((n) == 0ULL ? 0LL : __builtin_clzll((n)))
+#else
+#define TMPL_ULLONG_LEADING_ZEROS tmpl_ULLong_Leading_Zeros
+#endif
+/*  End of #if __has_builtin(__builtin_clzll).                                */
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 #elif defined(_MSC_VER)
 /*  Else for #if defined(__has_builtin).                                      */
@@ -323,6 +353,14 @@ unsigned long int __inline TMPL_ULONG_TRAILING_ZEROS(unsigned long int n)
     return trailing_zeros;
 }
 
+/*  long long is 64-bits on Windows.                                          */
+unsigned long int __inline TMPL_ULLONG_TRAILING_ZEROS(unsigned long long int n)
+{
+    unsigned long int trailing_zeros = 0UL;
+    _BitScanForward64(&trailing_zeros, n);
+    return trailing_zeros;
+}
+
 /*  Microsoft's compiler has _BitScanReverse, equivalent to leading zeros.    */
 unsigned int __inline TMPL_UINT_LEADING_ZEROS(unsigned int n)
 {
@@ -339,6 +377,14 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
     return leading_zeros;
 }
 
+/*  long long is 64-bits on Windows.                                          */
+unsigned long int __inline TMPL_ULLONG_LEADING_ZEROS(unsigned long long int n)
+{
+    unsigned long int trailing_zeros = 0UL;
+    _BitScanReverse64(&trailing_zeros, n);
+    return trailing_zeros;
+}
+
 #else
 /*  Else for #if defined(__has_builtin).                                      */
 
@@ -349,6 +395,14 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
 #define TMPL_LONG_TRAILING_ZEROS tmpl_Long_Trailing_Zeros
 #define TMPL_UINT_LEADING_ZEROS tmpl_UInt_Leading_Zeros
 #define TMPL_ULONG_LEADING_ZEROS tmpl_ULong_Leading_Zeros
+
+/*  Macros for long long function if long long is available.                  */
+#if TMPL_HAS_LONGLONG == 1
+#define TMPL_LLONG_TRAILING_ZEROS tmpl_LLong_Trailing_Zeros
+#define TMPL_ULLONG_TRAILING_ZEROS tmpl_ULLong_Trailing_Zeros
+#define TMPL_ULLONG_LEADING_ZEROS tmpl_ULLong_Leading_Zeros
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 #endif
 /*  End of #if defined(__has_builtin).                                        */
