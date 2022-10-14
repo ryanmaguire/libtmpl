@@ -1,9 +1,3 @@
-/*  Needed for puts.                                                          */
-#include <stdio.h>
-
-/*  Needed for exit and NULL.                                                 */
-#include <stdlib.h>
-
 /*  Header file which contains aliases for the function in the standard C     *
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
@@ -17,14 +11,8 @@ float tmpl_Real_Poly_Float_Coeffs(float *coeffs, unsigned int degree, float x)
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_Real_Poly_Float_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return TMPL_NANF;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *
@@ -54,14 +42,8 @@ double tmpl_Real_Poly_Double_Coeffs(double *coeffs,
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_Real_Poly_Double_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return TMPL_NAN;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *
@@ -92,14 +74,8 @@ tmpl_Real_Poly_LDouble_Coeffs(long double *coeffs,
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Check this and abort the computation  *
      *  if it's NULL.                                                         */
-    if (coeffs == NULL)
-    {
-        puts("Error Encountered: libtmpl\n"
-             "\tFunction: tmpl_Real_Poly_LDouble_Coeffs\n\n"
-             "The input coefficients pointer is NULL. Trying to access this\n"
-             "will result in a segmentation fault. Aborting computation.\n\n");
-        exit(0);
-    }
+    if (!coeffs)
+        return TMPL_NANL;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
      *  a constant. Check this. If degree is zero, we'll just return the      *
