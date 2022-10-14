@@ -37,12 +37,26 @@ endif
 
 CWARN := -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
 
+ifdef NO_LONGLONG
+LL_FLAG := -DTMPL_SET_LONGLONG_FALSE
+LL_EXCLUDE := \
+	-not -name "tmpl_abs_llong.c" -and
+else
+LL_FLAG :=
+LL_EXCLUDE :=
+endif
+
 ifdef NO_INLINE
 INLINE_FLAG :=
 INLINE_EXCLUDE :=
 else
 INLINE_FLAG := -DTMPL_SET_INLINE_TRUE
 INLINE_EXCLUDE := \
+	-not -name "tmpl_abs_char.c" -and \
+	-not -name "tmpl_abs_short.c" -and \
+	-not -name "tmpl_abs_int.c" -and \
+	-not -name "tmpl_abs_long.c" -and \
+	-not -name "tmpl_abs_llong.c" -and \
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
 	-not -name "tmpl_abs_ldouble.c" -and \
@@ -239,9 +253,9 @@ ASM_EXCLUDE :=
 # End of ifdef NO_ASM.
 endif
 
-ALLCFLAGS := $(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG)
+ALLCFLAGS := $(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG)
 INCLUDE := \( $(ASM_INCLUDE) $(BUILTIN_INCLUDE) -name "*.c" \)
-EXCLUDE := $(ASM_EXCLUDE) $(BUILTIN_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE)
+EXCLUDE := $(ASM_EXCLUDE) $(BUILTIN_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)

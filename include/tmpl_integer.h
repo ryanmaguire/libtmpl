@@ -65,7 +65,30 @@
 #ifndef TMPL_INTEGER_H
 #define TMPL_INTEGER_H
 
+#include <libtmpl/include/tmpl_inttype.h>
+
 #include <libtmpl/include/tmpl_vector.h>
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Abs                                                          *
+ *  Purpose:                                                                  *
+ *      Computes the absolute value of an integer.                            *
+ *  Arguments:                                                                *
+ *      n (int):                                                              *
+ *          An integer.                                                       *
+ *  Output:                                                                   *
+ *      abs_n (int):                                                          *
+ *          The absolute value of n.                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/integer/tmpl_integer_abs_inline.h>
+#else
+extern signed char tmpl_Char_Abs(signed char n);
+extern short int tmpl_Short_Abs(short int n);
+extern int tmpl_Int_Abs(int n);
+extern long int tmpl_Long_Abs(long int n);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

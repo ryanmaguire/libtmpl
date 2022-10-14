@@ -82,6 +82,9 @@
 /*  We can get a speed boost if 32-bit int is available.                      */
 #if TMPL_HAS_32_BIT_INT == 1
 
+/*  Functions for counting the number of leading zeros in an integer are here.*/
+#include <libtmpl/include/tmpl_integer.h>
+
 /*  Function for computing the remainder after division by 2.                 */
 float tmpl_Float_Mod_2(float x)
 {

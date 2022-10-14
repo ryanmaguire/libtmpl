@@ -1015,8 +1015,9 @@ static int make_integer_h(void)
     fprintf(fp, " ******************************************************************************/\n\n");
     fprintf(fp, "#ifndef TMPL_INTTYPE_H\n");
     fprintf(fp, "#define TMPL_INTTYPE_H\n\n");
-    fprintf(fp, "#include <libtmpl/include/tmpl_integer.h>\n\n");
-#ifdef ULLONG_MAX
+#if defined(TMPL_SET_LONGLONG_FALSE)
+    fprintf(fp, "#define TMPL_HAS_LONGLONG 0\n\n");
+#elif defined(ULLONG_MAX)
     fprintf(fp, "#define TMPL_HAS_LONGLONG 1\n\n");
 #else
     fprintf(fp, "#define TMPL_HAS_LONGLONG 0\n\n");

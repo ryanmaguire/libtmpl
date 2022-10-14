@@ -51,6 +51,9 @@ INPLACE=0
 # Enable this with -inline.
 USEINLINE=0
 
+# Macro for long long support.
+USELONGLONG=0
+
 # Whether or not to use libtmpl's implementation of libm.
 USEMATH=1
 
@@ -109,6 +112,9 @@ for arg in "$@"; do
 
     elif [ "$arg" == "-monster" ]; then
         MAKEMONSTER=1
+
+    elif [ "$arg" == "-longlong" ]; then
+        USELONGLONG=1
 
     elif [ "$arg" == "-remove" ]; then
         SONAME="libtmpl.so"
@@ -183,6 +189,11 @@ fi
 # TMPL_SET_INLINE_TRUE with -DTMPL_SET_INLINE_TRUE to enable this macro.
 if [ $USEINLINE == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_INLINE_TRUE"
+    Exclude="$Exclude tmpl_abs_char.c"
+    Exclude="$Exclude tmpl_abs_int.c"
+    Exclude="$Exclude tmpl_abs_short.c"
+    Exclude="$Exclude tmpl_abs_long.c"
+    Exclude="$Exclude tmpl_abs_llong.c"
     Exclude="$Exclude tmpl_abs_double.c"
     Exclude="$Exclude tmpl_abs_float.c"
     Exclude="$Exclude tmpl_abs_ldouble.c"
@@ -221,6 +232,11 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_sin_pade_pi_float.c"
     Exclude="$Exclude tmpl_sin_pade_pi_ldouble.c"
     Exclude="$Exclude tmpl_sin_very_small_double.c"
+fi
+
+if [ $USELONGLONG == 0 ]; then
+	ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
+    Exclude="$Exclude tmpl_abs_llong.c"
 fi
 
 if [ $USEMATH == 1 ]; then

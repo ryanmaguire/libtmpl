@@ -31,7 +31,7 @@ float tmpl_Float_Pow2(signed int expo)
 
 #else
 
-#include <stdlib.h>
+#include <libtmpl/include/tmpl_integer.h>
 #include <float.h>
 
 float tmpl_Float_Pow2(signed int expo)
@@ -42,7 +42,7 @@ float tmpl_Float_Pow2(signed int expo)
     if (expo == 0)
         return x;
 
-    n = abs(expo);
+    n = tmpl_Int_Abs(expo);
 
 #if FLT_MAX_10_EXP > 154
 #define TWO_TO_THE_512 \
