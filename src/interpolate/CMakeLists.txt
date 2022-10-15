@@ -1,0 +1,1 @@
+target_sources(tmpl PRIVATE tmpl_sorted_linear_interpolation.c)

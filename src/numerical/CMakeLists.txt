@@ -1,0 +1,10 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_five_point_derivative.c
+        tmpl_halleys_method.c
+        tmpl_halleys_method_complex.c
+        tmpl_newton_raphson.c
+        tmpl_newton_raphson_poly.c
+        tmpl_newtons_method_complex.c
+)

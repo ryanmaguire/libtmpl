@@ -1,0 +1,17 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_complex_window_function_normalization.c
+        tmpl_coss.c
+        tmpl_kaiser_bessel.c
+        tmpl_kaiser_bessel_2_0.c
+        tmpl_kaiser_bessel_2_5.c
+        tmpl_kaiser_bessel_3_5.c
+        tmpl_kaiser_bessel_modified.c
+        tmpl_kaiser_bessel_modified_2_0.c
+        tmpl_kaiser_bessel_modified_2_5.c
+        tmpl_kaiser_bessel_modified_3_5.c
+        tmpl_norm_eq_width.c
+        tmpl_rect.c
+        tmpl_window_function_normalization.c
+)

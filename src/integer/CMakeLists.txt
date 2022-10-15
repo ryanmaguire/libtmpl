@@ -1,0 +1,27 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_abs_char.c
+        tmpl_abs_int.c
+        tmpl_abs_llong.c
+        tmpl_abs_long.c
+        tmpl_abs_short.c
+        tmpl_binary_gcd_int.c
+        tmpl_binary_gcd_long.c
+        tmpl_binary_gcd_uint.c
+        tmpl_binary_gcd_uintvector.c
+        tmpl_binary_gcd_ulong.c
+        tmpl_leading_zeros_uchar.c
+        tmpl_leading_zeros_uint.c
+        tmpl_leading_zeros_ulong.c
+        tmpl_leading_zeros_ushort.c
+        tmpl_sieve_of_eratosthenes.c
+        tmpl_trailing_zeros_char.c
+        tmpl_trailing_zeros_int.c
+        tmpl_trailing_zeros_long.c
+        tmpl_trailing_zeros_short.c
+        tmpl_trailing_zeros_uchar.c
+        tmpl_trailing_zeros_uint.c
+        tmpl_trailing_zeros_ulong.c
+        tmpl_trailing_zeros_ushort.c
+)

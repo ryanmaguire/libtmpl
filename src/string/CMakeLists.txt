@@ -1,0 +1,11 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_ascii_lower_case.c
+        tmpl_ascii_upper_case.c
+        tmpl_lower_case.c
+        tmpl_make_lower.c
+        tmpl_remove_spaces.c
+        tmpl_strdup.c
+        tmpl_upper_case.c
+)
