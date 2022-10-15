@@ -1,0 +1,9 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_determine_endianness.c
+        tmpl_swap_bytes.c
+        tmpl_swap_most_significant_bit_2.c
+        tmpl_swap_most_significant_bit_4.c
+        tmpl_swap_most_significant_bit_8.c
+)
