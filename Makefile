@@ -90,10 +90,14 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_copysign_ldouble.c" -and \
 	-not -name "tmpl_sin_pade_double.c" -and \
 	-not -name "tmpl_sin_pade_float.c" -and \
+	# FIXME: "tmpl_sin_pade_float.c" not found
 	-not -name "tmpl_sin_pade_ldouble.c" -and \
+	# FiXME: tmpl_sin_pade_ldouble.c not found
 	-not -name "tmpl_sin_pade_pi_double.c" -and \
 	-not -name "tmpl_sin_pade_pi_float.c" -and \
+	# FIXME: tmpl_sin_pade_pi_float.c not found
 	-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
+	# FIXME: tmpl_sin_pade_pi_ldouble.c not found
 	-not -name "tmpl_sin_very_small_double.c" -and
 endif
 
@@ -345,4 +349,3 @@ uninstall:
 	rm -f /usr/local/lib/$(TARGET_LIB)
 
 -include $(DEPS)
-
