@@ -1,17 +1,17 @@
 target_sources(
     PRIVATE
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_ldouble.c>
-        tmpl_arctan2_double.c
-        tmpl_arctan2_float.c
-        tmpl_arctan2_ldouble.c
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_double.c>
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_float.c>
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan2_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan2_float.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan2_ldouble.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_double.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_float.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_ldouble.c>
-        tmpl_arctan_double.c
-        tmpl_arctan_float.c
-        tmpl_arctan_ldouble.c
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan_float.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan_ldouble.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_double.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_float.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_ldouble.c>
@@ -33,7 +33,7 @@ target_sources(
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_double.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_float.c>
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_ldouble.c>
-        tmpl_cos_double.c
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_cos_double.c>
         tmpl_cos_float.c
         tmpl_cos_ldouble.c
         tmpl_cosh.c
@@ -46,8 +46,8 @@ target_sources(
         tmpl_factorial_as_double.c
         tmpl_faddeeva_im.c
         tmpl_falling_factorial.c
-        tmpl_floor_double.c
-        tmpl_floor_float.c
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_floor_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_floor_float.c>
         tmpl_floor_ldouble.c
         tmpl_infinity.c
         tmpl_is_inf.c
@@ -67,7 +67,7 @@ target_sources(
         tmpl_pow2_double.c
         tmpl_pow2_float.c
         tmpl_reverse_array.c
-        tmpl_sin_double.c
+        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_sin_double.c>
         tmpl_sin_float.c
         tmpl_sin_ldouble.c
         $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_pade_double.c>
