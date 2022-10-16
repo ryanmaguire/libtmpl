@@ -9,7 +9,7 @@ option(BUILD_TESTS "" FALSE)
 option(NO_LONGLONG "" FALSE)
 option(NO_INT "" FALSE)
 
-project(libtmpl_library)
+project(libtmpl_library LANGUAGES C)
 
 add_library(tmpl SHARED)
 add_executable(tmpl_config config.c)
@@ -78,3 +78,18 @@ add_subdirectory("src")
 if(BUILD_TESTS)
     add_subdirectory("tests")
 endif()
+
+add_library(tmpl::tmpl ALIAS tmpl)
+
+include(GNUInstallDirs)
+install(
+    TARGETS tmpl
+    RUNTIME
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
+)
