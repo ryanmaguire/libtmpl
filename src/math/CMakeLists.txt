@@ -1,38 +1,38 @@
 target_sources(
     PRIVATE
-        tmpl_abs_double.c
-        tmpl_abs_float.c
-        tmpl_abs_ldouble.c
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_ldouble.c>
         tmpl_arctan2_double.c
         tmpl_arctan2_float.c
         tmpl_arctan2_ldouble.c
-        tmpl_arctan_asymptotic_double.c
-        tmpl_arctan_asymptotic_float.c
-        tmpl_arctan_asymptotic_ldouble.c
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_ldouble.c>
         tmpl_arctan_double.c
         tmpl_arctan_float.c
         tmpl_arctan_ldouble.c
-        tmpl_arctan_maclaurin_double.c
-        tmpl_arctan_maclaurin_float.c
-        tmpl_arctan_maclaurin_ldouble.c
-        tmpl_arctan_pade_double.c
-        tmpl_arctan_pade_float.c
-        tmpl_arctan_pade_ldouble.c
-        tmpl_arctan_very_small_double.c
-        tmpl_arctan_very_small_float.c
-        tmpl_arctan_very_small_ldouble.c
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_pade_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_pade_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_pade_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_very_small_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_very_small_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_very_small_ldouble.c>
         tmpl_base2_mant_and_exp_double.c
         tmpl_base2_mant_and_exp_float.c
         tmpl_cbrt_double.c
         tmpl_cbrt_float.c
-        tmpl_cbrt_pade_double.c
-        tmpl_cbrt_pade_float.c
-        tmpl_cbrt_pade_ldouble.c
-        tmpl_cbrt_taylor_double.c
-        tmpl_cbrt_taylor_float.c
-        tmpl_copysign_double.c
-        tmpl_copysign_float.c
-        tmpl_copysign_ldouble.c
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_pade_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_pade_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_pade_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_taylor_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_taylor_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_ldouble.c>
         tmpl_cos_double.c
         tmpl_cos_float.c
         tmpl_cos_ldouble.c
@@ -70,9 +70,9 @@ target_sources(
         tmpl_sin_double.c
         tmpl_sin_float.c
         tmpl_sin_ldouble.c
-        tmpl_sin_pade_double.c
-        tmpl_sin_pade_pi_double.c
-        tmpl_sin_very_small_double.c
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_pade_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_pade_pi_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_very_small_double.c>
         tmpl_sinc.c
         tmpl_sinh.c
         tmpl_sqrt_double.c
