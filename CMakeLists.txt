@@ -38,7 +38,6 @@ if(OMP)
     endif()
 endif()
 
-# TODO: Check for incompatible requests. inline can't be used with -std=c89/c90.
 if(NOT NO_INLINE)
     if(STDVER STREQUAL "-std=c89")
         message(
