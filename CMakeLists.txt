@@ -5,10 +5,18 @@ option(NO_IEEE "" TRUE)
 option(NO_ASM "" TRUE)
 option(NO_BUILTIN "" TRUE)
 option(FASM "" TRUE)
+option(BUILD_TESTS "" FALSE)
+option(NO_LONGLONG "" FALSE)
 
 project(libtmpl_library)
 
 add_library(tmpl SHARED)
+add_executable(tmpl_config config.c)
+target_source(tmpl PRIVATE "include/tmpl_config.h")
+
+if(NO_LONGLONG)
+    target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
+endif()
 
 if(OMP)
     # Build with OpenMP, if it is supported by the toolchain
@@ -39,10 +47,8 @@ else()
     target_compile_definitions(tmpl PUBLIC TMPL_SET_USE_MATH_TRUE)
 endif()
 
-if(NO_INLINE)
+if(NOT NO_INLINE)
     target_compile_definitions(tmpl PUBLIC TMPL_SET_INLINE_TRUE)
-else()
-    # TODO: set up file exclusions
 endif()
 
 if(NO_IEEE)
@@ -55,8 +61,19 @@ endif()
 
 # TODO: set up ASM support
 
-#target_compile_definitions(tmpl PUBLIC TMPL_USE_INLINE=$<IF:${NO_INLINE},true_string,false_string>)
+# Build config.c and run to generate "include/tmpl_config.h"
+add_custom_command(
+    OUTPUT "include/tmpl_config.h"
+    DEPENDS tmpl_config
+    BYPRODUCTS "include/tmpl_config.h"
+    COMMAND "$<TARGET_FILE:tmpl_config>"
+    VERBATIM
+)
 
 target_include_directories(tmpl PUBLIC include)
 
 add_subdirectory("src")
+
+if(BUILD_TESTS)
+    add_subdirectory("tests")
+endif()
