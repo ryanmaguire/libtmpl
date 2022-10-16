@@ -7,6 +7,7 @@ option(NO_BUILTIN "" TRUE)
 option(FASM "" TRUE)
 option(BUILD_TESTS "" FALSE)
 option(NO_LONGLONG "" FALSE)
+option(NO_INT "" FALSE)
 
 project(libtmpl_library)
 
@@ -44,19 +45,19 @@ if(NO_MATH)
     endif()
     # TODO: set up file exclusions
 else()
-    target_compile_definitions(tmpl PUBLIC TMPL_SET_USE_MATH_TRUE)
+    target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MATH_TRUE)
 endif()
 
 if(NOT NO_INLINE)
-    target_compile_definitions(tmpl PUBLIC TMPL_SET_INLINE_TRUE)
+    target_compile_definitions(tmpl_config PUBLIC TMPL_SET_INLINE_TRUE)
 endif()
 
 if(NO_IEEE)
-    target_compile_definitions(tmpl PUBLIC TMPL_SET_TMPL_USE_IEEE_FALSE)
+    target_compile_definitions(tmpl_config PUBLIC TMPL_SET_TMPL_USE_IEEE_FALSE)
 endif()
 
 if(NO_INT)
-    target_compile_definitions(tmpl PUBLIC TMPL_SET_NO_INT)
+    target_compile_definitions(tmpl_config PUBLIC TMPL_SET_NO_INT)
 endif()
 
 # TODO: set up ASM support
