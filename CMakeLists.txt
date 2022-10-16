@@ -9,6 +9,10 @@ option(BUILD_TESTS "" FALSE)
 option(NO_LONGLONG "" FALSE)
 option(NO_INT "" FALSE)
 
+if(NOT DEFINED STDVER)
+    set(STDVER "-std=c89" CACHE STRING "" FORCE)
+endif()
+
 project(libtmpl_library LANGUAGES C)
 
 add_library(tmpl SHARED)
@@ -35,6 +39,21 @@ if(OMP)
 endif()
 
 # TODO: Check for incompatible requests. inline can't be used with -std=c89/c90.
+if(NOT NO_INLINE)
+    if(STDVER STREQUAL "-std=c89")
+        message(
+            FATAL_ERROR
+            "Error: inline mode cannot be used with C89.\n        Set -std to a version supporting inline."
+        )
+    endif()
+
+    if(STDVER STREQUAL "-std=c90")
+        message(
+            FATAL_ERROR
+            "Error: inline mode cannot be used with C90.\n        Set -std to a version supporting inline."
+        )
+    endif()
+endif()
 
 if(NO_MATH)
     # Do not use libtmpl's libm implementation
