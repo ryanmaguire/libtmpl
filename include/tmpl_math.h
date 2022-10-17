@@ -1009,37 +1009,123 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  If IEEE-754 support for float does exist, the following macros should be  *
  *  set. Another sanity check, make sure they are.                            */
 #if TMPL_HAS_IEEE754_FLOAT == 1
+
 #ifndef TMPL_FLOAT_BIAS
 #error "tmpl_math.h: TMPL_FLOAT_BIAS undefined."
+#endif
+
+#ifndef TMPL_FLOAT_UBIAS
+#error "tmpl_math.h: TMPL_FLOAT_UBIAS undefined."
 #endif
 
 #ifndef TMPL_FLOAT_NANINF_EXP
 #error "tmpl_math.h: TMPL_FLOAT_NANINF_EXP undefined."
 #endif
+
+#ifndef TMPL_FLOAT_MANTISSA_LENGTH
+#error "tmpl_math.h: TMPL_FLOAT_MANTISSA_LENGTH undefined."
+#endif
+
+#ifndef TMPL_FLOAT_MANTISSA_ULENGTH
+#error "tmpl_math.h: TMPL_FLOAT_MANTISSA_ULENGTH undefined."
+#endif
+
+#ifndef TMPL_FLOAT_NORMALIZE
+#error "tmpl_math.h: TMPL_FLOAT_NORMALIZE undefined."
+#endif
+
+#ifndef TMPL_FLOAT_IS_NAN_OR_INF
+#error "tmpl_math.h: TMPL_FLOAT_IS_NAN_OR_INF undefined."
+#endif
+
+#ifndef TMPL_FLOAT_IS_NAN
+#error "tmpl_math.h: TMPL_FLOAT_IS_NAN_OR_INF undefined."
+#endif
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 /*  Same sanity check for double precision macros.                            */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
+
 #ifndef TMPL_DOUBLE_BIAS
 #error "tmpl_math.h: TMPL_DOUBLE_BIAS undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_UBIAS
+#error "tmpl_math.h: TMPL_DOUBLE_UBIAS undefined."
 #endif
 
 #ifndef TMPL_DOUBLE_NANINF_EXP
 #error "tmpl_math.h: TMPL_DOUBLE_NANINF_EXP undefined."
 #endif
+
+#ifndef TMPL_DOUBLE_MANTISSA_LENGTH
+#error "tmpl_math.h: TMPL_DOUBLE_MANTISSA_LENGTH undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_MANTISSA_ULENGTH
+#error "tmpl_math.h: TMPL_DOUBLE_MANTISSA_ULENGTH undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_NORMALIZE
+#error "tmpl_math.h: TMPL_DOUBLE_NORMALIZE undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_NAN_OR_INF
+#error "tmpl_math.h: TMPL_DOUBLE_IS_NAN_OR_INF undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_NAN
+#error "tmpl_math.h: TMPL_DOUBLE_IS_NAN_OR_INF undefined."
+#endif
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 /*  Lastly, sanity check for long double versions of these macros.            */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
+
 #ifndef TMPL_LDOUBLE_BIAS
 #error "tmpl_math.h: TMPL_LDOUBLE_BIAS undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_UBIAS
+#error "tmpl_math.h: TMPL_LDOUBLE_UBIAS undefined."
 #endif
 
 #ifndef TMPL_LDOUBLE_NANINF_EXP
 #error "tmpl_math.h: TMPL_LDOUBLE_NANINF_EXP undefined."
 #endif
+
+#ifndef TMPL_LDOUBLE_MANTISSA_LENGTH
+#error "tmpl_math.h: TMPL_LDOUBLE_MANTISSA_LENGTH undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_MANTISSA_ULENGTH
+#error "tmpl_math.h: TMPL_LDOUBLE_MANTISSA_ULENGTH undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_NORMALIZE
+#error "tmpl_math.h: TMPL_LDOUBLE_NORMALIZE undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_IS_NAN_OR_INF
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_NAN_OR_INF undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_IS_NAN
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_NAN_OR_INF undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_EXPO_BITS
+#error "tmpl_math.h: TMPL_LDOUBLE_EXPO_BITS undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_IS_NEGATIVE
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_NEGATIVE undefined."
+#endif
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
