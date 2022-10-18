@@ -11,7 +11,29 @@
 [ ] erfc
 [ ] erfcx
 [ ] exp
-[ ]
+[ ] factorial
+[ ] falling_factorial
+[ ] faddeeva_im_part
+[ ] floor
+[ ] infinity
+[ ] is_inf
+[ ] is_nan
+[ ] is_nan_or_inf
+[ ] log
+[ ] max
+[ ] min
+[ ] mod_2
+[ ] nan
+[ ] poly_eval
+[ ] poly_deriv_eval
+[ ] pow_2
+[ ] reverse
+[ ] sinc
+[ ] sin
+[ ] sinh
+[ ] sqrt
+[ ] tan
+[ ] tanh
 
 Run api-sanity-checker on library and pass generated tests.
 
