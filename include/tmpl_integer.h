@@ -92,6 +92,26 @@ extern long int tmpl_Long_Abs(long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_UInt_Factorial                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the factorial of an integer.                                 *
+ *  Arguments:                                                                *
+ *      n (unsigned int):                                                     *
+ *          An integer.                                                       *
+ *  Output:                                                                   *
+ *      n! (int):                                                             *
+ *          The factorial of n.                                               *
+ *  Notes:                                                                    *
+ *      Returns 0 on overflow. n! is never zero for positive integers, so     *
+ *      this can be used for error checking.                                  *
+ ******************************************************************************/
+extern unsigned char tmpl_UChar_Factorial(unsigned char n);
+extern unsigned short int tmpl_UShort_Factorial(unsigned short int n);
+extern unsigned int tmpl_UInt_Factorial(unsigned int n);
+extern unsigned long int tmpl_ULong_Factorial(unsigned long int n);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_UChar_Leading_Zeros                                              *
  *  Purpose:                                                                  *
  *      Computes the number of leading zeros for unsigned integers. Similar   *
