@@ -41,7 +41,7 @@
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          The absolute value can be computed by setting s to 0. Note, this  *
+ *          Set the sign bit of the input to zero. Note, this                 *
  *          method will work for NaN and inf, and the output will be          *
  *          "positive" NaN and positive infinity, respectively.               *
  *      Error:                                                                *
@@ -68,6 +68,12 @@
  *          to zero. abs_lo depends on whether x_hi and x_lo have the same    *
  *          sign. This can be computed via the exclusive or, or XOR. The sign *
  *          of abs_lo is the exclusive or of the signs of x_hi and x_lo.      *
+ *      Error:                                                                *
+ *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
+ *              max relative error: 0.0                                       *
+ *              rms relative error: 0.0                                       *
+ *              max absolute error: 0.0                                       *
+ *              rms absolute error: 0.0                                       *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
