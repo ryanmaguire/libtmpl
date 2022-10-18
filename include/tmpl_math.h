@@ -1285,8 +1285,12 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_math_abs_inline.h>
+#include <libtmpl/include/math/tmpl_math_abs_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_abs_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_abs_ldouble_inline.h>
+
 #else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
 
 /*  Inline not requested, use the external functions in src/math.             */
 extern float tmpl_Float_Abs(float x);
