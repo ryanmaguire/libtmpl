@@ -1,3 +1,18 @@
+[ ] abs
+[ ] atan2
+[ ] atan
+[ ] cbrt
+[ ] frexp
+[ ] copysign
+[ ] cos
+[ ] cosh
+[ ] dist
+[ ] erf
+[ ] erfc
+[ ] erfcx
+[ ] exp
+[ ]
+
 Run api-sanity-checker on library and pass generated tests.
 
 Finish Proofreading:

@@ -1724,10 +1724,23 @@ extern float tmpl_Float_Exp(float x);
 extern double tmpl_Double_Exp(double x);
 extern long double tmpl_LDouble_Exp(long double x);
 
-extern unsigned long tmpl_Factorial(unsigned int n);
-
-extern float tmpl_Factorial_As_Float(unsigned int n);
-extern double tmpl_Factorial_As_Double(unsigned int n);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Factorial                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the factorial of an integer, stored as a double.             *
+ *  Arguments:                                                                *
+ *      unsigned int n:                                                       *
+ *          An integer.                                                       *
+ *  Output:                                                                   *
+ *      double n!:                                                            *
+ *          The factorial of n.                                               *
+ *  Notes:                                                                    *
+ *      Returns +Inf on overflow.                                             *
+ ******************************************************************************/
+extern float tmpl_Float_Factorial(unsigned int n);
+extern double tmpl_Double_Factorial(unsigned int n);
+extern long double tmpl_LDouble_Factorial(unsigned int n);
 
 /******************************************************************************
  *  Function:                                                                 *
