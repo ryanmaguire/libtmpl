@@ -1,59 +1,27 @@
-#ifndef TMPL_MATH_ARCTAN_TABLE_H
-#define TMPL_MATH_ARCTAN_TABLE_H
-
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *                                     u - v                                  *
- *          atan(u) = atan(v) + atan( -------- )                              *
- *                                     1 + uv                                 *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
  *                                                                            *
- *  The values v and atan(v) are pre-computed below for the calculation.      */
-static const float tmpl_atan_float_v[8] = {
-    0.05F,
-    0.18F,
-    0.35F,
-    0.72F,
-    1.35F,
-    2.5F,
-    4.0F,
-    8.0F
-};
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************/
 
-static const float tmpl_atan_float_atan_of_v[8] = {
-    0.0499583957219427614100063F,
-    0.178092938231197549667920F,
-    0.336674819386727181396699F,
-    0.624023052976756847589791F,
-    0.933247528656203869893663F,
-    1.19028994968253173292773F,
-    1.32581766366803246505924F,
-    1.44644133224813518419997F
-};
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_ARCTAN_LDOUBLE_TABLES_H
+#define TMPL_MATH_ARCTAN_LDOUBLE_TABLES_H
 
-static const double tmpl_atan_double_v[8] = {
-    0.05,
-    0.18,
-    0.35,
-    0.72,
-    1.35,
-    2.5,
-    4.0,
-    8.0
-};
-
-static const double tmpl_atan_double_atan_of_v[8] = {
-    0.0499583957219427614100063,
-    0.178092938231197549667920,
-    0.336674819386727181396699,
-    0.624023052976756847589791,
-    0.933247528656203869893663,
-    1.19028994968253173292773,
-    1.32581766366803246505924,
-    1.44644133224813518419997
-};
-
+/*  64-bit and 80-bit long double use the same table as 64-bit double.        */
 #if \
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
@@ -63,6 +31,21 @@ static const double tmpl_atan_double_atan_of_v[8] = {
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
 
+/******************************************************************************
+ *                          64 BIT DOUBLE PRECISION                           *
+ *                                    and                                     *
+ *                         80 BIT EXTENDED PRECISION                          *
+ *                                    and                                     *
+ *                              PORTABLE VERSION                              *
+ ******************************************************************************/
+
+/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
+ *                                                                            *
+ *                                     u - v                                  *
+ *          atan(u) = atan(v) + atan( -------- )                              *
+ *                                     1 + uv                                 *
+ *                                                                            *
+ *  The values v and atan(v) are pre-computed below for the calculation.      */
 static const long double tmpl_atan_ldouble_v[8] = {
     0.05L,
     0.18L,
@@ -86,6 +69,23 @@ static const long double tmpl_atan_ldouble_atan_of_v[8] = {
 };
 
 #else
+/*  Else for 64-bit / 80-bit / portable versions of the table.                */
+
+/******************************************************************************
+ *                        128 BIT QUADRUPLE PRECISION                         *
+ *                                    and                                     *
+ *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
+ ******************************************************************************/
+
+/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
+ *                                                                            *
+ *                                     u - v                                  *
+ *          atan(u) = atan(v) + atan( -------- )                              *
+ *                                     1 + uv                                 *
+ *                                                                            *
+ *  The values atan(v) are pre-computed below for the calculation. A lot more *
+ *  values are used than with extended precision to get ~10^-34 relative      *
+ *  error in a short amount of time.                                          */
 static const long double tmpl_ldouble_atan_n_by_8[129] = {
     0.0000000000000000000000000000000000000000E0L,
     1.2435499454676143503135484916387102557317E-1L,
@@ -218,4 +218,7 @@ static const long double tmpl_ldouble_atan_n_by_8[129] = {
     1.5083775167989392707573425786542463284923E0L
 };
 #endif
+/*  End of 64-bit / 80-bit vs 128-bit versions.                               */
+
 #endif
+/*  End of include guard.                                                     */
