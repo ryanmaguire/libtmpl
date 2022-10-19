@@ -16,22 +16,22 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_arctan_pade_float                           *
+ *                       tmpl_arctan_pade_double_inline                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (11, 11) Pade approximant of atan(x) at single precision.*
+ *      Computes the (11, 11) Pade approximant of atan(x) at double precision.*
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Arctan_Pade                                                *
+ *      tmpl_Double_Arctan_Pade                                               *
  *  Purpose:                                                                  *
  *      Computes the Pade approximant of order (11, 11) for arctan.           *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      atan_x (float):                                                       *
+ *      atan_x (double):                                                      *
  *          The Pade approximation of atan(x).                                *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -58,12 +58,14 @@
  *          |  5  |   -1679 / 247401  |     33 / 4199    |                    *
  *          ----------------------------------------------                    *
  *  Notes:                                                                    *
- *      Surprisingly accurate for a fairly large range. For |x| < 1.0,        *
- *      accurate to single precision (10^-8). For |x| < 6.0, max relative     *
- *      error is 5.0 x 10^-2. The function becomes unusable for larger values.*
+ *      Surprisingly accurate for a fairly large range. For |x| < 0.4,        *
+ *      accurate to double precision (10^-16). For |x| < 1.0, accurate to     *
+ *      8 decimals (max rel error bounded by 5 x 10^-9). For |x| < 6.0,       *
+ *      max relative error is 5.0 x 10^-2. The function becomes unusable for  *
+ *      larger arguments.                                                     *
  *                                                                            *
- *      This function is about 1.5x faster than calling atan directly. Use if *
- *      you know your argument is small, or if you don't need all 8 decimals. *
+ *      This function is about 3x faster than calling atan directly. Use if   *
+ *      you know your argument is small, or if you don't need all 16 decimals.*
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -76,46 +78,51 @@
  *  Date:       September 22, 2022                                            *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_ARCTAN_PADE_DOUBLE_INLINE_H
+#define TMPL_MATH_ARCTAN_PADE_DOUBLE_INLINE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the Pade approximant of (atan(x) - x)/x.*/
-#define P4 (-6.786553005040399998383191660502584872333E-03F)
-#define P3 (-1.073552227908707342586157269925514065275E-01F)
-#define P2 (-4.461152882205513784461152882205513784461E-01F)
-#define P1 (-6.730158730158730158730158730158730158730E-01F)
-#define P0 (-3.333333333333333333333333333333333333333E-01F)
+#define P4 (-6.786553005040399998383191660502584872333E-03)
+#define P3 (-1.073552227908707342586157269925514065275E-01)
+#define P2 (-4.461152882205513784461152882205513784461E-01)
+#define P1 (-6.730158730158730158730158730158730158730E-01)
+#define P0 (-3.333333333333333333333333333333333333333E-01)
 
 /*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q5 (7.859014050964515360800190521552750654918E-03F)
-#define Q4 (1.702786377708978328173374613003095975232E-01F)
-#define Q3 (1.021671826625386996904024767801857585139E+00F)
-#define Q2 (2.481203007518796992481203007518796992481E+00F)
-#define Q1 (2.619047619047619047619047619047619047619E+00F)
-#define Q0 (1.000000000000000000000000000000000000000E+00F)
+#define Q5 (7.859014050964515360800190521552750654918E-03)
+#define Q4 (1.702786377708978328173374613003095975232E-01)
+#define Q3 (1.021671826625386996904024767801857585139E+00)
+#define Q2 (2.481203007518796992481203007518796992481E+00)
+#define Q1 (2.619047619047619047619047619047619047619E+00)
+#define Q0 (1.000000000000000000000000000000000000000E+00)
 
 /*  Function for computing the (11, 11) Pade approximant of atan(x).          */
-float tmpl_Float_Arctan_Pade(float x)
+TMPL_INLINE_DECL
+double tmpl_Double_Arctan_Pade(double x)
 {
     /*  The numerator is in terms of x^{2n+1} and the denominator is in terms *
      *  of x^{2n}. Compute the square of x and use this.                      */
-    const float x2 = x*x;
+    const double x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = x2*(P0 + x2*(P1 + x2*(P2 + x2*(P3 + x2*P4))));
-    const float q = Q0 + x2*(Q1 + x2*(Q2 + x2*(Q3 + x2*(Q4 + x2*Q5))));
+    const double p = x2*(P0 + x2*(P1 + x2*(P2 + x2*(P3 + x2*P4))));
+    const double q = Q0 + x2*(Q1 + x2*(Q2 + x2*(Q3 + x2*(Q4 + x2*Q5))));
 
     /*  p/q is the Pade approximant for (atan(x) - x)/x. Compute atan(x) by   *
      *  adding 1 and multiplying by x.                                        */
-    return x*(1.0F + p/q);
+    return x*(1.0 + p/q);
 }
-/*  End of tmpl_Float_Arctan_Pade.                                            */
+/*  End of tmpl_Double_Arctan_Pade.                                           */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef P4
@@ -131,4 +138,7 @@ float tmpl_Float_Arctan_Pade(float x)
 #undef Q0
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */
