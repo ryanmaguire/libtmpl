@@ -42,7 +42,7 @@
  *              positive real numbers. Very accurate for x > 16.              *
  *          tmpl_LDouble_Arctan_Maclaurin (tmpl_math.h):                      *
  *              Computes the Maclaurin series of arctan. More terms are used  *
- *              in this function than tmpl_Double_Arctan_Very_Small.          *
+ *              in this function than tmpl_LDouble_Arctan_Very_Small.         *
  *          tmpl_LDouble_Arctan_Very_Small (tmpl_math.h):                     *
  *              Computes the inverse tangent of small numbers using a         *
  *              Maclaurin series. Accurate for values smaller than 1/32.      *
@@ -74,7 +74,7 @@
  *          statements used in the portable method.                           *
  *                                                                            *
  *          The following values were obtained via guess-and-check to reduce  *
- *          the relative error to below 2 * 10^-16 ~= 2^-52 = double epsilon. *
+ *          the relative error to below 10^-19 ~= 2^-63 = extended epsilon.   *
  *                                                                            *
  *                                     u - v                                  *
  *          atan(u) = atan(v) + atan( -------- )                              *
@@ -97,8 +97,8 @@
  *              rms absolute error: 1.1660491924987274e-16                    *
  *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
  *          less than 1 ULP (~2 x 10^-16).                                    *
- *      Error (64-Bit Double):                                                *
- *          Based on 1,124,081,868 random samples with -10^6 < x < 10^6.       *
+ *      Error (80-Bit Extended):                                              *
+ *          Based on 1,124,081,868 random samples with -10^6 < x < 10^6.      *
  *              max relative error: 1.0760955259629269e-19                    *
  *              rms relative error: 3.4510708882926869e-20                    *
  *              max absolute error: 1.0842021724855044e-19                    *
@@ -140,14 +140,14 @@
  *              positive real numbers. Very accurate for x > 16.              *
  *          tmpl_LDouble_Arctan_Maclaurin (tmpl_math.h):                      *
  *              Computes the Maclaurin series of arctan. More terms are used  *
- *              in this function than tmpl_Double_Arctan_Very_Small.          *
+ *              in this function than tmpl_LDouble_Arctan_Very_Small.         *
  *          tmpl_LDouble_Arctan_Very_Small (tmpl_math.h):                     *
  *              Computes the inverse tangent of small numbers using a         *
  *              Maclaurin series. Accurate for values smaller than 1/32.      *
  *          tmpl_LDouble_Is_NaN (tmpl_math.h):                                *
- *              Determines if a double is Not-a-Number.                       *
+ *              Determines if a long double is Not-a-Number.                  *
  *          tmpl_LDouble_Is_Inf (tmpl_math.h):                                *
- *              Determines if a double is infinity.                           *
+ *              Determines if a long double is infinity.                      *
  *      Method:                                                               *
  *          Same double / extended but use if-then statements to narrow       *
  *          the range of x and use the appropriate values in the table.       *
