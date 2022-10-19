@@ -1471,16 +1471,23 @@ extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
  *      significantly faster than atan (math.h) and tmpl_Double_Arctan.       *
  ******************************************************************************/
 
-/*  This function is a rational function that is worth inlining.              */
+/*  This function is small enough to inline.                                  */
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_pade_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_pade_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_pade_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_pade_ldouble_inline.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
 extern float tmpl_Float_Arctan_Pade(float x);
 extern double tmpl_Double_Arctan_Pade(double x);
 extern long double tmpl_LDouble_Arctan_Pade(long double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

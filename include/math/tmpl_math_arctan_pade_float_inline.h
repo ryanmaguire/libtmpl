@@ -76,11 +76,15 @@
  *  Date:       September 22, 2022                                            *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_ARCTAN_PADE_FLOAT_INLINE_H
+#define TMPL_MATH_ARCTAN_PADE_FLOAT_INLINE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -101,6 +105,7 @@
 #define Q0 (1.000000000000000000000000000000000000000E+00F)
 
 /*  Function for computing the (11, 11) Pade approximant of atan(x).          */
+TMPL_INLINE_DECL
 float tmpl_Float_Arctan_Pade(float x)
 {
     /*  The numerator is in terms of x^{2n+1} and the denominator is in terms *
@@ -131,4 +136,7 @@ float tmpl_Float_Arctan_Pade(float x)
 #undef Q0
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */
