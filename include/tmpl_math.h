@@ -1439,12 +1439,19 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_ldouble_inline.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
 extern float tmpl_Float_Arctan_Maclaurin(float x);
 extern double tmpl_Double_Arctan_Maclaurin(double x);
 extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
