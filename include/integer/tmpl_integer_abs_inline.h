@@ -7,25 +7,37 @@
 TMPL_INLINE_DECL
 signed char tmpl_Char_Abs(signed char n)
 {
-    return (n < 0x00 ? -n : n);
+    if (n < 0x00)
+        return -n;
+    else
+        return n;
 }
 
 TMPL_INLINE_DECL
 short int tmpl_Short_Abs(short int n)
 {
-    return (n < 0 ? -n : n);
+    if (n < 0)
+        return -n;
+    else
+        return n;
 }
 
 TMPL_INLINE_DECL
 int tmpl_Int_Abs(int n)
 {
-    return (n < 0 ? -n : n);
+    if (n < 0)
+        return -n;
+    else
+        return n;
 }
 
 TMPL_INLINE_DECL
 long int tmpl_Long_Abs(long int n)
 {
-    return (n < 0L ? -n : n);
+    if (n < 0L)
+        return -n;
+    else
+        return n;
 }
 
 #if TMPL_HAS_LONGLONG == 1
@@ -37,3 +49,4 @@ long long int tmpl_LLong_Abs(long long int n)
 #endif
 
 #endif
+/*  End of include guard.                                                     */

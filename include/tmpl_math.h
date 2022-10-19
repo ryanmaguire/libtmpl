@@ -1401,12 +1401,20 @@ extern long double tmpl_LDouble_Arctan(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_ldouble_inline.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the external ones in src/math.                              */
 extern float tmpl_Float_Arctan_Asymptotic(float x);
 extern double tmpl_Double_Arctan_Asymptotic(double x);
 extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
