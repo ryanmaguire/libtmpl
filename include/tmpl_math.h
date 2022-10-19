@@ -1507,16 +1507,23 @@ extern long double tmpl_LDouble_Arctan_Pade(long double x);
  *      is accurate to 2 x 10^-16 relative error in this range.               *
  ******************************************************************************/
 
-/*  This function is a rational function that is worth inlining.              */
+/*  This function should be inlined if possible.                              */
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_very_small_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_very_small_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_very_small_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_arctan_very_small_ldouble_inline.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
 extern float tmpl_Float_Arctan_Very_Small(float x);
 extern double tmpl_Double_Arctan_Very_Small(double x);
 extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
