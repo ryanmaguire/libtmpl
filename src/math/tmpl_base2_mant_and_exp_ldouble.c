@@ -42,7 +42,8 @@
  *      None (void).                                                          *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          None.                                                             *
+ *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
+ *              Computes the absolute value of a long double.                 *
  *      Method:                                                               *
  *          Extract the exponent by subtracting the bias. Set the exponent    *
  *          part of the input to the bias and return.                         *
@@ -52,8 +53,27 @@
  *                  Set expo to zero, and mant to +NaN or +Inf, respectively. *
  *              Zero:                                                         *
  *                  Set expo to zero, and mant to +zero.                      *
- *      Error:                                                                *
+ *      Error (64-bit double / 80-bit long double / 128-bit quadruple):       *
  *          Based on 631,175,086 random samples.                              *
+ *              max mant relative error: 0.000000e+00                         *
+ *              rms mant relative error: 0.000000e+00                         *
+ *              max mant absolute error: 0.000000e+00                         *
+ *              rms mant absolute error: 0.000000e+00                         *
+ *              max expo relative error: 0.000000e+00                         *
+ *              rms expo relative error: 0.000000e+00                         *
+ *              max expo absolute error: 0.000000e+00                         *
+ *              rms expo absolute error: 0.000000e+00                         *
+ *      Error 128-bit double-double:                                          *
+ *          Based on 20,000,000 random samples with 0 < x-1 < 10^-309         *
+ *              max mant relative error: 4.940656e-324                        *
+ *              rms mant relative error: 0.000000e+00                         *
+ *              max mant absolute error: 4.940656e-324                        *
+ *              rms mant absolute error: 0.000000e+00                         *
+ *              max expo relative error: 0.000000e+00                         *
+ *              rms expo relative error: 0.000000e+00                         *
+ *              max expo absolute error: 0.000000e+00                         *
+ *              rms expo absolute error: 0.000000e+00                         *
+ *          Based on 20,000,000 random samples with 10^-200 < x < 10^200      *
  *              max mant relative error: 0.000000e+00                         *
  *              rms mant relative error: 0.000000e+00                         *
  *              max mant absolute error: 0.000000e+00                         *
@@ -188,7 +208,90 @@ void tmpl_LDouble_Base2_Mant_and_Exp(long double x,
 #else
 /*  Else for 64-bit / 80-bit / 128-bit version.                               */
 
-/*  TODO: double-double not-yet implemented.                                  */
+/******************************************************************************
+ *                       128-bit Double-Double Version                        *
+ ******************************************************************************/
+
+/*  Function for computing the scientific form of the input. Given x, return  *
+ *  the values m and e such that |x| = m * 2^e with 1 <= m < 2.               */
+void tmpl_LDouble_Base2_Mant_and_Exp(long double x,
+                                     long double *mant,
+                                     signed int *expo)
+{
+    /*  Words for the high and low part of the long double.                   */
+    tmpl_IEEE754_Double whi, wlo;
+
+    /*  And a word for the long double itself.                                */
+    tmpl_IEEE754_LDouble w;
+
+    /*  This function computes |x| = m * 2^e, so compute |x|.                 */
+    w.r = tmpl_LDouble_Abs(x);
+
+    /*  Extract the hi and low parts of the input.                            */
+    whi.r = w.d[0];
+    wlo.r = w.d[1];
+
+    /*  Special case, NaN or infinity.                                        */
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(whi))
+    {
+        *expo = 0;
+        *mant = w.r;
+        return;
+    }
+
+    /*  If the high word is subnormal / denormal, the low word must be zero.  */
+    else if (whi.bits.expo == 0x00U)
+    {
+        /*  Special case, the input is zero.                                  */
+        if (whi.r == 0.0)
+        {
+            *mant = w.r;
+            *expo = 0;
+            return;
+        }
+
+        /*  Otherwise, normalize the high word.                               */
+        whi.r *= TMPL_DOUBLE_NORMALIZE;
+
+        /*  Compute the exponent by subtracting off the bias.                 */
+        *expo = (signed int)(whi.bits.expo) - TMPL_DOUBLE_BIAS;
+
+        /*  Since we normalized the value, subtract off this power of two.    */
+        *expo = *expo - TMPL_DOUBLE_MANTISSA_LENGTH;
+
+        /*  Set the exponent bits to the bias. Now 1 <= whi.r < 2.            */
+        whi.bits.expo = TMPL_DOUBLE_UBIAS;
+
+        /*  Load the doubles into the long double.                            */
+        w.d[0] = whi.r;
+        w.d[1] = wlo.r;
+        *mant = w.r;
+        return;
+    }
+
+    /*  If whi expo is much larger than wlo, set low to zero. Maximum         *
+     *  relative error this can cause is 10^-308, well below quad precision.  */
+    if (whi.bits.expo > wlo.bits.expo + TMPL_DOUBLE_UBIAS)
+        wlo.r = 0.0;
+
+    /*  Otherwise, subtract whi's exponent from wlo since we will be setting  *
+     *  whi's exponent to the bias later.                                     */
+    else
+        wlo.bits.expo = (TMPL_DOUBLE_UBIAS + wlo.bits.expo) - whi.bits.expo;
+
+    /*  The exponent can be computed from whi double by subtracting the bias. */
+    *expo = (signed int)whi.bits.expo - TMPL_DOUBLE_BIAS;
+
+    /*  Set the exponent bits to the bias. Now 1 <= whi.r < 2.                */
+    whi.bits.expo = TMPL_DOUBLE_UBIAS;
+
+    /*  Load the two doubles into the long double and return.                 */
+    w.d[0] = whi.r;
+    w.d[1] = wlo.r;
+    *mant = w.r;
+    return;
+}
+/*  End of tmpl_LDouble_Base2_Mant_and_Exp.                                   */
 
 #endif
 /*  End of double-double version.                                             */
