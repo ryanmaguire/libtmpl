@@ -264,21 +264,21 @@ DEPS := $(OBJS:.o=.d)
 
 all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
 
-include/tmpl_config.h: ./config.c
+include/tmpl_config.h: ./config.c $(BUILD_DIR)
 	$(CC) $(ALLCFLAGS) config.c -o config.out
 	./config.out
 	rm -f config.out
 
-$(TARGET_LIB): $(OBJS)
+$(TARGET_LIB): $(OBJS) include/tmpl_config.h
 	$(CC) $(OBJS) $(LFLAGS) -o $@
 
-$(BUILD_DIR)/%.c.o: %.c
+$(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.S.o: %.S
+$(BUILD_DIR)/%.S.o: %.S include/tmpl_config.h
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.fasm.o: %.fasm
+$(BUILD_DIR)/%.fasm.o: %.fasm include/tmpl_config.h
 	fasm $< $@
 
 $(BUILD_DIR):
