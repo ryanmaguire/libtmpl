@@ -118,9 +118,7 @@
  *              max abs error: 3.6977854932234928e-32                         *
  *              rms abs error: 7.6912561628308798e-33                         *
  *  128-Bit Double-Double Version:                                            *
- *      Called Functions:                                                     *
- *          tmpl_LDouble_Cbrt_Taylor (tmpl_math.h):                           *
- *              Computes the Taylor series of cbrt(x) about x = 1.            *
+ *      None.                                                                 *
  *      Method:                                                               *
  *          Use the 64-bit double method, but with a slightly more accurate   *
  *          Taylor series. Convert the result to long double and apply 1      *
@@ -141,7 +139,7 @@
  *          tmpl_LDouble_Cbrt_Pade (tmpl_math.h):                             *
  *              Computes the Pade approximant of cbrt(x) about x = 1.         *
  *          tmpl_LDouble_Pow2 (tmpl_math.h):                                  *
- *              Quickly computes an integer power of 2 as a double.           *
+ *              Quickly computes an integer power of 2 as a long double.      *
  *      Method:                                                               *
  *          Reduce to x >= 0 since cbrt is an odd function. Convert x to      *
  *          scientific notation x = m * 2^b with 1 <= m < 2 and b an integer. *
