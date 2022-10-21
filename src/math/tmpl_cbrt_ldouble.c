@@ -80,12 +80,57 @@
  *          If r = 0 we are done. If r = 1, multiply by cbrt(2). If r = 2,    *
  *          multiply by 2^{2/3}. Precompute these two values and multiply if  *
  *          needed.                                                           *
- *      Error:                                                                *
- *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *      Error (64-bit Version):                                               *
+ *          Based on 1,124,081,732 samples with -10^6 < x < 10^6.             *
  *              max rel error: 7.0469763017409916e-16                         *
  *              rms rel error: 1.5775644974028550e-16                         *
  *              max abs error: 1.4210854715202004e-14                         *
  *              rms abs error: 2.6790772954468324e-15                         *
+ *      Error (80-bit Version):                                               *
+ *          Based on 1,124,081,732 samples with -10^6 < x < 10^6.             *
+ *              max rel error: 1.6263031802160458e-19                         *
+ *              rms rel error: 5.0193793438984997e-20                         *
+ *              max abs error: 1.3877787807814457e-17                         *
+ *              rms abs error: 3.8916051752684035e-18                         *
+ *  128-Bit Quadruple Version:                                                *
+ *      Called Functions:                                                     *
+ *          tmpl_LDouble_Cbrt_Taylor (tmpl_math.h):                           *
+ *              Computes the Taylor series of cbrt(x) about x = 1.            *
+ *      Method:                                                               *
+ *          Similar to 64-bit double / 80-bit extended, but use Halley's      *
+ *          method to improve the precision instead of Newton's. We have:     *
+ *                                                                            *
+ *                    y ~ cbrt(x)                                             *
+ *              y^3 - x ~ 0                                                   *
+ *                 f(y) = y^3 - x                                             *
+ *                f'(y) = 3y^2                                                *
+ *               f''(y) = 6y                                                  *
+ *                                                                            *
+ *          Apply Halley's method for 1 iteration:                            *
+ *                                                                            *
+ *                  out = y - 2f'(y)f(y)/(2f'(y)^2 - f(y)f''(y))              *
+ *                      = y*(2x + y^3) / (x + 2y^3)                           *
+ *                                                                            *
+ *      Error:                                                                *
+ *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
+ *              max rel error: 4.1658200001486494e-34                         *
+ *              rms rel error: 9.8932710080529471e-35                         *
+ *              max abs error: 3.6977854932234928e-32                         *
+ *              rms abs error: 7.6912561628308798e-33                         *
+ *  128-Bit Double-Double Version:                                            *
+ *      Called Functions:                                                     *
+ *          tmpl_LDouble_Cbrt_Taylor (tmpl_math.h):                           *
+ *              Computes the Taylor series of cbrt(x) about x = 1.            *
+ *      Method:                                                               *
+ *          Use the 64-bit double method, but with a slightly more accurate   *
+ *          Taylor series. Convert the result to long double and apply 1      *
+ *          iteration of Halley's method.                                     *
+ *      Error:                                                                *
+ *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
+ *              max rel error: 1.0078655821595501e-31                         *
+ *              rms rel error: 1.0989354283675196e-32                         *
+ *              max abs error: 8.6774699574311299e-30                         *
+ *              rms abs error: 8.5334997265454440e-31                         *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_LDouble_Is_NaN_Or_Inf (tmpl_math.h):                         *
