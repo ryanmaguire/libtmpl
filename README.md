@@ -58,7 +58,8 @@ Run the Makefile with (`FreeBSD` users should use `gmake`):
 ```
 make
 ```
-The Makefile is parallelizable which saves quite a bit of time:
+The Makefile is parallelizable which saves quite a bit of time, especially on
+emulated architectures:
 ```
 make -j
 ```
