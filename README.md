@@ -58,6 +58,10 @@ Run the Makefile with (`FreeBSD` users should use `gmake`):
 ```
 make
 ```
+The Makefile is parallelizable which saves quite a bit of time:
+```
+make -j
+```
 Options to pass to `make`
 
 `OMP=1`
