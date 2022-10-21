@@ -16,22 +16,22 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_cbrt_taylor_double                           *
+ *                         tmpl_cbrt_taylor_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) at double precision at x = 1.   *
+ *      Computes the Taylor series of cbrt(x) at long double precision.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cbrt_Taylor                                               *
+ *      tmpl_LDouble_Cbrt_Taylor                                              *
  *  Purpose:                                                                  *
  *      Computes the Taylor series of cbrt(x) for small values x.             *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cbrt_x (double):                                                      *
+ *      cbrt_x (long double):                                                 *
  *          The Taylor series of atan(x).                                     *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -61,28 +61,71 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  64-bit long double does not need any more precision than 64-bit double.   */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/******************************************************************************
+ *                           64-Bit Double Version                            *
+ ******************************************************************************/
+
 /*  Coefficients for the Taylor series at x = 1.                              */
-#define A0 (1.0000000000000000000000000000E+00)
-#define A1 (3.3333333333333333333333333333E-01)
-#define A2 (-1.1111111111111111111111111111E-01)
-#define A3 (6.1728395061728395061728395061E-02)
+#define A0 (1.0000000000000000000000000000000000000000E+00L)
+#define A1 (3.3333333333333333333333333333333333333333E-01L)
+#define A2 (-1.111111111111111111111111111111111111111E-01L)
+#define A3 (6.1728395061728395061728395061728395061728E-02L)
 
 /*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
-double tmpl_Double_Cbrt_Taylor(double x)
+long double tmpl_LDouble_Cbrt_Taylor(long double x)
 {
     /*  The series is computed at x = 1. Shift the input.                     */
-    const double xs = x - 1.0;
+    const long double xs = x - 1.0L;
 
     /*  Use Horner's method to evaluate the polynomial.                       */
     return A0 + xs*(A1 + xs*(A2 + xs*A3));
 }
-/*  End of tmpl_Double_Cbrt_Taylor.                                           */
+/*  End of tmpl_LDouble_Cbrt_Taylor.                                          */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef A0
 #undef A1
 #undef A2
 #undef A3
+
+#else
+/*  Else for 64-bit long double version.                                      */
+
+/******************************************************************************
+ *   80-Bit Extended / 128-bit Quadruple / 128-bit Double-Double / Portable   *
+ ******************************************************************************/
+
+/*  Coefficients for the Taylor series at x = 1.                              */
+#define A0 (1.0000000000000000000000000000000000000000E+00L)
+#define A1 (3.3333333333333333333333333333333333333333E-01L)
+#define A2 (-1.111111111111111111111111111111111111111E-01L)
+#define A3 (6.1728395061728395061728395061728395061728E-02L)
+#define A4 (-4.1152263374485596707818930041152263374485E-02L)
+
+/*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
+long double tmpl_LDouble_Cbrt_Taylor(long double x)
+{
+    /*  The series is computed at x = 1. Shift the input.                     */
+    const long double xs = x - 1.0L;
+
+    /*  Use Horner's method to evaluate the polynomial.                       */
+    return A0 + xs*(A1 + xs*(A2 + xs*(A3 + xs*A4)));
+}
+/*  End of tmpl_LDouble_Cbrt_Taylor.                                          */
+
+/*  Undefine all macros in case someone wants to #include this file.          */
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+
+#endif
+/*  End difference between 64-bit long double and higher precisions.          */
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

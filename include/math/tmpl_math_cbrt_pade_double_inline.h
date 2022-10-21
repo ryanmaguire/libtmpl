@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_cbrt_pade_double                            *
+ *                        tmpl_cbrt_pade_double_inline                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the (7, 7) Pade approximant of cbrt(x) at double precision.  *
@@ -69,11 +69,15 @@
  *  Date:       October 21, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_CBRT_PADE_DOUBLE_INLINE_H
+#define TMPL_MATH_CBRT_PADE_DOUBLE_INLINE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -99,6 +103,7 @@
 #define Q7 (1.107294202858903361875469785849301167088E-04)
 
 /*  Function for computing the (7, 7) Pade approximate of cbrt(x) at x = 1.   */
+TMPL_INLINE_DECL
 double tmpl_Double_Cbrt_Pade(double x)
 {
     /*  The approximant is computed at x = 1. Shift the input.                */
@@ -132,4 +137,7 @@ double tmpl_Double_Cbrt_Pade(double x)
 #undef Q7
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */

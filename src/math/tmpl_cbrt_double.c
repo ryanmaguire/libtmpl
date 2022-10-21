@@ -110,7 +110,7 @@
  *          Header file with the functions prototype.                         *
  *  2.) tmpl_math_cbrt_data_double.h:                                         *
  *          Lookup table with pre-computed values of cbrt(x).                 *
- *  3.) tmpl_math_rcpr_table_double:                                          *
+ *  3.) tmpl_math_rcpr_table_double.h:                                        *
  *          Table with values 1/(1 + k/128) for 0 <= k <= 127.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
