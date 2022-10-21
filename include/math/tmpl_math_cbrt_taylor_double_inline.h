@@ -52,11 +52,15 @@
  *  Date:       October 21, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_CBRT_TAYLOR_DOUBLE_INLINE_H
+#define TMPL_MATH_CBRT_TAYLOR_DOUBLE_INLINE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -68,6 +72,7 @@
 #define A3 (6.1728395061728395061728395061E-02)
 
 /*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
+TMPL_INLINE_DECL
 double tmpl_Double_Cbrt_Taylor(double x)
 {
     /*  The series is computed at x = 1. Shift the input.                     */
@@ -85,4 +90,7 @@ double tmpl_Double_Cbrt_Taylor(double x)
 #undef A3
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */

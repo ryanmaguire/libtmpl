@@ -3,8 +3,8 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  under the terms of the GNU General Public License as published by         *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -15,12 +15,67 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                           tmpl_cbrt_pade_float                             *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the (7, 7) Pade approximant of cbrt(x) at single precision.  *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Float_Cbrt_Pade                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the Pade approximant of order (7, 7) for cbrt.               *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      cbrt_x (float):                                                       *
+ *          The Pade approximation of cbrt(x).                                *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Use Horner's method to evaluate the polynomials for the numerator     *
+ *      and denominator.                                                      *
+ *                                                                            *
+ *                     a0+a1*s^1+a2*s^2+a3*s^3+a4*s^4+a5*s^5+a6*s^6+a7*s^7    *
+ *          cbrt(x) ~= --------------------------------------------------     *
+ *                     b0+b1*s^1+b2*s^2+b3*s^3+b4*s^4+b5*s^5+b6*s^6+b7*s^7    *
+ *                                                                            *
+ *      Where s = x - 1.                                                      *
+ *      Label the rational function as rat and return x*(rat + 1).            *
+ *          ----------------------------------------------                    *
+ *          |  n  |        an         |        bn        |                    *
+ *          ----------------------------------------------                    *
+ *          |  0  |         1         |        1         |                    *
+ *          |  1  |      11 / 3       |     10 / 3       |                    *
+ *          |  2  |     209 / 39      |    170 / 39      |                    *
+ *          |  3  |    4180 / 1053    |   2975 / 1053    |                    *
+ *          |  4  |     380 / 243     |   2975 / 3159    |                    *
+ *          |  5  |      76 / 243     |    476 / 3159    |                    *
+ *          |  6  |     532 / 19683   |   2380 / 255879  |                    *
+ *          |  7  |      38 / 59049   |     85 / 767637  |                    *
+ *          ----------------------------------------------                    *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_USE_INLINE macro.                     *
+ *  2.) tmpl_math.h:                                                          *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       October 21, 2022                                              *
  ******************************************************************************/
 
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  This file is only compiled if inline support is not requested.            */
 #if TMPL_USE_INLINE != 1
 
+/*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
@@ -78,4 +133,3 @@ float tmpl_Float_Cbrt_Pade(float x)
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
-

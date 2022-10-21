@@ -1581,7 +1581,9 @@ extern long double tmpl_LDouble_Cbrt(long double x);
  *          The cube root of x, x^{1/3}.                                      *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_cbrt_pade_inline.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_pade_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_pade_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_pade_ldouble_inline.h>
 #else
 extern float tmpl_Float_Cbrt_Pade(float x);
 extern double tmpl_Double_Cbrt_Pade(double x);
@@ -1601,7 +1603,9 @@ extern long double tmpl_LDouble_Cbrt_Pade(long double x);
  *          The cube root of x, x^{1/3}.                                      *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_cbrt_taylor_inline.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_taylor_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_taylor_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_cbrt_taylor_ldouble_inline.h>
 #else
 extern float tmpl_Float_Cbrt_Taylor(float x);
 extern double tmpl_Double_Cbrt_Taylor(double x);
