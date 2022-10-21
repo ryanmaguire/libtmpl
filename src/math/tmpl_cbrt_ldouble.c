@@ -146,6 +146,12 @@
  *          scientific notation x = m * 2^b with 1 <= m < 2 and b an integer. *
  *          Use the Pade approximant on m and multiply by 2^{b/3}. Finish by  *
  *          performing one iteration of Newton's method.                      *
+ *      Error (64-bit Version):                                               *
+ *          Based on 1,124,081,732 samples with -10^6 < x < 10^6.             *
+ *              max rel error: 1.6263030109827658e-19                         *
+ *              rms rel error: 5.0194294935883383e-20                         *
+ *              max abs error: 1.3877787807814457e-17                         *
+ *              rms abs error: 3.8916483493519231e-18                         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -781,7 +787,11 @@ long double tmpl_LDouble_Cbrt(long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+#define CBRT_2    (1.259921049894873164767210607278228350570E+00L)
+#define CBRT_2_SQ (1.587401051968199474751705639272308260391E+00L)
 #define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)
+
+static const long double tmpl_ldouble_cbrt_data[3] = {1.0L, CBRT_2, CBRT_2_SQ};
 
 /*  Function for computing square roots at double precision.                  */
 long double tmpl_LDouble_Cbrt(long double x)
