@@ -118,7 +118,8 @@
  *              max abs error: 3.6977854932234928e-32                         *
  *              rms abs error: 7.6912561628308798e-33                         *
  *  128-Bit Double-Double Version:                                            *
- *      None.                                                                 *
+ *      Called Functions:                                                     *
+ *          None.                                                             *
  *      Method:                                                               *
  *          Use the 64-bit double method, but with a slightly more accurate   *
  *          Taylor series. Convert the result to long double and apply 1      *
