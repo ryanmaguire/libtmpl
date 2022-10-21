@@ -649,6 +649,8 @@ long double tmpl_LDouble_Cbrt(long double x)
 
     /*  Set the long double part of the union to the input.                   */
     w.r = x;
+
+    /*  Get the high part from the long double.                               */
     whi.r = w.d[0];
 
     /*  Disregard the low part. Halley's method will recover this later.      */
@@ -746,14 +748,13 @@ long double tmpl_LDouble_Cbrt(long double x)
     whi.bits.expo = exponent & 0x7FFU;
     whi.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_double_cbrt_lookup_table[ind];
 
+    /*  Cbrt is an odd function. Negate if needed.                            */
+    whi.bits.sign = w.bits.signa;
+
     /*  The double part has cbrt(x) to about 10 decimals. The low part of the *
      *  word was zeroed out. We can triple this to 32 decimals using          *
      *  Halley's method. Store the double into the high part of w.            */
     w.d[0] = whi.r; /* w.d[1] is still zero. */
-
-    /*  Cbrt is an odd function. Negate if needed.                            */
-    if (x < 0.0L)
-        w.r = -w.r;
 
     /*  Apply 1 iteration of Halley's method and return.                      */
     w3 = w.r*w.r*w.r;
