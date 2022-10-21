@@ -1,8 +1,8 @@
-[ ] abs
-[ ] atan2
-[ ] atan
-[ ] cbrt
-[ ] frexp
+[x] abs
+[x] atan2
+[x] atan
+[x] cbrt
+[x] frexp
 [ ] copysign
 [ ] cos
 [ ] cosh
