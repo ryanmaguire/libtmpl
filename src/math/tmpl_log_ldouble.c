@@ -144,11 +144,12 @@
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_rcpr_table_ldouble.h>
 
 /*  We can only implement this function if IEEE754 support is available. Also *
  *  only implement this if the user has requested libtmpl algorithms.         */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1 && TMPL_USE_MATH_ALGORITHMS == 1
+
+#include <libtmpl/include/math/tmpl_math_rcpr_table_ldouble.h>
 
 static long double tmpl_ldouble_log_table[128] = {
     0.0L,

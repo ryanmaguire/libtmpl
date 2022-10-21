@@ -8,24 +8,25 @@ double tmpl_Double_Pow2(signed int expo)
     tmpl_IEEE754_Double w;
     w.r = 1.0;
 
-    if (expo < -1022)
+    if (expo <= -TMPL_DOUBLE_BIAS)
     {
-        if (expo < -1074)
+        if (expo <= -TMPL_DOUBLE_BIAS - TMPL_DOUBLE_MANTISSA_LENGTH)
             return 0.0;
 
-        expo += 52;
-        w.bits.expo = (unsigned int)(TMPL_DOUBLE_BIAS + expo) & 0x7FF;
-        w.r /= 4.503599627370496E15;
-
+        expo += TMPL_DOUBLE_MANTISSA_LENGTH;
+        w.bits.expo =
+            (unsigned int)(TMPL_DOUBLE_BIAS + expo) & TMPL_DOUBLE_NANINF_EXP;
+        w.r /= TMPL_DOUBLE_NORMALIZE;
         return w.r;
     }
-    else if (expo > 1023)
+    else if (expo > TMPL_DOUBLE_BIAS)
     {
         w.bits.expo = TMPL_DOUBLE_NANINF_EXP;
         return w.r;
     }
 
-    w.bits.expo = (unsigned int)(TMPL_DOUBLE_BIAS + expo) & 0x7FF;
+    w.bits.expo =
+        (unsigned int)(TMPL_DOUBLE_BIAS + expo) & TMPL_DOUBLE_NANINF_EXP;
     return w.r;
 }
 
