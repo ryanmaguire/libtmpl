@@ -1,4 +1,5 @@
 target_sources(
+    tmpl
     PRIVATE
         $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_double.c>
         $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_float.c>
