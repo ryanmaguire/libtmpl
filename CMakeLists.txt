@@ -28,7 +28,12 @@ add_custom_command(
     DEPENDS tmpl_config
     BYPRODUCTS "include/tmpl_config.h"
     COMMAND "$<TARGET_FILE:tmpl_config>"
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    COMMAND
+        ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_config.h
+        include
+    COMMAND
+        ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_inttype.h
+        include
     VERBATIM
 )
 
