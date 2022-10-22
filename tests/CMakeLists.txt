@@ -1,1 +1,8 @@
 add_subdirectory("bytes_tests")
+add_subdirectory("complex_tests")
+add_subdirectory("integer_tests")
+add_subdirectory("math_tests")
+add_subdirectory("rational_tests")
+add_subdirectory("special_functions_tests")
+add_subdirectory("string_tests")
+add_subdirectory("vec3_tests")

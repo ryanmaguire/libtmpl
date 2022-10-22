@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake")
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     if(APPLE)
@@ -9,13 +9,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     endif()
 endif()
 
-project(bytes_tests)
+project(integer_test_unit_test)
 
 set(test_apps
-    tmpl_swap_bytes_unit_test_001
-    tmpl_swap_most_significant_bit_2_unit_test_001
-    tmpl_swap_most_significant_bit_4_unit_test_001
-    tmpl_swap_most_significant_bit_8_unit_test_001
+    tmpl_trailing_zeros_ushort_unit_test_001
+    tmpl_trailing_zeros_ushort_unit_test_002
 )
 
 foreach(app ${test_apps})

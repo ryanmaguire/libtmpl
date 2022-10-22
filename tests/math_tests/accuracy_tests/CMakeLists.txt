@@ -9,13 +9,19 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     endif()
 endif()
 
-project(bytes_tests)
+project(math_accuracy_tests)
 
 set(test_apps
-    tmpl_swap_bytes_unit_test_001
-    tmpl_swap_most_significant_bit_2_unit_test_001
-    tmpl_swap_most_significant_bit_4_unit_test_001
-    tmpl_swap_most_significant_bit_8_unit_test_001
+    tmpl_abs_double_accuracy_test
+    tmpl_abs_float_accuracy_test
+    tmpl_abs_ldouble_accuracy_test
+    tmpl_arctan_double_accuracy_test
+    tmpl_arctan_float_accuracy_test
+    tmpl_arctan_ldouble_accuracy_test
+    tmpl_floor_double_accuracy_test
+    tmpl_log_double_accuracy_test
+    tmpl_log_float_accuracy_test
+    tmpl_log_ldouble_accuracy_test
 )
 
 foreach(app ${test_apps})
@@ -24,7 +30,10 @@ foreach(app ${test_apps})
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
     )
-    target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}")
+    target_include_directories(
+        ${app}
+        PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
