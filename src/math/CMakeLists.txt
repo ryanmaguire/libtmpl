@@ -1,40 +1,40 @@
 target_sources(
     tmpl
     PRIVATE
-        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_double.c>
-        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_float.c>
-        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:tmpl_abs_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan2_double.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan2_float.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan2_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_asymptotic_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan_double.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan_float.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_arctan_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_maclaurin_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_pade_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_pade_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_pade_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_very_small_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_very_small_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_arctan_very_small_ldouble.c>
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_double.c>
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_float.c>
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_MATH}>>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan2_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan2_float.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan2_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_asymptotic_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_asymptotic_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_asymptotic_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_float.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_maclaurin_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_maclaurin_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_maclaurin_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_pade_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_pade_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_pade_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_very_small_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_very_small_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_arctan_very_small_ldouble.c>
         tmpl_base2_mant_and_exp_double.c
         tmpl_base2_mant_and_exp_float.c
         tmpl_cbrt_double.c
         tmpl_cbrt_float.c
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_pade_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_pade_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_pade_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_taylor_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_cbrt_taylor_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_copysign_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_cos_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_cbrt_pade_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_cbrt_pade_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_cbrt_pade_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_cbrt_taylor_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_cbrt_taylor_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_copysign_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_copysign_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_copysign_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_cos_double.c>
         tmpl_cos_float.c
         tmpl_cos_ldouble.c
         tmpl_cosh.c
@@ -47,8 +47,8 @@ target_sources(
         tmpl_factorial_as_double.c
         tmpl_faddeeva_im.c
         tmpl_falling_factorial.c
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_floor_double.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_floor_float.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_floor_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_floor_float.c>
         tmpl_floor_ldouble.c
         tmpl_infinity.c
         tmpl_is_inf.c
@@ -68,12 +68,12 @@ target_sources(
         tmpl_pow2_double.c
         tmpl_pow2_float.c
         tmpl_reverse_array.c
-        $<$<NOT:$<BOOL:${NO_MATH}>>:tmpl_sin_double.c>
+        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sin_double.c>
         tmpl_sin_float.c
         tmpl_sin_ldouble.c
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_pade_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_pade_pi_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_sin_very_small_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sin_pade_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sin_pade_pi_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sin_very_small_double.c>
         tmpl_sinc.c
         tmpl_sinh.c
         tmpl_sqrt_double.c

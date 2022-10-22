@@ -1,11 +1,11 @@
 target_sources(
     tmpl
     PRIVATE
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_char.c>
-        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_INLINE}>>>:tmpl_abs_int.c>
-        # $<$<NOT:$<BOOL:${NO_LONGLONG}>>:tmpl_abs_llong.c> FIXME: this file is missing
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_long.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_abs_short.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_char.c>
+        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_INLINE}>>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_int.c>
+        $<$<NOT:$<BOOL:${NO_LONGLONG}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_llong.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_long.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_short.c>
         tmpl_binary_gcd_int.c
         tmpl_binary_gcd_long.c
         tmpl_binary_gcd_uint.c

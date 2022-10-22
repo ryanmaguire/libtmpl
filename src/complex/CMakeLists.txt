@@ -1,14 +1,14 @@
 target_sources(
     tmpl
     PRIVATE
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_abs_double.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_abs_float.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_abs_ldouble.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_abs_squared.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_add.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_abs_double.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_abs_float.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_abs_ldouble.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_abs_squared.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_add.c>
         tmpl_complex_add_imag.c
         tmpl_complex_add_real.c
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_addto.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_addto.c>
         tmpl_complex_argument.c
         tmpl_complex_compare.c
         tmpl_complex_conjugate.c
@@ -37,7 +37,7 @@ target_sources(
         tmpl_complex_poly_real_coeffs.c
         tmpl_complex_pow.c
         tmpl_complex_pow_real.c
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:tmpl_complex_quick_abs.c>
+        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_quick_abs.c>
         tmpl_complex_real_part.c
         tmpl_complex_reciprocal.c
         tmpl_complex_rect.c
