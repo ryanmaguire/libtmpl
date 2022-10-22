@@ -1,0 +1,18 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_floor_double_x86_64.S
+        tmpl_floor_float_x86_64.S
+        tmpl_floor_ldouble_x86_64.S
+        tmpl_sqrt_double_x86_64.S
+        tmpl_sqrt_float_x86_64.S
+        tmpl_sqrt_ldouble_x86_64.S
+        tmpl_trailing_zeros_char_x86_64.S
+        tmpl_trailing_zeros_int_x86_64.S
+        tmpl_trailing_zeros_long_x86_64.S
+        tmpl_trailing_zeros_short_x86_64.S
+        tmpl_trailing_zeros_uchar_x86_64.S
+        tmpl_trailing_zeros_uint_x86_64.S
+        tmpl_trailing_zeros_ulong_x86_64.S
+        tmpl_trailing_zeros_ushort_x86_64.S
+)

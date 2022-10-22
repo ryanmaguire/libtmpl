@@ -98,9 +98,95 @@ if(NO_INT)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_NO_INT)
 endif()
 
-# TODO: set up ASM support
-
 add_subdirectory("src")
+
+# TODO: set up ASM support
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" system_processor)
+set(X86_64_ARCHES "amd64;x86_64")
+set(ARM64_ARCHES "aarch64;arm64")
+set(ARMHF_ARCHES "armv7l;")
+if(NOT NO_ASM)
+    if(system_processor IN_LIST X86_64_ARCHES)
+        if(NOT NO_BUILTIN)
+            # This includes Windows AMD64 and Unix x86_64
+            add_subdirectory("src/builtins/x86_64")
+
+            #TODO set up C file exclusion of
+            #BUILTIN_EXCLUDE := \
+            #-not -name "tmpl_cos_double.c" -and \
+            #-not -name "tmpl_cos_float.c" -and \
+            #-not -name "tmpl_cos_ldouble.c" -and \
+            #-not -name "tmpl_sin_double.c" -and \
+            #-not -name "tmpl_sin_float.c" -and \
+            #-not -name "tmpl_sin_ldouble.c" -and \
+            #-not -name "tmpl_sincos_double.c" -and \
+            #-not -name "tmpl_sincos_float.c" -and \
+            #-not -name "tmpl_sincos_ldouble.c" -and
+        endif()
+
+        if(FASM)
+            add_subdirectory("src/assembly/fasm")
+            #TODO exclude
+            # ASM_EXCLUDE := \
+            # -not -name "tmpl_sqrt_double.c" -and \
+            # -not -name "tmpl_sqrt_float.c" -and
+
+            # TODO add checks for fasm compatibility
+        elseif()
+            add_subdirectory("src/assembly/x86_64")
+            #TODO exclude
+            # ASM_EXCLUDE := \
+            # -not -name "tmpl_trailing_zeros_char.c" -and \
+            # -not -name "tmpl_trailing_zeros_int.c" -and \
+            # -not -name "tmpl_trailing_zeros_long.c" -and \
+            # -not -name "tmpl_trailing_zeros_short.c" -and \
+            # -not -name "tmpl_trailing_zeros_uint.c" -and \
+            # -not -name "tmpl_trailing_zeros_uchar.c" -and \
+            # -not -name "tmpl_trailing_zeros_ulong.c" -and \
+            # -not -name "tmpl_trailing_zeros_ushort.c" -and \
+            # -not -name "tmpl_sqrt_double.c" -and \
+            # -not -name "tmpl_sqrt_float.c" -and \
+            # -not -name "tmpl_sqrt_ldouble.c" -and \
+            # -not -name "tmpl_floor_double.c" -and \
+            # -not -name "tmpl_floor_float.c" -and \
+            # -not -name "tmpl_floor_ldouble.c" -and
+        endif()
+    elseif(system_processor in ARM64_ARCHES)
+        if(NOT NO_BUILTIN)
+            add_subdirectory("src/builtins/aarch64")
+            # TODO exclude
+            # BUILTIN_EXCLUDE := \
+            # -not -name "tmpl_cos_double.c" -and \
+            # -not -name "tmpl_cos_float.c" -and \
+            # -not -name "tmpl_cos_ldouble.c" -and \
+            # -not -name "tmpl_floor_ldouble.c" -and \
+            # -not -name "tmpl_sin_double.c" -and \
+            # -not -name "tmpl_sin_float.c" -and \
+            # -not -name "tmpl_sin_ldouble.c" -and \
+            # -not -name "tmpl_sincos_double.c" -and \
+            # -not -name "tmpl_sincos_float.c" -and \
+            # -not -name "tmpl_sincos_ldouble.c" -and \
+            # -not -name "tmpl_sqrt_ldouble.c" -and
+        endif()
+
+        add_subdirectory("src/assembly/aarch64")
+
+        #TODO exclude
+        # ASM_EXCLUDE := \
+        # -not -name "tmpl_floor_double.c" -and \
+        # -not -name "tmpl_floor_float.c" -and \
+        # -not -name "tmpl_sqrt_double.c" -and \
+        # -not -name "tmpl_sqrt_float.c" -and \
+    elseif(system_processor IN ARMHF_ARCHES)
+        add_subdirectory("src/assembly/armv7l")
+
+        #TODO exclude
+        # ASM_EXCLUDE :=
+        # -not -name "tmpl_sqrt_double.c" -and \
+        # -not -name "tmpl_sqrt_float.c" -and \
+        # -not -name "tmpl_sqrt_ldouble.c" -and
+    endif()
+endif()
 
 if(BUILD_TESTS)
     add_subdirectory("tests")

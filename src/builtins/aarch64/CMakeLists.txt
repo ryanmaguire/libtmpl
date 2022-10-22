@@ -1,0 +1,15 @@
+target_sources(
+    tmpl
+    PRIVATE
+        tmpl_cos_double_aarch64.S
+        tmpl_cos_float_aarch64.S
+        tmpl_cos_ldouble_aarch64.S
+        tmpl_floor_ldouble_aarch64.S
+        tmpl_sin_double_aarch64.S
+        tmpl_sin_float_aarch64.S
+        tmpl_sin_ldouble_aarch64.S
+        tmpl_sincos_double_aarch64.S
+        tmpl_sincos_float_aarch64.S
+        tmpl_sincos_ldouble_aarch64.S
+        tmpl_sqrt_ldouble_aarch64.S
+)
