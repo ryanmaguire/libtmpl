@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+
 option(OMP "User OpenMP, if available" TRUE)
 option(NO_INLINE "" TRUE)
 option(NO_MATH "" TRUE)
@@ -15,9 +17,22 @@ endif()
 
 project(libtmpl_library LANGUAGES C)
 
+cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
+
 add_library(tmpl SHARED)
+target_include_directories(tmpl PUBLIC "include" "${TMPL_PARENT_DIR}")
 add_executable(tmpl_config config.c)
-target_source(tmpl PRIVATE "include/tmpl_config.h")
+# Build config.c and run to generate "include/tmpl_config.h"
+add_custom_command(
+    OUTPUT "include/tmpl_config.h"
+    DEPENDS tmpl_config
+    BYPRODUCTS "include/tmpl_config.h"
+    COMMAND "$<TARGET_FILE:tmpl_config>"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    VERBATIM
+)
+
+target_sources(tmpl PRIVATE "include/tmpl_config.h")
 
 if(NO_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
@@ -79,17 +94,6 @@ if(NO_INT)
 endif()
 
 # TODO: set up ASM support
-
-# Build config.c and run to generate "include/tmpl_config.h"
-add_custom_command(
-    OUTPUT "include/tmpl_config.h"
-    DEPENDS tmpl_config
-    BYPRODUCTS "include/tmpl_config.h"
-    COMMAND "$<TARGET_FILE:tmpl_config>"
-    VERBATIM
-)
-
-target_include_directories(tmpl PUBLIC include)
 
 add_subdirectory("src")
 
