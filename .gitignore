@@ -92,3 +92,4 @@ Mkfile.old
 dkms.conf
 build/
 .idea/
+CMakeUserPresets.json
