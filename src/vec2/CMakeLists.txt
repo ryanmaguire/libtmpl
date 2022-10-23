@@ -1,27 +1,29 @@
-target_sources(
-    tmpl
-    PRIVATE
-        tmpl_rotation_matrix_2d.c
-        tmpl_two_by_two_matrix_component.c
-        tmpl_two_by_two_matrix_determinant.c
-        tmpl_two_by_two_matrix_inverse.c
-        tmpl_two_by_two_matrix_new.c
-        tmpl_two_by_two_matrix_scale.c
-        tmpl_two_vector_add.c
-        tmpl_two_vector_dot_product.c
-        tmpl_two_vector_euclidean_distance.c
-        tmpl_two_vector_euclidean_is_collinear.c
-        tmpl_two_vector_euclidean_midpoint.c
-        tmpl_two_vector_euclidean_norm.c
-        tmpl_two_vector_euclidean_norm_squared.c
-        tmpl_two_vector_euclidean_orthogonal.c
-        tmpl_two_vector_euclidean_rel_angle.c
-        tmpl_two_vector_matrix_transform.c
-        tmpl_two_vector_normalize.c
-        tmpl_two_vector_polar.c
-        tmpl_two_vector_rect.c
-        tmpl_two_vector_scale.c
-        tmpl_two_vector_subtract.c
-        tmpl_two_vector_x.c
-        tmpl_two_vector_y.c
+set(sources
+    tmpl_rotation_matrix_2d.c
+    tmpl_two_by_two_matrix_component.c
+    tmpl_two_by_two_matrix_determinant.c
+    tmpl_two_by_two_matrix_inverse.c
+    tmpl_two_by_two_matrix_new.c
+    tmpl_two_by_two_matrix_scale.c
+    tmpl_two_vector_add.c
+    tmpl_two_vector_dot_product.c
+    tmpl_two_vector_euclidean_distance.c
+    tmpl_two_vector_euclidean_is_collinear.c
+    tmpl_two_vector_euclidean_midpoint.c
+    tmpl_two_vector_euclidean_norm.c
+    tmpl_two_vector_euclidean_norm_squared.c
+    tmpl_two_vector_euclidean_orthogonal.c
+    tmpl_two_vector_euclidean_rel_angle.c
+    tmpl_two_vector_matrix_transform.c
+    tmpl_two_vector_normalize.c
+    tmpl_two_vector_polar.c
+    tmpl_two_vector_rect.c
+    tmpl_two_vector_scale.c
+    tmpl_two_vector_subtract.c
+    tmpl_two_vector_x.c
+    tmpl_two_vector_y.c
 )
+
+list(REMOVE_ITEM sources ${SOURCE_EXCLUSION_LIST})
+
+target_sources(tmpl PRIVATE ${sources})

@@ -1,27 +1,29 @@
-target_sources(
-    tmpl
-    PRIVATE
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_char.c>
-        $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_INLINE}>>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_int.c>
-        $<$<NOT:$<BOOL:${NO_LONGLONG}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_llong.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_long.c>
-        $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_short.c>
-        tmpl_binary_gcd_int.c
-        tmpl_binary_gcd_long.c
-        tmpl_binary_gcd_uint.c
-        tmpl_binary_gcd_uintvector.c
-        tmpl_binary_gcd_ulong.c
-        tmpl_leading_zeros_uchar.c
-        tmpl_leading_zeros_uint.c
-        tmpl_leading_zeros_ulong.c
-        tmpl_leading_zeros_ushort.c
-        tmpl_sieve_of_eratosthenes.c
-        tmpl_trailing_zeros_char.c
-        tmpl_trailing_zeros_int.c
-        tmpl_trailing_zeros_long.c
-        tmpl_trailing_zeros_short.c
-        tmpl_trailing_zeros_uchar.c
-        tmpl_trailing_zeros_uint.c
-        tmpl_trailing_zeros_ulong.c
-        tmpl_trailing_zeros_ushort.c
+set(sources
+    $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_char.c>
+    $<$<AND:$<NOT:$<BOOL:${NO_INLINE}>>,$<NOT:$<BOOL:${NO_INLINE}>>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_int.c>
+    $<$<NOT:$<BOOL:${NO_LONGLONG}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_llong.c>
+    $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_long.c>
+    $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_abs_short.c>
+    tmpl_binary_gcd_int.c
+    tmpl_binary_gcd_long.c
+    tmpl_binary_gcd_uint.c
+    tmpl_binary_gcd_uintvector.c
+    tmpl_binary_gcd_ulong.c
+    tmpl_leading_zeros_uchar.c
+    tmpl_leading_zeros_uint.c
+    tmpl_leading_zeros_ulong.c
+    tmpl_leading_zeros_ushort.c
+    tmpl_sieve_of_eratosthenes.c
+    tmpl_trailing_zeros_char.c
+    tmpl_trailing_zeros_int.c
+    tmpl_trailing_zeros_long.c
+    tmpl_trailing_zeros_short.c
+    tmpl_trailing_zeros_uchar.c
+    tmpl_trailing_zeros_uint.c
+    tmpl_trailing_zeros_ulong.c
+    tmpl_trailing_zeros_ushort.c
 )
+
+list(REMOVE_ITEM sources ${SOURCE_EXCLUSION_LIST})
+
+target_sources(tmpl PRIVATE ${sources})

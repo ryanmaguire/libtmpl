@@ -1,25 +1,27 @@
-target_sources(
-    tmpl
-    PRIVATE
-        tmpl_binary_pgm_from_data.c
-        tmpl_binary_ppm_from_data.c
-        tmpl_pgm_colors.c
-        tmpl_ppm_color_addition.c
-        tmpl_ppm_color_average.c
-        tmpl_ppm_color_blend.c
-        tmpl_ppm_colors.c
-        tmpl_ppm_complex_plot.c
-        tmpl_ppm_create_color.c
-        tmpl_ppm_linear_color_wheel.c
-        tmpl_ppm_linear_gradient.c
-        tmpl_ppm_plot.c
-        tmpl_ppm_print_color.c
-        tmpl_ppm_print_color_from_values.c
-        tmpl_ppm_scale_color.c
-        tmpl_ppm_scaled_color_wheel.c
-        tmpl_ppm_scaled_gradient.c
-        tmpl_ppm_write_color.c
-        tmpl_ppm_write_color_from_values.c
-        tmpl_text_pgm_from_data.c
-        tmpl_text_ppm_from_data.c
+set(sources
+    tmpl_binary_pgm_from_data.c
+    tmpl_binary_ppm_from_data.c
+    tmpl_pgm_colors.c
+    tmpl_ppm_color_addition.c
+    tmpl_ppm_color_average.c
+    tmpl_ppm_color_blend.c
+    tmpl_ppm_colors.c
+    tmpl_ppm_complex_plot.c
+    tmpl_ppm_create_color.c
+    tmpl_ppm_linear_color_wheel.c
+    tmpl_ppm_linear_gradient.c
+    tmpl_ppm_plot.c
+    tmpl_ppm_print_color.c
+    tmpl_ppm_print_color_from_values.c
+    tmpl_ppm_scale_color.c
+    tmpl_ppm_scaled_color_wheel.c
+    tmpl_ppm_scaled_gradient.c
+    tmpl_ppm_write_color.c
+    tmpl_ppm_write_color_from_values.c
+    tmpl_text_pgm_from_data.c
+    tmpl_text_ppm_from_data.c
 )
+
+list(REMOVE_ITEM sources ${SOURCE_EXCLUSION_LIST})
+
+target_sources(tmpl PRIVATE ${sources})
