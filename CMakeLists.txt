@@ -12,6 +12,7 @@ option(FASM "" TRUE)
 option(BUILD_TESTS "" FALSE)
 option(NO_LONGLONG "" FALSE)
 option(NO_INT "" FALSE)
+option(ENABLE_VERBOSE "" FALSE)
 
 if(NOT DEFINED STDVER)
     set(STDVER "-std=c89" CACHE STRING "" FORCE)
@@ -44,7 +45,10 @@ add_custom_command(
 # tmpl target
 target_sources(tmpl PRIVATE "include/tmpl_config.h" "include/tmpl_inttype.h")
 
-set_c_standard(tmpl "${STDVER}")
+set_c_standard(TARGET tmpl
+    STDVER "${STDVER}"
+    ENABLE_VERBOSE ${ENABLE_VERBOSE}
+)
 
 if(NO_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
