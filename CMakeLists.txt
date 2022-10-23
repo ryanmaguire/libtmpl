@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(ParseCStandard)
 
 option(OMP "User OpenMP, if available" TRUE)
 option(NO_INLINE "" TRUE)
@@ -21,12 +23,13 @@ cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 
 add_library(tmpl SHARED)
 target_include_directories(tmpl PUBLIC "include" "${TMPL_PARENT_DIR}")
-add_executable(tmpl_config config.c)
+
 # Build config.c and run to generate "include/tmpl_config.h"
+add_executable(tmpl_config config.c)
 add_custom_command(
-    OUTPUT "include/tmpl_config.h"
+    OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h"
     DEPENDS tmpl_config
-    BYPRODUCTS "include/tmpl_config.h"
+    BYPRODUCTS "include/tmpl_config.h" "include/tmpl_inttype.h"
     COMMAND "$<TARGET_FILE:tmpl_config>"
     COMMAND
         ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_config.h
@@ -37,7 +40,11 @@ add_custom_command(
     VERBATIM
 )
 
-target_sources(tmpl PRIVATE "include/tmpl_config.h")
+# Declare a dependency on the generated tmpl_config.h file to ensure that we wait for its generate before building the
+# tmpl target
+target_sources(tmpl PRIVATE "include/tmpl_config.h" "include/tmpl_inttype.h")
+
+set_c_standard(tmpl "${STDVER}")
 
 if(NO_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
@@ -107,6 +114,8 @@ set(ARM64_ARCHES "aarch64;arm64")
 set(ARMHF_ARCHES "armv7l;")
 if(NOT NO_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
+        enable_language(ASM)
+
         if(NOT NO_BUILTIN)
             # This includes Windows AMD64 and Unix x86_64
             add_subdirectory("src/builtins/x86_64")
@@ -152,6 +161,7 @@ if(NOT NO_ASM)
             # -not -name "tmpl_floor_ldouble.c" -and
         endif()
     elseif(system_processor in ARM64_ARCHES)
+        enable_language(ASM)
         if(NOT NO_BUILTIN)
             add_subdirectory("src/builtins/aarch64")
             # TODO exclude
@@ -178,6 +188,7 @@ if(NOT NO_ASM)
         # -not -name "tmpl_sqrt_double.c" -and \
         # -not -name "tmpl_sqrt_float.c" -and \
     elseif(system_processor IN ARMHF_ARCHES)
+        enable_language(ASM)
         add_subdirectory("src/assembly/armv7l")
 
         #TODO exclude
