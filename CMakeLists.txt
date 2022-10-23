@@ -109,13 +109,14 @@ if(NO_INT)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_NO_INT)
 endif()
 
-add_subdirectory("src")
-
 # TODO: set up ASM support
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" system_processor)
 set(X86_64_ARCHES "amd64;x86_64")
 set(ARM64_ARCHES "aarch64;arm64")
 set(ARMHF_ARCHES "armv7l;")
+
+set(ARMHF_ASM_ENABLED FALSE)
+set(ARM64_ASM_ENABLED FALSE)
 if(NOT NO_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
         enable_language(ASM)
@@ -166,6 +167,7 @@ if(NOT NO_ASM)
         endif()
     elseif(system_processor in ARM64_ARCHES)
         enable_language(ASM)
+        set(ARM64_ASM_ENABLED TRUE)
         if(NOT NO_BUILTIN)
             add_subdirectory("src/builtins/aarch64")
             # TODO exclude
@@ -184,25 +186,14 @@ if(NOT NO_ASM)
         endif()
 
         add_subdirectory("src/assembly/aarch64")
-
-        #TODO exclude
-        # ASM_EXCLUDE := \
-        # -not -name "tmpl_floor_double.c" -and \
-        # -not -name "tmpl_floor_float.c" -and \
-        # -not -name "tmpl_sqrt_double.c" -and \
-        # -not -name "tmpl_sqrt_float.c" -and \
     elseif(system_processor IN ARMHF_ARCHES)
         enable_language(ASM)
+        set(ARMHF_ASM_ENABLED TRUE)
         add_subdirectory("src/assembly/armv7l")
-
-        #TODO exclude
-        # ASM_EXCLUDE :=
-        # -not -name "tmpl_sqrt_double.c" -and \
-        # -not -name "tmpl_sqrt_float.c" -and \
-        # -not -name "tmpl_sqrt_ldouble.c" -and
     endif()
 endif()
 
+add_subdirectory("src")
 if(BUILD_TESTS)
     add_subdirectory("tests")
 endif()

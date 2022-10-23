@@ -47,8 +47,10 @@ target_sources(
         tmpl_factorial_as_double.c
         tmpl_faddeeva_im.c
         tmpl_falling_factorial.c
-        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_floor_double.c>
-        $<$<NOT:$<BOOL:${NO_MATH}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_floor_float.c>
+        $<$<AND:$<NOT:$<BOOL:${ARM64_ASM_ENABLED}>>,$<NOT:$<BOOL:${NO_MATH}>>>:
+        ${CMAKE_CURRENT_SOURCE_DIR}/tmpl_floor_double.c>
+        $<$<AND:$<NOT:$<BOOL:${ARM64_ASM_ENABLED}>>,$<NOT:$<BOOL:${NO_MATH}>>>:
+        ${CMAKE_CURRENT_SOURCE_DIR}/tmpl_floor_float.c>
         tmpl_floor_ldouble.c
         tmpl_infinity.c
         tmpl_is_inf.c
@@ -76,9 +78,11 @@ target_sources(
         $<$<NOT:$<BOOL:${NO_INLINE}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sin_very_small_double.c>
         tmpl_sinc.c
         tmpl_sinh.c
-        tmpl_sqrt_double.c
-        tmpl_sqrt_float.c
-        tmpl_sqrt_ldouble.c
+        $<$<AND:$<NOT:$<BOOL:${ARM64_ASM_ENABLED}>>,$<NOT:$<BOOL:${ARMHF_ASM_ENABLED}>>>:
+        ${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sqrt_double.c>
+        $<$<AND:$<NOT:$<BOOL:${ARM64_ASM_ENABLED}>>,$<NOT:$<BOOL:${ARMHF_ASM_ENABLED}>>>:
+        ${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sqrt_float.c>
+        $<$<NOT:$<BOOL:${ARMHF_ASM_ENABLED}>>:${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sqrt_ldouble.c>
         tmpl_tan.c
         tmpl_tanh.c
 )
