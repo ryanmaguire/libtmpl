@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_copysign_double                            *
+ *                        tmpl_copysign_double_inline                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x, y) = |x|*sgn(y), where sgn is the sign function.        *
@@ -85,17 +85,18 @@
  *      Added license.                                                        *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_COPYSIGN_DOUBLE_INLINE_H
+#define TMPL_MATH_COPYSIGN_DOUBLE_INLINE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  Only implement this if the user requested libtmpl algorithms.             */
-#if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -105,6 +106,7 @@
  ******************************************************************************/
 
 /*  Double precision coypsign function (coypsign equivalent).                 */
+TMPL_INLINE_DECL
 double tmpl_Double_Copysign(double x, double y)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -130,6 +132,7 @@ double tmpl_Double_Copysign(double x, double y)
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
+TMPL_INLINE_DECL
 double tmpl_Double_Copysign(double x, double y)
 {
     /*  If y is negative, compute -|x|.                                       */
@@ -150,7 +153,7 @@ double tmpl_Double_Copysign(double x, double y)
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 #endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */
