@@ -1628,18 +1628,30 @@ extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
  *          The value sgn(y) * |x|.                                           *
  ******************************************************************************/
 
+/*  Alias functions to copysign if libtmpl algorithms not requested.          */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Copysign copysignf
+#define tmpl_Double_Copysign copysign
+#define tmpl_LDouble_Copysign copysignl
+
 /*  These functions are small enough that it's worth-while inlining them.     */
-#if TMPL_USE_INLINE == 1
+#elif TMPL_USE_INLINE == 1
 
 /*  Inline support to copysign found here.                                    */
-#include <libtmpl/include/math/tmpl_math_copysign_inline.h>
+#include <libtmpl/include/math/tmpl_math_copysign_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_copysign_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_copysign_ldouble_inline.h>
+
 #else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
 /*  No inline support requested.                                              */
 extern float tmpl_Float_Copysign(float x, float y);
 extern double tmpl_Double_Copysign(double x, double y);
 extern long double tmpl_LDouble_Copysign(long double x, long double y);
+
 #endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
