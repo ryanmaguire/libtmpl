@@ -16,37 +16,30 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_copysign_float                             *
+ *                              tmpl_dist_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x, y) = |x|*sgn(y), where sgn is the sign function.        *
+ *      Computes the distance from x to y on the number line.                 *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Copysign                                                   *
+ *      tmpl_Float_Dist                                                       *
  *  Purpose:                                                                  *
- *      Copies the sign of y into x.                                          *
+ *      Computes the Euclidean distance d(x, y) = |x - y|.                    *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
  *      y (float):                                                            *
- *          A real number, the sign of which will be copied to x.             *
+ *          A real number.                                                    *
  *  Output:                                                                   *
- *      cpysgn (float):                                                       *
- *          The value |x|*sgn(y).                                             *
+ *      dist (float):                                                         *
+ *          The distance |x - y|.                                             *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Copy the sign bit of y into x. A 32-bit float is represented by:  *
- *                                                                            *
- *              s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                            *
- *              - -------- -----------------------                            *
- *           sign exponent        mantissa                                    *
- *                                                                            *
- *          Copysign(x, y) can be computing by setting the sign bit of x      *
- *          equal to the sign bit of y.                                       *
+ *          Computes x - y and then sets the sign bit to zero.                *
  *      Error:                                                                *
  *          Based on 3,372,245,196 samples with -10^2 < x, y < 10^2.          *
  *              max relative error: 0.0                                       *
@@ -58,16 +51,13 @@
  *          tmpl_Float_Abs (tmpl_math.h):                                     *
  *              Computes the absolute value of a real number.                 *
  *      Method:                                                               *
- *          Use an if-then statement to check the sign of y.                  *
+ *          Compute x - y and pass the result to tmpl_Float_Abs.              *
  *      Error:                                                                *
  *          Based on 3,372,245,196 samples with -10^2 < x, y < 10^2.          *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
- *  Notes:                                                                    *
- *      If IEEE-754 is not supported and y is zero, x is returned as is.      *
- *      IEEE-754 has signed zeros, other float representations may not.       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -94,9 +84,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Only implement this if the user requested libtmpl algorithms.             */
-#if TMPL_USE_MATH_ALGORITHMS == 1
-
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -104,23 +91,22 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Single precision coypsign function (coypsign equivalent).                 */
-float tmpl_Float_Copysign(float x, float y)
+/*  Single precision 1-D distance function.                                   */
+float tmpl_Float_Dist(float x, float y)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Float wx, wy;
+    tmpl_IEEE754_Float w;
 
-    /*  Set the float part of the words to the inputs.                        */
-    wx.r = x;
-    wy.r = y;
+    /*  Set the float part of the word to the signed distance x - y.          */
+    w.r = x - y;
 
-    /*  Set the sign bit of x to the sign bit of y.                           */
-    wx.bits.sign = wy.bits.sign;
+    /*  Set the sign bit to zero to compute the absolute value.               */
+    w.bits.sign = 0x00U;
 
     /*  Return the float part of the union.                                   */
-    return wx.r;
+    return w.r;
 }
-/*  End of tmpl_Float_Copysign.                                               */
+/*  End of tmpl_Float_Dist.                                                   */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
@@ -130,27 +116,15 @@ float tmpl_Float_Copysign(float x, float y)
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
-float tmpl_Float_Copysign(float x, float y)
+float tmpl_Float_Dist(float x, float y)
 {
-    /*  If y is negative, compute -|x|.                                       */
-    if (y < 0.0F)
-        return -tmpl_Float_Abs(x);
-
-    /*  If y is positive, compute |x|.                                        */
-    else if (0.0F < y)
-        return tmpl_Float_Abs(x);
-
-    /*  And lastly, if y is zero, return x.                                   */
-    else
-        return x;
+    /*  Pass the difference to the absolute value function and return.        */
+    return tmpl_Float_Abs(x - y);
 }
-/*  End of tmpl_Float_Copysign.                                               */
+/*  End of tmpl_Float_Dist.                                                   */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

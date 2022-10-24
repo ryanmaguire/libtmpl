@@ -1655,22 +1655,6 @@ extern long double tmpl_LDouble_Copysign(long double x, long double y);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Cosh                                                      *
- *  Purpose:                                                                  *
- *      Computes the hyperbolic cosine of a real number.                      *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cos_x:                                                         *
- *          The hyperbolic cosine of x, cosh(x).                              *
- ******************************************************************************/
-extern float tmpl_Float_Cosh(float x);
-extern double tmpl_Double_Cosh(double x);
-extern long double tmpl_LDouble_Cosh(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_Double_Cos                                                       *
  *  Purpose:                                                                  *
  *      Computes the cosine of a real number.                                 *
@@ -1693,6 +1677,22 @@ extern long double tmpl_LDouble_Cos(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Cosh                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the hyperbolic cosine of a real number.                      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_x:                                                         *
+ *          The hyperbolic cosine of x, cosh(x).                              *
+ ******************************************************************************/
+extern float tmpl_Float_Cosh(float x);
+extern double tmpl_Double_Cosh(double x);
+extern long double tmpl_LDouble_Cosh(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Dist                                                      *
  *  Purpose:                                                                  *
  *      Compute the distance between two numbers on the real line.            *
@@ -1705,9 +1705,25 @@ extern long double tmpl_LDouble_Cos(long double x);
  *      double dist:                                                          *
  *          The distance |x - y|.                                             *
  ******************************************************************************/
+
+/*  These functions should be inlined.                                        */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for dist functions found here.                             */
+#include <libtmpl/include/math/tmpl_math_dist_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_dist_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_dist_ldouble_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested.                                              */
 extern float tmpl_Float_Dist(float x, float y);
 extern double tmpl_Double_Dist(double x, double y);
 extern long double tmpl_LDouble_Dist(long double x, long double y);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
