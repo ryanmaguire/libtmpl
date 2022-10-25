@@ -1677,6 +1677,51 @@ extern long double tmpl_LDouble_Cos(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Cosd                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the cosine of a number in degrees.                           *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cosd_x:                                                        *
+ *          The cosine of x in degrees.                                       *
+ ******************************************************************************/
+extern float tmpl_Float_Cosd(float x);
+extern double tmpl_Double_Cosd(double x);
+extern long double tmpl_LDouble_Cosd(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cosd_Maclaurin                                            *
+ *  Purpose:                                                                  *
+ *      Computes the Maclaurin series of cosine in degrees.                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cosd_x:                                                        *
+ *          The cosine of x in degrees.                                       *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_math_cosd_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_cosd_maclaurin_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support, use external functions in src/math.                    */
+extern float tmpl_Float_Cosd_Maclaurin(float x);
+extern double tmpl_Double_Cosd_Maclaurin(double x);
+extern long double tmpl_LDouble_Cosd_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_CosPi                                                     *
  *  Purpose:                                                                  *
  *      Computes the normalized cosine of a real number, f(x) = cos(pi x).    *
@@ -2036,6 +2081,22 @@ extern long double tmpl_LDouble_Mod_2(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Mod_360                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the remainder after division by 360 of the input.            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double x_mod_360:                                                     *
+ *          The value x mod 360.                                              *
+ ******************************************************************************/
+extern float tmpl_Float_Mod_360(float x);
+extern double tmpl_Double_Mod_360(double n);
+extern long double tmpl_LDouble_Mod_360(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Float_NaN                                                        *
  *  Purpose:                                                                  *
  *      Returns Not-A-Number.                                                 *
@@ -2209,6 +2270,51 @@ extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
 
 extern void
 tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sind                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the sine of a number in degrees.                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sind_x:                                                        *
+ *          The sine of x in degrees.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_Sind(float x);
+extern double tmpl_Double_Sind(double x);
+extern long double tmpl_LDouble_Sind(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sind_Maclaurin                                            *
+ *  Purpose:                                                                  *
+ *      Computes the Maclaurin series of sine in degrees.                     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sind_x:                                                        *
+ *          The sine of x in degrees.                                         *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_math_sind_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_sind_maclaurin_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support, use external functions in src/math.                    */
+extern float tmpl_Float_Sind_Maclaurin(float x);
+extern double tmpl_Double_Sind_Maclaurin(double x);
+extern long double tmpl_LDouble_Sind_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
