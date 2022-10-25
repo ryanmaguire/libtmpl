@@ -88,6 +88,8 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
 	-not -name "tmpl_copysign_ldouble.c" -and \
+	-not -name "tmpl_cospi_maclaurin_double.c" -and \
+	-not -name "tmpl_cospi_maclaurin_float.c" -and \
 	-not -name "tmpl_dist_float.c" -and \
 	-not -name "tmpl_dist_double.c" -and \
 	-not -name "tmpl_dist_ldouble.c" -and \
@@ -97,6 +99,8 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_sin_pade_pi_double.c" -and \
 	-not -name "tmpl_sin_pade_pi_float.c" -and \
 	-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_double.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_float.c" -and \
 	-not -name "tmpl_sin_very_small_double.c" -and
 endif
 

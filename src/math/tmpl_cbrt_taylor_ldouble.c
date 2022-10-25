@@ -26,13 +26,13 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_Cbrt_Taylor                                              *
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) for small values x.             *
+ *      Computes the Taylor series of cbrt(x) for values near 1.              *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      cbrt_x (long double):                                                 *
- *          The Taylor series of atan(x).                                     *
+ *          The Taylor series of cbrt(x).                                     *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *

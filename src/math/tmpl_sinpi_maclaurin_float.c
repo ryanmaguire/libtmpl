@@ -16,41 +16,38 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_arctan_maclaurin_double_inline                     *
+ *                        tmpl_sinpi_maclaurin_float                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of atan(x) at double precision, inlined.*
+ *      Computes the Maclaurin series of sin(pi x) at single precision.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Arctan_Maclaurin                                          *
+ *      tmpl_Float_SinPi_Maclaurin                                            *
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of atan(x) for small values x.          *
+ *      Computes the Maclaurin series of sin(pi x) for small values x.        *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      atan_x (double):                                                      *
- *          The Maclaurin series of atan(x).                                  *
+ *      sin_pix (float):                                                      *
+ *          The Maclaurin series of sin(pi x).                                *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
  *                                                                            *
- *                      infty                                                 *
- *                      -----                                                 *
- *                      \         (-1)^n                                      *
- *          atan(x) =   /        -------- * x^{2n+1}                          *
- *                      -----    (2n + 1)                                     *
- *                      n = 0                                                 *
+ *                        infty                                               *
+ *                        -----                                               *
+ *                        \        (-1)^n pi^{2n+1}                           *
+ *          sin(pi x) =   /        ---------------- * x^{2n+1}                *
+ *                        -----         (2n+1)!                               *
+ *                        n = 0                                               *
  *                                                                            *
- *      Use the first 9 terms (0 <= n <= 8) and compute.                      *
+ *      Use the first 3 terms (0 <= n <= 2) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for small values. For |x| < 0.15 this function is       *
- *      accurate to double precision (10^-16 relative error). The larger      *
- *      the input is, the worse the error. By the alternating series theorem, *
- *      the absolute error is bounded by (1/19)*|x|^19.                       *
+ *      Only accurate for values near 0.                                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -60,58 +57,38 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 22, 2022                                            *
+ *  Date:       October 24, 2022                                              *
  ******************************************************************************/
-
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_ARCTAN_MACLAURIN_DOUBLE_INLINE_H
-#define TMPL_MATH_ARCTAN_MACLAURIN_DOUBLE_INLINE_H
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (1.00000000000000000000000000000E+00)
-#define A1 (-3.33333333333333333333333333333E-01)
-#define A2 (2.00000000000000000000000000000E-01)
-#define A3 (-1.42857142857142857142857142857E-01)
-#define A4 (1.11111111111111111111111111111E-01)
-#define A5 (-9.09090909090909090909090909090E-02)
-#define A6 (7.69230769230769230769230769231E-02)
-#define A7 (-6.66666666666666666666666666667E-02)
-#define A8 (5.88235294117647058823529411765E-02)
+/*  Coefficients for the Maclaurin series at single precision.                */
+#define A0 (3.1415926535897932384626433832795028841972E+00F)
+#define A1 (-5.1677127800499700292460525111835658670375E+00F)
+#define A2 (2.5501640398773454438561775836952967206692E+00F)
 
-/*  Maclaurin series for arctan, double precision, to 9 terms.                */
-TMPL_INLINE_DECL
-double tmpl_Double_Arctan_Maclaurin(double x)
+/*  Maclaurin series for sin(pi x), single precision, to 5 terms.             */
+float tmpl_Float_SinPi_Maclaurin(float x)
 {
     /*  Declare necessary variables.                                          */
-    const double x2 = x*x;
+    const float x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0+x2*(A1+x2*(A2+x2*(A3+x2*(A4+x2*(A5+x2*(A6+x2*(A7+x2*A8))))))));
+    return x*(A0 + x2*(A1 + x2*A2));
 }
-/*  End of tmpl_Double_Arctan_Maclaurin.                                      */
+/*  End of tmpl_Float_SinPi_Maclaurin.                                        */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
 #undef A1
 #undef A2
-#undef A3
-#undef A4
-#undef A5
-#undef A6
-#undef A7
-#undef A8
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

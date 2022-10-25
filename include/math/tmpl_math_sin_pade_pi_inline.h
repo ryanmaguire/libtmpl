@@ -1,5 +1,5 @@
-#ifndef TMPL_MATH_SINE_PADE_PI_INLINE_H
-#define TMPL_MATH_SINE_PADE_PI_INLINE_H
+#ifndef TMPL_MATH_SIN_PADE_PI_INLINE_H
+#define TMPL_MATH_SIN_PADE_PI_INLINE_H
 
 #include <libtmpl/include/tmpl_config.h>
 

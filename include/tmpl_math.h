@@ -1677,6 +1677,67 @@ extern long double tmpl_LDouble_Cos(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_CosPi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the normalized cosine of a real number, f(x) = cos(pi x).    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_pix:                                                       *
+ *          The normalized cosine of x, cos(pi x).                            *
+ ******************************************************************************/
+extern float tmpl_Float_CosPi(float x);
+extern double tmpl_Double_CosPi(double x);
+extern long double tmpl_LDouble_CosPi(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_CosPi_Maclaurin                                           *
+ *  Purpose:                                                                  *
+ *      Computes the Maclaurin series of the normalized cosine, cos(pi x).    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_pix:                                                       *
+ *          The normalized cosine of x, cos(pi x).                            *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_math_cospi_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_cospi_maclaurin_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support, use external functions in src/math.                    */
+extern float tmpl_Float_CosPi_Maclaurin(float x);
+extern double tmpl_Double_CosPi_Maclaurin(double x);
+extern long double tmpl_LDouble_CosPi_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_CosPi_Pade                                                *
+ *  Purpose:                                                                  *
+ *      Computes the Pade approximant of the normalized cosine, cos(pi x).    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_pix:                                                       *
+ *          The normalized cosine of x, cos(pi x).                            *
+ ******************************************************************************/
+extern float tmpl_Float_CosPi_Pade(float x);
+extern double tmpl_Double_CosPi_Pade(double x);
+extern long double tmpl_LDouble_CosPi_Pade(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Cosh                                                      *
  *  Purpose:                                                                  *
  *      Computes the hyperbolic cosine of a real number.                      *
@@ -2101,7 +2162,7 @@ extern double tmpl_Double_Sin_Very_Small(double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sine_pade_inline.h>
+#include <libtmpl/include/math/tmpl_math_sin_pade_inline.h>
 #else
 extern float tmpl_Float_Sin_Pade(float x);
 extern double tmpl_Double_Sin_Pade(double x);
@@ -2121,7 +2182,7 @@ extern long double tmpl_LDouble_Sin_Pade(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sine_pade_pi_inline.h>
+#include <libtmpl/include/math/tmpl_math_sin_pade_pi_inline.h>
 #else
 extern float tmpl_Float_Sin_Pade_Pi(float x);
 extern double tmpl_Double_Sin_Pade_Pi(double x);
@@ -2164,6 +2225,51 @@ tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
 extern float tmpl_Float_Sinh(float x);
 extern double tmpl_Double_Sinh(double x);
 extern long double tmpl_LDouble_Sinh(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinPi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the normalized sine of a real number, f(x) = sin(pi x).      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_pix:                                                       *
+ *          The normalized sine of x, sin(pi x).                              *
+ ******************************************************************************/
+extern float tmpl_Float_SinPi(float x);
+extern double tmpl_Double_SinPi(double x);
+extern long double tmpl_LDouble_SinPi(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinPi_Maclaurin                                           *
+ *  Purpose:                                                                  *
+ *      Computes the Maclaurin series of the normalized sine, sin(pi x).      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_pix:                                                       *
+ *          The normalized sine of x, sin(pi x).                              *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_math_sinpi_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_sinpi_maclaurin_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support, use external functions in src/math.                    */
+extern float tmpl_Float_SinPi_Maclaurin(float x);
+extern double tmpl_Double_SinPi_Maclaurin(double x);
+extern long double tmpl_LDouble_SinPi_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

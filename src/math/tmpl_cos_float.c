@@ -15,11 +15,12 @@ float tmpl_Float_Cos(float x)
 
 #else
 
-#include <libtmpl/include/math/tmpl_math_sincos_data_float.h>
+#include <libtmpl/include/math/tmpl_math_cospi_lookup_table_float.h>
+#include <libtmpl/include/math/tmpl_math_sinpi_lookup_table_float.h>
 
 float tmpl_Float_Cos(float x)
 {
-    float arg, sgn_x, cx, cdx, sx, sdx, dx, dx_sq;
+    float arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int arg_128_int;
 
     arg = tmpl_Float_Mod_2(tmpl_Float_Abs(x) * tmpl_One_By_Pi_F);
@@ -32,20 +33,13 @@ float tmpl_Float_Cos(float x)
     else
         sgn_x = 1.0F;
 
-    arg_128_int = (unsigned int)(128.0F*arg);
+    arg_128_int = (unsigned int)(128.0F*arg + 0.25F);
     dx = arg - 0.0078125F*(float)arg_128_int;
-    dx_sq = dx*dx;
 
-    sx  = tmpl_Float_Sin_Lookup_Table[arg_128_int];
-    cx  = tmpl_Float_Cos_Lookup_Table[arg_128_int];
-
-    sdx = 2.550164039877345443856178F * dx_sq - 5.167712780049970029246053F;
-    sdx = sdx * dx_sq + 3.141592653589793238462643F;
-    sdx = sdx * dx;
-
-    cdx = 4.058712126416768218185014F * dx_sq - 4.934802200544679309417245F;
-    cdx = cdx * dx_sq + 1.0F;
-
+    sx = tmpl_Float_SinPi_Lookup_Table[arg_128_int];
+    cx = tmpl_Float_CosPi_Lookup_Table[arg_128_int];
+    sdx = tmpl_Float_SinPi_Maclaurin(dx);
+    cdx = tmpl_Float_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*cx - sx*sdx);
 }
 

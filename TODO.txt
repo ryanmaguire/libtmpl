@@ -3,10 +3,10 @@
 [x] atan
 [x] cbrt
 [x] frexp
-[ ] copysign
+[x] copysign
 [ ] cos
 [ ] cosh
-[ ] dist
+[x] dist
 [ ] erf
 [ ] erfc
 [ ] erfcx
