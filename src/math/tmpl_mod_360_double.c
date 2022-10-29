@@ -1,8 +1,57 @@
-#include <libtmpl/include/tmpl_inttype.h>
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                            tmpl_mod_360_double                             *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the remainder after division by 360.                         *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Double_Mod_360                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the remainder after division of the input by 360.            *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number, the argument for x mod 360.                        *
+ *  Output:                                                                   *
+ *      x_mod_360 (double):                                                   *
+ *          The remainder after division of x by 360.                         *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_math.h:                                                          *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       October 29, 2022                                              *
+ ******************************************************************************/
+
+/*  Function prototype and IEEE-754 double found here.                        */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Check for IEEE-754 double.                                                */
+/*  Check for IEEE-754 double. This method is significantly faster.           */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
+
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
 
 /*  Function for computing x mod 360.                                         */
 double tmpl_Double_Mod_360(double x)
