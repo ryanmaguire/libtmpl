@@ -52,6 +52,7 @@ set_c_standard(TARGET tmpl
 
 if(NO_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
+    list(APPEND SOURCE_EXCLUSION_LIST "tmpl_abs_llong.c")
 endif()
 
 if(OMP)
@@ -92,13 +93,78 @@ if(NO_MATH)
     if(UNIX)
         target_link_libraries(tmpl PRIVATE m)
     endif()
-    # TODO: set up file exclusions
+
+    list(
+        APPEND
+        SOURCE_EXCLUSION_LIST
+        "tmpl_abs_double.c"
+        "tmpl_abs_float.c"
+        "tmpl_abs_ldouble.c"
+        "tmpl_arctan2_double.c"
+        "tmpl_arctan2_float.c"
+        "tmpl_arctan2_ldouble.c"
+        "tmpl_arctan_double.c"
+        "tmpl_arctan_float.c"
+        "tmpl_arctan_ldouble.c"
+        "tmpl_cos_double.c"
+        "tmpl_floor_double.c"
+        "tmpl_floor_float.c"
+        "tmpl_sin_double.c"
+    )
 else()
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MATH_TRUE)
 endif()
 
 if(NOT NO_INLINE)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_INLINE_TRUE)
+
+    list(
+        APPEND
+        SOURCE_EXCLUSION_LIST
+        "tmpl_abs_char.c"
+        "tmpl_abs_short.c"
+        "tmpl_abs_int.c"
+        "tmpl_abs_long.c"
+        "tmpl_abs_llong.c"
+        "tmpl_abs_double.c"
+        "tmpl_abs_float.c"
+        "tmpl_abs_ldouble.c"
+        "tmpl_arctan_asymptotic_double.c"
+        "tmpl_arctan_asymptotic_float.c"
+        "tmpl_arctan_asymptotic_ldouble.c"
+        "tmpl_arctan_maclaurin_double.c"
+        "tmpl_arctan_maclaurin_float.c"
+        "tmpl_arctan_maclaurin_ldouble.c"
+        "tmpl_arctan_pade_double.c"
+        "tmpl_arctan_pade_float.c"
+        "tmpl_arctan_pade_ldouble.c"
+        "tmpl_arctan_very_small_double.c"
+        "tmpl_arctan_very_small_float.c"
+        "tmpl_arctan_very_small_ldouble.c"
+        "tmpl_cbrt_pade_double.c"
+        "tmpl_cbrt_pade_float.c"
+        "tmpl_cbrt_pade_ldouble.c"
+        "tmpl_cbrt_taylor_double.c"
+        "tmpl_cbrt_taylor_float.c"
+        "tmpl_cbrt_taylor_ldouble.c"
+        "tmpl_complex_abs_double.c"
+        "tmpl_complex_abs_float.c"
+        "tmpl_complex_abs_ldouble.c"
+        "tmpl_complex_abs_squared.c"
+        "tmpl_complex_add.c"
+        "tmpl_complex_addto.c"
+        "tmpl_complex_quick_abs.c"
+        "tmpl_copysign_float.c"
+        "tmpl_copysign_double.c"
+        "tmpl_copysign_ldouble.c"
+        "tmpl_sin_pade_double.c"
+        "tmpl_sin_pade_float.c" # FIXME: "tmpl_sin_pade_float.c" not found
+        "tmpl_sin_pade_ldouble.c" # FiXME: tmpl_sin_pade_ldouble.c not found
+        "tmpl_sin_pade_pi_double.c"
+        "tmpl_sin_pade_pi_float.c" # FIXME: tmpl_sin_pade_pi_float.c not found
+        "tmpl_sin_pade_pi_ldouble.c" # FIXME: tmpl_sin_pade_pi_ldouble.c not found
+        "tmpl_sin_very_small_double.c"
+    )
 endif()
 
 if(NO_IEEE)
@@ -109,15 +175,11 @@ if(NO_INT)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_NO_INT)
 endif()
 
-# TODO: set up ASM support
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" system_processor)
 set(X86_64_ARCHES "amd64;x86_64")
 set(ARM64_ARCHES "aarch64;arm64")
 set(ARMHF_ARCHES "armv7l;")
 
-set(ARMHF_ASM_ENABLED FALSE)
-set(ARM64_ASM_ENABLED FALSE)
-set(ARM64_USE_BUILTIN FALSE)
 if(NOT NO_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
         enable_language(ASM)
@@ -174,7 +236,7 @@ if(NOT NO_ASM)
         endif()
     elseif(system_processor in ARM64_ARCHES)
         enable_language(ASM)
-        set(ARM64_ASM_ENABLED TRUE)
+
         if(NOT NO_BUILTIN)
             set(ARM64_USE_BUILTIN TRUE)
             add_subdirectory("src/builtins/aarch64")
@@ -198,7 +260,7 @@ if(NOT NO_ASM)
         add_subdirectory("src/assembly/aarch64")
     elseif(system_processor IN ARMHF_ARCHES)
         enable_language(ASM)
-        set(ARMHF_ASM_ENABLED TRUE)
+
         add_subdirectory("src/assembly/armv7l")
         list(
             APPEND
