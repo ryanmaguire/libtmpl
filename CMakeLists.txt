@@ -34,10 +34,10 @@ add_custom_command(
     COMMAND "$<TARGET_FILE:tmpl_config>"
     COMMAND
         ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_config.h
-        include
+        ${CMAKE_SOURCE_DIR}/include
     COMMAND
         ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_inttype.h
-        include
+        ${CMAKE_SOURCE_DIR}/include
     VERBATIM
 )
 
