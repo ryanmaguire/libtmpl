@@ -23,4 +23,4 @@ static inline double fmod360(double x)
     return fmod(x, 360.0);
 }
 
-TEST1(double, -1.0E6, 1.0E6, tmpl_Double_Mod_360, fmod360)
+TEST1(double, -1.0E300, 1.0E300, tmpl_Double_Mod_360, fmod360)
