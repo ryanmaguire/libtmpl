@@ -7,22 +7,22 @@
 /*  complex data types are defined here.                                      */
 #include <libtmpl/include/tmpl_complex.h>
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Fresnel_Integral_Real(double z);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Bessel_J0(tmpl_ComplexDouble z);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Bessel_I0(tmpl_ComplexDouble z);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_LambertW(tmpl_ComplexDouble z);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Fresnel_Cos(tmpl_ComplexDouble z);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Fresnel_Sin(tmpl_ComplexDouble z);
 
 extern float
@@ -71,13 +71,13 @@ extern long double
 tmpl_LDouble_Fresnel_Sin(long double x);
 
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Legendre_Polynomials(double *legendre_p, double x, unsigned int order);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Alt_Legendre_Polynomials(double *poly, double *legendre_p, unsigned int order);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
                                  double *alt_legendre_p,
                                  double Legendre_Coeff, unsigned int order);

@@ -488,21 +488,21 @@ tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
  *  Examples:                                                                 *
  *                                                                            *
  ******************************************************************************/
-extern void tmpl_Destroy_SVG_Canvas(tmpl_SVG_Canvas **canvas_ptr);
+TMPL_EXPORT extern void tmpl_Destroy_SVG_Canvas(tmpl_SVG_Canvas **canvas_ptr);
 
 extern tmpl_SVG *
 tmpl_Create_SVG(const char *filename, tmpl_SVG_Canvas *canvas);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_SVG(tmpl_SVG **svg_ptr);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Set_Arrow_Type(tmpl_SVG_Arrow *arrow, tmpl_SVG_ArrowType type);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Set_Arrow_Pos(tmpl_SVG_Arrow *arrow, double pos);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Set_Arrow_Size(tmpl_SVG_Arrow *arrow, double size);
 
 extern tmpl_SVG_Arrow *
@@ -512,14 +512,14 @@ tmpl_SVG_Create_Arrow(double pos, double arrow_size, tmpl_SVG_Color *fill_color,
 extern tmpl_SVG_Circle *
 tmpl_Create_SVG_Circle(tmpl_TwoVector P, double r, tmpl_SVG_Palette *palette);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Circle2D_As_Line(tmpl_Circle2D *circle,
                       tmpl_TwoVector P, tmpl_TwoVector V);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Reset_Circle2D(tmpl_Circle2D *circle, tmpl_TwoVector P, double r);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_Circle2D(tmpl_Circle2D **circle);
 
 extern tmpl_SVG_Line *
@@ -531,7 +531,7 @@ tmpl_Create_SVG_Line_From_Point_And_Tangent(tmpl_TwoVector P,
                                             tmpl_TwoVector V,
                                             tmpl_SVG_Palette *palette);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_SVG_Line(tmpl_SVG_Line **line_pointer);
 
 /******************************************************************************
@@ -574,22 +574,22 @@ tmpl_Create_SVG_Pen(unsigned char red, unsigned char green, unsigned char blue,
  *  NOTE:                                                                     *
  *      This function must be called if kissvg_CreateColor was used.          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_SVG_Pen(tmpl_SVG_Pen **color_pointer);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Pen_Change_Linewidth(tmpl_SVG_Pen *pen, double linewidth);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Pen_Change_Transparency(tmpl_SVG_Pen *pen, double alpha);
 
 extern tmpl_SVG_Palette *
 tmpl_SVG_Create_Palette(tmpl_SVG_Pen *line_pen, tmpl_SVG_Canvas *canvas);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Palette_Set_Fill_Pen(tmpl_SVG_Palette *palette, tmpl_SVG_Pen *fpen);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Palette_Add_Arrow(tmpl_SVG_Palette *palette,
                            double pos,
                            double arrow_size,
@@ -597,7 +597,7 @@ tmpl_SVG_Palette_Add_Arrow(tmpl_SVG_Palette *palette,
                            tmpl_SVG_Pen *line_pen,
                            tmpl_SVG_ArrowType type);
 
-extern void tmpl_SVG_Palette_Add_Ticks(tmpl_SVG_Palette *palette,
+TMPL_EXPORT extern void tmpl_SVG_Palette_Add_Ticks(tmpl_SVG_Palette *palette,
                                        double tick_start,
                                        double tick_end,
                                        tmpl_SVG_Pen *tick_pen,
@@ -606,13 +606,13 @@ extern void tmpl_SVG_Palette_Add_Ticks(tmpl_SVG_Palette *palette,
                                        double tick_semi_height,
                                        double tick_semi_semi_height);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Palette_Use_Up_Ticks(tmpl_SVG_Palette *palette);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Palette_Use_Down_Ticks(tmpl_SVG_Palette *palette);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_SVG_Destroy_Palette(tmpl_SVG_Palette *palette);
 
 extern tmpl_SVG_Label *
@@ -620,31 +620,31 @@ tmpl_Create_SVG_Label(const char *label_content,
                       tmpl_TwoVector anchor,
                       tmpl_SVG_Canvas *canvas);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_SVG_Label(tmpl_SVG_Label *label);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Reset_SVG_Label_Content(tmpl_SVG_Label *label, const char *content);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Set_SVG_Label_Anchor(tmpl_SVG_Label *label, tmpl_TwoVector anchor);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Set_SVG_Label_Shift(tmpl_SVG_Label *label, tmpl_TwoVector shift);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Set_SVG_Label_FontSize(tmpl_SVG_Label *label, unsigned int font_size);
 
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Draw_SVG_Label(tmpl_SVG *svg, tmpl_SVG_Label *label);
 
 extern tmpl_SVG_Path2D *
 tmpl_Create_SVG_Path(tmpl_TwoVector start, tmpl_SVG_Palette *canvas);
 
-extern void tmpl_Append_Path2D(tmpl_SVG_Path2D *path, tmpl_TwoVector P);
-extern void tmpl_Close_Path2D(tmpl_SVG_Path2D *path);
-extern void tmpl_Destroy_Path2D(tmpl_SVG_Path2D **path_pointer);
+TMPL_EXPORT extern void tmpl_Append_Path2D(tmpl_SVG_Path2D *path, tmpl_TwoVector P);
+TMPL_EXPORT extern void tmpl_Close_Path2D(tmpl_SVG_Path2D *path);
+TMPL_EXPORT extern void tmpl_Destroy_Path2D(tmpl_SVG_Path2D **path_pointer);
 
 extern tmpl_SVG_Line *
 ttmpl_CreateLineFromTwoPoints(tmpl_TwoVector P,
@@ -656,25 +656,25 @@ tmpl_CreateLineFromPointAndTangent(tmpl_TwoVector P,
                                    tmpl_TwoVector V,
                                    tmpl_SVG_Palette *palette);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_Line(tmpl_SVG_Line *L);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_DrawPolygon2D(tmpl_SVG *svg, tmpl_SVG_Path2D *path);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_FillDrawPolygon2D(tmpl_SVG *svg, tmpl_SVG_Path2D *path);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_DrawCircle2D(tmpl_SVG *svg, tmpl_SVG_Circle *circle);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_FillDrawCircle2D(tmpl_SVG *svg, tmpl_SVG_Circle *circle);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_DrawLine2D(tmpl_SVG *cr, tmpl_SVG_Line *line, double t0, double t1);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_GenerateFile(char *filename, void (*instruction)(tmpl_SVG *),
                   double x_inches, double y_inches);
 

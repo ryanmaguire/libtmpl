@@ -47,6 +47,5 @@
 #include <libtmpl/include/tmpl_vector.h>
 #include <libtmpl/include/tmpl_void_pointer.h>
 #include <libtmpl/include/tmpl_window_functions.h>
-
+#include "tmpl_exports.h"
 #endif
-

@@ -94,6 +94,8 @@
 #ifndef TMPL_MATH_H
 #define TMPL_MATH_H
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -1203,9 +1205,9 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #else
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Abs(float x);
-extern double tmpl_Double_Abs(double x);
-extern long double tmpl_LDouble_Abs(long double x);
+TMPL_EXPORT extern float tmpl_Float_Abs(float x);
+TMPL_EXPORT extern double tmpl_Double_Abs(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Abs(long double x);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
@@ -1243,9 +1245,9 @@ extern long double tmpl_LDouble_Abs(long double x);
 #define tmpl_Double_Arctan2 atan2
 #define tmpl_LDouble_Arctan2 atan2l
 #else
-extern float tmpl_Float_Arctan2(float y, float x);
-extern double tmpl_Double_Arctan2(double y, double x);
-extern long double tmpl_LDouble_Arctan2(long double y, long double x);
+TMPL_EXPORT extern float tmpl_Float_Arctan2(float y, float x);
+TMPL_EXPORT extern double tmpl_Double_Arctan2(double y, double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arctan2(long double y, long double x);
 #endif
 
 /******************************************************************************
@@ -1286,9 +1288,9 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
 #define tmpl_Double_Arctan atan
 #define tmpl_LDouble_Arctan atanl
 #else
-extern float tmpl_Float_Arctan(float x);
-extern double tmpl_Double_Arctan(double x);
-extern long double tmpl_LDouble_Arctan(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arctan(float x);
+TMPL_EXPORT extern double tmpl_Double_Arctan(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arctan(long double x);
 #endif
 
 /******************************************************************************
@@ -1313,9 +1315,9 @@ extern long double tmpl_LDouble_Arctan(long double x);
 /*  inline versions found here.                                               */
 #include <libtmpl/include/math/tmpl_math_arctan_asymptotic_inline.h>
 #else
-extern float tmpl_Float_Arctan_Asymptotic(float x);
-extern double tmpl_Double_Arctan_Asymptotic(double x);
-extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arctan_Asymptotic(float x);
+TMPL_EXPORT extern double tmpl_Double_Arctan_Asymptotic(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 #endif
 
 /******************************************************************************
@@ -1343,9 +1345,9 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 /*  inline versions found here.                                               */
 #include <libtmpl/include/math/tmpl_math_arctan_maclaurin_inline.h>
 #else
-extern float tmpl_Float_Arctan_Maclaurin(float x);
-extern double tmpl_Double_Arctan_Maclaurin(double x);
-extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arctan_Maclaurin(float x);
+TMPL_EXPORT extern double tmpl_Double_Arctan_Maclaurin(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 #endif
 
 /******************************************************************************
@@ -1372,9 +1374,9 @@ extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 /*  inline versions found here.                                               */
 #include <libtmpl/include/math/tmpl_math_arctan_pade_inline.h>
 #else
-extern float tmpl_Float_Arctan_Pade(float x);
-extern double tmpl_Double_Arctan_Pade(double x);
-extern long double tmpl_LDouble_Arctan_Pade(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arctan_Pade(float x);
+TMPL_EXPORT extern double tmpl_Double_Arctan_Pade(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Pade(long double x);
 #endif
 
 /******************************************************************************
@@ -1401,9 +1403,9 @@ extern long double tmpl_LDouble_Arctan_Pade(long double x);
 /*  inline versions found here.                                               */
 #include <libtmpl/include/math/tmpl_math_arctan_very_small_inline.h>
 #else
-extern float tmpl_Float_Arctan_Very_Small(float x);
-extern double tmpl_Double_Arctan_Very_Small(double x);
-extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arctan_Very_Small(float x);
+TMPL_EXPORT extern double tmpl_Double_Arctan_Very_Small(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
 #endif
 
 /******************************************************************************
@@ -1422,13 +1424,13 @@ extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Float_Base2_Mant_and_Exp(float x, float *mant, signed int *expo);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDouble_Base2_Mant_and_Exp(long double x,
                                 long double *mant,
                                 signed int *expo);
@@ -1445,9 +1447,9 @@ tmpl_LDouble_Base2_Mant_and_Exp(long double x,
  *      double cbrt_x:                                                        *
  *          The cube root of x, x^{1/3}.                                      *
  ******************************************************************************/
-extern float tmpl_Float_Cbrt(float x);
-extern double tmpl_Double_Cbrt(double x);
-extern long double tmpl_LDouble_Cbrt(long double x);
+TMPL_EXPORT extern float tmpl_Float_Cbrt(float x);
+TMPL_EXPORT extern double tmpl_Double_Cbrt(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Cbrt(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1464,9 +1466,9 @@ extern long double tmpl_LDouble_Cbrt(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_cbrt_pade_inline.h>
 #else
-extern float tmpl_Float_Cbrt_Pade(float x);
-extern double tmpl_Double_Cbrt_Pade(double x);
-extern long double tmpl_LDouble_Cbrt_Pade(long double x);
+TMPL_EXPORT extern float tmpl_Float_Cbrt_Pade(float x);
+TMPL_EXPORT extern double tmpl_Double_Cbrt_Pade(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Cbrt_Pade(long double x);
 #endif
 
 /******************************************************************************
@@ -1484,9 +1486,9 @@ extern long double tmpl_LDouble_Cbrt_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_cbrt_taylor_inline.h>
 #else
-extern float tmpl_Float_Cbrt_Taylor(float x);
-extern double tmpl_Double_Cbrt_Taylor(double x);
-extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
+TMPL_EXPORT extern float tmpl_Float_Cbrt_Taylor(float x);
+TMPL_EXPORT extern double tmpl_Double_Cbrt_Taylor(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
 #endif
 
 /******************************************************************************
@@ -1513,9 +1515,9 @@ extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
 #else
 
 /*  No inline support requested.                                              */
-extern float tmpl_Float_Copysign(float x, float y);
-extern double tmpl_Double_Copysign(double x, double y);
-extern long double tmpl_LDouble_Copysign(long double x, long double y);
+TMPL_EXPORT extern float tmpl_Float_Copysign(float x, float y);
+TMPL_EXPORT extern double tmpl_Double_Copysign(double x, double y);
+TMPL_EXPORT extern long double tmpl_LDouble_Copysign(long double x, long double y);
 #endif
 
 /******************************************************************************
@@ -1530,9 +1532,9 @@ extern long double tmpl_LDouble_Copysign(long double x, long double y);
  *      double cos_x:                                                         *
  *          The hyperbolic cosine of x, cosh(x).                              *
  ******************************************************************************/
-extern float tmpl_Float_Cosh(float x);
-extern double tmpl_Double_Cosh(double x);
-extern long double tmpl_LDouble_Cosh(long double x);
+TMPL_EXPORT extern float tmpl_Float_Cosh(float x);
+TMPL_EXPORT extern double tmpl_Double_Cosh(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Cosh(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1547,9 +1549,9 @@ extern long double tmpl_LDouble_Cosh(long double x);
  *          The cosine of x, cos(x).                                          *
  ******************************************************************************/
 #if TMPL_USE_MATH_ALGORITHMS == 1
-extern float tmpl_Float_Cos(float x);
-extern double tmpl_Double_Cos(double x);
-extern long double tmpl_LDouble_Cos(long double x);
+TMPL_EXPORT extern float tmpl_Float_Cos(float x);
+TMPL_EXPORT extern double tmpl_Double_Cos(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Cos(long double x);
 #else
 #define tmpl_Float_Cos cosf
 #define tmpl_Double_Cos cos
@@ -1570,9 +1572,9 @@ extern long double tmpl_LDouble_Cos(long double x);
  *      double dist:                                                          *
  *          The distance |x - y|.                                             *
  ******************************************************************************/
-extern float tmpl_Float_Dist(float x, float y);
-extern double tmpl_Double_Dist(double x, double y);
-extern long double tmpl_LDouble_Dist(long double x, long double y);
+TMPL_EXPORT extern float tmpl_Float_Dist(float x, float y);
+TMPL_EXPORT extern double tmpl_Double_Dist(double x, double y);
+TMPL_EXPORT extern long double tmpl_LDouble_Dist(long double x, long double y);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1586,9 +1588,9 @@ extern long double tmpl_LDouble_Dist(long double x, long double y);
  *      double erf_x:                                                         *
  *          The error function of x, Erf(x).                                  *
  ******************************************************************************/
-extern float tmpl_Float_Erf(float x);
-extern double tmpl_Double_Erf(double x);
-extern long double tmpl_LDouble_Erf(long double x);
+TMPL_EXPORT extern float tmpl_Float_Erf(float x);
+TMPL_EXPORT extern double tmpl_Double_Erf(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1602,9 +1604,9 @@ extern long double tmpl_LDouble_Erf(long double x);
  *      double erfc_x:                                                        *
  *          The complementary error function of x, Erfc(x).                   *
  ******************************************************************************/
-extern float tmpl_Float_Erfc(float x);
-extern double tmpl_Double_Erfc(double x);
-extern long double tmpl_LDouble_Erfc(long double x);
+TMPL_EXPORT extern float tmpl_Float_Erfc(float x);
+TMPL_EXPORT extern double tmpl_Double_Erfc(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erfc(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1618,9 +1620,9 @@ extern long double tmpl_LDouble_Erfc(long double x);
  *      double erfcx_x:                                                       *
  *          The scaled error function of x, Erfc(x).                          *
  ******************************************************************************/
-extern float tmpl_Float_Erfcx(float x);
-extern double tmpl_Double_Erfcx(double x);
-extern long double tmpl_LDouble_Erfcx(long double x);
+TMPL_EXPORT extern float tmpl_Float_Erfcx(float x);
+TMPL_EXPORT extern double tmpl_Double_Erfcx(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erfcx(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1634,14 +1636,14 @@ extern long double tmpl_LDouble_Erfcx(long double x);
  *      double exp_x:                                                         *
  *          The exponential function of x, exp(x).                            *
  ******************************************************************************/
-extern float tmpl_Float_Exp(float x);
-extern double tmpl_Double_Exp(double x);
-extern long double tmpl_LDouble_Exp(long double x);
+TMPL_EXPORT extern float tmpl_Float_Exp(float x);
+TMPL_EXPORT extern double tmpl_Double_Exp(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Exp(long double x);
 
-extern unsigned long tmpl_Factorial(unsigned int n);
+TMPL_EXPORT extern unsigned long tmpl_Factorial(unsigned int n);
 
-extern float tmpl_Factorial_As_Float(unsigned int n);
-extern double tmpl_Factorial_As_Double(unsigned int n);
+TMPL_EXPORT extern float tmpl_Factorial_As_Float(unsigned int n);
+TMPL_EXPORT extern double tmpl_Factorial_As_Double(unsigned int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1656,11 +1658,11 @@ extern double tmpl_Factorial_As_Double(unsigned int n);
  *      double fa_im_x:                                                       *
  *          The imaginary part of the Faddeeva function of x.                 *
  ******************************************************************************/
-extern float tmpl_Float_Faddeeva_Im(float x);
-extern double tmpl_Double_Faddeeva_Im(double x);
-extern long double tmpl_LDouble_Faddeeva_Im(long double x);
+TMPL_EXPORT extern float tmpl_Float_Faddeeva_Im(float x);
+TMPL_EXPORT extern double tmpl_Double_Faddeeva_Im(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Faddeeva_Im(long double x);
 
-extern unsigned long
+TMPL_EXPORT extern unsigned long
 tmpl_Falling_Factorial(unsigned int x, unsigned int N);
 
 /******************************************************************************
@@ -1680,9 +1682,9 @@ tmpl_Falling_Factorial(unsigned int x, unsigned int N);
 #define tmpl_Double_Floor floor
 #define tmpl_LDouble_Floor floorl
 #else
-extern float tmpl_Float_Floor(float x);
-extern double tmpl_Double_Floor(double x);
-extern long double tmpl_LDouble_Floor(long double x);
+TMPL_EXPORT extern float tmpl_Float_Floor(float x);
+TMPL_EXPORT extern double tmpl_Double_Floor(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Floor(long double x);
 #endif
 
 /******************************************************************************
@@ -1705,9 +1707,9 @@ extern long double tmpl_LDouble_Floor(long double x);
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_infinity_example.c                *
  ******************************************************************************/
-extern float tmpl_Float_Infinity(void);
-extern double tmpl_Double_Infinity(void);
-extern long double tmpl_LDouble_Infinity(void);
+TMPL_EXPORT extern float tmpl_Float_Infinity(void);
+TMPL_EXPORT extern double tmpl_Double_Infinity(void);
+TMPL_EXPORT extern long double tmpl_LDouble_Infinity(void);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1729,9 +1731,9 @@ extern long double tmpl_LDouble_Infinity(void);
  *      libtmpl/examples/math_examples/tmpl_is_inf_double_example.c           *
  *      libtmpl/examples/math_examples/tmpl_is_inf_ldouble_example.c          *
  ******************************************************************************/
-extern tmpl_Bool tmpl_Float_Is_Inf(float x);
-extern tmpl_Bool tmpl_Double_Is_Inf(double x);
-extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Float_Is_Inf(float x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Double_Is_Inf(double x);
+TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1753,9 +1755,9 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
  *      libtmpl/examples/math_examples/tmpl_is_nan_double_example.c           *
  *      libtmpl/examples/math_examples/tmpl_is_nan_ldouble_example.c          *
  ******************************************************************************/
-extern tmpl_Bool tmpl_Float_Is_NaN(float x);
-extern tmpl_Bool tmpl_Double_Is_NaN(double x);
-extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Float_Is_NaN(float x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Double_Is_NaN(double x);
+TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1773,9 +1775,9 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
  *  Source Code:                                                              *
  *      libtmpl/src/math/tmpl_is_nan_or_inf.c                                 *
  ******************************************************************************/
-extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
-extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
-extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
+TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1789,9 +1791,9 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
  *      double log_x:                                                         *
  *          The natural log function evaluated at x.                          *
  ******************************************************************************/
-extern float tmpl_Float_Log(float x);
-extern double tmpl_Double_Log(double x);
-extern long double tmpl_LDouble_Log(long double x);
+TMPL_EXPORT extern float tmpl_Float_Log(float x);
+TMPL_EXPORT extern double tmpl_Double_Log(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Log(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1805,9 +1807,9 @@ extern long double tmpl_LDouble_Log(long double x);
  *      double x_mod_2:                                                       *
  *          The value x mod 2.                                                *
  ******************************************************************************/
-extern float tmpl_Float_Mod_2(float x);
-extern double tmpl_Double_Mod_2(double n);
-extern long double tmpl_LDouble_Mod_2(long double x);
+TMPL_EXPORT extern float tmpl_Float_Mod_2(float x);
+TMPL_EXPORT extern double tmpl_Double_Mod_2(double n);
+TMPL_EXPORT extern long double tmpl_LDouble_Mod_2(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1829,9 +1831,9 @@ extern long double tmpl_LDouble_Mod_2(long double x);
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_nan_example.c                     *
  ******************************************************************************/
-extern float tmpl_Float_NaN(void);
-extern double tmpl_Double_NaN(void);
-extern long double tmpl_LDouble_NaN(void);
+TMPL_EXPORT extern float tmpl_Float_NaN(void);
+TMPL_EXPORT extern double tmpl_Double_NaN(void);
+TMPL_EXPORT extern long double tmpl_LDouble_NaN(void);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1847,9 +1849,9 @@ extern long double tmpl_LDouble_NaN(void);
  *      double sinc_x:                                                        *
  *          The sinc of x.                                                    *
  ******************************************************************************/
-extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
-extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
-extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
+TMPL_EXPORT extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
+TMPL_EXPORT extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
+TMPL_EXPORT extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1863,9 +1865,9 @@ extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
  *      double pow2_expo:                                                     *
  *          The value 2^expo.                                                 *
  ******************************************************************************/
-extern float tmpl_Float_Pow2(signed int expo);
-extern double tmpl_Double_Pow2(signed int expo);
-extern long double tmpl_LDouble_Pow2(signed int expo);
+TMPL_EXPORT extern float tmpl_Float_Pow2(signed int expo);
+TMPL_EXPORT extern double tmpl_Double_Pow2(signed int expo);
+TMPL_EXPORT extern long double tmpl_LDouble_Pow2(signed int expo);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1879,9 +1881,9 @@ extern long double tmpl_LDouble_Pow2(signed int expo);
  *      double sinc_x:                                                        *
  *          The sinc of x.                                                    *
  ******************************************************************************/
-extern float tmpl_Float_Sinc(float x);
-extern double tmpl_Double_Sinc(double x);
-extern long double tmpl_LDouble_Sinc(long double x);
+TMPL_EXPORT extern float tmpl_Float_Sinc(float x);
+TMPL_EXPORT extern double tmpl_Double_Sinc(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sinc(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1896,9 +1898,9 @@ extern long double tmpl_LDouble_Sinc(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_MATH_ALGORITHMS == 1
-extern float tmpl_Float_Sin(float x);
-extern double tmpl_Double_Sin(double x);
-extern long double tmpl_LDouble_Sin(long double x);
+TMPL_EXPORT extern float tmpl_Float_Sin(float x);
+TMPL_EXPORT extern double tmpl_Double_Sin(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sin(long double x);
 #else
 #define tmpl_Float_Sin sinf
 #define tmpl_Double_Sin sin
@@ -1921,7 +1923,7 @@ extern long double tmpl_LDouble_Sin(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_sin_very_small_inline.h>
 #else
-extern double tmpl_Double_Sin_Very_Small(double x);
+TMPL_EXPORT extern double tmpl_Double_Sin_Very_Small(double x);
 #endif
 
 /******************************************************************************
@@ -1939,9 +1941,9 @@ extern double tmpl_Double_Sin_Very_Small(double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_sine_pade_inline.h>
 #else
-extern float tmpl_Float_Sin_Pade(float x);
-extern double tmpl_Double_Sin_Pade(double x);
-extern long double tmpl_LDouble_Sin_Pade(long double x);
+TMPL_EXPORT extern float tmpl_Float_Sin_Pade(float x);
+TMPL_EXPORT extern double tmpl_Double_Sin_Pade(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sin_Pade(long double x);
 #endif
 
 /******************************************************************************
@@ -1959,9 +1961,9 @@ extern long double tmpl_LDouble_Sin_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_sine_pade_pi_inline.h>
 #else
-extern float tmpl_Float_Sin_Pade_Pi(float x);
-extern double tmpl_Double_Sin_Pade_Pi(double x);
-extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
+TMPL_EXPORT extern float tmpl_Float_Sin_Pade_Pi(float x);
+TMPL_EXPORT extern double tmpl_Double_Sin_Pade_Pi(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
 #endif
 
 /******************************************************************************
@@ -1979,10 +1981,10 @@ extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Float_SinCos(float t, float *sin_t, float *cos_t);
-extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
+TMPL_EXPORT extern void tmpl_Float_SinCos(float t, float *sin_t, float *cos_t);
+TMPL_EXPORT extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
 
 /******************************************************************************
@@ -1997,9 +1999,9 @@ tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
  *      double sinh_x:                                                        *
  *          The hyperbolic sine of x.                                         *
  ******************************************************************************/
-extern float tmpl_Float_Sinh(float x);
-extern double tmpl_Double_Sinh(double x);
-extern long double tmpl_LDouble_Sinh(long double x);
+TMPL_EXPORT extern float tmpl_Float_Sinh(float x);
+TMPL_EXPORT extern double tmpl_Double_Sinh(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sinh(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2013,9 +2015,9 @@ extern long double tmpl_LDouble_Sinh(long double x);
  *      double sqrt_x:                                                        *
  *          The square root of x.                                             *
  ******************************************************************************/
-extern float tmpl_Float_Sqrt(float x);
-extern double tmpl_Double_Sqrt(double x);
-extern long double tmpl_LDouble_Sqrt(long double x);
+TMPL_EXPORT extern float tmpl_Float_Sqrt(float x);
+TMPL_EXPORT extern double tmpl_Double_Sqrt(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sqrt(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2029,9 +2031,9 @@ extern long double tmpl_LDouble_Sqrt(long double x);
  *      double tan_x:                                                         *
  *          The tangent of x.                                                 *
  ******************************************************************************/
-extern float tmpl_Float_Tan(float x);
-extern double tmpl_Double_Tan(double x);
-extern long double tmpl_LDouble_Tan(long double x);
+TMPL_EXPORT extern float tmpl_Float_Tan(float x);
+TMPL_EXPORT extern double tmpl_Double_Tan(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Tan(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2045,103 +2047,103 @@ extern long double tmpl_LDouble_Tan(long double x);
  *      double tanh_x:                                                        *
  *          The hyperbolic tangent of x.                                      *
  ******************************************************************************/
-extern float tmpl_Float_Tanh(float x);
-extern double tmpl_Double_Tanh(double x);
-extern long double tmpl_LDouble_Tanh(long double x);
+TMPL_EXPORT extern float tmpl_Float_Tanh(float x);
+TMPL_EXPORT extern double tmpl_Double_Tanh(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Tanh(long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Real_Poly_Float_Coeffs(float *coeffs, unsigned int degree, float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Real_Poly_Double_Coeffs(double *coeffs, unsigned int degree, double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_Real_Poly_LDouble_Coeffs(long double *coeffs,
                               unsigned int degree,
                               long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Real_Poly_Deriv_Float_Coeffs(float *coeffs,
                                   unsigned int degree,
                                   unsigned int deriv,
                                   float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Real_Poly_Deriv_Double_Coeffs(double *coeffs,
                                    unsigned int degree,
                                    unsigned int deriv,
                                    double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
                                     unsigned int degree,
                                     unsigned int deriv,
                                     long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Max_Float(float *arr, unsigned long n_elements);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Max_Double(double *arr, unsigned long n_elements);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_Max_LDouble(long double *arr, unsigned long n_elements);
 
-extern char
+TMPL_EXPORT extern char
 tmpl_Max_Char(char *arr, unsigned long n_elements);
 
-extern unsigned char
+TMPL_EXPORT extern unsigned char
 tmpl_Max_UChar(unsigned char *arr, unsigned long n_elements);
 
-extern short
+TMPL_EXPORT extern short
 tmpl_Max_Short(short *arr, unsigned long n_elements);
 
-extern unsigned short
+TMPL_EXPORT extern unsigned short
 tmpl_Max_UShort(unsigned short *arr, unsigned long n_elements);
 
-extern int
+TMPL_EXPORT extern int
 tmpl_Max_Int(int *arr, unsigned long n_elements);
 
-extern unsigned int
+TMPL_EXPORT extern unsigned int
 tmpl_Max_UInt(unsigned int *arr, unsigned long n_elements);
 
-extern long
+TMPL_EXPORT extern long
 tmpl_Max_Long(long *arr, unsigned long n_elements);
 
-extern unsigned long
+TMPL_EXPORT extern unsigned long
 tmpl_Max_ULong(unsigned long *arr, unsigned long n_elements);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Min_Float(float *arr, unsigned long n_elements);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Min_Double(double *arr, unsigned long n_elements);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_Min_LDouble(long double *arr, unsigned long n_elements);
 
-extern char
+TMPL_EXPORT extern char
 tmpl_Min_Char(char *arr, unsigned long n_elements);
 
-extern unsigned char
+TMPL_EXPORT extern unsigned char
 tmpl_Min_UChar(unsigned char *arr, unsigned long n_elements);
 
-extern short
+TMPL_EXPORT extern short
 tmpl_Min_Short(short *arr, unsigned long n_elements);
 
-extern unsigned short
+TMPL_EXPORT extern unsigned short
 tmpl_Min_UShort(unsigned short *arr, unsigned long n_elements);
 
-extern int
+TMPL_EXPORT extern int
 tmpl_Min_Int(int *arr, unsigned long n_elements);
 
-extern unsigned int
+TMPL_EXPORT extern unsigned int
 tmpl_Min_UInt(unsigned int *arr, unsigned long n_elements);
 
-extern long
+TMPL_EXPORT extern long
 tmpl_Min_Long(long *arr, unsigned long n_elements);
 
-extern unsigned long
+TMPL_EXPORT extern unsigned long
 tmpl_Min_ULong(unsigned long *arr, unsigned long n_elements);
 
 /*  Macro for positive infinity                                               */

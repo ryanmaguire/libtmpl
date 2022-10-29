@@ -227,37 +227,37 @@ typedef struct tmpl_ULongVector_Def {
  *      libtmpl/src/vector/tmpl_create_empty_int_vector.c                     *
  *      libtmpl/src/vector/tmpl_create_empty_long_vector.c                    *
  ******************************************************************************/
-extern tmpl_FloatVector *
+TMPL_EXPORT extern tmpl_FloatVector *
 tmpl_Create_Empty_FloatVector(unsigned long int length);
 
-extern tmpl_DoubleVector *
+TMPL_EXPORT extern tmpl_DoubleVector *
 tmpl_Create_Empty_DoubleVector(unsigned long int length);
 
-extern tmpl_LongDoubleVector *
+TMPL_EXPORT extern tmpl_LongDoubleVector *
 tmpl_Create_Empty_LongDoubleVector(unsigned long int length);
 
-extern tmpl_CharVector *
+TMPL_EXPORT extern tmpl_CharVector *
 tmpl_Create_Empty_CharVector(unsigned long int length);
 
-extern tmpl_UCharVector *
+TMPL_EXPORT extern tmpl_UCharVector *
 tmpl_Create_Empty_UCharVector(unsigned long int length);
 
-extern tmpl_ShortVector *
+TMPL_EXPORT extern tmpl_ShortVector *
 tmpl_Create_Empty_ShortVector(unsigned long int length);
 
-extern tmpl_UShortVector *
+TMPL_EXPORT extern tmpl_UShortVector *
 tmpl_Create_Empty_UShortVector(unsigned long int length);
 
-extern tmpl_IntVector *
+TMPL_EXPORT extern tmpl_IntVector *
 tmpl_Create_Empty_IntVector(unsigned long int length);
 
-extern tmpl_UIntVector *
+TMPL_EXPORT extern tmpl_UIntVector *
 tmpl_Create_Empty_UIntVector(unsigned long int length);
 
-extern tmpl_LongVector *
+TMPL_EXPORT extern tmpl_LongVector *
 tmpl_Create_Empty_LongVector(unsigned long int length);
 
-extern tmpl_ULongVector *
+TMPL_EXPORT extern tmpl_ULongVector *
 tmpl_Create_Empty_ULongVector(unsigned long int length);
 
 /******************************************************************************
@@ -287,39 +287,39 @@ tmpl_Create_Empty_ULongVector(unsigned long int length);
  *  Source Code:                                                              *
  *      libtmpl/src/vector/tmpl_create_real_vector_from_data.c                *
  ******************************************************************************/
-extern tmpl_FloatVector *
+TMPL_EXPORT extern tmpl_FloatVector *
 tmpl_Create_FloatVector_From_Data(float *arr, unsigned long int length);
 
-extern tmpl_DoubleVector *
+TMPL_EXPORT extern tmpl_DoubleVector *
 tmpl_Create_DoubleVector_From_Data(double *arr, unsigned long int length);
 
-extern tmpl_LongDoubleVector *
+TMPL_EXPORT extern tmpl_LongDoubleVector *
 tmpl_Create_LongDoubleVector_From_Data(long double *arr,
                                        unsigned long int length);
 
-extern tmpl_CharVector *
+TMPL_EXPORT extern tmpl_CharVector *
 tmpl_Create_CharVector_From_Data(char *v, unsigned long length);
 
-extern tmpl_UCharVector *
+TMPL_EXPORT extern tmpl_UCharVector *
 tmpl_Create_UCharVector_From_Data(unsigned char *v, unsigned long int length);
 
-extern tmpl_ShortVector *
+TMPL_EXPORT extern tmpl_ShortVector *
 tmpl_Create_ShortVector_From_Data(short int *v, unsigned long length);
 
-extern tmpl_UShortVector *
+TMPL_EXPORT extern tmpl_UShortVector *
 tmpl_Create_UShortVector_From_Data(unsigned short int *v,
                                    unsigned long int length);
 
-extern tmpl_IntVector *
+TMPL_EXPORT extern tmpl_IntVector *
 tmpl_Create_IntVector_From_Data(int *v, unsigned long length);
 
-extern tmpl_UIntVector *
+TMPL_EXPORT extern tmpl_UIntVector *
 tmpl_Create_UIntVector_From_Data(unsigned int *v, unsigned long int length);
 
-extern tmpl_LongVector *
+TMPL_EXPORT extern tmpl_LongVector *
 tmpl_Create_LongVector_From_Data(long int *v, unsigned long int length);
 
-extern tmpl_ULongVector *
+TMPL_EXPORT extern tmpl_ULongVector *
 tmpl_Create_ULongVector_From_Data(unsigned long int *v,
                                   unsigned long int length);
 
@@ -344,37 +344,37 @@ tmpl_Create_ULongVector_From_Data(unsigned long int *v,
  *      libtmpl/src/vector/tmpl_create_zero_int_vector.c                      *
  *      libtmpl/src/vector/tmpl_create_zero_long_vector.c                     *
  ******************************************************************************/
-extern tmpl_FloatVector *
+TMPL_EXPORT extern tmpl_FloatVector *
 tmpl_Create_Zero_FloatVector(unsigned long int length);
 
-extern tmpl_DoubleVector *
+TMPL_EXPORT extern tmpl_DoubleVector *
 tmpl_Create_Zero_DoubleVector(unsigned long int length);
 
-extern tmpl_LongDoubleVector *
+TMPL_EXPORT extern tmpl_LongDoubleVector *
 tmpl_Create_Zero_LongDoubleVector(unsigned long int length);
 
-extern tmpl_CharVector *
+TMPL_EXPORT extern tmpl_CharVector *
 tmpl_Create_Zero_CharVector(unsigned long int length);
 
-extern tmpl_UCharVector *
+TMPL_EXPORT extern tmpl_UCharVector *
 tmpl_Create_Zero_UCharVector(unsigned long int length);
 
-extern tmpl_ShortVector *
+TMPL_EXPORT extern tmpl_ShortVector *
 tmpl_Create_Zero_ShortVector(unsigned long int length);
 
-extern tmpl_UShortVector *
+TMPL_EXPORT extern tmpl_UShortVector *
 tmpl_Create_Zero_UShortVector(unsigned long int length);
 
-extern tmpl_IntVector *
+TMPL_EXPORT extern tmpl_IntVector *
 tmpl_Create_Zero_IntVector(unsigned long int length);
 
-extern tmpl_UIntVector *
+TMPL_EXPORT extern tmpl_UIntVector *
 tmpl_Create_Zero_UIntVector(unsigned long int length);
 
-extern tmpl_LongVector *
+TMPL_EXPORT extern tmpl_LongVector *
 tmpl_Create_Zero_LongVector(unsigned long int length);
 
-extern tmpl_ULongVector *
+TMPL_EXPORT extern tmpl_ULongVector *
 tmpl_Create_Zero_ULongVector(unsigned long int length);
 
 /******************************************************************************
@@ -398,37 +398,37 @@ tmpl_Create_Zero_ULongVector(unsigned long int length);
  *      libtmpl/src/vector/tmpl_destroy_int_vector.c                          *
  *      libtmpl/src/vector/tmpl_destroy_long_vector.c                         *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_FloatVector(tmpl_FloatVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_DoubleVector(tmpl_DoubleVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_LongDoubleVector(tmpl_LongDoubleVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_CharVector(tmpl_CharVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_UCharVector(tmpl_UCharVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_IntVector(tmpl_IntVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_UIntVector(tmpl_UIntVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_LongVector(tmpl_LongVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_ULongVector(tmpl_ULongVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_ShortVector(tmpl_ShortVector **v);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Destroy_UShortVector(tmpl_UShortVector **v);
 
 
@@ -450,21 +450,20 @@ tmpl_Destroy_UShortVector(tmpl_UShortVector **v);
  *  Called Functions:                                                         *
  *      tmpl_strdup   (tmpl_string.h)                                         *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_FloatVector_Add(tmpl_FloatVector *v,
                      tmpl_FloatVector *u, tmpl_FloatVector *sum);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_DoubleVector_Add(tmpl_DoubleVector *v,
                       tmpl_DoubleVector *u, tmpl_DoubleVector *sum);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDoubleVector_Add(tmpl_LongDoubleVector *v,
                        tmpl_LongDoubleVector *u, tmpl_LongDoubleVector *sum);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_ULongVector_Add(tmpl_ULongVector *v,
                      tmpl_ULongVector *u, tmpl_ULongVector *sum);
 
 #endif
-

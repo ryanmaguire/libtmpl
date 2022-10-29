@@ -564,7 +564,7 @@ void kissvg_Path2DCreateEasyLabel(kissvg_Path2D *path,
     return;
 }
 
-extern void kissvg_Path2DAddEasyLabel(kissvg_Path2D *path,
+TMPL_EXPORT extern void kissvg_Path2DAddEasyLabel(kissvg_Path2D *path,
                                       char *label_content,
                                       double pos, int font_size,
                                       kissvg_TwoVector shift)

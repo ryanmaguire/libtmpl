@@ -46,10 +46,10 @@ extern long double
 tmpl_LDouble_Frequency_To_Wavelength(long double x);
 
 /*  The ringlet and gap modeling functions.                                   */
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Ringlet_Diffraction(double x, double a, double b, double F);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Gap_Diffraction(double x, double a, double b, double F);
 
 /*  Functions for computing the phase of a ringlet.                           */
@@ -61,7 +61,7 @@ extern double
 tmpl_Double_Ringlet_Diffraction_Phase(double x, double a,
                                              double b, double F);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Square_Wave_Diffraction(double x, double W, double F,
                                      unsigned int N);
 
@@ -70,10 +70,10 @@ tmpl_LDouble_Ringlet_Diffraction_Phase(long double x, long double a,
                                        long double b, long double F);
 
 /*  Left and right straightedge modeling tools.                               */
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Right_Straightedge_Diffraction(double x, double edge, double F);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Left_Straightedge_Diffraction(double x, double edge, double F);
 
 /******************************************************************************
@@ -108,4 +108,3 @@ tmpl_LDouble_Two_Slit_Fraunhofer_Diffraction(long double x, long double z,
                                              long double lambda);
 
 #endif
-

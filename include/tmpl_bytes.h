@@ -85,6 +85,8 @@
 extern "C" {
 #endif
 
+#include "tmpl_exports.h"
+
 /*  Data type for determining the endianness of your platform.                */
 typedef enum tmpl_Endian_Def {
     tmpl_UnknownEndian,
@@ -123,7 +125,7 @@ typedef enum tmpl_Endian_Def {
  *  Examples:                                                                 *
  *      libtmpl/examples/bytes_examples/tmpl_determine_endianness_example.c   *
  ******************************************************************************/
-extern tmpl_Endian tmpl_Determine_Endianness(void);
+TMPL_EXPORT extern tmpl_Endian tmpl_Determine_Endianness(void);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -144,7 +146,7 @@ extern tmpl_Endian tmpl_Determine_Endianness(void);
  *  Tests:                                                                    *
  *      libtmpl/tests/bytes_tests/tmpl_swap_bytes_unit_test_001.c             *
  ******************************************************************************/
-extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
+TMPL_EXPORT extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -172,9 +174,9 @@ extern void tmpl_Swap_Bytes(char *ptr1, char *ptr2);
  *          tmpl_swap_most_significant_bit_4_unit_test_001.c                  *
  *          tmpl_swap_most_significant_bit_8_unit_test_001.c                  *
  ******************************************************************************/
-extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
-extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);
-extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
+TMPL_EXPORT extern void tmpl_Swap_Most_Significant_Bit_2(char *ptr);
+TMPL_EXPORT extern void tmpl_Swap_Most_Significant_Bit_4(char *ptr);
+TMPL_EXPORT extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
@@ -183,4 +185,3 @@ extern void tmpl_Swap_Most_Significant_Bit_8(char *ptr);
 
 #endif
 /*  End of include guard.                                                     */
-

@@ -2,6 +2,8 @@
 #ifndef TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H
 #define TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H
 
+#include "tmpl_exports.h"
+
 /*  3D Vectors with single precision components.                              */
 typedef struct tmpl_ThreeVectorFloat_Def {
     float dat[3];
@@ -154,15 +156,15 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
  *          tmpl_three_vector_add_to_ldouble_huge_time_test.c                 *
  *          tmpl_three_vector_add_to_ldouble_small_time_test.c                *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
                    const tmpl_ThreeVectorFloat *source);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
                     const tmpl_ThreeVectorDouble *source);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
                      const tmpl_ThreeVectorLongDouble *source);
 
@@ -258,15 +260,15 @@ tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
  *          tmpl_three_vector_cross_with_ldouble_huge_time_test.c             *
  *          tmpl_three_vector_cross_with_ldouble_small_time_test.c            *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat *target,
                        const tmpl_ThreeVectorFloat *source);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble *target,
                         const tmpl_ThreeVectorDouble *source);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
                          const tmpl_ThreeVectorLongDouble *source);
 

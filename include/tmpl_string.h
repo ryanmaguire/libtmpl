@@ -70,6 +70,8 @@
 extern "C" {
 #endif
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -102,7 +104,7 @@ extern "C" {
  *      libtmpl/tests/string_tests/time_tests/                                *
  *          tmpl_lower_case_functions_time_test.c                             *
  ******************************************************************************/
-extern char tmpl_ASCII_Lower_Case(char c);
+TMPL_EXPORT extern char tmpl_ASCII_Lower_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -133,7 +135,7 @@ extern char tmpl_ASCII_Lower_Case(char c);
  *      libtmpl/tests/string_tests/time_tests/                                *
  *          tmpl_upper_case_functions_time_test.c                             *
  ******************************************************************************/
-extern char tmpl_ASCII_Upper_Case(char c);
+TMPL_EXPORT extern char tmpl_ASCII_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -162,7 +164,7 @@ extern char tmpl_ASCII_Upper_Case(char c);
  *      libtmpl/tests/string_tests/time_tests/                                *
  *          tmpl_lower_case_functions_time_test.c                             *
  ******************************************************************************/
-extern char tmpl_Lower_Case(char c);
+TMPL_EXPORT extern char tmpl_Lower_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -193,8 +195,8 @@ extern char *tmpl_strdup(const char *str);
 
 extern char tmpl_Upper_Case(char c);
 
-extern void tmpl_Make_Lower(char *str);
-extern void tmpl_Remove_Spaces(char * str);
+TMPL_EXPORT extern void tmpl_Make_Lower(char *str);
+TMPL_EXPORT extern void tmpl_Remove_Spaces(char * str);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
@@ -203,4 +205,3 @@ extern void tmpl_Remove_Spaces(char * str);
 
 #endif
 /*  End of include guard.                                                     */
-

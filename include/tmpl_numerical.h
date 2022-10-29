@@ -23,63 +23,63 @@
 
 #include <libtmpl/include/tmpl_complex.h>
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_Halleys_Method_Complex(tmpl_ComplexDouble z,
                             tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
                             tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
                             tmpl_ComplexDouble (*f_2prime)(tmpl_ComplexDouble),
                             unsigned int max_iters, double eps);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
                             tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
                             tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
                             unsigned int max_iters, double eps);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z,
                                       double *coeffs, unsigned int degree,
                                       unsigned int max_iters, double eps);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Newton_Raphson_Float(float x, float (*f)(float), float (*f_prime)(float),
                           unsigned int max_iters, float eps);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Newton_Raphson_Double(double x, double (*f)(double),
                            double (*f_prime)(double),
                            unsigned int max_iters, double eps);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_Newton_Raphson_LDouble(long double x, long double (*f)(long double),
                             long double (*f_prime)(long double),
                             unsigned int max_iters, long double eps);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Halleys_Method_Float(float x, float (*f)(float),
                           float (*f_prime)(float),
                           float (*f_2prime)(float),
                           unsigned int max_iters, float eps);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Halleys_Method_Double(double x, double (*f)(double),
                            double (*f_prime)(double),
                            double (*f_2prime)(double),
                            unsigned int max_iters, double eps);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_Halleys_Method_LDouble(long double x, long double (*f)(long double),
                             long double (*f_prime)(long double),
                             long double (*f_2prime)(long double),
                             unsigned int max_iters, long double eps);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Five_Point_Derivative(float (*f)(float), float x, float h);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Five_Point_Derivative(double (*f)(double), double x, double h);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Five_Point_Derivative(long double (*f)(long double),
                                    long double x, long double h);
 

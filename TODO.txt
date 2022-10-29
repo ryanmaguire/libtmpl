@@ -91,11 +91,11 @@ Graph theory code:
     Compute homology.
 
 Add these back;
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z,
                                  tmpl_ComplexDouble w);
 
-extern tmpl_ComplexDouble
+TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
                                         tmpl_ComplexDouble w);
 
@@ -115,4 +115,3 @@ tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
 	Plane struct
 	intersection of planes
 	Center of 4 non-coplanar points.
-

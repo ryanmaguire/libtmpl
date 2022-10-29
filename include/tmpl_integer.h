@@ -64,6 +64,7 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_INTEGER_H
 #define TMPL_INTEGER_H
+#include "tmpl_exports.h"
 
 #include <libtmpl/include/tmpl_inttype.h>
 
@@ -84,10 +85,10 @@
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/integer/tmpl_integer_abs_inline.h>
 #else
-extern signed char tmpl_Char_Abs(signed char n);
-extern short int tmpl_Short_Abs(short int n);
-extern int tmpl_Int_Abs(int n);
-extern long int tmpl_Long_Abs(long int n);
+TMPL_EXPORT extern signed char tmpl_Char_Abs(signed char n);
+TMPL_EXPORT extern short int tmpl_Short_Abs(short int n);
+TMPL_EXPORT extern int tmpl_Int_Abs(int n);
+TMPL_EXPORT extern long int tmpl_Long_Abs(long int n);
 #endif
 
 /******************************************************************************
@@ -104,10 +105,10 @@ extern long int tmpl_Long_Abs(long int n);
  *      zeros (int):                                                          *
  *          The number of leading zeros in the binary representation of n.    *
  ******************************************************************************/
-extern int tmpl_UChar_Leading_Zeros(unsigned char n);
-extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
-extern int tmpl_UInt_Leading_Zeros(unsigned int n);
-extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
+TMPL_EXPORT extern int tmpl_UChar_Leading_Zeros(unsigned char n);
+TMPL_EXPORT extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
+TMPL_EXPORT extern int tmpl_UInt_Leading_Zeros(unsigned int n);
+TMPL_EXPORT extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -128,10 +129,10 @@ extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
  *      libtmpl/src/integer/tmpl_trailing_zeros_int.c                         *
  *      libtmpl/src/integer/tmpl_trailing_zeros_long.c                        *
  ******************************************************************************/
-extern int tmpl_Char_Trailing_Zeros(signed char n);
-extern int tmpl_Short_Trailing_Zeros(short int n);
-extern int tmpl_Int_Trailing_Zeros(int n);
-extern int tmpl_Long_Trailing_Zeros(long int n);
+TMPL_EXPORT extern int tmpl_Char_Trailing_Zeros(signed char n);
+TMPL_EXPORT extern int tmpl_Short_Trailing_Zeros(short int n);
+TMPL_EXPORT extern int tmpl_Int_Trailing_Zeros(int n);
+TMPL_EXPORT extern int tmpl_Long_Trailing_Zeros(long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -163,10 +164,10 @@ extern int tmpl_Long_Trailing_Zeros(long int n);
  *          tmpl_trailing_zeros_uint_time_test.c                              *
  *          tmpl_trailing_zeros_ulong_time_test.c                             *
  ******************************************************************************/
-extern int tmpl_UChar_Trailing_Zeros(unsigned char n);
-extern int tmpl_UShort_Trailing_Zeros(unsigned short int n);
-extern int tmpl_UInt_Trailing_Zeros(unsigned int n);
-extern int tmpl_ULong_Trailing_Zeros(unsigned long int n);
+TMPL_EXPORT extern int tmpl_UChar_Trailing_Zeros(unsigned char n);
+TMPL_EXPORT extern int tmpl_UShort_Trailing_Zeros(unsigned short int n);
+TMPL_EXPORT extern int tmpl_UInt_Trailing_Zeros(unsigned int n);
+TMPL_EXPORT extern int tmpl_ULong_Trailing_Zeros(unsigned long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -198,10 +199,10 @@ extern int tmpl_ULong_Trailing_Zeros(unsigned long int n);
  *          tmpl_remove_trailing_zeros_uint_time_test.c                       *
  *          tmpl_remove_trailing_zeros_ulong_time_test.c                      *
  ******************************************************************************/
-extern char tmpl_Char_GCD(signed char m, signed char n);
-extern short int tmpl_Short_GCD(short int m, short int n);
-extern int tmpl_Int_GCD(int m, int n);
-extern long int tmpl_Long_GCD(long int m, long int n);
+TMPL_EXPORT extern char tmpl_Char_GCD(signed char m, signed char n);
+TMPL_EXPORT extern short int tmpl_Short_GCD(short int m, short int n);
+TMPL_EXPORT extern int tmpl_Int_GCD(int m, int n);
+TMPL_EXPORT extern long int tmpl_Long_GCD(long int m, long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -235,16 +236,16 @@ extern long int tmpl_Long_GCD(long int m, long int n);
  *          tmpl_binary_gcd_uint_time_test.c                                  *
  *          tmpl_binary_gcd_ulong_time_test.c                                 *
  ******************************************************************************/
-extern unsigned char
+TMPL_EXPORT extern unsigned char
 tmpl_UChar_GCD(unsigned char m, unsigned char n);
 
-extern unsigned short int
+TMPL_EXPORT extern unsigned short int
 tmpl_UShort_GCD(unsigned short int m, unsigned short int n);
 
-extern unsigned int
+TMPL_EXPORT extern unsigned int
 tmpl_UInt_GCD(unsigned int m, unsigned int n);
 
-extern unsigned long int
+TMPL_EXPORT extern unsigned long int
 tmpl_ULong_GCD(unsigned long int m, unsigned long int n);
 
 /******************************************************************************
@@ -259,7 +260,7 @@ tmpl_ULong_GCD(unsigned long int m, unsigned long int n);
  *      GCD (unsigned int):                                                   *
  *          The greatest common denominator of the array.                     *
  ******************************************************************************/
-extern unsigned int tmpl_UIntVector_GCD(tmpl_UIntVector *arr);
+TMPL_EXPORT extern unsigned int tmpl_UIntVector_GCD(tmpl_UIntVector *arr);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -273,7 +274,7 @@ extern unsigned int tmpl_UIntVector_GCD(tmpl_UIntVector *arr);
  *      arr (tmpl_ULongVector *):                                             *
  *          The first N primes in order.                                      *
  ******************************************************************************/
-extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
+TMPL_EXPORT extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 /*  Macros for taking advantage of several builtin's different compilers      *
  *  may have. GCC and clang support __builtin_ctz and more.                   */

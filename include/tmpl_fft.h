@@ -68,7 +68,7 @@
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
                               unsigned long N, tmpl_Bool inverse);
 
@@ -97,7 +97,7 @@ tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
                                    tmpl_ComplexDouble *out,
                                    unsigned long N, tmpl_Bool inverse);
@@ -128,9 +128,8 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern tmpl_ComplexDouble *
+TMPL_EXPORT extern tmpl_ComplexDouble *
 tmpl_CDouble_FFT(tmpl_ComplexDouble *in, unsigned long N, tmpl_Bool inverse);
 
 #endif
 /*  End of include guard.                                                     */
-
