@@ -49,7 +49,7 @@ repos:
   #   rev: 0.5.0
 
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.1.0
+    rev: v3.2.0
     hooks:
     -   id: pyupgrade
         args: [--py36-plus]
@@ -63,6 +63,7 @@ repos:
     rev: 0.8.2
     hooks:
     -   id: gersemi
+        arguments: [--line-length, 120]
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.2.0
     hooks:

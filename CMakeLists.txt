@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ParseCStandard)
 
 option(OMP "User OpenMP, if available" TRUE)
@@ -20,7 +20,7 @@ endif()
 
 project(libtmpl LANGUAGES C)
 
-cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
+cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 
 add_library(tmpl SHARED)
 
@@ -44,11 +44,14 @@ add_custom_command(
     BYPRODUCTS "include/tmpl_config.h" "include/tmpl_inttype.h"
     COMMAND "$<TARGET_FILE:tmpl_config>"
     COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_config.h
-        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
     COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/include/tmpl_inttype.h
-        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM
 )
 
@@ -56,7 +59,9 @@ target_sources(
     tmpl
     PUBLIC
         FILE_SET HEADERS
-        BASE_DIRS ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include
+        BASE_DIRS
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 add_subdirectory("include")
 
@@ -313,3 +318,5 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
 )
+
+#TODO set up install(EXPORT)
