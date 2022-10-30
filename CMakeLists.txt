@@ -18,7 +18,7 @@ if(NOT DEFINED STDVER)
     set(STDVER "-std=c89" CACHE STRING "" FORCE)
 endif()
 
-project(libtmpl_library LANGUAGES C)
+project(libtmpl LANGUAGES C)
 
 cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 
@@ -37,6 +37,9 @@ target_include_directories(
     PUBLIC "include" "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 set_target_properties(tmpl PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+if(MSVC)
+    target_compile_options(tmpl PRIVATE /MP)
+endif()
 
 # Build config.c and run to generate "include/tmpl_config.h"
 add_executable(tmpl_config config.c)
