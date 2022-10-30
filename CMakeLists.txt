@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.23)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(ParseCStandard)
 
@@ -23,18 +23,13 @@ project(libtmpl LANGUAGES C)
 cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 
 add_library(tmpl SHARED)
-include(GenerateExportHeader)
-generate_export_header(
-    tmpl # generates the export header shared_EXPORTS.h automatically
-    BASE_NAME tmpl
-    EXPORT_MACRO_NAME TMPL_EXPORT
-    EXPORT_FILE_NAME tmpl_exports.h
-    STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
-)
 
 target_include_directories(
     tmpl
-    PUBLIC "include" "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+    PUBLIC
+        "include"
+        "$<BUILD_INTERFACE:${TMPL_PARENT_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
 )
 set_target_properties(tmpl PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 if(MSVC)
@@ -57,9 +52,13 @@ add_custom_command(
     VERBATIM
 )
 
-# Declare a dependency on the generated tmpl_config.h file to ensure that we wait for its generate before building the
-# tmpl target
-target_sources(tmpl PRIVATE "include/tmpl_config.h" "include/tmpl_inttype.h")
+target_sources(
+    tmpl
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include
+)
+add_subdirectory("include")
 
 set_c_standard(TARGET tmpl
     STDVER "${STDVER}"
@@ -310,13 +309,6 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
-)
-install(
-    FILES
-        ${CMAKE_BINARY_DIR}/tmpl_exports.h
-        ${CMAKE_BINARY_DIR}/include/tmpl_config.h
-        ${CMAKE_BINARY_DIR}/include/tmpl_inttype.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+    FILE_SET HEADERS
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
 )

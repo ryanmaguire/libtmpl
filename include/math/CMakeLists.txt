@@ -1,0 +1,30 @@
+target_sources(
+    tmpl
+    PUBLIC
+        FILE_SET HEADERS
+        FILES
+            tmpl_math_abs_inline.h
+            tmpl_math_arctan_asymptotic_inline.h
+            tmpl_math_arctan_maclaurin_inline.h
+            tmpl_math_arctan_pade_inline.h
+            tmpl_math_arctan_tables.h
+            tmpl_math_arctan_very_small_inline.h
+            tmpl_math_cbrt_data_double.h
+            tmpl_math_cbrt_data_float.h
+            tmpl_math_cbrt_pade_inline.h
+            tmpl_math_cbrt_taylor_inline.h
+            tmpl_math_copysign_inline.h
+            tmpl_math_log_data_double.h
+            tmpl_math_rcpr_table_double.h
+            tmpl_math_rcpr_table_float.h
+            tmpl_math_sin_very_small_inline.h
+            tmpl_math_sincos_cos_precise_eval.h
+            tmpl_math_sincos_data_double.h
+            tmpl_math_sincos_data_float.h
+            tmpl_math_sincos_reduction.h
+            tmpl_math_sincos_reduction_very_large.h
+            tmpl_math_sincos_sin_precise_eval.h
+            tmpl_math_sincos_sin_precise_small.h
+            tmpl_math_sine_pade_inline.h
+            tmpl_math_sine_pade_pi_inline.h
+)
