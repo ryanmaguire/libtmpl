@@ -94,8 +94,6 @@ float tmpl_Float_Sind_Maclaurin(float x)
 #undef A0
 #undef A1
 #undef A2
-#undef A3
-#undef A4
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

@@ -16,12 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include "tmpl_math_time_tests.h"
-
-static inline double cosd(double x)
+#include "tmpl_math_plots.h"
+#include <math.h>
+static double sind(double x)
 {
-    return cos(fmod(x, 360.0) * tmpl_One_Pi/180.0);
-
+    return sin(fmod(x, 360.0) * tmpl_One_Pi / 180.0);
 }
 
-TEST1(double, -1.0E1, 1.0E1, tmpl_Double_Cosd, cosd)
+PLOT_DIFF(tmpl_Double_Sind, sind, double, 0.0, 1.0, 1E5, "sind_diff.ps")

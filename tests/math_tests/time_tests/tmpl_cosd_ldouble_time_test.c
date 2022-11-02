@@ -18,10 +18,10 @@
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
 
-static inline double cosd(double x)
+static inline long double cosdl(long double x)
 {
-    return cos(fmod(x, 360.0) * tmpl_One_Pi/180.0);
+    return cosl(fmodl(x, 360.0L) * tmpl_One_Pi_L/180.0L);
 
 }
 
-TEST1(double, -1.0E1, 1.0E1, tmpl_Double_Cosd, cosd)
+TEST1(long double, -1.0E1L, 1.0E1L, tmpl_LDouble_Cosd, cosdl)
