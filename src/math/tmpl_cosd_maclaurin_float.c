@@ -81,7 +81,7 @@ float tmpl_Float_Cosd_Maclaurin(float x)
     const float x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return A0 + x2*(A1 + x2*(A2 + x2));
+    return A0 + x2*(A1 + x2*A2);
 }
 /*  End of tmpl_Float_Cosd_Maclaurin.                                         */
 
@@ -89,5 +89,6 @@ float tmpl_Float_Cosd_Maclaurin(float x)
 #undef A0
 #undef A1
 #undef A2
+
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

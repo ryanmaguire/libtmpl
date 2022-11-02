@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_sind_maclaurin_double_inline                      *
+ *                         tmpl_sind_maclaurin_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of sine in degrees.                     *
@@ -24,14 +24,14 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Sind_Maclaurin                                            *
+ *      tmpl_LDouble_Sind_Maclaurin                                           *
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of sine in degrees for small values x.  *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      sind_x (double):                                                      *
+ *      sind_x (long double):                                                 *
  *          The Maclaurin series of sine in degrees.                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -45,7 +45,7 @@
  *                        -----    (2n+1)! 180^{2n+1}                         *
  *                        n = 0                                               *
  *                                                                            *
- *      Use the first 4 terms (0 <= n <= 3) and compute.                      *
+ *      Use the first few terms and compute.                                  *
  *  Notes:                                                                    *
  *      Only accurate for values near 0.                                      *
  ******************************************************************************
@@ -61,8 +61,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_SIND_MACLAURIN_DOUBLE_INLINE_H
-#define TMPL_MATH_SIND_MACLAURIN_DOUBLE_INLINE_H
+#ifndef TMPL_MATH_SIND_MACLAURIN_LDOUBLE_INLINE_H
+#define TMPL_MATH_SIND_MACLAURIN_LDOUBLE_INLINE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -73,29 +73,118 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (1.7453292519943295769236907684886127134429E-02)
-#define A1 (-8.8609615570129801598869213154725066307228E-07)
-#define A2 (1.3496016231632550105929914052816816969112E-11)
-#define A3 (-9.7883848616177276095359680022041494717926E-17)
+/*  64-bit long double uses the same number of terms as double.               */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/******************************************************************************
+ *                          64 BIT DOUBLE PRECISION                           *
+ ******************************************************************************/
+
+/*  Coefficients for the Maclaurin series at long double precision.           */
+#define A0 (1.7453292519943295769236907684886127134429E-02L)
+#define A1 (-8.8609615570129801598869213154725066307228E-07L)
+#define A2 (1.3496016231632550105929914052816816969112E-11L)
+#define A3 (-9.7883848616177276095359680022041494717926E-17L)
 
 /*  Maclaurin series for sine in degrees.                                     */
 TMPL_INLINE_DECL
-double tmpl_Double_Sind_Maclaurin(double x)
+long double tmpl_LDouble_Sind_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
-    const double x2 = x*x;
+    const long double x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
     return x*(A0 + x2*(A1 + x2*(A2 + x2*A3)));
 }
-/*  End of tmpl_Double_Sind_Maclaurin.                                        */
+/*  End of tmpl_LDouble_Sind_Maclaurin.                                       */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
 #undef A1
 #undef A2
 #undef A3
+
+/*  128-bit quadruple and double-double, a few more terms.                    */
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                        128 BIT QUADRUPLE PRECISION                         *
+ *                                    and                                     *
+ *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
+ ******************************************************************************/
+
+/*  Coefficients for the Maclaurin series at long double precision.           */
+#define A0 (1.7453292519943295769236907684886127134429E-02L)
+#define A1 (-8.8609615570129801598869213154725066307228E-07L)
+#define A2 (1.3496016231632550105929914052816816969112E-11L)
+#define A3 (-9.78838486161772760953596800220414947179257E-17L)
+#define A4 (4.14126741725732068529449587689393809274778E-22L)
+#define A5 (-1.14682017753790161396412139175844787354022E-27L)
+#define A6 (2.23936797077519653778917540987515319909871E-33L)
+
+/*  Maclaurin series for sine in degrees.                                     */
+TMPL_INLINE_DECL
+long double tmpl_LDouble_Sind_Maclaurin(long double x)
+{
+    /*  Declare necessary variables.                                          */
+    const long double x2 = x*x;
+
+    /*  Use Horner's method to compute the polynomial.                        */
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*(A4 + x2*(A5 + x2*A6))))));
+}
+/*  End of tmpl_LDouble_Sind_Maclaurin.                                       */
+
+/*  Undefine the coefficients in case someone wants to #include this file.    */
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
+#undef A6
+
+#else
+/*  End of 128-quadruple / 128-bit double-double version.                     */
+
+/******************************************************************************
+ *                         80 BIT EXTENDED PRECISION                          *
+ *                                    and                                     *
+ *                                  PORTABLE                                  *
+ ******************************************************************************/
+
+/*  Coefficients for the Maclaurin series at long double precision.           */
+#define A0 (1.7453292519943295769236907684886127134429E-02L)
+#define A1 (-8.8609615570129801598869213154725066307228E-07L)
+#define A2 (1.3496016231632550105929914052816816969112E-11L)
+#define A3 (-9.7883848616177276095359680022041494717926E-17L)
+#define A4 (4.14126741725732068529449587689393809274778E-22L)
+
+/*  Maclaurin series for sine in degrees.                                     */
+TMPL_INLINE_DECL
+long double tmpl_LDouble_Sind_Maclaurin(long double x)
+{
+    /*  Declare necessary variables.                                          */
+    const long double x2 = x*x;
+
+    /*  Use Horner's method to compute the polynomial.                        */
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
+}
+/*  End of tmpl_LDouble_Sind_Maclaurin.                                       */
+
+/*  Undefine the coefficients in case someone wants to #include this file.    */
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+
+#endif
+/*  End of portable version.                                                  */
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

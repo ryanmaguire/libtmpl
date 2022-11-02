@@ -1708,6 +1708,7 @@ extern long double tmpl_LDouble_Cosd(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_cosd_maclaurin_double_inline.h>
 #include <libtmpl/include/math/tmpl_math_cosd_maclaurin_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_cosd_maclaurin_ldouble_inline.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2304,6 +2305,7 @@ extern long double tmpl_LDouble_Sind(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_math_sind_maclaurin_double_inline.h>
 #include <libtmpl/include/math/tmpl_math_sind_maclaurin_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_sind_maclaurin_ldouble_inline.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

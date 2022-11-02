@@ -45,7 +45,7 @@
  *                        -----    (2n+1)! 180^{2n+1}                         *
  *                        n = 0                                               *
  *                                                                            *
- *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
+ *      Use the first 4 terms (0 <= n <= 3) and compute.                      *
  *  Notes:                                                                    *
  *      Only accurate for values near 0.                                      *
  ******************************************************************************
@@ -74,16 +74,15 @@
 #define A1 (-8.8609615570129801598869213154725066307228E-07)
 #define A2 (1.3496016231632550105929914052816816969112E-11)
 #define A3 (-9.7883848616177276095359680022041494717926E-17)
-#define A4 (4.1412674172573206852944958768939380927478E-22)
 
-/*  Maclaurin series for sine in degrees, double precision, to 5 terms.       */
+/*  Maclaurin series for sine in degrees.                                     */
 double tmpl_Double_Sind_Maclaurin(double x)
 {
     /*  Declare necessary variables.                                          */
     const double x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*A3)));
 }
 /*  End of tmpl_Double_Sind_Maclaurin.                                        */
 
@@ -92,7 +91,6 @@ double tmpl_Double_Sind_Maclaurin(double x)
 #undef A1
 #undef A2
 #undef A3
-#undef A4
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
