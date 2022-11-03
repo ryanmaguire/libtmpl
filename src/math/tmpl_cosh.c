@@ -78,25 +78,6 @@ float tmpl_Float_Cosh(float x)
 }
 /*  End of tmpl_Float_Cosh.                                                   */
 
-/*  Double precision hyperbolic cosine (cosh equivalent).                     */
-double tmpl_Double_Cosh(double x)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double cosh_x, exp_x, exp_minus_x;
-
-    /*  The definition of cosh(x) is [exp(x) + exp(-x)]/2, so return this. It *
-     *  is computationally faster to compute exp(x) and then exp(-x) via the  *
-     *  formula exp(-x) = 1/exp(x). This saves us from computing two          *
-     *  exponentials at the cost of an extra division.                        */
-    exp_x = tmpl_Double_Exp(x);
-    exp_minus_x = 1.0/exp_x;
-
-    /*  Compute cosh from the two exponentials and return.                    */
-    cosh_x = 0.5*(exp_x + exp_minus_x);
-    return cosh_x;
-}
-/*  End of tmpl_Double_Cosh.                                                  */
-
 /*  Long doubel precision hyperbolic cosine (coshl equivalent).               */
 long double tmpl_LDouble_Cosh(long double x)
 {
