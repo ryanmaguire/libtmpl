@@ -1800,6 +1800,38 @@ extern long double tmpl_LDouble_Cosh(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Cosh_Maclaurin                                            *
+ *  Purpose:                                                                  *
+ *      Compute hyperbolic cosine of a small value with a Maclaurin series.   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_x:                                                         *
+ *          The hyperbolic cosine of x, cosh(x).                              *
+ ******************************************************************************/
+extern float tmpl_Float_Cosh_Maclaurin(float x);
+extern double tmpl_Double_Cosh_Maclaurin(double x);
+extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cosh_Pade                                                 *
+ *  Purpose:                                                                  *
+ *      Compute hyperbolic cosine of a small value with a Pade approximant.   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_x:                                                         *
+ *          The hyperbolic cosine of x, cosh(x).                              *
+ ******************************************************************************/
+extern float tmpl_Float_Cosh_Pade(float x);
+extern double tmpl_Double_Cosh_Pade(double x);
+extern long double tmpl_LDouble_Cosh_Pade(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Dist                                                      *
  *  Purpose:                                                                  *
  *      Compute the distance between two numbers on the real line.            *
