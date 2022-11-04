@@ -42,6 +42,10 @@
  *      Called Functions:                                                     *
  *          tmpl_Double_Abs (tmpl_math.h):                                    *
  *              Computes the absolute value of a double.                      *
+ *          tmpl_Double_Cosh_Maclaurin (tmpl_math.h):                         *
+ *              Computes cosh via a Maclaurin series for small inputs.        *
+ *          tmpl_Double_Cosh_Pade (tmpl_math.h):                              *
+ *              Computes cosh via a Pade approximation.                       *
  *      Method:                                                               *
  *      Error:                                                                *
  *  Portable Version:                                                         *
@@ -165,6 +169,7 @@ double tmpl_Double_Cosh(double x)
 #undef A2
 #undef A3
 #undef A4
+#undef A5
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
