@@ -85,3 +85,15 @@ double tmpl_Double_Cosh_Pade(double x)
     const double q = Q0 + x2*(Q2 + x2*(Q4 + x2*(Q6 + x2*Q8)));
     return p / q;
 }
+
+/*  Undefine all macros in case someone wants to #include this file.          */
+#undef P0
+#undef P2
+#undef P4
+#undef P6
+#undef P8
+#undef Q0
+#undef Q2
+#undef Q4
+#undef Q6
+#undef Q8
