@@ -268,7 +268,7 @@ if(NOT NO_ASM)
                 "tmpl_floor_ldouble.c"
             )
         endif()
-    elseif(system_processor in ARM64_ARCHES)
+    elseif(system_processor IN_LIST ARM64_ARCHES)
         enable_language(ASM)
 
         if(NOT NO_BUILTIN)
@@ -292,7 +292,7 @@ if(NOT NO_ASM)
         endif()
 
         add_subdirectory("src/assembly/aarch64")
-    elseif(system_processor IN ARMHF_ARCHES)
+    elseif(system_processor IN_LIST ARMHF_ARCHES)
         enable_language(ASM)
 
         add_subdirectory("src/assembly/armv7l")
