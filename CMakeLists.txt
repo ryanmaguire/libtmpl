@@ -69,6 +69,21 @@ set_c_standard(TARGET tmpl
     ENABLE_VERBOSE ${ENABLE_VERBOSE}
 )
 
+include(CheckIPOSupported)
+# Optional IPO. Do not use IPO if it's not supported by compiler.
+check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT IPO_CHECK_OUTPUT)
+if(IPO_SUPPORTED)
+    message(
+        STATUS
+        "Interprocedural Optimization/Link-Time Optimization is supported."
+    )
+else()
+    message(
+        WARNING
+        "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}"
+    )
+endif()
+
 if(NO_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
     list(APPEND SOURCE_EXCLUSION_LIST "tmpl_abs_llong.c")
