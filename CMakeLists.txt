@@ -41,7 +41,6 @@ add_executable(tmpl_config config.c)
 add_custom_command(
     OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h"
     DEPENDS tmpl_config
-    BYPRODUCTS "include/tmpl_config.h" "include/tmpl_inttype.h"
     COMMAND "$<TARGET_FILE:tmpl_config>"
     COMMAND
         ${CMAKE_COMMAND} -E copy
