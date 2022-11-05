@@ -27,7 +27,7 @@ add_library(tmpl SHARED)
 target_include_directories(
     tmpl
     PUBLIC
-        "include"
+        "$<INSTALL_INTERFACE:include>"
         "$<BUILD_INTERFACE:${TMPL_PARENT_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
 )
@@ -317,11 +317,12 @@ if(BUILD_TESTS)
     add_subdirectory("tests")
 endif()
 
-add_library(tmpl::tmpl ALIAS tmpl)
-
+include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 install(
     TARGETS tmpl
+    COMPONENT libtmpl_Runtime
+    EXPORT libtmpl_Runtime
     RUNTIME
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY
@@ -332,5 +333,23 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
 )
-
-#TODO set up install(EXPORT)
+set(LIBTMPL_RUNTIME_CONFIG_FILE libtmpl_Runtime.cmake CACHE INTERNAL "")
+install(
+    EXPORT libtmpl_Runtime
+    NAMESPACE tmpl::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    FILE ${LIBTMPL_RUNTIME_CONFIG_FILE}
+)
+set(cmakeModulesDir cmake)
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libtmplConfig.cmake.in
+    ${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    PATH_VARS cmakeModulesDir
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
