@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ParseCStandard)
 
-option(OMP "User OpenMP, if available" TRUE)
+option(OMP "Use OpenMP, if available" TRUE)
 option(NO_INLINE "" TRUE)
 option(NO_MATH "" TRUE)
 option(NO_IEEE "" TRUE)
@@ -311,6 +311,8 @@ if(SOURCE_EXCLUSION_LIST_SIZE GREATER 1)
     list(REMOVE_DUPLICATES SOURCE_EXCLUSION_LIST)
     list(SORT SOURCE_EXCLUSION_LIST)
 endif()
+
+add_library(tmpl::tmpl ALIAS tmpl)
 
 add_subdirectory("src")
 if(BUILD_TESTS)
