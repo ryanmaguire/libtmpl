@@ -2,20 +2,68 @@ cmake_minimum_required(VERSION 3.23)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ParseCStandard)
 
-option(OMP "Use OpenMP, if available" TRUE)
-option(NO_INLINE "" TRUE)
-option(NO_MATH "" TRUE)
-option(NO_IEEE "" TRUE)
-option(NO_ASM "" TRUE)
-option(NO_BUILTIN "" TRUE)
-option(FASM "" TRUE)
-option(BUILD_TESTS "" FALSE)
-option(NO_LONGLONG "" FALSE)
-option(NO_INT "" FALSE)
-option(ENABLE_VERBOSE "" FALSE)
+option(
+    OMP
+    "Compile with `OpenMP` support (highly recommended).
+**WARNING** Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option will result in an error.
+Homebrew has versions of clang and gcc that do support OpenMP."
+    TRUE
+)
+option(
+    LIBTMPL_NO_INLINE
+    "Do not use any inline code. This results in a slightly smaller `libtmpl.so` file, but several
+functions become significantly slower (not recommended). If your compiler does not support `C99` or higher, and
+does not support the `gcc` `inline` extension, enable this option."
+    FALSE
+)
+option(
+    LIBTMPL_NO_MATH
+    "Do not use `libtmpl`'s implementation of `libm`, the C standard library for mathematical tools,
+instead using your compilers implementation. This may be recommended. Tests against `glibc`, `FreeBSD libc`, and
+`MSVC`'s implementation of `libm` show that `libtmpl` can be significantly faster (all functions have benchmarks
+in the `tests/` directory and you may see for yourself), but this has only been tested on the architectures supported
+by the Debian GNU/Linux operating system. Users of other architectures may wish to use their default `libm`. Also, if
+your compiler does not support the `IEEE-754` standard (most do), or does not support type-punning for `union`, the
+portable algorithms (algorithms that do not use `IEEE-754` or type-punning) are much slower. In these instances you
+may wish to use the default `libm`."
+    TRUE
+)
+option(
+    LIBTMPL_NO_IEEE
+    "Disable use of the `IEEE` formats for `float` and `double`. The `config.c` file should detect if your
+compiler supports this, and type-punning for `union`, so you should not need to set this option manually
+(not recommended)."
+    FALSE
+)
+option(
+    LIBTMPL_NO_ASM
+    "Only applicable is `LIBTMPL_NO_MATH` is not set, and for `x86_64/amd64/arm64/armv7l` machines. Some functions,
+like `sqrt`, can be handle efficiently in assembly code. If you wish to use only C code, set this option
+(not recommended)."
+    FALSE
+)
+option(
+    LIBTMPL_NO_BUILTIN
+    "Only applicable is `LIBTMPL_NO_MATH` and `LIBTMPL_NO_ASM` are not set, and only for `x86_64/amd64/arm64` machines.
+If you are using `gcc`, `clang`, or `pcc`, you can take adventage of several built-in functions like `sincos`.
+This is handled in assembly code. If you're not using a compiler that has these built-in functions, set this option
+(not recommended)."
+    TRUE
+)
+option(
+    LIBTMPL_FASM
+    "Use the flat assembler instead of the assembly language used by `gcc` and `clang`. You must have `fasm`
+installed to use this. This option is ignored if `LIBTMPL_NO_ASM=1` is set."
+    TRUE
+)
 
-if(NOT DEFINED STDVER)
-    set(STDVER "-std=c89" CACHE STRING "" FORCE)
+option(LIBTMPL_NO_LONGLONG "" FALSE)
+option(LIBTMPL_NO_INT "" FALSE)
+option(LIBTMPL_BUILD_TESTS "Set to TRUE to enabling the build of tests" FALSE)
+option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
+
+if(NOT DEFINED LIBTMPL_STDVER)
+    set(LIBTMPL_STDVER "-std=c89" CACHE STRING "" FORCE)
 endif()
 
 project(libtmpl LANGUAGES C)
@@ -65,8 +113,8 @@ target_sources(
 add_subdirectory("include")
 
 set_c_standard(TARGET tmpl
-    STDVER "${STDVER}"
-    ENABLE_VERBOSE ${ENABLE_VERBOSE}
+    STDVER "${LIBTMPL_STDVER}"
+    ENABLE_VERBOSE ${LIBTMPL_ENABLE_VERBOSE}
 )
 
 include(CheckIPOSupported)
@@ -84,7 +132,7 @@ else()
     )
 endif()
 
-if(NO_LONGLONG)
+if(LIBTMPL_NO_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
     list(APPEND SOURCE_EXCLUSION_LIST "tmpl_abs_llong.c")
 endif()
@@ -104,15 +152,15 @@ if(OMP)
     endif()
 endif()
 
-if(NOT NO_INLINE)
-    if(STDVER STREQUAL "-std=c89")
+if(NOT LIBTMPL_NO_INLINE)
+    if(LIBTMPL_STDVER STREQUAL "-std=c89")
         message(
             FATAL_ERROR
             "Error: inline mode cannot be used with C89.\n        Set -std to a version supporting inline."
         )
     endif()
 
-    if(STDVER STREQUAL "-std=c90")
+    if(LIBTMPL_STDVER STREQUAL "-std=c90")
         message(
             FATAL_ERROR
             "Error: inline mode cannot be used with C90.\n        Set -std to a version supporting inline."
@@ -120,7 +168,7 @@ if(NOT NO_INLINE)
     endif()
 endif()
 
-if(NO_MATH)
+if(LIBTMPL_NO_MATH)
     # Do not use libtmpl's libm implementation
 
     # TODO what to do for other systems?
@@ -149,7 +197,7 @@ else()
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MATH_TRUE)
 endif()
 
-if(NOT NO_INLINE)
+if(NOT LIBTMPL_NO_INLINE)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_INLINE_TRUE)
 
     list(
@@ -201,11 +249,11 @@ if(NOT NO_INLINE)
     )
 endif()
 
-if(NO_IEEE)
+if(LIBTMPL_NO_IEEE)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_TMPL_USE_IEEE_FALSE)
 endif()
 
-if(NO_INT)
+if(LIBTMPL_NO_INT)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_NO_INT)
 endif()
 
@@ -214,11 +262,11 @@ set(X86_64_ARCHES "amd64;x86_64")
 set(ARM64_ARCHES "aarch64;arm64")
 set(ARMHF_ARCHES "armv7l;")
 
-if(NOT NO_ASM)
+if(NOT LIBTMPL_NO_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
         enable_language(ASM)
 
-        if(NOT NO_BUILTIN)
+        if(NOT LIBTMPL_NO_BUILTIN)
             # This includes Windows AMD64 and Unix x86_64
             add_subdirectory("src/builtins/x86_64")
 
@@ -237,7 +285,7 @@ if(NOT NO_ASM)
             )
         endif()
 
-        if(FASM)
+        if(LIBTMPL_FASM)
             add_subdirectory("src/assembly/fasm")
             list(
                 APPEND
@@ -271,7 +319,7 @@ if(NOT NO_ASM)
     elseif(system_processor IN_LIST ARM64_ARCHES)
         enable_language(ASM)
 
-        if(NOT NO_BUILTIN)
+        if(NOT LIBTMPL_NO_BUILTIN)
             set(ARM64_USE_BUILTIN TRUE)
             add_subdirectory("src/builtins/aarch64")
             list(
@@ -315,7 +363,7 @@ endif()
 add_library(tmpl::tmpl ALIAS tmpl)
 
 add_subdirectory("src")
-if(BUILD_TESTS)
+if(LIBTMPL_BUILD_TESTS)
     add_subdirectory("tests")
 endif()
 
