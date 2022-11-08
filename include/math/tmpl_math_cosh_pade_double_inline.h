@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_cosh_pade_double                            *
+ *                       tmpl_cosh_pade_double_inline                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the (8, 8) Pade approximant of cosh(x) at double precision.  *
@@ -65,13 +65,17 @@
  *  Date:       October 21, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_MATH_COSH_PADE_DOUBLE_INLINE_H
+#define TMPL_MATH_COSH_PADE_DOUBLE_INLINE_H
+
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline support is requested.                    */
+#if TMPL_USE_INLINE == 1
 
-/*  Function prototype found here.                                            */
+/*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
@@ -89,6 +93,7 @@
 #define Q8 (6.237544679486808556431083134258191256732E-9)
 
 /*  Function for computing the (8, 8) Pade approximant of Cosh.               */
+TMPL_INLINE_DECL
 double tmpl_Double_Cosh_Pade(double x)
 {
     /*  All non-zero powers of the numerator and denominator are even.        */
@@ -116,4 +121,7 @@ double tmpl_Double_Cosh_Pade(double x)
 #undef Q8
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */

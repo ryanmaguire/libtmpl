@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_cosh_double                              *
+ *                              tmpl_cosh_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes hyperbolic cosine at double precision.                       *
+ *      Computes hyperbolic cosine at single precision.                       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cosh                                                      *
+ *      tmpl_Float_Cosh                                                       *
  *  Purpose:                                                                  *
  *      Computes the hyperbolic cosine of a number.                           *
  *                                                                            *
@@ -33,25 +33,25 @@
  *                            2                                               *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number, the argument for cosh(x).                          *
  *  Output:                                                                   *
- *      cosh_x (double):                                                      *
+ *      cosh_x (float):                                                       *
  *          The hyperbolic cosine of x.                                       *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Abs (tmpl_math.h):                                    *
- *              Computes the absolute value of a double.                      *
- *          tmpl_Double_Cosh_Maclaurin (tmpl_math.h):                         *
+ *          tmpl_Float_Abs (tmpl_math.h):                                     *
+ *              Computes the absolute value of a float.                       *
+ *          tmpl_Float_Cosh_Maclaurin (tmpl_math.h):                          *
  *              Computes cosh via a Maclaurin series for small inputs.        *
- *          tmpl_Double_Cosh_Pade (tmpl_math.h):                              *
+ *          tmpl_Float_Cosh_Pade (tmpl_math.h):                               *
  *              Computes cosh via a Pade approximation.                       *
  *      Method:                                                               *
  *      Error:                                                                *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Exp (tmpl_math.h):                                    *
- *              Computes the exponential of a double.                         *
+ *          tmpl_Float_Exp (tmpl_math.h):                                     *
+ *              Computes the exponential of a float.                          *
  *      Method:                                                               *
  *          Compute t = exp(x) and return (t + 1/t)/2.                        *
  *      Error:                                                                *
@@ -82,78 +82,78 @@
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Check for IEEE-754 support. Bit of a speed boost this way.                */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision hyperbolic cosine (cosh equivalent).                     */
-double tmpl_Double_Cosh(double x)
+/*  Single precision hyperbolic cosine (coshf equivalent).                    */
+float tmpl_Float_Cosh(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Double w;
-    double exp_x;
+    tmpl_IEEE754_Float w;
+    float exp_x;
 
-    /*  Set the double part of the union to the input.                        */
-    w.r = tmpl_Double_Abs(x);
+    /*  Set the float part of the union to the input.                         */
+    w.r = tmpl_Float_Abs(x);
 
     /*  +/- NaN returns NaN, for +/- infinity the limit is + infinity.        */
-    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
+    if (TMPL_FLOAT_IS_NAN_OR_INF(w))
         return w.r;
 
-    /*  For |x| > log(DBL_MAX) ~= 709, exp will overflow. Return infinity.    */
-    else if (w.r > 709.0895657128241)
-        return TMPL_INFINITY;
+    /*  For |x| > log(FLT_MAX) ~= 88, exp will overflow. Return infinity.    */
+    else if (w.r > 88.02969193111305F)
+        return TMPL_INFINITYF;
 
-    /*  For small x, |x| < 1/32, the Maclaurin series is sufficient.          */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 5U)
-        return tmpl_Double_Cosh_Maclaurin(w.r);
+    /*  For small x, |x| < 1/16, the Maclaurin series is sufficient.          */
+    else if (w.bits.expo < TMPL_FLOAT_UBIAS - 4U)
+        return tmpl_Float_Cosh_Maclaurin(w.r);
 
     /*  For slightly larger x, |x| < 1, use the Pade approximant.             */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-        return tmpl_Double_Cosh_Pade(w.r);
+    else if (w.bits.expo < TMPL_FLOAT_UBIAS)
+        return tmpl_Float_Cosh_Pade(w.r);
 
     /*  Normal value, not too small, not too big. Compute exp(x).             */
-    exp_x = tmpl_Double_Exp_Pos_Kernel(w.r);
+    exp_x = tmpl_Float_Exp_Pos_Kernel(w.r);
 
     /*  For large x only the e^x term is significant. e^-x is negligible.     */
-    if (w.bits.expo > TMPL_DOUBLE_UBIAS + 5U)
-        return 0.5*exp_x;
+    if (w.bits.expo > TMPL_FLOAT_UBIAS + 4U)
+        return 0.5F*exp_x;
 
     /*  Otherwise, compute cosh(x) via (exp(x) + exp(-x))/2.                  */
     else
-        return 0.5*(exp_x + 1.0/exp_x);
+        return 0.5F*(exp_x + 1.0F/exp_x);
 }
-/*  End of tmpl_Double_Cosh.                                                  */
+/*  End of tmpl_Float_Cosh.                                                   */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Double precision hyperbolic cosine (cosh equivalent).                     */
-double tmpl_Double_Cosh(double x)
+/*  Single precision hyperbolic cosine (cosh equivalent).                     */
+float tmpl_Float_Cosh(float x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double exp_x, exp_minus_x;
+    float exp_x, exp_minus_x;
 
     /*  The definition of cosh(x) is [exp(x) + exp(-x)]/2, so return this. It *
      *  is computationally faster to compute exp(x) and then exp(-x) via the  *
      *  formula exp(-x) = 1/exp(x). This saves us from computing two          *
      *  exponentials at the cost of an extra division.                        */
-    exp_x = tmpl_Double_Exp(x);
-    exp_minus_x = 1.0/exp_x;
+    exp_x = tmpl_Float_Exp(x);
+    exp_minus_x = 1.0F/exp_x;
 
     /*  Compute cosh from the two exponentials and return.                    */
-    return 0.5*(exp_x + exp_minus_x);
+    return 0.5F*(exp_x + exp_minus_x);
 }
-/*  End of tmpl_Double_Cosh.                                                  */
+/*  End of tmpl_Float_Cosh.                                                   */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

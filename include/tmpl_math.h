@@ -1794,9 +1794,15 @@ extern long double tmpl_LDouble_CosPi_Pade(long double x);
  *      double cos_x:                                                         *
  *          The hyperbolic cosine of x, cosh(x).                              *
  ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS == 1
 extern float tmpl_Float_Cosh(float x);
 extern double tmpl_Double_Cosh(double x);
 extern long double tmpl_LDouble_Cosh(long double x);
+#else
+#define tmpl_Float_Cosh coshf
+#define tmpl_Double_Cosh cosh
+#define tmpl_LDouble_Cosh coshl
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1810,9 +1816,25 @@ extern long double tmpl_LDouble_Cosh(long double x);
  *      double cos_x:                                                         *
  *          The hyperbolic cosine of x, cosh(x).                              *
  ******************************************************************************/
+
+/*  This function is small enough that it should be inlined.                  */
+#if TMPL_USE_INLINE == 1
+
+/*  inline versions found here.                                               */
+#include <libtmpl/include/math/tmpl_math_cosh_maclaurin_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_cosh_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_cosh_maclaurin_ldouble_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline support not requested, use functions in src/math.                  */
 extern float tmpl_Float_Cosh_Maclaurin(float x);
 extern double tmpl_Double_Cosh_Maclaurin(double x);
 extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1826,9 +1848,25 @@ extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
  *      double cos_x:                                                         *
  *          The hyperbolic cosine of x, cosh(x).                              *
  ******************************************************************************/
+
+/*  These functions should be inlined.                                        */
+#if TMPL_USE_INLINE == 1
+
+/*  inline versions found here.                                               */
+#include <libtmpl/include/math/tmpl_math_cosh_pade_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_cosh_pade_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_cosh_pade_ldouble_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline support not requested, use functions in src/math.                  */
 extern float tmpl_Float_Cosh_Pade(float x);
 extern double tmpl_Double_Cosh_Pade(double x);
 extern long double tmpl_LDouble_Cosh_Pade(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1927,6 +1965,37 @@ extern long double tmpl_LDouble_Erfcx(long double x);
 extern float tmpl_Float_Exp(float x);
 extern double tmpl_Double_Exp(double x);
 extern long double tmpl_LDouble_Exp(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp_Pos_Kernel                                            *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for dist functions found here.                             */
+#include <libtmpl/include/math/tmpl_math_exp_pos_kernel_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_exp_pos_kernel_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested.                                              */
+extern float tmpl_Float_Exp_Pos_Kernel(float x);
+extern double tmpl_Double_Exp_Pos_Kernel(double x);
+extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
