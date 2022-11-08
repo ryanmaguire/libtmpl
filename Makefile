@@ -91,11 +91,19 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_cosd_maclaurin_double.c" -and \
 	-not -name "tmpl_cosd_maclaurin_float.c" -and \
 	-not -name "tmpl_cosd_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_cosh_maclaurin_double.c" -and \
+	-not -name "tmpl_cosh_maclaurin_float.c" -and \
+	-not -name "tmpl_cosh_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_cosh_pade_double.c" -and \
+	-not -name "tmpl_cosh_pade_float.c" -and \
+	-not -name "tmpl_cosh_pade_ldouble.c" -and \
 	-not -name "tmpl_cospi_maclaurin_double.c" -and \
 	-not -name "tmpl_cospi_maclaurin_float.c" -and \
 	-not -name "tmpl_dist_float.c" -and \
 	-not -name "tmpl_dist_double.c" -and \
 	-not -name "tmpl_dist_ldouble.c" -and \
+	-not -name "tmpl_exp_pos_kernel_double.c" -and \
+	-not -name "tmpl_exp_pos_kernel_float.c" -and \
 	-not -name "tmpl_sin_pade_double.c" -and \
 	-not -name "tmpl_sin_pade_float.c" -and \
 	-not -name "tmpl_sin_pade_ldouble.c" -and \

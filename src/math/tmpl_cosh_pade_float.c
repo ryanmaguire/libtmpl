@@ -16,22 +16,22 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_cosh_pade_double                            *
+ *                           tmpl_cosh_pade_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (8, 8) Pade approximant of cosh(x) at double precision.  *
+ *      Computes the (8, 8) Pade approximant of cosh(x) at single precision.  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cosh_Pade                                                 *
+ *      tmpl_Float_Cosh_Pade                                                  *
  *  Purpose:                                                                  *
  *      Computes the Pade approximant of order (8, 8) for cosh.               *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cosh_x (double):                                                      *
+ *      cosh_x (float):                                                       *
  *          The Pade approximation of cosh(x).                                *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -56,9 +56,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
+ *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -75,33 +73,33 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
-#define P0 (1.000000000000000000000000000000000000000E+00)
-#define P2 (4.778622064850044352562551775202152382209E-01)
-#define P4 (3.084243505437065884843491564554266615011E-02)
-#define P6 (5.871465444196315779152437095211293016391E-04)
-#define P8 (3.421843486182193140047209119910667485205E-06)
+#define P0 (1.000000000000000000000000000000000000000E+00F)
+#define P2 (4.778622064850044352562551775202152382209E-01F)
+#define P4 (3.084243505437065884843491564554266615011E-02F)
+#define P6 (5.871465444196315779152437095211293016391E-04F)
+#define P8 (3.421843486182193140047209119910667485205E-06F)
 
 /*  Coefficients for the denominator.                                         */
-#define Q0 (1.000000000000000000000000000000000000000E+00)
-#define Q2 (-2.213779351499556474374482247978476177909E-02)
-#define Q4 (2.446651452017745536406602187683803729901E-04)
-#define Q6 (-1.666853945329390137941018760918032949527E-6)
-#define Q8 (6.237544679486808556431083134258191256732E-9)
+#define Q0 (1.000000000000000000000000000000000000000E+00F)
+#define Q2 (-2.213779351499556474374482247978476177909E-02F)
+#define Q4 (2.446651452017745536406602187683803729901E-04F)
+#define Q6 (-1.666853945329390137941018760918032949527E-6F)
+#define Q8 (6.237544679486808556431083134258191256732E-9F)
 
 /*  Function for computing the (8, 8) Pade approximant of Cosh.               */
-double tmpl_Double_Cosh_Pade(double x)
+float tmpl_Float_Cosh_Pade(float x)
 {
     /*  All non-zero powers of the numerator and denominator are even.        */
-    const double x2 = x*x;
+    const float x2 = x*x;
 
     /*  Compute the numerator (p) and the denominator (q).                    */
-    const double p = P0 + x2*(P2 + x2*(P4 + x2*(P6 + x2*P8)));
-    const double q = Q0 + x2*(Q2 + x2*(Q4 + x2*(Q6 + x2*Q8)));
+    const float p = P0 + x2*(P2 + x2*(P4 + x2*(P6 + x2*P8)));
+    const float q = Q0 + x2*(Q2 + x2*(Q4 + x2*(Q6 + x2*Q8)));
 
     /*  Return the quotient.                                                  */
     return p / q;
 }
-/*  End of tmpl_Double_Cosh_Pade.                                             */
+/*  End of tmpl_Float_Cosh_Pade.                                              */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef P0
