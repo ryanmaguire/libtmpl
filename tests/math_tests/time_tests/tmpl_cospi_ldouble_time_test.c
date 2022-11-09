@@ -17,6 +17,6 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-static const double pi = 3.141592653589793238462643383279502884197;
-static inline double cospi(double x){return cos(pi*x);}
-TEST1(double, -0.25, 0.25, tmpl_Double_CosPi, cospi)
+static const long double pi = 3.141592653589793238462643383279502884197L;
+static inline long double cospil(long double x){return cosl(pi*x);}
+TEST1(long double, -0.25L, 0.25L, tmpl_LDouble_CosPi, cospil)

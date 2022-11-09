@@ -5,7 +5,7 @@
 double tmpl_Double_SinPi(double x)
 {
     double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
-    unsigned int arg_128_int;
+    unsigned int ind;
 
     if (x >= 0.0)
     {
@@ -26,11 +26,11 @@ double tmpl_Double_SinPi(double x)
         arg -= 1.0;
     }
 
-    arg_128_int = (unsigned int)(128.0*arg);
-    dx = arg - 0.0078125*arg_128_int;
+    ind = (unsigned int)(128.0*arg);
+    dx = arg - 0.0078125*ind;
 
-    sx = tmpl_Double_SinPi_Lookup_Table[arg_128_int];
-    cx = tmpl_Double_CosPi_Lookup_Table[arg_128_int];
+    sx = tmpl_Double_SinPi_Lookup_Table[ind];
+    cx = tmpl_Double_CosPi_Lookup_Table[ind];
     sdx = tmpl_Double_SinPi_Maclaurin(dx);
     cdx = tmpl_Double_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);
