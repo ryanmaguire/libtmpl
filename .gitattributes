@@ -1,5 +1,4 @@
-*.c linguist-language=C
 *.h linguist-language=C
-*.cpp linguist-language=C++
+*.c linguist-language=C
 *.hpp linguist-language=C++
-*.fasm linguist-language=Assembly
+*.cpp linguist-language=C++
