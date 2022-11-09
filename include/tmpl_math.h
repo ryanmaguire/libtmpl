@@ -1969,6 +1969,69 @@ extern long double tmpl_LDouble_Exp(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Exp_Maclaurin                                             *
+ *  Purpose:                                                                  *
+ *      Computes the base e exponential of a small real number.               *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Small functions, worth inlining.                                          */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/math/tmpl_math_exp_maclaurin_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_exp_maclaurin_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested, use functions in src/math.                   */
+extern float tmpl_Float_Exp_Maclaurin(float x);
+extern double tmpl_Double_Exp_Maclaurin(double x);
+extern long double tmpl_LDouble_Exp_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp_Pade                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the base e exponential of a small real number.               *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Small functions, worth inlining.                                          */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/math/tmpl_math_exp_pade_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_exp_pade_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_exp_pade_ldouble_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested, use functions in src/math.                   */
+extern float tmpl_Float_Exp_Pade(float x);
+extern double tmpl_Double_Exp_Pade(double x);
+extern long double tmpl_LDouble_Exp_Pade(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Exp_Pos_Kernel                                            *
  *  Purpose:                                                                  *
  *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
