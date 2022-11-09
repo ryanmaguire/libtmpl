@@ -99,6 +99,7 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_cosh_pade_ldouble.c" -and \
 	-not -name "tmpl_cospi_maclaurin_double.c" -and \
 	-not -name "tmpl_cospi_maclaurin_float.c" -and \
+	-not -name "tmpl_cospi_maclaurin_ldouble.c" -and \
 	-not -name "tmpl_dist_float.c" -and \
 	-not -name "tmpl_dist_double.c" -and \
 	-not -name "tmpl_dist_ldouble.c" -and \
@@ -115,6 +116,7 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_sind_maclaurin_ldouble.c" -and \
 	-not -name "tmpl_sinpi_maclaurin_double.c" -and \
 	-not -name "tmpl_sinpi_maclaurin_float.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_ldouble.c" -and \
 	-not -name "tmpl_sin_very_small_double.c" -and
 endif
 

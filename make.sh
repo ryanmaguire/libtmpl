@@ -236,6 +236,7 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_cosh_pade_ldouble.c"
     Exclude="$Exclude tmpl_cospi_maclaurin_double.c"
     Exclude="$Exclude tmpl_cospi_maclaurin_float.c"
+    Exclude="$Exclude tmpl_cospi_maclaurin_ldouble.c"
     Exclude="$Exclude tmpl_dist_float.c"
     Exclude="$Exclude tmpl_dist_double.c"
     Exclude="$Exclude tmpl_dist_ldouble.c"
@@ -253,6 +254,7 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_sind_maclaurin_ldouble.c"
     Exclude="$Exclude tmpl_sinpi_maclaurin_double.c"
     Exclude="$Exclude tmpl_sinpi_maclaurin_float.c"
+    Exclude="$Exclude tmpl_sinpi_maclaurin_ldouble.c"
 fi
 
 if [ $USELONGLONG == 0 ]; then
