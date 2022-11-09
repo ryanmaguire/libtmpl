@@ -151,7 +151,7 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
 
     /*  log(2) split into two components for extra precision.                 */
     const float ln_2_hi = 6.9314575195E-01F;
-    const float ln_2_lo = 6.9314575195E-01F;
+    const float ln_2_lo = 1.4286067653e-06F;
 
     /*  Reciprocal of log(2). Low part not needed.                            */
     const float rcpr_ln_2 = 1.44269504088896338700E+00F;
