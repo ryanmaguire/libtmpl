@@ -56,14 +56,16 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_bool.h:                                                          *
+ *  1.) stdlib.h:                                                             *
+ *          Standard C library file with the size_t typedef.                  *
+ *  2.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- *  2.) tmpl_config.h:                                                        *
+ *  3.) tmpl_config.h:                                                        *
  *          Header file containing the endianness of your system. This file   *
  *          is built with config.c in libtmpl/. The Makefile automatically    *
  *          runs this, as does the make.sh script. This also contains the     *
  *          TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.              *
- *  3.) math.h:                                                               *
+ *  4.) math.h:                                                               *
  *          C standard library for math functions. This is only included if   *
  *          TMPL_USE_MATH_ALGORITHMS is not set to one. The Makefile and      *
  *          make.sh file set this macro to one by default.                    *
@@ -93,6 +95,9 @@
 /*  Include guard for this file to prevent including it twice.                */
 #ifndef TMPL_MATH_H
 #define TMPL_MATH_H
+
+/*  size_t typedef given here.                                                */
+#include <stdlib.h>
 
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
@@ -1527,6 +1532,71 @@ extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Array_Max                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the maximum of an array of doubles.                           *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      double max:                                                           *
+ *          The maximum of arr. NaN's in the array are skipped.               *
+ ******************************************************************************/
+extern float tmpl_Float_Array_Max(float *arr, size_t len);
+extern double tmpl_Double_Array_Max(double *arr, size_t len);
+extern long double tmpl_LDouble_Array_Max(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_Min                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the minimum of an array of doubles.                           *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      double min:                                                           *
+ *          The minimum of arr. NaN's in the array are skipped.               *
+ ******************************************************************************/
+extern float tmpl_Float_Array_Min(float *arr, size_t len);
+extern double tmpl_Double_Array_Min(double *arr, size_t len);
+extern long double tmpl_LDouble_Array_Min(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_MinMax                                              *
+ *  Purpose:                                                                  *
+ *      Compute the min and max of an array of doubles.                       *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *      double *min:                                                          *
+ *          A pointer to a double. The minimum will be stored here.           *
+ *      double *max:                                                          *
+ *          A pointer to a double. The max is stored here.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Float_Array_MinMax(float *arr, size_t len,
+                        float *min, float *max);
+
+extern void
+tmpl_Double_Array_MinMax(double *arr, size_t len,
+                         double *min, double *max);
+
+extern void
+tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
+                          long double *min, long double *max);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Base2_Mant_and_Exp                                        *
  *  Purpose:                                                                  *
  *      Given a real number x, compute the numbers m and e such that          *
@@ -2231,6 +2301,42 @@ extern long double tmpl_LDouble_Log(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Max                                                       *
+ *  Purpose:                                                                  *
+ *      Compute the maximum of two doubles.                                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double max:                                                           *
+ *          The maximum of x and y.                                           *
+ ******************************************************************************/
+extern float tmpl_Float_Max(float x, float y);
+extern double tmpl_Double_Max(double x, double y);
+extern long double tmpl_LDouble_Max(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Min                                                       *
+ *  Purpose:                                                                  *
+ *      Compute the minimum of two doubles.                                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double max:                                                           *
+ *          The minimum of x and y.                                           *
+ ******************************************************************************/
+extern float tmpl_Float_Min(float x, float y);
+extern double tmpl_Double_Min(double x, double y);
+extern long double tmpl_LDouble_Min(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Mod_2                                                     *
  *  Purpose:                                                                  *
  *      Computes the remainder after division by 2 of the input.              *
@@ -2622,15 +2728,6 @@ tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
                                     unsigned int deriv,
                                     long double x);
 
-extern float
-tmpl_Max_Float(float *arr, unsigned long n_elements);
-
-extern double
-tmpl_Max_Double(double *arr, unsigned long n_elements);
-
-extern long double
-tmpl_Max_LDouble(long double *arr, unsigned long n_elements);
-
 extern char
 tmpl_Max_Char(char *arr, unsigned long n_elements);
 
@@ -2654,15 +2751,6 @@ tmpl_Max_Long(long *arr, unsigned long n_elements);
 
 extern unsigned long
 tmpl_Max_ULong(unsigned long *arr, unsigned long n_elements);
-
-extern float
-tmpl_Min_Float(float *arr, unsigned long n_elements);
-
-extern double
-tmpl_Min_Double(double *arr, unsigned long n_elements);
-
-extern long double
-tmpl_Min_LDouble(long double *arr, unsigned long n_elements);
 
 extern char
 tmpl_Min_Char(char *arr, unsigned long n_elements);
