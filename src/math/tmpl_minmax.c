@@ -15,9 +15,6 @@ type tmpl_Min_##Type(type *arr, unsigned long n_elements)                      \
     return min;                                                                \
 }
 
-MinFuncFromType(float, Float)
-MinFuncFromType(double, Double)
-MinFuncFromType(long double, LDouble)
 MinFuncFromType(char, Char)
 MinFuncFromType(unsigned char, UChar)
 MinFuncFromType(short, Short)
@@ -41,9 +38,6 @@ type tmpl_Max_##Type(type *arr, unsigned long n_elements)                      \
     return max;                                                                \
 }
 
-MaxFuncFromType(float, Float)
-MaxFuncFromType(double, Double)
-MaxFuncFromType(long double, LDouble)
 MaxFuncFromType(char, Char)
 MaxFuncFromType(unsigned char, UChar)
 MaxFuncFromType(short, Short)
