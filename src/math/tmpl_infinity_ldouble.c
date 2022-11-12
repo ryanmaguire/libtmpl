@@ -23,9 +23,11 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_USE_INLINE macro.                 *
+ *  2.) tmpl_math.h:                                                          *
  *          Header file containing the function prototype.                    *
- *  2.) float.h:                                                              *
+ *  3.) float.h:                                                              *
  *          C standard library header file containing FLT_MAX, DBL_MAX, and   *
  *          LDBL_MAX. Only included if IEEE-754 support is unavailable.       *
  ******************************************************************************
@@ -33,90 +35,29 @@
  *  Date:       May 7, 2021                                                   *
  ******************************************************************************/
 
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
+
 /*  Function prototype and IEEE-754 data types here.                          */
 #include <libtmpl/include/tmpl_math.h>
 
-#if TMPL_HAS_IEEE754_FLOAT != 1  || \
-    TMPL_HAS_IEEE754_DOUBLE != 1 || \
-    TMPL_HAS_IEEE754_LDOUBLE != 1
-#include <float.h>
-#endif
+/*  With IEEE-754 support we can set the value of infinity bit-by-bit.        */
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
 
-/*  Single-precision real positive infinity.                                  */
-float tmpl_Float_Infinity(void)
-{
-    /*  Check for IEEE-754. This is the easiest way to define infinity.       */
-#if TMPL_HAS_IEEE754_FLOAT == 1
+/*  64-bit long double is implemented the same as 64-bit double.              */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
 
-    /*  IEEE-754 declares single precision positive infinity to have zero for *
-     *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
-     *  sign. Set the bits to this and then return the resulting float.       */
-    tmpl_IEEE754_Float x;
-    x.bits.sign = 0x0U;
-    x.bits.expo = 0xFFU;
-    x.bits.man0 = 0x0U;
-    x.bits.man1 = 0x0U;
-    return x.r;
-#else
-/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
-
-    /*  glibc sets the following for compilers lacking IEEE-754 support. This *
-     *  may result in compiler warnings, and may also result in undefined     *
-     *  behavior, but this is guaranteed to overflow and for the most part    *
-     *  it should work in practice.                                           */
-    float x = FLT_MAX;
-    return x*x;
-#endif
-/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-}
-/*  End of tmpl_Float_Infinity.                                               */
-
-/*  Double-precision real positive infinity.                                  */
-double tmpl_Double_Infinity(void)
-{
-    /*  Check for IEEE-754. This is the easiest way to define infinity.       */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
-
-    /*  IEEE-754 declares double precision positive infinity to have zero for *
-     *  all mantissa components, 1 for the all exponents bits, and 0 for the  *
-     *  sign. Set the bits to this and then return the resulting double.      */
-    tmpl_IEEE754_Double x;
-    x.bits.sign = 0x0U;
-    x.bits.expo = 0x7FFU;
-    x.bits.man0 = 0x0U;
-    x.bits.man1 = 0x0U;
-    x.bits.man2 = 0x0U;
-    x.bits.man3 = 0x0U;
-    return x.r;
-#else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
-
-    /*  glibc sets the infinity to 1.0E10000 for compilers lacking IEEE       *
-     *  support. This works, in practice, but is undefined behavior and       *
-     *  results in compiler warnings. Instead, use DBL_MAX from float.h,      *
-     *  is roughly the largest value possible for double, and return the      *
-     *  square of this. This may still be undefined behavior, but works in    *
-     *  practice and avoids compiler warnings.                                */
-    double x = DBL_MAX;
-    return x*x;
-#endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
-
-}
-/*  End of tmpl_Double_Infinity.                                              */
+/******************************************************************************
+ *                           64-Bit Double Version                            *
+ ******************************************************************************/
 
 /*  Long double precision real positive infinity.                             */
 long double tmpl_LDouble_Infinity(void)
 {
-    /*  Check for IEEE-754. This is the easiest way to define infinity.       */
-#if TMPL_HAS_IEEE754_LDOUBLE == 1
-
-    /*  Unlike float and double, there are several ways to implement long     *
-     *  double. Infinity is difference for each of these.                     */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
-
     /*  This is the same as 64-bit double precision. IEEE-754 declares double *
      *  precision positive infinity to have zero for all mantissa components, *
      *  1 for the all exponents bits, and 0 for the sign. Set the bits to     *
@@ -129,12 +70,24 @@ long double tmpl_LDouble_Infinity(void)
     x.bits.man2 = 0x0U;
     x.bits.man3 = 0x0U;
     return x.r;
+}
+/*  End of tmpl_LDouble_Infinity.                                             */
+
+/*  Extended precision. This is the only precision with a bit for the integer *
+ *  part of the number. Long doubles are written x = s * n.m * 2^e.           */
 #elif \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
 
+/******************************************************************************
+ *                          80-Bit Extended Version                           *
+ ******************************************************************************/
+
+/*  Long double precision real positive infinity.                             */
+long double tmpl_LDouble_Infinity(void)
+{
     /*  80-bit extended. Similar to double but need to set the integer bit to *
      *  1. 32-bit float and 64-bit double do not have an integer bit.         */
     tmpl_IEEE754_LDouble x;
@@ -146,11 +99,21 @@ long double tmpl_LDouble_Infinity(void)
     x.bits.man3 = 0x0U;
     x.bits.intr = 0x1U;
     return x.r;
+}
+/*  End of tmpl_LDouble_Infinity.                                             */
 
+/*  Quadruple precision. Similar to 64-bit double, but with more bits.        */
 #elif \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
 
+/******************************************************************************
+ *                         128-Bit Quadruple Version                          *
+ ******************************************************************************/
+
+/*  Long double precision real positive infinity.                             */
+long double tmpl_LDouble_Infinity(void)
+{
     /*  128-bit quadruple. Similar to double but with more mantissa parts.    */
     tmpl_IEEE754_LDouble x;
     x.bits.sign = 0x0U;
@@ -163,21 +126,63 @@ long double tmpl_LDouble_Infinity(void)
     x.bits.man5 = 0x0U;
     x.bits.man6 = 0x0U;
     return x.r;
+}
+/*  End of tmpl_LDouble_Infinity.                                             */
 
+/*  Double-double precision. Similar to 64-bit double but with an extra zero. */
 #else
+
+/******************************************************************************
+ *                       128-Bit Double-Double Version                        *
+ ******************************************************************************/
+
+/*  Long double precision real positive infinity.                             */
+long double tmpl_LDouble_Infinity(void)
+{
+    /*  Declare necessary variables.                                          */
     tmpl_IEEE754_LDouble x;
+
+    /*  Set the high double to infinity, bit-by-bit.                          */
     x.bits.signa = 0x0U;
     x.bits.expoa = TMPL_LDOUBLE_NANINF_EXP;
     x.bits.man0a = 0x0U;
     x.bits.man1a = 0x0U;
     x.bits.man2a = 0x0U;
     x.bits.man3a = 0x0U;
-    x.d[1] = x.d[0];
+
+    /*  Set the low double to zero and return.                                */
+    x.d[1] = 0.0;
     return x.r;
-#endif
-#else
-    const long double x = LDBL_MAX;
-    return x*x;
-#endif
 }
 /*  End of tmpl_LDouble_Infinity.                                             */
+
+#endif
+/*  End of double-double version.                                             */
+
+#else
+/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  LDBL_MAX macro found here.                                                */
+#include <float.h>
+
+/*  Long double precision real positive infinity.                             */
+long double tmpl_LDouble_Infinity(void)
+{
+    /*  LDBL_MAX is supposed to be close to the largest representable long    *
+     *  double that does not overflow to infinity. Squaring this should give  *
+     *  in infinity. This may be undefined behavior, but it works in practice *
+     *  and avoids compiler warnings.                                         */
+    const long double x = LDBL_MAX;
+    return x*x;
+}
+/*  End of tmpl_LDouble_Infinity.                                             */
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

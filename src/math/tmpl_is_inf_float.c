@@ -51,22 +51,7 @@
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2021                                              *
  ******************************************************************************/
 
@@ -76,12 +61,16 @@
 /*  Function prototypes here.                                                 */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Check for IEEE-754. This is the easiest way check for infinity.           */
+#if TMPL_HAS_IEEE754_FLOAT == 1
+
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
 /*  Function for testing if a float is +/- infinity.                          */
 tmpl_Bool tmpl_Float_Is_Inf(float x)
 {
-    /*  Check for IEEE-754. This is the easiest way check for infinity.       */
-#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
-
     /*  Declare a variable for the IEEE-754 float object.                     */
     tmpl_IEEE754_Float w;
 
@@ -94,9 +83,19 @@ tmpl_Bool tmpl_Float_Is_Inf(float x)
         return tmpl_True;
     else
         return tmpl_False;
-#else
-/*  Else #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1   */
+}
+/*  End of tmpl_Float_Is_Inf.                                                 */
 
+#else
+/*  Else for TMPL_HAS_IEEE754_FLOAT == 1.                                     */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Function for testing if a float is +/- infinity.                          */
+tmpl_Bool tmpl_Float_Is_Inf(float x)
+{
     /*  A portable way to check (without IEEE-754 support) is to see if       *
      *  x = x + x, and x is not zero. x == x + 1 is another way to check, but *
      *  this can return true for finite numbers if x is greater in magnitude  *
@@ -110,71 +109,8 @@ tmpl_Bool tmpl_Float_Is_Inf(float x)
         return tmpl_True;
     else
         return tmpl_False;
-#endif
-/*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
-
 }
 /*  End of tmpl_Float_Is_Inf.                                                 */
 
-/*  Function for testing if a double is +/- infinity.                         */
-tmpl_Bool tmpl_Double_Is_Inf(double x)
-{
-    /*  Check for IEEE-754 support. This is the easiest way to work with inf. */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
-
-    /*  Declare a variable for the IEEE-754 double object.                    */
-    tmpl_IEEE754_Double w;
-
-    /*  Set the double part to the input.                                     */
-    w.r = x;
-
-    /*  Infinity for IEEE-754 is exponent set to all 1's and the mantissa set *
-     *  to all zeros. The sign can be 0 or 1 for +/- infinity.                */
-    if (w.bits.expo == 0x7FFU &&
-        w.bits.man0 == 0x00U &&
-        w.bits.man1 == 0x00U &&
-        w.bits.man2 == 0x00U &&
-        w.bits.man3 == 0x00U)
-        return tmpl_True;
-    else
-        return tmpl_False;
-#else
-/*  For #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1  */
-
-    /*  A portable way to check (without IEEE-754 support) is to see if       *
-     *  x = x + x, and x is not zero. x == x + 1 is another way to check, but *
-     *  this can return true for finite numbers if x is greater in magnitude  *
-     *  than the precision implemented for float. x == x + x avoids this      *
-     *  problem. To avoid the compiler trying to optimize this code away,     *
-     *  declare y as volatile.                                                */
-    volatile double y = x + x;
-
-    /*  If x == x + x, then either x = 0 or x = +/- infinity.                 */
-    if (x == y && x != 0.0)
-        return tmpl_True;
-    else
-        return tmpl_False;
 #endif
-/*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1  */
-
-}
-/*  End of tmpl_Double_Is_Inf.                                                */
-
-/*  Function for testing if a long double is +/- infinity.                    */
-tmpl_Bool tmpl_LDouble_Is_Inf(long double x)
-{
-    /*  A portable way to check (without IEEE-754 support) is to see if       *
-     *  x = x + x, and x is not zero. x == x + 1 is another way to check, but *
-     *  this can return true for finite numbers if x is greater in magnitude  *
-     *  than the precision implemented for long double. x == x + x avoids     *
-     *  this. To avoid the compiler trying to optimize this code away,        *
-     *  declare y as volatile.                                                */
-    volatile long double y = x + x;
-
-    /*  If x == x + x, then either x = 0 or x = +/- infinity.                 */
-    if (x == y && x != 0.0L)
-        return tmpl_True;
-    else
-        return tmpl_False;
-}
-/*  End of tmpl_LDouble_Is_Inf.                                               */
+/*  End of TMPL_HAS_IEEE754_FLOAT == 1.                                       */
