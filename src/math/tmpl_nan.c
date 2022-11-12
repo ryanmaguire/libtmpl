@@ -26,14 +26,7 @@
  *  1.) tmpl_math.h:                                                          *
  *          Header file containing the function prototype.                    *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
  ******************************************************************************/
 

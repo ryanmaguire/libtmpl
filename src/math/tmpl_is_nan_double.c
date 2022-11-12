@@ -50,21 +50,6 @@
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2021                                              *
  ******************************************************************************/
@@ -75,51 +60,16 @@
 /*  Function prototypes here.                                                 */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Function for testing if a float is Not-A-Number.                          */
-tmpl_Bool tmpl_Float_Is_NaN(float x)
-{
-    /*  Check for IEEE-754. This is the easiest way check for NaN.            */
-#if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1
+/*  Check for IEEE-754 support. This is the easiest way to work with nan.     */
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
-    /*  Declare a variable for the IEEE-754 float object.                     */
-    tmpl_IEEE754_Float w;
-
-    /*  Set the float part to the input.                                      */
-    w.r = x;
-
-    /*  NaN for IEEE-754 is exponent set to all 1's and the mantissa set to   *
-     *  zeros and ones . The sign can be 0 or 1 for +/- nan.                  */
-    if (w.bits.expo == 0xFFU && (w.bits.man0 != 0x0U || w.bits.man1 != 0x0U))
-        return tmpl_True;
-    else
-        return tmpl_False;
-#else
-/*  Else #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1   */
-
-    /*  The compiler will see this as x == x, which for normal values will    *
-     *  always return true. It may try to optimize this code away. For        *
-     *  NaN values, x == x will return false, whereas for all other values    *
-     *  it will return true. To prevent the compiler from optimizing          *
-     *  out this code, declare y as "volatile".                               */
-    volatile float y = x;
-
-    /*  If x == y, x is a number. Otherwise, it is NaN.                       */
-    if (x == y)
-        return tmpl_False;
-    else
-        return tmpl_True;
-#endif
-/*  End #if defined(TMPL_HAS_IEEE754_FLOAT) && TMPL_HAS_IEEE754_FLOAT == 1    */
-
-}
-/*  End of tmpl_Float_Is_NaN.                                                 */
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
 
 /*  Function for testing if a double is Not-A-Number.                         */
 tmpl_Bool tmpl_Double_Is_NaN(double x)
 {
-    /*  Check for IEEE-754 support. This is the easiest way to work with nan. */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
-
     /*  Declare a variable for the IEEE-754 double object.                    */
     tmpl_IEEE754_Double w;
 
@@ -136,8 +86,19 @@ tmpl_Bool tmpl_Double_Is_NaN(double x)
         return tmpl_True;
     else
         return tmpl_False;
-#else
+}
+/*  End of tmpl_Double_Is_NaN.                                                */
 
+#else
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Function for testing if a double is Not-A-Number.                         */
+tmpl_Bool tmpl_Double_Is_NaN(double x)
+{
     /*  The compiler will see this as x == x, which for normal values will    *
      *  always return true. It may try to optimize this code away. For        *
      *  NaN values, x == x will return false, whereas for all other values    *
@@ -150,27 +111,8 @@ tmpl_Bool tmpl_Double_Is_NaN(double x)
         return tmpl_False;
     else
         return tmpl_True;
-#endif
-/*  End #if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1  */
-
 }
 /*  End of tmpl_Double_Is_NaN.                                                */
 
-/*  Function for testing if a long double is Not-A-Number.                    */
-tmpl_Bool tmpl_LDouble_Is_NaN(long double x)
-{
-    /*  The compiler will see this as x == x, which for normal values will    *
-     *  always return true. It may try to optimize this code away. For        *
-     *  NaN values, x == x will return false, whereas for all other values    *
-     *  it will return true. To prevent the compiler from optimizing          *
-     *  out this code, declare y as "volatile".                               */
-    volatile long double y = x;
-
-    /*  If x == y, x is a number. Otherwise, it is NaN.                       */
-    if (x == y)
-        return tmpl_False;
-    else
-        return tmpl_True;
-}
-/*  End of tmpl_LDouble_Is_NaN.                                               */
-
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

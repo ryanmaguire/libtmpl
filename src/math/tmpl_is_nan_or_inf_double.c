@@ -16,33 +16,34 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_is_inf                                   *
+ *                          tmpl_is_nan_or_inf                                *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Determines if the input is +/- infinity.                              *
+ *      Determines if the input is +/- nan.                                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Is_Inf:                                                    *
- *      tmpl_Double_Is_Inf:                                                   *
- *      tmpl_LDouble_Is_Inf:                                                  *
+ *      tmpl_Float_Is_NaN_Or_Inf:                                             *
+ *      tmpl_Double_Is_NaN_Or_Inf:                                            *
+ *      tmpl_LDouble_Is_NaN_Or_Inf:                                           *
  *  Purpose:                                                                  *
- *      Determines if the input is +/- infinity.                              *
+ *      Determines if the input is +/- nan/inf.                               *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      is_inf (tmpl_Bool):                                                   *
- *          Boolean for if x is +/- infinity.                                 *
+ *      is_nan (tmpl_Bool):                                                   *
+ *          Boolean for if x is +/- nan/inf.                                  *
  *  Method:                                                                   *
  *      If IEEE-754 support is available, check if the bits correspond to     *
- *      +/- infinity. IEEE-754 states infinity is when all exponent bits are  *
- *      1 and all mantissa bits are 0. The sign can be zero or 1.             *
+ *      +/- NaN/Inf. IEEE-754 states NaN or Inf is when all exponent bits are *
+ *      1. The mantissa values can be anything, depending on whether the      *
+ *      value is NaN, inf, sNaN, or qNaN.                                     *
  *                                                                            *
  *      If IEEE-754 is not available, a portable way to check is by comparing *
- *      x + x == x. This will return True in 3 cases: x = 0, x = +infinity,   *
- *      and x = -infinity. Checking if x + x == x and if x != 0 suffices.     *
+ *      x == x. This returns true for numbers, and false for NaN. For inf we  *
+ *      check if x != x + x.                                                  *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -52,7 +53,7 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 21, 2021                                              *
+ *  Date:       February 3, 2022                                              *
  ******************************************************************************/
 
 /*  Booleans found here.                                                      */
@@ -61,55 +62,49 @@
 /*  Function prototypes here.                                                 */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  With IEEE-754 support we can check the bits to see if they represent inf. */
-#if TMPL_HAS_IEEE754_LDOUBLE == 1
+/*  Check for IEEE-754 support. This is the easiest way to work with nan/inf. */
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/******************************************************************************
- *                              IEEE-754 Version                              *
- ******************************************************************************/
-
-/*  Function for testing if a long double is +/- infinity.                    */
-tmpl_Bool tmpl_LDouble_Is_Inf(long double x)
+/*  Function for testing if a double is Not-A-Number or inf.                  */
+tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x)
 {
-    /*  Declare necessary variables.                                          */
-    tmpl_IEEE754_LDouble w;
+    /*  Declare a variable for the IEEE-754 double object.                    */
+    tmpl_IEEE754_Double w;
 
-    /*  Set the long double part to the input.                                */
+    /*  Set the double part to the input.                                     */
     w.r = x;
 
-    /*  Check the bits and see if they correspond to infinity.                */
-    if (TMPL_LDOUBLE_IS_NAN_OR_INF(w) && !TMPL_LDOUBLE_IS_NAN(w))
+    /*  NaN for IEEE-754 is exponent set to all 1's and the mantissa set to   *
+     *  zeros and ones . The sign can be 0 or 1 for +/- nan.                  */
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
         return tmpl_True;
     else
         return tmpl_False;
 }
-/*  End of tmpl_LDouble_Is_Inf.                                               */
+/*  End of tmpl_Double_Is_NaN_Or_Inf.                                         */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
-/******************************************************************************
- *                              Portable Version                              *
- ******************************************************************************/
-
-/*  Function for testing if a long double is +/- infinity.                    */
-tmpl_Bool tmpl_LDouble_Is_Inf(long double x)
+/*  Function for testing if a double is Not-A-Number or inf.                  */
+tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x)
 {
-    /*  A portable way to check (without IEEE-754 support) is to see if       *
-     *  x = x + x, and x is not zero. x == x + 1 is another way to check, but *
-     *  this can return true for finite numbers if x is greater in magnitude  *
-     *  than the precision implemented for long double. x == x + x avoids     *
-     *  this. To avoid the compiler trying to optimize this code away,        *
-     *  declare y as volatile.                                                */
-    volatile long double y = x + x;
+    /*  The compiler will see this as x == x, which for normal values will    *
+     *  always return true. It may try to optimize this code away. For        *
+     *  NaN values, x == x will return false, whereas for all other values    *
+     *  it will return true. To prevent the compiler from optimizing          *
+     *  out this code, declare y as "volatile".                               */
+    volatile double y = x;
 
-    /*  If x == x + x, then either x = 0 or x = +/- infinity.                 */
-    if (x == y && x != 0.0L)
-        return tmpl_True;
-    else
+    /*  If x - x evaluates to NaN for x = infinity and x = NaN. It returns 0  *
+     *  for all other doubles.                                                */
+    if ((x - y) == 0.0)
         return tmpl_False;
+    else
+        return tmpl_True;
 }
-/*  End of tmpl_LDouble_Is_Inf.                                               */
+/*  End of tmpl_Double_Is_NaN.                                                */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+
