@@ -10,6 +10,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 project(integer_time_tests)
+include(FindBoost)
+find_package(Boost REQUIRED)
 
 set(test_c_apps
     tmpl_integer_abs_char_time_test
@@ -52,6 +54,7 @@ set(test_cpp_apps
     tmpl_integer_gcd_uint
     tmpl_integer_gcd_ulong
 )
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 foreach(app ${test_cpp_apps})
     add_executable(${app} ${app}.cpp)
     set_target_properties(
@@ -61,6 +64,7 @@ foreach(app ${test_cpp_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+        PRIVATE "${Boost_INCLUDE_DIRS}"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)
