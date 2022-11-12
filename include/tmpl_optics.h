@@ -18,32 +18,17 @@ extern long double
 Fresnel_Scale_LDouble(long double lambda, long double d,
                       long double phi, long double b);
 
-extern float
-tmpl_Float_Resolution_Inverse(float x);
+extern float tmpl_Float_Resolution_Inverse(float x);
+extern double tmpl_Double_Resolution_Inverse(double x);
+extern long double tmpl_LDouble_Resolution_Inverse(long double x);
 
-extern double
-tmpl_Double_Resolution_Inverse(double x);
+extern float tmpl_Float_Wavelength_To_Wavenumber(float x);
+extern double tmpl_Double_Wavelength_To_Wavenumber(double x);
+extern long double tmpl_LDouble_Wavelength_To_Wavenumber(long double x);
 
-extern long double
-tmpl_LDouble_Resolution_Inverse(long double x);
-
-extern float
-tmpl_Float_Wavelength_To_Wavenumber(float x);
-
-extern double
-tmpl_Double_Wavelength_To_Wavenumber(double x);
-
-extern long double
-tmpl_LDouble_Wavelength_To_Wavenumber(long double x);
-
-extern float
-tmpl_Float_Frequency_To_Wavelength(float x);
-
-extern double
-tmpl_Double_Frequency_To_Wavelength(double x);
-
-extern long double
-tmpl_LDouble_Frequency_To_Wavelength(long double x);
+extern float tmpl_Float_Frequency_To_Wavelength(float x);
+extern double tmpl_Double_Frequency_To_Wavelength(double x);
+extern long double tmpl_LDouble_Frequency_To_Wavelength(long double x);
 
 /*  The ringlet and gap modeling functions.                                   */
 extern tmpl_ComplexDouble
@@ -58,8 +43,7 @@ extern float
 tmpl_Float_Ringlet_Diffraction_Phase(float x, float a, float b, float F);
 
 extern double
-tmpl_Double_Ringlet_Diffraction_Phase(double x, double a,
-                                             double b, double F);
+tmpl_Double_Ringlet_Diffraction_Phase(double x, double a, double b, double F);
 
 extern tmpl_ComplexDouble
 tmpl_CDouble_Square_Wave_Diffraction(double x, double W, double F,
@@ -106,6 +90,4 @@ extern long double
 tmpl_LDouble_Two_Slit_Fraunhofer_Diffraction(long double x, long double z,
                                              long double a, long double d,
                                              long double lambda);
-
 #endif
-
