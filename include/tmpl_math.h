@@ -2728,54 +2728,6 @@ tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
                                     unsigned int deriv,
                                     long double x);
 
-extern char
-tmpl_Max_Char(char *arr, unsigned long n_elements);
-
-extern unsigned char
-tmpl_Max_UChar(unsigned char *arr, unsigned long n_elements);
-
-extern short
-tmpl_Max_Short(short *arr, unsigned long n_elements);
-
-extern unsigned short
-tmpl_Max_UShort(unsigned short *arr, unsigned long n_elements);
-
-extern int
-tmpl_Max_Int(int *arr, unsigned long n_elements);
-
-extern unsigned int
-tmpl_Max_UInt(unsigned int *arr, unsigned long n_elements);
-
-extern long
-tmpl_Max_Long(long *arr, unsigned long n_elements);
-
-extern unsigned long
-tmpl_Max_ULong(unsigned long *arr, unsigned long n_elements);
-
-extern char
-tmpl_Min_Char(char *arr, unsigned long n_elements);
-
-extern unsigned char
-tmpl_Min_UChar(unsigned char *arr, unsigned long n_elements);
-
-extern short
-tmpl_Min_Short(short *arr, unsigned long n_elements);
-
-extern unsigned short
-tmpl_Min_UShort(unsigned short *arr, unsigned long n_elements);
-
-extern int
-tmpl_Min_Int(int *arr, unsigned long n_elements);
-
-extern unsigned int
-tmpl_Min_UInt(unsigned int *arr, unsigned long n_elements);
-
-extern long
-tmpl_Min_Long(long *arr, unsigned long n_elements);
-
-extern unsigned long
-tmpl_Min_ULong(unsigned long *arr, unsigned long n_elements);
-
 /*  Macro for positive infinity                                               */
 #define TMPL_INFINITYF (tmpl_Float_Infinity())
 #define TMPL_INFINITY (tmpl_Double_Infinity())
