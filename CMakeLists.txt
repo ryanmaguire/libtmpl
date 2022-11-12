@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.23)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(
+    APPEND
+    CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 include(ParseCStandard)
 
 option(
@@ -66,10 +71,33 @@ if(NOT DEFINED LIBTMPL_STDVER)
     set(LIBTMPL_STDVER "-std=c89" CACHE STRING "" FORCE)
 endif()
 
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
+    message(
+        STATUS
+        "Downloading conan.cmake from https://github.com/conan-io/cmake-conan"
+    )
+    file(
+        DOWNLOAD
+            "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake"
+    )
+endif()
+
 project(libtmpl LANGUAGES C)
 
-cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
+include(${CMAKE_CURRENT_BINARY_DIR}/conan.cmake)
 
+conan_cmake_autodetect(settings)
+
+conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
+                    BUILD missing
+                    REMOTE conancenter
+                    SETTINGS ${settings}
+)
+
+cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
+include(FindBoost)
 add_library(tmpl SHARED)
 
 target_include_directories(
