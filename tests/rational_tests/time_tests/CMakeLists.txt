@@ -10,6 +10,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 project(rational_time_tests LANGUAGES C CXX)
+include(FindBoost)
+find_package(Boost REQUIRED)
 
 set(test_apps
     tmpl_rational_add_test
@@ -28,6 +30,7 @@ foreach(app ${test_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+        PRIVATE "${Boost_INCLUDE_DIR}" "${Boost_INCLUDE_DIR}/boost"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)

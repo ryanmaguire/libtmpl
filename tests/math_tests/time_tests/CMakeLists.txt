@@ -9,6 +9,20 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     endif()
 endif()
 
+if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+    fetchcontent_declare(
+        linasm-checkout
+        GIT_REPOSITORY https://github.com/rurban/linasm.git
+        GIT_TAG master
+        SOURCE_DIR
+        GIT_PROGRESS
+        TRUE
+    )
+
+    set(linasm_INCLUDE_DIR "${linasm_checkout_SOURCE_DIR}/include")
+    set(linasm_SOURCE_DIR "${linasm_checkout_SOURCE_DIR}/source")
+endif()
+
 project(math_time_tests)
 
 set(test_apps
@@ -68,7 +82,6 @@ set(test_apps
     tmpl_sqrt_double_time_test_big_vals
     tmpl_sqrt_double_time_test_denormal_vals
     tmpl_sqrt_double_time_test_near_1
-    tmpl_sqrt_double_time_test_vs_linasm
     tmpl_sqrt_float_time_test
     tmpl_sqrt_float_time_test_big_vals
     tmpl_sqrt_float_time_test_denormal_vals
@@ -95,9 +108,30 @@ foreach(app ${test_apps})
     endif()
 endforeach()
 
+if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(linasm_compare_test_apps tmpl_sqrt_double_time_test_vs_linasm)
+
+    foreach(app ${linasm_compare_test_apps})
+        add_executable(${app} ${app}.c)
+        set_target_properties(
+            ${app}
+            PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
+        )
+        target_include_directories(
+            ${app}
+            PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+            PRIVATE "${linasm_INCLUDE_DIR}"
+        )
+        target_link_libraries(${app} PRIVATE tmpl::tmpl)
+        if(UNIX)
+            target_link_libraries(${app} PRIVATE m)
+        endif()
+    endforeach()
+endif()
+
 include(GNUInstallDirs)
 install(
-    TARGETS ${test_apps}
+    TARGETS ${test_apps} ${linasm_compare_test_apps}
     RUNTIME
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY

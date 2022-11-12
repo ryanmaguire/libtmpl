@@ -42,6 +42,7 @@ foreach(app ${test_c_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+        PRIVATE "${Boost_INCLUDE_DIR}" "${Boost_INCLUDE_DIR}/boost"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)
@@ -54,7 +55,7 @@ set(test_cpp_apps
     tmpl_integer_gcd_uint
     tmpl_integer_gcd_ulong
 )
-message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+
 foreach(app ${test_cpp_apps})
     add_executable(${app} ${app}.cpp)
     set_target_properties(
@@ -64,7 +65,7 @@ foreach(app ${test_cpp_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
-        PRIVATE "${Boost_INCLUDE_DIRS}"
+        PRIVATE "${Boost_INCLUDE_DIR}" "${Boost_INCLUDE_DIR}/boost"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)

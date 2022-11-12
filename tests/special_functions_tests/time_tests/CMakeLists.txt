@@ -10,7 +10,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 project(special_function_time_tests)
-
+include(FindGSL)
 set(test_apps
     tmpl_bessel_j0_double_small_time_test_vs_glibc
     tmpl_bessel_j0_double_small_time_test_vs_gsl
@@ -25,8 +25,9 @@ foreach(app ${test_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+        PRIVATE "${GSL_INCLUDE_DIRS}"
     )
-    target_link_libraries(${app} PRIVATE tmpl::tmpl)
+    target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
