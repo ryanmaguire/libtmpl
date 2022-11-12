@@ -33,9 +33,6 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
-
 /*  Function prototype and IEEE-754 data types here.                          */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -172,6 +169,3 @@ long double tmpl_LDouble_NaN(void)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
