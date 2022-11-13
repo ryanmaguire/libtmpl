@@ -9,8 +9,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     endif()
 endif()
 
-project(bytes_tests)
-
+project(numerical_examples)
+include(FindGSL)
 set(test_apps
     five_point_derivative_example
     linear_interpolate_plot
@@ -24,8 +24,12 @@ foreach(app ${test_apps})
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
     )
-    target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}")
-    target_link_libraries(${app} PRIVATE tmpl::tmpl)
+    target_include_directories(
+        ${app}
+        PUBLIC "${TMPL_PARENT_DIR}"
+        PRIVATE "${GSL_INCLUDE_DIRS}"
+    )
+    target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()

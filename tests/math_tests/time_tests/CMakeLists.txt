@@ -10,17 +10,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
-    fetchcontent_declare(
-        linasm-checkout
-        GIT_REPOSITORY https://github.com/rurban/linasm.git
-        GIT_TAG master
-        SOURCE_DIR
-        GIT_PROGRESS
-        TRUE
-    )
-
-    set(linasm_INCLUDE_DIR "${linasm_checkout_SOURCE_DIR}/include")
-    set(linasm_SOURCE_DIR "${linasm_checkout_SOURCE_DIR}/source")
+    include(FetchLinAsm)
 endif()
 
 project(math_time_tests)
@@ -59,7 +49,6 @@ set(test_apps
     tmpl_log_double_time_test_big_vals
     tmpl_log_double_time_test_denormal_vals
     tmpl_log_double_time_test_near_1
-    tmpl_log_double_time_test_vs_linasm
     tmpl_log_float_time_test
     tmpl_log_float_time_test_big_vals
     tmpl_log_float_time_test_denormal_vals
@@ -109,7 +98,10 @@ foreach(app ${test_apps})
 endforeach()
 
 if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
-    set(linasm_compare_test_apps tmpl_sqrt_double_time_test_vs_linasm)
+    set(linasm_compare_test_apps
+        tmpl_log_double_time_test_vs_linasm
+        tmpl_sqrt_double_time_test_vs_linasm
+    )
 
     foreach(app ${linasm_compare_test_apps})
         add_executable(${app} ${app}.c)
