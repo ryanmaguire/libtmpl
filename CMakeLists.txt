@@ -64,7 +64,12 @@ installed to use this. This option is ignored if `LIBTMPL_NO_ASM=1` is set."
 
 option(LIBTMPL_NO_LONGLONG "" FALSE)
 option(LIBTMPL_NO_INT "" FALSE)
-option(LIBTMPL_BUILD_TESTS "Set to TRUE to enabling the build of tests" FALSE)
+option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests" FALSE)
+option(
+    LIBTMPL_BUILD_EXAMPLES
+    "Set to TRUE to enable the building of examples"
+    FALSE
+)
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
 
 if(NOT DEFINED LIBTMPL_STDVER)
@@ -393,6 +398,10 @@ add_library(tmpl::tmpl ALIAS tmpl)
 add_subdirectory("src")
 if(LIBTMPL_BUILD_TESTS)
     add_subdirectory("tests")
+endif()
+
+if(LIBTMPL_BUILD_EXAMPLES)
+    add_subdirectory("examples")
 endif()
 
 include(CMakePackageConfigHelpers)
