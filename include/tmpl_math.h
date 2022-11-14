@@ -2752,6 +2752,11 @@ extern const double tmpl_double_cosd_table[180];
 extern const float tmpl_float_cosd_table[180];
 extern const long double tmpl_ldouble_cosd_table[180];
 
+/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_cospi_table[128];
+extern const float tmpl_float_cospi_table[128];
+extern const long double tmpl_ldouble_cospi_table[128];
+
 /*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
 extern const double tmpl_double_log_table[128];
 extern const float tmpl_float_log_table[128];
@@ -2766,6 +2771,11 @@ extern const long double tmpl_ldouble_rcpr_table[128];
 extern const double tmpl_double_sind_table[180];
 extern const float tmpl_float_sind_table[180];
 extern const long double tmpl_ldouble_sind_table[180];
+
+/*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_sinpi_table[128];
+extern const float tmpl_float_sinpi_table[128];
+extern const long double tmpl_ldouble_sinpi_table[128];
 
 #endif
 /*  End of include guard.                                                     */
