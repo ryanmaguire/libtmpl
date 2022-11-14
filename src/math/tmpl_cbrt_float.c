@@ -77,8 +77,6 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  2.) tmpl_math_cbrt_lookup_table.h:                                        *
- *          Lookup table with pre-computed values of cbrt(x).                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
@@ -97,12 +95,6 @@ static const float tmpl_float_cbrt_data[3] = {1.0F, CBRT_2, CBRT_2_SQ};
 
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_FLOAT == 1
-
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_float.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_float.h>
 
 /*  Function for computing square roots at single precision.                  */
 float tmpl_Float_Cbrt(float x)
@@ -209,7 +201,7 @@ float tmpl_Float_Cbrt(float x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0xFFU;
-    w.r *= tmpl_float_cbrt_data[parity]*tmpl_float_cbrt_lookup_table[ind];
+    w.r *= tmpl_float_cbrt_data[parity]*tmpl_float_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;

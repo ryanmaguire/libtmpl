@@ -108,10 +108,6 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  2.) tmpl_math_cbrt_data_double.h:                                         *
- *          Lookup table with pre-computed values of cbrt(x).                 *
- *  3.) tmpl_math_rcpr_table_double.h:                                        *
- *          Table with values 1/(1 + k/128) for 0 <= k <= 127.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
@@ -135,12 +131,6 @@ static const double tmpl_double_cbrt_data[3] = {1.0, CBRT_2, CBRT_2_SQ};
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
-
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_double.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_double.h>
 
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Cbrt(double x)
@@ -252,7 +242,7 @@ double tmpl_Double_Cbrt(double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFU;
-    w.r *= tmpl_double_cbrt_data[parity]*tmpl_double_cbrt_lookup_table[ind];
+    w.r *= tmpl_double_cbrt_data[parity]*tmpl_double_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;

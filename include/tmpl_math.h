@@ -2738,5 +2738,24 @@ tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
 #define TMPL_NAN (tmpl_Double_NaN())
 #define TMPL_NANL (tmpl_LDouble_NaN())
 
+/******************************************************************************
+ *                              Tables and Data                               *
+ ******************************************************************************/
+
+/*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
+extern const double tmpl_double_cbrt_table[128];
+extern const float tmpl_float_cbrt_table[128];
+extern const long double tmpl_ldouble_cbrt_table[128];
+
+/*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
+extern const double tmpl_double_log_table[128];
+extern const float tmpl_float_log_table[128];
+extern const long double tmpl_ldouble_log_table[128];
+
+/*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
+extern const double tmpl_double_rcpr_table[128];
+extern const float tmpl_float_rcpr_table[128];
+extern const long double tmpl_ldouble_rcpr_table[128];
+
 #endif
 /*  End of include guard.                                                     */

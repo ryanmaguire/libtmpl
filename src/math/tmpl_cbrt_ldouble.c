@@ -157,14 +157,6 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  2.) tmpl_math_cbrt_data_ldouble.h:                                        *
- *          Lookup table with pre-computed values of cbrt(x).                 *
- *  3.) tmpl_math_rcpr_table_ldouble.h:                                       *
- *          Table with values 1/(1 + k/128) for 0 <= k <= 127.                *
- *  4.) tmpl_math_cbrt_data_double.h:                                         *
- *          Double-double method uses the double version of the tables.       *
- *  5.) tmpl_math_rcpr_table_double.h:                                        *
- *          Double-double method uses the double version of the tables.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
@@ -186,12 +178,6 @@
 /******************************************************************************
  *                           64-Bit Double Version                            *
  ******************************************************************************/
-
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_ldouble.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_ldouble.h>
 
 #define CBRT_2    (1.259921049894873164767210607278228350570E+00L)
 #define CBRT_2_SQ (1.587401051968199474751705639272308260391E+00L)
@@ -309,7 +295,7 @@ long double tmpl_LDouble_Cbrt(long double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFU;
-    w.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_ldouble_cbrt_lookup_table[ind];
+    w.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_ldouble_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
@@ -334,12 +320,6 @@ long double tmpl_LDouble_Cbrt(long double x)
 /******************************************************************************
  *                          80-Bit Extended Version                           *
  ******************************************************************************/
-
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_ldouble.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_ldouble.h>
 
 #define CBRT_2    (1.259921049894873164767210607278228350570E+00L)
 #define CBRT_2_SQ (1.587401051968199474751705639272308260391E+00L)
@@ -448,7 +428,7 @@ long double tmpl_LDouble_Cbrt(long double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFFU;
-    w.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_ldouble_cbrt_lookup_table[ind];
+    w.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_ldouble_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
@@ -471,12 +451,6 @@ long double tmpl_LDouble_Cbrt(long double x)
 /******************************************************************************
  *                         128-Bit Quadruple Version                          *
  ******************************************************************************/
-
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_ldouble.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_ldouble.h>
 
 #define CBRT_2    (1.259921049894873164767210607278228350570E+00L)
 #define CBRT_2_SQ (1.587401051968199474751705639272308260391E+00L)
@@ -592,7 +566,7 @@ long double tmpl_LDouble_Cbrt(long double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFFU;
-    w.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_ldouble_cbrt_lookup_table[ind];
+    w.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_ldouble_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
@@ -613,12 +587,6 @@ long double tmpl_LDouble_Cbrt(long double x)
 /******************************************************************************
  *                       128-Bit Double-Double Version                        *
  ******************************************************************************/
-
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_double.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_double.h>
 
 #define CBRT_2    (1.259921049894873164767210607278228350570E+00)
 #define CBRT_2_SQ (1.587401051968199474751705639272308260391E+00)
@@ -752,7 +720,7 @@ long double tmpl_LDouble_Cbrt(long double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     whi.bits.expo = exponent & 0x7FFU;
-    whi.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_double_cbrt_lookup_table[ind];
+    whi.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_double_cbrt_table[ind];
 
     /*  Cbrt is an odd function. Negate if needed.                            */
     whi.bits.sign = w.bits.signa;
