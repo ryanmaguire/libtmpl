@@ -2699,34 +2699,58 @@ extern float tmpl_Float_Tanh(float x);
 extern double tmpl_Double_Tanh(double x);
 extern long double tmpl_LDouble_Tanh(long double x);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_Eval                                                 *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the       *
+ *      the polynomial with the given coefficient at that point.              *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      size_t degree:                                                        *
+ *          The degree of the polynomial.                                     *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double poly:                                                          *
+ *          The polynomial evaluated at x.                                    *
+ ******************************************************************************/
+extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
+extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
+extern long double
+tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_Deriv_Eval                                           *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the nth   *
+ *      derivative of the the polynomial at that point.                       *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      unsigned int degree:                                                  *
+ *          The degree of the polynomial.                                     *
+ *      unsigned int deriv:                                                   *
+ *          The order of the derivative being applied to the polynomial.      *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double dpoly:                                                         *
+ *          The nth derivative of the polynomial evaluated at x.              *
+ ******************************************************************************/
 extern float
-tmpl_Real_Poly_Float_Coeffs(float *coeffs, unsigned int degree, float x);
+tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
+                           unsigned int deriv, float x);
 
 extern double
-tmpl_Real_Poly_Double_Coeffs(double *coeffs, unsigned int degree, double x);
+tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
+                            unsigned int deriv, double x);
 
 extern long double
-tmpl_Real_Poly_LDouble_Coeffs(long double *coeffs,
-                              unsigned int degree,
-                              long double x);
-
-extern float
-tmpl_Real_Poly_Deriv_Float_Coeffs(float *coeffs,
-                                  unsigned int degree,
-                                  unsigned int deriv,
-                                  float x);
-
-extern double
-tmpl_Real_Poly_Deriv_Double_Coeffs(double *coeffs,
-                                   unsigned int degree,
-                                   unsigned int deriv,
-                                   double x);
-
-extern long double
-tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
-                                    unsigned int degree,
-                                    unsigned int deriv,
-                                    long double x);
+tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
+                             unsigned int deriv, long double x);
 
 /*  Macro for positive infinity                                               */
 #define TMPL_INFINITYF (tmpl_Float_Infinity())

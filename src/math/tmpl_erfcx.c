@@ -1231,9 +1231,9 @@ static double erfcx_chebyshev_table(double y100)
         }
     }
 
-    /*  Use tmpl_Real_Poly_Double_Coeffs to evaluate the                      *
+    /*  Use tmpl_Double_Poly_Eval to evaluate the                             *
      *  polynomial in t via Horner's method and return.                       */
-    out = tmpl_Real_Poly_Double_Coeffs(coeffs, 6, t);
+    out = tmpl_Double_Poly_Eval(coeffs, 6, t);
     return out;
 }
 
