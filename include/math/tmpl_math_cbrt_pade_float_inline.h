@@ -141,4 +141,3 @@ float tmpl_Float_Cbrt_Pade(float x)
 
 #endif
 /*  End of include guard.                                                     */
-

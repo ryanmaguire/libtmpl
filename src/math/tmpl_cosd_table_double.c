@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_COSD_LOOKUP_TABLE_DOUBLE_H
-#define TMPL_MATH_COSD_LOOKUP_TABLE_DOUBLE_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
-static const double tmpl_Double_Cosd_Lookup_Table[180] = {
+const double tmpl_double_cosd_table[180] = {
     1.00000000000000000000000000000000000000000,
     0.99984769515639123915701155881391485169274,
     0.99939082701909573000624344004392996449524,
@@ -204,6 +203,3 @@ static const double tmpl_Double_Cosd_Lookup_Table[180] = {
     -0.99939082701909573000624344004392996449524,
     -0.99984769515639123915701155881391485169274
 };
-
-#endif
-/*  End of include guard.                                                     */
