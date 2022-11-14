@@ -2393,21 +2393,56 @@ extern long double tmpl_LDouble_NaN(void);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Reverse_Double_Array                                             *
+ *      tmpl_Double_Poly_Eval                                                 *
  *  Purpose:                                                                  *
- *      Reverses the order of a pointer to an array of real numbers.          *
+ *      Given an array of coefficients and a real number, evaluates the       *
+ *      the polynomial with the given coefficient at that point.              *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          A pointer to an array.                                            *
- *      unsigned long int arrsize:                                            *
- *          The number of elements in the array.                              *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      size_t degree:                                                        *
+ *          The degree of the polynomial.                                     *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
  *  Output:                                                                   *
- *      double sinc_x:                                                        *
- *          The sinc of x.                                                    *
+ *      double poly:                                                          *
+ *          The polynomial evaluated at x.                                    *
  ******************************************************************************/
-extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
-extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
-extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
+extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
+extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
+extern long double
+tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_Deriv_Eval                                           *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the nth   *
+ *      derivative of the the polynomial at that point.                       *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      unsigned int degree:                                                  *
+ *          The degree of the polynomial.                                     *
+ *      unsigned int deriv:                                                   *
+ *          The order of the derivative being applied to the polynomial.      *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double dpoly:                                                         *
+ *          The nth derivative of the polynomial evaluated at x.              *
+ ******************************************************************************/
+extern float
+tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
+                           unsigned int deriv, float x);
+
+extern double
+tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
+                            unsigned int deriv, double x);
+
+extern long double
+tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
+                             unsigned int deriv, long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2424,6 +2459,24 @@ extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
 extern float tmpl_Float_Pow2(signed int expo);
 extern double tmpl_Double_Pow2(signed int expo);
 extern long double tmpl_LDouble_Pow2(signed int expo);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Reverse_Double_Array                                             *
+ *  Purpose:                                                                  *
+ *      Reverses the order of a pointer to an array of real numbers.          *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          A pointer to an array.                                            *
+ *      unsigned long int arrsize:                                            *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      double sinc_x:                                                        *
+ *          The sinc of x.                                                    *
+ ******************************************************************************/
+extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
+extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
+extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2698,59 +2751,6 @@ extern long double tmpl_LDouble_Tan(long double x);
 extern float tmpl_Float_Tanh(float x);
 extern double tmpl_Double_Tanh(double x);
 extern long double tmpl_LDouble_Tanh(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Poly_Eval                                                 *
- *  Purpose:                                                                  *
- *      Given an array of coefficients and a real number, evaluates the       *
- *      the polynomial with the given coefficient at that point.              *
- *  Arguments:                                                                *
- *      double *coeffs:                                                       *
- *          The coefficients. There must be degree + 1 elements in the array. *
- *      size_t degree:                                                        *
- *          The degree of the polynomial.                                     *
- *      double x:                                                             *
- *          The point where the polynomial is being evaluated.                *
- *  Output:                                                                   *
- *      double poly:                                                          *
- *          The polynomial evaluated at x.                                    *
- ******************************************************************************/
-extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
-extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
-extern long double
-tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Poly_Deriv_Eval                                           *
- *  Purpose:                                                                  *
- *      Given an array of coefficients and a real number, evaluates the nth   *
- *      derivative of the the polynomial at that point.                       *
- *  Arguments:                                                                *
- *      double *coeffs:                                                       *
- *          The coefficients. There must be degree + 1 elements in the array. *
- *      unsigned int degree:                                                  *
- *          The degree of the polynomial.                                     *
- *      unsigned int deriv:                                                   *
- *          The order of the derivative being applied to the polynomial.      *
- *      double x:                                                             *
- *          The point where the polynomial is being evaluated.                *
- *  Output:                                                                   *
- *      double dpoly:                                                         *
- *          The nth derivative of the polynomial evaluated at x.              *
- ******************************************************************************/
-extern float
-tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
-                           unsigned int deriv, float x);
-
-extern double
-tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
-                            unsigned int deriv, double x);
-
-extern long double
-tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
-                             unsigned int deriv, long double x);
 
 /*  Macro for positive infinity                                               */
 #define TMPL_INFINITYF (tmpl_Float_Infinity())
