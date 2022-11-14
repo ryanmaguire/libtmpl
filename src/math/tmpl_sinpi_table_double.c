@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_SINPI_LOOKUP_TABLE_DOUBLE_H
-#define TMPL_MATH_SINPI_LOOKUP_TABLE_DOUBLE_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
-static const double tmpl_Double_SinPi_Lookup_Table[128] = {
+const double tmpl_double_sinpi_table[128] = {
     0.000000000000000000000000000000000000000000,
     0.024541228522912288031734529459282925065466,
     0.049067674327418014254954976942682658314745,
@@ -152,6 +151,3 @@ static const double tmpl_Double_SinPi_Lookup_Table[128] = {
     0.049067674327418014254954976942682658314745,
     0.024541228522912288031734529459282925065466
 };
-
-#endif
-/*  End of include guard.                                                     */

@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_COSPI_LOOKUP_TABLE_FLOAT_H
-#define TMPL_MATH_COSPI_LOOKUP_TABLE_FLOAT_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
-static const float tmpl_Float_CosPi_Lookup_Table[128] = {
+const float tmpl_float_cospi_table[128] = {
     1.0000000000000000000000000000000000000000F,
     0.99969881869620422011576564966617219685006F,
     0.99879545620517239271477160475910069444320F,
@@ -152,6 +151,3 @@ static const float tmpl_Float_CosPi_Lookup_Table[128] = {
     -0.99879545620517239271477160475910069444320F,
     -0.99969881869620422011576564966617219685006F
 };
-
-#endif
-/*  End of include guard.                                                     */
