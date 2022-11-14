@@ -1391,7 +1391,7 @@ static double chebyshev_lookup_table(double y100, double x)
             coeffs[4] = 0.016931216931216931217;
             deg = 5;
 
-            out = x*tmpl_Real_Poly_Double_Coeffs(coeffs, deg, t);
+            out = x*tmpl_Double_Poly_Eval(coeffs, deg, t);
             return out;
         }
 
@@ -1402,7 +1402,7 @@ static double chebyshev_lookup_table(double y100, double x)
 
     /*  Use tmpl_Real_Poly_Double_Coeffs to evaluate the                      *
      *  polynomial in t via Horner's method and return.                       */
-    out = tmpl_Real_Poly_Double_Coeffs(coeffs, deg, t);
+    out = tmpl_Double_Poly_Eval(coeffs, deg, t);
     return out;
 }
 
