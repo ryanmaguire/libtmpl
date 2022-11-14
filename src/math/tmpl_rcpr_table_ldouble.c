@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_RCPR_TABLE_LDOUBLE_H
-#define TMPL_MATH_RCPR_TABLE_LDOUBLE_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values 1/(1 + k/128) for k = 0, 1, ..., 126, 127.                     */
-static long double tmpl_ldouble_rcpr_table[128] = {
+const long double tmpl_ldouble_rcpr_table[128] = {
     1.000000000000000000000000000000000000L,
     0.992248062015503875968992248062015504L,
     0.984615384615384615384615384615384615L,
@@ -152,6 +151,3 @@ static long double tmpl_ldouble_rcpr_table[128] = {
     0.503937007874015748031496062992125984L,
     0.501960784313725490196078431372549020L
 };
-
-#endif
-/*  End of include guard.                                                     */

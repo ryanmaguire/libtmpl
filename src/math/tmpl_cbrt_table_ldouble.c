@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_CBRT_DATA_LDOUBLE_H
-#define TMPL_MATH_CBRT_DATA_LDOUBLE_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-static long double tmpl_ldouble_cbrt_lookup_table[128] = {
+const long double tmpl_ldouble_cbrt_table[128] = {
     1.000000000000000000000000000000000000000L,
     1.002597414264600244564181021925149874873L,
     1.005181439647264494021636128607872189952L,
@@ -152,6 +151,3 @@ static long double tmpl_ldouble_cbrt_lookup_table[128] = {
     1.256631423828369795284351717905935643387L,
     1.258278386950141167184289225203945088188L
 };
-
-#endif
-/*  End of include guard.                                                     */

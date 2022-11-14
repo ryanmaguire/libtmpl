@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_RCPR_TABLE_FLOAT_H
-#define TMPL_MATH_RCPR_TABLE_FLOAT_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values 1/(1 + k/128) for k = 0, 1, ..., 126, 127.                     */
-static float tmpl_float_rcpr_table[128] = {
+const float tmpl_float_rcpr_table[128] = {
     1.00000000000000000000000000000000F, 0.99224806201550387596899224806202F,
     0.98461538461538461538461538461538F, 0.97709923664122137404580152671756F,
     0.96969696969696969696969696969697F, 0.96240601503759398496240601503759F,
@@ -88,6 +87,3 @@ static float tmpl_float_rcpr_table[128] = {
     0.50793650793650793650793650793651F, 0.50592885375494071146245059288538F,
     0.50393700787401574803149606299213F, 0.50196078431372549019607843137255F
 };
-
-#endif
-/*  End of include guard.                                                     */

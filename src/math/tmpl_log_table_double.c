@@ -16,11 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#ifndef TMPL_MATH_LOG_DATA_DOUBLE_H
-#define TMPL_MATH_LOG_DATA_DOUBLE_H
 
-static double tmpl_double_log_table[128] = {
-    0.0,
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Table of the values log(1 + k/128) for k = 0, 1, ..., 126, 127.           */
+const double tmpl_double_log_table[128] = {
+    0.00000000000000000000000000000000000000,
     0.00778214044205494894746290006113676368,
     0.0155041865359652541508540460424468359,
     0.0231670592815343782287991609622899166,
@@ -149,5 +151,3 @@ static double tmpl_double_log_table[128] = {
     0.685304003098919416544048078967232986,
     0.689233281238808980324914337814603903
 };
-
-#endif

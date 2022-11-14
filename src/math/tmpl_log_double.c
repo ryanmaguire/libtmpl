@@ -252,25 +252,6 @@
  *  1.) tmpl_math.h:                                                          *
  *          Header file containing tmpl_IEEE754_Double typedef and the        *
  *          function prototype.                                               *
- *  2.) math.h:                                                               *
- *          Only included if TMPL_HAS_IEEE754_DOUBLE == 0 or if               *
- *          TMPL_USE_MATH_ALGORITHMS == 0. If either of these is true, then   *
- *          tmpl_Double_Log is identical to the standard library log function.*
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 4, 2022                                              *
@@ -301,9 +282,6 @@
 
 /*  If IEEE-754 support is available, use this. It's much faster.             */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
-
-#include <libtmpl/include/math/tmpl_math_rcpr_table_double.h>
-#include <libtmpl/include/math/tmpl_math_log_data_double.h>
 
 /*  Function for computing natural log at double precision.                   */
 double tmpl_Double_Log(double x)
