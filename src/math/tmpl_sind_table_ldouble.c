@@ -17,12 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_SIND_LOOKUP_TABLE_LDOUBLE_H
-#define TMPL_MATH_SIND_LOOKUP_TABLE_LDOUBLE_H
+/*  Declaration given here.                                                   */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
-static const long double tmpl_LDouble_Sind_Lookup_Table[180] = {
+const long double tmpl_ldouble_sind_table[180] = {
     0.000000000000000000000000000000000000000000L,
     0.017452406437283512819418978516316192472253L,
     0.034899496702500971645995181625332937354825L,
@@ -204,6 +203,3 @@ static const long double tmpl_LDouble_Sind_Lookup_Table[180] = {
     0.034899496702500971645995181625332937354825L,
     0.017452406437283512819418978516316192472253L
 };
-
-#endif
-/*  End of include guard.                                                     */

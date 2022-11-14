@@ -1,6 +1,4 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_cosd_lookup_table_ldouble.h>
-#include <libtmpl/include/math/tmpl_math_sind_lookup_table_ldouble.h>
 
 long double tmpl_LDouble_Cosd(long double x)
 {
@@ -20,8 +18,8 @@ long double tmpl_LDouble_Cosd(long double x)
     ind = (unsigned int)arg;
     dx = arg - (long double)ind;
 
-    sx = tmpl_LDouble_Sind_Lookup_Table[ind];
-    cx = tmpl_LDouble_Cosd_Lookup_Table[ind];
+    sx = tmpl_ldouble_sind_table[ind];
+    cx = tmpl_ldouble_cosd_table[ind];
     sdx = tmpl_LDouble_Sind_Maclaurin(dx);
     cdx = tmpl_LDouble_Cosd_Maclaurin(dx);
     return sgn_x * (cdx*cx - sx*sdx);
