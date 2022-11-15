@@ -16,44 +16,33 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+
+/*  Function prototype give here.                                             */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  size_t typedef is here.                                                   */
+#include <stdlib.h>
+
 /*  Standard algorithm of time-complexity O(n) to take an array and reverse   *
- *  the order. This is equivalent to taking a numpy array arr and writing     *
- *  arr = arr[::-1] (in Python 3, at least). Since all of the main routines   *
- *  use double pointers, only a double version is provided.                   */
-void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize)
+ *  the order.                                                                */
+void tmpl_Float_Reverse_Array(float *arr, size_t len)
 {
-    float val;
-    unsigned long i;
-    for(i=0; i<arrsize/2; i++)
-    {
-        val = arr[i];
-        arr[i] = arr[arrsize-i-1];
-        arr[arrsize-i-1] = val;
-    }
-}
+    /*  Variable for saving the value of the nth element of the array.        */
+    float tmp;
 
-void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize)
-{
-    double val;
-    unsigned long i;
-    for(i=0; i<arrsize/2; i++)
-    {
-        val = arr[i];
-        arr[i] = arr[arrsize-i-1];
-        arr[arrsize-i-1] = val;
-    }
-}
+    /*  Variable for indexing.                                                */
+    size_t n;
 
-void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize)
-{
-    long double val;
-    unsigned long i;
-    for(i=0; i<arrsize/2; i++)
+    /*  Two elements are swapped at a time, to only len/2 iterations needed.  */
+    const size_t N = len >> 1U;
+
+    /*  Loop over the elements of the array.                                  */
+    for(n = 0; n < N; ++n)
     {
-        val = arr[i];
-        arr[i] = arr[arrsize-i-1];
-        arr[arrsize-i-1] = val;
+        /*  Perform a basic swap of two variables.                            */
+        tmp = arr[n];
+        arr[n] = arr[len - n - 1];
+        arr[len - n - 1] = tmp;
     }
 }
+/*  End of tmpl_Float_Reverse_Array.                                          */

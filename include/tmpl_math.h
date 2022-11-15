@@ -2462,21 +2462,20 @@ extern long double tmpl_LDouble_Pow2(signed int expo);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Reverse_Double_Array                                             *
+ *      tmpl_Double_Reverse_Array                                             *
  *  Purpose:                                                                  *
  *      Reverses the order of a pointer to an array of real numbers.          *
  *  Arguments:                                                                *
  *      double *arr:                                                          *
  *          A pointer to an array.                                            *
- *      unsigned long int arrsize:                                            *
+ *      size_t len:                                                           *
  *          The number of elements in the array.                              *
  *  Output:                                                                   *
- *      double sinc_x:                                                        *
- *          The sinc of x.                                                    *
+ *      None (void):                                                          *
  ******************************************************************************/
-extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
-extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
-extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
+extern void tmpl_Float_Reverse_Array(float *arr, size_t len);
+extern void tmpl_Double_Reverse_Array(double *arr, size_t len);
+extern void tmpl_LDouble_Reverse_Array(long double *arr, size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2493,6 +2492,22 @@ extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
 extern float tmpl_Float_Sinc(float x);
 extern double tmpl_Double_Sinc(double x);
 extern long double tmpl_LDouble_Sinc(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SincPi                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the normalized sinc function sinc(x) = sin(pi x)/(pi x).     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sincpi_x:                                                      *
+ *          The normalized sinc of x.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_SincPi(float x);
+extern double tmpl_Double_SincPi(double x);
+extern long double tmpl_LDouble_SincPi(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
