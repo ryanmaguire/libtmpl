@@ -1134,7 +1134,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
-/* Declare Miscellaneous Constants.                                           */
+/******************************************************************************
+ *                           Mathematical Constants                           *
+ ******************************************************************************/
 
 /*  sqrt( 1 / (2pi) )                                                         */
 extern const float tmpl_Sqrt_One_By_Two_Pi_F;
@@ -1240,6 +1242,50 @@ extern const long double tmpl_Max_LDouble_Base_E;
 extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
+
+/******************************************************************************
+ *                              Tables and Data                               *
+ ******************************************************************************/
+
+/*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
+extern const double tmpl_double_cbrt_table[128];
+extern const float tmpl_float_cbrt_table[128];
+extern const long double tmpl_ldouble_cbrt_table[128];
+
+/*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
+extern const double tmpl_double_cosd_table[180];
+extern const float tmpl_float_cosd_table[180];
+extern const long double tmpl_ldouble_cosd_table[180];
+
+/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_cospi_table[128];
+extern const float tmpl_float_cospi_table[128];
+extern const long double tmpl_ldouble_cospi_table[128];
+
+/*  The values exp(k/256) for k = 0, 1, ..., 176, 177.                        */
+extern const double tmpl_double_exp_table[355];
+extern const float tmpl_float_exp_table[355];
+extern const long double tmpl_ldouble_exp_table[355];
+
+/*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
+extern const double tmpl_double_log_table[128];
+extern const float tmpl_float_log_table[128];
+extern const long double tmpl_ldouble_log_table[128];
+
+/*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
+extern const double tmpl_double_rcpr_table[128];
+extern const float tmpl_float_rcpr_table[128];
+extern const long double tmpl_ldouble_rcpr_table[128];
+
+/*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
+extern const double tmpl_double_sind_table[180];
+extern const float tmpl_float_sind_table[180];
+extern const long double tmpl_ldouble_sind_table[180];
+
+/*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_sinpi_table[128];
+extern const float tmpl_float_sinpi_table[128];
+extern const long double tmpl_ldouble_sinpi_table[128];
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2776,45 +2822,6 @@ extern long double tmpl_LDouble_Tanh(long double x);
 #define TMPL_NANF (tmpl_Float_NaN())
 #define TMPL_NAN (tmpl_Double_NaN())
 #define TMPL_NANL (tmpl_LDouble_NaN())
-
-/******************************************************************************
- *                              Tables and Data                               *
- ******************************************************************************/
-
-/*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-extern const double tmpl_double_cbrt_table[128];
-extern const float tmpl_float_cbrt_table[128];
-extern const long double tmpl_ldouble_cbrt_table[128];
-
-/*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_cosd_table[180];
-extern const float tmpl_float_cosd_table[180];
-extern const long double tmpl_ldouble_cosd_table[180];
-
-/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_cospi_table[128];
-extern const float tmpl_float_cospi_table[128];
-extern const long double tmpl_ldouble_cospi_table[128];
-
-/*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
-extern const double tmpl_double_log_table[128];
-extern const float tmpl_float_log_table[128];
-extern const long double tmpl_ldouble_log_table[128];
-
-/*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
-extern const double tmpl_double_rcpr_table[128];
-extern const float tmpl_float_rcpr_table[128];
-extern const long double tmpl_ldouble_rcpr_table[128];
-
-/*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_sind_table[180];
-extern const float tmpl_float_sind_table[180];
-extern const long double tmpl_ldouble_sind_table[180];
-
-/*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_sinpi_table[128];
-extern const float tmpl_float_sinpi_table[128];
-extern const long double tmpl_ldouble_sinpi_table[128];
 
 #endif
 /*  End of include guard.                                                     */

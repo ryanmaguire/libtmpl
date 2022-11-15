@@ -1,39 +1,79 @@
 [x] abs
+[x] array_max
+[x] array_min
+[x] array_minmax
 [x] atan2
 [x] atan
+[x] atan_maclaurin
+[x] atan_pade
+[x] atan_very_small
+[x] base2_mant_exp
 [x] cbrt
-[x] frexp
+[x] cbrt_pade
+[x] cbrt_taylor
 [x] copysign
 [ ] cos
-[ ] cosh
+[ ] cos_maclaurin
+[x] cosd
+[x] cosd_maclaurin
+[x] cospi
+[x] cospi_maclaurin
+[x] cosh
+[x] cosh_maclaurin
+[x] cosh_pade
 [x] dist
 [ ] erf
 [ ] erfc
 [ ] erfcx
 [ ] exp
+[ ] exp_maclaurin
+[ ] exp_pade
+[ ] exp_pos_kernel
+[ ] exp_neg_kernel
 [ ] factorial
 [ ] falling_factorial
 [ ] faddeeva_im_part
-[ ] floor
-[ ] infinity
-[ ] is_inf
-[ ] is_nan
-[ ] is_nan_or_inf
-[ ] log
-[ ] max
-[ ] min
-[ ] mod_2
-[ ] nan
-[ ] poly_eval
-[ ] poly_deriv_eval
-[ ] pow_2
-[ ] reverse
-[ ] sinc
+[x] floor
+[ ] frexp
+[x] infinity
+[x] is_inf
+[x] is_nan
+[x] is_nan_or_inf
+[x] log
+[ ] log_taylor
+[ ] log_near_1
+[ ] log_pade
+[x] max
+[x] min
+[x] mod_2
+[x] mod_360
+[x] nan
+[x] poly_deriv_eval
+[x] poly_eval
+[x] pow_2
+[x] reverse
+[x] sinc
+[ ] sinc_maclaurin
+[x] sincpi
+[ ] sincpi_maclaurin
 [ ] sin
+[ ] sin_maclaurin
+[x] sind
+[x] sind_maclaurin
+[x] sinpi
+[x] sinpi_maclaurin
 [ ] sinh
-[ ] sqrt
+[ ] sinh_maclaurin
+[ ] sinh_pade
+[x] sqrt
+[ ] sqrt_pade
+[ ] sqrt_taylor
 [ ] tan
+[ ] tan_maclaurin
 [ ] tanh
+[ ] tanh_asymptotic
+[ ] tanh_maclaurin
+[ ] tanh_pade
 
 Run api-sanity-checker on library and pass generated tests.
 

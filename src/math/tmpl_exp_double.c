@@ -33,7 +33,7 @@ double tmpl_Double_Exp(double x)
     }
 
     /*  For |x| < 1/16 the Maclaurin series is accurate to double precision.  */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
         return tmpl_Double_Exp_Maclaurin(x);
 
     /*  For |x| < 1, the Pade approximant is sufficient and much faster than  *

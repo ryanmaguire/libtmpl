@@ -76,12 +76,13 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the polynomial approximation of x(exp(x)+1)/(exp(x)-1).  */
-#define A1 (1.666666666666666666666666666666666666667E-01)
-#define A2 (-2.777777777777777777777777777777777777778E-03)
-#define A3 (6.613756613756613756613756613756613756614E-05)
-#define A4 (-1.653439153439153439153439153439153439153E-06)
-#define A5 (4.175351397573619795842018064240286462509E-08)
+/*  Coefficients for the polynonial. They are 1 / n!.                         */
+#define A0 (1.000000000000000000000000000000000000000E+00)
+#define A1 (1.000000000000000000000000000000000000000E+00)
+#define A2 (5.000000000000000000000000000000000000000E-01)
+#define A3 (1.666666666666666666666666666666666666667E-01)
+#define A4 (4.166666666666666666666666666666666666667E-02)
+#define A5 (8.333333333333333333333333333333333333333E-03)
 
 /*  Check for IEEE-754 support. Significantly faster.                         */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -95,7 +96,8 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Double exp_w;
-    double r, t, t2, hi, lo;
+    double r, t, hi, lo;
+    int t256, ind;
 
     /*  log(2) split into two components for extra precision.                 */
     const double ln_2_hi = 6.93147180369123816490e-01;
@@ -115,14 +117,14 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
     hi = x - ln_2_hi*t;
     lo = t*ln_2_lo;
     t = hi - lo;
-    t2 = t*t;
 
-    /*  Rational approximation of exp(t) for small t.                         */
-    r = t - t2*(A1 + t2*(A2 + t2*(A3 + t2*(A4 + t2*A5))));
-    t = 1.0 - ((lo - (t*r)/(2.0 - r)) - hi);
+    t256 = (int)(256.0*t);
+    ind = t256 + 177;
+    t = t - 0.00390625*t256;
+    r = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
+    exp_w.r = r*tmpl_double_exp_table[ind];
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    exp_w.r = t;
     exp_w.bits.expo += k & 0x7FF;
     return exp_w.r;
 }
@@ -139,7 +141,8 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
 double tmpl_Double_Exp_Pos_Kernel(double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    double r, t, t2, hi, lo;
+    double r, t, hi, lo;
+    int t256, ind;
 
     /*  log(2) split into two components for extra precision.                 */
     const double ln_2_hi = 6.93147180369123816490e-01;
@@ -159,14 +162,15 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
     hi = x - ln_2_hi*t;
     lo = t*ln_2_lo;
     t = hi - lo;
-    t2 = t*t;
 
-    /*  Rational approximation of exp(t) for small t.                         */
-    r = t - t2*(A1 + t2*(A2 + t2*(A3 + t2*(A4 + t2*A5))));
-    t = 1.0 - ((lo - (t*r)/(2.0 - r)) - hi);
+    t256 = (int)(256.0*t);
+    ind = t256 + 177;
+    t = t - 0.00390625*t256;
+    r = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
+    r *= tmpl_double_exp_table[ind];
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    return t*tmpl_Double_Pow2(k);
+    return r*tmpl_Double_Pow2(k);
 }
 /*  End of tmpl_Double_Exp_Pos_Kernel.                                        */
 
@@ -174,6 +178,7 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 /*  Undefine all coefficients in case someone wants to #include this file.    */
+#undef A0
 #undef A1
 #undef A2
 #undef A3
