@@ -15,13 +15,10 @@ float tmpl_Float_Sin(float x)
 
 #else
 
-#include <libtmpl/include/math/tmpl_math_cospi_lookup_table_float.h>
-#include <libtmpl/include/math/tmpl_math_sinpi_lookup_table_float.h>
-
 float tmpl_Float_Sin(float x)
 {
     float arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
-    unsigned int arg_128_int;
+    unsigned int ind;
 
     if (x >= 0.0F)
     {
@@ -42,11 +39,11 @@ float tmpl_Float_Sin(float x)
         arg -= 1.0F;
     }
 
-    arg_128_int = (unsigned int)(128.0F*arg);
-    dx = arg - 0.0078125F*(float)arg_128_int;
+    ind = (unsigned int)(128.0F*arg);
+    dx = arg - 0.0078125F*(float)ind;
 
-    sx = tmpl_Float_SinPi_Lookup_Table[arg_128_int];
-    cx = tmpl_Float_CosPi_Lookup_Table[arg_128_int];
+    sx = tmpl_float_sinpi_table[ind];
+    cx = tmpl_float_cospi_table[ind];
     sdx = tmpl_Float_SinPi_Maclaurin(dx);
     cdx = tmpl_Float_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);
