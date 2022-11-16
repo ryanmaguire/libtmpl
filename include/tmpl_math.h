@@ -2179,6 +2179,36 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Exp_Pos_Kernel                                            *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for dist functions found here.                             */
+#include <libtmpl/include/math/tmpl_math_exp_neg_kernel_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_exp_neg_kernel_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested.                                              */
+extern double tmpl_Double_Exp_Neg_Kernel(double x);
+extern float tmpl_Float_Exp_Neg_Kernel(float x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Factorial                                                 *
  *  Purpose:                                                                  *
  *      Computes the factorial of an integer, stored as a double.             *

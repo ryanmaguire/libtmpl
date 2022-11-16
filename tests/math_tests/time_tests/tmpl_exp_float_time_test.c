@@ -17,4 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-TEST1(float, -0.0F, 10.0F, tmpl_Float_Exp, expf)
+TEST1(float, -80.0F, 80.0F, tmpl_Float_Exp, expf)
