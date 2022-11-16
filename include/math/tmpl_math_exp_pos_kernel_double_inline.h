@@ -142,6 +142,10 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+/*  This function is declared after this file is included in tmpl_math.h. Give*
+ *  the prototype here for safety.                                            */
+extern double tmpl_Double_Pow2(signed int expo);
+
 /*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Pos_Kernel(double x)
@@ -173,10 +177,9 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
     ind = t256 + 177;
     t = t - 0.00390625*t256;
     r = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
-    r *= tmpl_double_exp_table[ind];
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    return r*tmpl_Double_Pow2(k);
+    return r*tmpl_double_exp_table[ind]*tmpl_Double_Pow2(k);
 }
 /*  End of tmpl_Double_Exp_Pos_Kernel.                                        */
 

@@ -1,9 +1,6 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
-/* TODO: Write neg kernel.*/
-#define tmpl_Float_Exp_Neg_Kernel(x) (1.0F / tmpl_Float_Exp_Pos_Kernel(-(x)))
-
 /*  With IEEE-754 support we can get a bit of a speed boost.                  */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 

@@ -16,17 +16,17 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_exp_pos_kernel_float                          *
+ *                         tmpl_exp_neg_kernel_float                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes exp(x) for 1 < x < log(FLT_MAX).                             *
+ *      Computes exp(x) for 1 < -x < log(FLT_MAX).                            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Exp_Pos_Kernel                                             *
+ *      tmpl_Float_Exp_Neg_Kernel                                             *
  *  Purpose:                                                                  *
- *      Computes exp(x) for positive values, 1 < x < log(FLT_MAX).            *
+ *      Computes exp(x) for negitive values, 1 < -x < log(FLT_MAX).           *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number, the argument for exp(x).                           *
@@ -56,7 +56,7 @@
  *      Error:                                                                *
  *  Notes:                                                                    *
  *      This function assumes the input x is not infinity, not NaN, and       *
- *      positive between 1 and log(FLT_MAX) ~= 88 for 32-bit float.           *
+ *      negitive between -1 and -log(FLT_MAX) ~= -88 for 32-bit float.        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -67,15 +67,11 @@
  *  Date:       November 07, 2022                                             *
  ******************************************************************************/
 
-/*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MATH_EXP_POS_KERNEL_FLOAT_INLINE_H
-#define TMPL_MATH_EXP_POS_KERNEL_FLOAT_INLINE_H
-
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
+/*  This file is only compiled if inline support is not requested.            */
+#if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -93,8 +89,7 @@
  ******************************************************************************/
 
 /*  Function for computing exp(x) for 1 < x < log(FLT_MAX).                   */
-TMPL_INLINE_DECL
-float tmpl_Float_Exp_Pos_Kernel(float x)
+float tmpl_Float_Exp_Neg_Kernel(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Float exp_w;
@@ -109,15 +104,15 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
     const float rcpr_ln_2 = 1.44269504088896338700E+00F;
 
     /*  Compute the correctly rounded down integer part of |x|/log(2).        */
-    const unsigned int k = (unsigned int)(rcpr_ln_2*x + 0.5F);
+    const unsigned int k = (unsigned int)(rcpr_ln_2*(-x) + 0.5F);
     t = (float)k;
 
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
      *  exp(r) is computed via a Taylor series for the function               *
      *  f(r) = r*(exp(r) + 1)/(exp(r) - 1) and solving for exp(r) in          *
      *  terms of f(r).                                                        */
-    hi = x - ln_2_hi*t;
-    lo = t*ln_2_lo;
+    hi = x + ln_2_hi*t;
+    lo = -t*ln_2_lo;
     t = hi - lo;
 
     t256 = (int)(256.0F*t);
@@ -127,10 +122,10 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
     exp_w.r = r*tmpl_float_exp_table[ind];
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    exp_w.bits.expo += k & 0xFF;
+    exp_w.bits.expo -= k & 0xFF;
     return exp_w.r;
 }
-/*  End of tmpl_Float_Exp_Pos_Kernel.                                         */
+/*  End of tmpl_Float_Exp_Neg_Kernel.                                         */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
@@ -139,13 +134,8 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  This function is declared after this file is included in tmpl_math.h. Give*
- *  the prototype here for safety.                                            */
-extern float tmpl_Float_Pow2(signed int expo);
-
 /*  Function for computing exp(x) for 1 < x < log(FLT_MAX).                   */
-TMPL_INLINE_DECL
-float tmpl_Float_Exp_Pos_Kernel(float x)
+float tmpl_Float_Exp_Neg_Kernel(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     float r, t, hi, lo;
@@ -159,15 +149,15 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
     const float rcpr_ln_2 = 1.44269504088896338700E+00F;
 
     /*  Compute the correctly rounded down integer part of |x|/log(2).        */
-    const int k = (int)(rcpr_ln_2*x + 0.5F);
+    const int k = (int)(rcpr_ln_2*(-x) + 0.5F);
     t = (float)k;
 
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
      *  exp(r) is computed via a Taylor series for the function               *
      *  f(r) = r*(exp(r) + 1)/(exp(r) - 1) and solving for exp(r) in          *
      *  terms of f(r).                                                        */
-    hi = x - ln_2_hi*t;
-    lo = t*ln_2_lo;
+    hi = x + ln_2_hi*t;
+    lo = -t*ln_2_lo;
     t = hi - lo;
 
     t256 = (int)(256.0F*t);
@@ -176,9 +166,9 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
     r = A0 + t*(A1 + t*A2);
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    return r*tmpl_float_exp_table[ind]*tmpl_Float_Pow2(k);
+    return r*tmpl_float_exp_table[ind]*tmpl_Float_Pow2(-k);
 }
-/*  End of tmpl_Float_Exp_Pos_Kernel.                                         */
+/*  End of tmpl_Float_Exp_Neg_Kernel.                                         */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
@@ -189,7 +179,4 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
 #undef A2
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-#endif
-/*  End of include guard.                                                     */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

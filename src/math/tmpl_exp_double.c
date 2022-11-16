@@ -1,9 +1,6 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
-/* TODO: Write neg kernel.*/
-#define tmpl_Double_Exp_Neg_Kernel(x) (1.0 / tmpl_Double_Exp_Pos_Kernel(-(x)))
-
 /*  With IEEE-754 support we can get a bit of a speed boost.                  */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
