@@ -239,6 +239,9 @@ extern int tmpl_UChar_Leading_Zeros(unsigned char n);
 extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
 extern int tmpl_UInt_Leading_Zeros(unsigned int n);
 extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
+#if TMPL_HAS_LONGLONG == 1
+extern int tmpl_ULLong_Leading_Zeros(unsigned long long int);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

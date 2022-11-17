@@ -268,7 +268,7 @@ if [ $USEINLINE == 1 ]; then
 fi
 
 if [ $USELONGLONG == 0 ]; then
-	ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
+    ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
     Exclude="$Exclude tmpl_abs_llong.c"
 fi
 
