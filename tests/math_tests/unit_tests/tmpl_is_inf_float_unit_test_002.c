@@ -20,6 +20,6 @@
  *  Date:       September 5, 2022                                             *
  ******************************************************************************/
 #include "tmpl_math_unit_tests.h"
-#define indata {0.0L, -0.0L, LDBL_MIN, -LDBL_MIN, LDBL_MAX, -LDBL_MAX}
-#define outdata {0.0L, 0.0L, LDBL_MIN, LDBL_MIN, LDBL_MAX, LDBL_MAX}
-TEST1(long double, tmpl_LDouble_Abs, indata, outdata, tmpl_LDouble_Is_NaN)
+#define indata {TMPL_INFINITYF, -TMPL_INFINITYF, TMPL_NANF, -TMPL_NANF}
+#define outdata {T, T, F, F}
+TEST2(float, tmpl_Float_Is_Inf, indata, outdata)
