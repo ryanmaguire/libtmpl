@@ -39,11 +39,12 @@ IF %1 == clang GOTO MakeClang
 :MakeClang
 
     :: Arguments for the compiler.
+    SET CMACR=-DTMPL_SET_USE_MATH_TRUE
     SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
-    SET CARGS=-DTMPL_SET_USE_MATH_TRUE -O2 -I..\ -c
+    SET CARGS=-O2 -I..\ -c
 
     :: Create include\tmpl_endianness.h
-    clang-cl config.c -o config.exe
+    clang-cl %CMACR% config.c -o config.exe
     config.exe
     del *.exe *.obj
 
@@ -56,11 +57,12 @@ IF %1 == clang GOTO MakeClang
 :MakeCL
 
     :: Arguments for the compiler.
+    SET CMACR=/DTMPL_SET_USE_MATH_TRUE
     SET CWARN=/W4
-    SET CARGS=/DTMPL_SET_USE_MATH_TRUE /I../ /O2 /c
+    SET CARGS= /I../ /O2 /c
 
     :: Create include\tmpl_endianness.h
-    cl config.c /link /out:config.exe
+    cl %CWARN% %CMACR% config.c /link /out:config.exe
     config.exe
     del *.exe *.obj
 
