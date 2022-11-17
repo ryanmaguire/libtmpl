@@ -62,12 +62,22 @@ IF %1 == clang GOTO MakeClang
     SET CARGS= /I../ /O2 /c
 
     :: Create include\tmpl_endianness.h
-    cl %CWARN% %CMACR% config.c /link /out:config.exe
+    cl %CMACR% config.c /link /out:config.exe
     config.exe
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do cl %CWARN% %CARGS% %%d\*.c
+    for /D %%d in (.\src\*) do (
+        if "%%G" == ".\src\assembly\*.c" (
+            echo "Skipping assembly directory"
+        ) else (
+            if "%%G" == ".\src\builtins\*.c" (
+                echo "Skipping builtins directory"
+            ) else (
+                cl %CWARN% %CARGS% %%d\*.c
+            )
+        )
+    )
 
     :: Go to the Linking stage.
     GOTO LinkLib
