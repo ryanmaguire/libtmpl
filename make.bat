@@ -78,6 +78,7 @@ IF %1 == clang GOTO MakeClang
             )
         )
 	:NEXT
+	echo Next > nul
     )
 
     :: Go to the Linking stage.
