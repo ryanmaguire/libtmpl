@@ -31,62 +31,77 @@ IF EXIST *.lib (del *.lib)
 IF EXIST *.so (del *.so)
 
 :: See if the user specified which compiler to use.
-IF %1.==. GOTO MakeCL
-IF %1 == cl GOTO MakeCL
-IF %1 == clang-cl GOTO MakeClang
-IF %1 == clang GOTO MakeClang
-
-:MakeClang
-
-    :: Arguments for the compiler.
-    SET CMACR=-DTMPL_SET_USE_MATH_TRUE
-    SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
-    SET CARGS=-O2 -I..\ -c
-
-    :: Create include\tmpl_endianness.h
-    clang-cl %CMACR% config.c -o config.exe
-    config.exe
-    del *.exe *.obj
-
-    :: Compile the library.
-    for /D %%d in (.\src\*) do clang-cl %CWARN% %CARGS% %%d\*.c
-
-    :: Go to the Linking stage.
-    GOTO LinkLib
-
-:MakeCL
+IF %1 == cl (
+    :: Compiler being used.
+    SET CC=cl
 
     :: Arguments for the compiler.
     SET CMACR=/DTMPL_SET_USE_MATH_TRUE
     SET CWARN=/W4
     SET CARGS= /I../ /O2 /c
 
-    :: Create include\tmpl_endianness.h
-    cl %CMACR% config.c /link /out:config.exe
-    config.exe
-    del *.exe *.obj
+    :: Out command for compiler.
+    SET OUT=/out:
+) ELSE (
+    IF %1 == clang-cl (
+        :: Compiler being used.
+        SET CC=clang-cl
 
-    :: Compile the library.
-    for /D %%d in (.\src\*) do (
-        if "%%d" == ".\src\assembly" (
-            echo Skipping src\assembly\
-        ) else (
-            if "%%d" == ".\src\builtins" (
-                echo Skipping src\builtins\
-            ) else (
-                cl %CWARN% %CARGS% %%d\*.c
-            )
+        :: Arguments for the compiler.
+        SET CMACR=-DTMPL_SET_USE_MATH_TRUE
+        SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+        SET CARGS=-O2 -I..\ -c
+
+        :: Out command for compiler.
+        SET OUT=-o
+    ) ELSE (
+        IF %1 == clang (
+            :: Compiler being used.
+            SET CC=clang-cl
+
+            :: Arguments for the compiler.
+            SET CMACR=-DTMPL_SET_USE_MATH_TRUE
+            SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+            SET CARGS=-O2 -I..\ -c
+
+            :: Out command for compiler.
+            SET OUT=-o
+        ) ELSE (
+            :: Compiler being used.
+            SET CC=cl
+
+            :: Arguments for the compiler.
+            SET CMACR=/DTMPL_SET_USE_MATH_TRUE
+            SET CWARN=/W4
+            SET CARGS= /I../ /O2 /c
+
+            :: Out command for compiler.
+            SET OUT=/out:
         )
     )
+)
 
-    :: Go to the Linking stage.
-    GOTO LinkLib
+:: Create include\tmpl_endianness.h
+%CC% %CMACR% config.c %OUT%config.exe
+config.exe
+del *.exe *.obj
 
-:LinkLib
+:: Compile the library.
+for /D %%d in (.\src\*) do (
+    if "%%d" == ".\src\assembly" (
+        echo Skipping src\assembly\
+    ) else (
+        if "%%d" == ".\src\builtins" (
+            echo Skipping src\builtins\
+        ) else (
+            %CC% %CWARN% %CARGS% %%d\*.c
+        )
+    )
+)
 
-    :: Link everything into a .lib file.
-    lib /out:libtmpl.lib *.obj
 
-    :: Clean up.
-    del *.exe *.obj
+:: Link everything into a .lib file.
+lib /out:libtmpl.lib *.obj
 
+:: Clean up.
+del *.exe *.obj
