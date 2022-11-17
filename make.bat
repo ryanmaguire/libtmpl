@@ -40,6 +40,7 @@ IF %1 == clang GOTO MakeClang
 
     :: Arguments for the compiler.
     SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+    SET CARGS=-DTMPL_SET_USE_MATH_TRUE -O2 -I..\ -c
 
     :: Create include\tmpl_endianness.h
     clang-cl config.c -o config.exe
@@ -47,12 +48,16 @@ IF %1 == clang GOTO MakeClang
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do clang-cl %CWARN% -O2 -I..\ -c %%d\*.c
+    for /D %%d in (.\src\*) do clang-cl %CWARN% %CARGS% %%d\*.c
 
     :: Go to the Linking stage.
     GOTO LinkLib
 
 :MakeCL
+
+    :: Arguments for the compiler.
+    SET CWARN=/W4
+    SET CARGS=/DTMPL_SET_USE_MATH_TRUE /I../ /O2 /c
 
     :: Create include\tmpl_endianness.h
     cl config.c /link /out:config.exe
@@ -60,7 +65,7 @@ IF %1 == clang GOTO MakeClang
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do cl /I../ /W4 /O2 /c %%d\*.c
+    for /D %%d in (.\src\*) do cl %CWARN% %CARGS% %%d\*.c
 
     :: Go to the Linking stage.
     GOTO LinkLib
