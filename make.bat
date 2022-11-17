@@ -68,10 +68,10 @@ IF %1 == clang GOTO MakeClang
 
     :: Compile the library.
     for /D %%d in (.\src\*) do (
-        if "%%G" == ".\src\assembly\*.c" (
+        if "%%d" == ".\src\assembly" (
             echo "Skipping assembly directory"
         ) else (
-            if "%%G" == ".\src\builtins\*.c" (
+            if "%%d" == ".\src\builtins" (
                 echo "Skipping builtins directory"
             ) else (
                 cl %CWARN% %CARGS% %%d\*.c
