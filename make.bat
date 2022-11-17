@@ -69,16 +69,14 @@ IF %1 == clang GOTO MakeClang
     :: Compile the library.
     for /D %%d in (.\src\*) do (
         if "%%d" == ".\src\assembly" (
-            goto NEXT
+            echo Skipping src\assembly\
         ) else (
             if "%%d" == ".\src\builtins" (
-                goto NEXT
+                echo Skipping src\builtins\
             ) else (
                 cl %CWARN% %CARGS% %%d\*.c
             )
         )
-	:NEXT
-	echo Next > nul
     )
 
     :: Go to the Linking stage.
