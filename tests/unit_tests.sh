@@ -21,10 +21,11 @@
 #   Author:     Ryan Maguire                                                   #
 #   Date:       September 7, 2022                                              #
 ################################################################################
-
-result="test_results/unit_test_results_`uname -m`_`date +%Y%m%d%H%M%S`.txt"
+result="test_results/`uname -s`_`uname -m`_`date +%Y_%m_%d_%H_%M_%S`.txt"
 touch $result
-
+LINELEN=50
+BUFFERLEN=5
+DARGS="-I/usr/local/include/ -L/usr/local/lib/ -Wno-float-equal -Wno-padded"
 COMPILER_LIST="gcc"
 
 if  command -v clang &> /dev/null; then
@@ -39,52 +40,43 @@ if  command -v pcc &> /dev/null; then
     COMPILER_LIST="$COMPILER_LIST pcc"
 fi
 
-echo "===============" >> $result
-echo "NO OPTIMIZATION" >> $result
-echo "===============" >> $result
-echo "" >> $result
+for OPT in "" "-O3"; do
+    if [[ "$OPT" == "-O3" ]]; then
+        echo "=================" >> $result
+        echo "WITH OPTIMIZATION" >> $result
+        echo "=================" >> $result
+    else
+        echo "===============" >> $result
+        echo "NO OPTIMIZATION" >> $result
+        echo "===============" >> $result
+    fi
 
-for FILE in `find . -iname "*unit_test*.c"`; do
-    for CCOMP in $COMPILER_LIST; do
-        CARGS="-I/usr/local/include/ -L/usr/local/lib/ -Wno-float-equal -Wno-padded"
-        if [ "$CCOMP" == "clang" ]; then
-            CARGS="$CARGS -Weverything"
-        else
-            CARGS="$CARGS -Wall -Wextra -Wpedantic"
+    for dir in */; do
+        if [[ "$dir" == *"test_results"* ]]; then
+            continue
         fi
+        echo "$dir" >> $result
+        for FILE in `find $dir/ -iname "*unit_test*.c" | sort`; do
+            FILENAME=$(basename -- $FILE)
+            LEN=$(($LINELEN-${#FILENAME}))
+            for CCOMP in $COMPILER_LIST; do
+    	        LEN2=$(($BUFFERLEN - ${#CCOMP}))
+                if [ "$CCOMP" == "clang" ]; then
+                    CARGS="$DARGS -Weverything $OPT"
+                else
+                    CARGS="$DARGS -Wall -Wextra -Wpedantic $OPT"
+                fi
 
-        if !($CCOMP $CARGS $FILE -o test.out -ltmpl -lm); then
-            echo "$FILE | $CCOMP: NO COMPILE" >> $result
-        else
-            printf "$FILE | $CCOMP: " >> $result
-            ./test.out >> $result
-            rm -f test.out
-        fi
+                if !($CCOMP $CARGS $FILE -o test.out -ltmpl -lm); then
+                    printf "    $FILENAME %-${LEN}s| " >> $result
+                    printf "$CCOMP:%${LEN2}s NO COMPILE\n" >> $result
+                else
+                    printf "    $FILENAME %-${LEN}s| " >> $result
+                    OUT=`./test.out`
+                    printf "$CCOMP:%-${LEN2}s $OUT\n" >> $result
+                    rm -f test.out
+                fi
+            done
+        done
     done
 done
-
-echo "" >> $result
-echo "=================" >> $result
-echo "WITH OPTIMIZATION" >> $result
-echo "=================" >> $result
-echo "" >> $result
-
-for FILE in `find . -iname "*unit_test*.c"`; do
-    for CCOMP in $COMPILER_LIST; do
-        CARGS="-I/usr/local/include/ -L/usr/local/lib/ -Wno-float-equal -Wno-padded -O3"
-        if [ "$CCOMP" == "clang" ]; then
-            CARGS="$CARGS -Weverything"
-        else
-            CARGS="$CARGS -Wall -Wextra -Wpedantic"
-        fi
-
-        if !($CCOMP $CARGS $FILE -o test.out -ltmpl -lm); then
-            echo "$FILE | $CCOMP: NO COMPILE" >> $result
-        else
-            printf "$FILE | $CCOMP: " >> $result
-            ./test.out >> $result
-            rm -f test.out
-        fi
-    done
-done
-
