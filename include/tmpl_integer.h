@@ -543,9 +543,9 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 /*  Microsoft's compiler has _BitScanForward, equivalent to trailing zeros.   */
 unsigned int __inline TMPL_UINT_TRAILING_ZEROS(unsigned int n)
 {
-    unsigned int trailing_zeros = 0U;
+    unsigned long int trailing_zeros = 0U;
     _BitScanForward(&trailing_zeros, n);
-    return trailing_zeros;
+    return (unsigned int)trailing_zeros;
 }
 
 /*  long and int are the same on Windows.                                     */
@@ -567,9 +567,9 @@ unsigned long int __inline TMPL_ULLONG_TRAILING_ZEROS(unsigned long long int n)
 /*  Microsoft's compiler has _BitScanReverse, equivalent to leading zeros.    */
 unsigned int __inline TMPL_UINT_LEADING_ZEROS(unsigned int n)
 {
-    unsigned int leading_zeros = 0U;
+    unsigned long int leading_zeros = 0U;
     _BitScanReverse(&leading_zeros, n);
-    return leading_zeros;
+    return (unsigned int)leading_zeros;
 }
 
 /*  long and int are the same on Windows.                                     */
@@ -577,7 +577,7 @@ unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
 {
     unsigned long int leading_zeros = 0UL;
     _BitScanReverse(&leading_zeros, n);
-    return leading_zeros;
+    return (unsigned int)leading_zeros;
 }
 
 /*  long long is 64-bits on Windows.                                          */
