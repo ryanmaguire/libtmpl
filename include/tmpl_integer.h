@@ -537,6 +537,9 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 #elif defined(_MSC_VER)
 /*  Else for #if defined(__has_builtin).                                      */
 
+/*  _BitScanForward64 and _BitScanReverse64 found here.                       */
+#include <intrin.h>
+
 /*  Microsoft's compiler has _BitScanForward, equivalent to trailing zeros.   */
 unsigned int __inline TMPL_UINT_TRAILING_ZEROS(unsigned int n)
 {
