@@ -21,8 +21,6 @@ target_sources(
             tmpl_math_arctan_very_small_double_inline.h
             tmpl_math_arctan_very_small_float_inline.h
             tmpl_math_arctan_very_small_ldouble_inline.h
-            tmpl_math_cbrt_data_double.h
-            tmpl_math_cbrt_data_float.h
             tmpl_math_cbrt_data_ldouble.h
             tmpl_math_cbrt_pade_double_inline.h
             tmpl_math_cbrt_pade_float_inline.h
@@ -56,14 +54,13 @@ target_sources(
             tmpl_math_dist_ldouble_inline.h
             tmpl_math_exp_maclaurin_double_inline.h
             tmpl_math_exp_maclaurin_float_inline.h
+            tmpl_math_exp_neg_kernel_double_inline.h
+            tmpl_math_exp_neg_kernel_float_inline.h
             tmpl_math_exp_pade_double_inline.h
             tmpl_math_exp_pade_float_inline.h
             tmpl_math_exp_pade_ldouble_inline.h
             tmpl_math_exp_pos_kernel_double_inline.h
             tmpl_math_exp_pos_kernel_float_inline.h
-            tmpl_math_log_data_double.h
-            tmpl_math_rcpr_table_double.h
-            tmpl_math_rcpr_table_float.h
             tmpl_math_rcpr_table_ldouble.h
             tmpl_math_sin_pade_inline.h
             tmpl_math_sin_pade_pi_inline.h
