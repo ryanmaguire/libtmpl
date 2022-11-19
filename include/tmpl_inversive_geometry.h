@@ -1,6 +1,8 @@
 #ifndef TMPL_INVERSIVE_H
 #define TMPL_INVERSIVE_H
 
+#include "tmpl_exports.h"
+
 #include <libtmpl/include/tmpl_vec2.h>
 
 extern tmpl_TwoVector

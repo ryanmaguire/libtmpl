@@ -43,7 +43,7 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_INTERPOLATE_H
 #define TMPL_INTERPOLATE_H
-
+#include "tmpl_exports.h"
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Sorted_Interp1d                                           *

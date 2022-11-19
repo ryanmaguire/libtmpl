@@ -58,6 +58,8 @@
 #ifndef TMPL_KNOTS_H
 #define TMPL_KNOTS_H
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 

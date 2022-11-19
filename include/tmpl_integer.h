@@ -81,6 +81,7 @@
  *      abs_n (int):                                                          *
  *          The absolute value of n.                                          *
  ******************************************************************************/
+#include "tmpl_exports.h"
 
 /*  Small function worth inlining.                                            */
 #if TMPL_USE_INLINE == 1
