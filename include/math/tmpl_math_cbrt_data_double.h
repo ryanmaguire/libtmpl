@@ -1,3 +1,23 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************/
+
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_MATH_CBRT_DATA_DOUBLE_H
 #define TMPL_MATH_CBRT_DATA_DOUBLE_H
 
@@ -68,7 +88,6 @@ static double tmpl_double_cbrt_lookup_table[128] = {
     1.2533244837411461578909044387303, 1.2549801322759665670777461332602,
     1.2566314238283697952843517179059, 1.2582783869501411671842892252039
 };
-
 
 #endif
 /*  End of include guard.                                                     */

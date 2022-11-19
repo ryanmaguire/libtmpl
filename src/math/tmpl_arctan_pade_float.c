@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_arctan_pade_float                            *
+ *                           tmpl_arctan_pade_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the (11, 11) Pade approximant of atan(x) at single precision.*
@@ -60,7 +60,7 @@
  *  Notes:                                                                    *
  *      Surprisingly accurate for a fairly large range. For |x| < 1.0,        *
  *      accurate to single precision (10^-8). For |x| < 6.0, max relative     *
- *      error is 5.0 x 10^-2. The function becomes unusable for larger values.*                                                     *
+ *      error is 5.0 x 10^-2. The function becomes unusable for larger values.*
  *                                                                            *
  *      This function is about 1.5x faster than calling atan directly. Use if *
  *      you know your argument is small, or if you don't need all 8 decimals. *

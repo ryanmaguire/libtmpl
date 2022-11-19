@@ -80,8 +80,6 @@
  *                      0 if y is positive, pi if y is negative.              *
  *                  y NaN:                                                    *
  *                      return NaN.                                           *
- *                  y infinite:                                               *
- *                      See previous cases.                                   *
  *              x and y finite:                                               *
  *                  Reduce y to positive via:                                 *
  *                      atan2(y, x) = -atan2(-y, x)                           *
@@ -111,6 +109,8 @@
  *              rms relative error: 9.2214263529102684e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
  *              rms absolute error: 1.6454528697674011e-16                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_Double_Abs (tmpl_math.h):                                    *
@@ -137,14 +137,16 @@
  *              rms relative error: 9.2214263529102684e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
  *              rms absolute error: 1.6454528697674011e-16                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~2 x 10^-16).                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) tmpl_math_arctan_tables.h:                                            *
+ *  3.) tmpl_math_arctan_double_tables.h:                                     *
  *          Header file containing pre-computed values of arctan(x).          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -166,7 +168,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Lookup table of precomputed arctan values found here.                     */
-#include <libtmpl/include/math/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math/tmpl_math_arctan_double_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -271,11 +273,11 @@ double tmpl_Double_Arctan2(double y, double x)
     w.bits.sign = 0x00U;
 
     /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
-    if (w.bits.expo < TMPL_DOUBLE_BIAS - 4U)
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
         out = tmpl_Double_Arctan_Very_Small(w.r);
 
     /*  For |z| > 16, use the asymptotic expansion.                           */
-    else if (w.bits.expo > TMPL_DOUBLE_BIAS + 3U)
+    else if (w.bits.expo > TMPL_DOUBLE_UBIAS + 3U)
         out = tmpl_Double_Arctan_Asymptotic(w.r);
 
     /*  Otherwise use the lookup table to reduce. Note we have reduced to the *
@@ -287,7 +289,7 @@ double tmpl_Double_Arctan2(double y, double x)
          *  is the exponent of the number z. Compute this. The exponent       *
          *  in the IEEE-754 representation of a number is offset by a bias.   *
          *  Subtract off this bias to compute the actual index.               */
-        ind = (w.bits.expo + 4U) - TMPL_DOUBLE_BIAS;
+        ind = (w.bits.expo + 4U) - TMPL_DOUBLE_UBIAS;
 
         /*  Get the corresponding values from the lookup tables.              */
         v = tmpl_atan_double_v[ind];
@@ -392,7 +394,7 @@ double tmpl_Double_Arctan2(double y, double x)
     if (z < 0.0625)
     {
         out = tmpl_Double_Arctan_Very_Small(z);
-        goto TMPL_DOUBLE_ARCTAN_FINISH;
+        goto TMPL_DOUBLE_ARCTAN2_FINISH;
     }
 
     /*  Otherwise compute the greatest power of two less than z. To compute   *
@@ -419,7 +421,7 @@ double tmpl_Double_Arctan2(double y, double x)
     else
     {
         out = tmpl_Double_Arctan_Asymptotic(z);
-        goto TMPL_DOUBLE_ARCTAN_FINISH;
+        goto TMPL_DOUBLE_ARCTAN2_FINISH;
     }
 
     /*  Use the lookup table for arctan. Get the pre-computed values.         */
@@ -433,7 +435,7 @@ double tmpl_Double_Arctan2(double y, double x)
     /*  Last step, perform the argument reduction. We computed |y/x| at the   *
      *  start but have not changed x or y so their signs are untouched.       *
      *  Inspect the signs of each to finish the computation.                  */
-TMPL_DOUBLE_ARCTAN_FINISH:
+TMPL_DOUBLE_ARCTAN2_FINISH:
 
     /*  Reduce to x > 0 via atan2(y, x) = pi - atan2(y, -x).                  */
     if (x < 0.0)

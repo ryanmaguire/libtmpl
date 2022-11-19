@@ -155,12 +155,11 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST2(type, f0, f1)                                                    \
+#define TEST2(type, begin, finish, f0, f1)                                     \
 int main(void)                                                                 \
 {                                                                              \
     type *x, *y0, *y1;                                                         \
     int *n0, *n1;                                                              \
-    const size_t N = NSAMPS(double) / 5;                                       \
     size_t n;                                                                  \
     clock_t t1, t2;                                                            \
     long double mant_rms_rel = 0.0L;                                           \
@@ -174,6 +173,10 @@ int main(void)                                                                 \
     long double tmp;                                                           \
     int n_tmp;                                                                 \
     const type zero = (type)0;                                                 \
+    const type start = (type)begin;                                            \
+    const type end = (type)finish;                                             \
+    const size_t N = NSAMPS(type) / 5;                                         \
+    const type dx = (end - start) / (type)N;                                   \
                                                                                \
     x = malloc(sizeof(*x) * N);                                                \
                                                                                \
@@ -226,9 +229,14 @@ int main(void)                                                                 \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1 "\n");                                              \
-    printf("samples:  %zu\n", N);                                              \
-    for (n = 0U; n < N; ++n)                                                   \
-        RAND_REAL(type, x[n])                                                  \
+    printf("start:   %.16Le\n", (long double)start);                           \
+    printf("end:     %.16Le\n", (long double)end);                             \
+    printf("samples: %zu\n", N);                                               \
+    printf("dx:      %.16Le\n", (long double)dx);                              \
+                                                                               \
+    x[0] = start;                                                              \
+    for (n = 1UL; n < N; ++n)                                                  \
+        x[n] = x[n-1] + dx;                                                    \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \

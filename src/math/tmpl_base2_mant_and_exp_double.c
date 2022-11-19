@@ -74,12 +74,10 @@
  *              rms expo absolute error: 0.000000e+00                         *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Is_Abs (tmpl_math.h):                                 *
+ *          tmpl_Double_Abs (tmpl_math.h):                                    *
  *              Computes the absolute value of a double.                      *
- *          tmpl_Double_Is_Inf (tmpl_math.h):                                 *
- *              Determines if a double is infinity.                           *
- *          tmpl_Double_Is_NaN (tmpl_math.h):                                 *
- *              Determines if a double is Not-a-Number.                       *
+ *          tmpl_Double_Is_NaN_Or_Inf (tmpl_math.h):                          *
+ *              Determines if a double is NaN or infinity.                    *
  *      Method:                                                               *
  *          If |x| < 1, compute with 1/|x|. Otherwise compute with |x|.       *
  *          Iteratively divide the input by certain powers of 2 until we      *
@@ -106,11 +104,9 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
+ *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) float.h:                                                              *
+ *  2.) float.h:                                                              *
  *          Standard C header file containing limits for the size of double.  *
  *          Only included with the portable (non-IEEE-754) version.           *
  ******************************************************************************
@@ -142,7 +138,7 @@ void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
     w.bits.sign = 0x00U;
 
     /*  NaN or Inf. Set exponent to zero and mant to the input.               */
-    if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
     {
         *mant = w.r;
         *expo = 0;
@@ -160,13 +156,16 @@ void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
             return;
         }
 
-        /*  Non-zero subnormal number. Normalize by multiplying by 2^52,      *
-         *  which is 4.503599627370496 x 10^15.                               */
-        w.r *= 4.503599627370496E15;
+        /*  Non-zero subnormal number. Normalize.                             */
+        w.r *= TMPL_DOUBLE_NORMALIZE;
 
-        /*  Compute the exponent. Since we multiplied by 2^52, subtract 52    *
-         *  from the value.                                                   */
-        *expo = (signed int)(w.bits.expo) - TMPL_DOUBLE_BIAS - 52;
+        /*  Compute the exponent by subtracting of the bias.                  */
+        *expo = (signed int)(w.bits.expo) - TMPL_DOUBLE_BIAS;
+
+        /*  Since we normalized, subtract off the appropriate power of two.   */
+        *expo = *expo - TMPL_DOUBLE_MANTISSA_LENGTH;
+
+        /*  Set the exponent bits to the bias, meaning 1 <= w.r < 2.          */
         w.bits.expo = TMPL_DOUBLE_BIAS;
         *mant = w.r;
         return;
@@ -196,7 +195,7 @@ void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
  *  it roughly runs like O(ln(ln(max(|x|, |1/x|)))).                          */
 void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
 {
-    /*  We'll compute the exponent using |x|, so compute this.                */
+    /*  We'll compute the exponent using |x|, so create a variable for this.  */
     double abs_x;
 
     /*  If either of the input pointers are NULL, there's nothing to be done. */
@@ -211,19 +210,11 @@ void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
         return;
     }
 
-    /*  Infinity is another special case. The mantissa will be set to         *
-     *  infinity and the exponent will be set to zero.                        */
-    else if (tmpl_Double_Is_Inf(x))
+    /*  Infinity/NaN are special cases. The mantissa will be set to the       *
+     *  absolute value of the input and the exponent will be set to zero.     */
+    else if (tmpl_Double_Is_NaN_Or_Inf(x))
     {
-        *mant = TMPL_INFINITY;
-        *expo = 0;
-        return;
-    }
-
-    /*  The last special case is NaN. expo will be zero, and mant will be nan.*/
-    else if (tmpl_Double_Is_NaN(x))
-    {
-        *mant = TMPL_NAN;
+        *mant = tmpl_Double_Abs(x);
         *expo = 0;
         return;
     }
@@ -252,6 +243,27 @@ void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
      *  O(ln(ln(x))) time. To avoid compiler warnings about constants beyond  *
      *  the range of double, use the macro DBL_MAX_10_EXP to check the        *
      *  largest power of 10 allowed.                                          */
+#if DBL_MAX_10_EXP > 308
+
+    /*  First two hundred digits of 2^1024.                                   */
+#define TWO_TO_THE_1024 \
+(1.7976931348623159077293051907890247336179769789423065727343008115773267580\
+5500963132708477322407536021120113879871393357658789768814416622492847430639\
+47412437776789342486548527630221960124609411945308E308)
+
+    /*  Keep dividing by this power until the exponent is less than 1024.     */
+    while (*mant >= TWO_TO_THE_1024)
+    {
+        *mant /= TWO_TO_THE_1024;
+        *expo += 1024;
+    }
+
+    /*  Undefine this macro in case someone wants to #include this file.      */
+#undef TWO_TO_THE_1024
+
+#endif
+/*  End of #if DBL_MAX_10_EXP = 308.                                          */
+
 #if DBL_MAX_10_EXP > 154
 
     /*  Portable version, we don't know how exactly a double is represented.  *

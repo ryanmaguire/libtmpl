@@ -3,20 +3,70 @@ target_sources(
     PUBLIC
         FILE_SET HEADERS
         FILES
-            tmpl_math_abs_inline.h
-            tmpl_math_arctan_asymptotic_inline.h
-            tmpl_math_arctan_maclaurin_inline.h
-            tmpl_math_arctan_pade_inline.h
-            tmpl_math_arctan_tables.h
-            tmpl_math_arctan_very_small_inline.h
+            tmpl_math_abs_double_inline.h
+            tmpl_math_abs_float_inline.h
+            tmpl_math_abs_ldouble_inline.h
+            tmpl_math_arctan_asymptotic_double_inline.h
+            tmpl_math_arctan_asymptotic_float_inline.h
+            tmpl_math_arctan_asymptotic_ldouble_inline.h
+            tmpl_math_arctan_double_tables.h
+            tmpl_math_arctan_float_tables.h
+            tmpl_math_arctan_ldouble_tables.h
+            tmpl_math_arctan_maclaurin_double_inline.h
+            tmpl_math_arctan_maclaurin_float_inline.h
+            tmpl_math_arctan_maclaurin_ldouble_inline.h
+            tmpl_math_arctan_pade_double_inline.h
+            tmpl_math_arctan_pade_float_inline.h
+            tmpl_math_arctan_pade_ldouble_inline.h
+            tmpl_math_arctan_very_small_double_inline.h
+            tmpl_math_arctan_very_small_float_inline.h
+            tmpl_math_arctan_very_small_ldouble_inline.h
             tmpl_math_cbrt_data_double.h
             tmpl_math_cbrt_data_float.h
-            tmpl_math_cbrt_pade_inline.h
-            tmpl_math_cbrt_taylor_inline.h
-            tmpl_math_copysign_inline.h
+            tmpl_math_cbrt_data_ldouble.h
+            tmpl_math_cbrt_pade_double_inline.h
+            tmpl_math_cbrt_pade_float_inline.h
+            tmpl_math_cbrt_pade_ldouble_inline.h
+            tmpl_math_cbrt_taylor_double_inline.h
+            tmpl_math_cbrt_taylor_float_inline.h
+            tmpl_math_cbrt_taylor_ldouble_inline.h
+            tmpl_math_copysign_double_inline.h
+            tmpl_math_copysign_float_inline.h
+            tmpl_math_copysign_ldouble_inline.h
+            tmpl_math_cosd_lookup_table_double.h
+            tmpl_math_cosd_lookup_table_float.h
+            tmpl_math_cosd_lookup_table_ldouble.h
+            tmpl_math_cosd_maclaurin_double_inline.h
+            tmpl_math_cosd_maclaurin_float_inline.h
+            tmpl_math_cosd_maclaurin_ldouble_inline.h
+            tmpl_math_cosh_maclaurin_double_inline.h
+            tmpl_math_cosh_maclaurin_float_inline.h
+            tmpl_math_cosh_maclaurin_ldouble_inline.h
+            tmpl_math_cosh_pade_double_inline.h
+            tmpl_math_cosh_pade_float_inline.h
+            tmpl_math_cosh_pade_ldouble_inline.h
+            tmpl_math_cospi_lookup_table_double.h
+            tmpl_math_cospi_lookup_table_float.h
+            tmpl_math_cospi_lookup_table_ldouble.h
+            tmpl_math_cospi_maclaurin_double_inline.h
+            tmpl_math_cospi_maclaurin_float_inline.h
+            tmpl_math_cospi_maclaurin_ldouble_inline.h
+            tmpl_math_dist_double_inline.h
+            tmpl_math_dist_float_inline.h
+            tmpl_math_dist_ldouble_inline.h
+            tmpl_math_exp_maclaurin_double_inline.h
+            tmpl_math_exp_maclaurin_float_inline.h
+            tmpl_math_exp_pade_double_inline.h
+            tmpl_math_exp_pade_float_inline.h
+            tmpl_math_exp_pade_ldouble_inline.h
+            tmpl_math_exp_pos_kernel_double_inline.h
+            tmpl_math_exp_pos_kernel_float_inline.h
             tmpl_math_log_data_double.h
             tmpl_math_rcpr_table_double.h
             tmpl_math_rcpr_table_float.h
+            tmpl_math_rcpr_table_ldouble.h
+            tmpl_math_sin_pade_inline.h
+            tmpl_math_sin_pade_pi_inline.h
             tmpl_math_sin_very_small_inline.h
             tmpl_math_sincos_cos_precise_eval.h
             tmpl_math_sincos_data_double.h
@@ -25,6 +75,16 @@ target_sources(
             tmpl_math_sincos_reduction_very_large.h
             tmpl_math_sincos_sin_precise_eval.h
             tmpl_math_sincos_sin_precise_small.h
-            tmpl_math_sine_pade_inline.h
-            tmpl_math_sine_pade_pi_inline.h
+            tmpl_math_sind_lookup_table_double.h
+            tmpl_math_sind_lookup_table_float.h
+            tmpl_math_sind_lookup_table_ldouble.h
+            tmpl_math_sind_maclaurin_double_inline.h
+            tmpl_math_sind_maclaurin_float_inline.h
+            tmpl_math_sind_maclaurin_ldouble_inline.h
+            tmpl_math_sinpi_lookup_table_double.h
+            tmpl_math_sinpi_lookup_table_float.h
+            tmpl_math_sinpi_lookup_table_ldouble.h
+            tmpl_math_sinpi_maclaurin_double_inline.h
+            tmpl_math_sinpi_maclaurin_float_inline.h
+            tmpl_math_sinpi_maclaurin_ldouble_inline.h
 )

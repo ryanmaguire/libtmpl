@@ -52,7 +52,7 @@
  *      Use the first 7 terms (0 <= n <= 6) of this expansion to compute.     *
  *  Notes:                                                                    *
  *      Only accurate for large POSITIVE values. For x > 16, this function    *
- *      is accurate to quadruple precision (10^-34 relative error) (the       *
+ *      is accurate to extended precision (10^-19 relative error) (the        *
  *      64-bit version is accurate to double precision, 10^-16 relative error,*
  *      for x > 16). The closer the input is to zero, the worse the error.    *
  *                                                                            *
@@ -81,7 +81,7 @@
 /*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
 #if TMPL_USE_INLINE != 1
 
-/*  IEEE-754 data types and macros found here.                                */
+/*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
@@ -126,7 +126,7 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 /*  Else for 64-bit long double version.                                      */
 
 /******************************************************************************
- *   80-Bit Extended / 128-bit Quadruple / 128-bit Double-Double / Portable   *
+ *   80-bit Extended / 128-bit Quadruple / 128-bit Double-Double / Portable   *
  ******************************************************************************/
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
@@ -144,6 +144,8 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 {
     const long double z = 1.0L / x;
     const long double z2 = z*z;
+
+    /*  Use Horner's method to compute the polynomial.                        */
     return tmpl_Pi_By_Two_L -
            z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*(A5 + z2*A6))))));
 }

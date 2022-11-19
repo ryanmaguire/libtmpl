@@ -4,16 +4,16 @@
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 
-static const double split = 134217729.0;
-static const double t576 = 2.473304014731045340605025210196E173;
-static const double tm600 = 2.409919865102884117740750034713E-181;
-static const double tm24 = 5.9604644775390625E-08;
-static const double big = 6.755399441055744E15;
-static const double big1 = 2.7021597764222976E16;
-static const double hp0 = 1.570796326794896557998981734272E00;
-static const double hp1 = 6.123233995736766035868820147292E-17;
-static const double mp1 = 1.5707963407039642333984375E00;
-static const double mp2 = -1.390906767539945576572790741920E-08;
+static const double split = 134217729.0; /* 2^27 + 1 */
+static const double t576 = 2.473304014731045340605025210196E173; /* 2^576 */
+static const double tm600 = 2.409919865102884117740750034713E-181; /* 2^-600 */
+static const double tm24 = 5.9604644775390625E-08; /* 2^-24 */
+static const double big = 6.755399441055744E15; /* 1.5 * 2^52 */
+static const double big1 = 2.7021597764222976E16; /* 1.5 * 2^54 */
+static const double hp0 = 1.570796326794896557998981734272E00;  /* pi / 2 hi */
+static const double hp1 = 6.123233995736766035868820147292E-17; /* pi / 2 lo */
+static const double mp1 = 1.5707963407039642333984375E00;        /* pi / 2 hi */
+static const double mp2 = -1.390906767539945576572790741920E-08; /* pi / 2 lo */
 
 static const double toverp[75] = { /*  2/ PI base 24*/
     10680707.0,  7228996.0,  1387004.0,  2578385.0, 16069853.0,
@@ -177,7 +177,7 @@ tmpl_Double_SinCos_Reduction_Very_Large(double x, double *a, double *aa)
     *a = s;
     *aa = t;
     k = (unsigned int)((int)sum & 3);
-    return k; /* return quater of unit circle */
+    return k; /* return quarter of unit circle */
 }
 
 #endif

@@ -36,7 +36,7 @@
  *      theta (long double):                                                  *
  *          The angle, between -pi and pi, the point (x, y) makes with the    *
  *          x axis.                                                           *
- *  IEEE-754 Version:                                                         *
+ *  64-Bit Double / 80-Bit Extended:                                          *
  *      Called Functions:                                                     *
  *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
  *              Computes the absolute value of a real number.                 *
@@ -82,8 +82,6 @@
  *                      0 if y is positive, pi if y is negative.              *
  *                  y NaN:                                                    *
  *                      return NaN.                                           *
- *                  y infinite:                                               *
- *                      See previous cases.                                   *
  *              x and y finite:                                               *
  *                  Reduce y to positive via:                                 *
  *                      atan2(y, x) = -atan2(-y, x)                           *
@@ -107,12 +105,48 @@
  *                      exponent of the long double z.                        *
  *                                                                            *
  *                      For larger values, use the asmyptotic expansion.      *
- *      Error:                                                                *
+ *      Error (64-Bit Double):                                                *
+ *          Based on 788,968,857 random samples with -100 < |x|, |y| < 100.   *
+ *              max relative error: 4.4955987686353023e-16                    *
+ *              rms relative error: 9.2214263529102684e-17                    *
+ *              max absolute error: 4.4408920985006262e-16                    *
+ *              rms absolute error: 1.6454528697674011e-16                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~2 x 10^-16).                                    *
+ *      Error (80-Bit Extended):                                              *
  *          Based on 394,484,428 random samples with -100 < |x|, |y| < 100.   *
  *              max relative error: 2.1682630157549489e-19                    *
  *              rms relative error: 3.9719504311123539e-20                    *
  *              max absolute error: 2.1684043449710089e-19                    *
  *              rms absolute error: 7.2247868870500588e-20                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~1 x 10^-19).                                    *
+ *  128-Bit Quadruple / 128-Bit Double-Double:                                *
+ *      Called Functions:                                                     *
+ *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
+ *              Computes the absolute value of a real number.                 *
+ *          tmpl_LDouble_Arctan_Pade (tmpl_math.h):                           *
+ *              Compute the Pade approximant for atan. Very accurate for      *
+ *              small values. Used to get relative error to ~10^-34.          *
+ *      Method:                                                               *
+ *          Similar to double / extended method, but with a large lookup      *
+ *          table and using the Pade approximant instead of Maclaurin series. *
+ *      Error (128-Bit Quadruple):                                            *
+ *          Based on 25,000,000 random samples with -100 < |x|, |y| < 100.    *
+ *              max relative error: 1.7473101468321921e-34                    *
+ *              rms relative error: 5.2509800591011004e-35                    *
+ *              max absolute error: 3.8518598887744717e-34                    *
+ *              rms absolute error: 1.0894746550053625e-34                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~2 x 10^-34).                                    *
+ *      Error (128-Bit Double-Double):                                        *
+ *          Based on 25,000,000 random samples with -100 < |x|, |y| < 100.    *
+ *              max relative error: 1.5693901271014608e-32                    *
+ *              rms relative error: 4.0465499798622827e-33                    *
+ *              max absolute error: 2.4651903288156619e-32                    *
+ *              rms absolute error: 6.3562982935323872e-33                    *
+ *          Values assume 100% accuracy of glibc. Comments for their          *
+ *          double-double implementation claim the peak error is 1.7 x 10^-34.*
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
@@ -131,22 +165,24 @@
  *          tmpl_LDouble_Is_Inf (tmpl_math.h):                                *
  *              Determines if a long double is infinity.                      *
  *      Method:                                                               *
- *          Same as IEEE-754 method, except the index of the lookup table is  *
- *          computed via if-then statements to narrow down the range of x.    *
+ *          Same as double / extended, except the index of the lookup table   *
+ *          is computed via if-then statements to narrow down the range of x. *
  *      Error:                                                                *
  *          Based on 394,484,428 random samples with -100 < |x|, |y| < 100.   *
  *              max relative error: 2.1682630157549489e-19                    *
  *              rms relative error: 3.9719504311123539e-20                    *
  *              max absolute error: 2.1684043449710089e-19                    *
  *              rms absolute error: 7.2247868870500588e-20                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~1 x 10^-19).                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) tmpl_math_arctan_tables.h:                                            *
+ *  3.) tmpl_math_arctan_ldouble_tables.h:                                    *
  *          Header file containing pre-computed values of arctan(x).          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -168,17 +204,12 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Lookup table of precomputed arctan values found here.                     */
-#include <libtmpl/include/math/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math/tmpl_math_arctan_ldouble_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
-/******************************************************************************
- *                          64 BIT DOUBLE PRECISION                           *
- *                                    and                                     *
- *                         80 BIT EXTENDED PRECISION                          *
- ******************************************************************************/
-
+/*  64-bit double and 80-bit extended use the same idea.                      */
 #if \
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
@@ -187,7 +218,13 @@
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
   TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
 
-/*  Long double precision inverse tangent (atan2 equivalent).                 */
+/******************************************************************************
+ *                          64 BIT DOUBLE PRECISION                           *
+ *                                    and                                     *
+ *                         80 BIT EXTENDED PRECISION                          *
+ ******************************************************************************/
+
+/*  Long double precision inverse tangent (atan2l equivalent).                */
 long double tmpl_LDouble_Arctan2(long double y, long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -287,11 +324,11 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     w.r = tmpl_LDouble_Abs(wy.r / wx.r);
 
     /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
-    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_BIAS - 4U)
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 4U)
         out = tmpl_LDouble_Arctan_Very_Small(w.r);
 
     /*  For |z| > 16, use the asymptotic expansion.                           */
-    else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_BIAS + 3U)
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_UBIAS + 3U)
         out = tmpl_LDouble_Arctan_Asymptotic(w.r);
 
     /*  Otherwise use the lookup table to reduce. Note we have reduced to the *
@@ -303,7 +340,7 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
          *  is the exponent of the number z. Compute this. The exponent       *
          *  in the IEEE-754 representation of a number is offset by a bias.   *
          *  Subtract off this bias to compute the actual index.               */
-        ind = (TMPL_LDOUBLE_EXPO_BITS(w) + 4U) - TMPL_LDOUBLE_BIAS;
+        ind = (TMPL_LDOUBLE_EXPO_BITS(w) + 4U) - TMPL_LDOUBLE_UBIAS;
 
         /*  Get the corresponding values from the lookup tables.              */
         v = tmpl_atan_ldouble_v[ind];
@@ -437,12 +474,12 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     /*  We have z = y/x. Reduce to x and y positive by computing |z|.         */
     w.r = tmpl_LDouble_Abs(wy.r / wx.r);
 
-    /*  Avoid underflow. If |x| < 2^-52, atan(x) = x to quadruple precision.  */
-    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_BIAS - 52U)
+    /*  Avoid underflow. If |x| < 2^-56, atan(x) = x to quadruple precision.  */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 56U)
         out = w.r;
 
     /*  For |x| > 16, use the asymptotic expansion.                           */
-    else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_BIAS + 3U)
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_UBIAS + 3U)
         out = tmpl_Pi_By_Two_L - tmpl_LDouble_Arctan_Pade(1.0L/w.r);
 
     /*  Otherwise reduce and use the Pade approximant.                        */
@@ -551,7 +588,7 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     if (z < 0.0625L)
     {
         out = tmpl_LDouble_Arctan_Very_Small(z);
-        goto TMPL_LDOUBLE_ARCTAN_FINISH;
+        goto TMPL_LDOUBLE_ARCTAN2_FINISH;
     }
 
     /*  Otherwise compute the greatest power of two less than z. To compute   *
@@ -578,7 +615,7 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     else
     {
         out = tmpl_LDouble_Arctan_Asymptotic(z);
-        goto TMPL_LDOUBLE_ARCTAN_FINISH;
+        goto TMPL_LDOUBLE_ARCTAN2_FINISH;
     }
 
     /*  Use the lookup table for arctan. Get the pre-computed values.         */
@@ -592,7 +629,7 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     /*  Last step, perform the argument reduction. We computed |y/x| at the   *
      *  start but have not changed x or y so their signs are untouched.       *
      *  Inspect the signs of each to finish the computation.                  */
-TMPL_LDOUBLE_ARCTAN_FINISH:
+TMPL_LDOUBLE_ARCTAN2_FINISH:
 
     /*  Reduce to x > 0 via atan2(y, x) = pi - atan2(y, -x).                  */
     if (x < 0.0L)
