@@ -1,10 +1,10 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  it under the terms of the GNU General Public License as published by      *
+ *  under the terms of the GNU General Public License as published by         *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -15,45 +15,11 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       September 5, 2022                                             *
  ******************************************************************************/
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Standard algorithm of time-complexity O(n) to take an array and reverse   *
- *  the order. This is equivalent to taking a numpy array arr and writing     *
- *  arr = arr[::-1] (in Python 3, at least). Since all of the main routines   *
- *  use double pointers, only a double version is provided.                   */
-void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize)
-{
-    float val;
-    unsigned long i;
-    for(i=0; i<arrsize/2; i++)
-    {
-        val = arr[i];
-        arr[i] = arr[arrsize-i-1];
-        arr[arrsize-i-1] = val;
-    }
-}
-
-void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize)
-{
-    double val;
-    unsigned long i;
-    for(i=0; i<arrsize/2; i++)
-    {
-        val = arr[i];
-        arr[i] = arr[arrsize-i-1];
-        arr[arrsize-i-1] = val;
-    }
-}
-
-void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize)
-{
-    long double val;
-    unsigned long i;
-    for(i=0; i<arrsize/2; i++)
-    {
-        val = arr[i];
-        arr[i] = arr[arrsize-i-1];
-        arr[arrsize-i-1] = val;
-    }
-}
+#include "tmpl_math_unit_tests.h"
+#define indata {0.0F, -0.0F, FLT_MIN, -FLT_MIN, FLT_MAX, -FLT_MAX}
+#define outdata {F, F, F, F, F, F}
+TEST2(float, tmpl_Float_Is_NaN, indata, outdata)

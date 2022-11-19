@@ -1,6 +1,4 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_cosd_lookup_table_double.h>
-#include <libtmpl/include/math/tmpl_math_sind_lookup_table_double.h>
 
 double tmpl_Double_Sind(double x)
 {
@@ -29,8 +27,8 @@ double tmpl_Double_Sind(double x)
     ind = (unsigned int)arg;
     dx = arg - (double)ind;
 
-    sx = tmpl_Double_Sind_Lookup_Table[ind];
-    cx = tmpl_Double_Cosd_Lookup_Table[ind];
+    sx = tmpl_double_sind_table[ind];
+    cx = tmpl_double_cosd_table[ind];
     sdx = tmpl_Double_Sind_Maclaurin(dx);
     cdx = tmpl_Double_Cosd_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);

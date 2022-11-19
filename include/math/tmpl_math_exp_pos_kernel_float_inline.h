@@ -80,10 +80,10 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the polynomial approximation of x(exp(x)+1)/(exp(x)-1).  */
-#define A1 (1.666666666666666666666666666666666666667E-01F)
-#define A2 (-2.777777777777777777777777777777777777778E-03F)
-#define A3 (6.613756613756613756613756613756613756614E-05F)
+/*  Coefficients for the polynonial. They are 1 / n!.                         */
+#define A0 (1.000000000000000000000000000000000000000E+00F)
+#define A1 (1.000000000000000000000000000000000000000E+00F)
+#define A2 (5.000000000000000000000000000000000000000E-01F)
 
 /*  Check for IEEE-754 support. Significantly faster.                         */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -98,7 +98,8 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Float exp_w;
-    float r, t, t2, hi, lo;
+    float r, t, hi, lo;
+    int ind, t256;
 
     /*  log(2) split into two components for extra precision.                 */
     const float ln_2_hi = 6.9314575195E-01F;
@@ -118,15 +119,15 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
     hi = x - ln_2_hi*t;
     lo = t*ln_2_lo;
     t = hi - lo;
-    t2 = t*t;
 
-    /*  Rational approximation of exp(t) for small t.                         */
-    r = t - t2*(A1 + t2*(A2 + t2*A3));
-    t = 1.0F - ((lo - (t*r)/(2.0F - r)) - hi);
+    t256 = (int)(256.0F*t);
+    ind = t256 + 177;
+    t = t - 0.00390625F*(float)t256;
+    r = A0 + t*(A1 + t*A2);
+    exp_w.r = r*tmpl_float_exp_table[ind];
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    exp_w.r = t;
-    exp_w.bits.expo += (k & 0xFF);
+    exp_w.bits.expo += k & 0xFF;
     return exp_w.r;
 }
 /*  End of tmpl_Float_Exp_Pos_Kernel.                                         */
@@ -147,7 +148,8 @@ TMPL_INLINE_DECL
 float tmpl_Float_Exp_Pos_Kernel(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    float r, t, t2, hi, lo;
+    float r, t, hi, lo;
+    int ind, t256;
 
     /*  log(2) split into two components for extra precision.                 */
     const float ln_2_hi = 6.9314575195E-01F;
@@ -167,14 +169,14 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
     hi = x - ln_2_hi*t;
     lo = t*ln_2_lo;
     t = hi - lo;
-    t2 = t*t;
 
-    /*  Rational approximation of exp(t) for small t.                         */
-    r = t - t2*(A1 + t2*(A2 + t2*A3));
-    t = 1.0F - ((lo - (t*r)/(2.0F - r)) - hi);
+    t256 = (int)(256.0F*t);
+    ind = t256 + 177;
+    t = t - 0.00390625F*(float)t256;
+    r = A0 + t*(A1 + t*A2);
 
     /*  Compute exp(x) via 2^k * exp(t).                                      */
-    return t*tmpl_Float_Pow2(k);
+    return r*tmpl_float_exp_table[ind]*tmpl_Float_Pow2(k);
 }
 /*  End of tmpl_Float_Exp_Pos_Kernel.                                         */
 
@@ -182,11 +184,9 @@ float tmpl_Float_Exp_Pos_Kernel(float x)
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 /*  Undefine all coefficients in case someone wants to #include this file.    */
+#undef A0
 #undef A1
 #undef A2
-#undef A3
-#undef A4
-#undef A5
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

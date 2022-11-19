@@ -37,7 +37,7 @@
  *      x (float, double, or long double):                                    *
  *          A real number, the argument for J_0(x).                           *
  *  Output:                                                                   *
- *      bessel_J0:                                                            *
+ *      J0_x:                                                                 *
  *          The Bessel function J_0(x).                                       *
  *  Method:                                                                   *
  *      For small values, the Taylor expansion is used. The J_0(x) function   *
@@ -184,7 +184,7 @@ static long double tmpl_LDouble_Bessel_J0_Asym[9] = {
 double tmpl_Double_Bessel_J0(double x)
 {
     /*  Declare necessary variables. C89 requires declaring these at the top. */
-    double bessel_J0, arg;
+    double J0_x, arg;
     double sinarg, cosarg;
 
     /*  Bessel J0 is even and in terms of the square of x, so compute this.   */
@@ -192,38 +192,27 @@ double tmpl_Double_Bessel_J0(double x)
 
     /*  For small arguments, use the Taylor series of J_0.                    */
     if (arg < 4.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 12U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 12U, arg);
     else if (arg < 16.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 16U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 16U, arg);
     else if (arg < 25.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 18U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 18U, arg);
     else if (arg < 36.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 19U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 19U, arg);
     else if (arg < 49.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 21U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 21U, arg);
     else if (arg < 64.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 23U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 23U, arg);
     else if (arg < 81.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 24U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 24U, arg);
     else if (arg < 100.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 26U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 26U, arg);
     else if (arg < 121.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 27U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 27U, arg);
     else if (arg < 144.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 29U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 29U, arg);
     else if (arg < 196.0)
-        bessel_J0 = tmpl_Real_Poly_Double_Coeffs(tmpl_Double_Bessel_J0_Taylor,
-                                                 30U, arg);
+        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 30U, arg);
 
     /*  For large arguments use the asymptotic expansion.                     */
     else if (arg < 1.0e32)
@@ -252,22 +241,22 @@ double tmpl_Double_Bessel_J0(double x)
         cosarg *= tmpl_Double_Cos(x - tmpl_Pi_By_Four);
 
         /*  Multiply the result by the coefficient and return.                */
-        bessel_J0 = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi;
-        bessel_J0 = bessel_J0 / tmpl_Double_Sqrt(x);
+        J0_x = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi;
+        J0_x = J0_x / tmpl_Double_Sqrt(x);
     }
 
     /*  For very large arguments, use the limit (which is zero).              */
     else
-        bessel_J0 = 0.0;
+        J0_x = 0.0;
 
-    return bessel_J0;
+    return J0_x;
 }
 
 /*  Compute the Bessel I_0 function for a long double precision number x.     */
 long double tmpl_LDouble_Bessel_J0(long double x)
 {
     /*  Declare necessary variables. C89 requires declaring these at the top. */
-    long double bessel_J0, arg;
+    long double J0_x, arg;
     long double sinarg, cosarg;
 
     /*  Bessel J0 is even and in terms of the square of x, so compute this.   */
@@ -275,38 +264,27 @@ long double tmpl_LDouble_Bessel_J0(long double x)
 
     /*  For small arguments, use the Taylor series of J_0.                    */
     if (arg < 4.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 12U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 12U, arg);
     else if (arg < 16.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 16U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 16U, arg);
     else if (arg < 25.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 18U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 18U, arg);
     else if (arg < 36.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 19U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 19U, arg);
     else if (arg < 49.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 21U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 21U, arg);
     else if (arg < 64.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 23U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 23U, arg);
     else if (arg < 81.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 24U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 24U, arg);
     else if (arg < 100.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 26U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 26U, arg);
     else if (arg < 121.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 27U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 27U, arg);
     else if (arg < 144.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 29U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 29U, arg);
     else if (arg < 196.0L)
-        bessel_J0 = tmpl_Real_Poly_LDouble_Coeffs(tmpl_LDouble_Bessel_J0_Taylor,
-                                                 30U, arg);
+        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 30U, arg);
 
     /*  For large arguments use the asymptotic expansion.                     */
     else if (arg < 1.0e32L)
@@ -335,13 +313,13 @@ long double tmpl_LDouble_Bessel_J0(long double x)
         cosarg *= tmpl_LDouble_Cos(x - tmpl_Pi_By_Four_L);
 
         /*  For very large arguments, use the limit (which is zero).          */
-        bessel_J0 = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi_L;
-        bessel_J0 = bessel_J0 / tmpl_LDouble_Sqrt(x);
+        J0_x = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi_L;
+        J0_x = J0_x / tmpl_LDouble_Sqrt(x);
     }
 
     /*  For very large arguments, use the limit (which is zero).              */
     else
-        bessel_J0 = 0.0L;
+        J0_x = 0.0L;
 
-    return bessel_J0;
+    return J0_x;
 }

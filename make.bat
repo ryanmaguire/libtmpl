@@ -39,28 +39,55 @@ IF %1 == clang GOTO MakeClang
 :MakeClang
 
     :: Arguments for the compiler.
+    SET CMACR=-DTMPL_SET_USE_MATH_TRUE
     SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+    SET CARGS=-O2 -I..\ -c
 
     :: Create include\tmpl_endianness.h
-    clang-cl config.c -o config.exe
+    clang-cl %CMACR% config.c -o config.exe
     config.exe
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do clang-cl %CWARN% -O2 -I..\ -c %%d\*.c
+    for /D %%d in (.\src\*) do (
+        if "%%d" == ".\src\assembly" (
+            echo Skipping src\assembly\
+        ) else (
+            if "%%d" == ".\src\builtins" (
+                echo Skipping src\builtins\
+            ) else (
+                clang-cl %CWARN% %CARGS% %%d\*.c
+            )
+        )
+    )
 
     :: Go to the Linking stage.
     GOTO LinkLib
 
 :MakeCL
 
+    :: Arguments for the compiler.
+    SET CMACR=/DTMPL_SET_USE_MATH_TRUE
+    SET CWARN=/W4
+    SET CARGS= /I../ /O2 /c
+
     :: Create include\tmpl_endianness.h
-    cl config.c /link /out:config.exe
+    cl %CMACR% config.c /link /out:config.exe
     config.exe
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do cl /I../ /W4 /O2 /c %%d\*.c
+    for /D %%d in (.\src\*) do (
+        if "%%d" == ".\src\assembly" (
+            echo Skipping src\assembly\
+        ) else (
+            if "%%d" == ".\src\builtins" (
+                echo Skipping src\builtins\
+            ) else (
+                cl %CWARN% %CARGS% %%d\*.c
+            )
+        )
+    )
 
     :: Go to the Linking stage.
     GOTO LinkLib

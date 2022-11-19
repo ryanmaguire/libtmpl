@@ -107,3 +107,4 @@ tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+

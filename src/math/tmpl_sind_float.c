@@ -1,6 +1,4 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_cosd_lookup_table_float.h>
-#include <libtmpl/include/math/tmpl_math_sind_lookup_table_float.h>
 
 float tmpl_Float_Sind(float x)
 {
@@ -29,8 +27,8 @@ float tmpl_Float_Sind(float x)
     ind = (unsigned int)arg;
     dx = arg - (float)ind;
 
-    sx = tmpl_Float_Sind_Lookup_Table[ind];
-    cx = tmpl_Float_Cosd_Lookup_Table[ind];
+    sx = tmpl_float_sind_table[ind];
+    cx = tmpl_float_cosd_table[ind];
     sdx = tmpl_Float_Sind_Maclaurin(dx);
     cdx = tmpl_Float_Cosd_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);

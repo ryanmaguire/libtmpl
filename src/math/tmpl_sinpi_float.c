@@ -1,6 +1,4 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_cospi_lookup_table_float.h>
-#include <libtmpl/include/math/tmpl_math_sinpi_lookup_table_float.h>
 
 float tmpl_Float_SinPi(float x)
 {
@@ -29,8 +27,8 @@ float tmpl_Float_SinPi(float x)
     ind = (unsigned int)(128.0F*arg);
     dx = arg - 0.0078125F*(float)ind;
 
-    sx = tmpl_Float_SinPi_Lookup_Table[ind];
-    cx = tmpl_Float_CosPi_Lookup_Table[ind];
+    sx = tmpl_float_sinpi_table[ind];
+    cx = tmpl_float_cospi_table[ind];
     sdx = tmpl_Float_SinPi_Maclaurin(dx);
     cdx = tmpl_Float_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);

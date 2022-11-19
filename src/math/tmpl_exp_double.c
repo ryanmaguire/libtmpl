@@ -1,9 +1,6 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
-/* TODO: Write neg kernel.*/
-#define tmpl_Double_Exp_Neg_Kernel(x) (1.0 / tmpl_Double_Exp_Pos_Kernel(-(x)))
-
 /*  With IEEE-754 support we can get a bit of a speed boost.                  */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -33,7 +30,7 @@ double tmpl_Double_Exp(double x)
     }
 
     /*  For |x| < 1/16 the Maclaurin series is accurate to double precision.  */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
         return tmpl_Double_Exp_Maclaurin(x);
 
     /*  For |x| < 1, the Pade approximant is sufficient and much faster than  *

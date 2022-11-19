@@ -248,6 +248,10 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_exp_pade_ldouble.c"
     Exclude="$Exclude tmpl_exp_pos_kernel_double.c"
     Exclude="$Exclude tmpl_exp_pos_kernel_float.c"
+    Exclude="$Exclude tmpl_exp_pos_kernel_ldouble.c"
+    Exclude="$Exclude tmpl_exp_neg_kernel_double.c"
+    Exclude="$Exclude tmpl_exp_neg_kernel_float.c"
+    Exclude="$Exclude tmpl_exp_neg_kernel_ldouble.c"
     Exclude="$Exclude tmpl_sin_pade_double.c"
     Exclude="$Exclude tmpl_sin_pade_float.c"
     Exclude="$Exclude tmpl_sin_pade_ldouble.c"
@@ -264,7 +268,7 @@ if [ $USEINLINE == 1 ]; then
 fi
 
 if [ $USELONGLONG == 0 ]; then
-	ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
+    ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
     Exclude="$Exclude tmpl_abs_llong.c"
 fi
 
@@ -490,3 +494,4 @@ if [ $INPLACE == 1 ]; then
     echo "    directories using the -I and -L option as follows:"
     echo "        gcc -I$(pwd)/../ -L$(pwd)/ my_file.c -o my_output -ltmpl"
 fi
+

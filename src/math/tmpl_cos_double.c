@@ -58,13 +58,10 @@ double tmpl_Double_Cos(double x)
 
 #else
 
-#include <libtmpl/include/math/tmpl_math_cospi_lookup_table_double.h>
-#include <libtmpl/include/math/tmpl_math_sinpi_lookup_table_double.h>
-
 double tmpl_Double_Cos(double x)
 {
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
-    unsigned int arg_128_int;
+    unsigned int ind;
 
     arg = tmpl_Double_Mod_2(tmpl_Double_Abs(x) * tmpl_One_By_Pi);
 
@@ -76,11 +73,11 @@ double tmpl_Double_Cos(double x)
     else
         sgn_x = 1.0;
 
-    arg_128_int = (unsigned int)(128.0*arg);
-    dx = arg - 0.0078125*arg_128_int;
+    ind = (unsigned int)(128.0*arg);
+    dx = arg - 0.0078125*ind;
 
-    sx = tmpl_Double_SinPi_Lookup_Table[arg_128_int];
-    cx = tmpl_Double_CosPi_Lookup_Table[arg_128_int];
+    sx = tmpl_double_sinpi_table[ind];
+    cx = tmpl_double_cospi_table[ind];
     sdx = tmpl_Double_SinPi_Maclaurin(dx);
     cdx = tmpl_Double_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*cx - sx*sdx);

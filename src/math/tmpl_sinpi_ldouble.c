@@ -1,6 +1,4 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_cospi_lookup_table_ldouble.h>
-#include <libtmpl/include/math/tmpl_math_sinpi_lookup_table_ldouble.h>
 
 long double tmpl_LDouble_SinPi(long double x)
 {
@@ -29,8 +27,8 @@ long double tmpl_LDouble_SinPi(long double x)
     ind = (unsigned int)(128.0L*arg);
     dx = arg - 0.0078125L*ind;
 
-    sx = tmpl_LDouble_SinPi_Lookup_Table[ind];
-    cx = tmpl_LDouble_CosPi_Lookup_Table[ind];
+    sx = tmpl_ldouble_sinpi_table[ind];
+    cx = tmpl_ldouble_cospi_table[ind];
     sdx = tmpl_LDouble_SinPi_Maclaurin(dx);
     cdx = tmpl_LDouble_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);

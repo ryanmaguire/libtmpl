@@ -92,14 +92,14 @@
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Otherwise use the functions in src/integer/.                              */
-TMPL_EXPORT extern signed char tmpl_Char_Abs(signed char n);
-TMPL_EXPORT extern short int tmpl_Short_Abs(short int n);
-TMPL_EXPORT extern int tmpl_Int_Abs(int n);
-TMPL_EXPORT extern long int tmpl_Long_Abs(long int n);
+extern signed char tmpl_Char_Abs(signed char n);
+extern short int tmpl_Short_Abs(short int n);
+extern int tmpl_Int_Abs(int n);
+extern long int tmpl_Long_Abs(long int n);
 
 /*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
-TMPL_EXPORT extern long long int tmpl_LLong_Abs(long long int);
+extern long long int tmpl_LLong_Abs(long long int);
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
@@ -120,7 +120,7 @@ TMPL_EXPORT extern long long int tmpl_LLong_Abs(long long int);
  *      int max:                                                              *
  *          The maximum of arr.                                               *
  ******************************************************************************/
-TMPL_EXPORT extern signed char tmpl_Char_Array_Max(signed char *arr, size_t len);
+extern signed char tmpl_Char_Array_Max(signed char *arr, size_t len);
 extern unsigned char tmpl_UChar_Array_Max(unsigned char *arr, size_t len);
 extern short int tmpl_Short_Array_Max(short int *arr, size_t len);
 extern unsigned short tmpl_UShort_Array_Max(unsigned short *arr, size_t len);
@@ -239,6 +239,9 @@ extern int tmpl_UChar_Leading_Zeros(unsigned char n);
 extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
 extern int tmpl_UInt_Leading_Zeros(unsigned int n);
 extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
+#if TMPL_HAS_LONGLONG == 1
+extern int tmpl_ULLong_Leading_Zeros(unsigned long long int);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -533,57 +536,6 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
-
-#elif defined(_MSC_VER)
-/*  Else for #if defined(__has_builtin).                                      */
-
-/*  Microsoft's compiler has _BitScanForward, equivalent to trailing zeros.   */
-unsigned int __inline TMPL_UINT_TRAILING_ZEROS(unsigned int n)
-{
-    unsigned int trailing_zeros = 0U;
-    _BitScanForward(&trailing_zeros, n);
-    return trailing_zeros;
-}
-
-/*  long and int are the same on Windows.                                     */
-unsigned long int __inline TMPL_ULONG_TRAILING_ZEROS(unsigned long int n)
-{
-    unsigned long int trailing_zeros = 0UL;
-    _BitScanForward(&trailing_zeros, n);
-    return trailing_zeros;
-}
-
-/*  long long is 64-bits on Windows.                                          */
-unsigned long int __inline TMPL_ULLONG_TRAILING_ZEROS(unsigned long long int n)
-{
-    unsigned long int trailing_zeros = 0UL;
-    _BitScanForward64(&trailing_zeros, n);
-    return trailing_zeros;
-}
-
-/*  Microsoft's compiler has _BitScanReverse, equivalent to leading zeros.    */
-unsigned int __inline TMPL_UINT_LEADING_ZEROS(unsigned int n)
-{
-    unsigned int leading_zeros = 0U;
-    _BitScanReverse(&leading_zeros, n);
-    return leading_zeros;
-}
-
-/*  long and int are the same on Windows.                                     */
-unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
-{
-    unsigned long int leading_zeros = 0UL;
-    _BitScanReverse(&leading_zeros, n);
-    return leading_zeros;
-}
-
-/*  long long is 64-bits on Windows.                                          */
-unsigned long int __inline TMPL_ULLONG_LEADING_ZEROS(unsigned long long int n)
-{
-    unsigned long int trailing_zeros = 0UL;
-    _BitScanReverse64(&trailing_zeros, n);
-    return trailing_zeros;
-}
 
 #else
 /*  Else for #if defined(__has_builtin).                                      */

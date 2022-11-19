@@ -57,7 +57,7 @@ long double tmpl_LDouble_NaN(void)
     tmpl_IEEE754_LDouble x;
     x.bits.sign = 0x0U;
     x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
-    x.bits.man0 = 0x40U;
+    x.bits.man0 = 0x8U;
     x.bits.man1 = 0x0U;
     x.bits.man2 = 0x0U;
     x.bits.man3 = 0x1U;

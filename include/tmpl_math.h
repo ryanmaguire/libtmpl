@@ -1134,7 +1134,9 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
-/* Declare Miscellaneous Constants.                                           */
+/******************************************************************************
+ *                           Mathematical Constants                           *
+ ******************************************************************************/
 
 /*  sqrt( 1 / (2pi) )                                                         */
 extern const float tmpl_Sqrt_One_By_Two_Pi_F;
@@ -1240,6 +1242,50 @@ extern const long double tmpl_Max_LDouble_Base_E;
 extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
+
+/******************************************************************************
+ *                              Tables and Data                               *
+ ******************************************************************************/
+
+/*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
+extern const double tmpl_double_cbrt_table[128];
+extern const float tmpl_float_cbrt_table[128];
+extern const long double tmpl_ldouble_cbrt_table[128];
+
+/*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
+extern const double tmpl_double_cosd_table[180];
+extern const float tmpl_float_cosd_table[180];
+extern const long double tmpl_ldouble_cosd_table[180];
+
+/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_cospi_table[128];
+extern const float tmpl_float_cospi_table[128];
+extern const long double tmpl_ldouble_cospi_table[128];
+
+/*  The values exp(k/256) for k = 0, 1, ..., 176, 177.                        */
+extern const double tmpl_double_exp_table[355];
+extern const float tmpl_float_exp_table[355];
+extern const long double tmpl_ldouble_exp_table[355];
+
+/*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
+extern const double tmpl_double_log_table[128];
+extern const float tmpl_float_log_table[128];
+extern const long double tmpl_ldouble_log_table[128];
+
+/*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
+extern const double tmpl_double_rcpr_table[128];
+extern const float tmpl_float_rcpr_table[128];
+extern const long double tmpl_ldouble_rcpr_table[128];
+
+/*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
+extern const double tmpl_double_sind_table[180];
+extern const float tmpl_float_sind_table[180];
+extern const long double tmpl_ldouble_sind_table[180];
+
+/*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_sinpi_table[128];
+extern const float tmpl_float_sinpi_table[128];
+extern const long double tmpl_ldouble_sinpi_table[128];
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2133,6 +2179,36 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Exp_Pos_Kernel                                            *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for dist functions found here.                             */
+#include <libtmpl/include/math/tmpl_math_exp_neg_kernel_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_exp_neg_kernel_float_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested.                                              */
+extern double tmpl_Double_Exp_Neg_Kernel(double x);
+extern float tmpl_Float_Exp_Neg_Kernel(float x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Factorial                                                 *
  *  Purpose:                                                                  *
  *      Computes the factorial of an integer, stored as a double.             *
@@ -2393,21 +2469,56 @@ extern long double tmpl_LDouble_NaN(void);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Reverse_Double_Array                                             *
+ *      tmpl_Double_Poly_Eval                                                 *
  *  Purpose:                                                                  *
- *      Reverses the order of a pointer to an array of real numbers.          *
+ *      Given an array of coefficients and a real number, evaluates the       *
+ *      the polynomial with the given coefficient at that point.              *
  *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          A pointer to an array.                                            *
- *      unsigned long int arrsize:                                            *
- *          The number of elements in the array.                              *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      size_t degree:                                                        *
+ *          The degree of the polynomial.                                     *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
  *  Output:                                                                   *
- *      double sinc_x:                                                        *
- *          The sinc of x.                                                    *
+ *      double poly:                                                          *
+ *          The polynomial evaluated at x.                                    *
  ******************************************************************************/
-extern void tmpl_Reverse_Float_Array(float *arr, unsigned long arrsize);
-extern void tmpl_Reverse_Double_Array(double *arr, unsigned long arrsize);
-extern void tmpl_Reverse_LDouble_Array(long double *arr, unsigned long arrsize);
+extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
+extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
+extern long double
+tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_Deriv_Eval                                           *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the nth   *
+ *      derivative of the the polynomial at that point.                       *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      unsigned int degree:                                                  *
+ *          The degree of the polynomial.                                     *
+ *      unsigned int deriv:                                                   *
+ *          The order of the derivative being applied to the polynomial.      *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double dpoly:                                                         *
+ *          The nth derivative of the polynomial evaluated at x.              *
+ ******************************************************************************/
+extern float
+tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
+                           unsigned int deriv, float x);
+
+extern double
+tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
+                            unsigned int deriv, double x);
+
+extern long double
+tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
+                             unsigned int deriv, long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2427,6 +2538,23 @@ extern long double tmpl_LDouble_Pow2(signed int expo);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Reverse_Array                                             *
+ *  Purpose:                                                                  *
+ *      Reverses the order of a pointer to an array of real numbers.          *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          A pointer to an array.                                            *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      None (void):                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_Reverse_Array(float *arr, size_t len);
+extern void tmpl_Double_Reverse_Array(double *arr, size_t len);
+extern void tmpl_LDouble_Reverse_Array(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Sinc                                                      *
  *  Purpose:                                                                  *
  *      Computes the sinc function sinc(x) = sin(x)/x (with limit 1 at x = 0).*
@@ -2440,6 +2568,22 @@ extern long double tmpl_LDouble_Pow2(signed int expo);
 extern float tmpl_Float_Sinc(float x);
 extern double tmpl_Double_Sinc(double x);
 extern long double tmpl_LDouble_Sinc(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SincPi                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the normalized sinc function sinc(x) = sin(pi x)/(pi x).     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sincpi_x:                                                      *
+ *          The normalized sinc of x.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_SincPi(float x);
+extern double tmpl_Double_SincPi(double x);
+extern long double tmpl_LDouble_SincPi(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2698,35 +2842,6 @@ extern long double tmpl_LDouble_Tan(long double x);
 extern float tmpl_Float_Tanh(float x);
 extern double tmpl_Double_Tanh(double x);
 extern long double tmpl_LDouble_Tanh(long double x);
-
-extern float
-tmpl_Real_Poly_Float_Coeffs(float *coeffs, unsigned int degree, float x);
-
-extern double
-tmpl_Real_Poly_Double_Coeffs(double *coeffs, unsigned int degree, double x);
-
-extern long double
-tmpl_Real_Poly_LDouble_Coeffs(long double *coeffs,
-                              unsigned int degree,
-                              long double x);
-
-extern float
-tmpl_Real_Poly_Deriv_Float_Coeffs(float *coeffs,
-                                  unsigned int degree,
-                                  unsigned int deriv,
-                                  float x);
-
-extern double
-tmpl_Real_Poly_Deriv_Double_Coeffs(double *coeffs,
-                                   unsigned int degree,
-                                   unsigned int deriv,
-                                   double x);
-
-extern long double
-tmpl_Real_Poly_Deriv_LDouble_Coeffs(long double *coeffs,
-                                    unsigned int degree,
-                                    unsigned int deriv,
-                                    long double x);
 
 /*  Macro for positive infinity                                               */
 #define TMPL_INFINITYF (tmpl_Float_Infinity())
