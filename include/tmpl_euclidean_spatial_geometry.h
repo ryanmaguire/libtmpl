@@ -107,15 +107,15 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
  *          tmpl_three_vector_add_ldouble_huge_time_test.c                    *
  *          tmpl_three_vector_add_ldouble_small_time_test.c                   *
  ******************************************************************************/
-extern tmpl_ThreeVectorFloat
+TMPL_EXPORT extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
                  const tmpl_ThreeVectorFloat *Q);
 
-extern tmpl_ThreeVectorDouble
+TMPL_EXPORT extern tmpl_ThreeVectorDouble
 tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble *P,
                   const tmpl_ThreeVectorDouble *Q);
 
-extern tmpl_ThreeVectorLongDouble
+TMPL_EXPORT extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
                    const tmpl_ThreeVectorLongDouble *Q);
 
@@ -208,15 +208,15 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
  *          tmpl_three_vector_cross_product_ldouble_huge_time_test.c          *
  *          tmpl_three_vector_cross_product_ldouble_small_time_test.c         *
  ******************************************************************************/
-extern tmpl_ThreeVectorFloat
+TMPL_EXPORT extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat *P,
                            const tmpl_ThreeVectorFloat *Q);
 
-extern tmpl_ThreeVectorDouble
+TMPL_EXPORT extern tmpl_ThreeVectorDouble
 tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble *P,
                             const tmpl_ThreeVectorDouble *Q);
 
-extern tmpl_ThreeVectorLongDouble
+TMPL_EXPORT extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
                              const tmpl_ThreeVectorLongDouble *Q);
 
@@ -310,15 +310,15 @@ tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
  *          tmpl_three_vector_dot_product_ldouble_huge_time_test.c            *
  *          tmpl_three_vector_dot_product_ldouble_small_time_test.c           *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat *P,
                          const tmpl_ThreeVectorFloat *Q);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble *P,
                           const tmpl_ThreeVectorDouble *Q);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
                            const tmpl_ThreeVectorLongDouble *Q);
 
@@ -347,9 +347,9 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
  *          tmpl_three_vector_l1_norm_double.c                                *
  *          tmpl_three_vector_l1_norm_ldouble.c                               *
  ******************************************************************************/
-extern float tmpl_3DFloat_L1_Norm(tmpl_ThreeVectorFloat P);
-extern double tmpl_3DDouble_L1_Norm(tmpl_ThreeVectorDouble P);
-extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
+TMPL_EXPORT extern float tmpl_3DFloat_L1_Norm(tmpl_ThreeVectorFloat P);
+TMPL_EXPORT extern double tmpl_3DDouble_L1_Norm(tmpl_ThreeVectorDouble P);
+TMPL_EXPORT extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
 
 /******************************************************************************
  *  Function:                                                                 *

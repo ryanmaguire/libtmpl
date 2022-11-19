@@ -395,13 +395,13 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
  *      implementations that support IEEE floating-point arithmetic. This     *
  *      includes GNU's glibc/gcc and clang.                                   *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_CFloat_Argument(tmpl_ComplexFloat z);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_CDouble_Argument(tmpl_ComplexDouble z);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -420,13 +420,13 @@ tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
  *      tmpl_Bool comp:                                                       *
  *          A Boolean indicating whether or not z0 and z1 are the same.       *
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_CFloat_Compare(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_CDouble_Compare(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
@@ -516,13 +516,13 @@ tmpl_CLDouble_Cosh(tmpl_ComplexLongDouble z);
  *      tmpl_CDouble_Subtract followed by tmpl_CDouble_Abs. This saves a      *
  *      redundant function call and makes code look cleaner.                  *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
@@ -544,13 +544,13 @@ tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      to the square root function that would be required by using the       *
  *      tmpl_CDouble_Dist function.                                           *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_CFloat_Dist_Squared(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_CDouble_Dist_Squared(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0,
                            tmpl_ComplexLongDouble z1);
 
@@ -756,13 +756,13 @@ tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z);
  *      double real:                                                          *
  *          The imaginary part of z.                                          *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_CFloat_Imag_Part(tmpl_ComplexFloat z);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_CDouble_Imag_Part(tmpl_ComplexDouble z);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -807,13 +807,13 @@ tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
  *      Using log rules we can avoid a redudant call to the square root       *
  *      function. This increases performance and accuracy.                    *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_CFloat_Log_Abs(tmpl_ComplexFloat z);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_CDouble_Log_Abs(tmpl_ComplexDouble z);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1121,9 +1121,9 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-extern float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z);
-extern double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z);
-extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
+TMPL_EXPORT extern float tmpl_CFloat_QuickAbs(tmpl_ComplexFloat z);
+TMPL_EXPORT extern double tmpl_CDouble_QuickAbs(tmpl_ComplexDouble z);
+TMPL_EXPORT extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
@@ -1140,7 +1140,7 @@ extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
  *      double real:                                                          *
  *          The real part of z.                                               *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_CFloat_Real_Part(tmpl_ComplexFloat z);
 
 extern double

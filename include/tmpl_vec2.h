@@ -665,16 +665,16 @@ tmpl_TwoVector_Euclidean_Rel_Angle(tmpl_TwoVector O, tmpl_TwoVector P,
  *          A Boolean that is true if A, B, and C are collinear, and false    *
  *          otherwise.                                                        *
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_TwoVector_Euclidean_Is_Collinear(tmpl_TwoVector A,
                                       tmpl_TwoVector B,
                                       tmpl_TwoVector C);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_TwoVector_Euclidean_Distance(tmpl_TwoVector A, tmpl_TwoVector B);
 
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_LineSegment2D_Intersect(tmpl_LineSegment2D L0, tmpl_LineSegment2D L1);
 
 #endif

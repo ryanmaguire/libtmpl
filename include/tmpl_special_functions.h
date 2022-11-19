@@ -25,49 +25,49 @@ tmpl_CDouble_Fresnel_Cos(tmpl_ComplexDouble z);
 TMPL_EXPORT extern tmpl_ComplexDouble
 tmpl_CDouble_Fresnel_Sin(tmpl_ComplexDouble z);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Bessel_I0(float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Bessel_I0(double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Bessel_I0(long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Bessel_J0(float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Bessel_J0(double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Bessel_J0(long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_LambertW(float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_LambertW(double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_LambertW(long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Fresnel_Cos(float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Fresnel_Cos(double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Fresnel_Cos(long double x);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Fresnel_Sin(float x);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Fresnel_Sin(double x);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Fresnel_Sin(long double x);
 
 
@@ -82,10 +82,10 @@ tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
                                  double *alt_legendre_p,
                                  double Legendre_Coeff, unsigned int order);
 
-extern unsigned long **
+TMPL_EXPORT extern unsigned long **
 tmpl_Where_Lesser_Char(char *data, unsigned long dim, double threshold);
 
-extern unsigned long **
+TMPL_EXPORT extern unsigned long **
 tmpl_Where_Lesser_UChar(unsigned char *data, unsigned long dim,
                         double threshold);
 

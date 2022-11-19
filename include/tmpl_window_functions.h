@@ -4,7 +4,7 @@
 /*  complex data types are defined here.                                      */
 #include <libtmpl/include/tmpl_complex.h>
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,
                                   long dim, double dx, double f_scale);
 

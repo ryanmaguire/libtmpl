@@ -8,23 +8,23 @@
 
 #include <libtmpl/include/tmpl_complex.h>
 
-extern float
+TMPL_EXPORT extern float
 Fresnel_Scale_Float(float lambda, float d, float phi, float b);
 
-extern double
+TMPL_EXPORT extern double
 Fresnel_Scale_Double(double lambda, double d, double phi, double b);
 
-extern long double
+TMPL_EXPORT extern long double
 Fresnel_Scale_LDouble(long double lambda, long double d,
                       long double phi, long double b);
 
-extern float tmpl_Float_Resolution_Inverse(float x);
-extern double tmpl_Double_Resolution_Inverse(double x);
-extern long double tmpl_LDouble_Resolution_Inverse(long double x);
+TMPL_EXPORT extern float tmpl_Float_Resolution_Inverse(float x);
+TMPL_EXPORT extern double tmpl_Double_Resolution_Inverse(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Resolution_Inverse(long double x);
 
-extern float tmpl_Float_Wavelength_To_Wavenumber(float x);
-extern double tmpl_Double_Wavelength_To_Wavenumber(double x);
-extern long double tmpl_LDouble_Wavelength_To_Wavenumber(long double x);
+TMPL_EXPORT extern float tmpl_Float_Wavelength_To_Wavenumber(float x);
+TMPL_EXPORT extern double tmpl_Double_Wavelength_To_Wavenumber(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Wavelength_To_Wavenumber(long double x);
 
 extern float tmpl_Float_Frequency_To_Wavelength(float x);
 extern double tmpl_Double_Frequency_To_Wavelength(double x);
