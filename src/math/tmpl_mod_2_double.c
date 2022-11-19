@@ -67,7 +67,7 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 30, 2022                                             *
+ *  Date:       September 30, 2022                                            *
  ******************************************************************************/
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro and function prototype found here.          */

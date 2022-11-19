@@ -58,6 +58,8 @@
 #ifndef TMPL_KNOTS_H
 #define TMPL_KNOTS_H
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -153,7 +155,7 @@ typedef struct tmpl_KnotArcs_Def {
  *      tmpl_Bool endianness:                                                 *
  *          A Boolean which determines whether or not the tuples are equal.   *
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_Are_Gauss_Tuples_Identical(tmpl_GaussTuple *T0, tmpl_GaussTuple *T1);
 
 /******************************************************************************
@@ -170,7 +172,7 @@ tmpl_Are_Gauss_Tuples_Identical(tmpl_GaussTuple *T0, tmpl_GaussTuple *T1);
  *      tmpl_Bool endianness:                                                 *
  *          A Boolean which determines whether or not the two knots are equal.*
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_Are_Virtual_Knots_Identical(tmpl_VirtualKnot *K0, tmpl_VirtualKnot *K1);
 
 /******************************************************************************
@@ -250,7 +252,7 @@ TMPL_EXPORT extern void tmpl_Destroy_Virtual_Knot_Pointer(tmpl_VirtualKnot **K_p
  *      tmpl_VirtualKnot *K:                                                  *
  *          A pointer to a virtual knot struct given by the Gauss code of str.*
  ******************************************************************************/
-extern tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str);
+TMPL_EXPORT extern tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -268,10 +270,10 @@ extern tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str);
  ******************************************************************************/
 TMPL_EXPORT extern void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_Is_Gauss_Code_Valid(tmpl_VirtualKnot *K);
 
-extern tmpl_CrossingIndices *
+TMPL_EXPORT extern tmpl_CrossingIndices *
 tmpl_Find_Crossing_Indices(tmpl_VirtualKnot *K);
 
 TMPL_EXPORT extern void
@@ -280,10 +282,10 @@ tmpl_Reidemeister_One_Reduction(tmpl_VirtualKnot *K);
 unsigned long int
 tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K);
 
-extern tmpl_PolynomialZ *
+TMPL_EXPORT extern tmpl_PolynomialZ *
 tmpl_Alexander_Polynomial(tmpl_VirtualKnot *K);
 
-extern tmpl_KnotArcs *
+TMPL_EXPORT extern tmpl_KnotArcs *
 tmpl_Compute_Knot_Arcs(tmpl_VirtualKnot *K);
 
 TMPL_EXPORT extern void

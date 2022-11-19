@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-list(
-    APPEND
-    CMAKE_MODULE_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_BINARY_DIR})
 include(ParseCStandard)
 
 option(
@@ -65,11 +60,7 @@ installed to use this. This option is ignored if `LIBTMPL_NO_ASM=1` is set."
 option(LIBTMPL_NO_LONGLONG "" FALSE)
 option(LIBTMPL_NO_INT "" FALSE)
 option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests" FALSE)
-option(
-    LIBTMPL_BUILD_EXAMPLES
-    "Set to TRUE to enable the building of examples"
-    FALSE
-)
+option(LIBTMPL_BUILD_EXAMPLES "Set to TRUE to enable the building of examples" FALSE)
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
 
 if(NOT DEFINED LIBTMPL_STDVER)
@@ -78,10 +69,7 @@ endif()
 
 # Download automatically, you can also just copy the conan.cmake file
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
-    message(
-        STATUS
-        "Downloading conan.cmake from https://github.com/conan-io/cmake-conan"
-    )
+    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
     file(
         DOWNLOAD
             "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
@@ -104,7 +92,7 @@ conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 include(FindBoost)
 add_library(tmpl SHARED)
-
+add_library(tmpl::tmpl ALIAS tmpl)
 target_include_directories(
     tmpl
     PUBLIC
@@ -124,26 +112,25 @@ add_custom_command(
     DEPENDS tmpl_config
     COMMAND "$<TARGET_FILE:tmpl_config>"
     COMMAND
-        ${CMAKE_COMMAND} -E copy
-        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h ${CMAKE_CURRENT_SOURCE_DIR}/include
     COMMAND
-        ${CMAKE_COMMAND} -E copy
-        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h ${CMAKE_CURRENT_SOURCE_DIR}/include
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM
 )
 
 target_sources(
     tmpl
-    PUBLIC
-        FILE_SET HEADERS
-        BASE_DIRS
-            ${CMAKE_CURRENT_SOURCE_DIR}/include
-            ${CMAKE_CURRENT_BINARY_DIR}/include
+    PUBLIC FILE_SET HEADERS BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 add_subdirectory("include")
+# Copy the export header to include/
+add_custom_command(
+    TARGET tmpl
+    POST_BUILD
+    COMMAND
+        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_exports.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 set_c_standard(TARGET tmpl
     STDVER "${LIBTMPL_STDVER}"
@@ -154,15 +141,9 @@ include(CheckIPOSupported)
 # Optional IPO. Do not use IPO if it's not supported by compiler.
 check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT IPO_CHECK_OUTPUT)
 if(IPO_SUPPORTED)
-    message(
-        STATUS
-        "Interprocedural Optimization/Link-Time Optimization is supported."
-    )
+    message(STATUS "Interprocedural Optimization/Link-Time Optimization is supported.")
 else()
-    message(
-        WARNING
-        "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}"
-    )
+    message(WARNING "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}")
 endif()
 
 if(LIBTMPL_NO_LONGLONG)
@@ -272,12 +253,43 @@ if(NOT LIBTMPL_NO_INLINE)
         "tmpl_copysign_float.c"
         "tmpl_copysign_double.c"
         "tmpl_copysign_ldouble.c"
+        "tmpl_cosd_maclaurin_double.c"
+        "tmpl_cosd_maclaurin_float.c"
+        "tmpl_cosd_maclaurin_ldouble.c"
+        "tmpl_cosh_maclaurin_double.c"
+        "tmpl_cosh_maclaurin_float.c"
+        "tmpl_cosh_maclaurin_ldouble.c"
+        "tmpl_cosh_pade_double.c"
+        "tmpl_cosh_pade_float.c"
+        "tmpl_cosh_pade_ldouble.c"
+        "tmpl_exp_maclaurin_double.c"
+        "tmpl_exp_maclaurin_float.c"
+        "tmpl_exp_maclaurin_ldouble.c"
+        "tmpl_exp_pade_double.c"
+        "tmpl_exp_pade_float.c"
+        "tmpl_exp_pade_ldouble.c"
+        "tmpl_cospi_maclaurin_double.c"
+        "tmpl_cospi_maclaurin_float.c"
+        "tmpl_cospi_maclaurin_ldouble.c"
+        "tmpl_dist_float.c"
+        "tmpl_dist_double.c"
+        "tmpl_dist_ldouble.c"
+        "tmpl_exp_neg_kernel_double.c"
+        "tmpl_exp_neg_kernel_float.c"
+        "tmpl_exp_pos_kernel_double.c"
+        "tmpl_exp_pos_kernel_float.c"
         "tmpl_sin_pade_double.c"
-        "tmpl_sin_pade_float.c" # FIXME: "tmpl_sin_pade_float.c" not found
-        "tmpl_sin_pade_ldouble.c" # FiXME: tmpl_sin_pade_ldouble.c not found
+        "tmpl_sin_pade_float.c"
+        "tmpl_sin_pade_ldouble.c"
         "tmpl_sin_pade_pi_double.c"
-        "tmpl_sin_pade_pi_float.c" # FIXME: tmpl_sin_pade_pi_float.c not found
-        "tmpl_sin_pade_pi_ldouble.c" # FIXME: tmpl_sin_pade_pi_ldouble.c not found
+        "tmpl_sin_pade_pi_float.c"
+        "tmpl_sin_pade_pi_ldouble.c"
+        "tmpl_sind_maclaurin_double.c"
+        "tmpl_sind_maclaurin_float.c"
+        "tmpl_sind_maclaurin_ldouble.c"
+        "tmpl_sinpi_maclaurin_double.c"
+        "tmpl_sinpi_maclaurin_float.c"
+        "tmpl_sinpi_maclaurin_ldouble.c"
         "tmpl_sin_very_small_double.c"
     )
 endif()
@@ -302,52 +314,13 @@ if(NOT LIBTMPL_NO_ASM)
         if(NOT LIBTMPL_NO_BUILTIN)
             # This includes Windows AMD64 and Unix x86_64
             add_subdirectory("src/builtins/x86_64")
-
-            list(
-                APPEND
-                SOURCE_EXCLUSION_LIST
-                "tmpl_cos_double.c"
-                "tmpl_cos_float.c"
-                "tmpl_cos_ldouble.c"
-                "tmpl_sin_double.c"
-                "tmpl_sin_float.c"
-                "tmpl_sin_ldouble.c"
-                "tmpl_sincos_double.c"
-                "tmpl_sincos_float.c"
-                "tmpl_sincos_ldouble.c"
-            )
         endif()
 
         if(LIBTMPL_FASM)
             add_subdirectory("src/assembly/fasm")
-            list(
-                APPEND
-                SOURCE_EXCLUSION_LIST
-                "tmpl_sqrt_double.c"
-                "tmpl_sqrt_float.c"
-            )
-
             # TODO add checks for fasm compatibility
         elseif()
             add_subdirectory("src/assembly/x86_64")
-            list(
-                APPEND
-                SOURCE_EXCLUSION_LIST
-                "tmpl_trailing_zeros_char.c"
-                "tmpl_trailing_zeros_int.c"
-                "tmpl_trailing_zeros_long.c"
-                "tmpl_trailing_zeros_short.c"
-                "tmpl_trailing_zeros_uint.c"
-                "tmpl_trailing_zeros_uchar.c"
-                "tmpl_trailing_zeros_ulong.c"
-                "tmpl_trailing_zeros_ushort.c"
-                "tmpl_sqrt_double.c"
-                "tmpl_sqrt_float.c"
-                "tmpl_sqrt_ldouble.c"
-                "tmpl_floor_double.c"
-                "tmpl_floor_float.c"
-                "tmpl_floor_ldouble.c"
-            )
         endif()
     elseif(system_processor IN_LIST ARM64_ARCHES)
         enable_language(ASM)
@@ -355,35 +328,14 @@ if(NOT LIBTMPL_NO_ASM)
         if(NOT LIBTMPL_NO_BUILTIN)
             set(ARM64_USE_BUILTIN TRUE)
             add_subdirectory("src/builtins/aarch64")
-            list(
-                APPEND
-                SOURCE_EXCLUSION_LIST
-                "tmpl_cos_double.c"
-                "tmpl_cos_float.c"
-                "tmpl_cos_ldouble.c"
-                "tmpl_floor_ldouble.c"
-                "tmpl_sin_double.c"
-                "tmpl_sin_float.c"
-                "tmpl_sin_ldouble.c"
-                "tmpl_sincos_double.c" #FIXME file not found
-                "tmpl_sincos_float.c" #FIXME file not found
-                "tmpl_sincos_ldouble.c" #FIXME file not found
-                "tmpl_sqrt_ldouble.c"
-            )
         endif()
 
         add_subdirectory("src/assembly/aarch64")
+
     elseif(system_processor IN_LIST ARMHF_ARCHES)
         enable_language(ASM)
 
         add_subdirectory("src/assembly/armv7l")
-        list(
-            APPEND
-            SOURCE_EXCLUSION_LIST
-            "tmpl_sqrt_double.c"
-            "tmpl_sqrt_float.c"
-            "tmpl_sqrt_ldouble.c"
-        )
     endif()
 endif()
 
@@ -392,8 +344,6 @@ if(SOURCE_EXCLUSION_LIST_SIZE GREATER 1)
     list(REMOVE_DUPLICATES SOURCE_EXCLUSION_LIST)
     list(SORT SOURCE_EXCLUSION_LIST)
 endif()
-
-add_library(tmpl::tmpl ALIAS tmpl)
 
 add_subdirectory("src")
 if(LIBTMPL_BUILD_TESTS)

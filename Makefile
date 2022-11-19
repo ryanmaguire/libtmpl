@@ -88,16 +88,43 @@ INLINE_EXCLUDE := \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
 	-not -name "tmpl_copysign_ldouble.c" -and \
+	-not -name "tmpl_cosd_maclaurin_double.c" -and \
+	-not -name "tmpl_cosd_maclaurin_float.c" -and \
+	-not -name "tmpl_cosd_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_cosh_maclaurin_double.c" -and \
+	-not -name "tmpl_cosh_maclaurin_float.c" -and \
+	-not -name "tmpl_cosh_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_cosh_pade_double.c" -and \
+	-not -name "tmpl_cosh_pade_float.c" -and \
+	-not -name "tmpl_cosh_pade_ldouble.c" -and \
+	-not -name "tmpl_exp_maclaurin_double.c" -and \
+	-not -name "tmpl_exp_maclaurin_float.c" -and \
+	-not -name "tmpl_exp_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_exp_pade_double.c" -and \
+	-not -name "tmpl_exp_pade_float.c" -and \
+	-not -name "tmpl_exp_pade_ldouble.c" -and \
+	-not -name "tmpl_cospi_maclaurin_double.c" -and \
+	-not -name "tmpl_cospi_maclaurin_float.c" -and \
+	-not -name "tmpl_cospi_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_dist_float.c" -and \
+	-not -name "tmpl_dist_double.c" -and \
+	-not -name "tmpl_dist_ldouble.c" -and \
+	-not -name "tmpl_exp_neg_kernel_double.c" -and \
+	-not -name "tmpl_exp_neg_kernel_float.c" -and \
+	-not -name "tmpl_exp_pos_kernel_double.c" -and \
+	-not -name "tmpl_exp_pos_kernel_float.c" -and \
 	-not -name "tmpl_sin_pade_double.c" -and \
 	-not -name "tmpl_sin_pade_float.c" -and \
-	# FIXME: "tmpl_sin_pade_float.c" not found
 	-not -name "tmpl_sin_pade_ldouble.c" -and \
-	# FiXME: tmpl_sin_pade_ldouble.c not found
 	-not -name "tmpl_sin_pade_pi_double.c" -and \
 	-not -name "tmpl_sin_pade_pi_float.c" -and \
-	# FIXME: tmpl_sin_pade_pi_float.c not found
 	-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
-	# FIXME: tmpl_sin_pade_pi_ldouble.c not found
+	-not -name "tmpl_sind_maclaurin_double.c" -and \
+	-not -name "tmpl_sind_maclaurin_float.c" -and \
+	-not -name "tmpl_sind_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_double.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_float.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_ldouble.c" -and \
 	-not -name "tmpl_sin_very_small_double.c" -and
 endif
 
@@ -268,21 +295,21 @@ DEPS := $(OBJS:.o=.d)
 
 all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
 
-include/tmpl_config.h: ./config.c
+include/tmpl_config.h: ./config.c $(BUILD_DIR)
 	$(CC) $(ALLCFLAGS) config.c -o config.out
 	./config.out
 	rm -f config.out
 
-$(TARGET_LIB): $(OBJS)
+$(TARGET_LIB): $(OBJS) include/tmpl_config.h
 	$(CC) $(OBJS) $(LFLAGS) -o $@
 
-$(BUILD_DIR)/%.c.o: %.c
+$(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.S.o: %.S
+$(BUILD_DIR)/%.S.o: %.S include/tmpl_config.h
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.fasm.o: %.fasm
+$(BUILD_DIR)/%.fasm.o: %.fasm include/tmpl_config.h
 	fasm $< $@
 
 $(BUILD_DIR):
@@ -349,3 +376,4 @@ uninstall:
 	rm -f /usr/local/lib/$(TARGET_LIB)
 
 -include $(DEPS)
+

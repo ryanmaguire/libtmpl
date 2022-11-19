@@ -11,3 +11,18 @@ target_sources(
         tmpl_sincos_float_x86_64.S
         tmpl_sincos_ldouble_x86_64.S
 )
+
+
+            list(
+                APPEND
+                SOURCE_EXCLUSION_LIST
+                "tmpl_cos_double.c"
+                "tmpl_cos_float.c"
+                "tmpl_cos_ldouble.c"
+                "tmpl_sin_double.c"
+                "tmpl_sin_float.c"
+                "tmpl_sin_ldouble.c"
+                "tmpl_sincos_double.c"
+                "tmpl_sincos_float.c"
+                "tmpl_sincos_ldouble.c"
+            )

@@ -191,9 +191,9 @@ TMPL_EXPORT extern char tmpl_Lower_Case(char c);
  *  Examples:                                                                 *
  *      libtmpl/examples/string/tmpl_strdup_example.c                         *
  ******************************************************************************/
-extern char *tmpl_strdup(const char *str);
+TMPL_EXPORT extern char *tmpl_strdup(const char *str);
 
-extern char tmpl_Upper_Case(char c);
+TMPL_EXPORT extern char tmpl_Upper_Case(char c);
 
 TMPL_EXPORT extern void tmpl_Make_Lower(char *str);
 TMPL_EXPORT extern void tmpl_Remove_Spaces(char * str);

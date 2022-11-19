@@ -27,14 +27,7 @@
  *  1.) tmpl_math.h:                                                          *
  *      Header file where all of these constants are declared.                *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 7, 2021                                                   *
  ******************************************************************************/
 
@@ -220,4 +213,3 @@ tmpl_Min_LDouble_Base_E = -706.89362354917202499352337658809981173L;
 const long double
 tmpl_Max_LDouble_Base_E = 709.19620864216607067754136804278417594L;
 #endif
-

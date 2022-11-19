@@ -1,3 +1,40 @@
+[x] abs
+[x] atan2
+[x] atan
+[x] cbrt
+[x] frexp
+[x] copysign
+[ ] cos
+[ ] cosh
+[x] dist
+[ ] erf
+[ ] erfc
+[ ] erfcx
+[ ] exp
+[ ] factorial
+[ ] falling_factorial
+[ ] faddeeva_im_part
+[ ] floor
+[ ] infinity
+[ ] is_inf
+[ ] is_nan
+[ ] is_nan_or_inf
+[ ] log
+[ ] max
+[ ] min
+[ ] mod_2
+[ ] nan
+[ ] poly_eval
+[ ] poly_deriv_eval
+[ ] pow_2
+[ ] reverse
+[ ] sinc
+[ ] sin
+[ ] sinh
+[ ] sqrt
+[ ] tan
+[ ] tanh
+
 Run api-sanity-checker on library and pass generated tests.
 
 Finish Proofreading:
@@ -91,11 +128,11 @@ Graph theory code:
     Compute homology.
 
 Add these back;
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_PoincareDiskMobiusTransform(tmpl_ComplexDouble z,
                                  tmpl_ComplexDouble w);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
                                         tmpl_ComplexDouble w);
 
@@ -115,3 +152,27 @@ tmpl_PoincareDiskInverseMobiusTransform(tmpl_ComplexDouble z,
 	Plane struct
 	intersection of planes
 	Center of 4 non-coplanar points.
+
+Astro stuff:
+    01 et2utc   [ ]
+    02 kclear   [ ]
+    03 furnsh   [ ]
+    04 tipbpod  [ ]
+    05 recrad   [ ]
+    06 spkezp   [ ]
+    06 dpr      [x]
+    07 rpd      [x]
+    08 eul2m    [ ]
+    09 bodvar   [ ]
+    10 utc2et   [ ]
+    11 vnorm    [x]
+    12 bodn2c   [ ]
+    13 ltime    [ ]
+    14 tkvrsn   [ ]
+    15 spkpos   [ ]
+    16 vsep     [ ]
+    17 clight   [x]
+    18 nplnpt   [ ]
+    19 vsubg    [ ]
+    20 vhat     [x]
+    21 vdot     [x]

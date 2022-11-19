@@ -20,65 +20,182 @@ set(sources
     tmpl_arctan_very_small_double.c
     tmpl_arctan_very_small_float.c
     tmpl_arctan_very_small_ldouble.c
+    tmpl_array_max_double.c
+    tmpl_array_max_float.c
+    tmpl_array_max_ldouble.c
+    tmpl_array_min_double.c
+    tmpl_array_min_float.c
+    tmpl_array_min_ldouble.c
+    tmpl_array_minmax_double.c
+    tmpl_array_minmax_float.c
+    tmpl_array_minmax_ldouble.c
     tmpl_base2_mant_and_exp_double.c
     tmpl_base2_mant_and_exp_float.c
+    tmpl_base2_mant_and_exp_ldouble.c
     tmpl_cbrt_double.c
     tmpl_cbrt_float.c
+    tmpl_cbrt_ldouble.c
     tmpl_cbrt_pade_double.c
     tmpl_cbrt_pade_float.c
     tmpl_cbrt_pade_ldouble.c
+    tmpl_cbrt_table_double.c
+    tmpl_cbrt_table_float.c
+    tmpl_cbrt_table_ldouble.c
     tmpl_cbrt_taylor_double.c
     tmpl_cbrt_taylor_float.c
+    tmpl_cbrt_taylor_ldouble.c
     tmpl_copysign_double.c
     tmpl_copysign_float.c
     tmpl_copysign_ldouble.c
     tmpl_cos_double.c
     tmpl_cos_float.c
     tmpl_cos_ldouble.c
-    tmpl_cosh.c
-    tmpl_dist.c
+    tmpl_cosd_double.c
+    tmpl_cosd_float.c
+    tmpl_cosd_ldouble.c
+    tmpl_cosd_maclaurin_double.c
+    tmpl_cosd_maclaurin_float.c
+    tmpl_cosd_maclaurin_ldouble.c
+    tmpl_cosd_table_double.c
+    tmpl_cosd_table_float.c
+    tmpl_cosd_table_ldouble.c
+    tmpl_cosh_double.c
+    tmpl_cosh_float.c
+    tmpl_cosh_ldouble.c
+    tmpl_cosh_maclaurin_double.c
+    tmpl_cosh_maclaurin_float.c
+    tmpl_cosh_maclaurin_ldouble.c
+    tmpl_cosh_pade_double.c
+    tmpl_cosh_pade_float.c
+    tmpl_cosh_pade_ldouble.c
+    tmpl_cospi_double.c
+    tmpl_cospi_float.c
+    tmpl_cospi_ldouble.c
+    tmpl_cospi_maclaurin_double.c
+    tmpl_cospi_maclaurin_float.c
+    tmpl_cospi_maclaurin_ldouble.c
+    tmpl_cospi_table_double.c
+    tmpl_cospi_table_float.c
+    tmpl_cospi_table_ldouble.c
+    tmpl_dist_double.c
+    tmpl_dist_float.c
+    tmpl_dist_ldouble.c
     tmpl_erf.c
     tmpl_erfc.c
     tmpl_erfcx.c
-    tmpl_exp.c
-    tmpl_factorial.c
-    tmpl_factorial_as_double.c
+    tmpl_exp_double.c
+    tmpl_exp_float.c
+    tmpl_exp_ldouble.c
+    tmpl_exp_maclaurin_double.c
+    tmpl_exp_maclaurin_float.c
+    tmpl_exp_neg_kernel_double.c
+    tmpl_exp_neg_kernel_float.c
+    tmpl_exp_pade_double.c
+    tmpl_exp_pade_float.c
+    tmpl_exp_pade_ldouble.c
+    tmpl_exp_pos_kernel_double.c
+    tmpl_exp_pos_kernel_float.c
+    tmpl_exp_table_double.c
+    tmpl_exp_table_float.c
+    tmpl_exp_table_ldouble.c
+    tmpl_factorial_double.c
+    tmpl_factorial_float.c
     tmpl_faddeeva_im.c
     tmpl_falling_factorial.c
     tmpl_floor_double.c
     tmpl_floor_float.c
     tmpl_floor_ldouble.c
-    tmpl_infinity.c
-    tmpl_is_inf.c
-    tmpl_is_nan.c
-    tmpl_is_nan_or_inf.c
+    tmpl_infinity_double.c
+    tmpl_infinity_float.c
+    tmpl_infinity_ldouble.c
+    tmpl_is_inf_double.c
+    tmpl_is_inf_float.c
+    tmpl_is_inf_ldouble.c
+    tmpl_is_nan_double.c
+    tmpl_is_nan_float.c
+    tmpl_is_nan_ldouble.c
+    tmpl_is_nan_or_inf_double.c
+    tmpl_is_nan_or_inf_float.c
+    tmpl_is_nan_or_inf_ldouble.c
     tmpl_log_double.c
     tmpl_log_float.c
     tmpl_log_ldouble.c
+    tmpl_log_table_double.c
+    tmpl_log_table_float.c
+    tmpl_log_table_ldouble.c
     tmpl_math_constants.c
-    tmpl_minmax.c
-    tmpl_mod_2.c
+    tmpl_max_double.c
+    tmpl_max_float.c
+    tmpl_max_ldouble.c
+    tmpl_min_double.c
+    tmpl_min_float.c
+    tmpl_min_ldouble.c
     tmpl_mod_2_double.c
     tmpl_mod_2_float.c
-    tmpl_nan.c
-    tmpl_poly_deriv.c
-    tmpl_polynomial.c
+    tmpl_mod_2_ldouble.c
+    tmpl_mod_360_double.c
+    tmpl_mod_360_float.c
+    tmpl_mod_360_ldouble.c
+    tmpl_nan_double.c
+    tmpl_nan_float.c
+    tmpl_nan_ldouble.c
+    tmpl_poly_deriv_eval_double.c
+    tmpl_poly_deriv_eval_float.c
+    tmpl_poly_deriv_eval_ldouble.c
+    tmpl_poly_eval_double.c
+    tmpl_poly_eval_float.c
+    tmpl_poly_eval_ldouble.c
     tmpl_pow2_double.c
     tmpl_pow2_float.c
-    tmpl_reverse_array.c
+    tmpl_pow2_ldouble.c
+    tmpl_rcpr_table_double.c
+    tmpl_rcpr_table_float.c
+    tmpl_rcpr_table_ldouble.c
+    tmpl_reverse_array_double.c
+    tmpl_reverse_array_float.c
+    tmpl_reverse_array_ldouble.c
     tmpl_sin_double.c
     tmpl_sin_float.c
     tmpl_sin_ldouble.c
     tmpl_sin_pade_double.c
     tmpl_sin_pade_pi_double.c
     tmpl_sin_very_small_double.c
-    tmpl_sinc.c
-    tmpl_sinh.c
+    tmpl_sinc_double.c
+    tmpl_sinc_float.c
+    tmpl_sinc_ldouble.c
+    tmpl_sincpi_double.c
+    tmpl_sincpi_float.c
+    tmpl_sincpi_ldouble.c
+    tmpl_sind_double.c
+    tmpl_sind_float.c
+    tmpl_sind_ldouble.c
+    tmpl_sind_maclaurin_double.c
+    tmpl_sind_maclaurin_float.c
+    tmpl_sind_maclaurin_ldouble.c
+    tmpl_sind_table_double.c
+    tmpl_sind_table_float.c
+    tmpl_sind_table_ldouble.c
+    tmpl_sinh_double.c
+    tmpl_sinh_float.c
+    tmpl_sinh_ldouble.c
+    tmpl_sinpi_double.c
+    tmpl_sinpi_float.c
+    tmpl_sinpi_ldouble.c
+    tmpl_sinpi_maclaurin_double.c
+    tmpl_sinpi_maclaurin_float.c
+    tmpl_sinpi_maclaurin_ldouble.c
+    tmpl_sinpi_table_double.c
+    tmpl_sinpi_table_float.c
+    tmpl_sinpi_table_ldouble.c
     tmpl_sqrt_double.c
     tmpl_sqrt_float.c
     tmpl_sqrt_ldouble.c
-    tmpl_tan.c
-    tmpl_tanh.c
+    tmpl_tan_double.c
+    tmpl_tan_float.c
+    tmpl_tan_ldouble.c
+    tmpl_tanh_double.c
+    tmpl_tanh_float.c
+    tmpl_tanh_ldouble.c
 )
 
 list(REMOVE_ITEM sources ${SOURCE_EXCLUSION_LIST})

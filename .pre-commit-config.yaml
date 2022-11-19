@@ -49,7 +49,7 @@ repos:
   #   rev: 0.5.0
 
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.0
+    rev: v3.2.2
     hooks:
     -   id: pyupgrade
         args: [--py36-plus]
@@ -79,7 +79,7 @@ repos:
 
   # --- Linters ---
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.982
+    rev: v0.991
     hooks:
     -   id: mypy
         additional_dependencies: [pandas-stubs, numpy, types-requests]
@@ -102,7 +102,7 @@ repos:
     rev: 1.6.1
     hooks:
     -   id: cpplint
-        args: [--linelength=120, '--filter=-legal/copyright,-whitespace/braces,-whitespace/newline,-build/namespaces,-build/header_guard,-build/include_order,-build/include_subdir, -whitespace/parens,-readability/casting,-runtime/threadsafe_fn,-runtime/int,-runtime/printf,-whitespace/operators,-readability/braces,-whitespace/comma,-whitespace/tab,-readability/fn_size']
+        args: [--linelength=120, '--filter=-legal/copyright,-whitespace/braces,-whitespace/newline,-whitespace/blank_line,-whitespace/indent,-build/namespaces,-build/header_guard,-build/include_order,-build/include_subdir, -whitespace/parens,-readability/casting,-runtime/threadsafe_fn,-runtime/int,-runtime/printf,-whitespace/operators,-readability/braces,-whitespace/comma,-whitespace/tab,-readability/fn_size']
 
 -   repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5

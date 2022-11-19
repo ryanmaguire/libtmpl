@@ -64,10 +64,9 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_INTEGER_H
 #define TMPL_INTEGER_H
-#include "tmpl_exports.h"
 
+#include <stdlib.h>
 #include <libtmpl/include/tmpl_inttype.h>
-
 #include <libtmpl/include/tmpl_vector.h>
 
 /******************************************************************************
@@ -82,14 +81,146 @@
  *      abs_n (int):                                                          *
  *          The absolute value of n.                                          *
  ******************************************************************************/
+#include "tmpl_exports.h"
+
+/*  Small function worth inlining.                                            */
 #if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
 #include <libtmpl/include/integer/tmpl_integer_abs_inline.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the functions in src/integer/.                              */
 TMPL_EXPORT extern signed char tmpl_Char_Abs(signed char n);
 TMPL_EXPORT extern short int tmpl_Short_Abs(short int n);
 TMPL_EXPORT extern int tmpl_Int_Abs(int n);
 TMPL_EXPORT extern long int tmpl_Long_Abs(long int n);
+
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+TMPL_EXPORT extern long long int tmpl_LLong_Abs(long long int);
 #endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Array_Max                                                    *
+ *  Purpose:                                                                  *
+ *      Compute the maximum of an array of ints.                              *
+ *  Arguments:                                                                *
+ *      int *arr:                                                             *
+ *          An array of ints.                                                 *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      int max:                                                              *
+ *          The maximum of arr.                                               *
+ ******************************************************************************/
+TMPL_EXPORT extern signed char tmpl_Char_Array_Max(signed char *arr, size_t len);
+TMPL_EXPORT extern unsigned char tmpl_UChar_Array_Max(unsigned char *arr, size_t len);
+TMPL_EXPORT extern short int tmpl_Short_Array_Max(short int *arr, size_t len);
+TMPL_EXPORT extern unsigned short tmpl_UShort_Array_Max(unsigned short *arr, size_t len);
+TMPL_EXPORT extern int tmpl_Int_Array_Max(int *arr, size_t len);
+TMPL_EXPORT extern unsigned int tmpl_UInt_Array_Max(unsigned int *arr, size_t len);
+TMPL_EXPORT extern long int tmpl_Long_Array_Max(long int *arr, size_t len);
+TMPL_EXPORT extern unsigned long tmpl_ULong_Array_Max(unsigned long *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Array_Min                                                    *
+ *  Purpose:                                                                  *
+ *      Compute the minimum of an array of ints.                              *
+ *  Arguments:                                                                *
+ *      int *arr:                                                             *
+ *          An array of ints.                                                 *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      int min:                                                              *
+ *          The minimum of arr.                                               *
+ ******************************************************************************/
+TMPL_EXPORT extern signed char tmpl_Char_Array_Min(signed char *arr, size_t len);
+TMPL_EXPORT extern unsigned char tmpl_UChar_Array_Min(unsigned char *arr, size_t len);
+TMPL_EXPORT extern short int tmpl_Short_Array_Min(short int *arr, size_t len);
+TMPL_EXPORT extern unsigned short tmpl_UShort_Array_Min(unsigned short *arr, size_t len);
+TMPL_EXPORT extern int tmpl_Int_Array_Min(int *arr, size_t len);
+TMPL_EXPORT extern unsigned int tmpl_UInt_Array_Min(unsigned int *arr, size_t len);
+TMPL_EXPORT extern long int tmpl_Long_Array_Min(long int *arr, size_t len);
+TMPL_EXPORT extern unsigned long tmpl_ULong_Array_Min(unsigned long *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Array_MinMax                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the min and max of an array of ints.                          *
+ *  Arguments:                                                                *
+ *      int *arr:                                                             *
+ *          An array of ints.                                                 *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *      int *min:                                                             *
+ *          A pointer to an int, the min is stored here.                      *
+ *      int *max:                                                             *
+ *          A pointer to an int, the max is stored here.                      *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+TMPL_EXPORT extern void
+tmpl_Char_Array_MinMax(signed char *arr, size_t len,
+                       signed char *min, signed char *max);
+
+TMPL_EXPORT extern void
+tmpl_UChar_Array_MinMax(unsigned char *arr, size_t len,
+                        unsigned char *min, unsigned char *max);
+
+TMPL_EXPORT extern void
+tmpl_Short_Array_MinMax(short int *arr, size_t len,
+                        short int *min, short int *max);
+
+TMPL_EXPORT extern void
+tmpl_UShort_Array_MinMax(unsigned short *arr, size_t len,
+                         unsigned short int *min, unsigned short int *max);
+
+TMPL_EXPORT extern void
+tmpl_Int_Array_MinMax(int *arr, size_t len,
+                      int *min, int *max);
+
+TMPL_EXPORT extern void
+tmpl_UInt_Array_MinMax(unsigned int *arr, size_t len,
+                       unsigned int *min, unsigned int *max);
+
+TMPL_EXPORT extern void
+tmpl_Long_Array_MinMax(long int *arr, size_t len,
+                       long int *min, long int *max);
+
+TMPL_EXPORT extern void
+tmpl_ULong_Array_MinMax(unsigned long *arr, size_t len,
+                        unsigned long int *min, unsigned long int *max);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UInt_Factorial                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the factorial of an integer.                                 *
+ *  Arguments:                                                                *
+ *      n (unsigned int):                                                     *
+ *          An integer.                                                       *
+ *  Output:                                                                   *
+ *      n! (int):                                                             *
+ *          The factorial of n.                                               *
+ *  Notes:                                                                    *
+ *      Returns 0 on overflow. n! is never zero for positive integers, so     *
+ *      this can be used for error checking.                                  *
+ ******************************************************************************/
+TMPL_EXPORT extern unsigned char tmpl_UChar_Factorial(unsigned char n);
+TMPL_EXPORT extern unsigned short int tmpl_UShort_Factorial(unsigned short int n);
+TMPL_EXPORT extern unsigned int tmpl_UInt_Factorial(unsigned int n);
+TMPL_EXPORT extern unsigned long int tmpl_ULong_Factorial(unsigned long int n);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -109,6 +240,55 @@ TMPL_EXPORT extern int tmpl_UChar_Leading_Zeros(unsigned char n);
 TMPL_EXPORT extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
 TMPL_EXPORT extern int tmpl_UInt_Leading_Zeros(unsigned int n);
 TMPL_EXPORT extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
+#if TMPL_HAS_LONGLONG == 1
+TMPL_EXPORT extern int tmpl_ULLong_Leading_Zeros(unsigned long long int);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Max                                                          *
+ *  Purpose:                                                                  *
+ *      Compute the maximum of two ints.                                      *
+ *  Arguments:                                                                *
+ *      int x:                                                                *
+ *          An integer.                                                       *
+ *      int y:                                                                *
+ *          Another integer.                                                  *
+ *  Output:                                                                   *
+ *      int max:                                                              *
+ *          The maximum of x and y.                                           *
+ ******************************************************************************/
+TMPL_EXPORT extern signed char tmpl_Char_Max(signed char x, signed char y);
+TMPL_EXPORT extern short int tmpl_Short_Max(short int x, short int y);
+TMPL_EXPORT extern int tmpl_Int_Max(int x, int y);
+TMPL_EXPORT extern long int tmpl_Long_Max(long int x, long int y);
+TMPL_EXPORT extern unsigned char tmpl_UChar_Max(unsigned char x, unsigned char y);
+TMPL_EXPORT extern unsigned short tmpl_UShort_Max(unsigned short x, unsigned short y);
+TMPL_EXPORT extern unsigned int tmpl_UInt_Max(unsigned int x, unsigned int y);
+TMPL_EXPORT extern unsigned long tmpl_ULong_Max(unsigned long x, unsigned long y);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Min                                                          *
+ *  Purpose:                                                                  *
+ *      Compute the minimum of two ints.                                      *
+ *  Arguments:                                                                *
+ *      int x:                                                                *
+ *          An integer.                                                       *
+ *      int y:                                                                *
+ *          Another integer.                                                  *
+ *  Output:                                                                   *
+ *      int max:                                                              *
+ *          The minimum of x and y.                                           *
+ ******************************************************************************/
+TMPL_EXPORT extern signed char tmpl_Char_Min(signed char x, signed char y);
+TMPL_EXPORT extern short int tmpl_Short_Min(short int x, short int y);
+TMPL_EXPORT extern int tmpl_Int_Min(int x, int y);
+TMPL_EXPORT extern long int tmpl_Long_Min(long int x, long int y);
+TMPL_EXPORT extern unsigned char tmpl_UChar_Min(unsigned char x, unsigned char y);
+TMPL_EXPORT extern unsigned short tmpl_UShort_Min(unsigned short x, unsigned short y);
+TMPL_EXPORT extern unsigned int tmpl_UInt_Min(unsigned int x, unsigned int y);
+TMPL_EXPORT extern unsigned long tmpl_ULong_Min(unsigned long x, unsigned long y);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -357,57 +537,6 @@ TMPL_EXPORT extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long in
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
-
-#elif defined(_MSC_VER)
-/*  Else for #if defined(__has_builtin).                                      */
-
-/*  Microsoft's compiler has _BitScanForward, equivalent to trailing zeros.   */
-unsigned int __inline TMPL_UINT_TRAILING_ZEROS(unsigned int n)
-{
-    unsigned int trailing_zeros = 0U;
-    _BitScanForward(&trailing_zeros, n);
-    return trailing_zeros;
-}
-
-/*  long and int are the same on Windows.                                     */
-unsigned long int __inline TMPL_ULONG_TRAILING_ZEROS(unsigned long int n)
-{
-    unsigned long int trailing_zeros = 0UL;
-    _BitScanForward(&trailing_zeros, n);
-    return trailing_zeros;
-}
-
-/*  long long is 64-bits on Windows.                                          */
-unsigned long int __inline TMPL_ULLONG_TRAILING_ZEROS(unsigned long long int n)
-{
-    unsigned long int trailing_zeros = 0UL;
-    _BitScanForward64(&trailing_zeros, n);
-    return trailing_zeros;
-}
-
-/*  Microsoft's compiler has _BitScanReverse, equivalent to leading zeros.    */
-unsigned int __inline TMPL_UINT_LEADING_ZEROS(unsigned int n)
-{
-    unsigned int leading_zeros = 0U;
-    _BitScanReverse(&leading_zeros, n);
-    return leading_zeros;
-}
-
-/*  long and int are the same on Windows.                                     */
-unsigned long int __inline TMPL_ULONG_LEADING_ZEROS(unsigned long int n)
-{
-    unsigned long int leading_zeros = 0UL;
-    _BitScanReverse(&leading_zeros, n);
-    return leading_zeros;
-}
-
-/*  long long is 64-bits on Windows.                                          */
-unsigned long int __inline TMPL_ULLONG_LEADING_ZEROS(unsigned long long int n)
-{
-    unsigned long int trailing_zeros = 0UL;
-    _BitScanReverse64(&trailing_zeros, n);
-    return trailing_zeros;
-}
 
 #else
 /*  Else for #if defined(__has_builtin).                                      */

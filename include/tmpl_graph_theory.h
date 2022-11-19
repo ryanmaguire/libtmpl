@@ -131,7 +131,7 @@ typedef struct tmpl_Graph {
  ******************************************************************************/
 TMPL_EXPORT extern void tmpl_Sort_Graph_Edges(tmpl_Graph **G);
 
-extern tmpl_Graph *
+TMPL_EXPORT extern tmpl_Graph *
 tmpl_Create_Complete_Bipartite_Graph(unsigned long int m, unsigned long int n);
 
 /******************************************************************************
@@ -151,13 +151,13 @@ tmpl_Create_Complete_Bipartite_Graph(unsigned long int m, unsigned long int n);
  *      NULL. It is the user's responsibility to check that malloc did not    *
  *      fail. Trying to access a NULL pointer may crash the program.          *
  ******************************************************************************/
-extern tmpl_Graph *
+TMPL_EXPORT extern tmpl_Graph *
 tmpl_Create_Complete_Graph(unsigned long int N);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_Is_Graph_Simple(tmpl_Graph *G);
 
-extern unsigned long int
+TMPL_EXPORT extern unsigned long int
 tmpl_Degree_of_Vertex(unsigned long int);
 
 #endif

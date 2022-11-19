@@ -1,3 +1,4 @@
+#include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */
@@ -26,7 +27,7 @@ tmpl_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs, unsigned int degree,
         poly = tmpl_CDouble_Zero;
     else if (degree == deriv)
     {
-        fact = tmpl_Factorial(degree);
+        fact = tmpl_ULong_Factorial(degree);
         factor = (double)fact;
         poly = tmpl_CDouble_Rect(factor * coeffs[degree], 0.0);
     }

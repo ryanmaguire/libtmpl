@@ -3,7 +3,6 @@
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/math/tmpl_math_sincos_data_double.h>
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -11,6 +10,7 @@
 #include <libtmpl/include/math/tmpl_math_sincos_cos_precise_eval.h>
 #include <libtmpl/include/math/tmpl_math_sincos_reduction.h>
 #include <libtmpl/include/math/tmpl_math_sincos_reduction_very_large.h>
+#include <libtmpl/include/math/tmpl_math_sincos_data_double.h>
 
 #define TMPL_PI_BY_TWO_LOW_HALF (6.123233995736766035868820147292E-17)
 
@@ -60,8 +60,8 @@ double tmpl_Double_Cos(double x)
 
 double tmpl_Double_Cos(double x)
 {
-    double arg, sgn_x, cx, cdx, sx, sdx, dx, dx_sq;
-    unsigned int arg_128_int;
+    double arg, sgn_x, cx, cdx, sx, sdx, dx;
+    unsigned int ind;
 
     arg = tmpl_Double_Mod_2(tmpl_Double_Abs(x) * tmpl_One_By_Pi);
 
@@ -73,24 +73,13 @@ double tmpl_Double_Cos(double x)
     else
         sgn_x = 1.0;
 
-    arg_128_int = (unsigned int)(128.0*arg);
-    dx = arg - 0.0078125*arg_128_int;
-    dx_sq = dx*dx;
+    ind = (unsigned int)(128.0*arg);
+    dx = arg - 0.0078125*ind;
 
-    sx  = tmpl_Double_Sin_Lookup_Table[arg_128_int];
-    cx  = tmpl_Double_Cos_Lookup_Table[arg_128_int];
-
-    sdx = 0.08214588661112822879880237 * dx_sq - 0.5992645293207920768877394;
-    sdx = sdx * dx_sq + 2.550164039877345443856178;
-    sdx = sdx * dx_sq - 5.167712780049970029246053;
-    sdx = sdx * dx_sq + 3.141592653589793238462643;
-    sdx = sdx * dx;
-
-    cdx = 0.2353306303588932045418794 * dx_sq - 1.335262768854589495875305;
-    cdx = cdx * dx_sq + 4.058712126416768218185014;
-    cdx = cdx * dx_sq - 4.934802200544679309417245;
-    cdx = cdx * dx_sq + 1.0;
-
+    sx = tmpl_double_sinpi_table[ind];
+    cx = tmpl_double_cospi_table[ind];
+    sdx = tmpl_Double_SinPi_Maclaurin(dx);
+    cdx = tmpl_Double_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*cx - sx*sdx);
 }
 

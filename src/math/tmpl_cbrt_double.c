@@ -33,66 +33,81 @@
  *  Output:                                                                   *
  *      cbrt_x (double):                                                      *
  *          The cubic root of x at double precision.                          *
- *  Called Functions:                                                         *
- *      None if IEEE-754 support is available and libtmpl algorithms have     *
- *      been requested. cbrt from math.h otherwise.                           *
- *  Method:                                                                   *
- *      Use a combination of cubic root rules, Taylor series, and Newton's    *
- *      method. That is, cbrt(x) is computed as follows:                      *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_Double_Cbrt_Taylor (tmpl_math.h):                            *
+ *              Computes the Taylor series of cbrt(x) about x = 1.            *
+ *      Method:                                                               *
+ *          Use a combination of cubic root rules, Taylor series, and Newton's*
+ *          method. That is, cbrt(x) is computed as follows:                  *
  *                                                                            *
- *          If x = +/- NaN, +/- Inf, or +/- 0, return x.                      *
- *          If x is subnormal (denormal), normalize by 2^52.                  *
- *          If x < 0, return -cbrt(-x) since cbrt is an odd function.         *
+ *              If x = +/- NaN, +/- Inf, or +/- 0, return x.                  *
+ *              If x is subnormal (denormal), normalize by 2^52.              *
+ *              If x < 0, return -cbrt(-x) since cbrt is an odd function.     *
  *                                                                            *
- *          cbrt(x) = cbrt(1.m * 2^b)                                         *
- *                  = cbrt(1.m) * cbrt(2^b)                                   *
- *                  = cbrt(1.m) * 2^{b/3}                                     *
- *                  = cbrt(u) * 2^{b/3}     with u = 1.m                      *
- *                  = cbrt(ut/t) * 2^{b/3}  with t = 1 + k/128 for some k.    *
- *                  = cbrt(u/t) * cbrt(t) * 2^{b/3}                           *
+ *              cbrt(x) = cbrt(1.m * 2^b)                                     *
+ *                      = cbrt(1.m) * cbrt(2^b)                               *
+ *                      = cbrt(1.m) * 2^{b/3}                                 *
+ *                      = cbrt(u) * 2^{b/3}    with u = 1.m                   *
+ *                      = cbrt(ut/t) * 2^{b/3} with t = 1 + k/128 for some k. *
+ *                      = cbrt(u/t) * cbrt(t) * 2^{b/3}                       *
  *                                                                            *
- *      Choose t = 1 + k/128 by choosing k to be the largest integer such     *
- *      that 1 + k/128 <= u. Precompute cbrt(t) and 1/t in a table. The       *
- *      value u/t is now between 1 and 1 + 1/128. Compute cbrt(u/t) by:       *
+ *          Choose t = 1 + k/128 by choosing k to be the largest integer such *
+ *          that 1 + k/128 <= u. Precompute cbrt(t) and 1/t in a table. The   *
+ *          value u/t is now between 1 and 1 + 1/128. Compute cbrt(u/t) by:   *
  *                                                                            *
+ *              y = cbrt(u/t)                                                 *
+ *              = cbrt(1 + s)             with s = u/t - 1.                   *
+ *              ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                           *
  *                                                                            *
- *          y = cbrt(u/t)                                                     *
- *            = cbrt(1 + s)             with s = u/t - 1.                     *
- *            ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                             *
+ *          y is now accurate to at least 8 decimals. We can double this to   *
+ *          16 decimals using 1 iteration of Newton's method. We have:        *
  *                                                                            *
- *      y is now accurate to at least 8 decimals. We can double this to at    *
- *      least 16 decimals using 1 iteration of Newton's method. We have:      *
+ *                    y ~ cbrt(x)                                             *
+ *              y^3 - x ~ 0                                                   *
+ *                 f(y) = y^3 - x                                             *
+ *                f'(y) = 3y^2                                                *
  *                                                                            *
- *                y ~ cbrt(x)                                                 *
- *          y^3 - x ~ 0                                                       *
- *             f(y) = y^3 - x                                                 *
- *            f'(y) = 3y^2                                                    *
+ *          Apply Newton's method for 1 iteration:                            *
  *                                                                            *
- *      Apply Newton's method for 1 iteration:                                *
+ *                  out = y - f(y)/f'(y)                                      *
+ *                      = y - (y^{3} - x)/(3y^{2})                            *
+ *                      = (3y^{3} - y^{3} + x)/(3y^{2})                       *
+ *                      = (2y^{3} + x)/(3y^{2})                               *
+ *                      = 0.3333*(2y + x/y^2)                                 *
  *                                                                            *
- *              out = y - f(y)/f'(y)                                          *
- *                  = y - (y^{3} - x)/(3y^{2})                                *
- *                  = (3y^{3} - y^{3} + x)/(3y^{2})                           *
- *                  = (2y^{3} + x)/(3y^{2})                                   *
- *                  = 0.3333*(2y + x/y^2)                                     *
- *                                                                            *
- *      Lastly, since 2^{b/3} is not an integer for some values of b write    *
- *      b = 3k + r, with r = 0, 1, 2. Then 2^{b/3} is 2^{k}2^{r/3}. If r = 0  *
- *      we are done. If r = 1, multiply by cbrt(2). If r = 2, multiply by     *
- *      2^{2/3}. Precompute these two values and multiply if needed.          *
- *  Error:                                                                    *
- *      Based on 1,051,958,476 samples with -10^6 < x < 10^6.                 *
- *          max rel error: 7.0469763017409916e-16                             *
- *          rms rel error: 1.5775644974028550e-16                             *
- *          max abs error: 1.4210854715202004e-14                             *
- *          rms abs error: 2.6790772954468324e-15                             *
+ *          Lastly, since 2^{b/3} is not an integer for some values of b      *
+ *          write b = 3k + r, with r = 0, 1, 2. Then 2^{b/3} is 2^{k}2^{r/3}. *
+ *          If r = 0 we are done. If r = 1, multiply by cbrt(2). If r = 2,    *
+ *          multiply by 2^{2/3}. Precompute these two values and multiply if  *
+ *          needed.                                                           *
+ *      Error:                                                                *
+ *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *              max rel error: 7.0469763017409916e-16                         *
+ *              rms rel error: 1.5775644974028550e-16                         *
+ *              max abs error: 1.4210854715202004e-14                         *
+ *              rms abs error: 2.6790772954468324e-15                         *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_Double_Is_NaN_Or_Inf (tmpl_math.h):                          *
+ *              Determines if a double is NaN or infinity.                    *
+ *          tmpl_Double_Base2_Mant_and_Exp (tmpl_math.h):                     *
+ *              Gets the input into scientific form, |x| = m * 2^e with       *
+ *              1 <= m < 2 and e an integer.                                  *
+ *          tmpl_Double_Cbrt_Pade (tmpl_math.h):                              *
+ *              Computes the Pade approximant of cbrt(x) about x = 1.         *
+ *          tmpl_Double_Pow2 (tmpl_math.h):                                   *
+ *              Quickly computes an integer power of 2 as a double.           *
+ *      Method:                                                               *
+ *          Reduce to x >= 0 since cbrt is an odd function. Convert x to      *
+ *          scientific notation x = m * 2^b with 1 <= m < 2 and b an integer. *
+ *          Use the Pade approximant on m and multiply by 2^{b/3}. Finish by  *
+ *          performing one iteration of Newton's method.                      *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  2.) tmpl_math_cbrt_lookup_table.h:                                        *
- *          Lookup table with pre-computed values of cbrt(x).                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
@@ -113,11 +128,9 @@ static const double tmpl_double_cbrt_data[3] = {1.0, CBRT_2, CBRT_2_SQ};
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  Pre-computed values of cbrt(x) found here.                                */
-#include <libtmpl/include/math/tmpl_math_cbrt_data_double.h>
-
-/*  The values 1/(1 + k/128) for 0 <= k < 128 found here.                     */
-#include <libtmpl/include/math/tmpl_math_rcpr_table_double.h>
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
 
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Cbrt(double x)
@@ -150,9 +163,8 @@ double tmpl_Double_Cbrt(double x)
         if (w.r == 0.0)
             return x;
 
-        /*  Non-zero subnormal number. Normalize by multiplying by 2^52,      *
-         *  which is 4.503599627370496 x 10^15.                               */
-        w.r *= 4.503599627370496E15;
+        /*  Non-zero subnormal number. Normalize the input.                   */
+        w.r *= TMPL_DOUBLE_NORMALIZE;
 
         /*  The parity is computed by expo mod 3. We have added 52 to the     *
          *  exponent to normalize the input, but 52 mod 2 is 1, not 0. Add 2  *
@@ -160,16 +172,18 @@ double tmpl_Double_Cbrt(double x)
          *  the parity variable is correctly computed.                        */
         w.bits.expo += 2U;
 
-        /*  Compute the exponent. Since we multiplied by 2^52, subtract 52    *
-         *  from the value. We also added 2 to expo, so subtract 2 more. To   *
-         *  compute the correctly rounded exponent after division by 3, add 2 *
-         *  more to the value before dividing. The total is adding 56 to the  *
-         *  input. Shift by the bias to get the correct exponent for the word.*/
+        /*  Compute the exponent. Since we normalized by a power of two we    *
+         *  need to subtract this from the value. We also added 2 to expo, so *
+         *  subtract 2 more. To compute the correctly rounded exponent after  *
+         *  division by 3, subtract 2 more before dividing. The total is      *
+         *  subtracting 4 plus the power of two. This power of two is         *
+         *  the macro TMPL_DOUBLE_MANTISSA_ULENGTH, but evaluates to 52, so   *
+         *  in total we need to add 56. Finally, shift by the bias.           */
         exponent = TMPL_DOUBLE_UBIAS - ((TMPL_DOUBLE_UBIAS-w.bits.expo)+56U)/3U;
     }
 
     /*  NaN or infinity. Return the input.                                    */
-    else if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+    else if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
         return x;
 
     /*  Normal number. Compute the exponent. This is the bits of the exponent *
@@ -228,7 +242,7 @@ double tmpl_Double_Cbrt(double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFU;
-    w.r *= tmpl_double_cbrt_data[parity]*tmpl_double_cbrt_lookup_table[ind];
+    w.r *= tmpl_double_cbrt_data[parity]*tmpl_double_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
@@ -239,37 +253,55 @@ double tmpl_Double_Cbrt(double x)
 /*  End of tmpl_Double_Cbrt.                                                  */
 
 #else
-/*  Else for TMPL_HAS_IEEE754_DOUBLE.                                         */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Cbrt(double x)
 {
+    /*  Declare necessary variables. C89 requires this at the top.            */
     signed int expo, parity;
     double mant, out;
 
+    /*  Special case, NaN or inf, simply return the input.                    */
     if (tmpl_Double_Is_NaN_Or_Inf(x))
         return x;
 
+    /*  Get x into scientific form, |x| = mant * 2^expo.                      */
     tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
 
+    /*  Negative exponent, computation the parity which must be positive.     */
     if (expo < 0)
     {
         parity = expo % 3;
 
+        /*  It's possible for parity to be -1 or -2. The correct parity is    *
+         *  then 3 plus this value.                                           */
         if (parity < 0)
             parity += 3;
 
-        expo = (expo + 2)/3;
+        /*  Get the correctly rounded down value of expo/3.                   */
+        expo = (expo - 2)/3;
     }
+
+    /*  Exponent positive, parity and division by 3 can be performed normally.*/
     else
     {
         parity = expo % 3;
         expo = expo/3;
     }
 
+    /*  Since 1 <= mant < 2, the Pade approximant to accurately compute cbrt. */
     out = tmpl_Double_Cbrt_Pade(mant);
+
+    /*  Since cbrt(m * 2^b) = cbrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
     out = out*tmpl_Double_Pow2(expo);
     out = out*tmpl_double_cbrt_data[parity];
 
+    /*  cbrt is an odd function. If the input was negative, negate the output.*/
     if (x < 0.0)
         out = -out;
 

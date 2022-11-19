@@ -80,8 +80,6 @@
  *                      0 if y is positive, pi if y is negative.              *
  *                  y NaN:                                                    *
  *                      return NaN.                                           *
- *                  y infinite:                                               *
- *                      See previous cases.                                   *
  *              x and y finite:                                               *
  *                  Reduce y to positive via:                                 *
  *                      atan2(y, x) = -atan2(-y, x)                           *
@@ -111,6 +109,8 @@
  *              rms relative error: 5.2721509856618008e-08                    *
  *              max absolute error: 4.7683715820312500e-07                    *
  *              rms absolute error: 1.0170987243977383e-07                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_Float_Abs (tmpl_math.h):                                     *
@@ -137,14 +137,16 @@
  *              rms relative error: 5.2721509856618008e-08                    *
  *              max absolute error: 4.7683715820312500e-07                    *
  *              rms absolute error: 1.0170987243977383e-07                    *
+ *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          less than 1 ULP (~1 x 10^-7).                                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) tmpl_math_arctan_tables.h:                                            *
+ *  3.) tmpl_math_arctan_float_tables.h:                                      *
  *          Header file containing pre-computed values of arctan(x).          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -161,7 +163,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Lookup table of precomputed arctan values found here.                     */
-#include <libtmpl/include/math/tmpl_math_arctan_tables.h>
+#include <libtmpl/include/math/tmpl_math_arctan_float_tables.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -170,7 +172,7 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Single precision inverse tangent (atan2 equivalent).                      */
+/*  Single precision inverse tangent (atan2f equivalent).                     */
 float tmpl_Float_Arctan2(float y, float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -266,11 +268,11 @@ float tmpl_Float_Arctan2(float y, float x)
     w.bits.sign = 0x00U;
 
     /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
-    if (w.bits.expo < TMPL_FLOAT_BIAS - 4U)
+    if (w.bits.expo < TMPL_FLOAT_UBIAS - 4U)
         out = tmpl_Float_Arctan_Very_Small(w.r);
 
     /*  For |z| > 16, use the asymptotic expansion.                           */
-    else if (w.bits.expo > TMPL_FLOAT_BIAS + 3U)
+    else if (w.bits.expo > TMPL_FLOAT_UBIAS + 3U)
         out = tmpl_Float_Arctan_Asymptotic(w.r);
 
     /*  Otherwise use the lookup table to reduce. Note we have reduced to the *
@@ -282,7 +284,7 @@ float tmpl_Float_Arctan2(float y, float x)
          *  is the exponent of the number z. Compute this. The exponent       *
          *  in the IEEE-754 representation of a number is offset by a bias.   *
          *  Subtract off this bias to compute the actual index.               */
-        ind = (w.bits.expo + 4U) - TMPL_FLOAT_BIAS;
+        ind = (w.bits.expo + 4U) - TMPL_FLOAT_UBIAS;
 
         /*  Get the corresponding values from the lookup tables.              */
         v = tmpl_atan_float_v[ind];
@@ -314,7 +316,7 @@ float tmpl_Float_Arctan2(float y, float x)
 
 /*  Portable implementation of atan2.                                         */
 
-/*  Single precision inverse tangent (atan2 equivalent).                      */
+/*  Single precision inverse tangent (atan2f equivalent).                     */
 float tmpl_Float_Arctan2(float y, float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */

@@ -8,24 +8,25 @@ float tmpl_Float_Pow2(signed int expo)
     tmpl_IEEE754_Float w;
     w.r = 1.0F;
 
-    if (expo < -127)
+    if (expo <= -TMPL_FLOAT_BIAS)
     {
-        if (expo < -150)
-            return 0.0;
+        if (expo < -TMPL_FLOAT_BIAS - TMPL_FLOAT_MANTISSA_LENGTH)
+            return 0.0F;
 
-        expo += 23;
-        w.bits.expo = (unsigned int)(TMPL_FLOAT_BIAS + expo) & 0xFF;
-        w.r /= 8.388608E06F;
-
+        expo += TMPL_FLOAT_MANTISSA_LENGTH;
+        w.bits.expo =
+            (unsigned int)(TMPL_FLOAT_BIAS + expo) & TMPL_FLOAT_NANINF_EXP;
+        w.r /= TMPL_FLOAT_NORMALIZE;
         return w.r;
     }
-    else if (expo > 127)
+    else if (expo > TMPL_FLOAT_BIAS)
     {
         w.bits.expo = TMPL_FLOAT_NANINF_EXP;
         return w.r;
     }
 
-    w.bits.expo = (unsigned int)(TMPL_FLOAT_BIAS + expo) & 0xFF;
+    w.bits.expo =
+        (unsigned int)(TMPL_FLOAT_BIAS + expo) & TMPL_FLOAT_NANINF_EXP;
     return w.r;
 }
 

@@ -189,7 +189,7 @@ float tmpl_Float_Mod_2(float x)
          *  1.xxx, not 0.1xxx, so shift one more to the left. The result is   *
          *  shifting by the number of leading zeros minus 9 plus 1, so shift  *
          *  by the number of leading zeros minus 8.                           */
-        leading = (unsigned int)tmpl_UInt64_Leading_Zeros(word32.n) - 8U;
+        leading = (unsigned int)tmpl_UInt32_Leading_Zeros(word32.n) - 8U;
         word32.n = word32.n << leading;
 
         /*  If the 24th bit is 1, we have 1.xxx as desired. The exponent is   *

@@ -17,5 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-
-TEST2(float, tmpl_Float_Base2_Mant_and_Exp, frexpf)
+TEST2(float, 1.0E-20F, 1.0E20F, tmpl_Float_Base2_Mant_and_Exp, frexpf)
