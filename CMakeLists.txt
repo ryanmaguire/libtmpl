@@ -3,22 +3,22 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_
 include(ParseCStandard)
 
 option(
-    OMP
+    LIBTMPL_USE_OMP
     "Compile with `OpenMP` support (highly recommended).
 **WARNING** Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option will result in an error.
 Homebrew has versions of clang and gcc that do support OpenMP."
     TRUE
 )
 option(
-    LIBTMPL_NO_INLINE
+    LIBTMPL_USE_INLINE
     "Do not use any inline code. This results in a slightly smaller `libtmpl.so` file, but several
 functions become significantly slower (not recommended). If your compiler does not support `C99` or higher, and
 does not support the `gcc` `inline` extension, enable this option."
-    FALSE
+    TRUE
 )
 option(
-    LIBTMPL_NO_MATH
-    "Do not use `libtmpl`'s implementation of `libm`, the C standard library for mathematical tools,
+    LIBTMPL_USE_MATH
+    "Use `libtmpl`'s implementation of `libm`, the C standard library for mathematical tools,
 instead using your compilers implementation. This may be recommended. Tests against `glibc`, `FreeBSD libc`, and
 `MSVC`'s implementation of `libm` show that `libtmpl` can be significantly faster (all functions have benchmarks
 in the `tests/` directory and you may see for yourself), but this has only been tested on the architectures supported
@@ -29,36 +29,36 @@ may wish to use the default `libm`."
     TRUE
 )
 option(
-    LIBTMPL_NO_IEEE
-    "Disable use of the `IEEE` formats for `float` and `double`. The `config.c` file should detect if your
+    LIBTMPL_USE_IEEE
+    "Enable use of the `IEEE` formats for `float` and `double`. The `config.c` file should detect if your
 compiler supports this, and type-punning for `union`, so you should not need to set this option manually
-(not recommended)."
-    FALSE
-)
-option(
-    LIBTMPL_NO_ASM
-    "Only applicable is `LIBTMPL_NO_MATH` is not set, and for `x86_64/amd64/arm64/armv7l` machines. Some functions,
-like `sqrt`, can be handle efficiently in assembly code. If you wish to use only C code, set this option
-(not recommended)."
-    FALSE
-)
-option(
-    LIBTMPL_NO_BUILTIN
-    "Only applicable is `LIBTMPL_NO_MATH` and `LIBTMPL_NO_ASM` are not set, and only for `x86_64/amd64/arm64` machines.
-If you are using `gcc`, `clang`, or `pcc`, you can take adventage of several built-in functions like `sincos`.
-This is handled in assembly code. If you're not using a compiler that has these built-in functions, set this option
 (not recommended)."
     TRUE
 )
 option(
-    LIBTMPL_FASM
+    LIBTMPL_USE_ASM
+    "Only applicable is `LIBTMPL_USE_MATH` is FALSE, and for `x86_64/amd64/arm64/armv7l` machines. Some functions,
+like `sqrt`, can be handle efficiently in assembly code. If you wish to use only C code, set this option to FALSE
+(not recommended)."
+    TRUE
+)
+option(
+    LIBTMPL_USE_BUILTIN
+    "Only applicable is `LIBTMPL_USE_MATH` and `LIBTMPL_USE_ASM` are TRUE, and only for `x86_64/amd64/arm64` machines.
+If you are using `gcc`, `clang`, or `pcc`, you can take adventage of several built-in functions like `sincos`.
+This is handled in assembly code. If you're not using a compiler that has these built-in functions, set this option to
+FALSE (not recommended)."
+    TRUE
+)
+option(
+    LIBTMPL_USE_FASM
     "Use the flat assembler instead of the assembly language used by `gcc` and `clang`. You must have `fasm`
-installed to use this. This option is ignored if `LIBTMPL_NO_ASM=1` is set."
+installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE."
     TRUE
 )
 
-option(LIBTMPL_NO_LONGLONG "" FALSE)
-option(LIBTMPL_NO_INT "" FALSE)
+option(LIBTMPL_USE_LONGLONG "" TRUE)
+option(LIBTMPL_USE_INT "" TRUE)
 option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests" FALSE)
 option(LIBTMPL_BUILD_EXAMPLES "Set to TRUE to enable the building of examples" FALSE)
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
@@ -146,12 +146,12 @@ else()
     message(WARNING "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}")
 endif()
 
-if(LIBTMPL_NO_LONGLONG)
+if(NOT LIBTMPL_USE_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
     list(APPEND SOURCE_EXCLUSION_LIST "tmpl_abs_llong.c")
 endif()
 
-if(OMP)
+if(LIBTMPL_USE_OMP)
     # Build with OpenMP, if it is supported by the toolchain
     find_package(OpenMP)
     if(OpenMP_C_FOUND)
@@ -166,7 +166,7 @@ if(OMP)
     endif()
 endif()
 
-if(NOT LIBTMPL_NO_INLINE)
+if(LIBTMPL_USE_INLINE)
     if(LIBTMPL_STDVER STREQUAL "-std=c89")
         message(
             FATAL_ERROR
@@ -182,7 +182,7 @@ if(NOT LIBTMPL_NO_INLINE)
     endif()
 endif()
 
-if(LIBTMPL_NO_MATH)
+if(NOT LIBTMPL_USE_MATH)
     # Do not use libtmpl's libm implementation
 
     # TODO what to do for other systems?
@@ -211,7 +211,7 @@ else()
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MATH_TRUE)
 endif()
 
-if(NOT LIBTMPL_NO_INLINE)
+if(LIBTMPL_USE_INLINE)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_INLINE_TRUE)
 
     list(
@@ -294,11 +294,11 @@ if(NOT LIBTMPL_NO_INLINE)
     )
 endif()
 
-if(LIBTMPL_NO_IEEE)
+if(NOT LIBTMPL_USE_IEEE)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_TMPL_USE_IEEE_FALSE)
 endif()
 
-if(LIBTMPL_NO_INT)
+if(NOT LIBTMPL_USE_INT)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_NO_INT)
 endif()
 
@@ -307,16 +307,16 @@ set(X86_64_ARCHES "amd64;x86_64")
 set(ARM64_ARCHES "aarch64;arm64")
 set(ARMHF_ARCHES "armv7l;")
 
-if(NOT LIBTMPL_NO_ASM)
+if(LIBTMPL_USE_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
         enable_language(ASM)
 
-        if(NOT LIBTMPL_NO_BUILTIN)
+        if(LIBTMPL_USE_BUILTIN)
             # This includes Windows AMD64 and Unix x86_64
             add_subdirectory("src/builtins/x86_64")
         endif()
 
-        if(LIBTMPL_FASM)
+        if(LIBTMPL_USE_FASM)
             add_subdirectory("src/assembly/fasm")
             # TODO add checks for fasm compatibility
         elseif()
@@ -325,13 +325,11 @@ if(NOT LIBTMPL_NO_ASM)
     elseif(system_processor IN_LIST ARM64_ARCHES)
         enable_language(ASM)
 
-        if(NOT LIBTMPL_NO_BUILTIN)
-            set(ARM64_USE_BUILTIN TRUE)
+        if(LIBTMPL_USE_BUILTIN)
             add_subdirectory("src/builtins/aarch64")
         endif()
 
         add_subdirectory("src/assembly/aarch64")
-
     elseif(system_processor IN_LIST ARMHF_ARCHES)
         enable_language(ASM)
 
