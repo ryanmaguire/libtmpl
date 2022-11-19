@@ -104,7 +104,7 @@ conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 include(FindBoost)
 add_library(tmpl SHARED)
-
+add_library(tmpl::tmpl ALIAS tmpl)
 target_include_directories(
     tmpl
     PUBLIC
@@ -144,6 +144,13 @@ target_sources(
             ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 add_subdirectory("include")
+# Copy the export header to include/
+add_custom_command(
+    TARGET tmpl
+    POST_BUILD
+    COMMAND
+        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_exports.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 set_c_standard(TARGET tmpl
     STDVER "${LIBTMPL_STDVER}"
@@ -393,7 +400,7 @@ if(SOURCE_EXCLUSION_LIST_SIZE GREATER 1)
     list(SORT SOURCE_EXCLUSION_LIST)
 endif()
 
-add_library(tmpl::tmpl ALIAS tmpl)
+
 
 add_subdirectory("src")
 if(LIBTMPL_BUILD_TESTS)
