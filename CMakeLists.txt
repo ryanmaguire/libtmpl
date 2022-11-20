@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.23)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_BINARY_DIR})
+list(
+    APPEND
+    CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 include(ParseCStandard)
 
 option(
@@ -60,7 +65,11 @@ installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE."
 option(LIBTMPL_USE_LONGLONG "" TRUE)
 option(LIBTMPL_USE_INT "" TRUE)
 option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests" FALSE)
-option(LIBTMPL_BUILD_EXAMPLES "Set to TRUE to enable the building of examples" FALSE)
+option(
+    LIBTMPL_BUILD_EXAMPLES
+    "Set to TRUE to enable the building of examples"
+    FALSE
+)
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
 
 if(NOT DEFINED LIBTMPL_STDVER)
@@ -69,7 +78,10 @@ endif()
 
 # Download automatically, you can also just copy the conan.cmake file
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+    message(
+        STATUS
+        "Downloading conan.cmake from https://github.com/conan-io/cmake-conan"
+    )
     file(
         DOWNLOAD
             "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
@@ -112,16 +124,24 @@ add_custom_command(
     DEPENDS tmpl_config
     COMMAND "$<TARGET_FILE:tmpl_config>"
     COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
     COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM
 )
 
 target_sources(
     tmpl
-    PUBLIC FILE_SET HEADERS BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 add_subdirectory("include")
 # Copy the export header to include/
@@ -129,7 +149,9 @@ add_custom_command(
     TARGET tmpl
     POST_BUILD
     COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_exports.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_exports.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 set_c_standard(TARGET tmpl
@@ -141,9 +163,15 @@ include(CheckIPOSupported)
 # Optional IPO. Do not use IPO if it's not supported by compiler.
 check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT IPO_CHECK_OUTPUT)
 if(IPO_SUPPORTED)
-    message(STATUS "Interprocedural Optimization/Link-Time Optimization is supported.")
+    message(
+        STATUS
+        "Interprocedural Optimization/Link-Time Optimization is supported."
+    )
 else()
-    message(WARNING "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}")
+    message(
+        WARNING
+        "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}"
+    )
 endif()
 
 if(NOT LIBTMPL_USE_LONGLONG)
@@ -317,12 +345,14 @@ if(LIBTMPL_USE_ASM)
         endif()
 
         if(LIBTMPL_USE_FASM)
-                if(LINUX AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-                    enable_language(ASM_FASM)
-                    add_subdirectory("src/assembly/fasm")
-                else()
-                    message(WARNING "FASM is only supported for 64-bit Linux builds")
-                endif()
+            if(LINUX AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+                enable_language(ASM_FASM)
+                add_subdirectory("src/assembly/fasm")
+            else()
+                message(
+                    WARNING
+                    "FASM is only supported for 64-bit Linux builds"
+                )
             endif()
         elseif()
             add_subdirectory("src/assembly/x86_64")
