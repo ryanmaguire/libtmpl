@@ -17,22 +17,22 @@ target_sources(
         tmpl_trailing_zeros_ushort_x86_64.S
 )
 
-
 list(
-                APPEND
-                SOURCE_EXCLUSION_LIST
-                "tmpl_trailing_zeros_char.c"
-                "tmpl_trailing_zeros_int.c"
-                "tmpl_trailing_zeros_long.c"
-                "tmpl_trailing_zeros_short.c"
-                "tmpl_trailing_zeros_uint.c"
-                "tmpl_trailing_zeros_uchar.c"
-                "tmpl_trailing_zeros_ulong.c"
-                "tmpl_trailing_zeros_ushort.c"
-                "tmpl_sqrt_double.c"
-                "tmpl_sqrt_float.c"
-                "tmpl_sqrt_ldouble.c"
-                "tmpl_floor_double.c"
-                "tmpl_floor_float.c"
-                "tmpl_floor_ldouble.c"
-            )
+    APPEND
+    SOURCE_EXCLUSION_LIST
+    "tmpl_trailing_zeros_char.c"
+    "tmpl_trailing_zeros_int.c"
+    "tmpl_trailing_zeros_long.c"
+    "tmpl_trailing_zeros_short.c"
+    "tmpl_trailing_zeros_uint.c"
+    "tmpl_trailing_zeros_uchar.c"
+    "tmpl_trailing_zeros_ulong.c"
+    "tmpl_trailing_zeros_ushort.c"
+    "tmpl_sqrt_double.c"
+    "tmpl_sqrt_float.c"
+    "tmpl_sqrt_ldouble.c"
+    "tmpl_floor_double.c"
+    "tmpl_floor_float.c"
+    "tmpl_floor_ldouble.c"
+)
+set(SOURCE_EXCLUSION_LIST ${SOURCE_EXCLUSION_LIST} PARENT_SCOPE)
