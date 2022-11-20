@@ -16,46 +16,45 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <libtmpl/include/tmpl_sort.h>
+#include <ctime>
+#include <algorithm>
 
 static double rand_real(void)
 {
-    int n = rand();
-    return (double)(n) / (double)(RAND_MAX);
-}
-
-static inline int comp(const void *x, const void *y)
-{
-    return (*(const double *)y < *(const double *)x);
+    int n = std::rand();
+    return static_cast<double>(n) / static_cast<double>(RAND_MAX);
 }
 
 int main(void)
 {
-    const size_t len = (size_t)(1E5);
-    double *arrtmpl = (double *)(malloc(sizeof(*arrtmpl)*len));
-    double *arrc = (double *)(malloc(sizeof(*arrc)*len));
+    const size_t len = static_cast<size_t>(1E5);
+    double *arrtmpl = static_cast<double *>(std::malloc(sizeof(*arrtmpl)*len));
+    double *arrcpp = static_cast<double *>(std::malloc(sizeof(*arrcpp)*len));
     size_t n;
+    clock_t t1, t2;
 
     for (n = 0; n < len; ++n)
     {
         double x = rand_real();
         arrtmpl[n] = x;
-        arrc[n] = x;
+        arrcpp[n] = x;
     }
 
+    std::printf("samples: %e\n", static_cast<double>(len));
+    t1 = std::clock();
     tmpl_Double_Merge_Sort(arrtmpl, len);
-    qsort(arrc, n, sizeof(double), comp);
+    t2 = std::clock();
+    std::printf("libtmpl: %f\n", static_cast<double>(t2 - t1)/CLOCKS_PER_SEC);
 
-    for (n = 0; n < len; ++n)
-    {
-        if (arrtmpl[n] != arrc[n])
-        {
-            puts("FAIL");
-            return -1;
-        }
-    }
-    puts("PASS");
+    t1 = std::clock();
+    std::sort(arrcpp, arrcpp + n);
+    t2 = std::clock();
+    std::printf("C++:     %f\n", static_cast<double>(t2 - t1)/CLOCKS_PER_SEC);
+
+    std::free(arrcpp);
+    std::free(arrtmpl);
     return 0;
 }

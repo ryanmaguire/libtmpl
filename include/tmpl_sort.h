@@ -30,7 +30,30 @@ extern "C" {
 /*  size_t typedef given here.                                                */
 #include <stddef.h>
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Merge_Sort                                                *
+ *  Purpose:                                                                  *
+ *      Sorts an array of real numbers using the merge sort algorithm.        *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of real numbers.                                         *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      int success:                                                          *
+ *          0 if fail (malloc returns NULL), 1 if successful.                 *
+ *  Notes:                                                                    *
+ *      This algorithm is O(N log(N)) in time, and O(N) + O(N) in space.      *
+ *      There's the input of size N, but a malloc of size N is also called    *
+ *      to store temporary data. This is free'd at the end of the algorithm.  *
+ *                                                                            *
+ *      If malloc fails and returns NULL the algorithm is aborted and 0 is    *
+ *      returned. The data will be untouched and still unsorted.              *
+ ******************************************************************************/
 int tmpl_Double_Merge_Sort(double *arr, size_t arr_size);
+int tmpl_Float_Merge_Sort(float *arr, size_t arr_size);
+int tmpl_LDouble_Merge_Sort(long double *arr, size_t arr_size);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
