@@ -18,7 +18,7 @@ if(NOT CMAKE_ASM${ASM_DIALECT}_COMPILER)
     else()
         # For Linux, fasm has separate 32- and 64-bit executables
         if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-            set(FASM_NAMES "fasm.x64")
+            set(FASM_NAMES "fasm.x64 fasm")
         else()
             set(FASM_NAMES "fasm")
         endif()
@@ -32,9 +32,17 @@ if(NOT CMAKE_ASM${ASM_DIALECT}_COMPILER)
         endif()
     endif()
 
-    set(_CMAKE_ASM_FASM_COMPILER_PATHS "${FASM_HOME}" "$ENV{FASM_HOME}" ${_CMAKE_ASM_FASM_COMPILER_PATHS})
+    set(_CMAKE_ASM_FASM_COMPILER_PATHS
+        "${FASM_HOME}"
+        "$ENV{FASM_HOME}"
+        ${_CMAKE_ASM_FASM_COMPILER_PATHS}
+    )
 
-    find_program(CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT NAMES ${FASM_NAMES} PATHS ${_CMAKE_ASM_FASM_COMPILER_PATHS})
+    find_program(
+        CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT
+        NAMES ${FASM_NAMES}
+        PATHS ${_CMAKE_ASM_FASM_COMPILER_PATHS}
+    )
 
     if(CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT)
         set(FASM_FOUND TRUE)
