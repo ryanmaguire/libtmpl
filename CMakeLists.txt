@@ -11,9 +11,9 @@ Homebrew has versions of clang and gcc that do support OpenMP."
 )
 option(
     LIBTMPL_USE_INLINE
-    "Do not use any inline code. This results in a slightly smaller `libtmpl.so` file, but several
+    "Use inline code. If disabled, this results in a slightly smaller `libtmpl.so` file, but several
 functions become significantly slower (not recommended). If your compiler does not support `C99` or higher, and
-does not support the `gcc` `inline` extension, enable this option."
+does not support the `gcc` `inline` extension, set this option to FALSE."
     TRUE
 )
 option(
@@ -317,8 +317,13 @@ if(LIBTMPL_USE_ASM)
         endif()
 
         if(LIBTMPL_USE_FASM)
-            add_subdirectory("src/assembly/fasm")
-            # TODO add checks for fasm compatibility
+                if(LINUX AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+                    enable_language(ASM_FASM)
+                    add_subdirectory("src/assembly/fasm")
+                else()
+                    message(WARNING "FASM is only supported for 64-bit Linux builds")
+                endif()
+            endif()
         elseif()
             add_subdirectory("src/assembly/x86_64")
         endif()
