@@ -15,17 +15,18 @@ target_sources(
 )
 
 list(
-                APPEND
-                SOURCE_EXCLUSION_LIST
-                "tmpl_cos_double.c"
-                "tmpl_cos_float.c"
-                "tmpl_cos_ldouble.c"
-                "tmpl_floor_ldouble.c"
-                "tmpl_sin_double.c"
-                "tmpl_sin_float.c"
-                "tmpl_sin_ldouble.c"
-                "tmpl_sincos_double.c"
-                "tmpl_sincos_float.c"
-                "tmpl_sincos_ldouble.c"
-                "tmpl_sqrt_ldouble.c"
-            )
+    APPEND
+    SOURCE_EXCLUSION_LIST
+    "tmpl_cos_double.c"
+    "tmpl_cos_float.c"
+    "tmpl_cos_ldouble.c"
+    "tmpl_floor_ldouble.c"
+    "tmpl_sin_double.c"
+    "tmpl_sin_float.c"
+    "tmpl_sin_ldouble.c"
+    "tmpl_sincos_double.c"
+    "tmpl_sincos_float.c"
+    "tmpl_sincos_ldouble.c"
+    "tmpl_sqrt_ldouble.c"
+)
+set(SOURCE_EXCLUSION_LIST ${SOURCE_EXCLUSION_LIST} PARENT_SCOPE)
