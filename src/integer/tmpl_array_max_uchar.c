@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
-#include <stdlib.h>
+#include <stddef.h>
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_integer.h>

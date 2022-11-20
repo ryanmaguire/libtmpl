@@ -65,7 +65,15 @@
 #ifndef TMPL_INTEGER_H
 #define TMPL_INTEGER_H
 
-#include <stdlib.h>
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*  size_t typedef given here.                                                */
+#include <stddef.h>
+
 #include <libtmpl/include/tmpl_inttype.h>
 #include <libtmpl/include/tmpl_vector.h>
 
@@ -565,6 +573,11 @@ extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 #define TMPL_SHORT_TRAILING_ZEROS tmpl_Short_Trailing_Zeros
 #define TMPL_UCHAR_LEADING_ZEROS tmpl_UChar_Leading_Zeros
 #define TMPL_USHORT_LEADING_ZEROS tmpl_UShort_Leading_Zeros
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */

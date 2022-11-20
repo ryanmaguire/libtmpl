@@ -1,8 +1,8 @@
+/*  size_t typedef is here.                                                   */
+#include <stddef.h>
+
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  size_t defined here.                                                      */
-#include <stdlib.h>
 
 /*  Function for evaluating a polynomial via Horner's method.                 */
 double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x)
