@@ -345,7 +345,12 @@ if(LIBTMPL_USE_ASM)
         endif()
 
         if(LIBTMPL_USE_FASM)
-            if(LINUX AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+            if(
+                UNIX
+                AND NOT APPLE
+                AND NOT CYGWIN
+                AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8
+            )
                 enable_language(ASM_FASM)
                 add_subdirectory("src/assembly/fasm")
             else()
