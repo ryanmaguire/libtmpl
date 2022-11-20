@@ -24,13 +24,13 @@
 #include <libtmpl/include/tmpl_sort.h>
 
 /*  Iterative merge-sort algorithm for an array arr of length len.            */
-int tmpl_Double_Merge_Sort(double *arr, size_t len)
+int tmpl_Float_Merge_Sort(float *arr, size_t len)
 {
     /*  Declare all necessary variables.                                      */
     size_t width, left, right, end, ind, k, m, n;
 
     /*  Temporary array used in the merge sort algorithm. malloc'd later.     */
-    double *unsorted;
+    float *unsorted;
 
     /*  If the input array is NULL, abort the algorithm. Nothing to sort.     */
     if (!arr)
@@ -95,4 +95,4 @@ int tmpl_Double_Merge_Sort(double *arr, size_t len)
     free(unsorted);
     return 1;
 }
-/*  End of tmpl_Double_Merge_Sort.                                            */
+/*  End of tmpl_Float_Merge_Sort.                                             */

@@ -1,8 +1,25 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <libtmpl/include/tmpl_sort.h>
 #include <gsl/gsl_sort_double.h>
-#include <time.h>
 
 static double rand_real(void)
 {
@@ -12,12 +29,10 @@ static double rand_real(void)
 
 int main(void)
 {
-    const size_t len = (size_t)(1E7);
+    const size_t len = (size_t)(1E5);
     double *arrtmpl = (double *)(malloc(sizeof(*arrtmpl)*len));
     double *arrc = (double *)(malloc(sizeof(*arrc)*len));
     size_t n;
-    int success;
-    clock_t t1, t2;
 
     for (n = 0; n < len; ++n)
     {
@@ -26,22 +41,8 @@ int main(void)
         arrc[n] = x;
     }
 
-    t1 = clock();
-    success = tmpl_Double_Merge_Sort(arrtmpl, len);
-    t2 = clock();
-
-    if (!success)
-    {
-        puts("tmpl_Double_Merge_Sort failed, malloc returned NULL.");
-        return -1;
-    }
-
-    printf("libtmpl: %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
-
-    t1 = clock();
+    tmpl_Double_Merge_Sort(arrtmpl, len);
     gsl_sort(arrc, 1, n);
-    t2 = clock();
-    printf("C:       %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
 
     for (n = 0; n < len; ++n)
     {

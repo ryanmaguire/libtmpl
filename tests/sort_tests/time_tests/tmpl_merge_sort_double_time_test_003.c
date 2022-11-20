@@ -19,16 +19,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <libtmpl/include/tmpl_sort.h>
+#include <gsl/gsl_sort_double.h>
+#include <time.h>
 
 static double rand_real(void)
 {
     int n = rand();
     return (double)(n) / (double)(RAND_MAX);
-}
-
-static inline int comp(const void *x, const void *y)
-{
-    return (*(const double *)y < *(const double *)x);
 }
 
 int main(void)
@@ -37,6 +34,7 @@ int main(void)
     double *arrtmpl = (double *)(malloc(sizeof(*arrtmpl)*len));
     double *arrc = (double *)(malloc(sizeof(*arrc)*len));
     size_t n;
+    clock_t t1, t2;
 
     for (n = 0; n < len; ++n)
     {
@@ -45,17 +43,18 @@ int main(void)
         arrc[n] = x;
     }
 
+    printf("samples: %e\n", (double)(len));
+    t1 = clock();
     tmpl_Double_Merge_Sort(arrtmpl, len);
-    qsort(arrc, n, sizeof(double), comp);
+    t2 = clock();
+    printf("libtmpl: %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
 
-    for (n = 0; n < len; ++n)
-    {
-        if (arrtmpl[n] != arrc[n])
-        {
-            puts("FAIL");
-            return -1;
-        }
-    }
-    puts("PASS");
+    t1 = clock();
+    gsl_sort(arrc, 1, n);
+    t2 = clock();
+    printf("gsl:     %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
+
+    free(arrc);
+    free(arrtmpl);
     return 0;
 }
