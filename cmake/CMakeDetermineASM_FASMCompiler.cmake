@@ -28,7 +28,7 @@ if(NOT CMAKE_ASM${ASM_DIALECT}_COMPILER)
         if(WIN32)
             set(FASM_HOME "C:/Program Files/fasm")
         else()
-            set(FASM_HOME "/usr/local/fasm")
+            set(FASM_HOME "/usr/bin")
         endif()
     endif()
 
