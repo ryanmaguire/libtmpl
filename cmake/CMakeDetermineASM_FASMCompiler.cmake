@@ -46,7 +46,10 @@ if(NOT CMAKE_ASM${ASM_DIALECT}_COMPILER)
 
     if(CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT)
         set(FASM_FOUND TRUE)
-        message(STATUS "FASM found: ${FASM}")
+        message(
+            STATUS
+            "FASM (flat assembler) found: ${CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT}"
+        )
     else()
         set(FASM_FOUND FALSE)
         message(
