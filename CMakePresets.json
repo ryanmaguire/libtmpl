@@ -1,0 +1,101 @@
+{
+  "version": 5,
+  "configurePresets": [
+    {"name": "default",
+    "hidden": true,
+      "binaryDir": "${sourceParentDir}/build/libtmpl",
+      "installDir": "${sourceParentDir}/install/libtmpl",
+      "cacheVariables": {
+        "LIBTMPL_STDVER": "-std=c11"
+      }
+    },
+    {"name":  "ci-linux",
+    "inherits": "default",
+      "generator": "Xcode",
+      "cacheVariables": {
+        "LIBTMPL_USE_OMP": false,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": true,
+        "LIBTMPL_ENABLE_VERBOSE": true,
+        "LIBTMPL_BUILD_TESTS": false
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "ci-macos",
+      "inherits": "default",
+      "generator": "Xcode",
+      "cacheVariables": {
+        "LIBTMPL_USE_OMP": false,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": false,
+        "LIBTMPL_ENABLE_VERBOSE": true,
+        "LIBTMPL_BUILD_TESTS": false
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "ci-windows",
+      "inherits": "default",
+      "cacheVariables": {
+        "LIBTMPL_USE_OMP": false,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": false,
+        "LIBTMPL_ENABLE_VERBOSE": true,
+        "LIBTMPL_BUILD_TESTS": false
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ci-linux",
+      "configurePreset": "ci-linux",
+      "targets": ["install"],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "ci-macos",
+      "configurePreset": "ci-macos",
+      "targets": ["install"],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "ci-windows",
+      "configurePreset": "ci-windows",
+      "targets": ["install"],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ]
+}
