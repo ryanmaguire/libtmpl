@@ -159,6 +159,22 @@ It does not copy the `include/` directory or the library to any system
 directories. This has been tested using a Windows 10 virtual machine and it
 worked as expected.
 
+## Installation using CMake
+
+### Prerequisites
+#### Install Conan
+Dependencies for libtmpl are provided using the [Conan](https://conan.io/) package manager. The simplest means to install Conan is to use Python's `pip` package mananger:
+```shell
+pip install conan
+```
+with only Python >= 3.6 supported. For installation by other means, please see [these instrucctions](https://docs.conan.io/en/latest/installation.html#).
+#### Install CMake
+Please download and install the latest version of CMake from [here](https://cmake.org/download/).
+
+#### [Optional] Ninja
+###
+
+
 # Language Bindings <a name="bindings"></a>
 Language bindings, or *wrappers*, are provided for `C++`, `Python`,
 and `IDL` (also the Free/Open-Source implementation `GDL`). All bindings require
