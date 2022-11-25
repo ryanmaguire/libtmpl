@@ -112,12 +112,7 @@ target_include_directories(
         "$<BUILD_INTERFACE:${TMPL_PARENT_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
 )
-set_target_properties(
-    tmpl
-    PROPERTIES
-        WINDOWS_EXPORT_ALL_SYMBOLS TRUE
-        INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
-)
+
 if(MSVC)
     target_compile_options(tmpl PRIVATE /MP)
 endif()
@@ -178,6 +173,13 @@ else()
         "Interprocedural Optimization/Link-Time Optimization is not supported: ${IPO_CHECK_OUTPUT}"
     )
 endif()
+
+set_target_properties(
+    tmpl
+    PROPERTIES
+        WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+        INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
+)
 
 if(NOT LIBTMPL_USE_LONGLONG)
     target_compile_definitions(tmpl_config PUBLIC TMPL_SET_LONGLONG_FALSE)
