@@ -35,6 +35,13 @@ jobs:
         -   name: Install Conan
             id: conan
             uses: turtlebrowser/get-conan@main
+        -   name: Create default Conan profile
+            run: conan profile new default --detect
+        -   name: Update profile
+            run: conan profile update settings.compiler.libcxx=libstdc++11 default
+
+        -   name: Install dependencies
+            run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl
         -   name: Check version
             run: cmake --version
 
