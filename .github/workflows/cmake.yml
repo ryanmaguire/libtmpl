@@ -35,6 +35,7 @@ jobs:
         -   uses: seanmiddleditch/gha-setup-ninja@master
 
         -   uses: stevenwdv/setup-fasm@v1
+            if: ${{ matrix.os == 'ubuntu-latest' }}
 
         -   name: Install Conan
             id: conan
