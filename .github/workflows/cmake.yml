@@ -21,7 +21,6 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                cmake_preset: ${{ '' }}
                 include:
                 -   os: windows-latest
                     cmake_preset: ci-windows
