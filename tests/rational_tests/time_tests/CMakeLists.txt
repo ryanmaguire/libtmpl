@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    if(APPLE)
-        include(gcc-macos)
-    elseif(UNIX)
-        include(gcc)
-    endif()
-endif()
-
 project(rational_time_tests LANGUAGES C CXX)
 include(FindBoost)
 find_package(Boost REQUIRED)
@@ -33,7 +25,7 @@ foreach(app ${test_apps})
         PRIVATE "${Boost_INCLUDE_DIR}" "${Boost_INCLUDE_DIR}/boost"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
-    if(UNIX)
+    if(UNIX AND NOT LIBTMPL_USE_MATH)
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()

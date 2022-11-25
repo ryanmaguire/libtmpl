@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    if(APPLE)
-        include(gcc-macos)
-    elseif(UNIX)
-        include(gcc)
-    endif()
-endif()
-
 project(bytes_tests)
 include(FindGSL)
 set(test_apps bessel_i0_plots bessel_j0_plots complex_bessel_I0_plots)
@@ -25,7 +17,7 @@ foreach(app ${test_apps})
         PRIVATE "${GSL_INCLUDE_DIRS}"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
-    if(UNIX)
+    if(UNIX AND NOT LIBTMPL_USE_MATH)
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()
