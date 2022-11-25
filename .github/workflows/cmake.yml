@@ -31,7 +31,7 @@ jobs:
 
         steps:
         -   uses: actions/checkout@v2
-
+        -   uses: seanmiddleditch/gha-setup-ninja@master
         -   name: Check version
             run: cmake --version
 
