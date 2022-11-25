@@ -45,7 +45,7 @@ jobs:
             run: conan profile new default --detect
 
         -   name: Install dependencies
-            run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl
+            run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl --build=missing
 
         -   name: Check version
             run: cmake --version
