@@ -60,7 +60,7 @@ jobs:
 
         -   name: Build
       # Build your program with the given configuration
-            run: cmake --build ${{github.workspace}}/build --preset ${{matrix.cmake_preset}} --config ${{env.BUILD_TYPE}}
+            run: cmake --build --preset ${{matrix.cmake_preset}} --config ${{env.BUILD_TYPE}}
 
         -   name: Test
             working-directory: ${{github.workspace}}/build/libtmpl
