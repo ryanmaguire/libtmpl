@@ -8,8 +8,9 @@
       "cacheVariables": {
         "LIBTMPL_STDVER": "-std=c11",
         "LIBTMPL_BUILD_TESTS": true,
-        "LIBTMPL_BUILD_EXAMPLES": true,
-        "LIBTMPL_ENABLE_VERBOSE": true
+        "LIBTMPL_BUILD_EXAMPLES": false,
+        "LIBTMPL_ENABLE_VERBOSE": true,
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {"name":  "ci-linux",
