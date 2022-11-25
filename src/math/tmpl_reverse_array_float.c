@@ -17,11 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
+/*  size_t typedef is here.                                                   */
+#include <stddef.h>
+
 /*  Function prototype give here.                                             */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  size_t typedef is here.                                                   */
-#include <stdlib.h>
 
 /*  Standard algorithm of time-complexity O(n) to take an array and reverse   *
  *  the order.                                                                */

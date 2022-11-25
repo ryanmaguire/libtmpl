@@ -56,7 +56,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stdlib.h:                                                             *
+ *  1.) stddef.h:                                                             *
  *          Standard C library file with the size_t typedef.                  *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
@@ -97,7 +97,7 @@
 #define TMPL_MATH_H
 
 /*  size_t typedef given here.                                                */
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "tmpl_exports.h"
 

@@ -23,7 +23,6 @@
  ******************************************************************************/
 
 #include <libtmpl/include/tmpl_integer.h>
-#include <stdlib.h>
 
 /*  Make sure this macro is available. It should be.                          */
 #ifdef TMPL_GCD_ALGORITHM
@@ -60,8 +59,8 @@ int tmpl_Int_GCD(int m, int n)
 
     /*  The GCD of negative numbers is still positive. Compute the absolute   *
      *  value of m and n and use the unsigned algorithm.                      */
-    m = abs(m);
-    n = abs(n);
+    m = tmpl_Int_Abs(m);
+    n = tmpl_Int_Abs(n);
 
     /*  Use the fact that GCD(2m, 2n) = 2 GCD(m, n) to reduce the arguments.  */
     m_zeros = TMPL_INT_TRAILING_ZEROS(m);
@@ -119,8 +118,8 @@ int tmpl_Int_GCD(int m, int n)
 
     /*  The GCD of negative numbers is still positive. Compute the absolute   *
      *  value of m and n and use the unsigned algorithm.                      */
-    m = abs(m);
-    n = abs(n);
+    m = tmpl_Int_Abs(m);
+    n = tmpl_Int_Abs(n);
 
     /*  Swap m and n, if necessary, so that m is the larger one.              */
     if (m < n)
@@ -179,8 +178,8 @@ int tmpl_Int_GCD(int m, int n)
 
     /*  The GCD of negative numbers is still positive. Compute the absolute   *
      *  value of m and n and use the unsigned algorithm.                      */
-    m = abs(m);
-    n = abs(n);
+    m = tmpl_Int_Abs(m);
+    n = tmpl_Int_Abs(n);
 
     /*  Apply the Euclidean GCD algorithm.                                    */
     while(n != 0)
@@ -211,8 +210,8 @@ int tmpl_Int_GCD(int m, int n)
 
     /*  The GCD of negative numbers is still positive. Compute the absolute   *
      *  value of m and n and use the unsigned algorithm.                      */
-    m = abs(m);
-    n = abs(n);
+    m = tmpl_Int_Abs(m);
+    n = tmpl_Int_Abs(n);
 
     /*  The "by-hand" algorithm repeatedly subtracts the smaller value from   *
      *  the larger value until the two are equal.                             */

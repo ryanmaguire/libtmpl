@@ -328,6 +328,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/rational/
 	mkdir -p $(BUILD_DIR)/src/special_functions/
 	mkdir -p $(BUILD_DIR)/src/spherical_geometry/
+	mkdir -p $(BUILD_DIR)/src/sort/
 	mkdir -p $(BUILD_DIR)/src/string/
 	mkdir -p $(BUILD_DIR)/src/svg/
 	mkdir -p $(BUILD_DIR)/src/vec2/

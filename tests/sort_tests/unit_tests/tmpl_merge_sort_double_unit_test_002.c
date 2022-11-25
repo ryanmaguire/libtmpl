@@ -16,35 +16,46 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <libtmpl/include/tmpl_sort.h>
 
-/*  size_t typedef found here.                                                */
-#include <stddef.h>
-
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
-
-/*  Function for finding the minimum of an int array.                         */
-unsigned char tmpl_UChar_Array_Min(unsigned char *arr, size_t len)
+static double rand_real(void)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
+    int n = rand();
+    return (double)(n) / (double)(RAND_MAX);
+}
+
+static inline int comp(const void *x, const void *y)
+{
+    return (*(const double *)y < *(const double *)x);
+}
+
+int main(void)
+{
+    const size_t len = (size_t)(1E5);
+    double *arrtmpl = (double *)(malloc(sizeof(*arrtmpl)*len));
+    double *arrc = (double *)(malloc(sizeof(*arrc)*len));
     size_t n;
-    unsigned char min;
 
-    /*  If the array is NULL or empty, the result is undefined.               */
-    if (!arr || !len)
-        return 0x00U;
-
-    /*  Initialize the min variable to the first element.                     */
-    min = arr[0];
-
-    /*  Loop through the remaining elements and find the minimum.             */
-    for (n = 1; n < len; ++n)
+    for (n = 0; n < len; ++n)
     {
-        /*  If the current array element is smaller, reset the min value.     */
-        if (arr[n] < min)
-            min = arr[n];
+        double x = rand_real();
+        arrtmpl[n] = x;
+        arrc[n] = x;
     }
 
-    return min;
+    tmpl_Double_Merge_Sort(arrtmpl, len);
+    qsort(arrc, n, sizeof(double), comp);
+
+    for (n = 0; n < len; ++n)
+    {
+        if (arrtmpl[n] != arrc[n])
+        {
+            puts("FAIL");
+            return -1;
+        }
+    }
+    puts("PASS");
+    return 0;
 }
-/*  End of tmpl_UChar_Array_Min.                                              */
