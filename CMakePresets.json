@@ -33,11 +33,12 @@
       "inherits": "default",
       "generator": "Xcode",
       "cacheVariables": {
-        "LIBTMPL_USE_OMP": false,
+        "LIBTMPL_USE_OMP": true,
         "LIBTMPL_USE_MATH": true,
         "LIBTMPL_USE_ASM": true,
         "LIBTMPL_USE_FASM": false
       },
+      "toolchainFile": "cmake/toolchains/gcc-macos.cmake",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
