@@ -42,6 +42,7 @@ jobs:
             uses: actions/setup-python@v4
             with:
                 python-version: '3.10'
+
         -   name: Install Conan
             id: conan
             uses: turtlebrowser/get-conan@main
@@ -49,10 +50,11 @@ jobs:
         -   name: Create default Conan profile
             run: conan profile new default --detect
 
-        -   name: Install dependencies
+        -   name: Conan install dependencies
             run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl --build=missing
+            timeout-minutes: 5
 
-        -   name: Check version
+        -   name: Check CMake version
             run: cmake --version
 
         -   name: Configure CMake
