@@ -7,7 +7,7 @@
       "installDir": "${sourceParentDir}/install/libtmpl",
       "cacheVariables": {
         "LIBTMPL_STDVER": "-std=c11",
-        "LIBTMPL_BUILD_TESTS": true,
+        "LIBTMPL_BUILD_TESTS": false,
         "LIBTMPL_BUILD_EXAMPLES": false,
         "LIBTMPL_ENABLE_VERBOSE": true,
         "CMAKE_BUILD_TYPE": "Release"
