@@ -17,7 +17,7 @@ foreach(app ${test_apps})
         PRIVATE "${GSL_INCLUDE_DIRS}"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
-    if(UNIX AND NOT LIBTMPL_USE_MATH)
+    if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()

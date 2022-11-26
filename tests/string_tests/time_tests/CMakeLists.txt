@@ -20,7 +20,7 @@ foreach(app ${test_apps})
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
-    if(UNIX AND NOT LIBTMPL_USE_MATH)
+    if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()

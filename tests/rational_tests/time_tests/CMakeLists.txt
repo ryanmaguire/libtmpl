@@ -25,7 +25,7 @@ foreach(app ${test_apps})
         PRIVATE "${Boost_INCLUDE_DIR}" "${Boost_INCLUDE_DIR}/boost"
     )
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
-    if(UNIX AND NOT LIBTMPL_USE_MATH)
+    if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()
