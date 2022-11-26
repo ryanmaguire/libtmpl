@@ -24,7 +24,7 @@ does not support the `gcc` `inline` extension, set this option to FALSE."
 option(
     LIBTMPL_USE_MATH
     "Use `libtmpl`'s implementation of `libm`, the C standard library for mathematical tools,
-instead using your compilers implementation. This may be recommended. Tests against `glibc`, `FreeBSD libc`, and
+instead using your compiler's implementation. This may be recommended. Tests against `glibc`, `FreeBSD libc`, and
 `MSVC`'s implementation of `libm` show that `libtmpl` can be significantly faster (all functions have benchmarks
 in the `tests/` directory and you may see for yourself), but this has only been tested on the architectures supported
 by the Debian GNU/Linux operating system. Users of other architectures may wish to use their default `libm`. Also, if
@@ -64,10 +64,10 @@ installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE."
 
 option(LIBTMPL_USE_LONGLONG "" TRUE)
 option(LIBTMPL_USE_INT "" TRUE)
-option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests" FALSE)
+option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests." FALSE)
 option(
     LIBTMPL_BUILD_EXAMPLES
-    "Set to TRUE to enable the building of examples"
+    "Set to TRUE to enable the building of examples."
     FALSE
 )
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
