@@ -52,7 +52,6 @@ jobs:
 
         -   name: Conan install dependencies
             run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl --build=missing
-            timeout-minutes: 5
 
         -   name: Check CMake version
             run: cmake --version
