@@ -168,12 +168,121 @@ Dependencies for libtmpl are provided using the [Conan](https://conan.io/) packa
 pip install conan
 ```
 with only Python >= 3.6 supported. For installation by other means, please see [these instrucctions](https://docs.conan.io/en/latest/installation.html#).
+
+After installing Conan, generate the default profile with
+```shell
+conan profile new default --detect
+```
 #### Install CMake
 Please download and install the latest version of CMake from [here](https://cmake.org/download/).
 
 #### [Optional] Ninja
-###
+CMake can generate Ninja build files, which can result in a more performant build. The simplest way to install
+Ninja is to use the pre-built packages via a package manager. For example, using Debian's apt-get
 
+```shell
+apt-get install ninja-build
+```
+
+or using Python's pip package manager
+```shell
+pip install ninja
+```
+. For other package managers, please see [this page](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
+
+### CMake options
+`LIBTMPL_USE_OMP:BOOL`
+> Compile with `OpenMP` support (highly recommended).
+**WARNING** Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option will result in an error.
+Homebrew has versions of clang and gcc that do support OpenMP."
+
+`LIBTMPL_USE_INLINE:BOOL`
+> Use inline code. If disabled, this results in a slightly smaller `libtmpl.so` file, but several
+functions become significantly slower (not recommended). If your compiler does not support `C99` or higher, and
+does not support the `gcc` `inline` extension, set this option to FALSE.
+
+`LIBTMPL_USE_MATH:BOOL`
+> Use `libtmpl`'s implementation of `libm`, the C standard library for mathematical tools,
+instead using your compiler's implementation. This may be recommended. Tests against `glibc`, `FreeBSD libc`, and
+`MSVC`'s implementation of `libm` show that `libtmpl` can be significantly faster (all functions have benchmarks
+in the `tests/` directory and you may see for yourself), but this has only been tested on the architectures supported
+by the Debian GNU/Linux operating system. Users of other architectures may wish to use their default `libm`. Also, if
+your compiler does not support the `IEEE-754` standard (most do), or does not support type-punning for `union`, the
+portable algorithms (algorithms that do not use `IEEE-754` or type-punning) are much slower. In these instances you
+may wish to use the default `libm`.
+
+`LIBTMPL_USE_IEEE: BOOL`
+> Enable use of the `IEEE` formats for `float` and `double`. The `config.c` file should detect if your
+compiler supports this, and type-punning for `union`, so you should not need to set this option manually
+(not recommended).
+
+`LIBTMPL_USE_ASM:BOOL`
+> Only applicable is `LIBTMPL_USE_MATH` is FALSE, and for `x86_64/amd64/arm64/armv7l` machines. Some functions,
+like `sqrt`, can be handle efficiently in assembly code. If you wish to use only C code, set this option to FALSE
+(not recommended).
+
+`LIBTMPL_USE_BUILTIN:BOOL`
+> Only applicable is `LIBTMPL_USE_MATH` and `LIBTMPL_USE_ASM` are TRUE, and only for `x86_64/amd64/arm64` machines.
+If you are using `gcc`, `clang`, or `pcc`, you can take adventage of several built-in functions like `sincos`.
+This is handled in assembly code. If you're not using a compiler that has these built-in functions, set this option to
+FALSE (not recommended).
+
+`LIBTMPL_USE_FASM:BOOL`
+> Use the flat assembler instead of the assembly language used by `gcc` and `clang`. You must have `fasm`
+installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE.
+
+`LIBTMPL_BUILD_TESTS:BOOL`
+> Set to TRUE to enable the building of tests.
+
+`LIBTMPL_BUILD_EXAMPLES:BOOL`
+> Set to TRUE to enable the building of examples.
+
+`LIBTMPL_STDVER:STRING`
+> Set the desired C version by setting to `-std=<version>`, where c89, c90, c99, c11 and c17 are recognized values for
+> `<version>`.
+
+### Running CMake
+Builds via CMake execute in over a couple of separate stages. The first (the configure/generate) step
+is traditionally executed with the follow where CMake cache variables (e.g. the options outlined above)
+can be set using `-D<option name>=<value>`.
+```shell
+cmake -B ../build -S . -DCMAKE_BUILD_TYPE=Debug
+```
+This command generates the build system using the default generator (i.e. Unix Makefiles on Linux/macOS and Visual Studio project files for Windows) configured for a `Debug`
+build. The build system files will be located a `../build`.
+
+To next step is the build stage, which will execute build
+```shell
+cmake --build ../build
+```
+And lastly the install stage can be executed with
+```shell
+cmake --install .../build --prefix=<your install path>
+```
+which will install the build products at `<your install path>`.
+
+Alternatively, CMake has introduced a [presets syntax](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) that allows one to express the desired configure/build options
+in a `*.json` file (see CMakePresets.json for the presets used with the Github CI).
+
+To begin, list the available configure presets with
+```shell
+cmake --list-presets
+```
+
+. To execute the configure stage with a preset use
+```shell
+cmake --preset <configure preset name>
+```
+
+. Next, list the available build presets with
+```shell
+cmake --build --list-presets
+```
+. Lastly execute the build stage with
+```shell
+cmake --build --preset <build preset name>
+```
+.
 
 # Language Bindings <a name="bindings"></a>
 Language bindings, or *wrappers*, are provided for `C++`, `Python`,
