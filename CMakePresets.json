@@ -1,7 +1,7 @@
 {
   "version": 5,
   "configurePresets": [
-    {"name": "default",
+    {"name": "ci-base",
     "hidden": true,
       "binaryDir": "${sourceParentDir}/build/libtmpl",
       "installDir": "${sourceParentDir}/install/libtmpl",
@@ -14,7 +14,7 @@
       }
     },
     {"name":  "ci-linux",
-    "inherits": "default",
+    "inherits": "ci-base",
       "generator": "Ninja",
       "cacheVariables": {
         "LIBTMPL_USE_OMP": true,
@@ -30,7 +30,7 @@
     },
     {
       "name": "ci-macos",
-      "inherits": "default",
+      "inherits": "ci-base",
       "generator": "Xcode",
       "cacheVariables": {
         "LIBTMPL_USE_OMP": true,
@@ -47,7 +47,7 @@
     },
     {
       "name": "ci-windows",
-      "inherits": "default",
+      "inherits": "ci-base",
       "cacheVariables": {
         "LIBTMPL_USE_OMP": false,
         "LIBTMPL_USE_MATH": true,
