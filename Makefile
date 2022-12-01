@@ -264,7 +264,7 @@ else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 BUILTIN_INCLUDE :=
 BUILTIN_EXCLUDE :=
 ASM_INCLUDE := -wholename "./src/assembly/armv7l/*.S" -or
-ASM_EXCLUDE :=
+ASM_EXCLUDE := \
 	-not -name "tmpl_sqrt_double.c" -and \
 	-not -name "tmpl_sqrt_float.c" -and \
 	-not -name "tmpl_sqrt_ldouble.c" -and
@@ -289,7 +289,6 @@ INCLUDE := \( $(ASM_INCLUDE) $(BUILTIN_INCLUDE) -name "*.c" \)
 EXCLUDE := $(ASM_EXCLUDE) $(BUILTIN_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
-DEPS := $(OBJS:.o=.d)
 
 .PHONY: clean install uninstall all
 
@@ -336,26 +335,13 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/vector/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
-ifdef FASM
 	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
-ifndef NO_BUILTIN
 	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
-endif
-else ifndef NO_ASM
-ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 	mkdir -p $(BUILD_DIR)/src/assembly/x86_64/
-ifndef NO_BUILTIN
 	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
-endif
-else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 	mkdir -p $(BUILD_DIR)/src/assembly/aarch64/
-ifndef NO_BUILTIN
 	mkdir -p $(BUILD_DIR)/src/builtins/aarch64/
-endif
-else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 	mkdir -p $(BUILD_DIR)/src/assembly/armv7l/
-endif
-endif
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -375,6 +361,3 @@ uninstall:
 	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)
-
--include $(DEPS)
-
