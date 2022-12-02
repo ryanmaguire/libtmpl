@@ -64,9 +64,8 @@ const double tmpl_atan_double_atan_of_v[8] = {
 /*  The long double version of these tables depends on how long double is     *
  *  implemented. 80-bit extended and 64-bit double implementations, as well   *
  *  as the "portable" version, use the same idea as double and float. 128-bit *
- *  quadruple uses a much larger table to speed up computations while still   *
- *  achieving 10^-34 peak relative error. 128-bit double-double uses the same *
- *  table as double and does not need any new tables.                         */
+ *  quadruple and double-double use a much larger table to speed up           *
+ *  computations while still achieving 10^-34 peak relative error.            */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
@@ -89,8 +88,8 @@ const long double tmpl_atan_ldouble_atan_of_v[8] = {
     1.44644133224813518419997E+00L
 };
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN || \
-      TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
+#else
+/*  Quadruple and double-double use a larger table.                           */
 
 /*  The values atan(n/8) for n = 0, 1, ... , 127, 128.                        */
 const long double tmpl_ldouble_atan_n_by_8[129] = {
