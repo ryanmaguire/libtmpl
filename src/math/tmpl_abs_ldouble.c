@@ -130,11 +130,11 @@
 /*  This file is only compiled if inline support is not requested.            */
 #if TMPL_USE_INLINE != 1
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Header file where the prototype for the function is defined.              */
+#include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
