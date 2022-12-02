@@ -16,11 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include "tmpl_vec3_vs_linasm.h"
+#include "tmpl_vec3_time_tests.h"
+typedef struct v3 {double x, y, z;} vec3;
+static double dot_prod(const vec3 *P, const vec3 *Q)
+{
+    return P->x*Q->x + P->y*Q->y + P->z*Q->z;
+}
 
-TEST3(double,
-      tmpl_ThreeVectorDouble,
-      v3D64_t,
-      tmpl_3DDouble_Dot_Product,
-      Vector3D_ScalarProduct_flt64,
-      10000000ULL)
+TEST3(double, tmpl_ThreeVectorDouble, vec3,
+      tmpl_3DDouble_Dot_Product, dot_prod)
