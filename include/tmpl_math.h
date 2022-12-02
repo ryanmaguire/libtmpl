@@ -27,7 +27,7 @@
  *                                                                            *
  *      If your compiler supports the IEEE-754 format, you'll find that the   *
  *      functions provided here are about as fast and as accurate as the ones *
- *      provided in other implementations, such as glibc or open libm. The    *
+ *      provided in other implementations, such as glibc or openlibm. The     *
  *      ideas used mostly come from standard algorithms found in textbooks,   *
  *      and nothing too fancy is attempted. The main goal is readability. As  *
  *      such, the algorithms are heavily commented.                           *
@@ -40,7 +40,7 @@
  *          There is no real portable way to implement infinity in strictly   *
  *          compliant ISO C. Compilers implementing the IEEE-754 format have  *
  *          a way of supporting infinity, but compilers that don't may not.   *
- *          They way glibc implements infinity for compilers lacking IEEE-754 *
+ *          The way glibc implements infinity for compilers lacking IEEE-754  *
  *          support is via the number 1.0E10000, which is guaranteed to       *
  *          overflow. This is undefined behavior, but in practice it works.   *
  *          This implementation uses similar tactics.                         *
