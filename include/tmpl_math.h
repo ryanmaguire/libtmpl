@@ -1247,6 +1247,38 @@ extern const long double tmpl_Min_LDouble_Base_E;
  *                              Tables and Data                               *
  ******************************************************************************/
 
+/*  The atan tables are only needed if libtmpl math algorithms are used.      */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  The values v and atan(v) used in atan and atan2 routines.                 */
+extern const float tmpl_atan_float_v[8];
+extern const float tmpl_atan_float_atan_of_v[8];
+extern const double tmpl_atan_double_v[8];
+extern const double tmpl_atan_double_atan_of_v[8];
+
+/*  The long double version of these tables depends on how long double is     *
+ *  implemented. 80-bit extended and 64-bit double implementations, as well   *
+ *  as the "portable" version, use the same idea as double and float. 128-bit *
+ *  quadruple uses a much larger table to speed up computations while still   *
+ *  achieving 10^-34 peak relative error. 128-bit double-double uses the same *
+ *  table as double and does not need any new tables.                         */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN    || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
+extern const long double tmpl_atan_ldouble_v[8];
+extern const long double tmpl_atan_ldouble_atan_of_v[8];
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN || \
+      TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
+extern const long double tmpl_ldouble_atan_n_by_8[129];
+#endif
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
+
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
 extern const double tmpl_double_cbrt_table[128];
 extern const float tmpl_float_cbrt_table[128];
@@ -1291,7 +1323,7 @@ extern const long double tmpl_ldouble_sinpi_table[128];
  *  Function:                                                                 *
  *      tmpl_Double_Abs                                                       *
  *  Purpose:                                                                  *
- *      Compute the absolute value of a real number (fabs alias).             *
+ *      Compute the absolute value of a real number (fabs equivalent).        *
  *  Arguments:                                                                *
  *      double x:                                                             *
  *          A real number.                                                    *
@@ -1304,7 +1336,9 @@ extern const long double tmpl_ldouble_sinpi_table[128];
  *      libtmpl/src/math/tmpl_abs_float.c                                     *
  *      libtmpl/src/math/tmpl_abs_double.c                                    *
  *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
- *      libtmpl/include/math/tmpl_math_abs_inline.h (inline version)          *
+ *      libtmpl/include/math/tmpl_math_abs_double_inline.h (inline version)   *
+ *      libtmpl/include/math/tmpl_math_abs_float_inline.h (inline version)    *
+ *      libtmpl/include/math/tmpl_math_abs_ldouble_inline.h (inline version)  *
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
  *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
@@ -1326,6 +1360,7 @@ extern const long double tmpl_ldouble_sinpi_table[128];
 
 /*  Alias functions to fabs from math.h if libtmpl algorithms not requested.  */
 #if TMPL_USE_MATH_ALGORITHMS != 1
+
 #define tmpl_Float_Abs fabsf
 #define tmpl_Double_Abs fabs
 #define tmpl_LDouble_Abs fabsl
@@ -1366,7 +1401,9 @@ extern long double tmpl_LDouble_Abs(long double x);
  *  Output:                                                                   *
  *      double atan:                                                          *
  *          The angle the point (x,y) makes with (1,0) in the plane.          *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *                                                                            *
  *      By convention dating back to (at least) the 1970s, Arctan2 takes the  *
  *      input as (y,x), not (x,y). i.e. the first argument is the y           *
  *      component and the second argument is the x component. This is contrary*
@@ -1379,15 +1416,24 @@ extern long double tmpl_LDouble_Abs(long double x);
  *      along the negative x axis. Because of this, use of this function      *
  *      in complex routines results in actual branch cuts.                    *
  ******************************************************************************/
+
+/*  If libtmpl math algorithms are not requested, alias functions to atan2.   */
 #if TMPL_USE_MATH_ALGORITHMS != 1
+
 #define tmpl_Float_Arctan2 atan2f
 #define tmpl_Double_Arctan2 atan2
 #define tmpl_LDouble_Arctan2 atan2l
+
 #else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
 extern float tmpl_Float_Arctan2(float y, float x);
 extern double tmpl_Double_Arctan2(double y, double x);
 extern long double tmpl_LDouble_Arctan2(long double y, long double x);
+
 #endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1423,14 +1469,21 @@ extern long double tmpl_LDouble_Arctan2(long double y, long double x);
 
 /*  Alias functions to atan from math.h if libtmpl algorithms not requested.  */
 #if TMPL_USE_MATH_ALGORITHMS != 1
+
 #define tmpl_Float_Arctan atanf
 #define tmpl_Double_Arctan atan
 #define tmpl_LDouble_Arctan atanl
+
 #else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
 extern float tmpl_Float_Arctan(float x);
 extern double tmpl_Double_Arctan(double x);
 extern long double tmpl_LDouble_Arctan(long double x);
+
 #endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *

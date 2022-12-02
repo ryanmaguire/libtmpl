@@ -171,8 +171,6 @@
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) tmpl_math_arctan_double_tables.h:                                     *
- *          Header file containing pre-computed values of arctan(x).          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 19, 2022                                              *
@@ -186,9 +184,6 @@
 
 /*  Function prototypes found here.                                           */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  Lookup tables are found here.                                             */
-#include <libtmpl/include/math/tmpl_math_arctan_ldouble_tables.h>
 
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1

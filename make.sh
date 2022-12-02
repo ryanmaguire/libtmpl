@@ -278,6 +278,7 @@ else
     Exclude="$Exclude tmpl_abs_double.c"
     Exclude="$Exclude tmpl_abs_float.c"
     Exclude="$Exclude tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arctan_tables.c"
     Exclude="$Exclude tmpl_arctan2_double.c"
     Exclude="$Exclude tmpl_arctan2_float.c"
     Exclude="$Exclude tmpl_arctan2_ldouble.c"
