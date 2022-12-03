@@ -17,6 +17,7 @@ set(sources
     tmpl_arctan_pade_double.c
     tmpl_arctan_pade_float.c
     tmpl_arctan_pade_ldouble.c
+    tmpl_arctan_tables.c
     tmpl_arctan_very_small_double.c
     tmpl_arctan_very_small_float.c
     tmpl_arctan_very_small_ldouble.c

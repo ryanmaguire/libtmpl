@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,11 +16,5 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include "tmpl_vec3_vs_linasm.h"
-
-TEST5(double,
-      tmpl_ThreeVectorDouble,
-      v3D64_t,
-      tmpl_3DDouble_L2_Norm,
-      Vector3D_Abs_flt64,
-      10000000ULL)
+#include "tmpl_vec3_time_tests.h"
+TEST7(CrossWith)
