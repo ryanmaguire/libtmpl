@@ -28,6 +28,23 @@
         "rhs": "Linux"
       }
     },
+    {"name":  "ci-linux-aarch64-crosscompile",
+    "inherits": "ci-base",
+    "description": "Cross-compile from x86-64 to aarch64. Requires qemu, gcc-aarch64-linux-gnu, and g++-aarch64-linux-gnu",
+      "generator": "Ninja",
+      "toolchainFile": "cmake/toolchains/aarch64-linux-gnu-gcc.cmake",
+      "cacheVariables": {
+        "LIBTMPL_USE_OMP": true,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": true
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
     {
       "name": "ci-macos",
       "inherits": "ci-base",
@@ -69,6 +86,16 @@
     {
       "name": "ci-linux",
       "configurePreset": "ci-linux",
+      "targets": ["install"],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "ci-linux-aarch64-crosscompile",
+      "configurePreset": "ci-linux-aarch64-crosscompile",
       "targets": ["install"],
       "condition": {
         "type": "equals",
