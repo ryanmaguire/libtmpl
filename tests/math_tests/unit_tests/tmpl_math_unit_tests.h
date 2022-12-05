@@ -93,18 +93,33 @@
 #define F tmpl_False
 #define TINF tmpl_Double_Infinity()
 #define TNAN tmpl_Double_NaN()
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 #define DNUM pow(2.0, 1 - (TMPL_DOUBLE_BIAS + TMPL_DOUBLE_MANTISSA_LENGTH))
 #define BNUM pow(2.0, (TMPL_DOUBLE_BIAS))
+#else
+#define DNUM DBL_MIN
+#define BNUM DBL_MAX
+#endif
 #define EPS (10.0 * DBL_EPSILON)
 #define TINFF tmpl_Float_Infinity()
 #define TNANF tmpl_Float_NaN()
+#if TMPL_HAS_IEEE754_FLOAT == 1
 #define DNUMF powf(2.0F, 1 - (TMPL_FLOAT_BIAS + TMPL_FLOAT_MANTISSA_LENGTH))
 #define BNUMF powf(2.0F, (TMPL_FLOAT_BIAS))
+#else
+#define DNUMF FLT_MIN
+#define BNUMF FLT_MAX
+#endif
 #define EPSF (10.0F * FLT_EPSILON)
 #define TINFL tmpl_LDouble_Infinity()
 #define TNANL tmpl_LDouble_NaN()
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
 #define DNUML powl(2.0L, 1 - (TMPL_LDOUBLE_BIAS + TMPL_LDOUBLE_MANTISSA_LENGTH))
 #define BNUML powl(2.0L, (TMPL_LDOUBLE_BIAS))
+#else
+#define DNUML LDBL_MIN
+#define BNUML LDBL_MAX
+#endif
 #define EPSL (10.0L * LDBL_EPSILON)
 
 #ifdef GET_EPS
