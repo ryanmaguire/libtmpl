@@ -156,7 +156,7 @@ int main(void)                                                                 \
         }                                                                      \
         else if (tmpl_LDouble_Abs((long double)(out0 - out1)) > EPS)           \
         {                                                                      \
-            puts("FAIL"); printf("%e\n%e\n", (double)out0, (double)out1);                                                     \
+            puts("FAIL");                                                      \
             return -1;                                                         \
         }                                                                      \
     }                                                                          \
