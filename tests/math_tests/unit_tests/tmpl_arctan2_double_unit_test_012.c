@@ -21,4 +21,4 @@
  ******************************************************************************/
 #include "tmpl_math_unit_tests.h"
 #define indata {{BNUM, BNUM}, {-BNUM, BNUM}, {-BNUM, -BNUM}, {BNUM, -BNUM}}
-TEST3(double, tmpl_Double_Arctan2, atan2, indata, tmpl_Double_Is_NaN, 1.0E-15)
+TEST3(double, tmpl_Double_Arctan2, atan2, indata)

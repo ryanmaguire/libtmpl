@@ -22,4 +22,4 @@
 #include "tmpl_math_unit_tests.h"
 #define indata {TMPL_INFINITY, -TMPL_INFINITY, TMPL_NAN, -TMPL_NAN}
 #define outdata {TMPL_INFINITY, TMPL_INFINITY, TMPL_NAN, TMPL_NAN}
-TEST1(double, tmpl_Double_Abs, indata, outdata, tmpl_Double_Is_NaN)
+TEST1(double, tmpl_Double_Abs, indata, outdata)
