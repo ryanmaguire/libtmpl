@@ -22,4 +22,4 @@
 #include "tmpl_math_unit_tests.h"
 #define indata {0.0F, -0.0F, FLT_MIN, -FLT_MIN, FLT_MAX, -FLT_MAX}
 #define outdata {0.0F, 0.0F, FLT_MIN, FLT_MIN, FLT_MAX, FLT_MAX}
-TEST1(float, tmpl_Float_Abs, indata, outdata, tmpl_Float_Is_NaN)
+TEST1(float, tmpl_Float_Abs, indata, outdata)

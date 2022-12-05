@@ -21,4 +21,4 @@
  ******************************************************************************/
 #include "tmpl_math_unit_tests.h"
 #define indata {{TINFF, 0.0F}, {-TINFF, 0.0F}, {-TINFF, -0.0F}, {TINFF, -0.0F}}
-TEST3(float, tmpl_Float_Arctan2, atan2f, indata, tmpl_Float_Is_NaN, 1.0E-6F)
+TEST3(float, tmpl_Float_Arctan2, atan2f, indata)
