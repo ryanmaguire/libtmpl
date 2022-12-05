@@ -56,12 +56,28 @@
 #ifdef BNUM
 #undef BNUM
 #endif
+#ifdef TINFF
+#undef TINFF
+#endif
+#ifdef TNANF
+#undef TNANF
+#endif
+#ifdef DNUMF
+#undef DNUMF
+#endif
+#ifdef BNUMF
+#undef BNUMF
+#endif
 #define T tmpl_True
 #define F tmpl_False
 #define TINF tmpl_Double_Infinity()
 #define TNAN tmpl_Double_NaN()
 #define DNUM pow(2.0, 1 - (TMPL_DOUBLE_BIAS + TMPL_DOUBLE_MANTISSA_LENGTH))
 #define BNUM pow(2.0, (TMPL_DOUBLE_BIAS))
+#define TINFF tmpl_Float_Infinity()
+#define TNANF tmpl_Float_NaN()
+#define DNUMF powf(2.0F, 1 - (TMPL_FLOAT_BIAS + TMPL_FLOAT_MANTISSA_LENGTH))
+#define BNUMF powf(2.0F, (TMPL_FLOAT_BIAS))
 
 #define TEST1(type, func, indata, outdata, is_nan)                             \
 int main(void)                                                                 \
@@ -140,7 +156,7 @@ int main(void)                                                                 \
         }                                                                      \
         else if (tmpl_LDouble_Abs((long double)(out0 - out1)) > EPS)           \
         {                                                                      \
-            puts("FAIL");                                                      \
+            puts("FAIL"); printf("%e\n%e\n", (double)out0, (double)out1);                                                     \
             return -1;                                                         \
         }                                                                      \
     }                                                                          \
