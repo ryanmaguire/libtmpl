@@ -104,12 +104,12 @@
  *                                                                            *
  *                      For larger values, use the asmyptotic expansion.      *
  *      Error:                                                                *
- *          Based on 788,968,857 random samples with -100 < |x|, |y| < 100.   *
+ *          Based on 788,968,857 random samples with -100 < x, y < 100.       *
  *              max relative error: 4.4955987686353023e-16                    *
  *              rms relative error: 9.2214263529102684e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
  *              rms absolute error: 1.6454528697674011e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
@@ -132,12 +132,12 @@
  *          Same as IEEE-754 method, except the index of the lookup table is  *
  *          computed via if-then statements to narrow down the range of x.    *
  *      Error:                                                                *
- *          Based on 788,968,857 random samples with -100 < |x|, |y| < 100.   *
+ *          Based on 788,968,857 random samples with -100 < x, y < 100.       *
  *              max relative error: 4.4955987686353023e-16                    *
  *              rms relative error: 9.2214263529102684e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
  *              rms absolute error: 1.6454528697674011e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
@@ -176,8 +176,8 @@
 double tmpl_Double_Arctan2(double y, double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Double wx, wy, w;
-    double arg, out, v, atan_v;
+    tmpl_IEEE754_Double wx, wy, w, out;
+    double arg, v, atan_v;
     unsigned int ind;
 
     /*  Set the double part of the words to the two inputs.                   */
@@ -229,10 +229,11 @@ double tmpl_Double_Arctan2(double y, double x)
             return y;
 
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
-        if (wy.bits.sign)
-            return -tmpl_Pi_By_Two;
-        else
-            return tmpl_Pi_By_Two;
+        w.r = tmpl_Pi_By_Two;
+
+        /*  The sign of the output is the same as the sign of y. Copy this.   */
+        w.bits.sign = wy.bits.sign;
+        return w.r;
     }
 
     /*  Next special case, y = 0.                                             */
@@ -242,10 +243,11 @@ double tmpl_Double_Arctan2(double y, double x)
         if (wx.bits.sign)
         {
             /*  Preserve the sign of y. If y is a negative zero, return -Pi.  */
-            if (wy.bits.sign)
-                return -tmpl_One_Pi;
-            else
-                return tmpl_One_Pi;
+            w.r = tmpl_One_Pi;
+
+            /*  The sign of the output is the same as the sign of y.          */
+            w.bits.sign = wy.bits.sign;
+            return w.r;
         }
 
         /*  Otherwise, return 0. To preserve the sign of y, return y.         */
@@ -257,10 +259,11 @@ double tmpl_Double_Arctan2(double y, double x)
     else if (x == 0.0)
     {
         /*  y is not zero, so the answer is +/- pi/2.                         */
-        if (wy.bits.sign)
-            return -tmpl_Pi_By_Two;
-        else
-            return tmpl_Pi_By_Two;
+        w.r = tmpl_Pi_By_Two;
+
+        /*  The sign of the output is the same as the sign of y. Copy this.   */
+        w.bits.sign = wy.bits.sign;
+        return w.r;
     }
 
     /*  We have z = y/x. Compute the absolute value by setting sign to 0.     */
@@ -269,11 +272,11 @@ double tmpl_Double_Arctan2(double y, double x)
 
     /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
-        out = tmpl_Double_Arctan_Very_Small(w.r);
+        out.r = tmpl_Double_Arctan_Very_Small(w.r);
 
     /*  For |z| > 16, use the asymptotic expansion.                           */
     else if (w.bits.expo > TMPL_DOUBLE_UBIAS + 3U)
-        out = tmpl_Double_Arctan_Asymptotic(w.r);
+        out.r = tmpl_Double_Arctan_Asymptotic(w.r);
 
     /*  Otherwise use the lookup table to reduce. Note we have reduced to the *
      *  case where -4 <= expo <= 3, where expo is the exponent of z.          */
@@ -292,18 +295,16 @@ double tmpl_Double_Arctan2(double y, double x)
 
         /*  Use 4.4.34 from Abramowitz and Stegun to compute the new argument.*/
         arg = (w.r - v) / (1.0 + w.r*v);
-        out = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
+        out.r = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
     }
 
     /*  Reduce to the case where x > 0 via atan2(y, -x) = pi - atan2(y, x).   */
     if (wx.bits.sign)
-        out = tmpl_One_Pi - out;
+        out.r = tmpl_One_Pi - out.r;
 
     /*  Reduce to y > 0 via atan2(-y, x) = -atan2(y, x).                      */
-    if (wy.bits.sign)
-        return -out;
-    else
-        return out;
+    out.bits.sign = wy.bits.sign;
+    return out.r;
 }
 /*  End of tmpl_Double_Arctan.                                                */
 
@@ -354,7 +355,7 @@ double tmpl_Double_Arctan2(double y, double x)
     else if (tmpl_Double_Is_Inf(y))
     {
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
-        if (x < 0.0)
+        if (y < 0.0)
             return -tmpl_Pi_By_Two;
         else
             return tmpl_Pi_By_Two;
