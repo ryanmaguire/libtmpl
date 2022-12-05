@@ -106,20 +106,20 @@
  *                                                                            *
  *                      For larger values, use the asmyptotic expansion.      *
  *      Error (64-Bit Double):                                                *
- *          Based on 788,968,857 random samples with -100 < |x|, |y| < 100.   *
+ *          Based on 788,968,857 random samples with -100 < x, y < 100.       *
  *              max relative error: 4.4955987686353023e-16                    *
  *              rms relative error: 9.2214263529102684e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
  *              rms absolute error: 1.6454528697674011e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *      Error (80-Bit Extended):                                              *
- *          Based on 394,484,428 random samples with -100 < |x|, |y| < 100.   *
+ *          Based on 394,484,428 random samples with -100 < x, y < 100.       *
  *              max relative error: 2.1682630157549489e-19                    *
  *              rms relative error: 3.9719504311123539e-20                    *
  *              max absolute error: 2.1684043449710089e-19                    *
  *              rms absolute error: 7.2247868870500588e-20                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *  128-Bit Quadruple / 128-Bit Double-Double:                                *
  *      Called Functions:                                                     *
@@ -132,15 +132,15 @@
  *          Similar to double / extended method, but with a large lookup      *
  *          table and using the Pade approximant instead of Maclaurin series. *
  *      Error (128-Bit Quadruple):                                            *
- *          Based on 25,000,000 random samples with -100 < |x|, |y| < 100.    *
+ *          Based on 25,000,000 random samples with -100 < x, y < 100.        *
  *              max relative error: 1.7473101468321921e-34                    *
  *              rms relative error: 5.2509800591011004e-35                    *
  *              max absolute error: 3.8518598887744717e-34                    *
  *              rms absolute error: 1.0894746550053625e-34                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-34).                                    *
  *      Error (128-Bit Double-Double):                                        *
- *          Based on 25,000,000 random samples with -100 < |x|, |y| < 100.    *
+ *          Based on 25,000,000 random samples with -100 < x, y < 100.        *
  *              max relative error: 1.5693901271014608e-32                    *
  *              rms relative error: 4.0465499798622827e-33                    *
  *              max absolute error: 2.4651903288156619e-32                    *
@@ -168,12 +168,12 @@
  *          Same as double / extended, except the index of the lookup table   *
  *          is computed via if-then statements to narrow down the range of x. *
  *      Error:                                                                *
- *          Based on 394,484,428 random samples with -100 < |x|, |y| < 100.   *
+ *          Based on 394,484,428 random samples with -100 < x, y < 100.       *
  *              max relative error: 2.1682630157549489e-19                    *
  *              rms relative error: 3.9719504311123539e-20                    *
  *              max absolute error: 2.1684043449710089e-19                    *
  *              rms absolute error: 7.2247868870500588e-20                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
@@ -205,18 +205,15 @@
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /*  64-bit double and 80-bit extended use the same idea.                      */
-#if \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
 
 /******************************************************************************
- *                          64 BIT DOUBLE PRECISION                           *
- *                                    and                                     *
- *                         80 BIT EXTENDED PRECISION                          *
+ *                  64-Bit Double / 80-Bit Extended Versions                  *
  ******************************************************************************/
 
 /*  Long double precision inverse tangent (atan2l equivalent).                */
@@ -362,9 +359,7 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
 /*  Else for 64-bit double / 80-bit extended precision versions.              */
 
 /******************************************************************************
- *                        128 BIT QUADRUPLE PRECISION                         *
- *                                    and                                     *
- *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
+ *                 128-Bit Quadruple / 128-Bit Double-Double                  *
  ******************************************************************************/
 
 /*  To get quadruple or double-double precision, the Taylor series is too     *
@@ -548,7 +543,7 @@ long double tmpl_LDouble_Arctan2(long double y, long double x)
     else if (tmpl_LDouble_Is_Inf(y))
     {
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
-        if (x < 0.0L)
+        if (y < 0.0L)
             return -tmpl_Pi_By_Two_L;
         else
             return tmpl_Pi_By_Two_L;
