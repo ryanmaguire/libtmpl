@@ -186,7 +186,7 @@ int main(void)                                                                 \
     type out0, out1;                                                           \
     size_t n;                                                                  \
     const long double eps = (long double)GET_EPS(out0);                        \
-    long double err;                                                           \
+    long double err = 0.0L;                                                    \
     type zero = (type)0;                                                       \
                                                                                \
     for (n = (size_t)0; n < sizeof(in)/sizeof(in[0]); ++n)                     \

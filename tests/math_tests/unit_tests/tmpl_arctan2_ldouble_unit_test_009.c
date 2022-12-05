@@ -20,5 +20,5 @@
  *  Date:       December 5, 2022                                              *
  ******************************************************************************/
 #include "tmpl_math_unit_tests.h"
-#define indata {{0.0F, 1.0F}, {-0.0F, 1.0F}, {-0.0F, -1.0F}, {0.0F, -1.0F}}
-TEST3(float, tmpl_Float_Arctan2, atan2f, indata)
+#define indata {{DNUML,DNUML}, {-DNUML,DNUML}, {-DNUML,-DNUML}, {DNUML,-DNUML}}
+TEST3(long double, tmpl_LDouble_Arctan2, atan2l, indata)
