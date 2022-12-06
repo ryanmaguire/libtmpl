@@ -45,7 +45,7 @@
  *              in this function than tmpl_LDouble_Arctan_Very_Small.         *
  *          tmpl_LDouble_Arctan_Very_Small (tmpl_math.h):                     *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *      Method:                                                               *
  *          Check if the input is is NaN or infinity. Return NaN if it is     *
  *          NaN, and sign(x) * pi / 2 if it is +/- infinity.                  *
@@ -80,22 +80,23 @@
  *          atan(u) = atan(v) + atan( -------- )                              *
  *                                     1 + uv                                 *
  *                                                                            *
- *          x in [0.0, 1/16) u = x, v = 0.05, reduce and use polynomial.      *
- *          x in [1/16, 1/8) u = x, v = 0.18, reduce and use polynomial.      *
- *          x in [1/8, 1/4)  u = x, v = 0.35, reduce and use polynomial.      *
- *          x in [1/4, 1/2)  u = x, v = 0.72, reduce and use polynomial.      *
- *          x in [1/2, 1)    u = x, v = 1.35, reduce and use polynomial.      *
- *          x in [1, 2)      u = x, v = 2.50, reduce and use polynomial.      *
- *          x in [2, 4)      u = x, v = 4.00, reduce and use polynomial.      *
- *          x in [4, 8)      u = x, v = 8.00, reduce and use polynomial.      *
- *          x >= 8           atan(x) ~= pi/2 + atan(-1/x).                    *
+ *          x in [0, 1/16)    atan(x) ~= x - x^3/3 + x^5/5 - x^7/7 + ...      *
+ *          x in [1/16, 1/8)  u = x, v = 0.05, reduce and use polynomial.     *
+ *          x in [1/8, 1/4)   u = x, v = 0.18, reduce and use polynomial.     *
+ *          x in [1/4, 1/2)   u = x, v = 0.35, reduce and use polynomial.     *
+ *          x in [1/2, 1)     u = x, v = 0.72, reduce and use polynomial.     *
+ *          x in [1, 2)       u = x, v = 1.35, reduce and use polynomial.     *
+ *          x in [2, 4)       u = x, v = 2.50, reduce and use polynomial.     *
+ *          x in [4, 8)       u = x, v = 4.00, reduce and use polynomial.     *
+ *          x in [8, 16)      u = x, v = 8.00, reduce and use polynomial.     *
+ *          x >= 16           atan(x) ~= pi/2 + atan(-1/x).                   *
  *      Error (64-Bit Double):                                                *
  *          Based on 2,248,163,737 random samples with -10^6 < x < 10^6.      *
  *              max relative error: 2.3223344540012894e-16                    *
  *              rms relative error: 7.4233764024303319e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
  *              rms absolute error: 1.1660491924987274e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *      Error (80-Bit Extended):                                              *
  *          Based on 1,124,081,868 random samples with -10^6 < x < 10^6.      *
@@ -103,7 +104,7 @@
  *              rms relative error: 3.4510708882926869e-20                    *
  *              max absolute error: 1.0842021724855044e-19                    *
  *              rms absolute error: 5.4208785603818807e-20                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *  128-Bit Quadruple / 128-Bit Double-Double:                                *
  *      Called Functions:                                                     *
@@ -121,7 +122,7 @@
  *              rms relative error: 5.2509800591011004e-35                    *
  *              max absolute error: 3.8518598887744717e-34                    *
  *              rms absolute error: 1.0894746550053625e-34                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-34).                                    *
  *      Error (128-Bit Double-Double):                                        *
  *          Based on 25,000,000 random samples with -10^6 < x < 10^6.         *
@@ -143,7 +144,7 @@
  *              in this function than tmpl_LDouble_Arctan_Very_Small.         *
  *          tmpl_LDouble_Arctan_Very_Small (tmpl_math.h):                     *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *          tmpl_LDouble_Is_NaN (tmpl_math.h):                                *
  *              Determines if a long double is Not-a-Number.                  *
  *          tmpl_LDouble_Is_Inf (tmpl_math.h):                                *
@@ -157,7 +158,7 @@
  *              rms relative error: 7.4233764024303319e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
  *              rms absolute error: 1.1660491924987274e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Notes:                                                                    *
  *      There are three special cases. If the input is NaN, the output will   *
@@ -189,18 +190,15 @@
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /*  64-bit / 80-bit long double uses the same idea as 64-bit double.          */
-#if \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN               || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
 
 /******************************************************************************
- *                          64 BIT DOUBLE PRECISION                           *
- *                                    and                                     *
- *                         80 BIT EXTENDED PRECISION                          *
+ *                  64-Bit Double / 80-Bit Extended Versions                  *
  ******************************************************************************/
 
 /*  Long double precision inverse tangent (atanl equivalent).                 */
@@ -228,7 +226,7 @@ long double tmpl_LDouble_Arctan(long double x)
             return tmpl_Pi_By_Two_L;
     }
 
-    /*  Small values, |x| < 1/32. Use the MacLaurin series to a few terms.    */
+    /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
     else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 4U)
     {
         /*  For very small values avoid underflow and return the first term   *
@@ -279,9 +277,7 @@ long double tmpl_LDouble_Arctan(long double x)
 /*  Else for 64-bit double and 80-bit extended precision methods.             */
 
 /******************************************************************************
- *                        128 BIT QUADRUPLE PRECISION                         *
- *                                    and                                     *
- *                      128 BIT DOUBLE-DOUBLE PRECISION                       *
+ *                 128-Bit Quadruple / 128-Bit Double-Double                  *
  ******************************************************************************/
 
 /*  To get quadruple or double-double precision, the Taylor series is too     *
@@ -330,6 +326,7 @@ long double tmpl_LDouble_Arctan(long double x)
         out = tmpl_ldouble_atan_n_by_8[n] + tmpl_LDouble_Arctan_Pade(t);
     }
 
+    /*  Use the fact that atan is odd to complete the computation.            */
     if (x < 0.0L)
         return -out;
     else
@@ -358,13 +355,22 @@ long double tmpl_LDouble_Arctan(long double x)
     if (tmpl_LDouble_Is_NaN(x))
         return x;
     else if (tmpl_LDouble_Is_Inf(x))
-        return (x < 0.0L ? -tmpl_Pi_By_Two_L : tmpl_Pi_By_Two_L);
+    {
+        /*  The limit as x -> inf is pi/2 and -pi/2 as x -> -inf.             */
+        if (x < 0.0L)
+            return -tmpl_Pi_By_Two_L;
+        else
+            return tmpl_Pi_By_Two_L;
+    }
 
+    /*  The inverse tangent function is odd. Reduce x to non-negative.        */
     abs_x = tmpl_LDouble_Abs(x);
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
     if (abs_x < 0.0625L)
         return tmpl_LDouble_Arctan_Very_Small(x);
+
+    /*  Otherwise get the correct index for the lookup table.                 */
     else if (abs_x < 0.125L)
         ind = 0U;
     else if (abs_x < 0.25L)
@@ -386,9 +392,15 @@ long double tmpl_LDouble_Arctan(long double x)
     else
     {
         out = tmpl_LDouble_Arctan_Asymptotic(abs_x);
-        return (x < 0.0L ? -out : out);
+
+        /*  Use the fact the atan is odd to finish the computation.           */
+        if (x < 0.0L)
+            return -out;
+        else
+            return out;
     }
 
+    /*  Get the nearby values from the lookup tables.                         */
     v = tmpl_atan_ldouble_v[ind];
     atan_v = tmpl_atan_ldouble_atan_of_v[ind];
 
@@ -397,8 +409,13 @@ long double tmpl_LDouble_Arctan(long double x)
     out = atan_v + tmpl_LDouble_Arctan_Maclaurin(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
-    return (x < 0.0L ? -out : out);
+    if (x < 0.0L)
+        return -out;
+    else
+        return out;
 }
+/*  End of tmpl_LDouble_Arctan.                                               */
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
