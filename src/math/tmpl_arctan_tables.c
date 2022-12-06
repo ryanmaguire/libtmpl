@@ -16,6 +16,8 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+
+/*  TMPL_USE_MATH_ALGORITHMS macro found here.                                */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  These tables are only needed if libtmpl math algorithms are used.         */

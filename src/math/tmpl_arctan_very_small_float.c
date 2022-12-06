@@ -47,7 +47,7 @@
  *                                                                            *
  *      Use the first 4 terms (0 <= n <= 3) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for very small values. For |x| < 1/32 this function is  *
+ *      Only accurate for very small values. For |x| < 1/16 this function is  *
  *      accurate to single precision (10^-8 relative error). The larger       *
  *      the input is, the worse the error. By the alternating series theorem, *
  *      the absolute error is bounded by (1/9)*|x|^9.                         *

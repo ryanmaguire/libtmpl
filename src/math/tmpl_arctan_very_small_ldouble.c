@@ -50,10 +50,10 @@
  *  80-Bit Extended / 128-Bit Quadruple / 128-Bit Double-Double / Portable:   *
  *      Use the first 8 terms (0 <= n <= 7) of this expansion to compute.     *
  *  Notes:                                                                    *
- *      Only accurate for small values. For |x| < 1/32 this function is       *
+ *      Only accurate for small values. For |x| < 1/16 this function is       *
  *      accurate to extended precision (10^-19 relative error) (for the       *
  *      64-bit version it is accurate to double precision, 10^-16, for        *
- *      |x| < 1/32). The larger the input is, the worse the error. By the     *
+ *      |x| < 1/16). The larger the input is, the worse the error. By the     *
  *      alternating series theorem, the absolute error is bounded by          *
  *      (1/19)*|x|^19, or (1/13)*|x|^13 for the 64-bit version.               *
  *                                                                            *
