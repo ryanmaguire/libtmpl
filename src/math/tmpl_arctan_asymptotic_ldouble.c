@@ -78,7 +78,7 @@
 /*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
+/*  This file is only compiled if inline support is not requested.            */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
@@ -93,7 +93,7 @@
  ******************************************************************************/
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 11 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1).*/
+ *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (1.00000000000000000000000000000E+00L)
 #define A1 (-3.33333333333333333333333333333E-01L)
 #define A2 (2.00000000000000000000000000000E-01L)
@@ -130,7 +130,7 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 13 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1).*/
+ *  of degree 6 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (1.0000000000000000000000000000000000000E+00L)
 #define A1 (-3.333333333333333333333333333333333333E-01L)
 #define A2 (2.0000000000000000000000000000000000000E-01L)
