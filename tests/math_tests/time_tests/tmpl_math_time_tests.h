@@ -661,3 +661,41 @@ int main(void)                                                                 \
     free(y1);                                                                  \
     return 0;                                                                  \
 }
+
+#define TEST6(type, f0, f1)                                                    \
+int main(void)                                                                 \
+{                                                                              \
+    type *x, y0, y1;                                                           \
+    unsigned long int n;                                                       \
+    clock_t t1, t2;                                                            \
+    const size_t N = NSAMPS(type) / 4;                                         \
+                                                                               \
+    x = malloc(sizeof(*x) * N);                                                \
+                                                                               \
+    if (!x)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for x. Aborting.");              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    printf(#f0 " vs. " #f1 "\n");                                              \
+    printf("samples: %zu\n", N);                                               \
+                                                                               \
+    for (n = 0UL; n < N; ++n)                                                  \
+        RAND_REAL(type, x[n])                                                  \
+                                                                               \
+    t1 = clock();                                                              \
+    y0 = f0(x, N);                                                             \
+    t2 = clock();                                                              \
+    printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    t1 = clock();                                                              \
+    y1 = f1(x, N);                                                             \
+    t2 = clock();                                                              \
+    printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    printf("rel error: %.16Le\n", tmpl_LDouble_Abs((long double)((y0-y1)/y1)));\
+    printf("abs error: %.16Le\n", tmpl_LDouble_Abs((long double)(y0-y1)));     \
+    free(x);                                                                   \
+    return 0;                                                                  \
+}
