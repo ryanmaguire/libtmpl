@@ -15,6 +15,51 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                           tmpl_array_max_ldouble                           *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the max of a long double array.                              *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_LDouble_Array_Max                                                *
+ *  Purpose:                                                                  *
+ *      Computes max(arr), the maximum of the long double array arr.          *
+ *  Arguments:                                                                *
+ *      arr (long double *):                                                  *
+ *          An array of long double.                                          *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      max (long double):                                                    *
+ *          The maximum of arr.                                               *
+ *  Called Functions:                                                         *
+ *          tmpl_LDouble_Is_NaN (tmpl_math.h):                                *
+ *              Determines if a long double is Not-a-Number.                  *
+ *  Method:                                                                   *
+ *      Loop through the array to find the first entry that is not NaN.       *
+ *      Set max to this element. Then loop through the rest of the array      *
+ *      and compare the elements with max, resetting max if necessary.        *
+ *  Notes:                                                                    *
+ *      If the array consists entirely of NaN's, a NaN is returned.           *
+ *      Similarly if the array is NULL or empty (len = 0).                    *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          size_t found here.                                                *
+ *  2.) tmpl_math.h:                                                          *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 11, 2022                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2022/12/07: Ryan Maguire                                                  *
+ *      Added license and description.                                        *
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
@@ -52,7 +97,7 @@ long double tmpl_LDouble_Array_Max(long double *arr, size_t len)
     /*  Loop through the remaining elements and find the maximum.             */
     for (; n < len; ++n)
     {
-        /*  If the current array element is smaller, reset the max value.     */
+        /*  If the current array element is larger, reset the max value.      */
         if (arr[n] > max)
             max = arr[n];
     }
