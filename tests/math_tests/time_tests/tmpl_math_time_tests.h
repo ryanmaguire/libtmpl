@@ -68,7 +68,7 @@ int main(void)                                                                 \
     long double rms_abs = 0.0L;                                                \
     long double temp;                                                          \
     type *x, *y0, *y1;                                                         \
-    unsigned long int n;                                                       \
+    size_t n;                                                                  \
     clock_t t1, t2;                                                            \
                                                                                \
     const type start = (type)begin;                                            \
@@ -110,22 +110,22 @@ int main(void)                                                                 \
     printf("dx:      %.16Le\n", (long double)dx);                              \
                                                                                \
     x[0] = start;                                                              \
-    for (n = 1UL; n < N; ++n)                                                  \
+    for (n = (size_t)1; n < N; ++n)                                            \
         x[n] = x[n-1] + dx;                                                    \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         y0[n] = f0(x[n]);                                                      \
     t2 = clock();                                                              \
     printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         y1[n] = f1(x[n]);                                                      \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         temp = fabsl((long double)(y0[n] - y1[n]));                            \
         rms_abs += temp*temp;                                                  \
@@ -235,17 +235,17 @@ int main(void)                                                                 \
     printf("dx:      %.16Le\n", (long double)dx);                              \
                                                                                \
     x[0] = start;                                                              \
-    for (n = 1UL; n < N; ++n)                                                  \
+    for (n = (size_t)1; n < N; ++n)                                            \
         x[n] = x[n-1] + dx;                                                    \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0U; n < N; ++n)                                                   \
+    for (n = (size_t)0; n < N; ++n)                                            \
         f0(x[n], &y0[n], &n0[n]);                                              \
     t2 = clock();                                                              \
     printf("libtmpl: %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);         \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0U; n < N; ++n)                                                   \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         y1[n] = ((type)2.0)*f1(x[n], &n1[n]);                                  \
         n1[n] -= 1;                                                            \
@@ -253,7 +253,7 @@ int main(void)                                                                 \
     t2 = clock();                                                              \
     printf("C:       %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);         \
                                                                                \
-    for (n = 0U; n < N; ++n)                                                   \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         tmp = (long double)(y0[n] > y1[n] ? y0[n] - y1[n] : y1[n] - y0[n]);    \
         mant_rms_abs += tmp*tmp;                                               \
@@ -320,7 +320,7 @@ int main(void)                                                                 \
     long double rms_abs = 0.0L;                                                \
     long double temp;                                                          \
     type *x, *y, *z0, *z1;                                                     \
-    unsigned long int n;                                                       \
+    size_t n;                                                                  \
     clock_t t1, t2;                                                            \
     type u, v;                                                                 \
                                                                                \
@@ -372,7 +372,7 @@ int main(void)                                                                 \
     printf("end:     %.16Le\n", (long double)end);                             \
     printf("samples: %zu\n", N);                                               \
                                                                                \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         RAND_REAL(type, u)                                                     \
         RAND_REAL(type, v)                                                     \
@@ -385,18 +385,18 @@ int main(void)                                                                 \
     }                                                                          \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         z0[n] = f0(x[n], y[n]);                                                \
     t2 = clock();                                                              \
     printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         z1[n] = f1(x[n], y[n]);                                                \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         temp = fabsl((long double)(z0[n] - z1[n]));                            \
         rms_abs += temp*temp;                                                  \
@@ -440,7 +440,7 @@ int main(void)                                                                 \
     long double rms_abs_z = 0.0L;                                              \
     long double tempy, tempz;                                                  \
     type *x, *y0, *y1, *z0, *z1;                                               \
-    unsigned long int n;                                                       \
+    size_t n;                                                                  \
     clock_t t1, t2;                                                            \
                                                                                \
     const type start = (type)begin;                                            \
@@ -505,22 +505,22 @@ int main(void)                                                                 \
     printf("dx:      %.16Le\n", (long double)dx);                              \
                                                                                \
     x[0] = start;                                                              \
-    for (n = 1UL; n < N; ++n)                                                  \
+    for (n = (size_t)1; n < N; ++n)                                            \
         x[n] = x[n-1] + dx;                                                    \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         f0(x[n], &y0[n], &z0[n]);                                              \
     t2 = clock();                                                              \
     printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         f1(x[n], &y1[n], &z1[n]);                                              \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         tempy = fabsl((long double)(y0[n] - y1[n]));                           \
         tempz = fabsl((long double)(z0[n] - z1[n]));                           \
@@ -577,7 +577,7 @@ int main(void)                                                                 \
     long double temp;                                                          \
     signed int *x;                                                             \
     type *y0, *y1;                                                             \
-    unsigned long int n;                                                       \
+    size_t n;                                                                  \
     clock_t t1, t2;                                                            \
                                                                                \
     const signed int start = (signed int)begin;                                \
@@ -617,22 +617,22 @@ int main(void)                                                                 \
     printf("samples: %zu\n", N);                                               \
                                                                                \
     x[0] = start;                                                              \
-    for (n = 1UL; n < N; ++n)                                                  \
+    for (n = (size_t)1; n < N; ++n)                                            \
         x[n] = x[n-1] + 1;                                                     \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         y0[n] = f0(x[n]);                                                      \
     t2 = clock();                                                              \
     printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
     t1 = clock();                                                              \
-    for (n = 0UL; n < N; ++n)                                                  \
-        y1[n] = f1(1.0, x[n]);                                                 \
+    for (n = (size_t)0; n < N; ++n)                                            \
+        y1[n] = f1((type)1.0, x[n]);                                           \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
                                                                                \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
     {                                                                          \
         temp = fabsl((long double)(y0[n] - y1[n]));                            \
         rms_abs += temp*temp;                                                  \
@@ -666,9 +666,9 @@ int main(void)                                                                 \
 int main(void)                                                                 \
 {                                                                              \
     type *x, y0, y1;                                                           \
-    unsigned long int n;                                                       \
+    size_t n;                                                                  \
     clock_t t1, t2;                                                            \
-    const size_t N = NSAMPS(type) / 4;                                         \
+    const size_t N = NSAMPS(type);                                             \
                                                                                \
     x = malloc(sizeof(*x) * N);                                                \
                                                                                \
@@ -681,7 +681,7 @@ int main(void)                                                                 \
     printf(#f0 " vs. " #f1 "\n");                                              \
     printf("samples: %zu\n", N);                                               \
                                                                                \
-    for (n = 0UL; n < N; ++n)                                                  \
+    for (n = (size_t)0; n < N; ++n)                                            \
         RAND_REAL(type, x[n])                                                  \
                                                                                \
     t1 = clock();                                                              \
@@ -696,6 +696,43 @@ int main(void)                                                                 \
                                                                                \
     printf("rel error: %.16Le\n", tmpl_LDouble_Abs((long double)((y0-y1)/y1)));\
     printf("abs error: %.16Le\n", tmpl_LDouble_Abs((long double)(y0-y1)));     \
+    free(x);                                                                   \
+    return 0;                                                                  \
+}
+
+#define TEST7(type, f0, f1)                                                    \
+int main(void)                                                                 \
+{                                                                              \
+    type *x;                                                                   \
+    size_t ind0, ind1, n;                                                      \
+    const size_t N = NSAMPS(type);                                             \
+    clock_t t1, t2;                                                            \
+                                                                               \
+    x = malloc(sizeof(*x) * N);                                                \
+                                                                               \
+    if (!x)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for x. Aborting.");              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    printf(#f0 " vs. " #f1 "\n");                                              \
+    printf("samples: %zu\n", N);                                               \
+                                                                               \
+    for (n = (size_t)0; n < N; ++n)                                            \
+        RAND_REAL(type, x[n])                                                  \
+                                                                               \
+    t1 = clock();                                                              \
+    ind0 = f0(x, N);                                                           \
+    t2 = clock();                                                              \
+    printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    t1 = clock();                                                              \
+    ind1 = f1(x, N);                                                           \
+    t2 = clock();                                                              \
+    printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    printf("error: %lld\n", llabs((long long int)ind0 - (long long int)ind1)); \
     free(x);                                                                   \
     return 0;                                                                  \
 }
