@@ -7,7 +7,6 @@ generate_export_header(
     STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
 )
 
-
 target_sources(
     tmpl
     PUBLIC
@@ -32,6 +31,7 @@ target_sources(
             tmpl_ppm.h
             tmpl_quadruple.h
             tmpl_rational.h
+            tmpl_sort.h
             tmpl_special_functions.h
             tmpl_spherical_geometry.h
             tmpl_string.h

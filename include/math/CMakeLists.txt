@@ -9,9 +9,6 @@ target_sources(
             tmpl_math_arctan_asymptotic_double_inline.h
             tmpl_math_arctan_asymptotic_float_inline.h
             tmpl_math_arctan_asymptotic_ldouble_inline.h
-            tmpl_math_arctan_double_tables.h
-            tmpl_math_arctan_float_tables.h
-            tmpl_math_arctan_ldouble_tables.h
             tmpl_math_arctan_maclaurin_double_inline.h
             tmpl_math_arctan_maclaurin_float_inline.h
             tmpl_math_arctan_maclaurin_ldouble_inline.h
