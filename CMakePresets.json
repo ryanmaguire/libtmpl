@@ -33,11 +33,17 @@
     "description": "Cross-compile from x86-64 to aarch64. Requires qemu, gcc-aarch64-linux-gnu, and g++-aarch64-linux-gnu",
       "generator": "Ninja",
       "toolchainFile": "cmake/toolchains/aarch64-linux-gnu-gcc.cmake",
+      "environment": {
+        "CONAN_CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/aarch64-linux-gnu-gcc.cmake",
+        "CONAN_CMAKE_SYSTEM_PROCESSOR": "aarch64",
+        "CONAN_CMAKE_SYSTEM_NAME": "Linux"
+      },
       "cacheVariables": {
         "LIBTMPL_USE_OMP": true,
         "LIBTMPL_USE_MATH": true,
         "LIBTMPL_USE_ASM": true,
         "LIBTMPL_USE_FASM": true
+
       },
       "condition": {
         "type": "equals",
