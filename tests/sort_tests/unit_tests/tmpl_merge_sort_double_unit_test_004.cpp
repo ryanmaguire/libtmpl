@@ -16,45 +16,38 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <libtmpl/include/tmpl_sort.h>
-#include <gsl/gsl_sort_double.h>
-#include <time.h>
+#include <algorithm>
 
 static double rand_real(void)
 {
-    int n = rand();
-    return (double)(n) / (double)(RAND_MAX);
+    int n = std::rand();
+    return static_cast<double>(n) / static_cast<double>(RAND_MAX);
 }
 
 int main(void)
 {
-    const size_t len = (size_t)(1E5);
-    double *arrtmpl = (double *)(malloc(sizeof(*arrtmpl)*len));
-    double *arrc = (double *)(malloc(sizeof(*arrc)*len));
+    const size_t len = static_cast<size_t>(1E5);
+    double *arr = static_cast<double *>(std::malloc(sizeof(*arr) * len));
     size_t n;
-    clock_t t1, t2;
 
     for (n = 0; n < len; ++n)
+        arr[n] = rand_real();
+
+    tmpl_Double_Merge_Sort(arr, len);
+
+    for (n = 1; n < len; ++n)
     {
-        double x = rand_real();
-        arrtmpl[n] = x;
-        arrc[n] = x;
+        if (arr[n-1] > arr[n])
+        {
+            std::puts("FAIL");
+            std::free(arr);
+            return -1;
+        }
     }
-
-    printf("samples: %e\n", (double)(len));
-    t1 = clock();
-    tmpl_Double_Merge_Sort(arrtmpl, len);
-    t2 = clock();
-    printf("libtmpl: %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
-
-    t1 = clock();
-    gsl_sort(arrc, 1, len);
-    t2 = clock();
-    printf("gsl:     %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
-
-    free(arrc);
-    free(arrtmpl);
+    std::puts("PASS");
+    std::free(arr);
     return 0;
 }

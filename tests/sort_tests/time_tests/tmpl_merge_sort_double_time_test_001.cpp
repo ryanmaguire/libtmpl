@@ -50,7 +50,7 @@ int main(void)
     std::printf("libtmpl: %f\n", static_cast<double>(t2 - t1)/CLOCKS_PER_SEC);
 
     t1 = std::clock();
-    std::sort(arrcpp, arrcpp + n);
+    std::sort(arrcpp, arrcpp + len);
     t2 = std::clock();
     std::printf("C++:     %f\n", static_cast<double>(t2 - t1)/CLOCKS_PER_SEC);
 
