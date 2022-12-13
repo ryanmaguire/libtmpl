@@ -11,8 +11,8 @@ static double rand_real(void)
 
 static inline int comp(const void* a, const void* b)
 {
-    double va = *(const int*)a;
-    double vb = *(const int*)b;
+    double va = *(const double*)a;
+    double vb = *(const double*)b;
     return (va > vb) - (va < vb);
 }
 
