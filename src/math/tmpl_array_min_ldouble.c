@@ -100,7 +100,7 @@ long double tmpl_LDouble_Array_Min(long double *arr, size_t len)
         /*  If the array consists only of NaN's (unlikely), stop this loop    *
          *  from going beyond the bounds of the array. Return NaN.            */
         if (ind == len)
-            return TMPL_NAN;
+            return TMPL_NANL;
 
         ++ind;
     }
