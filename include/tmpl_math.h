@@ -1730,6 +1730,35 @@ tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Array_MinMax_Index                                        *
+ *  Purpose:                                                                  *
+ *      Compute the indices of the min and max of an array of doubles.        *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *      size_t *minind:                                                       *
+ *          A pointer to a double. The index of the min will be stored here.  *
+ *      size_t *maxind:                                                       *
+ *          A pointer to a double. The index of the max will be stored here.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Float_Array_MinMax_Index(float *arr, size_t len,
+                              size_t *minind, size_t *maxind);
+
+extern void
+tmpl_Double_Array_MinMax_Index(double *arr, size_t len,
+                               size_t *minind, size_t *maxind);
+
+extern void
+tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
+                                size_t *minind, size_t *maxind);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Base2_Mant_and_Exp                                        *
  *  Purpose:                                                                  *
  *      Given a real number x, compute the numbers m and e such that          *
