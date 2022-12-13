@@ -42,16 +42,20 @@ int main(void)
     }
 
     tmpl_Double_Merge_Sort(arrtmpl, len);
-    std::sort(arrcpp, arrcpp + n);
+    std::sort(arrcpp, arrcpp + len);
 
     for (n = 0; n < len; ++n)
     {
         if (arrtmpl[n] != arrcpp[n])
         {
             std::puts("FAIL");
+            std::free(arrtmpl);
+            std::free(arrcpp);
             return -1;
         }
     }
     std::puts("PASS");
+    std::free(arrtmpl);
+    std::free(arrcpp);
     return 0;
 }

@@ -26,9 +26,11 @@ static double rand_real(void)
     return (double)(n) / (double)(RAND_MAX);
 }
 
-static inline int comp(const void *x, const void *y)
+static inline int comp(const void* a, const void* b)
 {
-    return (*(const double *)y < *(const double *)x);
+    double va = *(const int*)a;
+    double vb = *(const int*)b;
+    return (va > vb) - (va < vb);
 }
 
 int main(void)
@@ -46,16 +48,21 @@ int main(void)
     }
 
     tmpl_Double_Merge_Sort(arrtmpl, len);
-    qsort(arrc, n, sizeof(double), comp);
+    qsort(arrc, len, sizeof(double), comp);
 
     for (n = 0; n < len; ++n)
     {
         if (arrtmpl[n] != arrc[n])
         {
             puts("FAIL");
+            free(arrtmpl);
+            free(arrc);
             return -1;
         }
     }
+
     puts("PASS");
+    free(arrtmpl);
+    free(arrc);
     return 0;
 }
