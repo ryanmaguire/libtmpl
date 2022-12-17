@@ -8,6 +8,7 @@ list(
 
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
+set(CMAKE_HOST_SYSTEM_PROCESSOR x86_64)
 
 find_program(GCC aarch64-linux-gnu-gcc PATHS /usr/bin)
 
@@ -31,28 +32,22 @@ endif()
 set(CMAKE_C_COMPILER ${GCC})
 set(CMAKE_CXX_COMPILER ${GPP})
 
+find_program(CMAKE_AR  aarch64-linux-gnu-ar PATHS /usr/bin REQUIRED)
+find_program(CMAKE_LINKER  aarch64-linux-gnu-ld PATHS /usr/bin REQUIRED)
+find_program(CMAKE_OBJCOPY aarch64-linux-gnu-objcopy PATHS /usr/bin REQUIRED)
+find_program(CMAKE_RANLIB aarch64-linux-gnu-ranlib PATHS /usr/bin REQUIRED)
+find_program(CMAKE_SIZE aarch64-linux-gnu-size PATHS /usr/bin REQUIRED)
+find_program(CMAKE_STRIP aarch64-linux-gnu-strip PATHS /usr/bin REQUIRED)
+
+set(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu /usr/include/aarch64-linux-gnu
+    /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu)
+
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-# Set Conan variables
-set(CONAN_CMAKE_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}" CACHE INTERNAL "")
-set(CONAN_CMAKE_SYSTEM_VERSION "${CMAKE_SYSTEM_VERSION}" CACHE INTERNAL "")
-set(CONAN_CMAKE_SYSTEM_PROCESSOR "${CMAKE_SYSTEM_PROCESSOR}" CACHE INTERNAL "")
-set(CONAN_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}" CACHE INTERNAL "")
-set(CONAN_CMAKE_FIND_ROOT_PATH_MODE_PROGRAM
-    "${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}"
-    CACHE INTERNAL ""
-)
-set(CONAN_CMAKE_FIND_ROOT_PATH_MODE_LIBRARY
-    "${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}"
-    CACHE INTERNAL ""
-)
-set(CONAN_CMAKE_FIND_ROOT_PATH_MODE_INCLUDE
-    "${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}"
-    CACHE INTERNAL ""
-)
+
 
 if(NOT DEFINED QEMU_HOME)
     set(QEMU_HOME "/usr/bin")
@@ -78,6 +73,9 @@ else()
     endif()
 endif()
 
-set(CROSSCOMPILING_EMULATOR "${QEMU_AARCH64};-L /usr/aarch64-linux-gnu"
+# set(CMAKE_CROSSCOMPILING_EMULATOR "${QEMU_AARCH64};-L;/usr/aarch64-linux-gnu"
+#     CACHE INTERNAL ""
+# )
+set(CROSSCOMPILING_EMULATOR "${QEMU_AARCH64};-L;/usr/aarch64-linux-gnu"
     CACHE INTERNAL ""
 )

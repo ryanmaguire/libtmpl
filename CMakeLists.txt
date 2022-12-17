@@ -119,10 +119,12 @@ endif()
 
 # Build config.c and run to generate "include/tmpl_config.h"
 add_executable(tmpl_config config.c)
+include(CMakePrintHelpers)
+cmake_print_variables(CMAKE_FIND_ROOT_PATH CMAKE_SYSROOT CROSSCOMPILING_EMULATOR CMAKE_CROSSCOMPILING)
 add_custom_command(
     OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h"
     DEPENDS tmpl_config
-    COMMAND "$<TARGET_FILE:tmpl_config>"
+    COMMAND ${CROSSCOMPILING_EMULATOR} "$<TARGET_FILE:tmpl_config>"
     COMMAND
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h
