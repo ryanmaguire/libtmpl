@@ -32,22 +32,24 @@ endif()
 set(CMAKE_C_COMPILER ${GCC})
 set(CMAKE_CXX_COMPILER ${GPP})
 
-find_program(CMAKE_AR  aarch64-linux-gnu-ar PATHS /usr/bin REQUIRED)
-find_program(CMAKE_LINKER  aarch64-linux-gnu-ld PATHS /usr/bin REQUIRED)
+find_program(CMAKE_AR aarch64-linux-gnu-ar PATHS /usr/bin REQUIRED)
+find_program(CMAKE_LINKER aarch64-linux-gnu-ld PATHS /usr/bin REQUIRED)
 find_program(CMAKE_OBJCOPY aarch64-linux-gnu-objcopy PATHS /usr/bin REQUIRED)
 find_program(CMAKE_RANLIB aarch64-linux-gnu-ranlib PATHS /usr/bin REQUIRED)
 find_program(CMAKE_SIZE aarch64-linux-gnu-size PATHS /usr/bin REQUIRED)
 find_program(CMAKE_STRIP aarch64-linux-gnu-strip PATHS /usr/bin REQUIRED)
 
-set(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu /usr/include/aarch64-linux-gnu
-    /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu)
+set(CMAKE_FIND_ROOT_PATH
+    /usr/aarch64-linux-gnu
+    /usr/include/aarch64-linux-gnu
+    /usr/lib/aarch64-linux-gnu
+    /lib/aarch64-linux-gnu
+)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-
-
 
 if(NOT DEFINED QEMU_HOME)
     set(QEMU_HOME "/usr/bin")
