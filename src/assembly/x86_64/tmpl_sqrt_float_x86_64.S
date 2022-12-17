@@ -43,80 +43,19 @@
  *      using GCC or clang on FreeBSD and macOS (PCC may work on those        *
  *      platforms, but I haven't tested this), for x86_64/amd64 computers.    *
  *      This assembly code is significantly faster than the equivalent C code *
- *      found in tmpl_sqrt_double.c.                                          *
- *                                                                            *
- *  Accuracy and Performance:                                                 *
- *                                                                            *
- *      A time and accuracy test against glibc produced the following:        *
- *                                                                            *
- *      libtmpl using assembly code (tmpl_sqrt_double_x86_64.S):              *
- *                                                                            *
- *          tmpl_Float_Sqrt vs. sqrtf                                         *
- *          start:   9.9999997473787516e-05                                   *
- *          end:     1.0000000000000000e+04                                   *
- *          samples: 5220285568                                               *
- *          dx:      1.9156041162204929e-06                                   *
- *          libtmpl: 11.913069 seconds                                        *
- *          C:       10.062599 seconds                                        *
- *          max abs error: 0.0000000000000000e+00                             *
- *          max rel error: 0.0000000000000000e+00                             *
- *          rms abs error: 0.0000000000000000e+00                             *
- *          rms rel error: 0.0000000000000000e+00                             *
- *                                                                            *
- *      These tests were performed with the following specs:                  *
- *                                                                            *
- *          CPU:  AMD Ryzen 3900 12-core                                      *
- *          MAX:  4672.0698 MHz                                               *
- *          MIN:  2200.0000 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  Ripjaw DDR4-3600 16GBx4                                     *
- *          MB:   Gigabyte Aorus x570 Elite WiFi                              *
- *          OS:   Debian 11 (Bullseye) GNU/LINUX                              *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
+ *      found in tmpl_sqrt_float.c.                                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 5, 2022                                                 *
  ******************************************************************************/
 
-/*  Windows, 64-bit, version. Works with clang-cl in 64-bit mode.             */
-#if defined(_WIN64)
-.p2align 4,0x90;
-.globl tmpl_Float_Sqrt;
-.section .drectve;
-.ascii " -export:", "tmpl_Float_Sqrt";
-.section .text;
-.def tmpl_Float_Sqrt;
-.scl 2;
-.type 32;
-.endef;
+/*  Helper macros found here.                                                 */
+#include "tmpl_x86_64_asm.h"
 
-tmpl_Float_Sqrt:
-        sqrtss  %xmm0, %xmm0
-        ret
-
-/*  Apple x86_64 machines. Works with clang and gcc.                          */
-#elif defined(__APPLE__)
-.globl _tmpl_Float_Sqrt
-.align 4,0x90;
-
-_tmpl_Float_Sqrt:
+ASM_BEGIN(tmpl_Float_Sqrt)
     sqrtss %xmm0, %xmm0
     ret
-
-/*  GNU/Linux and FreeBSD (and others). Works with gcc, clang, and pcc.       */
-#else
-.text;
-.p2align 4,0x90;
-.globl tmpl_Float_Sqrt;
-.type tmpl_Float_Sqrt,@function;
-
-tmpl_Float_Sqrt:
-    sqrtss %xmm0, %xmm0
-    ret
-
-.size tmpl_Float_Sqrt, . - tmpl_Float_Sqrt
-#endif
+ASM_END(tmpl_Float_Sqrt)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)

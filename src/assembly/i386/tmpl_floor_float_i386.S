@@ -16,46 +16,47 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_sqrt_double                              *
+ *                              tmpl_floor_float                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing square roots at double precision.         *
+ *      Contains code for computing the floor function at single precision.   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Sqrt                                                      *
+ *      tmpl_Float_Floor                                                      *
  *  Purpose:                                                                  *
- *      Computes y = sqrt(x), the unique non-negative number y such that for  *
- *      non-negative x we have x = y^2.                                       *
+ *      Computes y = floor(x), the largest integer less than or equal to x.   *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      sqrt_x (double):                                                      *
- *          The square root of x at double precision.                         *
+ *      floor_x (float):                                                      *
+ *          The floor of x at single precision.                               *
  *  Called Functions:                                                         *
- *      sqrtsd                                                                *
- *  Method:                                                                   *
- *      For x86_64/amd64 machines sqrt is a built-in function.                *
- *  Notes:                                                                    *
- *      This file compiles using GCC, clang, or PCC on GNU/Linux, and         *
- *      using GCC or clang on FreeBSD and macOS (PCC may work on those        *
- *      platforms, but I haven't tested this), for x86_64/amd64 computers.    *
- *      This assembly code is significantly faster than the equivalent C code *
- *      found in tmpl_sqrt_double.c.                                          *
+ *      frndint                                                               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       April 5, 2022                                                 *
+ *  Date:       December 15, 2022                                             *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
-#include "tmpl_x86_64_asm.h"
+#include "tmpl_i386_asm.h"
 
-ASM_BEGIN(tmpl_Double_Sqrt)
-    sqrtsd %xmm0, %xmm0
+ASM_BEGIN(tmpl_Float_Floor)
+    subl    $4, %esp
+    fnstcw  2(%esp)
+    flds    8(%esp)
+    movzwl  2(%esp), %eax
+    andb    $-13, %ah
+    orb     $4, %ah
+    movw    %ax, (%esp)
+    fldcw   (%esp)
+    frndint
+    fldcw   2(%esp)
+    addl    $4, %esp
     ret
-ASM_END(tmpl_Double_Sqrt)
+ASM_END(tmpl_Float_Floor)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)

@@ -18,4 +18,9 @@
  ******************************************************************************/
 #include "tmpl_integer_vs_glibc.h"
 
-TEST1(unsigned int, int, tmpl_UInt_Trailing_Zeros, __builtin_ctz)
+extern int func(unsigned int n)
+{
+    return (n == 0U ? 0U : __builtin_ctz(n));
+}
+
+TEST1(unsigned int, int, tmpl_UInt_Trailing_Zeros, func)

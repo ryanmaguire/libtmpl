@@ -16,15 +16,13 @@
 ;   You should have received a copy of the GNU General Public License          ;
 ;   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          ;
 ;******************************************************************************;
-
 format ELF64
-public tmpl_Double_Sqrt
-public tmpl_Float_Sqrt
+public tmpl_Int_Trailing_Zeros
 
-tmpl_Float_Sqrt:
-    sqrtss xmm0,xmm0
-    ret
-
-tmpl_Double_Sqrt:
-    sqrtsd xmm0,xmm0
+tmpl_Int_Trailing_Zeros:
+    xor       ecx, ecx
+    mov       eax, edi
+    rep bsf   ecx, edi
+    test      edi, edi
+    cmovne    eax, ecx
     ret

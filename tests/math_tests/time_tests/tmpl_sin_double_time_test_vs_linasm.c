@@ -16,20 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#include "tmpl_math_time_tests.h"
+#include <linasm/Math.h>
 
-/*  Helper macros found here.                                                 */
-#include "tmpl_x86_64_asm.h"
-
-ASM_BEGIN(tmpl_Int_Trailing_Zeros)
-    xorl        %ecx, %ecx
-    movl        %edi, %eax
-    rep bsfl    %edi, %ecx
-    testl       %edi, %edi
-    cmovne      %ecx, %eax
-    ret
-ASM_END(tmpl_Int_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
+TEST1(double, -1.0E4, 1.0E4, tmpl_Double_Sin, Math_Sin_flt64)
