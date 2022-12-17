@@ -139,6 +139,5 @@ float tmpl_Float_Cbrt_Pade(float x)
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
-
 #endif
 /*  End of include guard.                                                     */
