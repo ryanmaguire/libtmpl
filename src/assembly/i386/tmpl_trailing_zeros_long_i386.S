@@ -18,16 +18,16 @@
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
-#include "tmpl_x86_64_asm.h"
+#include "tmpl_i386_asm.h"
 
-ASM_BEGIN(tmpl_Int_Trailing_Zeros)
-    xorl        %ecx, %ecx
-    movl        %edi, %eax
-    rep bsfl    %edi, %ecx
-    testl       %edi, %edi
-    cmovne      %ecx, %eax
+ASM_BEGIN(tmpl_Long_Trailing_Zeros)
+    movl      4(%esp), %eax
+    xorl      %ecx, %ecx
+    rep bsfl  %eax, %ecx
+    testl     %eax, %eax
+    cmovne    %ecx, %eax
     ret
-ASM_END(tmpl_Int_Trailing_Zeros)
+ASM_END(tmpl_Long_Trailing_Zeros)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)

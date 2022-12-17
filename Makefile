@@ -237,7 +237,11 @@ INT_FLAG=
 endif
 
 # The architecture libtmpl is being built on.
+ifndef ARCH
 uname_m=$(shell uname -m)
+else
+uname_m=$(ARCH)
+endif
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
@@ -276,8 +280,20 @@ endif
 ifdef FASM
 ASM_INCLUDE=-wholename "./src/assembly/fasm/*.fasm" -or
 ASM_EXCLUDE=\
+	-not -name "tmpl_trailing_zeros_char.c" -and \
+	-not -name "tmpl_trailing_zeros_int.c" -and \
+	-not -name "tmpl_trailing_zeros_long.c" -and \
+	-not -name "tmpl_trailing_zeros_short.c" -and \
+	-not -name "tmpl_trailing_zeros_uint.c" -and \
+	-not -name "tmpl_trailing_zeros_uchar.c" -and \
+	-not -name "tmpl_trailing_zeros_ulong.c" -and \
+	-not -name "tmpl_trailing_zeros_ushort.c" -and \
 	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and
+	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and \
+	-not -name "tmpl_floor_double.c" -and \
+	-not -name "tmpl_floor_float.c" -and \
+	-not -name "tmpl_floor_ldouble.c" -and
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to compile this, tested on
@@ -302,6 +318,25 @@ ASM_EXCLUDE=\
 	-not -name "tmpl_floor_ldouble.c" -and
 endif
 # End of ifdef FASM.
+
+else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
+
+ASM_INCLUDE=-wholename "./src/assembly/i386/*.S" -or
+ASM_EXCLUDE=\
+	-not -name "tmpl_trailing_zeros_char.c" -and \
+	-not -name "tmpl_trailing_zeros_int.c" -and \
+	-not -name "tmpl_trailing_zeros_long.c" -and \
+	-not -name "tmpl_trailing_zeros_short.c" -and \
+	-not -name "tmpl_trailing_zeros_uint.c" -and \
+	-not -name "tmpl_trailing_zeros_uchar.c" -and \
+	-not -name "tmpl_trailing_zeros_ulong.c" -and \
+	-not -name "tmpl_trailing_zeros_ushort.c" -and \
+	-not -name "tmpl_sqrt_double.c" -and \
+	-not -name "tmpl_sqrt_float.c" -and \
+	-not -name "tmpl_sqrt_ldouble.c" -and \
+	-not -name "tmpl_floor_double.c" -and \
+	-not -name "tmpl_floor_float.c" -and \
+	-not -name "tmpl_floor_ldouble.c" -and
 
 # Else for ifdef NO_ASM
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
@@ -412,12 +447,12 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
-	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
+	mkdir -p $(BUILD_DIR)/src/assembly/i386/
 	mkdir -p $(BUILD_DIR)/src/assembly/x86_64/
-	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
 	mkdir -p $(BUILD_DIR)/src/assembly/aarch64/
-	mkdir -p $(BUILD_DIR)/src/builtins/aarch64/
 	mkdir -p $(BUILD_DIR)/src/assembly/armv7l/
+	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
+	mkdir -p $(BUILD_DIR)/src/builtins/aarch64/
 
 clean:
 	rm -rf $(BUILD_DIR)

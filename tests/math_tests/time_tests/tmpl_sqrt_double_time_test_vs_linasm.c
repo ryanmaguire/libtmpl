@@ -19,4 +19,4 @@
 #include "tmpl_math_time_tests.h"
 #include <linasm/Math.h>
 
-TEST1(double, 1.0E-4, 1.0E4, tmpl_Double_Sqrt, Math_Sqrt_flt64)
+TEST1(double, 0.0, 1.0E4, tmpl_Double_Sqrt, Math_Sqrt_flt64)

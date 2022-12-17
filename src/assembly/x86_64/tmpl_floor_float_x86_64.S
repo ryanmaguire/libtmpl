@@ -15,30 +15,40 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                              tmpl_floor_float                              *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Contains code for computing the floor function at single precision.   *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Float_Floor                                                      *
+ *  Purpose:                                                                  *
+ *      Computes y = floor(x), the largest integer less than or equal to x.   *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      floor_x (float):                                                      *
+ *          The floor of x at single precision.                               *
+ *  Called Functions:                                                         *
+ *      roundss                                                               *
+ *  Method:                                                                   *
+ *      The roundss instruction with 9 passed to it computes floor(x).        *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       April 5, 2022                                                 *
  ******************************************************************************/
 
-/*  Apple x86_64 machines. Works with clang and gcc.                          */
-#if defined(__APPLE__)
-.globl _tmpl_Float_Floor
-.align 4,0x90;
+/*  Helper macros found here.                                                 */
+#include "tmpl_x86_64_asm.h"
 
-_tmpl_Float_Floor:
+ASM_BEGIN(tmpl_Float_Floor)
     roundss $9, %xmm0, %xmm0
     ret
-
-/*  GNU/Linux and FreeBSD (and others). Works with gcc, clang, and pcc.       */
-#else
-.text;
-.p2align 4,0x90;
-.globl tmpl_Float_Floor;
-.type tmpl_Float_Floor,@function;
-
-tmpl_Float_Floor:
-    roundss $9, %xmm0, %xmm0
-    ret
-
-.size tmpl_Float_Floor, . - tmpl_Float_Floor
-#endif
+ASM_END(tmpl_Float_Floor)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)

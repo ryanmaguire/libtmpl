@@ -15,27 +15,40 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                              tmpl_floor_double                             *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Contains code for computing the floor function at double precision.   *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Double_Floor                                                     *
+ *  Purpose:                                                                  *
+ *      Computes y = floor(x), the largest integer less than or equal to x.   *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      floor_x (double):                                                     *
+ *          The floor of x at double precision.                               *
+ *  Called Functions:                                                         *
+ *      roundsd                                                               *
+ *  Method:                                                                   *
+ *      The roundsd instruction with 9 passed to it computes floor(x).        *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       April 5, 2022                                                 *
  ******************************************************************************/
-#if defined(__APPLE__)
-.globl  _tmpl_Double_Floor
-.p2align        4, 0x90
 
-_tmpl_Double_Floor:
+/*  Helper macros found here.                                                 */
+#include "tmpl_x86_64_asm.h"
+
+ASM_BEGIN(tmpl_Double_Floor)
     roundsd $9, %xmm0, %xmm0
     ret
-
-#else
-.text;
-.p2align 4,0x90;
-.globl tmpl_Double_Floor;
-.type tmpl_Double_Floor,@function;
-
-tmpl_Double_Floor:
-    roundsd $9, %xmm0, %xmm0
-    ret
-
-.size tmpl_Double_Floor, . - tmpl_Double_Floor
-#endif
+ASM_END(tmpl_Double_Floor)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)
