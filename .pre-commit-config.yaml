@@ -21,7 +21,7 @@ repos:
         exclude: ^tests/resources/
     -   id: check-merge-conflict
     -   id: pretty-format-json
-        args: [--autofix]
+        args: [--autofix, --no-sort-keys]
     -   id: check-toml
     -   id: check-json
     -   id: fix-encoding-pragma
