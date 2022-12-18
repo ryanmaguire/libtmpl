@@ -84,8 +84,9 @@ if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
     )
     file(
         DOWNLOAD
-            "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake"
+            "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
+            "${CMAKE_BINARY_DIR}/conan.cmake"
+        TLS_VERIFY ON
     )
 endif()
 
@@ -99,6 +100,7 @@ conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
                     BUILD missing
                     REMOTE conancenter
                     SETTINGS ${settings}
+                    PROFILE "${CONAN_PROFILE_FILE}"
 )
 
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
@@ -120,7 +122,12 @@ endif()
 # Build config.c and run to generate "include/tmpl_config.h"
 add_executable(tmpl_config config.c)
 include(CMakePrintHelpers)
-cmake_print_variables(CMAKE_FIND_ROOT_PATH CMAKE_SYSROOT CROSSCOMPILING_EMULATOR CMAKE_CROSSCOMPILING)
+cmake_print_variables(
+    CMAKE_FIND_ROOT_PATH
+    CMAKE_SYSROOT
+    CROSSCOMPILING_EMULATOR
+    CMAKE_CROSSCOMPILING
+)
 add_custom_command(
     OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h"
     DEPENDS tmpl_config

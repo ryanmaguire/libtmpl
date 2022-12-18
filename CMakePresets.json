@@ -84,7 +84,11 @@
         "LIBTMPL_USE_ASM": true,
         "LIBTMPL_USE_FASM": true,
         "LIBTMPL_USE_MATH": true,
-        "LIBTMPL_USE_OMP": true
+        "LIBTMPL_USE_OMP": true,
+        "CONAN_PROFILE_FILE": {
+          "type": "PATH",
+          "value": "${sourceDir}/conan/aarch64-linux-gnu-gcc.conan.profile"
+        }
       },
       "condition": {
         "lhs": "${hostSystemName}",
