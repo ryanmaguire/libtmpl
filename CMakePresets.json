@@ -1,136 +1,148 @@
 {
-  "version": 5,
-  "configurePresets": [
-    {"name": "ci-base",
-    "hidden": true,
-      "binaryDir": "${sourceParentDir}/build/libtmpl",
-      "installDir": "${sourceParentDir}/install/libtmpl",
-      "cacheVariables": {
-        "LIBTMPL_STDVER": "-std=c11",
-        "LIBTMPL_BUILD_TESTS": true,
-        "LIBTMPL_BUILD_EXAMPLES": true,
-        "LIBTMPL_ENABLE_VERBOSE": true,
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {"name":  "ci-linux",
-    "inherits": "ci-base",
-      "generator": "Ninja",
-      "cacheVariables": {
-        "LIBTMPL_USE_OMP": true,
-        "LIBTMPL_USE_MATH": true,
-        "LIBTMPL_USE_ASM": true,
-        "LIBTMPL_USE_FASM": true
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      }
-    },
-    {"name":  "ci-linux-aarch64-crosscompile",
-    "inherits": "ci-base",
-    "description": "Cross-compile from x86-64 to aarch64. Requires qemu, gcc-aarch64-linux-gnu, and g++-aarch64-linux-gnu",
-      "generator": "Ninja",
-      "toolchainFile": "cmake/toolchains/aarch64-linux-gnu-gcc.cmake",
-      "environment": {
-        "CONAN_CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/aarch64-linux-gnu-gcc.cmake",
-        "CONAN_CMAKE_SYSTEM_PROCESSOR": "aarch64",
-        "CONAN_CMAKE_SYSTEM_NAME": "Linux",
-        "CONAN_CMAKE_FIND_ROOT_PATH": "/usr/aarch64-linux-gnu;/usr/include/aarch64-linux-gnu/;/usr/lib/aarch64-linux-gnu/;/lib/aarch64-linux-gnu",
-        "CONAN_CMAKE_FIND_ROOT_PATH_MODE_PROGRAM": "NEVER",
-        "CONAN_CMAKE_FIND_ROOT_PATH_MODE_LIBRARY": "BOTH",
-        "CONAN_CMAKE_FIND_ROOT_PATH_MODE_INCLUDE": "ONLY"
-      },
-      "cacheVariables": {
-        "LIBTMPL_USE_OMP": true,
-        "LIBTMPL_USE_MATH": true,
-        "LIBTMPL_USE_ASM": true,
-        "LIBTMPL_USE_FASM": true
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      }
-    },
-    {
-      "name": "ci-macos",
-      "inherits": "ci-base",
-      "generator": "Xcode",
-      "cacheVariables": {
-        "LIBTMPL_USE_OMP": true,
-        "LIBTMPL_USE_MATH": true,
-        "LIBTMPL_USE_ASM": true,
-        "LIBTMPL_USE_FASM": false
-      },
-      "toolchainFile": "cmake/toolchains/gcc-macos.cmake",
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Darwin"
-      }
-    },
-    {
-      "name": "ci-windows",
-      "inherits": "ci-base",
-      "cacheVariables": {
-        "LIBTMPL_USE_OMP": false,
-        "LIBTMPL_USE_MATH": true,
-        "LIBTMPL_USE_ASM": true,
-        "LIBTMPL_USE_FASM": false
-      },
-      "architecture": {
-        "value": "x64",
-        "strategy": "set"
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
-    }
-  ],
   "buildPresets": [
     {
-      "name": "ci-linux",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      },
       "configurePreset": "ci-linux",
-      "targets": ["install"],
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      }
+      "name": "ci-linux",
+      "targets": [
+        "install"
+      ]
     },
     {
-      "name": "ci-linux-aarch64-crosscompile",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      },
       "configurePreset": "ci-linux-aarch64-crosscompile",
-      "targets": ["install"],
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      }
+      "name": "ci-linux-aarch64-crosscompile",
+      "targets": [
+        "install"
+      ]
     },
     {
-      "name": "ci-macos",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin",
+        "type": "equals"
+      },
       "configurePreset": "ci-macos",
-      "targets": ["install"],
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Darwin"
-      }
+      "name": "ci-macos",
+      "targets": [
+        "install"
+      ]
     },
     {
-      "name": "ci-windows",
-      "configurePreset": "ci-windows",
-      "targets": ["install"],
       "condition": {
-        "type": "equals",
         "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
+        "rhs": "Windows",
+        "type": "equals"
+      },
+      "configurePreset": "ci-windows",
+      "name": "ci-windows",
+      "targets": [
+        "install"
+      ]
     }
-  ]
+  ],
+  "configurePresets": [
+    {
+      "binaryDir": "${sourceParentDir}/build/libtmpl",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "LIBTMPL_BUILD_EXAMPLES": true,
+        "LIBTMPL_BUILD_TESTS": true,
+        "LIBTMPL_ENABLE_VERBOSE": true,
+        "LIBTMPL_STDVER": "-std=c11"
+      },
+      "hidden": true,
+      "installDir": "${sourceParentDir}/install/libtmpl",
+      "name": "ci-base"
+    },
+    {
+      "cacheVariables": {
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": true,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_OMP": true
+      },
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      },
+      "generator": "Ninja",
+      "inherits": "ci-base",
+      "name": "ci-linux"
+    },
+    {
+      "cacheVariables": {
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": true,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_OMP": true
+      },
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      },
+      "description": "Cross-compile from x86-64 to aarch64. Requires qemu, gcc-aarch64-linux-gnu, and g++-aarch64-linux-gnu",
+      "displayName": "Cross-compile from x86-64 to aarch64 on Linux.",
+      "environment": {
+        "CONAN_CMAKE_FIND_ROOT_PATH": "/usr/aarch64-linux-gnu;/usr/include/aarch64-linux-gnu/;/usr/lib/aarch64-linux-gnu/;/lib/aarch64-linux-gnu",
+        "CONAN_CMAKE_FIND_ROOT_PATH_MODE_INCLUDE": "ONLY",
+        "CONAN_CMAKE_FIND_ROOT_PATH_MODE_LIBRARY": "BOTH",
+        "CONAN_CMAKE_FIND_ROOT_PATH_MODE_PROGRAM": "NEVER",
+        "CONAN_CMAKE_SYSTEM_NAME": "Linux",
+        "CONAN_CMAKE_SYSTEM_PROCESSOR": "aarch64",
+        "CONAN_CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/aarch64-linux-gnu-gcc.cmake"
+      },
+      "generator": "Ninja",
+      "inherits": "ci-base",
+      "name": "ci-linux-aarch64-crosscompile",
+      "toolchainFile": "cmake/toolchains/aarch64-linux-gnu-gcc.cmake"
+    },
+    {
+      "cacheVariables": {
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": false,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_OMP": true
+      },
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin",
+        "type": "equals"
+      },
+      "generator": "Xcode",
+      "inherits": "ci-base",
+      "name": "ci-macos",
+      "toolchainFile": "cmake/toolchains/gcc-macos.cmake"
+    },
+    {
+      "architecture": {
+        "strategy": "set",
+        "value": "x64"
+      },
+      "cacheVariables": {
+        "LIBTMPL_USE_ASM": true,
+        "LIBTMPL_USE_FASM": false,
+        "LIBTMPL_USE_MATH": true,
+        "LIBTMPL_USE_OMP": false
+      },
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows",
+        "type": "equals"
+      },
+      "inherits": "ci-base",
+      "name": "ci-windows"
+    }
+  ],
+  "version": 5
 }
