@@ -22,6 +22,24 @@ set(test_apps
     tmpl_arctan_pade_double_time_test
     tmpl_arctan_pade_float_time_test
     tmpl_arctan_pade_ldouble_time_test
+    tmpl_array_max_double_time_test
+tmpl_array_max_float_time_test
+tmpl_array_max_index_double_time_test
+tmpl_array_max_index_float_time_test
+tmpl_array_max_index_ldouble_time_test
+tmpl_array_max_ldouble_time_test
+tmpl_array_min_double_time_test
+tmpl_array_min_float_time_test
+tmpl_array_min_index_double_time_test
+tmpl_array_min_index_float_time_test
+tmpl_array_min_index_ldouble_time_test
+tmpl_array_min_ldouble_time_test
+tmpl_array_minmax_double_time_test
+tmpl_array_minmax_float_time_test
+tmpl_array_minmax_index_double_time_test
+tmpl_array_minmax_index_float_time_test
+tmpl_array_minmax_index_ldouble_time_test
+tmpl_array_minmax_ldouble_time_test
     tmpl_base2_mant_and_exp_double_time_test
     tmpl_base2_mant_and_exp_float_time_test
     tmpl_base2_mant_and_exp_ldouble_time_test
@@ -115,6 +133,7 @@ endforeach()
 if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(linasm_compare_test_apps
         tmpl_log_double_time_test_vs_linasm
+        tmpl_sin_double_time_test_vs_linasm
         tmpl_sqrt_double_time_test_vs_linasm
     )
 

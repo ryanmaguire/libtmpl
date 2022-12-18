@@ -81,7 +81,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 11 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1).*/
+ *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (1.00000000000000000000000000000E+00)
 #define A1 (-3.33333333333333333333333333333E-01)
 #define A2 (2.00000000000000000000000000000E-01)

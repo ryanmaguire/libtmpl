@@ -24,7 +24,7 @@ foreach(app ${test_apps})
     endif()
 endforeach()
 
-set(cpp_test_apps tmpl_merge_sort_double_unit_test_001)
+set(cpp_test_apps tmpl_merge_sort_double_unit_test_001 tmpl_merge_sort_double_unit_test_004)
 
 foreach(app ${cpp_test_apps})
     add_executable(${app} ${app}.cpp)

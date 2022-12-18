@@ -17,6 +17,9 @@ target_sources(
         tmpl_trailing_zeros_ushort_x86_64.S
 )
 
+#TODO do we need to install the header with our header file set?
+target_include_directories(tmpl PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
 list(
     APPEND
     SOURCE_EXCLUSION_LIST

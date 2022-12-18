@@ -339,8 +339,9 @@ endif()
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" system_processor)
 set(X86_64_ARCHES "amd64;x86_64")
+set(X86_ARCHES "i386;x86")
 set(ARM64_ARCHES "aarch64;arm64")
-set(ARMHF_ARCHES "armv7l;")
+set(ARMHF_ARCHES "armv7l")
 
 if(LIBTMPL_USE_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
@@ -381,6 +382,10 @@ if(LIBTMPL_USE_ASM)
         enable_language(ASM)
 
         add_subdirectory("src/assembly/armv7l")
+    elseif(system_processor IN_LIST X86_ARCHES)
+        enable_language(ASM)
+
+        add_subdirectory("src/assembly/i386")
     endif()
 endif()
 

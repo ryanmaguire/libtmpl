@@ -50,7 +50,7 @@ int main(void)
     printf("libtmpl: %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
 
     t1 = clock();
-    gsl_sort(arrc, 1, n);
+    gsl_sort(arrc, 1, len);
     t2 = clock();
     printf("gsl:     %f\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC);
 

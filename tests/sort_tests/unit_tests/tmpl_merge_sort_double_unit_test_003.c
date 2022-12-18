@@ -42,7 +42,7 @@ int main(void)
     }
 
     tmpl_Double_Merge_Sort(arrtmpl, len);
-    gsl_sort(arrc, 1, n);
+    gsl_sort(arrc, 1, len);
 
     for (n = 0; n < len; ++n)
     {

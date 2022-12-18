@@ -23,12 +23,21 @@ set(sources
     tmpl_arctan_very_small_ldouble.c
     tmpl_array_max_double.c
     tmpl_array_max_float.c
+    tmpl_array_max_index_double.c
+    tmpl_array_max_index_float.c
+    tmpl_array_max_index_ldouble.c
     tmpl_array_max_ldouble.c
     tmpl_array_min_double.c
     tmpl_array_min_float.c
+    tmpl_array_min_index_double.c
+    tmpl_array_min_index_float.c
+    tmpl_array_min_index_ldouble.c
     tmpl_array_min_ldouble.c
     tmpl_array_minmax_double.c
     tmpl_array_minmax_float.c
+    tmpl_array_minmax_index_double.c
+    tmpl_array_minmax_index_float.c
+    tmpl_array_minmax_index_ldouble.c
     tmpl_array_minmax_ldouble.c
     tmpl_base2_mant_and_exp_double.c
     tmpl_base2_mant_and_exp_float.c

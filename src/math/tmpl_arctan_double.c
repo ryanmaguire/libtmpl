@@ -43,7 +43,7 @@
  *              in this function than tmpl_Double_Arctan_Very_Small.          *
  *          tmpl_Double_Arctan_Very_Small (tmpl_math.h):                      *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *      Method:                                                               *
  *          Check if the input is is NaN or infinity. Return NaN if it is     *
  *          NaN, and sign(x) * pi / 2 if it is +/- infinity.                  *
@@ -78,22 +78,23 @@
  *          atan(u) = atan(v) + atan( -------- )                              *
  *                                     1 + uv                                 *
  *                                                                            *
- *          x in [0.0, 1/16) u = x, v = 0.05, reduce and use polynomial.      *
- *          x in [1/16, 1/8) u = x, v = 0.18, reduce and use polynomial.      *
- *          x in [1/8, 1/4)  u = x, v = 0.35, reduce and use polynomial.      *
- *          x in [1/4, 1/2)  u = x, v = 0.72, reduce and use polynomial.      *
- *          x in [1/2, 1)    u = x, v = 1.35, reduce and use polynomial.      *
- *          x in [1, 2)      u = x, v = 2.50, reduce and use polynomial.      *
- *          x in [2, 4)      u = x, v = 4.00, reduce and use polynomial.      *
- *          x in [4, 8)      u = x, v = 8.00, reduce and use polynomial.      *
- *          x >= 8           atan(x) ~= pi/2 + atan(-1/x).                    *
+ *          x in [0, 1/16)    atan(x) ~= x-x^3/3+x^5/5-x^7/7                  *
+ *          x in [1/16, 1/8)  u = x, v = 0.05, reduce and use polynomial.     *
+ *          x in [1/8, 1/4)   u = x, v = 0.18, reduce and use polynomial.     *
+ *          x in [1/4, 1/2)   u = x, v = 0.35, reduce and use polynomial.     *
+ *          x in [1/2, 1)     u = x, v = 0.72, reduce and use polynomial.     *
+ *          x in [1, 2)       u = x, v = 1.35, reduce and use polynomial.     *
+ *          x in [2, 4)       u = x, v = 2.50, reduce and use polynomial.     *
+ *          x in [4, 8)       u = x, v = 4.00, reduce and use polynomial.     *
+ *          x in [8, 16)      u = x, v = 8.00, reduce and use polynomial.     *
+ *          x >= 16           atan(x) ~= pi/2 + atan(-1/x).                   *
  *      Error:                                                                *
  *          Based on 788,968,857 random samples with -10^6 < x < 10^6.        *
  *              max relative error: 2.3223344540012894e-16                    *
  *              rms relative error: 7.4233764024303319e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
  *              rms absolute error: 1.1660491924987274e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
@@ -107,7 +108,7 @@
  *              in this function than tmpl_Double_Arctan_Very_Small.          *
  *          tmpl_Double_Arctan_Very_Small (tmpl_math.h):                      *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *          tmpl_Double_Is_NaN (tmpl_math.h):                                 *
  *              Determines if a double is Not-a-Number.                       *
  *          tmpl_Double_Is_Inf (tmpl_math.h):                                 *
@@ -121,7 +122,7 @@
  *              rms relative error: 7.4233764024303319e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
  *              rms absolute error: 1.1660491924987274e-16                    *
- *          Values assume 100% accuracy of glibc. Actually error in glibc is  *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Notes:                                                                    *
  *      There are three special cases. If the input is NaN, the output will   *
@@ -186,7 +187,7 @@ double tmpl_Double_Arctan(double x)
             return tmpl_Pi_By_Two;
     }
 
-    /*  Small values, |x| < 1/32. Use the MacLaurin series to a few terms.    */
+    /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
         return tmpl_Double_Arctan_Very_Small(x);
 

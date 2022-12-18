@@ -152,7 +152,7 @@ for arg in "$@"; do
 
     # Check for any extra arguments.
     else
-        ExtraArgs="$ExtraArgs ${arg#*=}"
+        ExtraArgs="$ExtraArgs ${arg#*}"
     fi
 done
 

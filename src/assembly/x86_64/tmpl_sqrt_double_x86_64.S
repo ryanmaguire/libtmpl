@@ -49,44 +49,13 @@
  *  Date:       April 5, 2022                                                 *
  ******************************************************************************/
 
-/*  Windows, 64-bit, version. Works with clang-cl in 64-bit mode.             */
-#if defined(_WIN64)
-.p2align 4,0x90;
-.globl tmpl_Double_Sqrt;
-.section .drectve;
-.ascii " -export:", "tmpl_Double_Sqrt";
-.section .text;
-.def tmpl_Double_Sqrt;
-.scl 2;
-.type 32;
-.endef;
+/*  Helper macros found here.                                                 */
+#include "tmpl_x86_64_asm.h"
 
-tmpl_Double_Sqrt:
-        sqrtsd %xmm0, %xmm0
-        ret
-
-/*  Apple x86_64 machines. Works with clang and gcc.                          */
-#elif defined(__APPLE__)
-.globl _tmpl_Double_Sqrt
-.align 4,0x90;
-
-_tmpl_Double_Sqrt:
+ASM_BEGIN(tmpl_Double_Sqrt)
     sqrtsd %xmm0, %xmm0
     ret
-
-/*  GNU/Linux and FreeBSD (and others). Works with gcc, clang, and pcc.       */
-#else
-.text;
-.p2align 4,0x90;
-.globl tmpl_Double_Sqrt;
-.type tmpl_Double_Sqrt,@function;
-
-tmpl_Double_Sqrt:
-    sqrtsd %xmm0, %xmm0
-    ret
-
-.size tmpl_Double_Sqrt, . - tmpl_Double_Sqrt
-#endif
+ASM_END(tmpl_Double_Sqrt)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)
