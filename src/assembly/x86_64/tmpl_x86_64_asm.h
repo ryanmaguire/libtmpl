@@ -44,19 +44,9 @@
  *                                  WINDOWS                                   *
  ******************************************************************************/
 #if defined(_WIN32)
-#ifndef _MSC_VER
 #define ASM_END(x) .end
-#define WIN32_START_ENTRY .text
-#else
-/*  Else for #ifndef _MSC_VER.                                                */
-
-#define ASM_END(x) end
-#define WIN32_START_ENTRY .code
-#endif
-/*  End of #ifndef _MSC_VER.                                                  */
-
 #define ASM_BEGIN(x)    \
-WIN32_START_ENTRY;      \
+.text;                  \
 .p2align ALIGN;         \
 .globl _##x;            \
 .section .drectve;      \
