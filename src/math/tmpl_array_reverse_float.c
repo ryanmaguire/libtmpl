@@ -1,10 +1,10 @@
 /******************************************************************************
- *                                  LICENSE                                   *
+ *                                 LICENSE                                    *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
  *  libtmpl is free software: you can redistribute it and/or modify it        *
- *  under the terms of the GNU General Public License as published by         *
+ *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
@@ -16,26 +16,33 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-#if defined(__APPLE__)
-.globl    _tmpl_LDouble_Cos
-.p2align  4, 0x90
 
-_tmpl_LDouble_Cos:
-    jmp    _cosl
+/*  size_t typedef is here.                                                   */
+#include <stddef.h>
 
-#else
-.text
-.p2align 4
-.globl  tmpl_LDouble_Cos
-.type   tmpl_LDouble_Cos, @function
+/*  Function prototype give here.                                             */
+#include <libtmpl/include/tmpl_math.h>
 
-tmpl_LDouble_Cos:
-    jmp    cosl@PLT
+/*  Standard algorithm of time-complexity O(n) to take an array and reverse   *
+ *  the order.                                                                */
+void tmpl_Float_Array_Reverse(float *arr, size_t len)
+{
+    /*  Variable for saving the value of the nth element of the array.        */
+    float tmp;
 
-.size   tmpl_LDouble_Cos, .-tmpl_LDouble_Cos
-#endif
+    /*  Variable for indexing.                                                */
+    size_t n;
 
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
+    /*  Two elements are swapped at a time, to only len/2 iterations needed.  */
+    const size_t N = len >> 1U;
+
+    /*  Loop over the elements of the array.                                  */
+    for(n = 0; n < N; ++n)
+    {
+        /*  Perform a basic swap of two variables.                            */
+        tmp = arr[n];
+        arr[n] = arr[len - n - 1];
+        arr[len - n - 1] = tmp;
+    }
+}
+/*  End of tmpl_Float_Array_Reverse.                                          */

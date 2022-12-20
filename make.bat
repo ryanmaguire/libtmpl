@@ -53,11 +53,7 @@ IF %1 == clang GOTO MakeClang
         if "%%d" == ".\src\assembly" (
             echo Skipping src\assembly\
         ) else (
-            if "%%d" == ".\src\builtins" (
-                echo Skipping src\builtins\
-            ) else (
-                clang-cl %CWARN% %CARGS% %%d\*.c
-            )
+            clang-cl %CWARN% %CARGS% %%d\*.c
         )
     )
 
@@ -81,11 +77,7 @@ IF %1 == clang GOTO MakeClang
         if "%%d" == ".\src\assembly" (
             echo Skipping src\assembly\
         ) else (
-            if "%%d" == ".\src\builtins" (
-                echo Skipping src\builtins\
-            ) else (
-                cl %CWARN% %CARGS% %%d\*.c
-            )
+            cl %CWARN% %CARGS% %%d\*.c
         )
     )
 

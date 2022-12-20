@@ -132,9 +132,6 @@ Options to pass to `make`:
 > handled efficiently in assembly code. If you wish to use only C code,
 > set this option (not recommended).
 
-`NO_BUILTIN=1`
-> **This option will be removed soon.**
-
 `FASM=1`
 > Use the flat assembler instead of the assembly language used by `gcc` and
 > `clang`. You must have `fasm` installed to use this. This option is ignored

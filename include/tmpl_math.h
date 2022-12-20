@@ -1759,6 +1759,23 @@ tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Reverse_Array                                             *
+ *  Purpose:                                                                  *
+ *      Reverses the order of a pointer to an array of real numbers.          *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          A pointer to an array.                                            *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      None (void):                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_Array_Reverse(float *arr, size_t len);
+extern void tmpl_Double_Array_Reverse(double *arr, size_t len);
+extern void tmpl_LDouble_Array_Reverse(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Base2_Mant_and_Exp                                        *
  *  Purpose:                                                                  *
  *      Given a real number x, compute the numbers m and e such that          *
@@ -2651,23 +2668,6 @@ tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
 extern float tmpl_Float_Pow2(signed int expo);
 extern double tmpl_Double_Pow2(signed int expo);
 extern long double tmpl_LDouble_Pow2(signed int expo);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Reverse_Array                                             *
- *  Purpose:                                                                  *
- *      Reverses the order of a pointer to an array of real numbers.          *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          A pointer to an array.                                            *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      None (void):                                                          *
- ******************************************************************************/
-extern void tmpl_Float_Reverse_Array(float *arr, size_t len);
-extern void tmpl_Double_Reverse_Array(double *arr, size_t len);
-extern void tmpl_LDouble_Reverse_Array(long double *arr, size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
