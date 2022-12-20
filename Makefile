@@ -248,8 +248,6 @@ endif
 # and armv7l (armhf) this is only advised if your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifdef NO_ASM
-BUILTIN_INCLUDE=
-BUILTIN_EXCLUDE=
 ASM_INCLUDE=
 ASM_EXCLUDE=
 
@@ -257,23 +255,6 @@ ASM_EXCLUDE=
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
 else ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
-
-ifdef NO_BUILTIN
-BUILTIN_INCLUDE=
-BUILTIN_EXCLUDE=
-else
-BUILTIN_INCLUDE=-wholename "./src/builtins/x86_64/*.S" -or
-BUILTIN_EXCLUDE=\
-	-not -name "tmpl_cos_double.c" -and \
-	-not -name "tmpl_cos_float.c" -and \
-	-not -name "tmpl_cos_ldouble.c" -and \
-	-not -name "tmpl_sin_double.c" -and \
-	-not -name "tmpl_sin_float.c" -and \
-	-not -name "tmpl_sin_ldouble.c" -and \
-	-not -name "tmpl_sincos_double.c" -and \
-	-not -name "tmpl_sincos_float.c" -and \
-	-not -name "tmpl_sincos_ldouble.c" -and
-endif
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
@@ -342,25 +323,6 @@ ASM_EXCLUDE=\
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
-ifdef NO_BUILTIN
-BUILTIN_INCLUDE=
-BUILTIN_EXCLUDE=
-else
-BUILTIN_INCLUDE=-wholename "./src/builtins/aarch64/*.S" -or
-BUILTIN_EXCLUDE=\
-	-not -name "tmpl_cos_double.c" -and \
-	-not -name "tmpl_cos_float.c" -and \
-	-not -name "tmpl_cos_ldouble.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and \
-	-not -name "tmpl_sin_double.c" -and \
-	-not -name "tmpl_sin_float.c" -and \
-	-not -name "tmpl_sin_ldouble.c" -and \
-	-not -name "tmpl_sincos_double.c" -and \
-	-not -name "tmpl_sincos_float.c" -and \
-	-not -name "tmpl_sincos_ldouble.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and
-endif
-
 ASM_INCLUDE=-wholename "./src/assembly/aarch64/*.S" -or
 ASM_EXCLUDE=\
 	-not -name "tmpl_floor_double.c" -and \
@@ -372,8 +334,6 @@ ASM_EXCLUDE=\
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
-BUILTIN_INCLUDE=
-BUILTIN_EXCLUDE=
 ASM_INCLUDE=-wholename "./src/assembly/armv7l/*.S" -or
 ASM_EXCLUDE=\
 	-not -name "tmpl_sqrt_double.c" -and \
@@ -387,8 +347,6 @@ ASM_EXCLUDE=\
 else
 
 # For all other architectures, use only C code. No assembly.
-BUILTIN_EXCLUDE=
-BUILTIN_INCLUDE=
 ASM_INCLUDE=
 ASM_EXCLUDE=
 
@@ -396,8 +354,8 @@ ASM_EXCLUDE=
 endif
 
 ALLCFLAGS=$(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG)
-INCLUDE=\( $(ASM_INCLUDE) $(BUILTIN_INCLUDE) -name "*.c" \)
-EXCLUDE=$(ASM_EXCLUDE) $(BUILTIN_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
+INCLUDE=\( $(ASM_INCLUDE) -name "*.c" \)
+EXCLUDE=$(ASM_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
 SRCS=$(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
 OBJS=$(SRCS:%=$(BUILD_DIR)/%.o)
 
@@ -451,8 +409,6 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/assembly/x86_64/
 	mkdir -p $(BUILD_DIR)/src/assembly/aarch64/
 	mkdir -p $(BUILD_DIR)/src/assembly/armv7l/
-	mkdir -p $(BUILD_DIR)/src/builtins/x86_64/
-	mkdir -p $(BUILD_DIR)/src/builtins/aarch64/
 
 clean:
 	rm -rf $(BUILD_DIR)

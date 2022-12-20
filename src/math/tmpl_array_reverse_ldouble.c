@@ -25,7 +25,7 @@
 
 /*  Standard algorithm of time-complexity O(n) to take an array and reverse   *
  *  the order.                                                                */
-void tmpl_LDouble_Reverse_Array(long double *arr, size_t len)
+void tmpl_LDouble_Array_Reverse(long double *arr, size_t len)
 {
     /*  Variable for saving the value of the nth element of the array.        */
     long double tmp;
@@ -45,4 +45,4 @@ void tmpl_LDouble_Reverse_Array(long double *arr, size_t len)
         arr[len - n - 1] = tmp;
     }
 }
-/*  End of tmpl_LDouble_Reverse_Array.                                        */
+/*  End of tmpl_LDouble_Array_Reverse.                                        */
