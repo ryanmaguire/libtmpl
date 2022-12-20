@@ -44,19 +44,20 @@
  *                                  WINDOWS                                   *
  ******************************************************************************/
 #if defined(_WIN32)
+#define EXT(x) _##x
 #define ASM_END(x) .end
 #define ASM_BEGIN(x)    \
 .text;                  \
 .p2align ALIGN;         \
-.globl _##x;            \
+.globl EXT(x);          \
 .section .drectve;      \
 .ascii " -export:", #x; \
 .section .text;         \
-.def _##x;              \
+.def EXT(x);            \
 .scl 2;                 \
 .type 32;               \
 .endef;                 \
-_##x:
+EXT(x):
 
 /******************************************************************************
  *                                   APPLE                                    *
