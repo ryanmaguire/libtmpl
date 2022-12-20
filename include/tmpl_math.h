@@ -1759,7 +1759,7 @@ tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Reverse_Array                                             *
+ *      tmpl_Double_Array_Reverse                                             *
  *  Purpose:                                                                  *
  *      Reverses the order of a pointer to an array of real numbers.          *
  *  Arguments:                                                                *
