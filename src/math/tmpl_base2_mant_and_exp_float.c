@@ -53,7 +53,7 @@
  *          The exponent is offset by a bias. By subtracting the bias from    *
  *          exponent we obtained the actual integer value of the exponent.    *
  *          Compute this and save it. Then set the exponent equal to the bias *
- *          which is equivalent to have the actual exponent equal to zero.    *
+ *          which is equivalent to setting the actual exponent to zero.       *
  *          The result will be a float m with value 1 <= |m| < 2. Save this   *
  *          variable and return.                                              *
  *                                                                            *
@@ -74,12 +74,10 @@
  *              rms expo absolute error: 0.000000e+00                         *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Is_Abs (tmpl_math.h):                                  *
+ *          tmpl_Float_Abs (tmpl_math.h):                                     *
  *              Computes the absolute value of a float.                       *
- *          tmpl_Float_Is_Inf (tmpl_math.h):                                  *
- *              Determines if a float is infinity.                            *
- *          tmpl_Float_Is_NaN (tmpl_math.h):                                  *
- *              Determines if a float is Not-a-Number.                        *
+ *          tmpl_Float_Is_NaN_Or_Inf (tmpl_math.h):                           *
+ *              Determines if a float is NaN or infinity.                     *
  *      Method:                                                               *
  *          If |x| < 1, compute with 1/|x|. Otherwise compute with |x|.       *
  *          Iteratively divide the input by certain powers of 2 until we      *
@@ -106,11 +104,9 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
+ *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
- *  3.) float.h:                                                              *
+ *  2.) float.h:                                                              *
  *          Standard C header file containing limits for the size of float.   *
  *          Only included with the portable (non-IEEE-754) version.           *
  ******************************************************************************
@@ -142,7 +138,7 @@ void tmpl_Float_Base2_Mant_and_Exp(float x, float *mant, signed int *expo)
     w.bits.sign = 0x00U;
 
     /*  NaN or Inf. Set exponent to zero and mant to the input.               */
-    if (w.bits.expo == TMPL_FLOAT_NANINF_EXP)
+    if (TMPL_FLOAT_IS_NAN_OR_INF(w))
     {
         *mant = w.r;
         *expo = 0;
@@ -160,13 +156,16 @@ void tmpl_Float_Base2_Mant_and_Exp(float x, float *mant, signed int *expo)
             return;
         }
 
-        /*  Non-zero subnormal number. Normalize by multiplying by 2^23,      *
-         *  which is 8.388608 x 10^6.                                         */
-        w.r *= 8.388608E6F;
+        /*  Non-zero subnormal number. Normalize.                             */
+        w.r *= TMPL_FLOAT_NORMALIZE;
 
-        /*  Compute the exponent. Since we multiplied by 2^23, subtract 23    *
-         *  from the value.                                                   */
-        *expo = (signed int)(w.bits.expo) - TMPL_FLOAT_BIAS - 23;
+        /*  Compute the exponent by subtracting of the bias.                  */
+        *expo = (signed int)(w.bits.expo) - TMPL_FLOAT_BIAS;
+
+        /*  Since we normalized, subtract off the appropriate power of two.   */
+        *expo = *expo - TMPL_FLOAT_MANTISSA_LENGTH;
+
+        /*  Set the exponent bits to the bias, meaning 1 <= w.r < 2.          */
         w.bits.expo = TMPL_FLOAT_BIAS;
         *mant = w.r;
         return;
@@ -211,19 +210,11 @@ void tmpl_Float_Base2_Mant_and_Exp(float x, float *mant, signed int *expo)
         return;
     }
 
-    /*  Infinity is another special case. The mantissa will be set to         *
-     *  infinity and the exponent will be set to zero.                        */
-    else if (tmpl_Float_Is_Inf(x))
+    /*  Infinity/NaN are special cases. The mantissa will be set to the       *
+     *  absolute value of the input and the exponent will be set to zero.     */
+    else if (tmpl_Float_Is_NaN_Or_Inf(x))
     {
-        *mant = TMPL_INFINITYF;
-        *expo = 0;
-        return;
-    }
-
-    /*  The last special case is NaN. expo will be zero, and mant will be nan.*/
-    else if (tmpl_Float_Is_NaN(x))
-    {
-        *mant = TMPL_NANF;
+        *mant = tmpl_Float_Abs(x);
         *expo = 0;
         return;
     }
