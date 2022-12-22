@@ -1,54 +1,4 @@
 {
-  "buildPresets": [
-    {
-      "condition": {
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux",
-        "type": "equals"
-      },
-      "configurePreset": "ci-linux",
-      "name": "ci-linux",
-      "targets": [
-        "install"
-      ]
-    },
-    {
-      "condition": {
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux",
-        "type": "equals"
-      },
-      "configurePreset": "ci-linux-aarch64-crosscompile",
-      "name": "ci-linux-aarch64-crosscompile",
-      "targets": [
-        "install"
-      ]
-    },
-    {
-      "condition": {
-        "lhs": "${hostSystemName}",
-        "rhs": "Darwin",
-        "type": "equals"
-      },
-      "configurePreset": "ci-macos",
-      "name": "ci-macos",
-      "targets": [
-        "install"
-      ]
-    },
-    {
-      "condition": {
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows",
-        "type": "equals"
-      },
-      "configurePreset": "ci-windows",
-      "name": "ci-windows",
-      "targets": [
-        "install"
-      ]
-    }
-  ],
   "configurePresets": [
     {
       "name": "ci-base",
@@ -141,6 +91,56 @@
         "LIBTMPL_USE_MATH": true,
         "LIBTMPL_USE_OMP": false
       },
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows",
+        "type": "equals"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ci-linux",
+      "configurePreset": "ci-linux",
+      "targets": [
+        "install"
+      ],
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-linux-aarch64-crosscompile",
+      "configurePreset": "ci-linux-aarch64-crosscompile",
+      "targets": [
+        "install"
+      ],
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-macos",
+      "configurePreset": "ci-macos",
+      "targets": [
+        "install"
+      ],
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-windows",
+      "configurePreset": "ci-windows",
+      "targets": [
+        "install"
+      ],
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Windows",
