@@ -347,11 +347,6 @@ if(LIBTMPL_USE_ASM)
     if(system_processor IN_LIST X86_64_ARCHES)
         enable_language(ASM)
 
-        if(LIBTMPL_USE_BUILTIN)
-            # This includes Windows AMD64 and Unix x86_64
-            add_subdirectory("src/builtins/x86_64")
-        endif()
-
         if(LIBTMPL_USE_FASM)
             if(
                 UNIX
@@ -372,10 +367,6 @@ if(LIBTMPL_USE_ASM)
         endif()
     elseif(system_processor IN_LIST ARM64_ARCHES)
         enable_language(ASM)
-
-        if(LIBTMPL_USE_BUILTIN)
-            add_subdirectory("src/builtins/aarch64")
-        endif()
 
         add_subdirectory("src/assembly/aarch64")
     elseif(system_processor IN_LIST ARMHF_ARCHES)

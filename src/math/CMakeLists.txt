@@ -39,6 +39,9 @@ set(sources
     tmpl_array_minmax_index_float.c
     tmpl_array_minmax_index_ldouble.c
     tmpl_array_minmax_ldouble.c
+    tmpl_array_reverse_double.c
+    tmpl_array_reverse_float.c
+    tmpl_array_reverse_ldouble.c
     tmpl_base2_mant_and_exp_double.c
     tmpl_base2_mant_and_exp_float.c
     tmpl_base2_mant_and_exp_ldouble.c
@@ -161,9 +164,6 @@ set(sources
     tmpl_rcpr_table_double.c
     tmpl_rcpr_table_float.c
     tmpl_rcpr_table_ldouble.c
-    tmpl_reverse_array_double.c
-    tmpl_reverse_array_float.c
-    tmpl_reverse_array_ldouble.c
     tmpl_sin_double.c
     tmpl_sin_float.c
     tmpl_sin_ldouble.c
