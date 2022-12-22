@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
+include(FindGSL)
+
 project(sort_unit_tests LANGUAGES C CXX)
 
 set(test_apps
@@ -17,14 +19,18 @@ foreach(app ${test_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+        PRIVATE "${GSL_INCLUDE_DIRS}"
     )
-    target_link_libraries(${app} PRIVATE tmpl::tmpl)
+    target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()
 
-set(cpp_test_apps tmpl_merge_sort_double_unit_test_001 tmpl_merge_sort_double_unit_test_004)
+set(cpp_test_apps
+    tmpl_merge_sort_double_unit_test_001
+    tmpl_merge_sort_double_unit_test_004
+)
 
 foreach(app ${cpp_test_apps})
     add_executable(${app} ${app}.cpp)
