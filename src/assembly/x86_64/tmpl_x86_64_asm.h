@@ -44,29 +44,20 @@
  *                                  WINDOWS                                   *
  ******************************************************************************/
 #if defined(_WIN32)
-#ifndef _MSC_VER
+#define EXT(x) x
 #define ASM_END(x) .end
-#define WIN32_START_ENTRY .text
-#else
-/*  Else for #ifndef _MSC_VER.                                                */
-
-#define ASM_END(x) end
-#define WIN32_START_ENTRY .code
-#endif
-/*  End of #ifndef _MSC_VER.                                                  */
-
 #define ASM_BEGIN(x)    \
-WIN32_START_ENTRY;      \
+.text;                  \
 .p2align ALIGN;         \
-.globl _##x;            \
+.globl EXT(x);          \
 .section .drectve;      \
 .ascii " -export:", #x; \
 .section .text;         \
-.def _##x;              \
+.def EXT(x);            \
 .scl 2;                 \
 .type 32;               \
 .endef;                 \
-_##x:
+EXT(x):
 
 /******************************************************************************
  *                                   APPLE                                    *

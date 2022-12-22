@@ -101,10 +101,10 @@
  *                  Set expo to zero, and mant to +zero.                      *
  *      Error:                                                                *
  *          Based on 631,175,086 random samples.                              *
- *              max mant relative error: 1.570009e-16                         *
- *              rms mant relative error: 5.194841e-17                         *
- *              max mant absolute error: 2.220446e-16                         *
- *              rms mant absolute error: 9.197094e-17                         *
+ *              max mant relative error: 7.082118e-20                         *
+ *              rms mant relative error: 1.583610e-23                         *
+ *              max mant absolute error: 1.084202e-19                         *
+ *              rms mant absolute error: 2.424350e-23                         *
  *              max expo relative error: 0.000000e+00                         *
  *              rms expo relative error: 0.000000e+00                         *
  *              max expo absolute error: 0.000000e+00                         *
@@ -223,6 +223,10 @@ void tmpl_LDouble_Base2_Mant_and_Exp(long double x,
 
     /*  And a word for the long double itself.                                */
     tmpl_IEEE754_LDouble w;
+
+    /*  If either of the input pointers are NULL, there's nothing to be done. */
+    if (!mant || !expo)
+        return;
 
     /*  This function computes |x| = m * 2^e, so compute |x|.                 */
     w.r = tmpl_LDouble_Abs(x);

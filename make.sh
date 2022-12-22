@@ -402,8 +402,6 @@ if [ $MAKEMONSTER == 1 ]; then
         # assembly and buitlins only has assembly code. Skip this.
         if [[ $dir == *"assembly"* ]]; then
             continue;
-        elif [[ $dir == *"builtins"* ]]; then
-            continue;
         fi
 
         for filename in $dir*.c; do
@@ -434,8 +432,6 @@ else
 
         # assembly and buitlins only has assembly code. Skip this.
         if [[ $dir == *"assembly"* ]]; then
-            continue;
-        elif [[ $dir == *"builtins"* ]]; then
             continue;
         fi
 

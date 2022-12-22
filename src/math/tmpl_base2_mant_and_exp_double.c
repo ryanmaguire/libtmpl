@@ -53,7 +53,7 @@
  *          The exponent is offset by a bias. By subtracting the bias from    *
  *          exponent we obtained the actual integer value of the exponent.    *
  *          Compute this and save it. Then set the exponent equal to the bias *
- *          which is equivalent to have the actual exponent equal to zero.    *
+ *          which is equivalent to setting the actual exponent to zero.       *
  *          The result will be a double m with value 1 <= |m| < 2. Save this  *
  *          variable and return.                                              *
  *                                                                            *
