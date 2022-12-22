@@ -4,6 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
     include(FetchLinAsm)
 endif()
+include(FindGSL)
 
 project(math_time_tests)
 
@@ -23,23 +24,23 @@ set(test_apps
     tmpl_arctan_pade_float_time_test
     tmpl_arctan_pade_ldouble_time_test
     tmpl_array_max_double_time_test
-tmpl_array_max_float_time_test
-tmpl_array_max_index_double_time_test
-tmpl_array_max_index_float_time_test
-tmpl_array_max_index_ldouble_time_test
-tmpl_array_max_ldouble_time_test
-tmpl_array_min_double_time_test
-tmpl_array_min_float_time_test
-tmpl_array_min_index_double_time_test
-tmpl_array_min_index_float_time_test
-tmpl_array_min_index_ldouble_time_test
-tmpl_array_min_ldouble_time_test
-tmpl_array_minmax_double_time_test
-tmpl_array_minmax_float_time_test
-tmpl_array_minmax_index_double_time_test
-tmpl_array_minmax_index_float_time_test
-tmpl_array_minmax_index_ldouble_time_test
-tmpl_array_minmax_ldouble_time_test
+    tmpl_array_max_float_time_test
+    tmpl_array_max_index_double_time_test
+    tmpl_array_max_index_float_time_test
+    tmpl_array_max_index_ldouble_time_test
+    tmpl_array_max_ldouble_time_test
+    tmpl_array_min_double_time_test
+    tmpl_array_min_float_time_test
+    tmpl_array_min_index_double_time_test
+    tmpl_array_min_index_float_time_test
+    tmpl_array_min_index_ldouble_time_test
+    tmpl_array_min_ldouble_time_test
+    tmpl_array_minmax_double_time_test
+    tmpl_array_minmax_float_time_test
+    tmpl_array_minmax_index_double_time_test
+    tmpl_array_minmax_index_float_time_test
+    tmpl_array_minmax_index_ldouble_time_test
+    tmpl_array_minmax_ldouble_time_test
     tmpl_base2_mant_and_exp_double_time_test
     tmpl_base2_mant_and_exp_float_time_test
     tmpl_base2_mant_and_exp_ldouble_time_test
@@ -123,8 +124,9 @@ foreach(app ${test_apps})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
+        PRIVATE "${GSL_INCLUDE_DIRS}"
     )
-    target_link_libraries(${app} PRIVATE tmpl::tmpl)
+    target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
