@@ -155,6 +155,18 @@
       }
     },
     {
+      "name": "ci-linux-armhf-crosscompile",
+      "configurePreset": "ci-linux-armhf-crosscompile",
+      "targets": [
+        "install"
+      ],
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      }
+    },
+    {
       "name": "ci-macos",
       "configurePreset": "ci-macos",
       "targets": [
