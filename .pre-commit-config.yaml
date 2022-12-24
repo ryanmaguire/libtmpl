@@ -58,7 +58,7 @@ repos:
     rev: 0.8.2
     hooks:
     -   id: gersemi
-        arguments: [--line-length, 120]
+        args: [--line-length, '120']
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.2.0
     hooks:
