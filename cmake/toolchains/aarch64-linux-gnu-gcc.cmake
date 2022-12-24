@@ -5,12 +5,13 @@ list(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/toolchains
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
 )
+set(ARCH_TUPLE aarch64-linux-gnu)
 
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
 set(CMAKE_HOST_SYSTEM_PROCESSOR x86_64)
 
-find_program(GCC aarch64-linux-gnu-gcc PATHS /usr/bin)
+find_program(GCC ${ARCH_TUPLE}-gcc PATHS /usr/bin)
 
 if(NOT GCC)
     message(
@@ -20,7 +21,7 @@ if(NOT GCC)
     )
 endif()
 
-find_program(GPP aarch64-linux-gnu-g++ PATHS /usr/bin)
+find_program(GPP ${ARCH_TUPLE}-g++ PATHS /usr/bin)
 if(NOT GPP)
     message(
         FATAL_ERROR
@@ -32,18 +33,18 @@ endif()
 set(CMAKE_C_COMPILER ${GCC})
 set(CMAKE_CXX_COMPILER ${GPP})
 
-find_program(CMAKE_AR aarch64-linux-gnu-ar PATHS /usr/bin REQUIRED)
-find_program(CMAKE_LINKER aarch64-linux-gnu-ld PATHS /usr/bin REQUIRED)
-find_program(CMAKE_OBJCOPY aarch64-linux-gnu-objcopy PATHS /usr/bin REQUIRED)
-find_program(CMAKE_RANLIB aarch64-linux-gnu-ranlib PATHS /usr/bin REQUIRED)
-find_program(CMAKE_SIZE aarch64-linux-gnu-size PATHS /usr/bin REQUIRED)
-find_program(CMAKE_STRIP aarch64-linux-gnu-strip PATHS /usr/bin REQUIRED)
+find_program(CMAKE_AR ${ARCH_TUPLE}-ar PATHS /usr/bin REQUIRED)
+find_program(CMAKE_LINKER ${ARCH_TUPLE}-ld PATHS /usr/bin REQUIRED)
+find_program(CMAKE_OBJCOPY ${ARCH_TUPLE}-objcopy PATHS /usr/bin REQUIRED)
+find_program(CMAKE_RANLIB ${ARCH_TUPLE}-ranlib PATHS /usr/bin REQUIRED)
+find_program(CMAKE_SIZE ${ARCH_TUPLE}-size PATHS /usr/bin REQUIRED)
+find_program(CMAKE_STRIP ${ARCH_TUPLE}-strip PATHS /usr/bin REQUIRED)
 
 set(CMAKE_FIND_ROOT_PATH
-    /usr/aarch64-linux-gnu
-    /usr/include/aarch64-linux-gnu
-    /usr/lib/aarch64-linux-gnu
-    /lib/aarch64-linux-gnu
+    /usr/${ARCH_TUPLE}
+    /usr/include/${ARCH_TUPLE}
+    /usr/lib/${ARCH_TUPLE}
+    /lib/${ARCH_TUPLE}
 )
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -75,9 +76,6 @@ else()
     endif()
 endif()
 
-# set(CMAKE_CROSSCOMPILING_EMULATOR "${QEMU_AARCH64};-L;/usr/aarch64-linux-gnu"
-#     CACHE INTERNAL ""
-# )
-set(CROSSCOMPILING_EMULATOR "${QEMU_AARCH64};-L;/usr/aarch64-linux-gnu"
+set(CROSSCOMPILING_EMULATOR "${QEMU_AARCH64};-L;/usr/${ARCH_TUPLE}"
     CACHE INTERNAL ""
 )
