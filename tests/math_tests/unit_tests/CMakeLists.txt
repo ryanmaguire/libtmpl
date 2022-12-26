@@ -68,7 +68,11 @@ set(test_apps
 
 foreach(app ${test_apps})
     add_executable(${app} ${app}.c)
-    set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
+    # tmpl_math_unit_tests.h uses _Generic, which was introduced in C11.
+    set_target_properties(
+        ${app}
+        PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED} C_STANDARD 11 C_STANDARD_REQUIRED ON
+    )
     target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}")
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)
