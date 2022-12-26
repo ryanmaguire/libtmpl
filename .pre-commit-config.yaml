@@ -34,7 +34,7 @@ repos:
     -   id: check-yaml
         exclude: ^recipes/.*
     repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
 
   # --- Commit msg checks ---
 -   hooks:
@@ -44,13 +44,13 @@ repos:
     rev: v2.38.0
 
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.2
+    rev: v3.3.1
     hooks:
     -   id: pyupgrade
         args: [--py36-plus]
   # Formatters
 -   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.4.0
+    rev: v2.5.0
     hooks:
     -   id: pretty-format-yaml
         args: [--autofix, --indent, '4']
@@ -64,7 +64,7 @@ repos:
     hooks:
     -   id: setup-cfg-fmt
 -   repo: https://github.com/psf/black # python formatter
-    rev: 22.10.0
+    rev: 22.12.0
     hooks:
     -   id: black
 -   repo: https://github.com/asottile/blacken-docs
@@ -80,7 +80,7 @@ repos:
         additional_dependencies: [pandas-stubs, numpy, types-requests]
         args: [--ignore-missing-imports, --config-file=pyproject.toml]
 -   repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
     -   id: flake8
         additional_dependencies:

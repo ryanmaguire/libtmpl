@@ -462,7 +462,7 @@ typedef struct tmpl_SVG_Line_Def {
  *  Examples:                                                                 *
  *                                                                            *
  ******************************************************************************/
-extern tmpl_SVG_Canvas *
+TMPL_EXPORT extern tmpl_SVG_Canvas *
 tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
                        double x_min, double x_max, double y_min, double y_max,
                        tmpl_SVG_Color background, tmpl_SVG_Pen outline);
@@ -490,7 +490,7 @@ tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
  ******************************************************************************/
 TMPL_EXPORT extern void tmpl_Destroy_SVG_Canvas(tmpl_SVG_Canvas **canvas_ptr);
 
-extern tmpl_SVG *
+TMPL_EXPORT extern tmpl_SVG *
 tmpl_Create_SVG(const char *filename, tmpl_SVG_Canvas *canvas);
 
 TMPL_EXPORT extern void

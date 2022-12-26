@@ -1143,7 +1143,7 @@ TMPL_EXPORT extern long double tmpl_CLDouble_QuickAbs(tmpl_ComplexLongDouble z);
 TMPL_EXPORT extern float
 tmpl_CFloat_Real_Part(tmpl_ComplexFloat z);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_CDouble_Real_Part(tmpl_ComplexDouble z);
 
 extern long double

@@ -43,11 +43,11 @@ extern const tmpl_Quadruple tmpl_Quadruple_Inf;
 extern const tmpl_Quadruple tmpl_Quadruple_Neg_Inf;
 extern const tmpl_Quadruple tmpl_Quadruple_NaN;
 
-extern tmpl_Bool tmpl_Quaduple_Is_Zero(tmpl_Quadruple x);
-extern tmpl_Bool tmpl_Quadruple_Is_Inf(tmpl_Quadruple x);
-extern tmpl_Bool tmpl_Quadruple_Is_NaN(tmpl_Quadruple x);
-extern tmpl_Bool tmpl_Quadruple_Is_Positive(tmpl_Quadruple x);
-extern tmpl_Bool tmpl_Quadruple_Is_Negative(tmpl_Quadruple x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Quaduple_Is_Zero(tmpl_Quadruple x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Quadruple_Is_Inf(tmpl_Quadruple x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Quadruple_Is_NaN(tmpl_Quadruple x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Quadruple_Is_Positive(tmpl_Quadruple x);
+TMPL_EXPORT extern tmpl_Bool tmpl_Quadruple_Is_Negative(tmpl_Quadruple x);
 
-extern tmpl_Quadruple tmpl_Quadruple_Add(tmpl_Quadruple x, tmpl_Quadruple y);
+TMPL_EXPORT extern tmpl_Quadruple tmpl_Quadruple_Add(tmpl_Quadruple x, tmpl_Quadruple y);
 #endif
