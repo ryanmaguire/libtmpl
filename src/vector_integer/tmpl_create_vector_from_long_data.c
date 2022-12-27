@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,26 +16,26 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_create_vector_from_short_data.c                     *
+ *                    tmpl_create_vector_from_long_data.c                     *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Create a pointer to a vector from a pointer to an short-valued array. *
+ *      Create a pointer to a vector from a pointer to a long-valued array.   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_ShortVector_From_Data                                     *
- *      tmpl_Create_UShortVector_From_Data                                    *
+ *      tmpl_Create_IntVector_From_Data                                       *
+ *      tmpl_Create_UIntVector_From_Data                                      *
  *  Purpose:                                                                  *
- *      Given a pointer to a short/unsigned short array, create a pointer     *
+ *      Given a pointer to a int/unsigned int array, create a pointer         *
  *      to a vector with the data set to this input array.                    *
  *  Arguments:                                                                *
- *      arr (short/unsigned short *):                                         *
- *          A pointer to a short-valued array.                                *
+ *      arr (int/unsigned int *):                                             *
+ *          A pointer to a char-valued array.                                 *
  *      length (unsigned long int):                                           *
  *          The length of the array pointed to by arr.                        *
  *  Output:                                                                   *
- *      vec (tmpl_ShortVector/tmpl_UShortVector *):                           *
+ *      vec (tmpl_IntVector/tmpl_UIntVector *):                               *
  *          A pointer to a vector struct.                                     *
  *  Called Functions:                                                         *
  *      malloc      (stdlib.h):                                               *
@@ -46,15 +46,15 @@
  *      Loop through the input array and store the values in the vector.      *
  *  Notes:                                                                    *
  *      You will need to free the memory allocated to the vector when you are *
- *      done with it. This is done with tmpl_Destroy_ShortVector and          *
- *      tmpl_Destroy_UShortVector.                                            *
+ *      done with it. This is done with tmpl_Destroy_IntVector and            *
+ *      tmpl_Destroy_UIntVector.                                              *
  *                                                                            *
  *      The memory pointed to be arr is NOT stolen, but rather copied. You    *
  *      will still need to free arr if malloc was used on it.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_vector.h:                                                        *
+ *  1.) tmpl_vector_integer.h:                                                *
  *          Header file where vectors are typedef'd.                          *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file where Booleans are defined.                           *
@@ -63,22 +63,7 @@
  *  4.) stdlib.h:                                                             *
  *          Standard C Library header file where malloc is defined.           *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
@@ -92,16 +77,16 @@
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Vectors are typedef'd here.                                               */
-#include <libtmpl/include/tmpl_vector.h>
+#include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for creating a int vector from an int array.                     */
-tmpl_ShortVector *
-tmpl_Create_ShortVector_From_Data(short *arr, unsigned long int length)
+tmpl_LongVector *
+tmpl_Create_LongVector_From_Data(long *arr, unsigned long int length)
 {
     /*  Declare a variable for indexing over the array, and a pointer to the  *
      *  vector we'll be returning.                                            */
     unsigned long int n;
-    tmpl_ShortVector *vec;
+    tmpl_LongVector *vec;
 
     /*  Allocate memory for vec using malloc.                                 */
     vec = malloc(sizeof(*vec));
@@ -137,7 +122,7 @@ tmpl_Create_ShortVector_From_Data(short *arr, unsigned long int length)
         /*  Store an error message detailing what went wrong in the struct.   */
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_ShortVector_From_Data\n\n"
+            "\tFunction Name: tmpl_Create_LongVector_From_Data\n\n"
             "Input pointer is NULL but input length is not zero.\n"
             "Setting vec->data to NULL and returning.\n"
         );
@@ -157,7 +142,7 @@ tmpl_Create_ShortVector_From_Data(short *arr, unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_ShortVector_From_Data\n\n"
+            "\tFunction Name: tmpl_Create_LongVector_From_Data\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -170,18 +155,17 @@ tmpl_Create_ShortVector_From_Data(short *arr, unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_ShortVector_From_Data.                                 */
+/*  End of tmpl_Create_LongVector_From_Data.                                  */
 
-/*  Function for creating an unsigned short vector from an unsigned short     *
- *  array.                                                                    */
-tmpl_UShortVector *
-tmpl_Create_UShortVector_From_Data(unsigned short *arr,
-                                   unsigned long int length)
+/*  Function for creating an unsigned int vector from an unsigned int array.  */
+tmpl_ULongVector *
+tmpl_Create_ULongVector_From_Data(unsigned long int *arr,
+                                  unsigned long int length)
 {
     /*  Declare a variable for indexing over the array, and a pointer to the  *
      *  vector we'll be returning.                                            */
     unsigned long int n;
-    tmpl_UShortVector *vec;
+    tmpl_ULongVector *vec;
 
     /*  Allocate memory for vec using malloc.                                 */
     vec = malloc(sizeof(*vec));
@@ -217,7 +201,7 @@ tmpl_Create_UShortVector_From_Data(unsigned short *arr,
         /*  Store an error message detailing what went wrong in the struct.   */
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_UShortVector_From_Data\n\n"
+            "\tFunction Name: tmpl_Create_ULongVector_From_Data\n\n"
             "Input pointer is NULL but input length is not zero.\n"
             "Setting vec->data to NULL and returning.\n"
         );
@@ -237,7 +221,7 @@ tmpl_Create_UShortVector_From_Data(unsigned short *arr,
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_UShortVector_From_Data\n\n"
+            "\tFunction Name: tmpl_Create_ULongVector_From_Data\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -250,4 +234,4 @@ tmpl_Create_UShortVector_From_Data(unsigned short *arr,
 
     return vec;
 }
-/*  End of tmpl_Create_UShortVector_From_Data.                                */
+/*  End of tmpl_Create_ULongVector_From_Data.                                 */

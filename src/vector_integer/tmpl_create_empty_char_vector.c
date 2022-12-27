@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,23 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_create_zero_char_vector.c                         *
+ *                      tmpl_create_empty_char_vector.c                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Create a pointer to a vector that has all of its entries set to zero. *
+ *      Create a pointer to a vector that has had it's data pointer allocated *
+ *      memory, but not initialized.                                          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Zero_IntVector                                            *
- *      tmpl_Create_Zero_UIntVector                                           *
+ *      tmpl_Create_Empty_CharVector                                          *
+ *      tmpl_Create_Empty_UCharVector                                         *
  *  Purpose:                                                                  *
- *      Allocates memory for a int-valued vector and sets entries to zero.    *
+ *      Allocates memory for a char-valued vector.                            *
  *  Arguments:                                                                *
  *      length (unsigned long int):                                           *
  *          The desired length of the vector.                                 *
  *  Output:                                                                   *
- *      vec (tmpl_IntVector/tmpl_UIntVector *):                               *
+ *      vec (tmpl_CharVector/tmpl_UCharVector *):                             *
  *          A pointer to a vector struct.                                     *
  *  Called Functions:                                                         *
  *      malloc      (stdlib.h):                                               *
@@ -40,39 +41,27 @@
  *      tmpl_strdup (tmpl_string.h):                                          *
  *          Copies a string const char *str into a char pointer.              *
  *  Method:                                                                   *
- *      Use calloc and return.                                                *
+ *      Use malloc and return.                                                *
  *  Notes:                                                                    *
  *      You will need to free the memory allocated to the vector when you are *
- *      done with it. This is done with tmpl_Destroy_IntVector and            *
- *      tmpl_Destroy_UIntVector.                                              *
+ *      done with it. This is done with tmpl_Destroy_UCharVector and          *
+ *      tmpl_Destroy_CharVector.                                              *
+ *                                                                            *
+ *      If malloc fails it returns NULL. Hence, this function returns NULL on *
+ *      failure. Check the resulting pointer before using it.                 *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_vector.h:                                                        *
+ *  1.) tmpl_vector_integer.h:                                                *
  *          Header file where vectors are typedef'd.                          *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file where Booleans are defined.                           *
  *  3.) tmpl_string.h:                                                        *
  *          Header file providing additional functionality with strings in C. *
  *  4.) stdlib.h:                                                             *
- *          Standard C Library header file where calloc is defined.           *
+ *          Standard C Library header file where malloc is defined.           *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
@@ -86,14 +75,14 @@
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Vectors are typedef'd here.                                               */
-#include <libtmpl/include/tmpl_vector.h>
+#include <libtmpl/include/tmpl_vector_integer.h>
 
-/*  Function for creating a single-precision zero vector.                     */
-tmpl_IntVector *
-tmpl_Create_Zero_IntVector(unsigned long int length)
+/*  Function for allocating memory to a char vector.                          */
+tmpl_CharVector *
+tmpl_Create_Empty_CharVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_IntVector *vec;
+    tmpl_CharVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -115,18 +104,17 @@ tmpl_Create_Zero_IntVector(unsigned long int length)
         return vec;
     }
 
-    /*  Otherwise, allocate memory for the data pointer. calloc, unlike       *
-     *  malloc, will initialize everything to zero, giving us a zero vector.  */
-    vec->data = calloc(sizeof(*(vec->data)), length);
+    /*  Otherwise, allocate memory for the data pointer.                      */
+    vec->data = malloc(sizeof(*(vec->data)) * length);
 
-    /*  Again, check that calloc did not fail.                                */
+    /*  Again, check that malloc did not fail.                                */
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Zero_IntVector\n\n"
+            "\tFunction Name: tmpl_Create_Empty_CharVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -135,14 +123,14 @@ tmpl_Create_Zero_IntVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Zero_IntVector.                                        */
+/*  End of tmpl_Create_Empty_CharVector.                                      */
 
-/*  Function for creating a double-precision zero vector.                     */
-tmpl_UIntVector *
-tmpl_Create_Zero_UIntVector(unsigned long int length)
+/*  Function for allocating memory to an unsigned char vector.                */
+tmpl_UCharVector *
+tmpl_Create_Empty_UCharVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_UIntVector *vec;
+    tmpl_UCharVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -164,18 +152,17 @@ tmpl_Create_Zero_UIntVector(unsigned long int length)
         return vec;
     }
 
-    /*  Otherwise, allocate memory for the data pointer. calloc, unlike       *
-     *  malloc, will initialize everything to zero, giving us a zero vector.  */
-    vec->data = calloc(sizeof(*(vec->data)), length);
+    /*  Otherwise, allocate memory for the data pointer.                      */
+    vec->data = malloc(sizeof(*(vec->data)) * length);
 
-    /*  Again, check that calloc did not fail.                                */
+    /*  Again, check that malloc did not fail.                                */
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Zero_UIntVector\n\n"
+            "\tFunction Name: tmpl_Create_Empty_UCharVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -184,4 +171,5 @@ tmpl_Create_Zero_UIntVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Zero_UIntVector.                                       */
+/*  End of tmpl_Create_Empty_UCharVector.                                     */
+

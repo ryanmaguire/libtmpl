@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_destroy_int_vector.c                            *
+ *                         tmpl_destroy_int_vector.c                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Create a pointer to a vector that has all of its entries set to zero. *
@@ -42,29 +42,14 @@
  *      to the entire structure to NULL to avoid trying to use it after it's  *
  *      been destroyed.                                                       *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vector.h:                                                        *
+ *  1.) tmpl_vector_integer.h:                                                *
  *          Header file where vectors are typedef'd.                          *
  *  2.) stdlib.h:                                                             *
  *          Standard C Library header file where calloc is defined.           *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 14, 2021                                                  *
  ******************************************************************************/
 
@@ -72,14 +57,14 @@
 #include <stdlib.h>
 
 /*  Vectors are typedef'd here.                                               */
-#include <libtmpl/include/tmpl_vector.h>
+#include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for creating a single-precision zero vector.                     */
 void
-tmpl_Destroy_IntVector(tmpl_IntVector **vec_ptr)
+tmpl_Destroy_LongVector(tmpl_LongVector **vec_ptr)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_IntVector *vec;
+    tmpl_LongVector *vec;
 
     /*  Neither the pointer-to-a-pointer, nor the pointer should be NULL.     *
      *  Check that this is so.                                                */
@@ -126,10 +111,10 @@ tmpl_Destroy_IntVector(tmpl_IntVector **vec_ptr)
 
 /*  Function for creating a single-precision zero vector.                     */
 void
-tmpl_Destroy_UIntVector(tmpl_UIntVector **vec_ptr)
+tmpl_Destroy_ULongVector(tmpl_ULongVector **vec_ptr)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_UIntVector *vec;
+    tmpl_ULongVector *vec;
 
     /*  Neither the pointer-to-a-pointer, nor the pointer should be NULL.     *
      *  Check that this is so.                                                */
