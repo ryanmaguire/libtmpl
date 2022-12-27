@@ -3,7 +3,7 @@
 #define TMPL_SPHERICAL_GEOMETRY_H
 
 #include <libtmpl/include/tmpl_vec2.h>
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 
 extern tmpl_ThreeVector
