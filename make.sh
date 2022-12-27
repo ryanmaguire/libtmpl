@@ -122,6 +122,7 @@ for arg in "$@"; do
         INCLUDE_TARGET=/usr/local/include/libtmpl/
         CONFIG_HEADER=include/tmpl_config.h
         INTEGER_HEADER=include/tmpl_inttype.h
+        LIMITS_HEADER=include/tmpl_limits.h
 
         echo "Removing libtmpl:"
         echo "    Clearing older files..."
@@ -135,6 +136,11 @@ for arg in "$@"; do
         echo "    Removing integer header file if it exists..."
         if [ -e "$INTEGER_HEADER" ]; then
             rm -f "$INTEGER_HEADER";
+        fi
+
+        echo "    Removing limits header file if it exists..."
+        if [ -e "$LIMITS_HEADER" ]; then
+            rm -f "$LIMITS_HEADER";
         fi
 
         echo -e "    Removing include directory if it exists..."
@@ -270,6 +276,8 @@ fi
 if [ $USELONGLONG == 0 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
     Exclude="$Exclude tmpl_abs_llong.c"
+    Exclude="$Exclude tmpl_factorial_ullong.c"
+    Exclude="$Exclude tmpl_leading_zeros_ullong.c"
 fi
 
 if [ $USEMATH == 1 ]; then
