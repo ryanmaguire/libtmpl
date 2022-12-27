@@ -27,21 +27,6 @@
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
  ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                             A FRIENDLY WARNING                             *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *                                  EXAMPLES                                  *
  ******************************************************************************
  *  Examples of all of the functions can be found in:                         *
@@ -74,8 +59,11 @@ extern "C" {
 /*  size_t typedef given here.                                                */
 #include <stddef.h>
 
+/*  TMPL_USE_INLINE macro found here.                                         */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  TMPL_HAS_LONGLONG macro found here.                                       */
 #include <libtmpl/include/tmpl_inttype.h>
-#include <libtmpl/include/tmpl_vector.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -137,6 +125,14 @@ extern unsigned int tmpl_UInt_Array_Max(unsigned int *arr, size_t len);
 extern long int tmpl_Long_Array_Max(long int *arr, size_t len);
 extern unsigned long tmpl_ULong_Array_Max(unsigned long *arr, size_t len);
 
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+extern long long int tmpl_LLong_Array_Max(long long int *arr, size_t len);
+extern unsigned long long int
+tmpl_ULLong_Array_Max(unsigned long long int *arr, size_t len);
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Int_Array_Min                                                    *
@@ -159,6 +155,14 @@ extern int tmpl_Int_Array_Min(int *arr, size_t len);
 extern unsigned int tmpl_UInt_Array_Min(unsigned int *arr, size_t len);
 extern long int tmpl_Long_Array_Min(long int *arr, size_t len);
 extern unsigned long tmpl_ULong_Array_Min(unsigned long *arr, size_t len);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+extern long long int tmpl_LLong_Array_Min(long long int *arr, size_t len);
+extern unsigned long long int
+tmpl_ULLong_Array_Min(unsigned long long int *arr, size_t len);
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -206,8 +210,22 @@ tmpl_Long_Array_MinMax(long int *arr, size_t len,
                        long int *min, long int *max);
 
 extern void
-tmpl_ULong_Array_MinMax(unsigned long *arr, size_t len,
+tmpl_ULong_Array_MinMax(unsigned long int *arr, size_t len,
                         unsigned long int *min, unsigned long int *max);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+extern void
+tmpl_LLong_Array_MinMax(long long int *arr, size_t len,
+                        long long int *min, long long int *max);
+
+extern void
+tmpl_ULLong_Array_MinMax(unsigned long long int *arr,
+                         size_t len,
+                         unsigned long long int *min,
+                         unsigned long long int *max);
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -229,6 +247,12 @@ extern unsigned short int tmpl_UShort_Factorial(unsigned short int n);
 extern unsigned int tmpl_UInt_Factorial(unsigned int n);
 extern unsigned long int tmpl_ULong_Factorial(unsigned long int n);
 
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+extern unsigned long long int tmpl_ULLong_Factorial(unsigned long long int);
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_UChar_Leading_Zeros                                              *
@@ -247,9 +271,12 @@ extern int tmpl_UChar_Leading_Zeros(unsigned char n);
 extern int tmpl_UShort_Leading_Zeros(unsigned short int n);
 extern int tmpl_UInt_Leading_Zeros(unsigned int n);
 extern int tmpl_ULong_Leading_Zeros(unsigned long int n);
+
+/*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
 extern int tmpl_ULLong_Leading_Zeros(unsigned long long int);
 #endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -274,6 +301,14 @@ extern unsigned short tmpl_UShort_Max(unsigned short x, unsigned short y);
 extern unsigned int tmpl_UInt_Max(unsigned int x, unsigned int y);
 extern unsigned long tmpl_ULong_Max(unsigned long x, unsigned long y);
 
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+extern long long int tmpl_LLong_Max(long long int x, long long int y);
+extern unsigned long long int
+tmpl_ULLong_Max(unsigned long long int x, unsigned long long int y);
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Int_Min                                                          *
@@ -296,6 +331,14 @@ extern unsigned char tmpl_UChar_Min(unsigned char x, unsigned char y);
 extern unsigned short tmpl_UShort_Min(unsigned short x, unsigned short y);
 extern unsigned int tmpl_UInt_Min(unsigned int x, unsigned int y);
 extern unsigned long tmpl_ULong_Min(unsigned long x, unsigned long y);
+
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+extern long long int tmpl_LLong_Min(long long int x, long long int y);
+extern unsigned long long int
+tmpl_ULLong_Min(unsigned long long int x, unsigned long long int y);
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -434,34 +477,6 @@ tmpl_UInt_GCD(unsigned int m, unsigned int n);
 
 extern unsigned long int
 tmpl_ULong_GCD(unsigned long int m, unsigned long int n);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_UIntVector_GCD                                                   *
- *  Purpose:                                                                  *
- *      Computes the multi-variable GCD of a vector of integers.              *
- *  Arguments:                                                                *
- *      arr (tmpl_UIntVector *):                                              *
- *          An array of unsigned integer.                                     *
- *  Output:                                                                   *
- *      GCD (unsigned int):                                                   *
- *          The greatest common denominator of the array.                     *
- ******************************************************************************/
-extern unsigned int tmpl_UIntVector_GCD(tmpl_UIntVector *arr);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Sieve_of_Eratosthenes                                            *
- *  Purpose:                                                                  *
- *      Computes the first N prime numbers using the Sieve of Eratosthenes.   *
- *  Arguments:                                                                *
- *      N (unsigned long int):                                                *
- *          The number of primes to compute.                                  *
- *  Output:                                                                   *
- *      arr (tmpl_ULongVector *):                                             *
- *          The first N primes in order.                                      *
- ******************************************************************************/
-extern tmpl_ULongVector *tmpl_Sieve_of_Eratosthenes(unsigned long int N);
 
 /*  Macros for taking advantage of several builtin's different compilers      *
  *  may have. GCC and clang support __builtin_ctz and more.                   */
