@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -20,35 +20,23 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      This file is used in both the Makefile and make.sh shell script when  *
- *      libtmpl is built. It determines the endianness of your platform and   *
- *      creates the file include/tmpl_config.h in the process. This file      *
- *      is not directly part of libtmpl, but you'll need to run it for        *
- *      libtmpl to function properly. If your compiler gives you an error     *
- *      that libtmpl/include/tmpl_config.h was not found, run this.           *
+ *      libtmpl is built. It creates the following files:                     *
+ *          tmpl_config.h:                                                    *
+ *              Contains endianness info, signed integer representation,      *
+ *              float, double, and long double implementation, and whether    *
+ *              or not libtmpl's libm is to be used, and whether functions    *
+ *              should be inlined.                                            *
+ *          tmpl_inttype.h:                                                   *
+ *              Contains typedefs for fixed-width integers of size 8, 16, 32, *
+ *              and 64 bits, if available.                                    *
+ *          tmpl_limits.h:                                                    *
+ *              Contains macros for the maximum values of integer types.      *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) limits.h:                                                             *
- *          Standard C library header file containing the macro CHAR_BITS,    *
- *          which stores the number of bits in a byte.                        *
- *  2.) stdio.h:                                                              *
+ *  1.) stdio.h:                                                              *
  *          Standard C library header file containing the fprintf function    *
- *          which we'll use to create the file include/tmpl_config.h.         *
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
+ *          which we'll use to create the files mentioned above.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2021                                                *
@@ -74,6 +62,8 @@
  *      GCC implements long double on that architecture.                      *
  *  2022/02/01: Ryan Maguire                                                  *
  *      Added more general support for long double.                           *
+ *  2022/12/21: Ryan Maguire                                                  *
+ *      Added tmpl_limits.h. Removes limits.h from dependencies.              *
  ******************************************************************************/
 
 /*  Avoid silly warning on Windows for using fopen. GNU/Linux, FreeBSD, and   *
@@ -82,12 +72,95 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
-/*  Macros for determining the size of integer data types found here. In      *
- *  particular, the macro CHAR_BIT is here telling us how many bits in a byte.*/
-#include <limits.h>
+/*  The long long data type is available starting with C99. MSVC does not set *
+ *  the __STDC_VERSION__ macro by default, but does have long long support.   *
+ *  If the Makefile set the TMPL_SET_LONGLONG_FALSE macro, long long support  *
+ *  is disabled regardless of whether the compiler supports it.               */
+#if !defined(TMPL_SET_LONGLONG_FALSE) && \
+    ((defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)) || \
+    (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L))
+#define TMPL_LONG_LONG_IS_AVAILABLE 1
+#endif
 
 /*  Needed for FILE data type and fprintf.                                    */
 #include <stdio.h>
+
+/*  Number of bits in char. char is not allowed to have padding, so all bits  *
+ *  are used. This fact can be used to determine this value.                  */
+static unsigned int TMPL_CHAR_BIT;
+
+/*  The other integer data types are allowed to have padding. These numbers   *
+ *  represent the number of unpadded bits.                                    */
+static unsigned int TMPL_SHORT_BIT;
+static unsigned int TMPL_INT_BIT;
+static unsigned int TMPL_LONG_BIT;
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+static unsigned int TMPL_LLONG_BIT;
+#endif
+static int TMPL_BITS_HAVE_BEEN_SET = 0;
+
+/*  Function for determining the number of bits in char, and others.          */
+static void tmpl_det_widths(void)
+{
+    unsigned char c = 0x01U;
+    unsigned short int s = 1U;
+    unsigned int i = 1U;
+    unsigned long int l = 1UL;
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+    unsigned long long int ll = 1ULL;
+    TMPL_LLONG_BIT = 0U;
+#endif
+    TMPL_CHAR_BIT = 0U;
+    TMPL_SHORT_BIT = 0U;
+    TMPL_INT_BIT = 0U;
+    TMPL_LONG_BIT = 0U;
+
+    /*  Unsigned integer types can not overflow since the result is computed  *
+     *  mod 2^N where N is the number of bits. By started with 1 and          *
+     *  repeatedly multiplying by 2 we will eventually get 2^N, which will    *
+     *  be computed as 0 mod 2^N. By counting the number of times we need to  *
+     *  to multiply by 2 in order to get zero we can compute the number of    *
+     *  bits in a char.                                                       */
+    while (c != 0x00U)
+    {
+        c = c * 0x02U;
+        TMPL_CHAR_BIT++;
+    }
+
+    /*  Similar idea for short, int, and long. These integer data types can   *
+     *  have padding. The number computed is not necessarily the number of    *
+     *  bits in a short, int, or long, just the number of used, or unpadded,  *
+     *  bits. For most compilers this is the same as the size of the type and *
+     *  no padding is actually used.                                          */
+    while (s != 0U)
+    {
+        s = s * 2U;
+        TMPL_SHORT_BIT++;
+    }
+
+    while (i != 0U)
+    {
+        i = i * 2U;
+        TMPL_INT_BIT++;
+    }
+
+    while (l != 0UL)
+    {
+        l = l * 2UL;
+        TMPL_LONG_BIT++;
+    }
+
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+    while (ll != 0ULL)
+    {
+        ll = ll * 2ULL;
+        TMPL_LLONG_BIT++;
+    }
+#endif
+
+    TMPL_BITS_HAVE_BEEN_SET = 1;
+}
+/*  End of tmpl_det_widths.                                                   */
 
 /*  There are 4 possibilities for endianness. Little endian is the most       *
  *  common, big endian is rare, mixed endian is essentially non-existent, and *
@@ -166,6 +239,11 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
     /*  n is for indexing and power keeps track of the power of an integer.   */
     unsigned long int n, power;
 
+    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
+     *  computed already. If not, compute it.                                 */
+    if (!TMPL_BITS_HAVE_BEEN_SET)
+        tmpl_det_widths();
+
     /*  The idea is as follows. Create the integer 76543210, store this in the*
      *  unsigned long int part of our union, and then check the array part to *
      *  see which element is 0. This would work if computers are base 10, but *
@@ -181,27 +259,28 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
     e.n = 0UL;
 
     /*  We need to set power to 2^(number of bits in a byte). This number is  *
-     *  found in limits.h as CHAR_BIT. We're going to write out the number as *
+     *  found in TMPL_CHAR_BIT. We're going to write out the number as        *
      *  7 * power^7 + 6 * power^6 + ... + 2 * power^2 + power + 0. If we      *
      *  somehow had a base-10 computer, this would be                         *
-     *  7*10^7 + 6*10^6 + ... + 2*10^2 + 1*10 + 0 = 76543210.                 *
-     *  We want this in base 2^CHAR_BIT. We can compute 2^CHAR_BIT quickly    *
-     *  using bitwise operators. 1 << N is the number 1000...000 in binary    *
-     *  with N 0's. This would be the number 2^N in decimal, which is what    *
-     *  we want. We compute 2^CHAR_BIT via 1UL << CHAR_BIT. UL means unsigned *
-     *  long, which is the data type of power.                                */
-    power = 1UL << CHAR_BIT;
+     *  7*10^7 + 6*10^6 + ... + 2*10^2 + 1*10 + 0 = 76543210. We want this in *
+     *  base 2^TMPL_CHAR_BIT. We can compute 2^TMPL_CHAR_BIT quickly using    *
+     *  bitwise operators. 1 << N is the number 1000...000 in binary with N   *
+     *  0's. This would be the number 2^N in decimal, which is what we want.  *
+     *  We compute 2^TMPL_CHAR_BIT via 1UL << TMPL_CHAR_BIT. UL means         *
+     *  unsigned long, which is the data type of power.                       */
+    power = 1UL << TMPL_CHAR_BIT;
 
-    /*  Write out 76543210 in base 2^CHAR_BIT by adding.                      */
+    /*  Write out 76543210 in base 2^TMPL_CHAR_BIT by adding.                 */
     for (n = 1UL; n < sizeof(unsigned long int); ++n)
     {
         e.n += n * power;
 
         /*  From power^k we can get power^(k+1) by shifting the "decimal"     *
-         *  CHAR_BIT to the right. In decimal, if we had 100 and want 1000,   *
-         *  we'd write 100.00, shift the decimal to the right, and get 1000.0.*
-         *  Writing pow = pow << CHAR_BIT is the base 2^CHAR_BIT equivalent.  */
-        power = power << CHAR_BIT;
+         *  TMPL_CHAR_BIT to the right. If we have 100 and want 1000, we'd    *
+         *  write 100.00, shift the decimal to the right, and get 1000.0.     *
+         *  Writing pow = pow << TMPL_CHAR_BIT is the base                    *
+         *  2^TMPL_CHAR_BIT equivalent.                                       */
+        power = power << TMPL_CHAR_BIT;
     }
 
     /*  We now have 76543210 in the array part of the union (or n-1...210 if  *
@@ -220,9 +299,8 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
     {
         /*  If your compiler supports C99 or higher, we can try this scheme   *
          *  with unsigned long long int, which should definitely have sizeof  *
-         *  greater than 1 (but again, is not required to). Check this with   *
-         *  the standard macro __STDC_VERSION__.                              */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+         *  greater than 1 (but again, is not required to). Check this.       */
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
 
         /*  Omitting comments since this is the exact same as before.         */
         union {
@@ -234,12 +312,12 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
 
         /*  The ULL suffix means unsigned long long.                          */
         ell.x = 0ULL;
-        powerll = 1ULL << CHAR_BIT;
+        powerll = 1ULL << TMPL_CHAR_BIT;
 
         for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
         {
             ell.x += kll * powerll;
-            powerll = powerll << CHAR_BIT;
+            powerll = powerll << TMPL_CHAR_BIT;
         }
 
         if (sizeof(unsigned long long int) == 1)
@@ -254,7 +332,7 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
             return tmpl_integer_unknown_endian;
 
 #else
-/*  Else for #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.    */
+/*  Else for #ifdef TMPL_LONG_LONG_IS_AVAILABLE.                              */
 
         /*  If we get here, sizeof(unsigned long int) = 1 and your compiler   *
          *  does not support the C99, or higher, standard so unsigned long    *
@@ -276,7 +354,6 @@ static tmpl_integer_endianness tmpl_det_int_end(void)
         return tmpl_integer_unknown_endian;
 }
 /*  End of tmpl_det_int_end.                                                  */
-
 
 /*  Function for detecting what type of signed integer representation is used.*/
 static tmpl_signed_integer_rep tmpl_det_signed_int(void)
@@ -328,8 +405,13 @@ static tmpl_float_type tmpl_det_float_type(void)
         float r;
     } f;
 
+    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
+     *  computed already. If not, compute it.                                 */
+    if (!TMPL_BITS_HAVE_BEEN_SET)
+        tmpl_det_widths();
+
     /*  float should have 32 bits. Check for this.                            */
-    if ((sizeof(float) * CHAR_BIT) != 32)
+    if ((sizeof(float) * TMPL_CHAR_BIT) != 32)
         return tmpl_float_unknown_endian;
 
     /*  Set the bits in the struct to represent the number 1.0 using the      *
@@ -412,8 +494,13 @@ static tmpl_double_type tmpl_det_double_type(void)
         double r;
     } d;
 
+    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
+     *  computed already. If not, compute it.                                 */
+    if (!TMPL_BITS_HAVE_BEEN_SET)
+        tmpl_det_widths();
+
     /*  double should have 64 bits. Check for this.                           */
-    if ((sizeof(double) * CHAR_BIT) != 64)
+    if ((sizeof(double) * TMPL_CHAR_BIT) != 64)
         return tmpl_double_unknown_endian;
 
     /*  Set the bits to represent 1.0 using the IEEE-754 format. If this is   *
@@ -636,8 +723,13 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         long double r;
     } powerpc_big_type;
 
+    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
+     *  computed already. If not, compute it.                                 */
+    if (!TMPL_BITS_HAVE_BEEN_SET)
+        tmpl_det_widths();
+
     /*  Try the 64-bit types first.                                           */
-    if ((sizeof(long double) * CHAR_BIT) == 64)
+    if ((sizeof(long double) * TMPL_CHAR_BIT) == 64)
     {
         /*  MIPS big endian (or PowerPC, or s390).                            */
         mips_big_type.bits.man3 = 0x0U;
@@ -663,7 +755,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
     }
 
     /*  96-bit implementations.                                               */
-    else if ((sizeof(long double) * CHAR_BIT) == 96)
+    else if ((sizeof(long double) * TMPL_CHAR_BIT) == 96)
     {
         /*  Try the i386 implementation.                                      */
         i386_type.big_bits.man3 = 0x0U;
@@ -691,7 +783,7 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
         if (i386_type.r == 1.0L)
             return tmpl_ldouble_96_bit_extended_little_endian;
     }
-    else if ((sizeof(long double) * CHAR_BIT) == 128)
+    else if ((sizeof(long double) * TMPL_CHAR_BIT) == 128)
     {
         /*  Set the bits to represent 1.0 for AMD64 architecture.             */
         amd64_type.bits.man3 = 0x0U;
@@ -820,7 +912,7 @@ static int make_config_h(void)
     if (!fp)
     {
         puts("Error Encountered: libtmpl\n"
-             "    det_end.c\n"
+             "    config.c\n"
              "fopen returned NULL for FILE *fp. Aborting.\n");
         return -1;
     }
@@ -987,6 +1079,11 @@ static int make_integer_h(void)
         return -1;
     }
 
+    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
+     *  computed already. If not, compute it.                                 */
+    if (!TMPL_BITS_HAVE_BEEN_SET)
+        tmpl_det_widths();
+
     /*  Create the file include/tmpl_config.h and return.                     */
     fprintf(fp, "/******************************************************************************\n");
     fprintf(fp, " *                                  LICENSE                                   *\n");
@@ -1015,9 +1112,7 @@ static int make_integer_h(void)
     fprintf(fp, " ******************************************************************************/\n\n");
     fprintf(fp, "#ifndef TMPL_INTTYPE_H\n");
     fprintf(fp, "#define TMPL_INTTYPE_H\n\n");
-#if defined(TMPL_SET_LONGLONG_FALSE)
-    fprintf(fp, "#define TMPL_HAS_LONGLONG 0\n\n");
-#elif defined(ULLONG_MAX)
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
     fprintf(fp, "#define TMPL_HAS_LONGLONG 1\n\n");
 #else
     fprintf(fp, "#define TMPL_HAS_LONGLONG 0\n\n");
@@ -1032,109 +1127,204 @@ static int make_integer_h(void)
 #else
 /*  Else of #ifdef TMPL_SET_NO_INT.                                           */
 
-#if UCHAR_MAX == 0xFF
-    fprintf(fp, "#define TMPL_HAS_8_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned char tmpl_UInt8;\n");
-    fprintf(fp, "typedef signed char tmpl_SInt8;\n");
-    fprintf(fp, "#define tmpl_UInt8_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt8_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt8_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n");
-#else
-    fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n");
+    if (TMPL_CHAR_BIT == 8)
+    {
+        fprintf(fp, "#define TMPL_HAS_8_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned char tmpl_UInt8;\n");
+        fprintf(fp, "typedef signed char tmpl_SInt8;\n");
+        fprintf(fp, "#define tmpl_UInt8_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt8_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt8_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+    }
+    else
+        fprintf(fp, "#define TMPL_HAS_8_BIT_INT 0\n\n");
+
+    if (TMPL_CHAR_BIT == 16)
+    {
+        fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned char tmpl_UInt16;\n");
+        fprintf(fp, "typedef signed char tmpl_SInt16;\n");
+        fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_SHORT_BIT == 16 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 16)
+    {
+        fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned short int tmpl_UInt16;\n");
+        fprintf(fp, "typedef signed short int tmpl_SInt16;\n");
+        fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_INT_BIT == 16 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 16)
+    {
+        fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned int tmpl_UInt16;\n");
+        fprintf(fp, "typedef signed int tmpl_SInt16;\n");
+        fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n\n");
+    }
+    else
+        fprintf(fp, "#define TMPL_HAS_16_BIT_INT 0\n\n");
+
+    if (TMPL_CHAR_BIT == 32)
+    {
+        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned char tmpl_UInt32;\n");
+        fprintf(fp, "typedef signed char tmpl_SInt32;\n");
+        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_SHORT_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 32)
+    {
+        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned short int tmpl_UInt32;\n");
+        fprintf(fp, "typedef signed short int tmpl_SInt32;\n");
+        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_INT_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 32)
+    {
+        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned int tmpl_UInt32;\n");
+        fprintf(fp, "typedef signed int tmpl_SInt32;\n");
+        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_LONG_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned long int)) == 32)
+    {
+        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned long int tmpl_UInt32;\n");
+        fprintf(fp, "typedef signed long int tmpl_SInt32;\n");
+        fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n\n");
+    }
+    else
+        fprintf(fp, "#define TMPL_HAS_32_BIT_INT 0\n\n");
+
+    if (TMPL_CHAR_BIT == 64)
+    {
+        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned char tmpl_UInt64;\n");
+        fprintf(fp, "typedef signed char tmpl_SInt64;\n");
+        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_UCHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_CHAR_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_UCHAR_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_SHORT_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 64)
+    {
+        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned short int tmpl_UInt64;\n");
+        fprintf(fp, "typedef signed short int tmpl_SInt64;\n");
+        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_INT_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 64)
+    {
+        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned int tmpl_UInt64;\n");
+        fprintf(fp, "typedef signed int tmpl_SInt64;\n");
+        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n\n");
+    }
+    else if (TMPL_LONG_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned long int)) == 64)
+    {
+        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned long int tmpl_UInt64;\n");
+        fprintf(fp, "typedef signed long int tmpl_SInt64;\n");
+        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n\n");
+    }
+
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+    else if (TMPL_LLONG_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned long long int)) == 64)
+    {
+        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
+        fprintf(fp, "typedef unsigned long long int tmpl_UInt64;\n");
+        fprintf(fp, "typedef signed long long int tmpl_SInt64;\n");
+        fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULLONG_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LLONG_TRAILING_ZEROS\n");
+        fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULLONG_LEADING_ZEROS\n\n");
+    }
 #endif
-
-    fprintf(fp, "\n");
-
-#if USHRT_MAX == 0xFFFF
-    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned short int tmpl_UInt16;\n");
-    fprintf(fp, "typedef signed short int tmpl_SInt16;\n");
-    fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n");
-#elif UINT_MAX == 0xFFFF
-    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned int tmpl_UInt16;\n");
-    fprintf(fp, "typedef signed int tmpl_SInt16;\n");
-    fprintf(fp, "#define tmpl_UInt16_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt16_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt16_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n");
-#else
-    fprintf(fp, "#define TMPL_HAS_16_BIT_INT 0\n");
-#endif
-
-    fprintf(fp, "\n");
-
-#if USHRT_MAX == 0xFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned short int tmpl_UInt32;\n");
-    fprintf(fp, "typedef signed short int tmpl_SInt32;\n");
-    fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n");
-#elif UINT_MAX == 0xFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned int tmpl_UInt32;\n");
-    fprintf(fp, "typedef signed int tmpl_SInt32;\n");
-    fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n");
-#elif ULONG_MAX == 0xFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned long int tmpl_UInt32;\n");
-    fprintf(fp, "typedef signed long int tmpl_SInt32;\n");
-    fprintf(fp, "#define tmpl_UInt32_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt32_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt32_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n");
-#else
-    fprintf(fp, "#define TMPL_HAS_32_BIT_INT 0\n");
-#endif
-
-    fprintf(fp, "\n");
-
-#if USHRT_MAX == 0xFFFFFFFFFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned short int tmpl_UInt64;\n");
-    fprintf(fp, "typedef signed short int tmpl_SInt64;\n");
-    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_USHORT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_SHORT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_USHORT_LEADING_ZEROS\n");
-#elif UINT_MAX == 0xFFFFFFFFFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned int tmpl_UInt64;\n");
-    fprintf(fp, "typedef signed int tmpl_SInt64;\n");
-    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_UINT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_INT_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_UINT_LEADING_ZEROS\n");
-#elif ULONG_MAX == 0xFFFFFFFFFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned long int tmpl_UInt64;\n");
-    fprintf(fp, "typedef signed long int tmpl_SInt64;\n");
-    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULONG_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LONG_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULONG_LEADING_ZEROS\n");
-#elif defined(ULLONG_MAX)
-
-#if ULLONG_MAX == 0xFFFFFFFFFFFFFFFF
-    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 1\n");
-    fprintf(fp, "typedef unsigned long long int tmpl_UInt64;\n");
-    fprintf(fp, "typedef signed long long int tmpl_SInt64;\n");
-
-    fprintf(fp, "#define tmpl_UInt64_Trailing_Zeros TMPL_ULLONG_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_SInt64_Trailing_Zeros TMPL_LLONG_TRAILING_ZEROS\n");
-    fprintf(fp, "#define tmpl_UInt64_Leading_Zeros TMPL_ULLONG_LEADING_ZEROS\n");
-#else
-    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
-#endif
-/*  End of #if ULLONG_MAX == 0xFFFFFFFFFFFFFFFF.                              */
-
-#else
-    fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n");
-#endif
-/*  End of #if USHRT_MAX == 0xFFFFFFFFFFFFFFFF.                               */
+    else
+        fprintf(fp, "#define TMPL_HAS_64_BIT_INT 0\n\n");
 
 #endif
 /*  End of #ifdef TMPL_SET_NO_INT.                                            */
+
+    fprintf(fp, "#endif\n");
+    return 0;
+}
+
+/*  Function for determining the max powers of unsigned integer types.        */
+static int make_limits_h(void)
+{
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)
+    FILE *fp = fopen(".\\include\\tmpl_limits.h", "w");
+#else
+    FILE *fp = fopen("./include/tmpl_limits.h", "w");
+#endif
+
+    /*  If fopen fails, it returns NULL. Check that it did not.               */
+    if (!fp)
+    {
+        puts("Error Encountered: libtmpl\n"
+             "    config.c\n"
+             "fopen returned NULL for FILE *fp. Aborting.\n");
+        return -1;
+    }
+
+    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
+     *  computed already. If not, compute it.                                 */
+    if (!TMPL_BITS_HAVE_BEEN_SET)
+        tmpl_det_widths();
+
+    /*  Create the file include/tmpl_config.h and return.                     */
+    fprintf(fp, "/******************************************************************************\n");
+    fprintf(fp, " *                                  LICENSE                                   *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  This file is part of libtmpl.                                             *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is free software: you can redistribute it and/or modify           *\n");
+    fprintf(fp, " *  it under the terms of the GNU General Public License as published by      *\n");
+    fprintf(fp, " *  the Free Software Foundation, either version 3 of the License, or         *\n");
+    fprintf(fp, " *  (at your option) any later version.                                       *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is distributed in the hope that it will be useful,                *\n");
+    fprintf(fp, " *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *\n");
+    fprintf(fp, " *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *\n");
+    fprintf(fp, " *  GNU General Public License for more details.                              *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  You should have received a copy of the GNU General Public License         *\n");
+    fprintf(fp, " *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *                                 tmpl_limits                                *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  Purpose:                                                                  *\n");
+    fprintf(fp, " *      This file is created by the config.c file. It provides macros         *\n");
+    fprintf(fp, " *      for unsigned integers, providing their largest possible values.       *\n");
+    fprintf(fp, " ******************************************************************************/\n\n");
+    fprintf(fp, "#ifndef TMPL_LIMITS_H\n");
+    fprintf(fp, "#define TMPL_LIMITS_H\n\n");
+
+    fprintf(fp, "#define TMPL_UCHAR_BIT %u\n", TMPL_CHAR_BIT);
+    fprintf(fp, "#define TMPL_USHORT_BIT %u\n", TMPL_SHORT_BIT);
+    fprintf(fp, "#define TMPL_UINT_BIT %u\n", TMPL_INT_BIT);
+    fprintf(fp, "#define TMPL_ULONG_BIT %u\n", TMPL_LONG_BIT);
+
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+    fprintf(fp, "#define TMPL_ULLONG_BIT %u\n", TMPL_LLONG_BIT);
+#endif
 
     fprintf(fp, "\n#endif\n");
     return 0;
@@ -1146,6 +1336,8 @@ int main(void)
     if (make_config_h() < 0)
         return -1;
     if (make_integer_h() < 0)
+        return -1;
+    if (make_limits_h() < 0)
         return -1;
     return 0;
 }
