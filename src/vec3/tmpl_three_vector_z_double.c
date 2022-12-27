@@ -25,7 +25,7 @@
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for returning the z component of a three dimensional vector.     */
 double tmpl_3DDouble_Z(const tmpl_ThreeVectorDouble *P)
