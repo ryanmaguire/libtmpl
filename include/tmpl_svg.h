@@ -87,14 +87,14 @@ typedef struct tmpl_SVG_Color_Def {
 } tmpl_SVG_Color;
 
 /*  Useful colors to have predefined.                                         */
-extern const tmpl_SVG_Color tmpl_SVG_Black;
-extern const tmpl_SVG_Color tmpl_SVG_White;
-extern const tmpl_SVG_Color tmpl_SVG_Red;
-extern const tmpl_SVG_Color tmpl_SVG_Green;
-extern const tmpl_SVG_Color tmpl_SVG_Blue;
-extern const tmpl_SVG_Color tmpl_SVG_Cyan;
-extern const tmpl_SVG_Color tmpl_SVG_Yellow;
-extern const tmpl_SVG_Color tmpl_SVG_Magenta;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Black;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_White;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Red;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Green;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Blue;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Cyan;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Yellow;
+TMPL_EXPORT extern const tmpl_SVG_Color tmpl_SVG_Magenta;
 
 /*  This is the primary structure for using colors in drawings. It contains a *
  *  color, which allows for opacity (see above), a linewidth, and a string    *
@@ -118,35 +118,35 @@ typedef struct tmpl_SVG_Pen_Def {
 #define tmpl_SVG_DASH_ARRAY(pen) ((pen)->dash_array)
 
 /*  Common pens.                                                              */
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Blue;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Green;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Red;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Black;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_White;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkGray;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Gray;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_LightGray;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Aqua;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Purple;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Violet;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Pink;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Yellow;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Crimson;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkGreen;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Orange;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_LightBlue;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Teal;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkBlue;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Lavender;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Magenta;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DeepPink;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Marine;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Lime;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Carrot;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Brown;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Azure;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Silver;
-extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Sand;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Blue;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Green;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Red;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Black;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_White;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkGray;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Gray;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_LightGray;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Aqua;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Purple;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Violet;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Pink;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Yellow;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Crimson;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkGreen;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Orange;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_LightBlue;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Teal;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DarkBlue;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Lavender;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Magenta;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_DeepPink;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Marine;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Lime;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Carrot;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Brown;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Azure;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Silver;
+TMPL_EXPORT extern const tmpl_SVG_Pen *tmpl_SVG_Pen_Sand;
 
 /*  Struct containing all of the information for arrows.                      */
 typedef struct tmpl_SVG_Arrow_Def {
@@ -505,11 +505,11 @@ tmpl_SVG_Set_Arrow_Pos(tmpl_SVG_Arrow *arrow, double pos);
 TMPL_EXPORT extern void
 tmpl_SVG_Set_Arrow_Size(tmpl_SVG_Arrow *arrow, double size);
 
-extern tmpl_SVG_Arrow *
+TMPL_EXPORT extern tmpl_SVG_Arrow *
 tmpl_SVG_Create_Arrow(double pos, double arrow_size, tmpl_SVG_Color *fill_color,
                       tmpl_SVG_Pen *line_pen, tmpl_SVG_ArrowType type);
 
-extern tmpl_SVG_Circle *
+TMPL_EXPORT extern tmpl_SVG_Circle *
 tmpl_Create_SVG_Circle(tmpl_TwoVector P, double r, tmpl_SVG_Palette *palette);
 
 TMPL_EXPORT extern void
@@ -522,11 +522,11 @@ tmpl_Reset_Circle2D(tmpl_Circle2D *circle, tmpl_TwoVector P, double r);
 TMPL_EXPORT extern void
 tmpl_Destroy_Circle2D(tmpl_Circle2D **circle);
 
-extern tmpl_SVG_Line *
+TMPL_EXPORT extern tmpl_SVG_Line *
 tmpl_Create_SVG_Line_From_Two_Points(tmpl_TwoVector P, tmpl_TwoVector Q,
                                      tmpl_SVG_Palette *palette);
 
-extern tmpl_SVG_Line *
+TMPL_EXPORT extern tmpl_SVG_Line *
 tmpl_Create_SVG_Line_From_Point_And_Tangent(tmpl_TwoVector P,
                                             tmpl_TwoVector V,
                                             tmpl_SVG_Palette *palette);
@@ -555,7 +555,7 @@ tmpl_Destroy_SVG_Line(tmpl_SVG_Line **line_pointer);
  *      Malloc is used in this file to allocate the appropriate memory. You   *
  *      must called kissvg_DestroyColor when you are done with the color.     *
  ******************************************************************************/
-extern tmpl_SVG_Pen *
+TMPL_EXPORT extern tmpl_SVG_Pen *
 tmpl_Create_SVG_Pen(unsigned char red, unsigned char green, unsigned char blue,
                     double linewidth, tmpl_Bool transparent, double opacity);
 
@@ -583,7 +583,7 @@ tmpl_SVG_Pen_Change_Linewidth(tmpl_SVG_Pen *pen, double linewidth);
 TMPL_EXPORT extern void
 tmpl_SVG_Pen_Change_Transparency(tmpl_SVG_Pen *pen, double alpha);
 
-extern tmpl_SVG_Palette *
+TMPL_EXPORT extern tmpl_SVG_Palette *
 tmpl_SVG_Create_Palette(tmpl_SVG_Pen *line_pen, tmpl_SVG_Canvas *canvas);
 
 TMPL_EXPORT extern void
@@ -615,7 +615,7 @@ tmpl_SVG_Palette_Use_Down_Ticks(tmpl_SVG_Palette *palette);
 TMPL_EXPORT extern void
 tmpl_SVG_Destroy_Palette(tmpl_SVG_Palette *palette);
 
-extern tmpl_SVG_Label *
+TMPL_EXPORT extern tmpl_SVG_Label *
 tmpl_Create_SVG_Label(const char *label_content,
                       tmpl_TwoVector anchor,
                       tmpl_SVG_Canvas *canvas);
@@ -639,19 +639,19 @@ tmpl_Set_SVG_Label_FontSize(tmpl_SVG_Label *label, unsigned int font_size);
 TMPL_EXPORT extern void
 tmpl_Draw_SVG_Label(tmpl_SVG *svg, tmpl_SVG_Label *label);
 
-extern tmpl_SVG_Path2D *
+TMPL_EXPORT extern tmpl_SVG_Path2D *
 tmpl_Create_SVG_Path(tmpl_TwoVector start, tmpl_SVG_Palette *canvas);
 
 TMPL_EXPORT extern void tmpl_Append_Path2D(tmpl_SVG_Path2D *path, tmpl_TwoVector P);
 TMPL_EXPORT extern void tmpl_Close_Path2D(tmpl_SVG_Path2D *path);
 TMPL_EXPORT extern void tmpl_Destroy_Path2D(tmpl_SVG_Path2D **path_pointer);
 
-extern tmpl_SVG_Line *
+TMPL_EXPORT extern tmpl_SVG_Line *
 ttmpl_CreateLineFromTwoPoints(tmpl_TwoVector P,
                               tmpl_TwoVector Q,
                               tmpl_SVG_Palette *palette);
 
-extern tmpl_SVG_Line *
+TMPL_EXPORT extern tmpl_SVG_Line *
 tmpl_CreateLineFromPointAndTangent(tmpl_TwoVector P,
                                    tmpl_TwoVector V,
                                    tmpl_SVG_Palette *palette);

@@ -68,19 +68,19 @@ typedef struct tmpl_PPM_Color_Def {
 } tmpl_PPM_Color;
 
 /*  Commonly used colors.                                                     */
-extern const tmpl_PPM_Color tmpl_PPM_Black;
-extern const tmpl_PPM_Color tmpl_PPM_White;
-extern const tmpl_PPM_Color tmpl_PPM_Red;
-extern const tmpl_PPM_Color tmpl_PPM_Green;
-extern const tmpl_PPM_Color tmpl_PPM_Blue;
-extern const tmpl_PPM_Color tmpl_PPM_Cyan;
-extern const tmpl_PPM_Color tmpl_PPM_Magenta;
-extern const tmpl_PPM_Color tmpl_PPM_Yellow;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Black;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_White;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Red;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Green;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Blue;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Cyan;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Magenta;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Yellow;
 
 /*  Useful values for grayscale images.                                       */
-extern const unsigned char tmpl_PGM_Black;
-extern const unsigned char tmpl_PGM_Gray;
-extern const unsigned char tmpl_PGM_White;
+TMPL_EXPORT extern const unsigned char tmpl_PGM_Black;
+TMPL_EXPORT extern const unsigned char tmpl_PGM_Gray;
+TMPL_EXPORT extern const unsigned char tmpl_PGM_White;
 
 /******************************************************************************
  *  Function:                                                                 *

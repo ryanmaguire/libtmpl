@@ -39,9 +39,9 @@ typedef struct tmpl_Quadruple_Def {
     unsigned int sign: 1;
 } tmpl_Quadruple;
 
-extern const tmpl_Quadruple tmpl_Quadruple_Inf;
-extern const tmpl_Quadruple tmpl_Quadruple_Neg_Inf;
-extern const tmpl_Quadruple tmpl_Quadruple_NaN;
+TMPL_EXPORT extern const tmpl_Quadruple tmpl_Quadruple_Inf;
+TMPL_EXPORT extern const tmpl_Quadruple tmpl_Quadruple_Neg_Inf;
+TMPL_EXPORT extern const tmpl_Quadruple tmpl_Quadruple_NaN;
 
 TMPL_EXPORT extern tmpl_Bool tmpl_Quaduple_Is_Zero(tmpl_Quadruple x);
 TMPL_EXPORT extern tmpl_Bool tmpl_Quadruple_Is_Inf(tmpl_Quadruple x);

@@ -1140,109 +1140,109 @@ typedef union tmpl_IEEE754_LDouble_Def {
  ******************************************************************************/
 
 /*  sqrt( 1 / (2pi) )                                                         */
-extern const float tmpl_Sqrt_One_By_Two_Pi_F;
-extern const double tmpl_Sqrt_One_By_Two_Pi;
-extern const long double tmpl_Sqrt_One_By_Two_Pi_L;
+TMPL_EXPORT extern const float tmpl_Sqrt_One_By_Two_Pi_F;
+TMPL_EXPORT extern const double tmpl_Sqrt_One_By_Two_Pi;
+TMPL_EXPORT extern const long double tmpl_Sqrt_One_By_Two_Pi_L;
 
 /*  sqrt( pi / 8 )                                                            */
-extern const float tmpl_Sqrt_Pi_By_Eight_F;
-extern const double tmpl_Sqrt_Pi_By_Eight;
-extern const long double tmpl_Sqrt_Pi_By_Eight_L;
+TMPL_EXPORT extern const float tmpl_Sqrt_Pi_By_Eight_F;
+TMPL_EXPORT extern const double tmpl_Sqrt_Pi_By_Eight;
+TMPL_EXPORT extern const long double tmpl_Sqrt_Pi_By_Eight_L;
 
 /*  sqrt( pi / 2 )                                                            */
-extern const float tmpl_Sqrt_Pi_By_Two_F;
-extern const double tmpl_Sqrt_Pi_By_Two;
-extern const long double tmpl_Sqrt_Pi_By_Two_L;
+TMPL_EXPORT extern const float tmpl_Sqrt_Pi_By_Two_F;
+TMPL_EXPORT extern const double tmpl_Sqrt_Pi_By_Two;
+TMPL_EXPORT extern const long double tmpl_Sqrt_Pi_By_Two_L;
 
 /*  sqrt( 1 / pi )                                                            */
-extern const float tmpl_Sqrt_One_By_Pi_F;
-extern const double tmpl_Sqrt_One_By_Pi;
-extern const long double tmpl_Sqrt_One_By_Pi_L;
+TMPL_EXPORT extern const float tmpl_Sqrt_One_By_Pi_F;
+TMPL_EXPORT extern const double tmpl_Sqrt_One_By_Pi;
+TMPL_EXPORT extern const long double tmpl_Sqrt_One_By_Pi_L;
 
 /*  sqrt( 2 / pi )                                                            */
-extern const float tmpl_Sqrt_Two_By_Pi_F;
-extern const double tmpl_Sqrt_Two_By_Pi;
-extern const long double tmpl_Sqrt_Two_By_Pi_L;
+TMPL_EXPORT extern const float tmpl_Sqrt_Two_By_Pi_F;
+TMPL_EXPORT extern const double tmpl_Sqrt_Two_By_Pi;
+TMPL_EXPORT extern const long double tmpl_Sqrt_Two_By_Pi_L;
 
 /*  1 / pi.                                                                   */
-extern const float tmpl_One_By_Pi_F;
-extern const double tmpl_One_By_Pi;
-extern const long double tmpl_One_By_Pi_L;
+TMPL_EXPORT extern const float tmpl_One_By_Pi_F;
+TMPL_EXPORT extern const double tmpl_One_By_Pi;
+TMPL_EXPORT extern const long double tmpl_One_By_Pi_L;
 
 /*  2 / sqrt( pi )                                                            */
-extern const float tmpl_Two_By_Sqrt_Pi_F;
-extern const double tmpl_Two_By_Sqrt_Pi;
-extern const long double tmpl_Two_By_Sqrt_Pi_L;
+TMPL_EXPORT extern const float tmpl_Two_By_Sqrt_Pi_F;
+TMPL_EXPORT extern const double tmpl_Two_By_Sqrt_Pi;
+TMPL_EXPORT extern const long double tmpl_Two_By_Sqrt_Pi_L;
 
 /*  pi / 2                                                                    */
-extern const float tmpl_Pi_By_Two_F;
-extern const double tmpl_Pi_By_Two;
-extern const long double tmpl_Pi_By_Two_L;
+TMPL_EXPORT extern const float tmpl_Pi_By_Two_F;
+TMPL_EXPORT extern const double tmpl_Pi_By_Two;
+TMPL_EXPORT extern const long double tmpl_Pi_By_Two_L;
 
 /*  3 pi / 4                                                                  */
-extern const float tmpl_Three_Pi_By_Four_F;
-extern const double tmpl_Three_Pi_By_Four;
-extern const long double tmpl_Three_Pi_By_Four_L;
+TMPL_EXPORT extern const float tmpl_Three_Pi_By_Four_F;
+TMPL_EXPORT extern const double tmpl_Three_Pi_By_Four;
+TMPL_EXPORT extern const long double tmpl_Three_Pi_By_Four_L;
 
 /*  pi / 4                                                                    */
-extern const float tmpl_Pi_By_Four_F;
-extern const double tmpl_Pi_By_Four;
-extern const long double tmpl_Pi_By_Four_L;
+TMPL_EXPORT extern const float tmpl_Pi_By_Four_F;
+TMPL_EXPORT extern const double tmpl_Pi_By_Four;
+TMPL_EXPORT extern const long double tmpl_Pi_By_Four_L;
 
 /*  pi                                                                        */
-extern const float tmpl_One_Pi_F;
-extern const double tmpl_One_Pi;
-extern const long double tmpl_One_Pi_L;
+TMPL_EXPORT extern const float tmpl_One_Pi_F;
+TMPL_EXPORT extern const double tmpl_One_Pi;
+TMPL_EXPORT extern const long double tmpl_One_Pi_L;
 
 /*  2 pi                                                                      */
-extern const float tmpl_Two_Pi_F;
-extern const double tmpl_Two_Pi;
-extern const long double tmpl_Two_Pi_L;
+TMPL_EXPORT extern const float tmpl_Two_Pi_F;
+TMPL_EXPORT extern const double tmpl_Two_Pi;
+TMPL_EXPORT extern const long double tmpl_Two_Pi_L;
 
 /*  sqrt( 2 )                                                                 */
-extern const float tmpl_Sqrt_Two_F;
-extern const double tmpl_Sqrt_Two;
-extern const long double tmpl_Sqrt_Two_L;
+TMPL_EXPORT extern const float tmpl_Sqrt_Two_F;
+TMPL_EXPORT extern const double tmpl_Sqrt_Two;
+TMPL_EXPORT extern const long double tmpl_Sqrt_Two_L;
 
 /*  e = exp( 1 )                                                              */
-extern const float tmpl_Euler_E_F;
-extern const double tmpl_Euler_E;
-extern const long double tmpl_Euler_E_L;
+TMPL_EXPORT extern const float tmpl_Euler_E_F;
+TMPL_EXPORT extern const double tmpl_Euler_E;
+TMPL_EXPORT extern const long double tmpl_Euler_E_L;
 
 /*  1 / e = exp( -1 )                                                         */
-extern const float tmpl_Rcpr_Euler_E_F;
-extern const double tmpl_Rcpr_Euler_E;
-extern const long double tmpl_Rcpr_Euler_E_L;
+TMPL_EXPORT extern const float tmpl_Rcpr_Euler_E_F;
+TMPL_EXPORT extern const double tmpl_Rcpr_Euler_E;
+TMPL_EXPORT extern const long double tmpl_Rcpr_Euler_E_L;
 
 /*  log_e( 2 ) = ln( 2 )                                                      */
-extern const float tmpl_Natural_Log_of_Two_F;
-extern const double tmpl_Natural_Log_of_Two;
-extern const long double tmpl_Natural_Log_of_Two_L;
+TMPL_EXPORT extern const float tmpl_Natural_Log_of_Two_F;
+TMPL_EXPORT extern const double tmpl_Natural_Log_of_Two;
+TMPL_EXPORT extern const long double tmpl_Natural_Log_of_Two_L;
 
 /*  log_e( 10 ) = ln( 10 )                                                    */
-extern const float tmpl_Natural_Log_of_Ten_F;
-extern const double tmpl_Natural_Log_of_Ten;
-extern const long double tmpl_Natural_Log_of_Ten_L;
+TMPL_EXPORT extern const float tmpl_Natural_Log_of_Ten_F;
+TMPL_EXPORT extern const double tmpl_Natural_Log_of_Ten;
+TMPL_EXPORT extern const long double tmpl_Natural_Log_of_Ten_L;
 
 /*  pi / 180                                                                  */
-extern const float tmpl_Deg_to_Rad_F;
-extern const double tmpl_Deg_to_Rad;
-extern const long double tmpl_Deg_to_Rad_L;
+TMPL_EXPORT extern const float tmpl_Deg_to_Rad_F;
+TMPL_EXPORT extern const double tmpl_Deg_to_Rad;
+TMPL_EXPORT extern const long double tmpl_Deg_to_Rad_L;
 
 /*  180 / pi                                                                  */
-extern const float tmpl_Rad_to_Deg_F;
-extern const double tmpl_Rad_to_Deg;
-extern const long double tmpl_Rad_to_Deg_L;
+TMPL_EXPORT extern const float tmpl_Rad_to_Deg_F;
+TMPL_EXPORT extern const double tmpl_Rad_to_Deg;
+TMPL_EXPORT extern const long double tmpl_Rad_to_Deg_L;
 
 /*  Largest value such that exp(x) will not return infinity.                  */
-extern const float tmpl_Max_Float_Base_E;
-extern const double tmpl_Max_Double_Base_E;
-extern const long double tmpl_Max_LDouble_Base_E;
+TMPL_EXPORT extern const float tmpl_Max_Float_Base_E;
+TMPL_EXPORT extern const double tmpl_Max_Double_Base_E;
+TMPL_EXPORT extern const long double tmpl_Max_LDouble_Base_E;
 
 /*  Smallest value such that exp(x) will not return zero.                     */
-extern const float tmpl_Min_Float_Base_E;
-extern const double tmpl_Min_Double_Base_E;
-extern const long double tmpl_Min_LDouble_Base_E;
+TMPL_EXPORT extern const float tmpl_Min_Float_Base_E;
+TMPL_EXPORT extern const double tmpl_Min_Double_Base_E;
+TMPL_EXPORT extern const long double tmpl_Min_LDouble_Base_E;
 
 /******************************************************************************
  *                              Tables and Data                               *
@@ -1252,10 +1252,10 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  The values v and atan(v) used in atan and atan2 routines.                 */
-extern const float tmpl_atan_float_v[8];
-extern const float tmpl_atan_float_atan_of_v[8];
-extern const double tmpl_atan_double_v[8];
-extern const double tmpl_atan_double_atan_of_v[8];
+TMPL_EXPORT extern const float tmpl_atan_float_v[8];
+TMPL_EXPORT extern const float tmpl_atan_float_atan_of_v[8];
+TMPL_EXPORT extern const double tmpl_atan_double_v[8];
+TMPL_EXPORT extern const double tmpl_atan_double_atan_of_v[8];
 
 /*  The long double version of these tables depends on how long double is     *
  *  implemented. 80-bit extended and 64-bit double implementations, as well   *
@@ -1269,54 +1269,54 @@ extern const double tmpl_atan_double_atan_of_v[8];
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
-extern const long double tmpl_atan_ldouble_v[8];
-extern const long double tmpl_atan_ldouble_atan_of_v[8];
+TMPL_EXPORT extern const long double tmpl_atan_ldouble_v[8];
+TMPL_EXPORT extern const long double tmpl_atan_ldouble_atan_of_v[8];
 #else
-extern const long double tmpl_ldouble_atan_n_by_8[129];
+TMPL_EXPORT extern const long double tmpl_ldouble_atan_n_by_8[129];
 #endif
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-extern const double tmpl_double_cbrt_table[128];
-extern const float tmpl_float_cbrt_table[128];
-extern const long double tmpl_ldouble_cbrt_table[128];
+TMPL_EXPORT extern const double tmpl_double_cbrt_table[128];
+TMPL_EXPORT extern const float tmpl_float_cbrt_table[128];
+TMPL_EXPORT extern const long double tmpl_ldouble_cbrt_table[128];
 
 /*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_cosd_table[180];
-extern const float tmpl_float_cosd_table[180];
-extern const long double tmpl_ldouble_cosd_table[180];
+TMPL_EXPORT extern const double tmpl_double_cosd_table[180];
+TMPL_EXPORT extern const float tmpl_float_cosd_table[180];
+TMPL_EXPORT extern const long double tmpl_ldouble_cosd_table[180];
 
 /*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_cospi_table[128];
-extern const float tmpl_float_cospi_table[128];
-extern const long double tmpl_ldouble_cospi_table[128];
+TMPL_EXPORT extern const double tmpl_double_cospi_table[128];
+TMPL_EXPORT extern const float tmpl_float_cospi_table[128];
+TMPL_EXPORT extern const long double tmpl_ldouble_cospi_table[128];
 
 /*  The values exp(k/256) for k = 0, 1, ..., 176, 177.                        */
-extern const double tmpl_double_exp_table[355];
-extern const float tmpl_float_exp_table[355];
-extern const long double tmpl_ldouble_exp_table[355];
+TMPL_EXPORT extern const double tmpl_double_exp_table[355];
+TMPL_EXPORT extern const float tmpl_float_exp_table[355];
+TMPL_EXPORT extern const long double tmpl_ldouble_exp_table[355];
 
 /*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
-extern const double tmpl_double_log_table[128];
-extern const float tmpl_float_log_table[128];
-extern const long double tmpl_ldouble_log_table[128];
+TMPL_EXPORT extern const double tmpl_double_log_table[128];
+TMPL_EXPORT extern const float tmpl_float_log_table[128];
+TMPL_EXPORT extern const long double tmpl_ldouble_log_table[128];
 
 /*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
-extern const double tmpl_double_rcpr_table[128];
-extern const float tmpl_float_rcpr_table[128];
-extern const long double tmpl_ldouble_rcpr_table[128];
+TMPL_EXPORT extern const double tmpl_double_rcpr_table[128];
+TMPL_EXPORT extern const float tmpl_float_rcpr_table[128];
+TMPL_EXPORT extern const long double tmpl_ldouble_rcpr_table[128];
 
 /*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_sind_table[180];
-extern const float tmpl_float_sind_table[180];
-extern const long double tmpl_ldouble_sind_table[180];
+TMPL_EXPORT extern const double tmpl_double_sind_table[180];
+TMPL_EXPORT extern const float tmpl_float_sind_table[180];
+TMPL_EXPORT extern const long double tmpl_ldouble_sind_table[180];
 
 /*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_sinpi_table[128];
-extern const float tmpl_float_sinpi_table[128];
-extern const long double tmpl_ldouble_sinpi_table[128];
+TMPL_EXPORT extern const double tmpl_double_sinpi_table[128];
+TMPL_EXPORT extern const float tmpl_float_sinpi_table[128];
+TMPL_EXPORT extern const long double tmpl_ldouble_sinpi_table[128];
 
 /******************************************************************************
  *  Function:                                                                 *

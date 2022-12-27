@@ -58,21 +58,21 @@ typedef tmpl_ThreeVectorLongDouble
 (*tmpl_3DLDouble_VectorField)(tmpl_ThreeVectorLongDouble);
 
 /*  Commonly used vectors in R^3.                                             */
-extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Zero;
-extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Zero;
-extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Zero;
+TMPL_EXPORT extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Zero;
+TMPL_EXPORT extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Zero;
+TMPL_EXPORT extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Zero;
 
-extern const tmpl_ThreeVectorFloat tmpl_3DFloat_X_Hat;
-extern const tmpl_ThreeVectorDouble tmpl_3DDouble_X_Hat;
-extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_X_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorFloat tmpl_3DFloat_X_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorDouble tmpl_3DDouble_X_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_X_Hat;
 
-extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Y_Hat;
-extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Y_Hat;
-extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Y_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Y_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Y_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Y_Hat;
 
-extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Z_Hat;
-extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Z_Hat;
-extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Z_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorDouble tmpl_3DDouble_Z_Hat;
+TMPL_EXPORT extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
 
 /******************************************************************************
  *  Function:                                                                 *

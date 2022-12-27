@@ -72,8 +72,8 @@ typedef struct tmpl_RationalNumber_Def {
 } tmpl_RationalNumber;
 
 /*  Commonly used rational numbers.                                           */
-extern const tmpl_RationalNumber tmpl_RationalNumber_Zero;
-extern const tmpl_RationalNumber tmpl_RationalNumber_One;
+TMPL_EXPORT extern const tmpl_RationalNumber tmpl_RationalNumber_Zero;
+TMPL_EXPORT extern const tmpl_RationalNumber tmpl_RationalNumber_One;
 
 /******************************************************************************
  *  Function:                                                                 *

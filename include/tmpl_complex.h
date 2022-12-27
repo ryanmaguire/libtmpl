@@ -100,19 +100,19 @@ typedef tmpl_ComplexDouble tmpl_Complex;
 /*  Useful constants used throughout computations.                            */
 
 /*  The imaginary unit, z = 0 + i 1.                                          */
-extern const tmpl_ComplexFloat tmpl_CFloat_I;
-extern const tmpl_ComplexDouble tmpl_CDouble_I;
-extern const tmpl_ComplexLongDouble tmpl_CLDouble_I;
+TMPL_EXPORT extern const tmpl_ComplexFloat tmpl_CFloat_I;
+TMPL_EXPORT extern const tmpl_ComplexDouble tmpl_CDouble_I;
+TMPL_EXPORT extern const tmpl_ComplexLongDouble tmpl_CLDouble_I;
 
 /*  Complex zero, z = 0 + i0.                                                 */
-extern const tmpl_ComplexFloat tmpl_CFloat_Zero;
-extern const tmpl_ComplexDouble tmpl_CDouble_Zero;
-extern const tmpl_ComplexLongDouble tmpl_CLDouble_Zero;
+TMPL_EXPORT extern const tmpl_ComplexFloat tmpl_CFloat_Zero;
+TMPL_EXPORT extern const tmpl_ComplexDouble tmpl_CDouble_Zero;
+TMPL_EXPORT extern const tmpl_ComplexLongDouble tmpl_CLDouble_Zero;
 
 /*  Complex one, z = 1 + i0.                                                  */
-extern const tmpl_ComplexFloat tmpl_CFloat_One;
-extern const tmpl_ComplexDouble tmpl_CDouble_One;
-extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
+TMPL_EXPORT extern const tmpl_ComplexFloat tmpl_CFloat_One;
+TMPL_EXPORT extern const tmpl_ComplexDouble tmpl_CDouble_One;
+TMPL_EXPORT extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
 
 /*  Complex infinity, set to inf + i inf. This is the "north pole" on the     *
  *  Riemann sphere.                                                           */
@@ -1146,7 +1146,7 @@ tmpl_CFloat_Real_Part(tmpl_ComplexFloat z);
 TMPL_EXPORT extern double
 tmpl_CDouble_Real_Part(tmpl_ComplexDouble z);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
