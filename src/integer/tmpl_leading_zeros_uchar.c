@@ -20,11 +20,11 @@
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  Size of unsigned char here.                                               */
-#include <limits.h>
+/*  The TMPL_UCHAR_BIT macro is found here.                                   */
+#include <libtmpl/include/tmpl_limits.h>
 
 /*  The C standard requires char to be at least 8 bits wide.                  */
-#if UCHAR_MAX == 0xFFU
+#if TMPL_UCHAR_BIT == 8
 
 /*  8-bit leading-zeros function.                                             */
 int tmpl_UChar_Leading_Zeros(unsigned char n)
@@ -58,7 +58,7 @@ int tmpl_UChar_Leading_Zeros(unsigned char n)
 }
 /*  End of tmpl_UChar_Leading_Zeros.                                          */
 
-#elif UCHAR_MAX == 0xFFFFU
+#elif TMPL_UCHAR_BIT == 16
 
 /*  16-bit leading-zeros function.                                            */
 int tmpl_UChar_Leading_Zeros(unsigned char n)
@@ -100,7 +100,7 @@ int tmpl_UChar_Leading_Zeros(unsigned char n)
 /*  End of tmpl_UChar_Leading_Zeros.                                          */
 
 /*   32-bit char.                                                             */
-#elif UCHAR_MAX == 0xFFFFFFFFU
+#elif TMPL_UCHAR_BIT == 32
 
 /*  32-bit leading-zeros function.                                            */
 int tmpl_UChar_Leading_Zeros(unsigned char n)
@@ -149,7 +149,7 @@ int tmpl_UChar_Leading_Zeros(unsigned char n)
 /*  End of tmpl_UChar_Leading_Zeros.                                          */
 
 /*  I once read there's a calculator with char = short = int = long = 64-bit. */
-#elif UCHAR_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif TMPL_UCHAR_BIT == 64
 
 /*  64-bit leading-zeros function.                                            */
 int tmpl_UChar_Leading_Zeros(unsigned char n)
@@ -252,4 +252,4 @@ int tmpl_UChat_Leading_Zeros(unsigned char n)
 /*  End of tmpl_UCHAR_Leading_Zeros.                                          */
 
 #endif
-/*  End of #if UCHAR_MAX == 0xFFFFU.                                          */
+/*  End of #if TMPL_UCHAR_BIT == 8.                                           */

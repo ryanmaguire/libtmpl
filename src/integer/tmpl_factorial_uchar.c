@@ -53,8 +53,8 @@
  ******************************************************************************
  *  1.) tmpl_integer.h:                                                       *
  *          Header file with the functions prototype.                         *
- *  2.) limits.h:                                                             *
- *          Standard library file containing UCHAR_MAX.                       *
+ *  2.) tmpl_limits.h:                                                        *
+ *          Header file containing TMPL_UCHAR_BIT                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -68,11 +68,11 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  The UCHAR_MAX macro is found here.                                        */
-#include <limits.h>
+/*  The TMPL_UCHAR_BIT macro is found here.                                   */
+#include <libtmpl/include/tmpl_limits.h>
 
 /*  8-bit unsigned char has a max value of 255.                               */
-#if UCHAR_MAX == 0xFFU
+#if TMPL_UCHAR_BIT == 8
 
 /*  For n > 5, 8-bit char, n! overflows. Create lookup table of a few values. */
 static const unsigned char tmpl_uchar_factorial_values[6] = {
@@ -95,7 +95,7 @@ unsigned char tmpl_UChar_Factorial(unsigned char n)
 /*  End of tmpl_UChar_Factorial.                                              */
 
 /*  16-bit unsigned char has a max value of 65,535.                           */
-#elif UCHAR_MAX == 0xFFFFU
+#elif TMPL_UCHAR_BIT == 16
 
 /******************************************************************************
  *                               16-Bit Version                               *
@@ -124,7 +124,7 @@ unsigned char tmpl_UChar_Factorial(unsigned char n)
 /*  End of tmpl_UChar_Factorial.                                              */
 
 /*  32-bit unsigned char has a max value of 4,294,967,295.                    */
-#elif UCHAR_MAX == 0xFFFFFFFFU
+#elif TMPL_UCHAR_BIT == 32
 
 /******************************************************************************
  *                               32-Bit Version                               *
@@ -154,7 +154,7 @@ unsigned char tmpl_UChar_Factorial(unsigned char n)
 /*  End of tmpl_UChar_Factorial.                                              */
 
 /*  64-bit unsigned char has a max value of 18,446,744,073,709,551,615.       */
-#elif UCHAR_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif TMPL_UCHAR_BIT == 64
 
 /******************************************************************************
  *                               64-Bit Version                               *
@@ -205,13 +205,13 @@ unsigned char tmpl_UChart_Factorial(unsigned char n)
     /*  Declare necessary variable. C89 requires this at the top.             */
     unsigned char k, factorial;
 
-    /*  For 0 <= n <= 8 we can use the lookup table above.                    */
-    if (n < 0x09U)
+    /*  For 0 <= n <= 5 we can use the lookup table above.                    */
+    if (n < 0x06U)
         return tmpl_uchar_factorial_values[n];
 
     /*  Otherwise, set factorial to the largest value in the table. We will   *
-     *  compute using n! = n*(n-1)*...*8!.                                    */
-    factorial = tmpl_uchar_factorial_values[8];
+     *  compute using n! = n*(n-1)*...*5!.                                    */
+    factorial = tmpl_uchar_factorial_values[5];
 
     /*  For 6 <= k <= n, multiply the result by k. This method has the        *
      *  unfortunate disadvantage of not detecting overflows.                  */
@@ -223,4 +223,4 @@ unsigned char tmpl_UChart_Factorial(unsigned char n)
 /*  End of tmpl_UChar_Factorial.                                              */
 
 #endif
-/*  End of #if UCHAR_MAX == 0xFFFFU.                                          */
+/*  End of #if TMPL_UCHAR_BIT == 8.                                           */

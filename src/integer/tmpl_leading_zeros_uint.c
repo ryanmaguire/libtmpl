@@ -20,11 +20,11 @@
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  Size of unsigned char here.                                               */
-#include <limits.h>
+/*  The TMPL_UINT_BIT macro is found here.                                    */
+#include <libtmpl/include/tmpl_limits.h>
 
 /*  The C standard requires int to be at least 16 bits wide.                  */
-#if UINT_MAX == 0xFFFFU
+#if TMPL_UINT_BIT == 16
 
 /*  16-bit leading-zeros function.                                            */
 int tmpl_UInt_Leading_Zeros(unsigned int n)
@@ -66,7 +66,7 @@ int tmpl_UInt_Leading_Zeros(unsigned int n)
 /*  End of tmpl_UInt_Leading_Zeros.                                           */
 
 /*  Most common implementation, 32-bit int.                                   */
-#elif UINT_MAX == 0xFFFFFFFFU
+#elif TMPL_UINT_BIT == 32
 
 /*  32-bit leading-zeros function.                                            */
 int tmpl_UInt_Leading_Zeros(unsigned int n)
@@ -115,7 +115,7 @@ int tmpl_UInt_Leading_Zeros(unsigned int n)
 /*  End of tmpl_UInt_Leading_Zeros.                                           */
 
 /*  I once read there's a calculator with char = short = int = long = 64-bit. */
-#elif UINT_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif TMPL_UINT_BIT == 64
 
 /*  64-bit leading-zeros function.                                            */
 int tmpl_UInt_Leading_Zeros(unsigned int n)
@@ -226,4 +226,4 @@ int tmpl_UInt_Leading_Zeros(unsigned int n)
 /*  End of tmpl_UInt_Leading_Zeros.                                           */
 
 #endif
-/*  End of #if UINT_MAX == 0xFFFFU.                                           */
+/*  End of #if TMPL_UINT_BIT == 16.                                           */
