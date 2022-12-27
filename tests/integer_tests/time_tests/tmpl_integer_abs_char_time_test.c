@@ -17,4 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_integer_vs_glibc.h"
-TEST1(signed char, signed char, tmpl_Char_Abs, abs)
+static inline signed char absc(signed char c)
+{
+    int x = abs((int)c);
+    return (signed char)x;
+}
+TEST1(signed char, signed char, tmpl_Char_Abs, absc)
