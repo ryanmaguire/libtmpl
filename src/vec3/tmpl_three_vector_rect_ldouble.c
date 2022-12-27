@@ -46,23 +46,8 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_euclidean_spatial_geometry.h:                                    *
+ *  1.) tmpl_vec3.h:                                                          *
  *          Header containing ThreeVector typedef and the function prototype. *
- ******************************************************************************
- *                             A NOTE ON COMMENTS                             *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                             A FRIENDLY WARNING                             *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -74,7 +59,7 @@
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for returning the point (x, y, z) given three long doubles.      */
 tmpl_ThreeVectorLongDouble

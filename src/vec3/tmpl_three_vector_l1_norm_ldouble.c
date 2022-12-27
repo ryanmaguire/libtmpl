@@ -1,5 +1,5 @@
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Absolute value function found here.                                       */
 #include <libtmpl/include/tmpl_math.h>

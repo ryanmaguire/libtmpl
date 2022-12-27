@@ -20,12 +20,12 @@
  *      Returns the x component of a three dimensional vector/spacial point.  *
  *      That is, given (x, y, z), return x.                                   *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for returning the x component of a three dimensional vector.     */
 long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble *P)

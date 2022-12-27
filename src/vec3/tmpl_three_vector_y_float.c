@@ -25,7 +25,7 @@
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for returning the x component of a three dimensional vector.     */
 float tmpl_3DFloat_Y(const tmpl_ThreeVectorFloat *P)

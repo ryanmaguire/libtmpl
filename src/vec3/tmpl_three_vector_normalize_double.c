@@ -57,23 +57,8 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_euclidean_spatial_geometry.h:                                    *
+ *  1.) tmpl_vec3.h:                                                          *
  *          Header containing ThreeVector typedef and the function prototype. *
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -85,32 +70,13 @@
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  If the user has not requested tmpl algorithms, use functions from math.h. */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-#include <math.h>
-
-/*  Set macros for the square root and absolute value functions for later.    *
- *  this avoids more checks for TMPL_USE_MATH_ALGORITHMS in the code.         */
-#define square_root sqrt
-#define absolute_value fabs
-
-#else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1                                */
-
-/*  If the user requested tmpl algorithm, alias the appropriate functions.    */
-#define square_root tmpl_Double_Sqrt
-#define absolute_value tmpl_Double_Abs
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
-
 /*  We can get a significant speed boost if IEEE-754 support is available.    */
-#if defined(TMPL_HAS_IEEE754_DOUBLE) && TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /*  The values 2^512 and 2^-512, to double precision, stored as macros.       */
 #define BIG_SCALE 1.340780792994259709957402E+154
@@ -125,9 +91,9 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
     double rcpr_norm;
 
     /*  Given P = (x, y, z), compute |x|, |y|, and |z|.                       */
-    double x = absolute_value(P->dat[0]);
-    double y = absolute_value(P->dat[1]);
-    double z = absolute_value(P->dat[2]);
+    double x = tmpl_Double_Abs(P->dat[0]);
+    double y = tmpl_Double_Abs(P->dat[1]);
+    double z = tmpl_Double_Abs(P->dat[2]);
 
     /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
      *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
@@ -153,7 +119,7 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
     }
 
     /*  Compute 1 / ||P||.                                                    */
-    rcpr_norm = 1.0 / square_root(x*x + y*y + z*z);
+    rcpr_norm = 1.0 / tmpl_Double_Sqrt(x*x + y*y + z*z);
 
     /*  Set P_hat to (x/||P||, y/||P||, z/||P||) and return.                  */
     normalized.dat[0] = x*rcpr_norm;
@@ -178,9 +144,9 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
     tmpl_ThreeVectorDouble P_normalized;
 
     /*  Given P = (x, y, z), compute |x|, |y|, and |z|.                       */
-    double x = absolute_value(P->dat[0]);
-    double y = absolute_value(P->dat[1]);
-    double z = absolute_value(P->dat[2]);
+    double x = tmpl_Double_Abs(P->dat[0]);
+    double y = tmpl_Double_Abs(P->dat[1]);
+    double z = tmpl_Double_Abs(P->dat[2]);
 
     /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
      *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
@@ -194,7 +160,7 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
     x *= rcpr_t;
     y *= rcpr_t;
     z *= rcpr_t;
-    norm = t*square_root(x*x + y*y + z*z);
+    norm = t*tmpl_Double_Sqrt(x*x + y*y + z*z);
 
     /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
     if (norm == 0.0)
@@ -223,3 +189,4 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
 /*  End of tmpl_3DDouble_Normalize.                                           */
 
 #endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

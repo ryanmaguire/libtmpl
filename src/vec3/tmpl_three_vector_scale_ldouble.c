@@ -24,7 +24,7 @@
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Multiply a three vector by a real number.                                 */
 tmpl_ThreeVectorLongDouble
