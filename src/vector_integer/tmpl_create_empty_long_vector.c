@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_create_empty_char_vector.c                         *
+ *                      tmpl_create_empty_long_vector.c                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Create a pointer to a vector that has had it's data pointer allocated *
@@ -25,15 +25,15 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Empty_CharVector                                          *
- *      tmpl_Create_Empty_UCharVector                                         *
+ *      tmpl_Create_Empty_LongVector                                          *
+ *      tmpl_Create_Empty_ULongVector                                         *
  *  Purpose:                                                                  *
- *      Allocates memory for a char-valued vector.                            *
+ *      Allocates memory for an int-valued vector.                            *
  *  Arguments:                                                                *
  *      length (unsigned long int):                                           *
  *          The desired length of the vector.                                 *
  *  Output:                                                                   *
- *      vec (tmpl_CharVector/tmpl_UCharVector *):                             *
+ *      vec (tmpl_LongVector/tmpl_ULongVector *):                             *
  *          A pointer to a vector struct.                                     *
  *  Called Functions:                                                         *
  *      malloc      (stdlib.h):                                               *
@@ -44,15 +44,12 @@
  *      Use malloc and return.                                                *
  *  Notes:                                                                    *
  *      You will need to free the memory allocated to the vector when you are *
- *      done with it. This is done with tmpl_Destroy_UCharVector and          *
- *      tmpl_Destroy_CharVector.                                              *
- *                                                                            *
- *      If malloc fails it returns NULL. Hence, this function returns NULL on *
- *      failure. Check the resulting pointer before using it.                 *
+ *      done with it. This is done with tmpl_Destroy_ULongVector and          *
+ *      tmpl_Destroy_LongVector.                                              *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vector.h:                                                        *
+ *  1.) tmpl_vector_integer.h:                                                *
  *          Header file where vectors are typedef'd.                          *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file where Booleans are defined.                           *
@@ -61,22 +58,7 @@
  *  4.) stdlib.h:                                                             *
  *          Standard C Library header file where malloc is defined.           *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
@@ -90,14 +72,14 @@
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Vectors are typedef'd here.                                               */
-#include <libtmpl/include/tmpl_vector.h>
+#include <libtmpl/include/tmpl_vector_integer.h>
 
-/*  Function for allocating memory to a char vector.                          */
-tmpl_CharVector *
-tmpl_Create_Empty_CharVector(unsigned long int length)
+/*  Function for allocating memory to a long vector.                          */
+tmpl_LongVector *
+tmpl_Create_Empty_LongVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_CharVector *vec;
+    tmpl_LongVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -129,7 +111,7 @@ tmpl_Create_Empty_CharVector(unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Empty_CharVector\n\n"
+            "\tFunction Name: tmpl_Create_Empty_LongVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -138,14 +120,14 @@ tmpl_Create_Empty_CharVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Empty_CharVector.                                      */
+/*  End of tmpl_Create_Empty_LongVector.                                      */
 
-/*  Function for allocating memory to an unsigned char vector.                */
-tmpl_UCharVector *
-tmpl_Create_Empty_UCharVector(unsigned long int length)
+/*  Function for allocating memory to an unsigned long vector.                */
+tmpl_ULongVector *
+tmpl_Create_Empty_ULongVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_UCharVector *vec;
+    tmpl_ULongVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -177,7 +159,7 @@ tmpl_Create_Empty_UCharVector(unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Empty_UCharVector\n\n"
+            "\tFunction Name: tmpl_Create_Empty_ULongVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -186,5 +168,5 @@ tmpl_Create_Empty_UCharVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Empty_UCharVector.                                     */
+/*  End of tmpl_Create_Empty_ULongVector.                                     */
 

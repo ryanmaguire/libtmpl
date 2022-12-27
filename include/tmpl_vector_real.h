@@ -29,21 +29,6 @@
  *  2.) tmpl_complex.h:                                                       *
  *          Header file with complex data types.                              *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************
@@ -51,54 +36,25 @@
  ******************************************************************************
  *  2022/02/01: Ryan Maguire                                                  *
  *      Getting rid of -Wreserved-identifier warnings with clang.             *
+ *  2022/12/22: Ryan Maguire                                                  *
+ *      Splitting vector code into integer, real, and complex versions.       *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VECTOR_H
-#define TMPL_VECTOR_H
+#ifndef TMPL_VECTOR_REAL_H
+#define TMPL_VECTOR_REAL_H
+
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*  size_t typedef given here.                                                */
+#include <stddef.h>
 
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
-
-/*  Complex numbers here.                                                     */
-#include <libtmpl/include/tmpl_complex.h>
-
-/******************************************************************************
- *                        Complex Valued Vectors                              *
- ******************************************************************************/
-
-/*  Single precision vector with complex entries.                             */
-typedef struct tmpl_ComplexFloatVector_Def {
-    tmpl_ComplexFloat *data;
-    unsigned long int length;
-
-    /*  In the event of an error, this Boolean is set to true and a string    *
-     *  detailing the error is stored in the error_message pointer.           */
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_ComplexFloatVector;
-
-/*  Double precision vector with complex entries.                             */
-typedef struct tmpl_ComplexDoubleVector_Def {
-    tmpl_ComplexDouble *data;
-    unsigned long int length;
-
-    /*  In the event of an error, this Boolean is set to true and a string    *
-     *  detailing the error is stored in the error_message pointer.           */
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_ComplexDoubleVector;
-
-/*  Extended precision vector with complex entries.                           */
-typedef struct tmpl_ComplexLongDoubleVector_Def {
-    tmpl_ComplexLongDouble *data;
-    unsigned long int length;
-
-    /*  In the event of an error, this Boolean is set to true and a string    *
-     *  detailing the error is stored in the error_message pointer.           */
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_ComplexLongDoubleVector;
 
 /******************************************************************************
  *                          Real Valued Vectors                               *
@@ -138,73 +94,6 @@ typedef struct tmpl_LongDoubleVector_Def {
 } tmpl_LongDoubleVector;
 
 /******************************************************************************
- *                         Integer Valued Vectors                             *
- ******************************************************************************/
-
-/*  These data types are similar to the real-valued ones. See those structs   *
- *  for comments.                                                             */
-
-typedef struct tmpl_CharVector_Def {
-    char *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_CharVector;
-
-typedef struct tmpl_UCharVector_Def {
-    unsigned char *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_UCharVector;
-
-typedef struct tmpl_ShortVector_Def {
-    short int *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_ShortVector;
-
-typedef struct tmpl_UShortVector_Def {
-    unsigned short int *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_UShortVector;
-
-typedef struct tmpl_IntVector_Def {
-    int *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_IntVector;
-
-typedef struct tmpl_UIntVector_Def {
-    unsigned int *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_UIntVector;
-
-typedef struct tmpl_LongVector_Def {
-    long int *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_LongVector;
-
-typedef struct tmpl_ULongVector_Def {
-    unsigned long int *data;
-    unsigned long int length;
-    tmpl_Bool error_occurred;
-    char *error_message;
-} tmpl_ULongVector;
-
-/******************************************************************************
- *                            Basic Routines                                  *
- ******************************************************************************/
-
-/******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Create_Empty_FloatVector                                         *
  *  Purpose:                                                                  *
@@ -222,10 +111,6 @@ typedef struct tmpl_ULongVector_Def {
  *      tmpl_strdup (tmpl_string.h)                                           *
  *  Source Code:                                                              *
  *      libtmpl/src/vector/tmpl_create_empty_real_vector.c                    *
- *      libtmpl/src/vector/tmpl_create_empty_char_vector.c                    *
- *      libtmpl/src/vector/tmpl_create_empty_short_vector.c                   *
- *      libtmpl/src/vector/tmpl_create_empty_int_vector.c                     *
- *      libtmpl/src/vector/tmpl_create_empty_long_vector.c                    *
  ******************************************************************************/
 extern tmpl_FloatVector *
 tmpl_Create_Empty_FloatVector(unsigned long int length);
@@ -235,30 +120,6 @@ tmpl_Create_Empty_DoubleVector(unsigned long int length);
 
 extern tmpl_LongDoubleVector *
 tmpl_Create_Empty_LongDoubleVector(unsigned long int length);
-
-extern tmpl_CharVector *
-tmpl_Create_Empty_CharVector(unsigned long int length);
-
-extern tmpl_UCharVector *
-tmpl_Create_Empty_UCharVector(unsigned long int length);
-
-extern tmpl_ShortVector *
-tmpl_Create_Empty_ShortVector(unsigned long int length);
-
-extern tmpl_UShortVector *
-tmpl_Create_Empty_UShortVector(unsigned long int length);
-
-extern tmpl_IntVector *
-tmpl_Create_Empty_IntVector(unsigned long int length);
-
-extern tmpl_UIntVector *
-tmpl_Create_Empty_UIntVector(unsigned long int length);
-
-extern tmpl_LongVector *
-tmpl_Create_Empty_LongVector(unsigned long int length);
-
-extern tmpl_ULongVector *
-tmpl_Create_Empty_ULongVector(unsigned long int length);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -297,32 +158,6 @@ extern tmpl_LongDoubleVector *
 tmpl_Create_LongDoubleVector_From_Data(long double *arr,
                                        unsigned long int length);
 
-extern tmpl_CharVector *
-tmpl_Create_CharVector_From_Data(char *v, unsigned long length);
-
-extern tmpl_UCharVector *
-tmpl_Create_UCharVector_From_Data(unsigned char *v, unsigned long int length);
-
-extern tmpl_ShortVector *
-tmpl_Create_ShortVector_From_Data(short int *v, unsigned long length);
-
-extern tmpl_UShortVector *
-tmpl_Create_UShortVector_From_Data(unsigned short int *v,
-                                   unsigned long int length);
-
-extern tmpl_IntVector *
-tmpl_Create_IntVector_From_Data(int *v, unsigned long length);
-
-extern tmpl_UIntVector *
-tmpl_Create_UIntVector_From_Data(unsigned int *v, unsigned long int length);
-
-extern tmpl_LongVector *
-tmpl_Create_LongVector_From_Data(long int *v, unsigned long int length);
-
-extern tmpl_ULongVector *
-tmpl_Create_ULongVector_From_Data(unsigned long int *v,
-                                  unsigned long int length);
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Create_Zero_FloatVector                                          *
@@ -352,30 +187,6 @@ tmpl_Create_Zero_DoubleVector(unsigned long int length);
 
 extern tmpl_LongDoubleVector *
 tmpl_Create_Zero_LongDoubleVector(unsigned long int length);
-
-extern tmpl_CharVector *
-tmpl_Create_Zero_CharVector(unsigned long int length);
-
-extern tmpl_UCharVector *
-tmpl_Create_Zero_UCharVector(unsigned long int length);
-
-extern tmpl_ShortVector *
-tmpl_Create_Zero_ShortVector(unsigned long int length);
-
-extern tmpl_UShortVector *
-tmpl_Create_Zero_UShortVector(unsigned long int length);
-
-extern tmpl_IntVector *
-tmpl_Create_Zero_IntVector(unsigned long int length);
-
-extern tmpl_UIntVector *
-tmpl_Create_Zero_UIntVector(unsigned long int length);
-
-extern tmpl_LongVector *
-tmpl_Create_Zero_LongVector(unsigned long int length);
-
-extern tmpl_ULongVector *
-tmpl_Create_Zero_ULongVector(unsigned long int length);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -407,31 +218,6 @@ tmpl_Destroy_DoubleVector(tmpl_DoubleVector **v);
 extern void
 tmpl_Destroy_LongDoubleVector(tmpl_LongDoubleVector **v);
 
-extern void
-tmpl_Destroy_CharVector(tmpl_CharVector **v);
-
-extern void
-tmpl_Destroy_UCharVector(tmpl_UCharVector **v);
-
-extern void
-tmpl_Destroy_IntVector(tmpl_IntVector **v);
-
-extern void
-tmpl_Destroy_UIntVector(tmpl_UIntVector **v);
-
-extern void
-tmpl_Destroy_LongVector(tmpl_LongVector **v);
-
-extern void
-tmpl_Destroy_ULongVector(tmpl_ULongVector **v);
-
-extern void
-tmpl_Destroy_ShortVector(tmpl_ShortVector **v);
-
-extern void
-tmpl_Destroy_UShortVector(tmpl_UShortVector **v);
-
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_FloatVector_Add                                                  *
@@ -462,9 +248,10 @@ extern void
 tmpl_LDoubleVector_Add(tmpl_LongDoubleVector *v,
                        tmpl_LongDoubleVector *u, tmpl_LongDoubleVector *sum);
 
-extern void
-tmpl_ULongVector_Add(tmpl_ULongVector *v,
-                     tmpl_ULongVector *u, tmpl_ULongVector *sum);
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

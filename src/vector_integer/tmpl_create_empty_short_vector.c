@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_create_empty_long_vector.c                        *
+ *                     tmpl_create_empty_short_vector.c                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Create a pointer to a vector that has had it's data pointer allocated *
@@ -25,15 +25,15 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Empty_LongVector                                           *
- *      tmpl_Create_Empty_ULongVector                                          *
+ *      tmpl_Create_Empty_ShortVector                                         *
+ *      tmpl_Create_Empty_UShortVector                                        *
  *  Purpose:                                                                  *
- *      Allocates memory for an int-valued vector.                            *
+ *      Allocates memory for a short-valued vector.                           *
  *  Arguments:                                                                *
  *      length (unsigned long int):                                           *
  *          The desired length of the vector.                                 *
  *  Output:                                                                   *
- *      vec (tmpl_LongVector/tmpl_ULongVector *):                             *
+ *      vec (tmpl_ShortVector/tmpl_UShortVector *):                           *
  *          A pointer to a vector struct.                                     *
  *  Called Functions:                                                         *
  *      malloc      (stdlib.h):                                               *
@@ -44,12 +44,12 @@
  *      Use malloc and return.                                                *
  *  Notes:                                                                    *
  *      You will need to free the memory allocated to the vector when you are *
- *      done with it. This is done with tmpl_Destroy_ULongVector and          *
- *      tmpl_Destroy_LongVector.                                              *
+ *      done with it. This is done with tmpl_Destroy_UShortVector and         *
+ *      tmpl_Destroy_ShortVector.                                             *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_vector.h:                                                        *
+ *  1.) tmpl_vector_integer.h:                                                *
  *          Header file where vectors are typedef'd.                          *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file where Booleans are defined.                           *
@@ -58,22 +58,7 @@
  *  4.) stdlib.h:                                                             *
  *          Standard C Library header file where malloc is defined.           *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
@@ -87,14 +72,14 @@
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Vectors are typedef'd here.                                               */
-#include <libtmpl/include/tmpl_vector.h>
+#include <libtmpl/include/tmpl_vector_integer.h>
 
-/*  Function for allocating memory to a long vector.                          */
-tmpl_LongVector *
-tmpl_Create_Empty_LongVector(unsigned long int length)
+/*  Function for allocating memory to a short vector.                         */
+tmpl_ShortVector *
+tmpl_Create_Empty_ShortVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_LongVector *vec;
+    tmpl_ShortVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -126,7 +111,7 @@ tmpl_Create_Empty_LongVector(unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Empty_LongVector\n\n"
+            "\tFunction Name: tmpl_Create_Empty_ShortVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -135,14 +120,14 @@ tmpl_Create_Empty_LongVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Empty_LongVector.                                      */
+/*  End of tmpl_Create_Empty_ShortVector.                                     */
 
-/*  Function for allocating memory to an unsigned long vector.                */
-tmpl_ULongVector *
-tmpl_Create_Empty_ULongVector(unsigned long int length)
+/*  Function for allocating memory to an unsigned short vector.               */
+tmpl_UShortVector *
+tmpl_Create_Empty_UShortVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_ULongVector *vec;
+    tmpl_UShortVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -174,7 +159,7 @@ tmpl_Create_Empty_ULongVector(unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Empty_ULongVector\n\n"
+            "\tFunction Name: tmpl_Create_Empty_UShortVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -183,5 +168,5 @@ tmpl_Create_Empty_ULongVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Empty_ULongVector.                                     */
+/*  End of tmpl_Create_Empty_UShortVector.                                    */
 

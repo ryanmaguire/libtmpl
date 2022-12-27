@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -24,15 +24,15 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Create_Zero_CharVector                                           *
- *      tmpl_Create_Zero_UCharVector                                          *
+ *      tmpl_Create_Zero_ShortVector                                          *
+ *      tmpl_Create_Zero_UShortVector                                         *
  *  Purpose:                                                                  *
- *      Allocates memory for a char-valued vector and sets entries to zero.   *
+ *      Allocates memory for a short-valued vector and sets entries to zero.  *
  *  Arguments:                                                                *
  *      length (unsigned long int):                                           *
  *          The desired length of the vector.                                 *
  *  Output:                                                                   *
- *      vec (tmpl_CharVector/tmpl_UCharVector *):                             *
+ *      vec (tmpl_ShortVector/tmpl_UShortVector *):                           *
  *          A pointer to a vector struct.                                     *
  *  Called Functions:                                                         *
  *      malloc      (stdlib.h):                                               *
@@ -43,12 +43,12 @@
  *      Use calloc and return.                                                *
  *  Notes:                                                                    *
  *      You will need to free the memory allocated to the vector when you are *
- *      done with it. This is done with tmpl_Destroy_CharVector and           *
- *      tmpl_Destroy_UCharVector.                                             *
+ *      done with it. This is done with tmpl_Destroy_ShortVector and          *
+ *      tmpl_Destroy_UShortVector.                                            *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vector.h:                                                        *
+ *  1.) tmpl_vector_integer.h:                                                *
  *          Header file where vectors are typedef'd.                          *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file where Booleans are defined.                           *
@@ -57,22 +57,7 @@
  *  4.) stdlib.h:                                                             *
  *          Standard C Library header file where calloc is defined.           *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2021                                                  *
  ******************************************************************************/
 
@@ -86,14 +71,14 @@
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Vectors are typedef'd here.                                               */
-#include <libtmpl/include/tmpl_vector.h>
+#include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for creating a single-precision zero vector.                     */
-tmpl_CharVector *
-tmpl_Create_Zero_CharVector(unsigned long int length)
+tmpl_ShortVector *
+tmpl_Create_Zero_ShortVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_CharVector *vec;
+    tmpl_ShortVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -126,7 +111,7 @@ tmpl_Create_Zero_CharVector(unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Zero_CharVector\n\n"
+            "\tFunction Name: tmpl_Create_Zero_ShortVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -135,14 +120,14 @@ tmpl_Create_Zero_CharVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Zero_CharVector.                                       */
+/*  End of tmpl_Create_Zero_ShortVector.                                      */
 
 /*  Function for creating a double-precision zero vector.                     */
-tmpl_UCharVector *
-tmpl_Create_Zero_UCharVector(unsigned long int length)
+tmpl_UShortVector *
+tmpl_Create_Zero_UShortVector(unsigned long int length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
-    tmpl_UCharVector *vec;
+    tmpl_UShortVector *vec;
 
     /*  Allocate memory for the vector with malloc.                           */
     vec = malloc(sizeof(*vec));
@@ -175,7 +160,7 @@ tmpl_Create_Zero_UCharVector(unsigned long int length)
         vec->length = 0UL;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
-            "\tFunction Name: tmpl_Create_Zero_UCharVector\n\n"
+            "\tFunction Name: tmpl_Create_Zero_UShortVector\n\n"
             "Malloc failed and returned NULL for vec->data.\n"
         );
         return vec;
@@ -184,4 +169,5 @@ tmpl_Create_Zero_UCharVector(unsigned long int length)
 
     return vec;
 }
-/*  End of tmpl_Create_Zero_UCharVector.                                      */
+/*  End of tmpl_Create_Zero_UShortVector.                                     */
+
