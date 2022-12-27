@@ -17,4 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_integer_vs_glibc.h"
-TEST1(short int, short int, tmpl_Short_Abs, abs)
+static inline short int abss(short int s)
+{
+    int x = abs((int)s);
+    return (short int)x;
+}
+TEST1(short int, short int, tmpl_Short_Abs, abss)
