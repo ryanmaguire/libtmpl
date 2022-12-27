@@ -1,0 +1,59 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************/
+
+/*  The TMPL_HAS_LONGLONG macro is found here.                                */
+#include <libtmpl/include/tmpl_inttype.h>
+
+/*  Only compile this is long long support is available / requested.          */
+#if TMPL_HAS_LONGLONG == 1
+
+/*  size_t typedef found here.                                                */
+#include <stddef.h>
+
+/*  Function prototype given here.                                            */
+#include <libtmpl/include/tmpl_integer.h>
+
+/*  Function for finding the maximum of a long long array.                    */
+long long int tmpl_LLong_Array_Max(long long int *arr, size_t len)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    size_t n;
+    long long int max;
+
+    /*  If the array is NULL or empty, the result is undefined.               */
+    if (!arr || !len)
+        return 0LL;
+
+    /*  Initialize the max variable to the first element.                     */
+    max = arr[0];
+
+    /*  Loop through the remaining elements and find the maximum.             */
+    for (n = 1; n < len; ++n)
+    {
+        /*  If the current array element is smaller, reset the max value.     */
+        if (arr[n] > max)
+            max = arr[n];
+    }
+
+    return max;
+}
+/*  End of tmpl_LLong_Array_Max.                                              */
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */

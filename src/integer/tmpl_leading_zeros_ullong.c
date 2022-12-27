@@ -20,14 +20,14 @@
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  Size of unsigned char here.                                               */
-#include <limits.h>
-
 /*  Only compile if libtmpl has long long support.                            */
 #if TMPL_HAS_LONGLONG == 1
 
+/*  The TMPL_ULLONG_BIT macro is found here.                                  */
+#include <libtmpl/include/tmpl_limits.h>
+
 /*  The C standard requires long long to be at least 64 bits wide.            */
-#if ULLONG_MAX == 0xFFFFFFFFFFFFFFFFU
+#if TMPL_ULLONG_BIT == 64
 
 /*  64-bit leading-zeros function.                                            */
 int tmpl_ULLong_Leading_Zeros(unsigned long long int n)
@@ -154,7 +154,7 @@ int tmpl_ULLong_Leading_Zeros(unsigned long long int n)
 /*  End of tmpl_ULLong_Leading_Zeros.                                         */
 
 #endif
-/*  End of #if ULLONG_MAX == 0xFFFFFFFFFFFFFFFFU.                             */
+/*  End of #if TMPL_ULLONG_BIT == 64.                                         */
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
