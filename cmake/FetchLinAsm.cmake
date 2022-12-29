@@ -4,16 +4,23 @@ if(NOT DEFINED LIBTMPL_LINASM_BRANCH)
     set(LIBTMPL_LINASM_BRANCH master)
 endif()
 
-fetchcontent_declare(
-    linasm-checkout
-    GIT_REPOSITORY https://github.com/rurban/linasm.git
-    GIT_TAG ${LIBTMPL_LINASM_BRANCH}
-    SOURCE_DIR
-    GIT_PROGRESS
-    TRUE
-)
+if(NOT DEFINED LIBTMPL_LINASM_SRC)
+    set(LIBTMP_LINASM_SRC ${CMAKE_CURRENT_BINARY_DIR}/src/linasm)
+endif()
 
-fetchcontent_makeavailable(linasm-checkout)
+if(NOT EXISTS "${LIBTMPL_LINASM_SRC}")
+    fetchcontent_declare(
+        linasm-checkout
+        GIT_REPOSITORY https://github.com/rurban/linasm.git
+        GIT_TAG ${LIBTMPL_LINASM_BRANCH}
+        SOURCE_DIR
+        ${LIBTMP_LINASM_SRC}
+        GIT_PROGRESS
+        TRUE
+    )
 
-set(linasm_INCLUDE_DIR "${linasm_checkout_SOURCE_DIR}/include")
-set(linasm_SOURCE_DIR "${linasm_checkout_SOURCE_DIR}/source")
+    fetchcontent_makeavailable(linasm-checkout)
+endif()
+
+set(linasm_INCLUDE_DIR "${LIBTMP_LINASM_SRC}/include")
+set(linasm_SOURCE_DIR "${LIBTMP_LINASM_SRC}/source")
