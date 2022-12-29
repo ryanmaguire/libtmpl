@@ -1,4 +1,5 @@
 include_guard()
+include(FetchContent)
 
 if(NOT DEFINED LIBTMPL_LINASM_BRANCH)
     set(LIBTMPL_LINASM_BRANCH master)
