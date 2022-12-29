@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 #include <math.h>
 #include <float.h>
 #include <stdio.h>
