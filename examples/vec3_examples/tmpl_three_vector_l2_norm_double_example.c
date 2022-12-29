@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                  LICENSE                                   *
+ *                                 LICENSE                                    *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -15,40 +15,37 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Provides an example of using the Euclidean norm function for a three  *
+ *      dimensional vector.                                                   *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       December 11, 2020                                             *
  ******************************************************************************/
 
-/*  3D data types and functions found here.                                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+/*  The Euclidean norm is declared here.                                      */
+#include <libtmpl/include/tmpl_vec3.h>
 
-/*  printf found here.                                                        */
+/*  We'll use stdio to print the results.                                     */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DDouble_Add.                      */
+/*  Routine for computing the norm of the vector (1, 2, 3).                   */
 int main(void)
 {
-    /*  Declare all necessary variables.                                      */
-    const double x0 = 1.0;
-    const double y0 = 2.0;
-    const double z0 = 3.0;
-    const double x1 = 4.0;
-    const double y1 = 5.0;
-    const double z1 = 6.0;
+    /*  Set the x, y, and z values to 1, 2, and 3, respectively.              */
+    const double x = 1.0;
+    const double y = 2.0;
+    const double z = 3.0;
 
-    /*  Create two vectors from the given real values above.                  */
-    const tmpl_ThreeVector V0 = tmpl_3DDouble_Rect(x0, y0, z0);
-    const tmpl_ThreeVector V1 = tmpl_3DDouble_Rect(x1, y1, z1);
+    /*  Set p to the vector (x, y, z).                                        */
+    const tmpl_ThreeVectorDouble p = tmpl_3DDouble_Rect(x, y, z);
 
-    /*  Compute the vector sum of V0 and V1.                                  */
-    const tmpl_ThreeVector sum = tmpl_3DDouble_Add(&V0, &V1);
+    /*  Compute the norm of p.                                                */
+    const double norm = tmpl_3DDouble_L2_Norm(&p);
 
-    /*  Extract the components from the sum.                                  */
-    const double xs = tmpl_3DDouble_X(&sum);
-    const double ys = tmpl_3DDouble_Y(&sum);
-    const double zs = tmpl_3DDouble_Z(&sum);
-
-    /*  Print the result.                                                     */
-    printf("   (%f, %f, %f) +\n   (%f, %f, %f)\n = (%f, %f, %f)\n",
-           x0, y0, z0, x1, y1, z1, xs, ys, zs);
+    /*  Print the result:                                                     */
+    printf("||(%f, %f, %f)|| = %f\n", x, y, z, norm);
     return 0;
 }
 /*  End of main.                                                              */
