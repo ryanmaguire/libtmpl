@@ -45,7 +45,7 @@
  *              Computes the inverse tangent of small numbers using a         *
  *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *      Method:                                                               *
- *          Check if the input is is NaN or infinity. Return NaN if it is     *
+ *          Check if the input is NaN or infinity. Return NaN if it is        *
  *          NaN, and sign(x) * pi / 2 if it is +/- infinity.                  *
  *                                                                            *
  *          Next, use the fact that atan(x) is odd to reduce to the case      *
@@ -66,7 +66,7 @@
  *          to index this list (e varies from -4 to 3, corresponding to 1/16  *
  *          to 8). For e < -4 we have |x| < 1/16, so use the MacLaurin        *
  *          series. For e > 3 we have |x| >= 16, so use the asymptotic        *
- *          expansion). Values of |x| lying between 2^e and 2^{e+1} will use  *
+ *          expansion. Values of |x| lying between 2^e and 2^{e+1} will use   *
  *          these precomputed values in the formula above from Abramowitz and *
  *          Stegun. Because of this we can skip most of the if-then           *
  *          statements used in the portable method.                           *

@@ -47,7 +47,7 @@
  *              Computes the inverse tangent of small numbers using a         *
  *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *      Method:                                                               *
- *          Check if the input is is NaN or infinity. Return NaN if it is     *
+ *          Check if the input is NaN or infinity. Return NaN if it is        *
  *          NaN, and sign(x) * pi / 2 if it is +/- infinity.                  *
  *                                                                            *
  *          Next, use the fact that atan(x) is odd to reduce to the case      *
@@ -150,7 +150,7 @@
  *          tmpl_LDouble_Is_Inf (tmpl_math.h):                                *
  *              Determines if a long double is infinity.                      *
  *      Method:                                                               *
- *          Same double / extended but use if-then statements to narrow       *
+ *          Same as double / extended but use if-then statements to narrow    *
  *          the range of x and use the appropriate values in the table.       *
  *      Error:                                                                *
  *          Based on 788,968,857 random samples with -10^6 < x < 10^6.        *
