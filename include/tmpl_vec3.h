@@ -1,6 +1,6 @@
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H
-#define TMPL_EUCLIDEAN_SPATIAL_GEOMETRY_H
+#ifndef TMPL_VEC3_H
+#define TMPL_VEC3_H
 
 /*  3D Vectors with single precision components.                              */
 typedef struct tmpl_ThreeVectorFloat_Def {

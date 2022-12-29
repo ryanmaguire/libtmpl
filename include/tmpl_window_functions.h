@@ -155,4 +155,3 @@ tmpl_LDouble_Window_Normalization(long double *ker, long dim, long double dx,
                                   long double f_scale);
 
 #endif
-

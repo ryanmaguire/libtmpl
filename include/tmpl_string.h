@@ -203,4 +203,3 @@ extern void tmpl_Remove_Spaces(char * str);
 
 #endif
 /*  End of include guard.                                                     */
-

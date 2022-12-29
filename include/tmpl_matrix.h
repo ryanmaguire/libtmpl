@@ -67,4 +67,3 @@ typedef struct tmpl_ComplexDoubleMatrix_Def {
 
 #endif
 /*  End of include guard.                                                     */
-

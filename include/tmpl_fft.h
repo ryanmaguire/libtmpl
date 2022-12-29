@@ -133,4 +133,3 @@ tmpl_CDouble_FFT(tmpl_ComplexDouble *in, unsigned long N, tmpl_Bool inverse);
 
 #endif
 /*  End of include guard.                                                     */
-
