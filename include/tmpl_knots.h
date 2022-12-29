@@ -291,4 +291,3 @@ tmpl_Destroy_Crossing_Indices(tmpl_CrossingIndices **Indices);
 
 #endif
 /*  End of include guard.                                                     */
-

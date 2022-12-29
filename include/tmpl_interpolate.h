@@ -84,4 +84,3 @@ tmpl_LDouble_Sorted_Interp1d(long double *x, long double *y, unsigned long N,
 
 #endif
 /*  End of include guard.                                                     */
-

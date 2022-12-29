@@ -20,4 +20,3 @@ extern tmpl_TwoVector
 tmpl_Stereographic_Projection_Torus(double u, double v, double r, double R);
 
 #endif
-

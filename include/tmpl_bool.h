@@ -90,4 +90,3 @@ typedef enum tmpl_Bool_Def {tmpl_False, tmpl_True} tmpl_Bool;
 
 #endif
 /*  End of include guard.                                                     */
-

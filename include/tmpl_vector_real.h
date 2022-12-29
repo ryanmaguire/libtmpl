@@ -254,4 +254,3 @@ tmpl_LDoubleVector_Add(tmpl_LongDoubleVector *v,
 #endif
 
 #endif
-

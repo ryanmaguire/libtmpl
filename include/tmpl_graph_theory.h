@@ -160,4 +160,3 @@ tmpl_Degree_of_Vertex(unsigned long int);
 
 #endif
 /*  End of include guard.                                                     */
-
