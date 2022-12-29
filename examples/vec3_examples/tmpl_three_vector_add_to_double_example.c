@@ -18,39 +18,37 @@
  ******************************************************************************/
 
 /*  3D data types and functions found here.                                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  printf found here.                                                        */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DFloat_Add.                       */
+/*  Function for showing basic use of tmpl_3DDouble_AddTo.                    */
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
-    const float x0 = 1.0F;
-    const float y0 = 2.0F;
-    const float z0 = 3.0F;
-    const float x1 = 4.0F;
-    const float y1 = 5.0F;
-    const float z1 = 6.0F;
+    const double x0 = 1.0;
+    const double y0 = 2.0;
+    const double z0 = 3.0;
+    const double x1 = 4.0;
+    const double y1 = 5.0;
+    const double z1 = 6.0;
 
     /*  Create two vectors from the given real values above.                  */
-    const tmpl_ThreeVectorFloat V0 = tmpl_3DFloat_Rect(x0, y0, z0);
-    const tmpl_ThreeVectorFloat V1 = tmpl_3DFloat_Rect(x1, y1, z1);
+    tmpl_ThreeVector V0 = tmpl_3DDouble_Rect(x0, y0, z0);
+    const tmpl_ThreeVector V1 = tmpl_3DDouble_Rect(x1, y1, z1);
 
     /*  Compute the vector sum of V0 and V1.                                  */
-    const tmpl_ThreeVectorFloat sum = tmpl_3DFloat_Add(&V0, &V1);
+    tmpl_3DDouble_AddTo(&V0, &V1);
 
     /*  Extract the components from the sum.                                  */
-    const float xs = tmpl_3DFloat_X(&sum);
-    const float ys = tmpl_3DFloat_Y(&sum);
-    const float zs = tmpl_3DFloat_Z(&sum);
+    const double xs = tmpl_3DDouble_X(&V0);
+    const double ys = tmpl_3DDouble_Y(&V0);
+    const double zs = tmpl_3DDouble_Z(&V0);
 
     /*  Print the result.                                                     */
     printf("   (%f, %f, %f) +\n   (%f, %f, %f)\n = (%f, %f, %f)\n",
-           (double)x0, (double)y0, (double)z0,
-           (double)x1, (double)y1, (double)z1,
-           (double)xs, (double)ys, (double)zs);
+           x0, y0, z0, x1, y1, z1, xs, ys, zs);
     return 0;
 }
 /*  End of main.                                                              */

@@ -18,38 +18,39 @@
  ******************************************************************************/
 
 /*  3D data types and functions found here.                                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  printf found here.                                                        */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DLDouble_Cross_Product.           */
+/*  Function for showing basic use of tmpl_3DFloat_Add.                       */
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
-    const long double x0 = 1.0L;
-    const long double y0 = 2.0L;
-    const long double z0 = 3.0L;
-    const long double x1 = 4.0L;
-    const long double y1 = 5.0L;
-    const long double z1 = 6.0L;
+    const float x0 = 1.0F;
+    const float y0 = 2.0F;
+    const float z0 = 3.0F;
+    const float x1 = 4.0F;
+    const float y1 = 5.0F;
+    const float z1 = 6.0F;
 
     /*  Create two vectors from the given real values above.                  */
-    const tmpl_ThreeVectorLongDouble V0 = tmpl_3DLDouble_Rect(x0, y0, z0);
-    const tmpl_ThreeVectorLongDouble V1 = tmpl_3DLDouble_Rect(x1, y1, z1);
+    tmpl_ThreeVectorFloat V0 = tmpl_3DFloat_Rect(x0, y0, z0);
+    const tmpl_ThreeVectorFloat V1 = tmpl_3DFloat_Rect(x1, y1, z1);
 
-    /*  Compute the vector product of V0 and V1.                              */
-    const tmpl_ThreeVectorLongDouble
-    cross = tmpl_3DLDouble_Cross_Product(&V0, &V1);
+    /*  Compute the vector sum of V0 and V1.                                  */
+    tmpl_3DFloat_AddTo(&V0, &V1);
 
-    /*  Extract the components from cross.                                    */
-    const long double xs = tmpl_3DLDouble_X(&cross);
-    const long double ys = tmpl_3DLDouble_Y(&cross);
-    const long double zs = tmpl_3DLDouble_Z(&cross);
+    /*  Extract the components from the sum.                                  */
+    const float xs = tmpl_3DFloat_X(&V0);
+    const float ys = tmpl_3DFloat_Y(&V0);
+    const float zs = tmpl_3DFloat_Z(&V0);
 
     /*  Print the result.                                                     */
-    printf("   (%Lf, %Lf, %Lf) +\n   (%Lf, %Lf, %Lf)\n = (%Lf, %Lf, %Lf)\n",
-           x0, y0, z0, x1, y1, z1, xs, ys, zs);
+    printf("   (%f, %f, %f) +\n   (%f, %f, %f)\n = (%f, %f, %f)\n",
+           (double)x0, (double)y0, (double)z0,
+           (double)x1, (double)y1, (double)z1,
+           (double)xs, (double)ys, (double)zs);
     return 0;
 }
 /*  End of main.                                                              */

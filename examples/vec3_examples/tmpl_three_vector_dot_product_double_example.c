@@ -18,37 +18,32 @@
  ******************************************************************************/
 
 /*  3D data types and functions found here.                                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  printf found here.                                                        */
 #include <stdio.h>
 
-/*  Function for showing basic use of tmpl_3DLDouble_AddTo.                   */
+/*  Function for showing basic use of tmpl_3DDouble_Dot_Product.              */
 int main(void)
 {
     /*  Declare all necessary variables.                                      */
-    const long double x0 = 1.0L;
-    const long double y0 = 2.0L;
-    const long double z0 = 3.0L;
-    const long double x1 = 4.0L;
-    const long double y1 = 5.0L;
-    const long double z1 = 6.0L;
+    const double x0 = 1.0;
+    const double y0 = 2.0;
+    const double z0 = 3.0;
+    const double x1 = 4.0;
+    const double y1 = 5.0;
+    const double z1 = 6.0;
 
     /*  Create two vectors from the given real values above.                  */
-    tmpl_ThreeVectorLongDouble V0 = tmpl_3DLDouble_Rect(x0, y0, z0);
-    const tmpl_ThreeVectorLongDouble V1 = tmpl_3DLDouble_Rect(x1, y1, z1);
+    const tmpl_ThreeVector V0 = tmpl_3DDouble_Rect(x0, y0, z0);
+    const tmpl_ThreeVector V1 = tmpl_3DDouble_Rect(x1, y1, z1);
 
-    /*  Compute the vector product of V0 and V1.                              */
-    tmpl_3DLDouble_CrossWith(&V0, &V1);
-
-    /*  Extract the components from the cross product.                        */
-    const long double xs = tmpl_3DLDouble_X(&V0);
-    const long double ys = tmpl_3DLDouble_Y(&V0);
-    const long double zs = tmpl_3DLDouble_Z(&V0);
+    /*  Compute the dot product of V0 and V1.                                 */
+    const double dot = tmpl_3DDouble_Dot_Product(&V0, &V1);
 
     /*  Print the result.                                                     */
-    printf("   (%Lf, %Lf, %Lf) x\n   (%Lf, %Lf, %Lf)\n = (%Lf, %Lf, %Lf)\n",
-           x0, y0, z0, x1, y1, z1, xs, ys, zs);
+    printf("(%f, %f, %f) . (%f, %f, %f) = %f\n",
+           x0, y0, z0, x1, y1, z1, dot);
     return 0;
 }
 /*  End of main.                                                              */
