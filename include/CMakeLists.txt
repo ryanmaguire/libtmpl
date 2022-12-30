@@ -16,7 +16,6 @@ target_sources(
             tmpl_bool.h
             tmpl_bytes.h
             tmpl_complex.h
-            tmpl_euclidean_spatial_geometry.h
             tmpl_fft.h
             tmpl_graph_theory.h
             tmpl_integer.h
@@ -37,9 +36,10 @@ target_sources(
             tmpl_string.h
             tmpl_svg.h
             tmpl_vec2.h
-            tmpl_vector.h
+            tmpl_vec3.h
             tmpl_vector_complex.h
             tmpl_vector_integer.h
+            tmpl_vector_real.h
             tmpl_void_pointer.h
             tmpl_window_functions.h
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_exports.h
