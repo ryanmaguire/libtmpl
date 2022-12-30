@@ -6,35 +6,41 @@ set(sources
     tmpl_abs_short.c
     tmpl_array_max_char.c
     tmpl_array_max_int.c
+    tmpl_array_max_llong.c
     tmpl_array_max_long.c
     tmpl_array_max_short.c
     tmpl_array_max_uchar.c
     tmpl_array_max_uint.c
+    tmpl_array_max_ullong.c
     tmpl_array_max_ulong.c
     tmpl_array_max_ushort.c
     tmpl_array_min_char.c
     tmpl_array_min_int.c
+    tmpl_array_min_llong.c
     tmpl_array_min_long.c
     tmpl_array_min_short.c
     tmpl_array_min_uchar.c
     tmpl_array_min_uint.c
+    tmpl_array_min_ullong.c
     tmpl_array_min_ulong.c
     tmpl_array_min_ushort.c
     tmpl_array_minmax_char.c
     tmpl_array_minmax_int.c
+    tmpl_array_minmax_llong.c
     tmpl_array_minmax_long.c
     tmpl_array_minmax_short.c
     tmpl_array_minmax_uchar.c
     tmpl_array_minmax_uint.c
+    tmpl_array_minmax_ullong.c
     tmpl_array_minmax_ulong.c
     tmpl_array_minmax_ushort.c
     tmpl_binary_gcd_int.c
     tmpl_binary_gcd_long.c
     tmpl_binary_gcd_uint.c
-    tmpl_binary_gcd_uintvector.c
     tmpl_binary_gcd_ulong.c
     tmpl_factorial_uchar.c
     tmpl_factorial_uint.c
+    tmpl_factorial_ullong.c
     tmpl_factorial_ulong.c
     tmpl_factorial_ushort.c
     tmpl_leading_zeros_uchar.c
@@ -44,21 +50,24 @@ set(sources
     tmpl_leading_zeros_ushort.c
     tmpl_max_char.c
     tmpl_max_int.c
+    tmpl_max_llong.c
     tmpl_max_long.c
     tmpl_max_short.c
     tmpl_max_uchar.c
     tmpl_max_uint.c
+    tmpl_max_ullong.c
     tmpl_max_ulong.c
     tmpl_max_ushort.c
     tmpl_min_char.c
     tmpl_min_int.c
+    tmpl_min_llong.c
     tmpl_min_long.c
     tmpl_min_short.c
     tmpl_min_uchar.c
     tmpl_min_uint.c
+    tmpl_min_ullong.c
     tmpl_min_ulong.c
     tmpl_min_ushort.c
-    tmpl_sieve_of_eratosthenes.c
     tmpl_trailing_zeros_char.c
     tmpl_trailing_zeros_int.c
     tmpl_trailing_zeros_long.c

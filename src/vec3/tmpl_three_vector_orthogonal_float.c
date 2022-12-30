@@ -19,12 +19,12 @@
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors.                            *
  ******************************************************************************
- *  Author:     Ryan Maguire, Wellesley College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
 /*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing an orthogonal vector to the given input.           */
 tmpl_ThreeVectorFloat
@@ -65,4 +65,4 @@ tmpl_3DFloat_Orthogonal(tmpl_ThreeVectorFloat P)
 
     return out;
 }
-/*  End of tmpl_Orthogonal_ThreeVector.                                */
+/*  End of tmpl_3DFloat_Orthogonal.                                           */

@@ -168,7 +168,7 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
  *      libtmpl/tests/complex_tests/tmpl_complex_absl_time_test.c             *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/complex_inline/tmpl_complex_abs_inline.h>
+#include <libtmpl/include/complex/tmpl_complex_abs_inline.h>
 #else
 TMPL_EXPORT extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
 TMPL_EXPORT extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
@@ -206,7 +206,7 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/complex_inline/tmpl_complex_abs_squared_inline.h>
+#include <libtmpl/include/complex/tmpl_complex_abs_squared_inline.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -254,7 +254,7 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble 
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/complex_inline/tmpl_complex_add_inline.h>
+#include <libtmpl/include/complex/tmpl_complex_add_inline.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -289,7 +289,7 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline version of the function found here.                                */
-#include <libtmpl/include/complex_inline/tmpl_complex_addto_inline.h>
+#include <libtmpl/include/complex/tmpl_complex_addto_inline.h>
 
 #else
 TMPL_EXPORT extern void
@@ -1116,7 +1116,7 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/complex_inline/tmpl_complex_quick_abs_inline.h>
+#include <libtmpl/include/complex/tmpl_complex_quick_abs_inline.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

@@ -18,9 +18,9 @@
  ******************************************************************************/
 #include "tmpl_integer_vs_glibc.h"
 
-unsigned char func(unsigned char n)
+static inline int func(unsigned char n)
 {
-    return (n == 0x00U ? 0x00U : __builtin_ctz(n));
+    return (n == 0x00U ? 0 : __builtin_ctz((unsigned int)n));
 }
 
 TEST1(unsigned char, int, tmpl_UChar_Trailing_Zeros, func)

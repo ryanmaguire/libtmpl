@@ -18,7 +18,7 @@
  ******************************************************************************/
 #include "tmpl_integer_vs_glibc.h"
 
-TMPL_EXPORT extern int func(unsigned int n)
+static inline int func(unsigned int n)
 {
     return (n == 0U ? 0U : __builtin_ctz(n));
 }

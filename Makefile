@@ -401,7 +401,8 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/svg/
 	mkdir -p $(BUILD_DIR)/src/vec2/
 	mkdir -p $(BUILD_DIR)/src/vec3/
-	mkdir -p $(BUILD_DIR)/src/vector/
+	mkdir -p $(BUILD_DIR)/src/vector_integer/
+	mkdir -p $(BUILD_DIR)/src/vector_real/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
@@ -411,9 +412,11 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/assembly/armv7l/
 
 clean:
+	rm -f *.o
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
 	rm -f include/tmpl_inttype.h
+	rm -f include/tmpl_limits.h
 	rm -f $(TARGET_LIB)
 
 install:
@@ -422,9 +425,11 @@ install:
 	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
 
 uninstall:
+	rm -f *.o
 	rm -rf $(BUILD_DIR)
 	rm -f include/tmpl_config.h
 	rm -f include/tmpl_inttype.h
+	rm -f include/tmpl_limits.h
 	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)

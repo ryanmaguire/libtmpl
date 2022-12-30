@@ -53,8 +53,8 @@
  ******************************************************************************
  *  1.) tmpl_integer.h:                                                       *
  *          Header file with the functions prototype.                         *
- *  2.) limits.h:                                                             *
- *          Standard library file containing USHRT_MAX.                       *
+ *  2.) tmpl_limits.h:                                                        *
+ *          Header file containing TMPL_UCHAR_BIT                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -68,11 +68,11 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  The USHRT_MAX macro is found here.                                        */
-#include <limits.h>
+/*  The TMPL_UINT_BIT macro is found here.                                    */
+#include <libtmpl/include/tmpl_limits.h>
 
 /*  16-bit unsigned short int has a max value of 65,535.                      */
-#if USHRT_MAX == 0xFFFFU
+#if TMPL_USHORT_BIT == 16
 
 /******************************************************************************
  *                               16-Bit Version                               *
@@ -100,7 +100,7 @@ unsigned short int tmpl_UShort_Factorial(unsigned short int n)
 /*  End of tmpl_UShort_Factorial.                                             */
 
 /*  32-bit unsigned short has a max value of 4,294,967,295.                   */
-#elif USHRT_MAX == 0xFFFFFFFFU
+#elif TMPL_USHORT_BIT == 32
 
 /******************************************************************************
  *                               32-Bit Version                               *
@@ -129,7 +129,7 @@ unsigned short int tmpl_UShort_Factorial(unsigned short int n)
 /*  End of tmpl_UShort_Factorial.                                             */
 
 /*  64-bit unsigned short has a max value of 18,446,744,073,709,551,615.      */
-#elif USHRT_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif TMPL_USHORT_BIT == 64
 
 /******************************************************************************
  *                               64-Bit Version                               *
@@ -195,4 +195,4 @@ unsigned short int tmpl_UShort_Factorial(unsigned short int n)
 /*  End of tmpl_UShort_Factorial.                                             */
 
 #endif
-/*  End of #if USHRT_MAX == 0xFFFFU.                                          */
+/*  End of #if TMPL_USHORT_BIT == 16.                                         */

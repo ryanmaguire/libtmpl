@@ -20,6 +20,8 @@ format ELF64
 public tmpl_UChar_Trailing_Zeros
 
 tmpl_UChar_Trailing_Zeros:
-    movzx    eax, dil
-    rep bsf  eax, eax
+    bsf    ecx, edi
+    xor    eax, eax
+    test   dil, dil
+    cmovne eax, ecx
     ret

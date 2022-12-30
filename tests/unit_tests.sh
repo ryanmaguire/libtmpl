@@ -22,11 +22,17 @@
 #   Date:       September 7, 2022                                              #
 ################################################################################
 result="test_results/`uname -s`_`uname -m`_`date +%Y_%m_%d_%H_%M_%S`.txt"
-touch $result
 LINELEN=50
 BUFFERLEN=5
 DARGS="-I/usr/local/include/ -L/usr/local/lib/ -Wno-float-equal -Wno-padded"
 COMPILER_LIST="gcc"
+
+if [[ -d test_results/ ]]; then
+    touch $result
+else
+    mkdir test_results
+    touch $result
+fi
 
 if  command -v clang &> /dev/null; then
     COMPILER_LIST="$COMPILER_LIST clang"
@@ -67,7 +73,7 @@ for OPT in "" "-O3"; do
                     CARGS="$DARGS -Wall -Wextra -Wpedantic $OPT"
                 fi
 
-                if !($CCOMP $CARGS $FILE -o test.out -ltmpl -lm); then
+                if !($CCOMP $CARGS $FILE -o test.out -ltmpl -lm -lgsl); then
                     printf "    $FILENAME %-${LEN}s| " >> $result
                     printf "$CCOMP:%${LEN2}s NO COMPILE\n" >> $result
                 else

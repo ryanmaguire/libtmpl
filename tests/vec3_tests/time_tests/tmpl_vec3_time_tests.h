@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 
 static inline long double rand_real(void)
 {

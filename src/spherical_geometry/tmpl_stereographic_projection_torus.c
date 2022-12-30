@@ -1,6 +1,6 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_vec2.h>
-#include <libtmpl/include/tmpl_euclidean_spatial_geometry.h>
+#include <libtmpl/include/tmpl_vec3.h>
 #include <libtmpl/include/tmpl_spherical_geometry.h>
 
 tmpl_TwoVector

@@ -46,7 +46,7 @@
  *              in this function than tmpl_Float_Arctan_Very_Small.           *
  *          tmpl_Float_Arctan_Very_Small (tmpl_math.h):                       *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *      Method:                                                               *
  *          Depends on one of several cases:                                  *
  *              y zero:                                                       *
@@ -123,7 +123,7 @@
  *              in this function than tmpl_Float_Arctan_Very_Small.           *
  *          tmpl_Float_Arctan_Very_Small (tmpl_math.h):                       *
  *              Computes the inverse tangent of small numbers using a         *
- *              Maclaurin series. Accurate for values smaller than 1/32.      *
+ *              Maclaurin series. Accurate for values smaller than 1/16.      *
  *          tmpl_Float_Is_NaN (tmpl_math.h):                                  *
  *              Determines if a float is Not-a-Number.                        *
  *          tmpl_Float_Is_Inf (tmpl_math.h):                                  *
@@ -270,7 +270,7 @@ float tmpl_Float_Arctan2(float y, float x)
     w.r = wy.r / wx.r;
     w.bits.sign = 0x00U;
 
-    /*  Small values, |z| < 1/32. Use the MacLaurin series to a few terms.    */
+    /*  Small values, |z| < 1/16. Use the MacLaurin series to a few terms.    */
     if (w.bits.expo < TMPL_FLOAT_UBIAS - 4U)
         out.r = tmpl_Float_Arctan_Very_Small(w.r);
 
@@ -386,7 +386,7 @@ float tmpl_Float_Arctan2(float y, float x)
     /*  We have z = y/x. Reduce by computing the absolute value of this.      */
     z = tmpl_Float_Abs(y / x);
 
-    /*  For small values, z < 1/32, use the Maclaurin series to a few terms.  */
+    /*  For small values, z < 1/16, use the Maclaurin series to a few terms.  */
     if (z < 0.0625F)
     {
         out = tmpl_Float_Arctan_Very_Small(z);
@@ -413,7 +413,7 @@ float tmpl_Float_Arctan2(float y, float x)
     else if (z < 16.0F)
         ind = 7U;
 
-    /*  For |z| > 16, use the asymptotic expansion.                           */
+    /*  For z > 16, use the asymptotic expansion.                             */
     else
     {
         out = tmpl_Float_Arctan_Asymptotic(z);

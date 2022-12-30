@@ -20,6 +20,8 @@ format ELF64
 public tmpl_UShort_Trailing_Zeros
 
 tmpl_UShort_Trailing_Zeros:
-    movzx    eax, di
-    rep bsf  eax, eax
+    bsf    ecx, edi
+    xor    eax, eax
+    test   di, di
+    cmovne eax, ecx
     ret

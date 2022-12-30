@@ -53,8 +53,8 @@
  ******************************************************************************
  *  1.) tmpl_integer.h:                                                       *
  *          Header file with the functions prototype.                         *
- *  2.) limits.h:                                                             *
- *          Standard library file containing UINT_MAX.                        *
+ *  2.) tmpl_limits.h:                                                        *
+ *          Header file containing TMPL_UCHAR_BIT                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -68,11 +68,11 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  The UINT_MAX macro is found here.                                         */
-#include <limits.h>
+/*  The TMPL_UINT_BIT macro is found here.                                    */
+#include <libtmpl/include/tmpl_limits.h>
 
 /*  16-bit unsigned int has a max value of 65,535.                            */
-#if UINT_MAX == 0xFFFFU
+#if TMPL_UINT_BIT == 16
 
 /******************************************************************************
  *                               16-Bit Version                               *
@@ -100,7 +100,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
 /*  End of tmpl_UInt_Factorial.                                               */
 
 /*  32-bit unsigned int has a max value of 4,294,967,295.                     */
-#elif UINT_MAX == 0xFFFFFFFFU
+#elif TMPL_UINT_BIT == 32
 
 /******************************************************************************
  *                               32-Bit Version                               *
@@ -129,7 +129,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
 /*  End of tmpl_UInt_Factorial.                                               */
 
 /*  64-bit unsigned int has a max value of 18,446,744,073,709,551,615.        */
-#elif UINT_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif TMPL_UINT_BIT == 64
 
 /******************************************************************************
  *                               64-Bit Version                               *
@@ -195,4 +195,4 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
 /*  End of tmpl_UInt_Factorial.                                               */
 
 #endif
-/*  End of #if UINT_MAX == 0xFFFFU.                                           */
+/*  End of #if TMPL_UINT_BIT == 16.                                           */

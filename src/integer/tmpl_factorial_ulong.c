@@ -55,8 +55,8 @@
  ******************************************************************************
  *  1.) tmpl_integer.h:                                                       *
  *          Header file with the functions prototype.                         *
- *  2.) limits.h:                                                             *
- *          Standard library file containing ULONG_MAX.                       *
+ *  2.) tmpl_limits.h:                                                        *
+ *          Header file containing TMPL_UCHAR_BIT                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
@@ -70,11 +70,11 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_integer.h>
 
-/*  The ULONG_MAX macro is found here.                                        */
-#include <limits.h>
+/*  The TMPL_ULONG_BIT macro is found here.                                   */
+#include <libtmpl/include/tmpl_limits.h>
 
 /*  32-bit unsigned long has a max value of 4,294,967,295.                    */
-#if ULONG_MAX == 0xFFFFFFFFU
+#if TMPL_ULONG_BIT == 32
 
 /*  For n > 12, and for 32-bit unsigned long, n! overflows. Pre-compute the   *
  *  first 13 values (0 <= n <= 12) and use this as a lookup table.            */
@@ -99,7 +99,7 @@ unsigned long int tmpl_ULong_Factorial(unsigned long int n)
 /*  End of tmpl_ULong_Factorial.                                              */
 
 /*  64-bit unsigned long has a max value of 18,446,744,073,709,551,615.       */
-#elif ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif TMPL_ULONG_BIT == 64
 
 /*  For n > 20, and for 64-bit unsigned long, n! overflows. Pre-compute the   *
  *  first 21 values (0 <= n <= 20) and use this as a lookup table.            */
@@ -146,7 +146,7 @@ unsigned long int tmpl_ULong_Factorial(unsigned long int n)
 
     /*  Otherwise, set factorial to the largest value in the table. We will   *
      *  compute using n! = n*(n-1)*...*12!.                                   */
-    factor = tmpl_ulong_factorial_values[12];
+    factorial = tmpl_ulong_factorial_values[12];
 
     /*  For 13 <= k <= n, multiply the result by k. This method has the       *
      *  unfortunate disadvantage of not detecting overflows.                  */
@@ -158,4 +158,4 @@ unsigned long int tmpl_ULong_Factorial(unsigned long int n)
 /*  End of tmpl_ULong_Factorial.                                              */
 
 #endif
-/*  End of #if ULONG_MAX == 0xFFFFFFFFU.                                      */
+/*  End of #if TMPL_ULONG_BIT == 64.                                          */

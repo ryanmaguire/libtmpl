@@ -38,6 +38,8 @@ target_sources(
             tmpl_svg.h
             tmpl_vec2.h
             tmpl_vector.h
+            tmpl_vector_complex.h
+            tmpl_vector_integer.h
             tmpl_void_pointer.h
             tmpl_window_functions.h
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_exports.h
@@ -45,6 +47,6 @@ target_sources(
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_inttype.h
 )
 
-add_subdirectory("complex_inline")
+add_subdirectory("complex")
 add_subdirectory("integer")
 add_subdirectory("math")
