@@ -129,7 +129,7 @@ cmake_print_variables(
     CMAKE_CROSSCOMPILING
 )
 add_custom_command(
-    OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h"
+    OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h" "include/tmpl_limits.h"
     DEPENDS tmpl_config
     COMMAND ${CROSSCOMPILING_EMULATOR} "$<TARGET_FILE:tmpl_config>"
     COMMAND
@@ -139,6 +139,10 @@ add_custom_command(
     COMMAND
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        COMMAND
+    ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_limits.h
         ${CMAKE_CURRENT_SOURCE_DIR}/include
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM

@@ -45,6 +45,7 @@ target_sources(
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_exports.h
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_config.h
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_inttype.h
+            ${CMAKE_CURRENT_BINARY_DIR}/tmpl_limits.h
 )
 
 add_subdirectory("complex")
