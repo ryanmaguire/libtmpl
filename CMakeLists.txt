@@ -77,7 +77,7 @@ if(NOT DEFINED LIBTMPL_STDVER)
 endif()
 
 # Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
+if((LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES) AND NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
     message(
         STATUS
         "Downloading conan.cmake from https://github.com/conan-io/cmake-conan"
@@ -92,6 +92,7 @@ endif()
 
 project(libtmpl LANGUAGES C)
 
+if(LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES)
 include(${CMAKE_CURRENT_BINARY_DIR}/conan.cmake)
 
 conan_cmake_autodetect(settings)
@@ -102,6 +103,7 @@ conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
                     SETTINGS ${settings}
                     PROFILE "${CONAN_PROFILE_FILE}"
 )
+endif()
 
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 
