@@ -71,7 +71,7 @@ int main(void)
     z[3] = tmpl_CFloat_Rect(TMPL_NANF, 0.0F);
     z[4] = tmpl_CFloat_Rect(TMPL_INFINITYF, 0.0F);
     z[5] = tmpl_CFloat_NaN;
-    z[6] = tmpl_CFloat_Infinity;
+    z[6] = tmpl_CFloat_Infinity();
 
     /*  Set the test values for the array y.                                  */
     y[0] =  TMPL_INFINITYF;

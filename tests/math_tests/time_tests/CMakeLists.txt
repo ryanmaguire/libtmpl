@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
-
-if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+set(IS_LINUX_X86_64 UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+if(IS_LINUX_X86_64)
     include(FetchLinAsm)
 endif()
 
@@ -133,7 +133,7 @@ foreach(app ${test_apps})
     endif()
 endforeach()
 
-if(UNIX AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+if(IS_LINUX_X86_64)
     set(linasm_compare_test_apps
         tmpl_log_double_time_test_vs_linasm
         tmpl_sin_double_time_test_vs_linasm
