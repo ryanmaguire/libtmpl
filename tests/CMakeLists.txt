@@ -1,3 +1,5 @@
+include(FindBoost)
+
 add_subdirectory("bytes_tests")
 add_subdirectory("complex_tests")
 add_subdirectory("integer_tests")

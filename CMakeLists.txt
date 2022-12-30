@@ -104,7 +104,7 @@ conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
-include(FindBoost)
+
 add_library(tmpl SHARED)
 add_library(tmpl::tmpl ALIAS tmpl)
 target_include_directories(
