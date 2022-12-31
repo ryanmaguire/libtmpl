@@ -7,14 +7,13 @@ generate_export_header(
     STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
 )
 
-file(GLOB_RECURSE headers CONFIGURE_DEPENDS *.h)
+include(header_list)
 
 target_sources(
     tmpl
     PUBLIC
         FILE_SET HEADERS
         FILES
-            ${headers}
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_exports.h
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_config.h
             ${CMAKE_CURRENT_BINARY_DIR}/tmpl_inttype.h

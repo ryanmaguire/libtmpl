@@ -78,6 +78,10 @@ if((LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES) AND NOT EXISTS "${CMAKE_CURRE
     )
 endif()
 
+# Construct file lists
+file(GLOB_RECURSE headers LIST_DIRECTORIES FALSE *.h)
+configure_file(cmake/header_list.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/header_list.cmake @ONLY)
+
 project(libtmpl LANGUAGES C)
 
 if(LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES)
