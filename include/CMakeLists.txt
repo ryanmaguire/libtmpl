@@ -7,7 +7,7 @@ generate_export_header(
     STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
 )
 
-include(header_list)
+include(headerList)
 
 target_sources(
     tmpl
