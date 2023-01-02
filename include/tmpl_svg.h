@@ -391,7 +391,7 @@ typedef struct tmpl_SVG_Path2D_Def {
 typedef struct tmpl_SVG_Circle_Def {
 
     /*  The geometrical data of the circle. We need the center and the radius.*/
-    tmpl_Circle2D *data;
+    tmpl_2DCircle *data;
 
     /*  Data for how to draw the path and the geometry of the page.           */
     tmpl_SVG_Palette *palette;
@@ -405,7 +405,7 @@ typedef struct tmpl_SVG_Circle_Def {
 typedef struct tmpl_SVG_Line_Def {
 
     /*  The data for the line.                                                */
-    tmpl_Line2D *data;
+    tmpl_2DLine *data;
 
     /*  Boolean for determining if an error occured.                          */
     tmpl_Bool error_occured;
@@ -511,16 +511,6 @@ tmpl_SVG_Create_Arrow(double pos, double arrow_size, tmpl_SVG_Color *fill_color,
 
 extern tmpl_SVG_Circle *
 tmpl_Create_SVG_Circle(tmpl_TwoVector P, double r, tmpl_SVG_Palette *palette);
-
-extern void
-tmpl_Circle2D_As_Line(tmpl_Circle2D *circle,
-                      tmpl_TwoVector P, tmpl_TwoVector V);
-
-extern void
-tmpl_Reset_Circle2D(tmpl_Circle2D *circle, tmpl_TwoVector P, double r);
-
-extern void
-tmpl_Destroy_Circle2D(tmpl_Circle2D **circle);
 
 extern tmpl_SVG_Line *
 tmpl_Create_SVG_Line_From_Two_Points(tmpl_TwoVector P, tmpl_TwoVector Q,
