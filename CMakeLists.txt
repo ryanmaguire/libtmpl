@@ -308,6 +308,9 @@ if(LIBTMPL_USE_INLINE)
         "tmpl_sinpi_maclaurin_float.c"
         "tmpl_sinpi_maclaurin_ldouble.c"
         "tmpl_sin_very_small_double.c"
+        "tmpl_two_vector_l2_norm_double.c"
+        "tmpl_two_vector_l2_norm_float.c"
+        "tmpl_two_vector_l2_norm_ldouble.c"
     )
 endif()
 
