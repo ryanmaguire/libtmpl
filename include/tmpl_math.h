@@ -2495,6 +2495,24 @@ TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Hypot                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the length of the point (x, y).                              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double mag:                                                           *
+ *          The magnitude of (x, y).                                          *
+ ******************************************************************************/
+extern float tmpl_Float_Hypot(float x, float y);
+extern double tmpl_Double_Hypot(double x, double y);
+extern long double tmpl_LDouble_Hypot(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Log                                                       *
  *  Purpose:                                                                  *
  *      Computes the natural log function of the input.                       *

@@ -219,7 +219,10 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_sinpi_maclaurin_double.c" -and \
 	-not -name "tmpl_sinpi_maclaurin_float.c" -and \
 	-not -name "tmpl_sinpi_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_sin_very_small_double.c" -and
+	-not -name "tmpl_sin_very_small_double.c" -and \
+	-not -name "tmpl_two_vector_l2_norm_double.c" -and \
+	-not -name "tmpl_two_vector_l2_norm_float.c" -and \
+	-not -name "tmpl_two_vector_l2_norm_ldouble.c" -and
 endif
 
 # Whether or not to use the strictly portable code, of IEEE-754 compliant code.

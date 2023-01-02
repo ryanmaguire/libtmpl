@@ -54,7 +54,6 @@ tmpl_Stereographic_Projection(tmpl_ThreeVector P)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     double Px, Py, Pz, x, y, factor, norm;
-    tmpl_TwoVector out;
 
     /*  Extract the X, Y, and Z components of the input vector.               */
     Px = P.dat[0];
@@ -95,6 +94,5 @@ tmpl_Stereographic_Projection(tmpl_ThreeVector P)
 
     /*  Use tmpl_TwoVector_Rect to create a TwoVector from x and y            *
      *  and return.                                                           */
-    out = tmpl_TwoVector_Rect(x, y);
-    return out;
+    return tmpl_2DDouble_Rect(x, y);
 }
