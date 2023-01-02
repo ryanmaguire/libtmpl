@@ -7,7 +7,6 @@ tmpl_TwoVector
 tmpl_Stereographic_Projection_Torus(double u, double v, double r, double R)
 {
     double cos_u, sin_u, cos_v, sin_v, t, x, y, Px, Py, Qx, Qy;
-    tmpl_TwoVector out;
 
     sin_u = tmpl_Double_Sin(u);
 
@@ -33,6 +32,5 @@ tmpl_Stereographic_Projection_Torus(double u, double v, double r, double R)
         y = t*Py + (1.0 - t)*Qy;
     }
 
-    out = tmpl_TwoVector_Rect(x, y);
-    return out;
+    return tmpl_2DDouble_Rect(x, y);
 }
