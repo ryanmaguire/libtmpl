@@ -446,9 +446,17 @@ tmpl_2DLDouble_Orthogonal(const tmpl_TwoVectorLongDouble *V);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Matrix_Product(const tmpl_TwoByTwoMatrixFloat *A,
+                            const tmpl_TwoVectorFloat *P);
+
 extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Matrix_Product(const tmpl_TwoByTwoMatrixDouble *A,
                              const tmpl_TwoVectorDouble *P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Matrix_Product(const tmpl_TwoByTwoMatrixLongDouble *A,
+                              const tmpl_TwoVectorLongDouble *P);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -690,7 +698,7 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble *P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_TwoVector_Euclidean_Rel_Angle                                    *
+ *      tmpl_2DDouble_Rel_Angle                                               *
  *  Purpose:                                                                  *
  *      Compute the angle between P and Q with respect to the point O.        *
  *                                                                            *
@@ -722,10 +730,20 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble *P);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
+extern float
+tmpl_2DFloat_Rel_Angle(const tmpl_TwoVectorFloat *O,
+                       const tmpl_TwoVectorFloat *P,
+                       const tmpl_TwoVectorFloat *Q);
+
 extern double
 tmpl_2DDouble_Rel_Angle(const tmpl_TwoVectorDouble *O,
                         const tmpl_TwoVectorDouble *P,
                         const tmpl_TwoVectorDouble *Q);
+
+extern long double
+tmpl_2DLDouble_Rel_Angle(const tmpl_TwoVectorLongDouble *O,
+                         const tmpl_TwoVectorLongDouble *P,
+                         const tmpl_TwoVectorLongDouble *Q);
 
 /******************************************************************************
  *  Function:                                                                 *
