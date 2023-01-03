@@ -28,7 +28,6 @@
 #include <libtmpl/include/tmpl_integer.h>
 #include <libtmpl/include/tmpl_interpolate.h>
 #include <libtmpl/include/tmpl_inttype.h>
-#include <libtmpl/include/tmpl_inversive_geometry.h>
 #include <libtmpl/include/tmpl_knots.h>
 #include <libtmpl/include/tmpl_limits.h>
 #include <libtmpl/include/tmpl_math.h>
