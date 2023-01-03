@@ -119,6 +119,18 @@ float tmpl_Float_Hypot(float x, float y)
         if (w.bits.expo > 0x4BU)
             return tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
 
+        else if (w.bits.expo == 0x00U)
+        {
+            /*  Very very small, denormal number. Scale values up.            */
+            abs_x *= TMPL_FLOAT_NORMALIZE;
+            abs_y *= TMPL_FLOAT_NORMALIZE;
+
+            abs_x *= TMPL_BIG_SCALE;
+            abs_y *= TMPL_BIG_SCALE;
+            w.r = TMPL_RCPR_BIG_SCALE*tmpl_Float_Sqrt(abs_x*abs_x+abs_y*abs_y);
+            return w.r / TMPL_FLOAT_NORMALIZE;
+        }
+
         /*  Both |x| and |y| are small. To avoid underflow scale by 2^512.    */
         abs_x *= TMPL_BIG_SCALE;
         abs_y *= TMPL_BIG_SCALE;
@@ -130,7 +142,7 @@ float tmpl_Float_Hypot(float x, float y)
 
     /*  Both |x| and |y| are large. To avoid overflow scale by 2^-512.        */
     abs_x *= TMPL_RCPR_BIG_SCALE;
-    abs_x *= TMPL_RCPR_BIG_SCALE;
+    abs_y *= TMPL_RCPR_BIG_SCALE;
 
     /*  |z| can now be computed as |z| = 2^512 * sqrt(x^2 + y^2) without      *
      *  the risk of overflow. Return this.                                    */
