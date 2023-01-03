@@ -792,14 +792,26 @@ tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble *P,
 extern tmpl_Bool
 tmpl_LineSegment2D_Intersect(tmpl_2DLineSegment L0, tmpl_2DLineSegment L1);
 
-/*
-extern void
-tmpl_Circle2D_As_Line(tmpl_Circle2D *circle,
-                      tmpl_TwoVector P, tmpl_TwoVector V);
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Point_Inverse(const tmpl_2DCircleDouble *C,
+                            const tmpl_TwoVectorDouble *P);
+
+extern tmpl_2DCircleDouble
+tmpl_2DDouble_Circle_Inverse(const tmpl_2DCircleDouble *C0,
+                             const tmpl_2DCircleDouble *C1);
+
+extern tmpl_2DCircleDouble
+tmpl_2DDouble_Line_Inverse(const tmpl_2DCircleDouble *C,
+                           const tmpl_2DLineDouble *L);
 
 extern void
-tmpl_Reset_Circle2D(tmpl_Circle2D *circle, tmpl_TwoVector P, double r);
-*/
+tmpl_2DDouble_Circle_As_Line(tmpl_2DCircleDouble *circle,
+                             const tmpl_TwoVectorDouble *P,
+                             const tmpl_TwoVectorDouble *V);
+
+extern void
+tmpl_2DDouble_Reset_Circle(const tmpl_2DCircleDouble *circle,
+                           const tmpl_TwoVector *P, double r);
 
 #endif
 /*  End of include guard.                                                     */
