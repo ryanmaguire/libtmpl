@@ -19,26 +19,26 @@
  *                       tmpl_two_vector_matrix_product                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Multiply a tmpl_TwoVectorDouble by a tmpl_TwoByTwoMatrixDouble.       *
+ *      Multiply a vector by a 2x2 matrix.                                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 28, 2020                                            *
+ *  Date:       January 2, 2023                                               *
  ******************************************************************************/
 
 /*  Function prototype and two-vector typedef found here.                     */
 #include <libtmpl/include/tmpl_vec2.h>
 
 /*  Function for multiplying a 2-vector by a 2x2 matrix.                      */
-tmpl_TwoVectorDouble
-tmpl_2DDouble_Matrix_Product(const tmpl_TwoByTwoMatrixDouble *A,
-                             const tmpl_TwoVectorDouble *P)
+tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Matrix_Product(const tmpl_TwoByTwoMatrixLongDouble *A,
+                              const tmpl_TwoVectorLongDouble *P)
 {
-    tmpl_TwoVectorDouble out;
+    tmpl_TwoVectorLongDouble out;
 
     out.dat[0] = A->dat[0][0]*P->dat[0] + A->dat[0][1]*P->dat[1];
     out.dat[1] = A->dat[1][0]*P->dat[0] + A->dat[1][1]*P->dat[1];
 
     return out;
 }
-/*  End of tmpl_2DDouble_Matrix_Product.                                      */
+/*  End of tmpl_2DLDouble_Matrix_Product.                                     */
 
