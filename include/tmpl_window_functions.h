@@ -1,8 +1,15 @@
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_WINDOW_FUNCTIONS_H
 #define TMPL_WINDOW_FUNCTIONS_H
 
 /*  complex data types are defined here.                                      */
 #include <libtmpl/include/tmpl_complex.h>
+
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern double
 tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,
@@ -154,4 +161,10 @@ extern long double
 tmpl_LDouble_Window_Normalization(long double *ker, long dim, long double dx,
                                   long double f_scale);
 
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+/*  End of include guard.                                                     */
