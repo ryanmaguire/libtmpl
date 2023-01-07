@@ -1505,8 +1505,8 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Pade(long double x);
 
 /*  Inline not requested, use the external functions in src/math.             */
 TMPL_EXPORT extern float tmpl_Float_Arccos_Tail_End(float x);
-TMPL_EXPORT externouble tmpl_Double_Arccos_Tail_End(double x);
-TMPL_EXPORT externong double tmpl_LDouble_Arccos_Tail_End(long double x);
+TMPL_EXPORT extern double tmpl_Double_Arccos_Tail_End(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Tail_End(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

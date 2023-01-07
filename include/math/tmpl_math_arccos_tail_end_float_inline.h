@@ -74,7 +74,7 @@
 
 /*  tmpl_Float_Sqrt is declared after tmpl_Float_Arccos_Tail_End in           *
  *  tmpl_math.h. Let the compiler know this function exists.                  */
-TMPL_EXPORT externloat tmpl_Float_Sqrt(float x);
+TMPL_EXPORT extern float tmpl_Float_Sqrt(float x);
 
 /*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
 TMPL_INLINE_DECL
