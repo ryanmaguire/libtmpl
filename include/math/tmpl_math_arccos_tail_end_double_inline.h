@@ -80,7 +80,7 @@
 
 /*  tmpl_Double_Sqrt is declared after tmpl_Double_Arccos_Tail_End in         *
  *  tmpl_math.h. Let the compiler know this function exists.                  */
-extern double tmpl_Double_Sqrt(double x);
+TMPL_EXPORT externouble tmpl_Double_Sqrt(double x);
 
 /*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
 TMPL_INLINE_DECL

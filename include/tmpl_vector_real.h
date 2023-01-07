@@ -112,13 +112,13 @@ typedef struct tmpl_LongDoubleVector_Def {
  *  Source Code:                                                              *
  *      libtmpl/src/vector/tmpl_create_empty_real_vector.c                    *
  ******************************************************************************/
-extern tmpl_FloatVector *
+TMPL_EXPORT externmpl_FloatVector *
 tmpl_Create_Empty_FloatVector(unsigned long int length);
 
-extern tmpl_DoubleVector *
+TMPL_EXPORT externmpl_DoubleVector *
 tmpl_Create_Empty_DoubleVector(unsigned long int length);
 
-extern tmpl_LongDoubleVector *
+TMPL_EXPORT externmpl_LongDoubleVector *
 tmpl_Create_Empty_LongDoubleVector(unsigned long int length);
 
 /******************************************************************************
@@ -148,13 +148,13 @@ tmpl_Create_Empty_LongDoubleVector(unsigned long int length);
  *  Source Code:                                                              *
  *      libtmpl/src/vector/tmpl_create_real_vector_from_data.c                *
  ******************************************************************************/
-extern tmpl_FloatVector *
+TMPL_EXPORT externmpl_FloatVector *
 tmpl_Create_FloatVector_From_Data(float *arr, unsigned long int length);
 
-extern tmpl_DoubleVector *
+TMPL_EXPORT externmpl_DoubleVector *
 tmpl_Create_DoubleVector_From_Data(double *arr, unsigned long int length);
 
-extern tmpl_LongDoubleVector *
+TMPL_EXPORT externmpl_LongDoubleVector *
 tmpl_Create_LongDoubleVector_From_Data(long double *arr,
                                        unsigned long int length);
 
@@ -179,13 +179,13 @@ tmpl_Create_LongDoubleVector_From_Data(long double *arr,
  *      libtmpl/src/vector/tmpl_create_zero_int_vector.c                      *
  *      libtmpl/src/vector/tmpl_create_zero_long_vector.c                     *
  ******************************************************************************/
-extern tmpl_FloatVector *
+TMPL_EXPORT externmpl_FloatVector *
 tmpl_Create_Zero_FloatVector(unsigned long int length);
 
-extern tmpl_DoubleVector *
+TMPL_EXPORT externmpl_DoubleVector *
 tmpl_Create_Zero_DoubleVector(unsigned long int length);
 
-extern tmpl_LongDoubleVector *
+TMPL_EXPORT externmpl_LongDoubleVector *
 tmpl_Create_Zero_LongDoubleVector(unsigned long int length);
 
 /******************************************************************************
@@ -209,13 +209,13 @@ tmpl_Create_Zero_LongDoubleVector(unsigned long int length);
  *      libtmpl/src/vector/tmpl_destroy_int_vector.c                          *
  *      libtmpl/src/vector/tmpl_destroy_long_vector.c                         *
  ******************************************************************************/
-extern void
+TMPL_EXPORT externoid
 tmpl_Destroy_FloatVector(tmpl_FloatVector **v);
 
-extern void
+TMPL_EXPORT externoid
 tmpl_Destroy_DoubleVector(tmpl_DoubleVector **v);
 
-extern void
+TMPL_EXPORT externoid
 tmpl_Destroy_LongDoubleVector(tmpl_LongDoubleVector **v);
 
 /******************************************************************************
@@ -236,15 +236,15 @@ tmpl_Destroy_LongDoubleVector(tmpl_LongDoubleVector **v);
  *  Called Functions:                                                         *
  *      tmpl_strdup   (tmpl_string.h)                                         *
  ******************************************************************************/
-extern void
+TMPL_EXPORT externoid
 tmpl_FloatVector_Add(tmpl_FloatVector *v,
                      tmpl_FloatVector *u, tmpl_FloatVector *sum);
 
-extern void
+TMPL_EXPORT externoid
 tmpl_DoubleVector_Add(tmpl_DoubleVector *v,
                       tmpl_DoubleVector *u, tmpl_DoubleVector *sum);
 
-extern void
+TMPL_EXPORT externoid
 tmpl_LDoubleVector_Add(tmpl_LongDoubleVector *v,
                        tmpl_LongDoubleVector *u, tmpl_LongDoubleVector *sum);
 

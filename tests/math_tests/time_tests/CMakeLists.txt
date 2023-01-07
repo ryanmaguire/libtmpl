@@ -13,6 +13,15 @@ set(test_apps
     tmpl_abs_double_time_test
     tmpl_abs_float_time_test
     tmpl_abs_ldouble_time_test
+    tmpl_arccos_double_time_test
+    tmpl_arccos_float_time_test
+    tmpl_arccos_ldouble_time_test
+    tmpl_arccos_pade_double_time_test
+    tmpl_arccos_pade_float_time_test
+    tmpl_arccos_pade_ldouble_time_test
+    tmpl_arccos_tail_end_double_time_test
+    tmpl_arccos_tail_end_float_time_test
+    tmpl_arccos_tail_end_ldouble_time_test
     tmpl_arctan2_double_time_test
     tmpl_arctan2_float_time_test
     tmpl_arctan2_ldouble_time_test
@@ -73,6 +82,12 @@ set(test_apps
     tmpl_floor_double_time_test
     tmpl_floor_float_time_test
     tmpl_floor_ldouble_time_test
+    tmpl_hypot_double_time_test
+    tmpl_hypot_double_time_test_denormal_vals
+    tmpl_hypot_double_time_test_large_vals
+    tmpl_hypot_double_time_test_larger_vals
+    tmpl_hypot_double_time_test_small_vals
+    tmpl_hypot_double_time_test_smaller_vals
     tmpl_log_double_time_test
     tmpl_log_double_time_test_big_vals
     tmpl_log_double_time_test_denormal_vals
@@ -85,6 +100,7 @@ set(test_apps
     tmpl_log_ldouble_time_test_big_vals
     tmpl_log_ldouble_time_test_denormal_vals
     tmpl_log_ldouble_time_test_near_1
+    tmpl_math_time_tests
     tmpl_mod_2_double_time_test
     tmpl_mod_2_float_time_test
     tmpl_mod_2_ldouble_time_test
@@ -118,10 +134,7 @@ set(test_apps
 
 foreach(app ${test_apps})
     add_executable(${app} ${app}.c)
-    set_target_properties(
-        ${app}
-        PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
-    )
+    set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -142,10 +155,7 @@ if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
 
     foreach(app ${linasm_compare_test_apps})
         add_executable(${app} ${app}.c)
-        set_target_properties(
-            ${app}
-            PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
-        )
+        set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
         target_include_directories(
             ${app}
             PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"

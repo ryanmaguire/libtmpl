@@ -64,7 +64,7 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-extern long double tmpl_LDouble_Sqrt(long double x);
+TMPL_EXPORT externong double tmpl_LDouble_Sqrt(long double x);
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \

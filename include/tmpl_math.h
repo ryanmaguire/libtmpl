@@ -1428,9 +1428,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Abs(long double x);
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
 /*  Otherwise use the functions in src/math/.                                 */
-extern float tmpl_Float_Arccos(float x);
-extern double tmpl_Double_Arccos(double x);
-extern long double tmpl_LDouble_Arccos(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arccos(float x);
+TMPL_EXPORT extern double tmpl_Double_Arccos(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arccos(long double x);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
@@ -1466,9 +1466,9 @@ extern long double tmpl_LDouble_Arccos(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arccos_Pade(float x);
-extern double tmpl_Double_Arccos_Pade(double x);
-extern long double tmpl_LDouble_Arccos_Pade(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arccos_Pade(float x);
+TMPL_EXPORT extern double tmpl_Double_Arccos_Pade(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1504,9 +1504,9 @@ extern long double tmpl_LDouble_Arccos_Pade(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arccos_Tail_End(float x);
-extern double tmpl_Double_Arccos_Tail_End(double x);
-extern long double tmpl_LDouble_Arccos_Tail_End(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arccos_Tail_End(float x);
+TMPL_EXPORT externouble tmpl_Double_Arccos_Tail_End(double x);
+TMPL_EXPORT externong double tmpl_LDouble_Arccos_Tail_End(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
