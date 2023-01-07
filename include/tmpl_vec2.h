@@ -56,6 +56,8 @@
 /*  size_t type given here.                                                   */
 #include <stddef.h>
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 

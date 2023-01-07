@@ -53,6 +53,8 @@ extern "C" {
 /*  size_t typedef given here.                                                */
 #include <stddef.h>
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
