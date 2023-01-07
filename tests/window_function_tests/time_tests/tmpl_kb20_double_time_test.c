@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -15,30 +15,24 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *                       tmpl_two_vector_matrix_product                       *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      Multiply a tmpl_TwoVectorDouble by a tmpl_TwoByTwoMatrixDouble.       *
- ******************************************************************************
- *  Author:     Ryan Maguire                                                  *
- *  Date:       September 28, 2020                                            *
  ******************************************************************************/
+#include "tmpl_window_functions_time_tests.h"
+#include <gsl/gsl_sf.h>
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_vec2.h>
-
-/*  Function for multiplying a 2-vector by a 2x2 matrix.                      */
-tmpl_TwoVectorDouble
-tmpl_2DDouble_Matrix_Product(const tmpl_TwoByTwoMatrixDouble *A,
-                             const tmpl_TwoVectorDouble *P)
+static double func(double x, double W)
 {
-    tmpl_TwoVectorDouble out;
+    const double c = 2.0*x/W;
+    const double arg = 1.0 - c*c;
+    const double alpha = 2.0*tmpl_One_Pi;
 
-    out.dat[0] = A->dat[0][0]*P->dat[0] + A->dat[0][1]*P->dat[1];
-    out.dat[1] = A->dat[1][0]*P->dat[0] + A->dat[1][1]*P->dat[1];
-
-    return out;
+    if (arg < 0.0)
+        return 0.L;
+    else
+    {
+        const double numer = gsl_sf_bessel_I0(alpha*sqrt(arg));
+        const double denom = gsl_sf_bessel_I0(alpha);
+        return numer / denom;
+    }
 }
-/*  End of tmpl_2DDouble_Matrix_Product.                                      */
 
+TEST1(double, -0.5, 0.5, tmpl_Double_Kaiser_Bessel_2_0, func)

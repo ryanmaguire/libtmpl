@@ -203,6 +203,12 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_abs_double.c"
     Exclude="$Exclude tmpl_abs_float.c"
     Exclude="$Exclude tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arccos_pade_double.c"
+    Exclude="$Exclude tmpl_arccos_pade_float.c"
+    Exclude="$Exclude tmpl_arccos_pade_ldouble.c"
+    Exclude="$Exclude tmpl_arccos_tail_end_double.c"
+    Exclude="$Exclude tmpl_arccos_tail_end_float.c"
+    Exclude="$Exclude tmpl_arccos_tail_end_ldouble.c"
     Exclude="$Exclude tmpl_arctan_asymptotic_double.c"
     Exclude="$Exclude tmpl_arctan_asymptotic_float.c"
     Exclude="$Exclude tmpl_arctan_asymptotic_ldouble.c"
@@ -271,6 +277,9 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_sinpi_maclaurin_double.c"
     Exclude="$Exclude tmpl_sinpi_maclaurin_float.c"
     Exclude="$Exclude tmpl_sinpi_maclaurin_ldouble.c"
+    Exclude="$Exclude tmpl_two_vector_l2_norm_double.c"
+    Exclude="$Exclude tmpl_two_vector_l2_norm_float.c"
+    Exclude="$Exclude tmpl_two_vector_l2_norm_ldouble.c"
 fi
 
 if [ $USELONGLONG == 0 ]; then

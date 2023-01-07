@@ -1387,6 +1387,132 @@ TMPL_EXPORT extern long double tmpl_LDouble_Abs(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Arccos                                                    *
+ *  Purpose:                                                                  *
+ *      Compute the arccos (inverse cosine) of a real number.                 *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arccos_float.c                                  *
+ *      libtmpl/src/math/tmpl_arccos_double.c                                 *
+ *      libtmpl/src/math/tmpl_arccos_ldouble.c                                *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_arccos_float_example.c            *
+ *      libtmpl/examples/math_examples/tmpl_arccos_double_example.c           *
+ *      libtmpl/examples/math_examples/tmpl_arccos_ldouble_example.c          *
+ *  Tests:                                                                    *
+ *      libtmpl/tests/math_tests/time_tests/                                  *
+ *          tmpl_arccos_float_time_test.c                                     *
+ *          tmpl_arccos_double_time_test.c                                    *
+ *          tmpl_arccos_ldouble_time_test.c                                   *
+ *      libtmpl/tests/math_tests/accuracy_tests/                              *
+ *          tmpl_arccos_float_accuracy_test.c                                 *
+ *          tmpl_arccos_double_accuracy_test.c                                *
+ *          tmpl_arccos_ldouble_accuracy_test.c                               *
+ ******************************************************************************/
+
+/*  Alias functions to acos from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Arccos acosf
+#define tmpl_Double_Arccos acos
+#define tmpl_LDouble_Arccos acosl
+
+#else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
+
+/*  Otherwise use the functions in src/math/.                                 */
+extern float tmpl_Float_Arccos(float x);
+extern double tmpl_Double_Arccos(double x);
+extern long double tmpl_LDouble_Arccos(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Pade                                               *
+ *  Purpose:                                                                  *
+ *      Compute the arccos (inverse cosine) using a Pade approximant.         *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arccos_pade_float.c                             *
+ *      libtmpl/src/math/tmpl_arccos_pade_double.c                            *
+ *      libtmpl/src/math/tmpl_arccos_pade_ldouble.c                           *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_math_arccos_pade_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_arccos_pade_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_arccos_pade_ldouble_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arccos_Pade(float x);
+extern double tmpl_Double_Arccos_Pade(double x);
+extern long double tmpl_LDouble_Arccos_Pade(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Tail_End                                           *
+ *  Purpose:                                                                  *
+ *      Compute the arccos (inverse cosine) for values near 1.                *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arccos_tail_end_float.c                         *
+ *      libtmpl/src/math/tmpl_arccos_tail_end_double.c                        *
+ *      libtmpl/src/math/tmpl_arccos_tail_end_ldouble.c                       *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_math_arccos_tail_end_double_inline.h>
+#include <libtmpl/include/math/tmpl_math_arccos_tail_end_float_inline.h>
+#include <libtmpl/include/math/tmpl_math_arccos_tail_end_ldouble_inline.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arccos_Tail_End(float x);
+extern double tmpl_Double_Arccos_Tail_End(double x);
+extern long double tmpl_LDouble_Arccos_Tail_End(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Arctan2                                                   *
  *  Purpose:                                                                  *
  *      Compute the 2-dimensional arctan (inverse tangent) of a point in the  *

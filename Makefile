@@ -154,6 +154,12 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
 	-not -name "tmpl_abs_ldouble.c" -and \
+	-not -name "tmpl_arccos_pade_double.c" -and \
+	-not -name "tmpl_arccos_pade_float.c" -and \
+	-not -name "tmpl_arccos_pade_ldouble.c" -and \
+	-not -name "tmpl_arccos_tail_end_double.c" -and \
+	-not -name "tmpl_arccos_tail_end_float.c" -and \
+	-not -name "tmpl_arccos_tail_end_ldouble.c" -and \
 	-not -name "tmpl_arctan_asymptotic_double.c" -and \
 	-not -name "tmpl_arctan_asymptotic_float.c" -and \
 	-not -name "tmpl_arctan_asymptotic_ldouble.c" -and \
