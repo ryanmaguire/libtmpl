@@ -1,4 +1,5 @@
 {
+  "version": 5,
   "configurePresets": [
     {
       "name": "ci-base",
@@ -191,5 +192,51 @@
       }
     }
   ],
-  "version": 5
+  "testPresets": [
+    {
+      "name": "ci-linux",
+      "configurePreset": "ci-linux",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-linux-aarch64-crosscompile",
+      "configurePreset": "ci-linux-aarch64-crosscompile",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-linux-armhf-crosscompile",
+      "configurePreset": "ci-linux-armhf-crosscompile",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-macos",
+      "configurePreset": "ci-macos",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin",
+        "type": "equals"
+      }
+    },
+    {
+      "name": "ci-windows",
+      "configurePreset": "ci-windows",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows",
+        "type": "equals"
+      }
+    }
+  ]
 }
