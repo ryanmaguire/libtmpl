@@ -1,12 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(bytes_tests)
 include(FindGSL)
-set(test_apps bessel_i0_plots bessel_j0_plots complex_bessel_I0_plots)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+project(special_functions_examples)
+
+file(GLOB sources CONFIGURE_DEPENDS *.c)
+
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

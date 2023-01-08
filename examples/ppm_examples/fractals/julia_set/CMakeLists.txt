@@ -3,10 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake")
 
 project(ppm_julia_set_examples)
 
-set(test_apps julia_set julia_set_animation julia_set_on_sphere)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

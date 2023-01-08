@@ -1,29 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(bytes_tests)
+project(vec3_examples)
 
-set(test_apps
-    tmpl_three_vector_add_double_example
-    tmpl_three_vector_add_float_example
-    tmpl_three_vector_add_ldouble_example
-    tmpl_three_vector_add_to_double_example
-    tmpl_three_vector_add_to_float_example
-    tmpl_three_vector_add_to_ldouble_example
-    tmpl_three_vector_cross_product_double_example
-    tmpl_three_vector_cross_product_float_example
-    tmpl_three_vector_cross_product_ldouble_example
-    tmpl_three_vector_cross_with_double_example
-    tmpl_three_vector_cross_with_float_example
-    tmpl_three_vector_cross_with_ldouble_example
-    tmpl_three_vector_dot_product_double_example
-    tmpl_three_vector_dot_product_float_example
-    tmpl_three_vector_dot_product_ldouble_example
-    tmpl_three_vector_l2_norm_double_example
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

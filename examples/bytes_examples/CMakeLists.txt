@@ -3,17 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
 project(bytes_tests)
 
-set(test_apps
-    tmpl_determine_endianness_example
-    tmpl_swap_bytes_example
-    tmpl_swap_most_significant_bit_2_alt_example
-    tmpl_swap_most_significant_bit_2_example
-    tmpl_swap_most_significant_bit_4_example
-    tmpl_swap_most_significant_bit_8_example
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

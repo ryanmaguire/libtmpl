@@ -1,29 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(bytes_tests)
+project(polynomial_examples)
 
-set(test_apps
-    tmpl_add_polynomial_z_example_001
-    tmpl_add_polynomial_z_example_002
-    tmpl_add_polynomial_z_example_003
-    tmpl_add_polynomial_z_example_004
-    tmpl_add_polynomial_z_example_005
-    tmpl_add_polynomial_z_example_006
-    tmpl_deriv_polynomial_z_example_001
-    tmpl_deriv_polynomial_z_example_002
-    tmpl_deriv_polynomial_z_example_003
-    tmpl_multiply_polynomial_z_example_001
-    tmpl_multiply_polynomial_z_example_002
-    tmpl_multiply_polynomial_z_example_003
-    tmpl_multiply_polynomial_z_example_004
-    tmpl_multiply_polynomial_z_example_005
-    tmpl_subtract_polynomial_z_example_001
-    tmpl_subtract_polynomial_z_example_002
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

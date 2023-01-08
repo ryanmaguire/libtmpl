@@ -1,17 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(bytes_tests)
+project(string_examples)
 
-set(test_apps
-    tmpl_ascii_lower_case_example
-    tmpl_ascii_upper_case_example
-    tmpl_lower_case_example
-    tmpl_strdup_example
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

@@ -1,17 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(bytes_tests)
+project(integer_examples)
 
-set(test_apps
-    tmpl_gcd_int_example
-    tmpl_gcd_uint_example
-    tmpl_sieve_of_eratosthenes_complexity
-    tmpl_sieve_of_eratosthenes_test
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
     target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}")
     target_link_libraries(${app} PRIVATE tmpl::tmpl)

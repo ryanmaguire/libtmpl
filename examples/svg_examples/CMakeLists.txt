@@ -2,25 +2,14 @@ cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
 if(UNIX)
-    project(bytes_tests)
+    project(svn_examples)
 
-    set(test_apps
-        kissvg_ApolloniusGasket
-        kissvg_ApolloniusGasketFordCircles
-        kissvg_ApolloniusGasketFordCirclesSetup
-        kissvg_ApolloniusGasketSetup
-        kissvg_ApolloniusGasketStart
-        kissvg_ApolloniusProblem
-        kissvg_CircleFromThreePointsProblem
-        kissvg_ColorTest
-        kissvg_EuclidBookOnePropOne
-        kissvg_sine
-        kissvg_TestCircleError
-        kissvg_TestInversiveGeometry
-    )
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-    foreach(app ${test_apps})
-        add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
         set_target_properties(
             ${app}
             PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

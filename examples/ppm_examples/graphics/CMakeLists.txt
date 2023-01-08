@@ -3,16 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake")
 
 project(ppm_graphics_examples)
 
-set(test_apps
-    tmpl_diamond_pgm
-    tmpl_rainbow_sphere_ppm
-    tmpl_red_diamond_ppm
-    tmpl_red_sphere_ppm
-    tmpl_sphere_pgm
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

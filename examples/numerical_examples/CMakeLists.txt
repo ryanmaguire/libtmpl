@@ -1,17 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(numerical_examples)
 include(FindGSL)
-set(test_apps
-    five_point_derivative_example
-    linear_interpolate_plot
-    newton_rapshon_bessel_function
-    sin_interpolate_plot
-)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+project(numerical_examples)
+
+file(GLOB sources CONFIGURE_DEPENDS *.c)
+
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

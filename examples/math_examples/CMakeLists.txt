@@ -1,28 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(bytes_tests)
+project(math_examples)
 
-set(test_apps
-    tmpl_abs_double_example
-    tmpl_abs_float_example
-    tmpl_abs_ldouble_example
-    tmpl_arctan_double_example
-    tmpl_arctan_float_example
-    tmpl_arctan_ldouble_example
-    tmpl_infinity_example
-    tmpl_is_inf_double_example
-    tmpl_is_inf_float_example
-    tmpl_is_inf_ldouble_example
-    tmpl_is_nan_double_example
-    tmpl_is_nan_float_example
-    tmpl_is_nan_ldouble_example
-    tmpl_is_nan_or_inf_double_example
-    tmpl_nan_example
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
