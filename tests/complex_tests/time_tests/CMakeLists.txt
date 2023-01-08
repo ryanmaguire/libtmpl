@@ -3,31 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
 project(complex_time_tests)
 
-set(test_apps
-    tmpl_complex_abs_double_time_test
-    tmpl_complex_abs_float_time_test
-    tmpl_complex_abs_ldouble_time_test
-    tmpl_complex_abs_squared_double_time_test
-    tmpl_complex_abs_squared_float_time_test
-    tmpl_complex_abs_squared_ldouble_time_test
-    tmpl_complex_add_imag_time_test
-    tmpl_complex_add_imagf_time_test
-    tmpl_complex_add_imagl_time_test
-    tmpl_complex_add_real_time_test
-    tmpl_complex_add_realf_time_test
-    tmpl_complex_add_reall_time_test
-    tmpl_complex_add_time_test
-    tmpl_complex_addf_time_test
-    tmpl_complex_addl_time_test
-    tmpl_complex_addto_time_test
-    tmpl_complex_argument_time_test
-    tmpl_complex_argumentf_time_test
-    tmpl_complex_argumentl_time_test
-    tmpl_complex_quick_abs_time_test
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

@@ -3,21 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
 project(math_accuracy_tests)
 
-set(test_apps
-    tmpl_abs_double_accuracy_test
-    tmpl_abs_float_accuracy_test
-    tmpl_abs_ldouble_accuracy_test
-    tmpl_arctan_double_accuracy_test
-    tmpl_arctan_float_accuracy_test
-    tmpl_arctan_ldouble_accuracy_test
-    tmpl_floor_double_accuracy_test
-    tmpl_log_double_accuracy_test
-    tmpl_log_float_accuracy_test
-    tmpl_log_ldouble_accuracy_test
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

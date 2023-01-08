@@ -11,7 +11,7 @@ file(GLOB cpp_sources CONFIGURE_DEPENDS *.cpp)
 foreach(source ${c_sources})
     cmake_path(GET source STEM app)
     list(APPEND test_apps ${app})
-    add_executable(${app} ${source)
+    add_executable(${app} ${source})
     set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
     target_include_directories(
         ${app}
@@ -27,7 +27,7 @@ endforeach()
 foreach(source ${cpp_sources})
     cmake_path(GET source STEM app)
     list(APPEND test_apps ${app})
-    add_executable(${app} ${source)
+    add_executable(${app} ${source})
     set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
     target_include_directories(
         ${app}
@@ -38,3 +38,12 @@ foreach(source ${cpp_sources})
         target_link_libraries(${app} PRIVATE m)
     endif()
 endforeach()
+
+include(GNUInstallDirs)
+install(
+    TARGETS ${test_apps}
+    RUNTIME
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)

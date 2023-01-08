@@ -5,13 +5,13 @@ include(FindGSL)
 
 project(sort_unit_tests LANGUAGES C CXX)
 
-set(test_apps
-    tmpl_merge_sort_double_unit_test_002
-    tmpl_merge_sort_double_unit_test_003
-)
+file(GLOB c_sources CONFIGURE_DEPENDS *.c)
+file(GLOB cpp_sources CONFIGURE_DEPENDS *.cpp)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${c_sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
@@ -27,13 +27,10 @@ foreach(app ${test_apps})
     endif()
 endforeach()
 
-set(cpp_test_apps
-    tmpl_merge_sort_double_unit_test_001
-    tmpl_merge_sort_double_unit_test_004
-)
-
-foreach(app ${cpp_test_apps})
-    add_executable(${app} ${app}.cpp)
+foreach(source ${cpp_sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
@@ -50,7 +47,7 @@ endforeach()
 
 include(GNUInstallDirs)
 install(
-    TARGETS ${test_apps} ${cpp_test_apps}
+    TARGETS ${test_apps}
     RUNTIME
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY

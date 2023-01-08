@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(special_function_time_tests)
 include(FindGSL)
-set(test_apps
-    tmpl_bessel_j0_double_small_time_test_vs_gsl
-    tmpl_bessel_j0_double_time_test
-    tmpl_bessel_j0_ldouble_time_test
-)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+project(special_function_time_tests)
+
+file(GLOB sources CONFIGURE_DEPENDS *.c)
+
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

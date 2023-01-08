@@ -8,18 +8,16 @@ endif()
 
 project(vec3_time_tests)
 
-set(test_apps
-    tmpl_three_vector_add_ldouble_time_test
-    tmpl_three_vector_add_to_ldouble_time_test
-    tmpl_three_vector_cross_product_ldouble_time_test
-    tmpl_three_vector_cross_with_ldouble_time_test
-    tmpl_three_vector_dot_product_double_time_test_001
-    tmpl_three_vector_dot_product_double_time_test_002
-    tmpl_three_vector_dot_product_ldouble_time_test
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+set(linasm_compare_sources ${sources})
+list(FILTER linasm_compare_sources INCLUDE REGEX .*linasm.*)
+list(FILTER sources EXCLUDE REGEX .*linasm.*)
+
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
@@ -35,22 +33,10 @@ foreach(app ${test_apps})
 endforeach()
 
 if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
-    set(linasm_test_apps
-        tmpl_three_vector_add_double_time_test_vs_linasm
-        tmpl_three_vector_add_float_time_test_vs_linasm
-        tmpl_three_vector_add_to_double_time_test_vs_linasm
-        tmpl_three_vector_add_to_float_time_test_vs_linasm
-        tmpl_three_vector_cross_product_double_time_test_vs_linasm
-        tmpl_three_vector_cross_product_float_time_test_vs_linasm
-        tmpl_three_vector_cross_with_double_time_test_vs_linasm
-        tmpl_three_vector_cross_with_float_time_test_vs_linasm
-        tmpl_three_vector_dot_product_double_time_test_vs_linasm
-        tmpl_three_vector_dot_product_float_time_test_vs_linasm
-        tmpl_three_vector_l2_norm_double_time_test_vs_linasm
-    )
-
-    foreach(app ${linasm_test_apps})
-        add_executable(${app} ${app}.c)
+    foreach(source ${linasm_compare_sources})
+        cmake_path(GET source STEM app)
+        list(APPEND test_apps ${app})
+        add_executable(${app} ${source})
         set_target_properties(
             ${app}
             PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
@@ -69,7 +55,7 @@ endif()
 
 include(GNUInstallDirs)
 install(
-    TARGETS ${test_apps} ${linasm_test_apps}
+    TARGETS ${test_apps}
     RUNTIME
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY

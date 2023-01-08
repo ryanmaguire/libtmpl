@@ -1,20 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-project(rational_time_tests LANGUAGES C CXX)
 include(FindBoost)
+
+project(rational_time_tests LANGUAGES C CXX)
+
 find_package(Boost REQUIRED)
 
-set(test_apps
-    tmpl_rational_add_test
-    tmpl_rational_add_to_test
-    tmpl_rational_divide_test
-    tmpl_rational_multiply_test
-    tmpl_rational_subtract_test
-)
+file(GLOB sources CONFIGURE_DEPENDS *.cpp)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.cpp)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

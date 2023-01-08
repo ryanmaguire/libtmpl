@@ -3,29 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
 project(math_plots_tests)
 
-set(test_apps
-    tmpl_arctan_double_diff_plot_gnuplotutils
-    tmpl_arctan_double_gnuplotutils
-    tmpl_arctan_float_diff_plot_gnuplotutils
-    tmpl_arctan_float_gnuplotutils
-    tmpl_arctan_ldouble_diff_plot_gnuplotutils
-    tmpl_arctan_ldouble_gnuplotutils
-    tmpl_arctan_maclaurin_double_diff_log_plot_gnuplotutils
-    tmpl_arctan_maclaurin_float_diff_log_plot_gnuplotutils
-    tmpl_arctan_pade_double_diff_log_plot_gnuplotutils
-    tmpl_floor_double_diff_plot_gnuplotutils
-    tmpl_log_double_diff_plot_near_one_gnuplotutils
-    tmpl_log_double_gnuplotutils
-    tmpl_log_float_gnuplotutils
-    tmpl_log_ldouble_gnuplotutils
-    tmpl_mod_2_double_gnuplotutils
-    tmpl_mod_2_float_gnuplotutils.c # TODO correct file name
-    tmpl_sin_double_diff_plot_gnuplotutils
-    tmpl_sin_double_gnuplotutils
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

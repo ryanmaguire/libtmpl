@@ -3,19 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake")
 
 project(string_unit_tests)
 
-set(test_apps
-    tmpl_ascii_lower_case_unit_test_001
-    tmpl_ascii_lower_case_unit_test_002
-    tmpl_ascii_upper_case_unit_test_001
-    tmpl_ascii_upper_case_unit_test_002
-    tmpl_lower_case_unit_test_001
-    tmpl_lower_case_unit_test_002
-    tmpl_upper_case_unit_test_001
-    tmpl_upper_case_unit_test_002
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     set_target_properties(
         ${app}
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}

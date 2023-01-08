@@ -3,71 +3,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake")
 
 project(math_tests_unit_tests)
 
-set(test_apps
-    tmpl_abs_double_unit_test_001
-    tmpl_abs_double_unit_test_002
-    tmpl_abs_float_unit_test_001
-    tmpl_abs_float_unit_test_002
-    tmpl_abs_ldouble_unit_test_001
-    tmpl_abs_ldouble_unit_test_002
-    tmpl_arctan2_double_unit_test_001
-    tmpl_arctan2_double_unit_test_002
-    tmpl_arctan2_double_unit_test_003
-    tmpl_arctan2_double_unit_test_004
-    tmpl_arctan2_double_unit_test_005
-    tmpl_arctan2_double_unit_test_006
-    tmpl_arctan2_double_unit_test_007
-    tmpl_arctan2_double_unit_test_008
-    tmpl_arctan2_double_unit_test_009
-    tmpl_arctan2_double_unit_test_010
-    tmpl_arctan2_double_unit_test_011
-    tmpl_arctan2_double_unit_test_012
-    tmpl_arctan2_float_unit_test_001
-    tmpl_arctan2_float_unit_test_002
-    tmpl_arctan2_float_unit_test_003
-    tmpl_arctan2_float_unit_test_004
-    tmpl_arctan2_float_unit_test_005
-    tmpl_arctan2_float_unit_test_006
-    tmpl_arctan2_float_unit_test_007
-    tmpl_arctan2_float_unit_test_008
-    tmpl_arctan2_float_unit_test_009
-    tmpl_arctan2_float_unit_test_010
-    tmpl_arctan2_float_unit_test_011
-    tmpl_arctan2_float_unit_test_012
-    tmpl_arctan2_ldouble_unit_test_001
-    tmpl_arctan2_ldouble_unit_test_002
-    tmpl_arctan2_ldouble_unit_test_003
-    tmpl_arctan2_ldouble_unit_test_004
-    tmpl_arctan2_ldouble_unit_test_005
-    tmpl_arctan2_ldouble_unit_test_006
-    tmpl_arctan2_ldouble_unit_test_007
-    tmpl_arctan2_ldouble_unit_test_008
-    tmpl_arctan2_ldouble_unit_test_009
-    tmpl_arctan2_ldouble_unit_test_010
-    tmpl_arctan2_ldouble_unit_test_011
-    tmpl_arctan2_ldouble_unit_test_012
-    tmpl_is_inf_double_unit_test_001
-    tmpl_is_inf_double_unit_test_002
-    tmpl_is_inf_float_unit_test_001
-    tmpl_is_inf_float_unit_test_002
-    tmpl_is_inf_ldouble_unit_test_001
-    tmpl_is_inf_ldouble_unit_test_002
-    tmpl_is_nan_double_unit_test_001
-    tmpl_is_nan_double_unit_test_002
-    tmpl_is_nan_float_unit_test_001
-    tmpl_is_nan_float_unit_test_002
-    tmpl_is_nan_ldouble_unit_test_001
-    tmpl_is_nan_ldouble_unit_test_002
-    tmpl_is_nan_or_inf_double_unit_test_001
-    tmpl_is_nan_or_inf_double_unit_test_002
-    tmpl_is_nan_or_inf_float_unit_test_001
-    tmpl_is_nan_or_inf_float_unit_test_002
-    tmpl_is_nan_or_inf_ldouble_unit_test_001
-    tmpl_is_nan_or_inf_ldouble_unit_test_002
-)
+file(GLOB sources CONFIGURE_DEPENDS *.c)
 
-foreach(app ${test_apps})
-    add_executable(${app} ${app}.c)
+foreach(source ${sources})
+    cmake_path(GET source STEM app)
+    list(APPEND test_apps ${app})
+    add_executable(${app} ${source})
     # tmpl_math_unit_tests.h uses _Generic, which was introduced in C11.
     set_target_properties(
         ${app}
@@ -81,4 +22,10 @@ foreach(app ${test_apps})
 endforeach()
 
 include(GNUInstallDirs)
-install(TARGETS ${test_apps} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(
+    TARGETS ${test_apps}
+    RUNTIME
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
