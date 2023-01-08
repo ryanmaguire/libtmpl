@@ -25,6 +25,8 @@ foreach(source ${c_sources})
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
+
+    add_test(NAME test_${app} COMMAND ${app})
 endforeach()
 
 set(cpp_test_apps tmpl_merge_sort_double_time_test_001)
@@ -45,6 +47,8 @@ foreach(source ${cpp_sources})
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
+
+    add_test(NAME test_${app} COMMAND ${app})
 endforeach()
 
 include(GNUInstallDirs)

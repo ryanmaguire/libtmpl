@@ -30,6 +30,8 @@ foreach(source ${sources})
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
+
+    add_test(NAME test_${app} COMMAND ${app})
 endforeach()
 
 if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
@@ -50,6 +52,8 @@ if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
         if(UNIX)
             target_link_libraries(${app} PRIVATE m)
         endif()
+
+    add_test(NAME test_${app} COMMAND ${app})
     endforeach()
 endif()
 
