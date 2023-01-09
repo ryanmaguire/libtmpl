@@ -1,5 +1,5 @@
 /*  Prototypes for these functions declared here.                             */
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 void tmpl_Legendre_Polynomials(double *legendre_p, double x, unsigned int order)
 {

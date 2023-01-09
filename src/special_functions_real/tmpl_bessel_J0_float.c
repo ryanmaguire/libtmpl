@@ -86,7 +86,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Prototypes for these functions declared here.                             */
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Define Taylor coefficients.                                               */
 #define tmpl_BESSEL_J0_TAYLORF_00  1.0F

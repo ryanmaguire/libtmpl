@@ -78,7 +78,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Prototypes for these functions declared here.                             */
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /* Define Coefficients for the Fresnel Sine Taylor Expansion.                 */
 #define FRESNEL_SINE_TAYLORL_00  0.33333333333333333333333333333L
