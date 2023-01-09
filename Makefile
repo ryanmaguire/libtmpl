@@ -403,7 +403,8 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/polynomial/
 	mkdir -p $(BUILD_DIR)/src/ppm/
 	mkdir -p $(BUILD_DIR)/src/rational/
-	mkdir -p $(BUILD_DIR)/src/special_functions/
+	mkdir -p $(BUILD_DIR)/src/special_functions_complex/
+	mkdir -p $(BUILD_DIR)/src/special_functions_real/
 	mkdir -p $(BUILD_DIR)/src/spherical_geometry/
 	mkdir -p $(BUILD_DIR)/src/sort/
 	mkdir -p $(BUILD_DIR)/src/string/
@@ -413,6 +414,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/vector_integer/
 	mkdir -p $(BUILD_DIR)/src/vector_real/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
+	mkdir -p $(BUILD_DIR)/src/where/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
 	mkdir -p $(BUILD_DIR)/src/assembly/i386/
