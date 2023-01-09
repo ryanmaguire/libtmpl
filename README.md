@@ -23,8 +23,10 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
     1. [The Mathematicians Programming Library](#TheMathProgLib)
-    2. [Installation (Unix-Like)](#InstallUnix)
-    3. [Installation (Windows)](#InstallWindows)
+    2. [Installation (Makefile, Unix-Like)](#InstallUnixMake)
+    3. [Installation (Bash Script, Unix-Like)](#InstallUnixBash)
+    3. [Installation (Batch Script, Windows)](#InstallWindowsBatch)
+    4. [Directory Structure](#DirStruct)
 2. [Language Bindings (C++, Python, IDL)](#bindings)
 4. [License](#license)
 
@@ -45,15 +47,7 @@ and no C99/C11 or GCC extensions are used. It compiles with C99 and C11/C18
 compilers, so it is more fitting to say it is written in the intersection of
 these standards.
 
-The ``examples/`` folder contains examples of all of the functions in the
-library and shows basic usage of these tools.
-
-The ``tests/`` folder contains time and accuracy tests of ``libtmpl`` against
-other libraries. To run these tests will require these libraries being
-available. Running these tests is **not** required, and they are mostly for
-internal use and to verify the algorithms implemented in libtmpl.
-
-## Installation (GNU, Linux, FreeBSD, macOS) <a name="InstallUnix"></a>
+## Installation (Makefile, Unix-Like) <a name="InstallUnixMake"></a>
 Run the Makefile with (`FreeBSD` users should use `gmake`):
 ```
 make
@@ -183,15 +177,115 @@ To uninstall, run:
 sudo make uninstall
 ```
 
-## Installation (Windows) <a name="InstallWindows"></a>
-Run the batch script `make.bat`.
+## Installation (Bash Script, Unix-Like) <a name="InstallUnixBash"></a>
+A `bash` script is available, but results in a larger and less performant build.
+By default it has nearly all compiler warnings enabled for `gcc` and `clang`
+(including `-Weverything` with `clang`) and is used internally as a
+quick error check.
+
+To use, run:
+```
+sudo bash make.sh
+```
+Options:
+
+`-cc=`
+> `C` compiler to be used. Tested with `gcc`, `clang`, `tcc`, and `pcc` on
+> Debian GNU/Linux.
+
+`-std=`
+> `C` standard to use. Default is `-std=c89`.
+
+`-omp`
+> Compile with OpenMP support.
+
+`-inplace`
+> Do not install `libtmpl` into `/usr/local/lib/` and `/usr/local/include/`.
+> Use this option if you do not have `sudo` privileges.
+
+`-inline`
+> Use inline code. You must have `-std` set to `c99` or higher.
+
+`-nomath`
+> Do not use `libtmpl`'s implementation of `libm`. Same as `NO_MATH=1` in the
+> Makefile.
+
+`-noieee`
+> Do not use any type-punning code or code that takes advantage of the
+> `IEEE-754` floating point format.
+
+`-noint`
+> Do not use any code that uses fixed-width integers.
+
+`-longlong`
+> Compile `long long` code. Must have `-std=c99` or higher.
+
+`-monster`
+> `libtmpl` was written in a way that allows all `.c` files to be `#include`d
+> into one file and then compiled. While this may seem silly, compilers lacking
+> link-time optimization can optimize the library at compile time, resulting in
+> a very performant build. Astronomical computations performed by `rss_ringoccs`
+> are about twice as fast this way. If your compiler has decent link-time
+> optimization it makes only a small difference.
+> This option creates a single `.c` file that `#include`s the entirety of
+> `libtmpl`, appropriately named `monster.c`, and then compiles this.
+
+## Installation (Batch Script, Windows) <a name="InstallWindowsBatch"></a>
+A very primitive batch script exists for Windows users.
+Run the script with:
 ```
 C:\Users\ryan\source\repos\libtmpl>make.bat
 ```
 This creates libtmpl.lib in the `libtmpl/` directory.
 It does not copy the `include/` directory or the library to any system
 directories. This has been tested using a Windows 10 virtual machine and it
-worked as expected.
+worked as expected. It compiles with `MSVC`'s `cl` by default. Pass the option
+`clang` or `clang-cl` to use LLVM's `clang` compiler.
+
+## Directory Structure <a name="DirStruct"></a>
+### data/
+Almost all mathematical functions of real or complex variables are
+computed via one of two methods:
+1. Argument reduction:
+> Reduce the input `x` to a small range `[a, b]` and then accurately compute
+> the function in the range using some numerical method. Ex: `sin`, `cos`,
+> `log`, `sqrt`.
+
+2. Separate argument into windows:
+> Determine if the input `x` falls in one of the ranges `[a_0, b_0]`, ...,
+> `[a_n, b_n]`, allowing for `a_0 = -inf` and `b_n = +inf`, and then compute
+> the function in this range using some numerical method. Ex: `Bessel_J0`,
+> `Bessel_I0`. Usually Taylor series for small inputs and asymptotic expansions
+> for large.
+
+The numerical methods are typically one of the following:
+1. Taylor / Maclaurin Series.
+2. Pade Approximants.
+3. Asymptotic Expansions.
+4. Chebyshev Polynomials.
+5. Remez exchange.
+
+Inside ``data/`` lies all of the code for computing the coefficients of these
+approximations. None of the code is directly used in `libtmpl`, indeed most
+files are in `Python`. This directory is kept in this repository for the sake
+of studying algorithms. In particular, for seeing *where* these approximations
+come from.
+
+### examples/
+All functions have examples of basic usage.
+
+### include/
+All header and inline files for `libtmpl`.
+
+### src/
+The source files. Mostly `.c`, but a few assembly files are found for certain
+architectures.
+
+### tests/
+Time and accuracy tests of ``libtmpl`` against other libraries. To run these
+tests will require these libraries being available. Running these tests is
+**not** required, and they are mostly for internal use and to verify the
+algorithms implemented in libtmpl.
 
 # Language Bindings <a name="bindings"></a>
 Language bindings, or *wrappers*, are provided for `C++`, `Python`,
