@@ -1,6 +1,6 @@
 /*  The C Standard Library header for math functions and more found here.     */
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_window_functions.h>
