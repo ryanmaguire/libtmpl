@@ -1,8 +1,7 @@
-
-
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
+#include <libtmpl/include/tmpl_special_functions_complex.h>
 
 /*  Define the first 25 coefficients of the Taylor series.                    */
 #define tmpl_BESSEL_I0_TAYLOR_00 1.0

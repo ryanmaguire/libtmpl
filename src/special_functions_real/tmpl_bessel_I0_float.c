@@ -70,7 +70,7 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file containing infinity, nan, and other math tools.       *
- *  2.) tmpl_special_functions.h:                                             *
+ *  2.) tmpl_special_functions_real.h:                                        *
  *          Header file containing the functions prototype.                   *
  ******************************************************************************
  *                            A NOTE ON COMMENTS                              *
@@ -106,147 +106,117 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Prototypes for these functions declared here.                             */
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
-/*  Define the first 25 coefficients of the Taylor series.                    */
-#define tmpl_BESSEL_I0_TAYLOR_00 1.0
-#define tmpl_BESSEL_I0_TAYLOR_01 0.25
-#define tmpl_BESSEL_I0_TAYLOR_02 1.56250e-2
-#define tmpl_BESSEL_I0_TAYLOR_03 4.34027777777777777777777777778e-4
-#define tmpl_BESSEL_I0_TAYLOR_04 6.78168402777777777777777777778e-6
-#define tmpl_BESSEL_I0_TAYLOR_05 6.78168402777777777777777777778e-8
-#define tmpl_BESSEL_I0_TAYLOR_06 4.70950279706790123456790123457e-10
-#define tmpl_BESSEL_I0_TAYLOR_07 2.40280754952443940539178634417e-12
-#define tmpl_BESSEL_I0_TAYLOR_08 9.38596699032984142731166540690e-15
-#define tmpl_BESSEL_I0_TAYLOR_09 2.89690339207711155163940290337e-17
-#define tmpl_BESSEL_I0_TAYLOR_10 7.24225848019277887909850725841e-20
-#define tmpl_BESSEL_I0_TAYLOR_11 1.49633439673404522295423703686e-22
-#define tmpl_BESSEL_I0_TAYLOR_12 2.59780277210771740096221707789e-25
-#define tmpl_BESSEL_I0_TAYLOR_13 3.84290350903508491266600159451e-28
-#define tmpl_BESSEL_I0_TAYLOR_14 4.90166263907536340901275713585e-31
-#define tmpl_BESSEL_I0_TAYLOR_15 5.44629182119484823223639681761e-34
-#define tmpl_BESSEL_I0_TAYLOR_16 5.31864435663559397679335626720e-37
-#define tmpl_BESSEL_I0_TAYLOR_17 4.60090342269515049895619054256e-40
-#define tmpl_BESSEL_I0_TAYLOR_18 3.55007980146230748376249270259e-43
-#define tmpl_BESSEL_I0_TAYLOR_19 2.45850401763317692781336059736e-46
-#define tmpl_BESSEL_I0_TAYLOR_20 1.53656501102073557988335037335e-49
-#define tmpl_BESSEL_I0_TAYLOR_21 8.71068600351890918301219032512e-53
-#define tmpl_BESSEL_I0_TAYLOR_22 4.49932128280935391684513963074e-56
-#define tmpl_BESSEL_I0_TAYLOR_23 2.12633330945621640682662553438e-59
-#define tmpl_BESSEL_I0_TAYLOR_24 9.22887721118149482129611777074e-63
+/*  Define the first 17 Taylor series coefficients for small values.          */
+#define tmpl_BESSEL_IO_TAYLORF_00 1.0F
+#define tmpl_BESSEL_IO_TAYLORF_01 0.25F
+#define tmpl_BESSEL_IO_TAYLORF_02 1.56250E-2F
+#define tmpl_BESSEL_IO_TAYLORF_03 4.34027777777777777777777777778E-4F
+#define tmpl_BESSEL_IO_TAYLORF_04 6.78168402777777777777777777778E-6F
+#define tmpl_BESSEL_IO_TAYLORF_05 6.78168402777777777777777777778E-8F
+#define tmpl_BESSEL_IO_TAYLORF_06 4.70950279706790123456790123457E-10F
+#define tmpl_BESSEL_IO_TAYLORF_07 2.40280754952443940539178634417E-12F
+#define tmpl_BESSEL_IO_TAYLORF_08 9.38596699032984142731166540690E-15F
+#define tmpl_BESSEL_IO_TAYLORF_09 2.89690339207711155163940290337E-17F
+#define tmpl_BESSEL_IO_TAYLORF_10 7.24225848019277887909850725841E-20F
+#define tmpl_BESSEL_IO_TAYLORF_11 1.49633439673404522295423703686E-22F
+#define tmpl_BESSEL_IO_TAYLORF_12 2.59780277210771740096221707789E-25F
+#define tmpl_BESSEL_IO_TAYLORF_13 3.84290350903508491266600159451E-28F
+#define tmpl_BESSEL_IO_TAYLORF_14 4.90166263907536340901275713585E-31F
+#define tmpl_BESSEL_IO_TAYLORF_15 5.44629182119484823223639681761E-34F
+#define tmpl_BESSEL_IO_TAYLORF_16 5.31864435663559397679335626720E-37F
 
-/*  And the first 7 terms of the asymptotic series.                           */
-#define tmpl_BESSEL_I0_ASYM_00 1.0
-#define tmpl_BESSEL_I0_ASYM_01 0.1250
-#define tmpl_BESSEL_I0_ASYM_02 0.07031250
-#define tmpl_BESSEL_I0_ASYM_03 0.07324218750
-#define tmpl_BESSEL_I0_ASYM_04 0.1121520996093750
-#define tmpl_BESSEL_I0_ASYM_05 0.2271080017089843750
-#define tmpl_BESSEL_I0_ASYM_06 0.5725014209747314453125
+/*  Define the first 5 coefficients of the asymptotic series.                 */
+#define tmpl_BESSEL_I0_ASYMF_00 1.0F
+#define tmpl_BESSEL_I0_ASYMF_01 0.1250F
+#define tmpl_BESSEL_I0_ASYMF_02 0.07031250F
+#define tmpl_BESSEL_I0_ASYMF_03 0.07324218750F
+#define tmpl_BESSEL_I0_ASYMF_04 0.1121520996093750F
 
-/*  Compute the Bessel I_0 function for a double precision value x. This      *
- *  returns double precision, maximum relative error ~1.e-9.                  */
-double tmpl_Double_Bessel_I0(double x)
+/*  Compute the Bessel I_0 function for a floating point number x. This       *
+ *  returns floating point precision, maximum relative error ~1.e-6.          */
+float tmpl_Float_Bessel_I0(float x)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    double bessel_I0, arg, abs_x;
+    /*  Declare necessary variables. C89 requires declaring these at the top. */
+    float bessel_I0, arg;
 
-    /*  I_0 is symmetric so compute the absolute value of x and use that.     *
-     *  tmpl_Abs_Double is an alias for fabs.                          */
-    abs_x = tmpl_Double_Abs(x);
+    /*  I_0 is an even function, so compute the absolute value of x.          */
+    const float abs_x = tmpl_Float_Abs(x);
 
     /*  For small arguments, use a Taylor series to approximate I_0.          */
-    if (abs_x < 16.0)
+    if (abs_x < 12.0F)
     {
-        /*  The series is in powers of x^2, so use Horner's method with that. */
-        arg = abs_x*abs_x;
+        /*  The series is in powers of x^2, so use Horner's method of         *
+         *  polynomial computation with that.                                 */
+        arg = x*x;
 
-        /*  Compute the degree 24 Taylor polynomial for bessel I0.            */
-        bessel_I0 = tmpl_BESSEL_I0_TAYLOR_24;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_23;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_22;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_21;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_20;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_19;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_18;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_17;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_16;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_15;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_14;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_13;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_12;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_11;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_10;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_09;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_08;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_07;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_06;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_05;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_04;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_03;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_02;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_01;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_TAYLOR_00;
+        /*  Compute the degree 16 Taylor polynomial for bessel I0.            */
+        bessel_I0 = tmpl_BESSEL_IO_TAYLORF_16;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_15;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_14;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_13;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_12;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_11;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_10;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_09;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_08;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_07;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_06;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_05;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_04;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_03;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_02;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_01;
+        bessel_I0 = arg*bessel_I0 + tmpl_BESSEL_IO_TAYLORF_00;
     }
 
-    /*  For larger values, use the asymptotic expansion.                      */
-    else if (abs_x < tmpl_Max_Double_Base_E)
+    /*  For larger values, use the asymptotic expansion. The constant         *
+     *  tmpl_Max_Float_Base_E is the largest value such that exp(x) does not  *
+     *  return infinity. It is defined in tmpl_math.h.                        */
+    else if (abs_x < tmpl_Max_Float_Base_E)
     {
         /*  The asymptotic expansion is in terms of 1/x.                      */
-        arg = 1.0/abs_x;
+        arg = 1.0F/abs_x;
 
-        /*  Compute the degree 6 polynomial term using Horner's Method.       */
-        bessel_I0 = tmpl_BESSEL_I0_ASYM_06;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYM_05;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYM_04;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYM_03;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYM_02;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYM_01;
-        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYM_00;
+        /*  Compute the degree 4 polynomial term using Horner's Method.       */
+        bessel_I0 = tmpl_BESSEL_I0_ASYMF_04;
+        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYMF_03;
+        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYMF_02;
+        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYMF_01;
+        bessel_I0 = arg * bessel_I0 + tmpl_BESSEL_I0_ASYMF_00;
 
         /*  Multiply by the coefficient factor and return.                    */
-        bessel_I0 *= tmpl_Double_Exp(abs_x) /
-                     tmpl_Double_Sqrt(tmpl_Two_Pi*abs_x);
+        bessel_I0 *= tmpl_Float_Exp(abs_x)/tmpl_Float_Sqrt(tmpl_Two_Pi_F*abs_x);
     }
 
     /*  For very large inputs, return infinity.                               */
     else
-        bessel_I0 = TMPL_INFINITY;
+        bessel_I0 = TMPL_INFINITYF;
 
     return bessel_I0;
 }
-/*  End of tmpl_Double_Bessel_I0.                                             */
+/*  End of tmpl_Float_Bessel_I0.                                              */
 
-/*  Undefine all of the macros.                                               */
-#undef tmpl_BESSEL_I0_TAYLOR_00
-#undef tmpl_BESSEL_I0_TAYLOR_01
-#undef tmpl_BESSEL_I0_TAYLOR_02
-#undef tmpl_BESSEL_I0_TAYLOR_03
-#undef tmpl_BESSEL_I0_TAYLOR_04
-#undef tmpl_BESSEL_I0_TAYLOR_05
-#undef tmpl_BESSEL_I0_TAYLOR_06
-#undef tmpl_BESSEL_I0_TAYLOR_07
-#undef tmpl_BESSEL_I0_TAYLOR_08
-#undef tmpl_BESSEL_I0_TAYLOR_09
-#undef tmpl_BESSEL_I0_TAYLOR_10
-#undef tmpl_BESSEL_I0_TAYLOR_11
-#undef tmpl_BESSEL_I0_TAYLOR_12
-#undef tmpl_BESSEL_I0_TAYLOR_13
-#undef tmpl_BESSEL_I0_TAYLOR_14
-#undef tmpl_BESSEL_I0_TAYLOR_15
-#undef tmpl_BESSEL_I0_TAYLOR_16
-#undef tmpl_BESSEL_I0_TAYLOR_17
-#undef tmpl_BESSEL_I0_TAYLOR_18
-#undef tmpl_BESSEL_I0_TAYLOR_19
-#undef tmpl_BESSEL_I0_TAYLOR_20
-#undef tmpl_BESSEL_I0_TAYLOR_21
-#undef tmpl_BESSEL_I0_TAYLOR_22
-#undef tmpl_BESSEL_I0_TAYLOR_23
-#undef tmpl_BESSEL_I0_TAYLOR_24
-#undef tmpl_BESSEL_I0_ASYM_00
-#undef tmpl_BESSEL_I0_ASYM_01
-#undef tmpl_BESSEL_I0_ASYM_02
-#undef tmpl_BESSEL_I0_ASYM_03
-#undef tmpl_BESSEL_I0_ASYM_04
-#undef tmpl_BESSEL_I0_ASYM_05
-#undef tmpl_BESSEL_I0_ASYM_06
+#undef tmpl_BESSEL_IO_TAYLORF_00
+#undef tmpl_BESSEL_IO_TAYLORF_01
+#undef tmpl_BESSEL_IO_TAYLORF_02
+#undef tmpl_BESSEL_IO_TAYLORF_03
+#undef tmpl_BESSEL_IO_TAYLORF_04
+#undef tmpl_BESSEL_IO_TAYLORF_05
+#undef tmpl_BESSEL_IO_TAYLORF_06
+#undef tmpl_BESSEL_IO_TAYLORF_07
+#undef tmpl_BESSEL_IO_TAYLORF_08
+#undef tmpl_BESSEL_IO_TAYLORF_09
+#undef tmpl_BESSEL_IO_TAYLORF_10
+#undef tmpl_BESSEL_IO_TAYLORF_11
+#undef tmpl_BESSEL_IO_TAYLORF_12
+#undef tmpl_BESSEL_IO_TAYLORF_13
+#undef tmpl_BESSEL_IO_TAYLORF_14
+#undef tmpl_BESSEL_IO_TAYLORF_15
+#undef tmpl_BESSEL_IO_TAYLORF_16
+#undef tmpl_BESSEL_I0_ASYMF_00
+#undef tmpl_BESSEL_I0_ASYMF_01
+#undef tmpl_BESSEL_I0_ASYMF_02
+#undef tmpl_BESSEL_I0_ASYMF_03
+#undef tmpl_BESSEL_I0_ASYMF_04

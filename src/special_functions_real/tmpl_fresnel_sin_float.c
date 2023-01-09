@@ -78,122 +78,112 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Prototypes for these functions declared here.                             */
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /* Define Coefficients for the Fresnel Sine Taylor Expansion.                 */
-#define FRESNEL_SINE_TAYLOR_00  0.33333333333333333333333333333
-#define FRESNEL_SINE_TAYLOR_01 -2.38095238095238095238095238095E-2
-#define FRESNEL_SINE_TAYLOR_02  7.57575757575757575757575757576E-4
-#define FRESNEL_SINE_TAYLOR_03 -1.32275132275132275132275132275E-5
-#define FRESNEL_SINE_TAYLOR_04  1.45038522231504687645038522232E-7
-#define FRESNEL_SINE_TAYLOR_05 -1.08922210371485733804574384285E-9
-#define FRESNEL_SINE_TAYLOR_06  5.94779401363763503681199154450E-12
-#define FRESNEL_SINE_TAYLOR_07 -2.46682701026445692771004257606E-14
-#define FRESNEL_SINE_TAYLOR_08  8.03273501241577360913984452289E-17
-#define FRESNEL_SINE_TAYLOR_09 -2.10785519144213582486050800945E-19
-#define FRESNEL_SINE_TAYLOR_10  4.55184675892820028624362194733E-22
-#define FRESNEL_SINE_TAYLOR_11 -8.23014929921422135684449347133E-25
-#define FRESNEL_SINE_TAYLOR_12  1.26410789889891635219506925867E-27
-#define FRESNEL_SINE_TAYLOR_13 -1.66976179341737202698649397027E-30
-#define FRESNEL_SINE_TAYLOR_14  1.91694286210978253077267196219E-33
-#define FRESNEL_SINE_TAYLOR_15 -1.93035720881510785655551537411E-36
-#define FRESNEL_SINE_TAYLOR_16  1.71885606280178362396819126766E-39
-#define FRESNEL_SINE_TAYLOR_17 -1.36304126177913957635067836351E-42
-#define FRESNEL_SINE_TAYLOR_18  9.68728023887076175384366004096E-46
-#define FRESNEL_SINE_TAYLOR_19 -6.20565791963739670594197460729E-49
-#define FRESNEL_SINE_TAYLOR_20  3.60157930981012591661339989697E-52
-#define FRESNEL_SINE_TAYLOR_21 -1.90254122728987952723942026864E-55
-#define FRESNEL_SINE_TAYLOR_22  9.18642950239868569596123672835E-59
+#define FRESNEL_SINE_TAYLORF_00  0.33333333333333333333333333333F
+#define FRESNEL_SINE_TAYLORF_01 -2.38095238095238095238095238095E-2F
+#define FRESNEL_SINE_TAYLORF_02  7.57575757575757575757575757576E-4F
+#define FRESNEL_SINE_TAYLORF_03 -1.32275132275132275132275132275E-5F
+#define FRESNEL_SINE_TAYLORF_04  1.45038522231504687645038522232E-7F
+#define FRESNEL_SINE_TAYLORF_05 -1.08922210371485733804574384285E-9F
+#define FRESNEL_SINE_TAYLORF_06  5.94779401363763503681199154450E-12F
+#define FRESNEL_SINE_TAYLORF_07 -2.46682701026445692771004257606E-14F
+#define FRESNEL_SINE_TAYLORF_08  8.03273501241577360913984452289E-17F
+#define FRESNEL_SINE_TAYLORF_09 -2.10785519144213582486050800945E-19F
+#define FRESNEL_SINE_TAYLORF_10  4.55184675892820028624362194733E-22F
+#define FRESNEL_SINE_TAYLORF_11 -8.23014929921422135684449347133E-25F
+#define FRESNEL_SINE_TAYLORF_12  1.26410789889891635219506925867E-27F
+#define FRESNEL_SINE_TAYLORF_13 -1.66976179341737202698649397027E-30F
+#define FRESNEL_SINE_TAYLORF_14  1.91694286210978253077267196219E-33F
+#define FRESNEL_SINE_TAYLORF_15 -1.93035720881510785655551537411E-36F
+#define FRESNEL_SINE_TAYLORF_16  1.71885606280178362396819126766E-39F
 
 /* Define Coefficients for the Fresnel Sine Asymptotic Expansion.             */
-#define FRESNEL_SINE_ASYM_00 -0.50
-#define FRESNEL_SINE_ASYM_01 -0.250
-#define FRESNEL_SINE_ASYM_02  0.3750
-#define FRESNEL_SINE_ASYM_03  0.93750
-#define FRESNEL_SINE_ASYM_04 -3.281250
-#define FRESNEL_SINE_ASYM_05 -14.7656250
-#define FRESNEL_SINE_ASYM_06  81.21093750
-#define FRESNEL_SINE_ASYM_07  527.871093750
-#define FRESNEL_SINE_ASYM_08 -3959.0332031250
-#define FRESNEL_SINE_ASYM_09 -33651.78222656250
+#define FRESNEL_SINE_ASYMF_00 -0.50F
+#define FRESNEL_SINE_ASYMF_01 -0.250F
+#define FRESNEL_SINE_ASYMF_02  0.3750F
+#define FRESNEL_SINE_ASYMF_03  0.93750F
+#define FRESNEL_SINE_ASYMF_04 -3.281250F
+#define FRESNEL_SINE_ASYMF_05 -14.7656250F
+#define FRESNEL_SINE_ASYMF_06  81.21093750F
+#define FRESNEL_SINE_ASYMF_07  527.871093750F
+#define FRESNEL_SINE_ASYMF_08 -3959.0332031250F
+#define FRESNEL_SINE_ASYMF_09 -33651.78222656250F
 
-double tmpl_Double_Fresnel_Sin(double x)
+float tmpl_Float_Fresnel_Sin(float x)
 {
     /* Variables for S(x) and powers of x, respectively. */
-    double sx;
-    double sinarg, cosarg, cos_x_squared, sin_x_squared;
-    double arg = x*x;
+    float sx;
+    float arg = x*x;
+    float sinarg, cosarg, cos_x_squared, sin_x_squared;
 
     /* For small x use the Taylor expansion to compute C(x). For larger x,  *
      * use the asymptotic expansion. For values near 3.076, accuracy of 5   *
      * decimals is guaranteed. Higher precicion outside this region. When   *
      * |x| > 1.e8, S(x) returns +/- sqrt(pi/8) to 8 decimals.               */
-    if (arg < 11.68){
+    if (arg < 9.0F)
+    {
         x *= arg;
         arg *= arg;
-        sx = arg * FRESNEL_SINE_TAYLOR_22 + FRESNEL_SINE_TAYLOR_21;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_20;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_19;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_18;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_17;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_16;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_15;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_14;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_13;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_12;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_11;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_10;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_09;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_08;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_07;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_06;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_05;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_04;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_03;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_02;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_01;
-        sx = arg * sx + FRESNEL_SINE_TAYLOR_00;
+        sx = arg * FRESNEL_SINE_TAYLORF_16 + FRESNEL_SINE_TAYLORF_15;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_14;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_13;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_12;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_11;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_10;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_09;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_08;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_07;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_06;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_05;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_04;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_03;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_02;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_01;
+        sx = arg * sx + FRESNEL_SINE_TAYLORF_00;
         sx = sx*x;
     }
-    else if (arg < 1.0e16)
+    else if (arg < 1.0e16F)
     {
-        cos_x_squared = tmpl_Double_Cos(arg);
-        sin_x_squared = tmpl_Double_Sin(arg);
+        cos_x_squared = tmpl_Float_Cos(arg);
+        sin_x_squared = tmpl_Float_Sin(arg);
 
-        arg = 1.0/arg;
+        arg = 1.0F/arg;
         cos_x_squared *= arg;
         arg *= arg;
         sin_x_squared *= arg;
 
-        cosarg  = arg * FRESNEL_SINE_ASYM_08 + FRESNEL_SINE_ASYM_06;
-        cosarg  = arg * cosarg + FRESNEL_SINE_ASYM_04;
-        cosarg  = arg * cosarg + FRESNEL_SINE_ASYM_02;
-        cosarg  = arg * cosarg + FRESNEL_SINE_ASYM_00;
+        cosarg  = arg * FRESNEL_SINE_ASYMF_08 + FRESNEL_SINE_ASYMF_06;
+        cosarg  = arg * cosarg + FRESNEL_SINE_ASYMF_04;
+        cosarg  = arg * cosarg + FRESNEL_SINE_ASYMF_02;
+        cosarg  = arg * cosarg + FRESNEL_SINE_ASYMF_00;
         cosarg *= cos_x_squared;
 
-        sinarg  = arg * FRESNEL_SINE_ASYM_09 + FRESNEL_SINE_ASYM_07;
-        sinarg  = arg * sinarg + FRESNEL_SINE_ASYM_05;
-        sinarg  = arg * sinarg + FRESNEL_SINE_ASYM_03;
-        sinarg  = arg * sinarg + FRESNEL_SINE_ASYM_01;
+        sinarg  = arg * FRESNEL_SINE_ASYMF_09 + FRESNEL_SINE_ASYMF_07;
+        sinarg  = arg * sinarg + FRESNEL_SINE_ASYMF_05;
+        sinarg  = arg * sinarg + FRESNEL_SINE_ASYMF_03;
+        sinarg  = arg * sinarg + FRESNEL_SINE_ASYMF_01;
         sinarg *= sin_x_squared;
 
         sx = cosarg + sinarg;
         sx *= x;
 
-        if (x > 0.0)
-            sx += tmpl_Sqrt_Pi_By_Eight;
+        if (x > 0.0F)
+            sx += tmpl_Sqrt_Pi_By_Eight_F;
         else
-            sx -= tmpl_Sqrt_Pi_By_Eight;
+            sx -= tmpl_Sqrt_Pi_By_Eight_F;
     }
 
     /*  For large values, return the limit of S(x) as x -> +/- infinity.      */
     else
     {
-        if (x > 0.0)
-            sx = tmpl_Sqrt_Pi_By_Eight;
+        if (x > 0.0F)
+            sx = tmpl_Sqrt_Pi_By_Eight_F;
         else
-            sx = -tmpl_Sqrt_Pi_By_Eight;
+            sx = -tmpl_Sqrt_Pi_By_Eight_F;
     }
 
     return sx;
 }
+/*  End of tmpl_Float_Fresnel_Sin.                                            */
