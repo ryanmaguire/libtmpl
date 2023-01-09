@@ -50,7 +50,7 @@
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  The Fresnel integrals are found here.                                     */
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Header file containing the prototypes for the functions.                  */
 #include <libtmpl/include/tmpl_optics.h>
