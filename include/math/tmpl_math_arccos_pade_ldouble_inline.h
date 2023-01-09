@@ -156,7 +156,7 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
         P0+z*(P1+z*(P2+z*(P3+z*(P4+z*(P5+z*(P6+z*(P7+z*(P8+z*P9))))))));
     const long double q =
         Q0+z*(Q1+z*(Q2+z*(Q3+z*(Q4+z*(Q5+z*(Q6+z*(Q7+z*(Q8+z*Q9))))))));
-    const long double r = x2*p/q;
+    const long double r = z*p/q;
 
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
     return tmpl_Pi_By_Two_L - (x + x*r);
