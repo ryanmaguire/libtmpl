@@ -23,10 +23,10 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
     1. [The Mathematicians Programming Library](#The-Mathematicians-Programming-Library)
-    2. [Installation (Makefile, Unix-Like)](#Installation-(Makefile-Unix-Like))
-    3. [Installation (Bash Script, Unix-Like)](#InstallUnixBash)
-    3. [Installation (Batch Script, Windows)](#InstallWindowsBatch)
-    4. [Directory Structure](#DirStruct)
+    2. [Installation: Makefile](#Installation-Makefile)
+    3. [Installation: Bash Script](#Installation-Bash-Script)
+    3. [Installation: Batch Script](#Installation-Batch-Script)
+    4. [Directory Structure](#Directory-Structure)
 2. [Language Bindings (C++, Python, IDL)](#bindings)
 4. [License](#license)
 
@@ -47,7 +47,7 @@ and no C99/C11 or GCC extensions are used. It compiles with C99 and C11/C18
 compilers, so it is more fitting to say it is written in the intersection of
 these standards.
 
-## Installation (Makefile, Unix-Like) <a name="InstallUnixMake"></a>
+## Installation: Makefile
 Run the Makefile with (`FreeBSD` users should use `gmake`):
 ```
 make
@@ -177,7 +177,7 @@ To uninstall, run:
 sudo make uninstall
 ```
 
-## Installation (Bash Script, Unix-Like) <a name="InstallUnixBash"></a>
+## Installation: Bash Script
 A `bash` script is available, but results in a larger and less performant build.
 By default it has nearly all compiler warnings enabled for `gcc` and `clang`
 (including `-Weverything` with `clang`) and is used internally as a
@@ -230,7 +230,7 @@ Options:
 > This option creates a single `.c` file that `#include`s the entirety of
 > `libtmpl`, appropriately named `monster.c`, and then compiles this.
 
-## Installation (Batch Script, Windows) <a name="InstallWindowsBatch"></a>
+## Installation: Batch Script
 A very primitive batch script exists for Windows users.
 Run the script with:
 ```
@@ -242,7 +242,7 @@ directories. This has been tested using a Windows 10 virtual machine and it
 worked as expected. It compiles with `MSVC`'s `cl` by default. Pass the option
 `clang` or `clang-cl` to use LLVM's `clang` compiler.
 
-## Directory Structure <a name="DirStruct"></a>
+## Directory Structure
 ### data/
 Almost all mathematical functions of real or complex variables are
 computed via one of two methods:
