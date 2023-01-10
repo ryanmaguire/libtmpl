@@ -172,6 +172,12 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_arctan_very_small_double.c" -and \
 	-not -name "tmpl_arctan_very_small_float.c" -and \
 	-not -name "tmpl_arctan_very_small_ldouble.c" -and \
+	-not -name "tmpl_bessel_i0_asymptotic_double.c" -and \
+	-not -name "tmpl_bessel_i0_asymptotic_float.c" -and \
+	-not -name "tmpl_bessel_i0_chebyshev_double.c" -and \
+	-not -name "tmpl_bessel_i0_chebyshev_float.c" -and \
+	-not -name "tmpl_bessel_i0_maclaurin_double.c" -and \
+	-not -name "tmpl_bessel_i0_maclaurin_float.c" -and \
 	-not -name "tmpl_cbrt_pade_double.c" -and \
 	-not -name "tmpl_cbrt_pade_float.c" -and \
 	-not -name "tmpl_cbrt_pade_ldouble.c" -and \
