@@ -1,21 +1,38 @@
 #ifndef TMPL_SPECIAL_FUNCTIONS_REAL_H
 #define TMPL_SPECIAL_FUNCTIONS_REAL_H
 
+#include <libtmpl/include/tmpl_config.h>
+
 extern float tmpl_Float_Bessel_I0(float x);
 extern double tmpl_Double_Bessel_I0(double x);
 extern long double tmpl_LDouble_Bessel_I0(long double x);
 
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/specfunc/tmpl_bessel_i0_asymptotic_double.h>
+#include <libtmpl/include/specfunc/tmpl_bessel_i0_asymptotic_float.h>
+#else
 extern float tmpl_Float_Bessel_I0_Asymptotic(float x);
 extern double tmpl_Double_Bessel_I0_Asymptotic(double x);
 extern long double tmpl_LDouble_Bessel_I0_Asymptotic(long double x);
+#endif
 
-extern float tmpl_Float_Bessel_I0_Small_Asymptotic(float x);
-extern double tmpl_Double_Bessel_I0_Small_Asymptotic(double x);
-extern long double tmpl_LDouble_Bessel_I0_Small_Asymptotic(long double x);
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/specfunc/tmpl_bessel_i0_chebyshev_double.h>
+#include <libtmpl/include/specfunc/tmpl_bessel_i0_chebyshev_float.h>
+#else
+extern float tmpl_Float_Bessel_I0_Chebyshev(float x);
+extern double tmpl_Double_Bessel_I0_Chebyshev(double x);
+extern long double tmpl_LDouble_Bessel_I0_Chebyshev(long double x);
+#endif
 
-extern float tmpl_Float_Bessel_I0_Large_Asymptotic(float x);
-extern double tmpl_Double_Bessel_I0_Large_Asymptotic(double x);
-extern long double tmpl_LDouble_Bessel_I0_Large_Asymptotic(long double x);
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/specfunc/tmpl_bessel_i0_maclaurin_double.h>
+#include <libtmpl/include/specfunc/tmpl_bessel_i0_maclaurin_float.h>
+#else
+extern float tmpl_Float_Bessel_I0_Maclaurin(float x);
+extern double tmpl_Double_Bessel_I0_Maclaurin(double x);
+extern long double tmpl_LDouble_Bessel_I0_Maclaurin(long double x);
+#endif
 
 extern float tmpl_Float_Bessel_J0(float x);
 extern double tmpl_Double_Bessel_J0(double x);

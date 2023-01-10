@@ -39,7 +39,8 @@
 #include <libtmpl/include/tmpl_quadruple.h>
 #include <libtmpl/include/tmpl_rational.h>
 #include <libtmpl/include/tmpl_sort.h>
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_complex.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 #include <libtmpl/include/tmpl_spherical_geometry.h>
 #include <libtmpl/include/tmpl_string.h>
 #include <libtmpl/include/tmpl_svg.h>
