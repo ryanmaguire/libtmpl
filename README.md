@@ -23,7 +23,7 @@
 # Table of Contents
 1. [libtmpl](#libtmpl)
     1. [The Mathematicians Programming Library](#The-Mathematicians-Programming-Library)
-    2. [Installation (Makefile, Unix-Like)](#Installation-Makefile-Unix-Like)
+    2. [Installation (Makefile, Unix-Like)](#Installation-(Makefile-Unix-Like))
     3. [Installation (Bash Script, Unix-Like)](#InstallUnixBash)
     3. [Installation (Batch Script, Windows)](#InstallWindowsBatch)
     4. [Directory Structure](#DirStruct)
