@@ -18,40 +18,62 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Determine the degrees necessary for the bessel I0 asymptotic expansion #
-#       to achieve double precision in certain windows.                        #
+#       Computes the Chebyshev coefficients for the Bessel Function I0.        #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
+# Chebyshev evaluation and coefficients.
+import chebyshev
+
+# Polynomial evaluation via Horner's method.
+import poly
+
 # Muli-precision math routines found here.
 import mpmath
-
-# Bessel I0 coefficients given here.
-import besseli0
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Precision needed.
+def f(x):
+    y = mpmath.mpf(16)/mpmath.mpf(x + 1)
+    return mpmath.exp(-y)*mpmath.besseli(0, y)*mpmath.sqrt(y)
+
+def coeffs(N):
+    return chebyshev.cheb_coeffs(f, N, 1000)
+
+def cheb_eval(a, x):
+    x = mpmath.mpf(x)
+    y = mpmath.mpf(16)/x - mpmath.mpf(1)
+    z = chebyshev.cheb_eval(a, y)
+    return z/mpmath.sqrt(x)
+
+def poly_eval(a, x):
+    x = mpmath.mpf(x)
+    y = mpmath.mpf(16)/x - mpmath.mpf(1)
+    z = poly.poly_eval(a, y)
+    return z/mpmath.sqrt(x)
+
+def diff(a, x):
+    y = cheb_eval(a, x)
+    z = mpmath.besseli(0, x)*mpmath.exp(-x)
+    return (y - z)/z
+
+# Desired precision.
 EPS = 2**-52
 
-# Function for computing the difference of the approximation.
-def diff(x, N):
-    y = mpmath.besseli(0, x)
-    z = besseli0.asym_series(x, N)
-    return (y - z) / y
-
 # Print which values of N achieved double precision.
-for n in range(3, 10):
-    x = 2**n
-    for m in range(2, 50):
-        y = diff(x, m)
+x = 16
+N = 21
+for m in range(2, N):
+    a = coeffs(m)
+    y = diff(a, x)
 
-        # If the expansion was very accurate, move along.
-        if abs(y) < EPS:
-            print(m, x, "%E" % float(y))
-            break
+    # If the expansion was very accurate, move along.
+    if abs(y) < EPS:
+        b = chebyshev.cheb_to_poly(a)
+        poly.print_coeffs(b)
+        break

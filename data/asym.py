@@ -18,40 +18,46 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Determine the degrees necessary for the bessel I0 asymptotic expansion #
-#       to achieve double precision in certain windows.                        #
+#       Routines for working with asymptotic expansions.                       #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   January 10, 2023.                                                  #
 ################################################################################
 """
 
 # Muli-precision math routines found here.
 import mpmath
 
-# Bessel I0 coefficients given here.
-import besseli0
-
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Precision needed.
-EPS = 2**-52
+# Print the coefficients for the Chebyshev expansion.
+def print_coeffs(c, ctype = "double"):
 
-# Function for computing the difference of the approximation.
-def diff(x, N):
-    y = mpmath.besseli(0, x)
-    z = besseli0.asym_series(x, N)
-    return (y - z) / y
+    # Number of decimals to print.
+    N = 50
 
-# Print which values of N achieved double precision.
-for n in range(3, 10):
-    x = 2**n
-    for m in range(2, 50):
-        y = diff(x, m)
+    # Extension for literal constants, depends on data type.
+    if ctype == "ldouble":
+        ext = "L"
+    elif ctype == "float":
+        ext = "F"
+    else:
+        ext = ""
 
-        # If the expansion was very accurate, move along.
-        if abs(y) < EPS:
-            print(m, x, "%E" % float(y))
-            break
+    print("/*  Coefficients for the asymptotic expansion."
+          "                                */")
+    for n in range(len(c)):
+        x = mpmath.mpf(c[n])
+        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
+                        min_fixed = 0, max_fixed = 0)
+        s = s.replace("e", "E")
+
+        if not s[-2:].isnumeric():
+            s = s[:-1] + "0" + s[-1:]
+
+        if x >= 0:
+            print("#define A%02d (+%s%s)" % (n, s, ext))
+        else:
+            print("#define A%02d (%s%s)" % (n, s, ext))

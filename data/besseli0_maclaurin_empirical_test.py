@@ -22,7 +22,7 @@
 #       to achieve double precision in certain windows.                        #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   January 10, 2023.                                                  #
 ################################################################################
 """
 
@@ -32,26 +32,31 @@ import mpmath
 # Bessel I0 coefficients given here.
 import besseli0
 
+# Polynomial computations here.
+import poly
+
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Precision needed.
-EPS = 2**-52
+# Desired precision.
+EPS = 2**-23
 
-# Function for computing the difference of the approximation.
-def diff(x, N):
+# Function for computing the difference of the approximation with scipy.
+def diff(a, x):
     y = mpmath.besseli(0, x)
-    z = besseli0.asym_series(x, N)
+    z = poly.poly_eval(a, x*x)
     return (y - z) / y
 
 # Print which values of N achieved double precision.
-for n in range(3, 10):
-    x = 2**n
-    for m in range(2, 50):
-        y = diff(x, m)
+x = 8
 
-        # If the expansion was very accurate, move along.
-        if abs(y) < EPS:
-            print(m, x, "%E" % float(y))
-            break
+for m in range(2, 50):
+    a = [besseli0.taylor(n) for n in range(m)]
+    y = diff(a, x)
+
+    # If the expansion was very accurate, move along.
+    if abs(y) < EPS:
+        b = [mpmath.mpf(k.numerator) / mpmath.mpf(k.denominator) for k in a]
+        poly.print_coeffs(b)
+        break

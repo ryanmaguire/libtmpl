@@ -40,7 +40,7 @@ mpmath.mp.dps = 224
 
 def f(x):
     y = mpmath.mpf(16)/mpmath.mpf(x + 1)
-    return mpmath.exp(-y)*mpmath.besseli(0, y)*mpmath.sqrt(y)-mpmath.mpf(0.375)
+    return mpmath.exp(-y)*mpmath.besseli(0, y)*mpmath.sqrt(y)
 
 def coeffs(N):
     return chebyshev.cheb_coeffs(f, N, 1000)
@@ -49,15 +49,15 @@ def cheb_eval(a, x):
     x = mpmath.mpf(x)
     y = mpmath.mpf(16)/x - mpmath.mpf(1)
     z = chebyshev.cheb_eval(a, y)
-    return (z + mpmath.mpf(0.375))/mpmath.sqrt(x)
+    return z/mpmath.sqrt(x)
 
 def poly_eval(a, x):
     x = mpmath.mpf(x)
     y = mpmath.mpf(16)/x - mpmath.mpf(1)
     z = poly.poly_eval(a, y)
-    return (z + mpmath.mpf(0.375))/mpmath.sqrt(x)
+    return z/mpmath.sqrt(x)
 
 c = coeffs(20)
 a = chebyshev.cheb_to_poly(c)
 chebyshev.print_coeffs(c)
-poly.print_coeffs(c)
+poly.print_coeffs(a)
