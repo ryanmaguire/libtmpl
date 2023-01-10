@@ -22,11 +22,11 @@
 
 # Table of Contents
 1. [libtmpl](#libtmpl)
-    1. [The Mathematicians Programming Library](#TheMathProgLib)
-    2. [Installation (Makefile, Unix-Like)](#InstallUnixMake)
-    3. [Installation (Bash Script, Unix-Like)](#InstallUnixBash)
-    3. [Installation (Batch Script, Windows)](#InstallWindowsBatch)
-    4. [Directory Structure](#DirStruct)
+    1. [The Mathematicians Programming Library](##TheMathProgLib)
+    2. [Installation (Makefile, Unix-Like)](##InstallUnixMake)
+    3. [Installation (Bash Script, Unix-Like)](##InstallUnixBash)
+    3. [Installation (Batch Script, Windows)](##InstallWindowsBatch)
+    4. [Directory Structure](##DirStruct)
 2. [Language Bindings (C++, Python, IDL)](#bindings)
 4. [License](#license)
 
