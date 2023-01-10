@@ -18,40 +18,27 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Determine the degrees necessary for the bessel I0 asymptotic expansion #
-#       to achieve double precision in certain windows.                        #
+#       Computes the Pade coefficients for the modified Bessel Function I0.    #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
+# Print routine given here.
+import asym
+
+# I0 coefficients found here.
+import besseli0
+
 # Muli-precision math routines found here.
 import mpmath
-
-# Bessel I0 coefficients given here.
-import besseli0
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Precision needed.
-EPS = 2**-52
-
-# Function for computing the difference of the approximation.
-def diff(x, N):
-    y = mpmath.besseli(0, x)
-    z = besseli0.asym_series(x, N)
-    return (y - z) / y
-
-# Print which values of N achieved double precision.
-for n in range(3, 10):
-    x = 2**n
-    for m in range(2, 50):
-        y = diff(x, m)
-
-        # If the expansion was very accurate, move along.
-        if abs(y) < EPS:
-            print(m, x, "%E" % float(y))
-            break
+# Compute and print the coefficients of the asymptotic expansion.
+a = [besseli0.asym(n) for n in range(11)]
+b = [mpmath.mpf(k.numerator) / mpmath.mpf(k.denominator) for k in a]
+asym.print_coeffs(b)
