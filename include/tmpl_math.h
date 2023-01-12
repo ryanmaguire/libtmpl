@@ -1334,9 +1334,9 @@ extern const long double tmpl_ldouble_sinpi_table[128];
  *      libtmpl/src/math/tmpl_abs_float.c                                     *
  *      libtmpl/src/math/tmpl_abs_double.c                                    *
  *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
- *      libtmpl/include/math/tmpl_math_abs_double_inline.h (inline version)   *
- *      libtmpl/include/math/tmpl_math_abs_float_inline.h (inline version)    *
- *      libtmpl/include/math/tmpl_math_abs_ldouble_inline.h (inline version)  *
+ *      libtmpl/include/math/tmpl_abs_double.h (inline version)               *
+ *      libtmpl/include/math/tmpl_abs_float.h (inline version)                *
+ *      libtmpl/include/math/tmpl_abs_ldouble.h (inline version)              *
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
  *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
@@ -1369,9 +1369,9 @@ extern const long double tmpl_ldouble_sinpi_table[128];
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_math_abs_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_abs_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_abs_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_abs_float.h>
+#include <libtmpl/include/math/tmpl_abs_double.h>
+#include <libtmpl/include/math/tmpl_abs_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -1457,9 +1457,9 @@ extern long double tmpl_LDouble_Arccos(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_math_arccos_pade_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_arccos_pade_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_arccos_pade_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_arccos_pade_double.h>
+#include <libtmpl/include/math/tmpl_arccos_pade_float.h>
+#include <libtmpl/include/math/tmpl_arccos_pade_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1495,9 +1495,9 @@ extern long double tmpl_LDouble_Arccos_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_math_arccos_tail_end_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_arccos_tail_end_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_arccos_tail_end_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_arccos_tail_end_double.h>
+#include <libtmpl/include/math/tmpl_arccos_tail_end_float.h>
+#include <libtmpl/include/math/tmpl_arccos_tail_end_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1629,9 +1629,9 @@ extern long double tmpl_LDouble_Arctan(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_asymptotic_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_arctan_asymptotic_double.h>
+#include <libtmpl/include/math/tmpl_arctan_asymptotic_float.h>
+#include <libtmpl/include/math/tmpl_arctan_asymptotic_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1667,9 +1667,9 @@ extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_maclaurin_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1703,9 +1703,9 @@ extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_pade_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_pade_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_pade_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_arctan_pade_double.h>
+#include <libtmpl/include/math/tmpl_arctan_pade_float.h>
+#include <libtmpl/include/math/tmpl_arctan_pade_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1739,9 +1739,9 @@ extern long double tmpl_LDouble_Arctan_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_arctan_very_small_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_very_small_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_arctan_very_small_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_arctan_very_small_double.h>
+#include <libtmpl/include/math/tmpl_arctan_very_small_float.h>
+#include <libtmpl/include/math/tmpl_arctan_very_small_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1956,9 +1956,9 @@ extern long double tmpl_LDouble_Cbrt(long double x);
  *          The cube root of x, x^{1/3}.                                      *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_cbrt_pade_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_cbrt_pade_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_cbrt_pade_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_cbrt_pade_double.h>
+#include <libtmpl/include/math/tmpl_cbrt_pade_float.h>
+#include <libtmpl/include/math/tmpl_cbrt_pade_ldouble.h>
 #else
 extern float tmpl_Float_Cbrt_Pade(float x);
 extern double tmpl_Double_Cbrt_Pade(double x);
@@ -1978,9 +1978,9 @@ extern long double tmpl_LDouble_Cbrt_Pade(long double x);
  *          The cube root of x, x^{1/3}.                                      *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_cbrt_taylor_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_cbrt_taylor_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_cbrt_taylor_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_cbrt_taylor_double.h>
+#include <libtmpl/include/math/tmpl_cbrt_taylor_float.h>
+#include <libtmpl/include/math/tmpl_cbrt_taylor_ldouble.h>
 #else
 extern float tmpl_Float_Cbrt_Taylor(float x);
 extern double tmpl_Double_Cbrt_Taylor(double x);
@@ -2013,9 +2013,9 @@ extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support to copysign found here.                                    */
-#include <libtmpl/include/math/tmpl_math_copysign_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_copysign_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_copysign_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_copysign_double.h>
+#include <libtmpl/include/math/tmpl_copysign_float.h>
+#include <libtmpl/include/math/tmpl_copysign_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
@@ -2081,9 +2081,9 @@ extern long double tmpl_LDouble_Cosd(long double x);
 
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_cosd_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_cosd_maclaurin_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_cosd_maclaurin_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_cosd_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_cosd_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_cosd_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2127,9 +2127,9 @@ extern long double tmpl_LDouble_CosPi(long double x);
 
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_cospi_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_cospi_maclaurin_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_cospi_maclaurin_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_cospi_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_cospi_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_cospi_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2197,9 +2197,9 @@ extern long double tmpl_LDouble_Cosh(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_cosh_maclaurin_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_cosh_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_cosh_maclaurin_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_cosh_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_cosh_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_cosh_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2229,9 +2229,9 @@ extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_cosh_pade_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_cosh_pade_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_cosh_pade_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_cosh_pade_float.h>
+#include <libtmpl/include/math/tmpl_cosh_pade_double.h>
+#include <libtmpl/include/math/tmpl_cosh_pade_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2263,9 +2263,9 @@ extern long double tmpl_LDouble_Cosh_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_math_dist_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_dist_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_dist_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_dist_double.h>
+#include <libtmpl/include/math/tmpl_dist_float.h>
+#include <libtmpl/include/math/tmpl_dist_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2359,8 +2359,8 @@ extern long double tmpl_LDouble_Exp(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_exp_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_exp_maclaurin_float_inline.h>
+#include <libtmpl/include/math/tmpl_exp_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_exp_maclaurin_float.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2390,9 +2390,9 @@ extern long double tmpl_LDouble_Exp_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/math/tmpl_math_exp_pade_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_exp_pade_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_exp_pade_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_exp_pade_double.h>
+#include <libtmpl/include/math/tmpl_exp_pade_float.h>
+#include <libtmpl/include/math/tmpl_exp_pade_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2422,8 +2422,8 @@ extern long double tmpl_LDouble_Exp_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_math_exp_pos_kernel_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_exp_pos_kernel_float_inline.h>
+#include <libtmpl/include/math/tmpl_exp_pos_kernel_double.h>
+#include <libtmpl/include/math/tmpl_exp_pos_kernel_float.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2453,8 +2453,8 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_math_exp_neg_kernel_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_exp_neg_kernel_float_inline.h>
+#include <libtmpl/include/math/tmpl_exp_neg_kernel_double.h>
+#include <libtmpl/include/math/tmpl_exp_neg_kernel_float.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2881,7 +2881,7 @@ extern long double tmpl_LDouble_Sin(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sin_very_small_inline.h>
+#include <libtmpl/include/math/tmpl_sin_very_small.h>
 #else
 extern double tmpl_Double_Sin_Very_Small(double x);
 #endif
@@ -2899,7 +2899,7 @@ extern double tmpl_Double_Sin_Very_Small(double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sin_pade_inline.h>
+#include <libtmpl/include/math/tmpl_sin_pade.h>
 #else
 extern float tmpl_Float_Sin_Pade(float x);
 extern double tmpl_Double_Sin_Pade(double x);
@@ -2919,7 +2919,7 @@ extern long double tmpl_LDouble_Sin_Pade(long double x);
  *          The sine of x.                                                    *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sin_pade_pi_inline.h>
+#include <libtmpl/include/math/tmpl_sin_pade_pi.h>
 #else
 extern float tmpl_Float_Sin_Pade_Pi(float x);
 extern double tmpl_Double_Sin_Pade_Pi(double x);
@@ -2978,9 +2978,9 @@ extern long double tmpl_LDouble_Sind(long double x);
 
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sind_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_sind_maclaurin_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_sind_maclaurin_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_sind_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_sind_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_sind_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -3040,9 +3040,9 @@ extern long double tmpl_LDouble_SinPi(long double x);
 
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_math_sinpi_maclaurin_double_inline.h>
-#include <libtmpl/include/math/tmpl_math_sinpi_maclaurin_float_inline.h>
-#include <libtmpl/include/math/tmpl_math_sinpi_maclaurin_ldouble_inline.h>
+#include <libtmpl/include/math/tmpl_sinpi_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_sinpi_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_sinpi_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
