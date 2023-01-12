@@ -6,11 +6,11 @@
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-#include <libtmpl/include/math/tmpl_math_sincos_sin_precise_eval.h>
-#include <libtmpl/include/math/tmpl_math_sincos_cos_precise_eval.h>
-#include <libtmpl/include/math/tmpl_math_sincos_reduction.h>
-#include <libtmpl/include/math/tmpl_math_sincos_reduction_very_large.h>
-#include <libtmpl/include/math/tmpl_math_sincos_data_double.h>
+#include <libtmpl/include/math/tmpl_sincos_sin_precise_eval.h>
+#include <libtmpl/include/math/tmpl_sincos_cos_precise_eval.h>
+#include <libtmpl/include/math/tmpl_sincos_reduction.h>
+#include <libtmpl/include/math/tmpl_sincos_reduction_very_large.h>
+#include <libtmpl/include/math/tmpl_sincos_data_double.h>
 
 #define TMPL_PI_BY_TWO_LOW_HALF (6.123233995736766035868820147292E-17)
 
