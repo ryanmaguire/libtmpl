@@ -35,17 +35,64 @@
  *          The arc-cosine of x.                                              *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *                                                                            *
+ *          tmpl_Double_Arccos_Pade (tmpl_math.h):                            *
+ *              Computes acos(x) via a Pade approximant for |x| < 0.5.        *
+ *          tmpl_Double_Arccos_Tail_End (tmpl_math.h):                        *
+ *              Computes acos(x) for 0.5 <= x < 1.0.                          *
  *      Method:                                                               *
+ *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
+ *          use the reflection formula:                                       *
  *                                                                            *
+ * 	            acos(x) = 2*asin(sqrt((1-x)/2))                               *
+ *                                                                            *
+ *	        Compute this using a Pade approximant. For values -1 < x <= -0.5  *
+ *          use the negation formula:                                         *
+ *                                                                            *
+ *              acos(x) = pi - acos(-x)                                       *
+ *                                                                            *
+ *          Use this and compute acos(-x) via the tail-end function.          *
+ *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
+ *          return acos(-1) = pi and acos(1) = 0.                             *
  *      Error:                                                                *
- *          Based on 788,968,857 random samples with -10^6 < x < 10^6.        *
- *              max relative error: 2.3223344540012894e-16                    *
- *              rms relative error: 7.4233764024303319e-17                    *
- *              max absolute error: 2.2204460492503131e-16                    *
- *              rms absolute error: 1.1660491924987274e-16                    *
+ *          Based on 788,968,857 random samples with -1 < x < 1.              *
+ *              max relative error: 2.2204459059627917e-16                    *
+ *              rms relative error: 8.3796804351081161e-17                    *
+ *              max absolute error: 4.4408920985006262e-16                    *
+ *              rms absolute error: 1.4737238548161158e-16                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_Double_Abs (tmpl_math.h):                                    *
+ *              Computes the absolute value of a real number.                 *
+ *          tmpl_Double_Arccos_Pade (tmpl_math.h):                            *
+ *              Computes acos(x) via a Pade approximant for |x| < 0.5.        *
+ *          tmpl_Double_Arccos_Tail_End (tmpl_math.h):                        *
+ *              Computes acos(x) for 0.5 <= x < 1.0.                          *
+ *      Method:                                                               *
+ *          Similar to the IEEE-754 version, but determine the size of the    *
+ *          input using the absolute value function and comparing the output  *
+ *          to the numbers 0.5 and 1.0.                                       *
+ *      Error:                                                                *
+ *          Based on 788,968,857 random samples with -1 < x < 1.              *
+ *              max relative error: 2.2204459059627917e-16                    *
+ *              rms relative error: 8.3796804351081161e-17                    *
+ *              max absolute error: 4.4408920985006262e-16                    *
+ *              rms absolute error: 1.4737238548161158e-16                    *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
+ *          less than 1 ULP (~2 x 10^-16).                                    *
+ *  Notes:                                                                    *
+ *      The only distinction between the IEEE-754 method and the portable one *
+ *      is how the size of the input x is determined. The IEEE-754 method     *
+ *      examines the exponent of the input, the portable method computes the  *
+ *      absolute value and compares the size of x directly with the numbers   *
+ *      0.5 and 1.0. The IEEE-754 method is hence slightly faster on most     *
+ *      computers.                                                            *
+ *                                                                            *
+ *      Both methods detect if the input is NaN or infinity. The IEEE-754     *
+ *      detects NaN and Inf since the exponents of NaN and Inf are large, and *
+ *      the portable method detects NaN since NaN should always evaluate      *
+ *      false when a comparison is made (==, <, >, etc.).                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -74,6 +121,10 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+/*  On most computers it is faster to check the value of the exponent of a    *
+ *  double rather than checking the entire double. This gives the IEEE-754    *
+ *  method a slight performance boost over the portable one below.            */
+
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(double x)
 {
@@ -87,19 +138,31 @@ double tmpl_Double_Arccos(double x)
     if (w.bits.expo < TMPL_DOUBLE_UBIAS - 1U)
         return tmpl_Double_Arccos_Pade(x);
 
+    /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
     {
+        /*  For negative inputs use the formula acos(x) = pi - cos(-x).       */
         if (w.bits.sign)
             return tmpl_One_Pi - tmpl_Double_Arccos_Tail_End(-x);
+
+        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         else
             return tmpl_Double_Arccos_Tail_End(x);
     }
+
+    /*  Special cases, |x| >= 1 or x = NaN.                                   */
     else
     {
+        /*  acos(-1) = pi and acos(1) = 0. Use this.                          */
         if (x == -1.0)
             return tmpl_One_Pi;
         else if (x == 1.0)
             return 0.0;
+
+        /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN.  *
+         *  Note, this catches NaN and infinity since we are checking the     *
+         *  exponent of the input, not the input. For x = NaN or Inf, the     *
+         *  exponent is greater than TMPL_DOUBLE_UBIAS, hence NaN will return.*/
         else
             return TMPL_NAN;
     }
@@ -123,19 +186,29 @@ double tmpl_Double_Arccos(double x)
     if (abs_x < 0.5)
         return tmpl_Double_Arccos_Pade(x);
 
+    /*  Otherwise use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).      */
     else if (abs_x < 1.0)
     {
+        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (x < 0.0)
             return tmpl_One_Pi - tmpl_Double_Arccos_Tail_End(abs_x);
+
+        /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         else
             return tmpl_Double_Arccos_Tail_End(abs_x);
     }
+
+    /*  Special cases, |x| >= 1 or x = NaN. Note, since comparison with       *
+     *  NaN always returns false, an input of NaN will end up on this branch. */
     else
     {
+        /*  acos(-1) = pi and acos(1) = 0. Use this.                          */
         if (x == -1.0)
             return tmpl_One_Pi;
         else if (x == 1.0)
             return 0.0;
+
+        /*  For |x| > 1 the function is undefined. Return NaN.                */
         else
             return TMPL_NAN;
     }
