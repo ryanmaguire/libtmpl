@@ -54,7 +54,7 @@
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
  *          return acos(-1) = pi and acos(1) = 0.                             *
  *      Error:                                                                *
- *          Based on 788,968,857 random samples with -1 < x < 1.              *
+ *          Based on 788,968,857 samples with -1 < x < 1.                     *
  *              max relative error: 2.2204459059627917e-16                    *
  *              rms relative error: 8.3796804351081161e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
@@ -74,7 +74,7 @@
  *          input using the absolute value function and comparing the output  *
  *          to the numbers 0.5 and 1.0.                                       *
  *      Error:                                                                *
- *          Based on 788,968,857 random samples with -1 < x < 1.              *
+ *          Based on 788,968,857 samples with -1 < x < 1.                     *
  *              max relative error: 2.2204459059627917e-16                    *
  *              rms relative error: 8.3796804351081161e-17                    *
  *              max absolute error: 4.4408920985006262e-16                    *
@@ -103,6 +103,11 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 03, 2023                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/01/13: Ryan Maguire                                                  *
+ *      Added comments, algorithm description, and fixed error values.        *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -141,7 +146,7 @@ double tmpl_Double_Arccos(double x)
     /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
     {
-        /*  For negative inputs use the formula acos(x) = pi - cos(-x).       */
+        /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (w.bits.sign)
             return tmpl_One_Pi - tmpl_Double_Arccos_Tail_End(-x);
 
