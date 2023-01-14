@@ -98,12 +98,18 @@ repos:
     hooks:
     -   id: cpplint
         args: [--linelength=120, '--filter=-legal/copyright,-whitespace/braces,-whitespace/newline,-whitespace/blank_line,-whitespace/indent,-build/namespaces,-build/header_guard,-build/include_order,-build/include_subdir, -whitespace/parens,-readability/casting,-runtime/threadsafe_fn,-runtime/int,-runtime/printf,-whitespace/operators,-readability/braces,-whitespace/comma,-whitespace/tab,-readability/fn_size']
-
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.0.215
+    hooks:
+    -   id: ruff
+        # Respect `exclude` and `extend-exclude` settings.
+        args: [--force-exclude]
 -   repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     hooks:
-   #   - id: clang-format
-   #     args: [--style=Google]
+      #   - id: clang-format
+      #     args: [--style=Google]
     -   id: clang-tidy
     -   id: oclint
     -   id: uncrustify
