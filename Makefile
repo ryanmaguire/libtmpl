@@ -172,6 +172,12 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_arctan_very_small_double.c" -and \
 	-not -name "tmpl_arctan_very_small_float.c" -and \
 	-not -name "tmpl_arctan_very_small_ldouble.c" -and \
+	-not -name "tmpl_bessel_i0_asymptotic_double.c" -and \
+	-not -name "tmpl_bessel_i0_asymptotic_float.c" -and \
+	-not -name "tmpl_bessel_i0_chebyshev_double.c" -and \
+	-not -name "tmpl_bessel_i0_chebyshev_float.c" -and \
+	-not -name "tmpl_bessel_i0_maclaurin_double.c" -and \
+	-not -name "tmpl_bessel_i0_maclaurin_float.c" -and \
 	-not -name "tmpl_cbrt_pade_double.c" -and \
 	-not -name "tmpl_cbrt_pade_float.c" -and \
 	-not -name "tmpl_cbrt_pade_ldouble.c" -and \
@@ -403,7 +409,8 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/polynomial/
 	mkdir -p $(BUILD_DIR)/src/ppm/
 	mkdir -p $(BUILD_DIR)/src/rational/
-	mkdir -p $(BUILD_DIR)/src/special_functions/
+	mkdir -p $(BUILD_DIR)/src/special_functions_complex/
+	mkdir -p $(BUILD_DIR)/src/special_functions_real/
 	mkdir -p $(BUILD_DIR)/src/spherical_geometry/
 	mkdir -p $(BUILD_DIR)/src/sort/
 	mkdir -p $(BUILD_DIR)/src/string/
@@ -413,6 +420,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/vector_integer/
 	mkdir -p $(BUILD_DIR)/src/vector_real/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
+	mkdir -p $(BUILD_DIR)/src/where/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
 	mkdir -p $(BUILD_DIR)/src/assembly/i386/

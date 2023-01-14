@@ -1,6 +1,6 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_special_functions.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 #include <libtmpl/include/tmpl_window_functions.h>
 
 float tmpl_Float_Modified_Kaiser_Bessel(float x, float W, float alpha)
