@@ -2,6 +2,8 @@
 #ifndef TMPL_WHERE_H
 #define TMPL_WHERE_H
 
+#include "tmpl_exports.h"
+
 TMPL_EXPORT extern unsigned long **
 tmpl_Where_Lesser_Char(char *data, unsigned long dim, double threshold);
 

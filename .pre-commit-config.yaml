@@ -111,7 +111,6 @@ repos:
       #   - id: clang-format
       #     args: [--style=Google]
     -   id: clang-tidy
-    -   id: oclint
-    -   id: uncrustify
+#    -   id: uncrustify
     -   id: cppcheck
-    -   id: include-what-you-use
+#    -   id: include-what-you-use
