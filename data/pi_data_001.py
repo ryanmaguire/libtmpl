@@ -36,7 +36,6 @@ mpmath.mp.prec = 1500
 
 x = mpmath.mpf(1)/(mpmath.mpf(2)*mpmath.pi)
 y = binary.float_to_binary(x)
-mpmath.nprint(x, 50, strip_zeros = True, min_fixed = 0, max_fixed = 0)
 
 X = [0]*5
 Y = [0]*5
