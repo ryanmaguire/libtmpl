@@ -631,24 +631,9 @@ tmpl_2DLDouble_Polar(long double r, long double theta);
  ******************************************************************************/
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/tmpl_math.h>
-TMPL_INLINE_DECL
-float tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat *P)
-{
-    return tmpl_Float_Hypot(P->dat[0], P->dat[1]);
-}
-
-TMPL_INLINE_DECL
-double tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble *P)
-{
-    return tmpl_Double_Hypot(P->dat[0], P->dat[1]);
-}
-
-TMPL_INLINE_DECL
-long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P)
-{
-    return tmpl_LDouble_Hypot(P->dat[0], P->dat[1]);
-}
+#include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_double.h>
+#include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_float.h>
+#include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_ldouble.h>
 #else
 extern float tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat *P);
 extern double tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble *P);
