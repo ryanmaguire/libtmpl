@@ -18,12 +18,18 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Computes the Chebyshev coefficients for the error function Erf(x).     #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   January 19, 2023.                                                  #
 ################################################################################
 """
+
+# Chebyshev evaluation and coefficients.
+import chebyshev
+
+# Polynomial evaluation via Horner's method.
+import poly
 
 # Muli-precision math routines found here.
 import mpmath
@@ -32,67 +38,38 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Evaluate a polynomial with coeffs "a" at the point "x" using Horner's method.
+def f(x):
+    y = mpmath.mpf(2)*(mpmath.mpf(x) + mpmath.mpf(2.0))
+    return mpmath.erf(y)
+
+def coeffs(N):
+    return chebyshev.cheb_coeffs(f, N, 1000)
+
+def cheb_eval(a, x):
+    y = (mpmath.mpf(x) - mpmath.mpf(4)) / mpmath.mpf(2)
+    return chebyshev.cheb_eval(a, y)
+
 def poly_eval(a, x):
-    deg = len(a) - 1
-    P = mpmath.mpf(0)
+    y = (mpmath.mpf(x) - mpmath.mpf(4)) / mpmath.mpf(2)
+    return poly.poly_eval(a, y)
 
-    # Compute using Horner's method.
-    for n in range(deg + 1):
-        P = x*P + a[deg - n]
+def diff(a, x):
+    y = cheb_eval(a, x)
+    z = mpmath.erf(x)
+    return (y - z)/z
 
-    return P
+# Desired precision.
+EPS = 2**-54
 
-# Compute the derivative of a polynomial using Horner's method.
-def dpoly_eval(a, x):
-    deg = len(a) - 1
-    P = mpmath.mpf(0)
+# Print which values of N achieved double precision.
+x = 2
+N = 40
+for m in range(27, N):
+    a = coeffs(m)
+    y = diff(a, x)
 
-    # Compute the derivative using Horner's method.
-    for n in range(deg):
-        P = x*P + mpmath.mpf(deg - n)*a[deg - n]
-
-    return P
-
-# Print the coefficients for the Chebyshev expansion.
-def print_coeffs(c, ctype = "double"):
-
-    # Number of decimals to print.
-    N = 50
-
-    # Extension for literal constants, depends on data type.
-    if ctype == "ldouble":
-        ext = "L"
-    elif ctype == "float":
-        ext = "F"
-    else:
-        ext = ""
-
-    print("/*  Coefficients for the polynomial."
-          "                                          */")
-    for n in range(len(c)):
-        x = mpmath.mpf(c[n])
-        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
-                        min_fixed = 0, max_fixed = 0)
-        s = s.replace("e", "E")
-
-        if not s[-2:].isnumeric():
-            s = s[:-1] + "0" + s[-1:]
-
-        if x >= 0:
-            print("#define A%02d (+%s%s)" % (n, s, ext))
-        else:
-            print("#define A%02d (%s%s)" % (n, s, ext))
-
-def print_poly_helper(n, A = "A", skip = 4):
-    print("/*  Helper macro for evaluating a polynomial via Horner's method."
-          "             */")
-    print("#define TMPL_POLY_EVAL(z) \\")
-    for k in range (n-1):
-        print(" "*(skip*k) + "%s%02d + z*(\\" % (A, k))
-    print(" "*(skip*(n-1)) + "%s%02d + z*%s%02d\\" % (A, n-1, A, n))
-
-    for k in range(2, n):
-        print(" "*(skip*(n-k)) + ")\\")
-
-    print(")")
+    # If the expansion was very accurate, move along.
+    if abs(y) < EPS:
+        b = chebyshev.cheb_to_poly(a)
+        poly.print_coeffs(b)
+        break

@@ -180,3 +180,49 @@ def print_coeffs(P, Q, ctype = "double"):
             print("#define Q%02d (+%s%s)" % (n, s, ext))
         else:
             print("#define Q%02d (%s%s)" % (n, s, ext))
+
+# Print function when the coefficients are mpmath instead of fractions.
+def mp_print_coeffs(P, Q, ctype = "double"):
+
+    # Number of decimals to print.
+    N = 50
+
+    # Extension for literal constants, depends on data type.
+    if ctype == "ldouble":
+        ext = "L"
+    elif ctype == "float":
+        ext = "F"
+    else:
+        ext = ""
+
+    print("/*  Coefficients for the numerator of the Pade approximant."
+          "                   */")
+    for n in range(len(P)):
+        x = P[n]
+        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
+                        min_fixed = 0, max_fixed = 0)
+        s = s.replace("e", "E")
+
+        if not s[-2:].isnumeric():
+            s = s[:-1] + "0" + s[-1:]
+
+        if P[n] >= 0:
+            print("#define P%02d (+%s%s)" % (n, s, ext))
+        else:
+            print("#define P%02d (%s%s)" % (n, s, ext))
+
+    print("\n/*  Coefficients for the denominator of the Pade approximant."
+          "                 */")
+    for n in range(len(Q)):
+        x = Q[n]
+        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
+                        min_fixed = 0, max_fixed = 0)
+        s = s.replace("e", "E")
+
+        if not s[-2:].isnumeric():
+            s = s[:-1] + "0" + s[-1:]
+
+        if Q[n] >= 0:
+            print("#define Q%02d (+%s%s)" % (n, s, ext))
+        else:
+            print("#define Q%02d (%s%s)" % (n, s, ext))
