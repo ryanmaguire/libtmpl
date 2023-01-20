@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_arctan2_float                              *
+ *                             tmpl_arctan2_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Compute the angle the point (x, y) makes with the x axis.             *
