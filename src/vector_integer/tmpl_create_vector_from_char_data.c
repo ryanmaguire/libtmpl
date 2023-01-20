@@ -81,11 +81,11 @@
 
 /*  Function for creating a char vector from a char array.                    */
 tmpl_CharVector *
-tmpl_Create_CharVector_From_Data(char *arr, unsigned long int length)
+tmpl_Create_CharVector_From_Data(char *arr, size_t length)
 {
     /*  Declare a variable for indexing over the array, and a pointer to the  *
      *  vector we'll be returning.                                            */
-    unsigned long int n;
+    size_t n;
     tmpl_CharVector *vec;
 
     /*  Allocate memory for vec using malloc.                                 */
@@ -103,7 +103,7 @@ tmpl_Create_CharVector_From_Data(char *arr, unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, this is an empty vector. Set the data to NULL. */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -117,7 +117,7 @@ tmpl_Create_CharVector_From_Data(char *arr, unsigned long int length)
         vec->error_occurred = tmpl_True;
 
         /*  Since the data is NULL, there are zero elements. Specify this.    */
-        vec->length = 0UL;
+        vec->length = (size_t)0;
 
         /*  Store an error message detailing what went wrong in the struct.   */
         vec->error_message = tmpl_strdup(
@@ -139,7 +139,7 @@ tmpl_Create_CharVector_From_Data(char *arr, unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_CharVector_From_Data\n\n"
@@ -150,7 +150,7 @@ tmpl_Create_CharVector_From_Data(char *arr, unsigned long int length)
     /*  End of if (vec->data == NULL).                                        */
 
     /*  If malloc didn't fail, loop through the array and store the values.   */
-    for (n = 0UL; n < length; ++n)
+    for (n = (size_t)0; n < length; ++n)
         (vec->data)[n] = arr[n];
 
     return vec;
@@ -159,11 +159,11 @@ tmpl_Create_CharVector_From_Data(char *arr, unsigned long int length)
 
 /*  Function for creating an unsigned char vector from an unsigned char array.*/
 tmpl_UCharVector *
-tmpl_Create_UCharVector_From_Data(unsigned char *arr, unsigned long int length)
+tmpl_Create_UCharVector_From_Data(unsigned char *arr, size_t length)
 {
     /*  Declare a variable for indexing over the array, and a pointer to the  *
      *  vector we'll be returning.                                            */
-    unsigned long int n;
+    size_t n;
     tmpl_UCharVector *vec;
 
     /*  Allocate memory for vec using malloc.                                 */
@@ -181,7 +181,7 @@ tmpl_Create_UCharVector_From_Data(unsigned char *arr, unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, this is an empty vector. Set the data to NULL. */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -195,7 +195,7 @@ tmpl_Create_UCharVector_From_Data(unsigned char *arr, unsigned long int length)
         vec->error_occurred = tmpl_True;
 
         /*  Since the data is NULL, there are zero elements. Specify this.    */
-        vec->length = 0UL;
+        vec->length = (size_t)0;
 
         /*  Store an error message detailing what went wrong in the struct.   */
         vec->error_message = tmpl_strdup(
@@ -217,7 +217,7 @@ tmpl_Create_UCharVector_From_Data(unsigned char *arr, unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_UCharVector_From_Data\n\n"
@@ -228,7 +228,7 @@ tmpl_Create_UCharVector_From_Data(unsigned char *arr, unsigned long int length)
     /*  End of if (vec->data == NULL).                                        */
 
     /*  If malloc didn't fail, loop through the array and store the values.   */
-    for (n = 0UL; n < length; ++n)
+    for (n = (size_t)0; n < length; ++n)
         (vec->data)[n] = arr[n];
 
     return vec;
