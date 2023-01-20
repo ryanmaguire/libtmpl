@@ -74,7 +74,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only use this if inline support is not requested.                         */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
