@@ -38,8 +38,8 @@
  *          Computes the square root of a number.                             *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
- * 	        acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *	    Compute this using a Pade approximant.                                *
+ *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
+ *      Compute this using a Pade approximant.                                *
  *          64-bit double:                                                    *
  *              Order (10, 8) approximant.                                    *
  *          80-bit extended / portable:                                       *
