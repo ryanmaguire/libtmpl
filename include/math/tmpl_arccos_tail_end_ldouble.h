@@ -16,17 +16,17 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_arccos_tail_end_ldouble                         *
+ *                        tmpl_arccos_tail_end_ldouble                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the acos(x) for 0.5 < x < 1.0.                               *
+ *      Computes the acos(x) for 0.5 <= x < 1.0.                              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_LDouble_Arccos_Tail_End                                          *
  *  Purpose:                                                                  *
- *      Computes the inverse cosine for 0.5 < x < 1.                          *
+ *      Computes the inverse cosine for 0.5 <= x < 1.                         *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
@@ -34,16 +34,20 @@
  *      acos_x (long double):                                                 *
  *          The inverse cosine of x.                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_LDouble_Sqrt (tmpl_math.h):                                      *
+ *          Computes the square root of a number.                             *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomials for the numerator     *
- *      and denominator.                                                      *
- *                                                                            *
- *          asin(x)+x-pi/2   a0 + a1*x^2 + a2*x^4 + a3*x^6 + a4*x^8 + a5*x^10 *
- *          -------------- = ------------------------------------------------ *
- *               x^3               1 + b1*x^2 + b2*x^4 + b3*x^6 + b4*x^8      *
+ *      Use the following trig identity:                                      *
+ *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
+ *      Compute this using a Pade approximant.                                *
+ *          64-bit double:                                                    *
+ *              Order (10, 8) approximant.                                    *
+ *          80-bit extended / portable:                                       *
+ *              Order (12, 10) approximant.                                   *
+ *          128-bit quadruple / 128-bit double-double:                        *
+ *              Order (18, 18) approximant.                                   *
  *  Notes:                                                                    *
- *      Accurate for |x| < 0.5.                                               *
+ *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -63,16 +67,35 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Only use this if inline support is requested.                             */
 #if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  The square root function needs to be visible. Give the prototype pending  *
+ *  whether libtmpl algorithms are requested.                                 */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
 extern long double tmpl_LDouble_Sqrt(long double x);
+#define TMPL_SQUARE_ROOT tmpl_LDouble_Sqrt
+
+/*  Otherwise use the default libm square root function.                      */
+#else
+
+extern long double sqrtl(long double x);
+#define TMPL_SQUARE_ROOT sqrtl
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/******************************************************************************
+ *                           64-Bit Double Version                            *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01L)
@@ -89,7 +112,7 @@ extern long double tmpl_LDouble_Sqrt(long double x);
 #define Q3 (-6.88283971605453293030E-01L)
 #define Q4 (+7.70381505559019352791e-02L)
 
-/*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Arccos_Tail_End(long double x)
 {
@@ -100,7 +123,7 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
     const long double p = P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*P5))));
     const long double q = Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*Q4)));
     const long double r = z*p/q;
-    const long double s = tmpl_LDouble_Sqrt(z);
+    const long double s = TMPL_SQUARE_ROOT(z);
     const long double t = r*s;
     return 2.0L*(s + t);
 }
@@ -126,6 +149,10 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
 
+/******************************************************************************
+ *                 128-bit Quadruple / 128-bit Double-Double                  *
+ ******************************************************************************/
+
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666666666666666666700314E-01L)
 #define P1 (-7.32816946414566252574527475428622708E-01L)
@@ -150,11 +177,11 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
 #define Q8 (+8.32600764660522313269101537926539470E-03L)
 #define Q9 (-1.99407384882605586705979504567947007E-04L)
 
-/*  Function for computing the (18, 18) Pade approximant of acos(x).          */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Arccos_Tail_End(long double x)
 {
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
+    /*  Rational function is computed in terms of (1 - x)/2.                  */
     const long double z = 0.5L*(1.0L - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
@@ -164,11 +191,11 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
         Q0+z*(Q1+z*(Q2+z*(Q3+z*(Q4+z*(Q5+z*(Q6+z*(Q7+z*(Q8+z*Q9))))))));
 
     const long double r = z*p/q;
-    const long double s = tmpl_LDouble_Sqrt(z);
+    const long double s = TMPL_SQUARE_ROOT(z);
     const long double t = r*s;
     return 2.0L*(s + t);
 }
-/*  End of tmpl_LDouble_Arccos_Pade.                                          */
+/*  End of tmpl_LDouble_Arccos_Tail_End.                                      */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef P9
@@ -192,7 +219,12 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
 #undef Q1
 #undef Q0
 
+/*  Lastly, extended precision and portable versions.                         */
 #else
+
+/******************************************************************************
+ *                         80-Bit Extended / Portable                         *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666666631E-01L)
@@ -211,22 +243,22 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
 #define Q4 (+3.90699412641738801874E-01L)
 #define Q5 (-3.14365703596053263322E-02L)
 
-/*  Function for computing the (12, 10) Pade approximant of acos(x).          */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Arccos_Tail_End(long double x)
 {
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
+    /*  Rational function is computed in terms of (1 - x)/2.                  */
     const long double z = 0.5L*(1.0L - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const long double p = P0+z*(P1+z*(P2+z*(P3+z*(P4+z*(P5+z*P6)))));
     const long double q = Q0+z*(Q1+z*(Q2+z*(Q3+z*(Q4+z*Q5))));
     const long double r = z*p/q;
-    const long double s = tmpl_LDouble_Sqrt(z);
+    const long double s = TMPL_SQUARE_ROOT(z);
     const long double t = r*s;
     return 2.0L*(s + t);
 }
-/*  End of tmpl_LDouble_Arccos_Pade.                                          */
+/*  End of tmpl_LDouble_Arccos_Tail_End.                                      */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef P6
@@ -245,6 +277,9 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
 
 #endif
 /*  End of 80-bit extended / portable version.                                */
+
+/*  Lastly, undef this macro in case someone wants to #include this file.     */
+#undef TMPL_SQUARE_ROOT
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
