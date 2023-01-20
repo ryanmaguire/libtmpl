@@ -19,14 +19,14 @@
  *                        tmpl_arccos_tail_end_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes acos(x) for 0.5 < x < 1 at double precision.                 *
+ *      Computes acos(x) for 0.5 <= x < 1 at double precision.                *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Arccos_Tail_End                                           *
  *  Purpose:                                                                  *
- *      Computes arccos for 0.5 < x < 1.0.                                    *
+ *      Computes arccos for 0.5 <= x < 1.0.                                   *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -41,7 +41,7 @@
  * 	        acos(x) = 2*asin(sqrt((1-x)/2))                                   *
  *	    Compute this using a Pade approximant.                                *
  *  Notes:                                                                    *
- *      Accurate for 0.5 < x < 1.0.                                           *
+ *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -57,7 +57,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only use this if inline support is not requested.                         */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
