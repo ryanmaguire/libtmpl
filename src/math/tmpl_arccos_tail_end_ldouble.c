@@ -204,7 +204,6 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
  *                         80-Bit Extended / Portable                         *
  ******************************************************************************/
 
-
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666666631E-01L)
 #define P1 (-4.16313987993683104320E-01L)
