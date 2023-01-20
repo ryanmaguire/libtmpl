@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_arccos_pade_ldouble                           *
+ *                          tmpl_arccos_pade_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Pade approximation for acos(x) at long double precision. *
@@ -39,9 +39,16 @@
  *      Use Horner's method to evaluate the polynomials for the numerator     *
  *      and denominator.                                                      *
  *                                                                            *
- *          asin(x)+x-pi/2   a0 + a1*x^2 + a2*x^4 + a3*x^6 + a4*x^8 + a5*x^10 *
+ *          acos(x)+x-pi/2   a0 + a1*x^2 + a2*x^4 + a3*x^6 + a4*x^8 + a5*x^10 *
  *          -------------- = ------------------------------------------------ *
  *               x^3               1 + b1*x^2 + b2*x^4 + b3*x^6 + b4*x^8      *
+ *                                                                            *
+ *      64-bit double:                                                        *
+ *          Order (10, 8) approximant.                                        *
+ *      80-bit extended / portable:                                           *
+ *          Order (12, 10) approximant.                                       *
+ *      128-bit quadruple / 128-bit double-double:                            *
+ *          Order (18, 18) approximant.                                       *
  *  Notes:                                                                    *
  *      Accurate for |x| < 0.5.                                               *
  ******************************************************************************
@@ -59,7 +66,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only use this if inline support is not requested.                         */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
@@ -68,6 +75,10 @@
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/******************************************************************************
+ *                           64-Bit Double Version                            *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01L)
@@ -119,6 +130,10 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                 128-bit Quadruple / 128-bit Double-Double                  *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666666666666666666700314E-01L)
@@ -184,7 +199,12 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
 #undef Q1
 #undef Q0
 
+/*  Lastly, extended precision and portable versions.                         */
 #else
+
+/******************************************************************************
+ *                         80-Bit Extended / Portable                         *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666666631E-01L)
