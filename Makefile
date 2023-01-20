@@ -215,6 +215,10 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_dist_float.c" -and \
 	-not -name "tmpl_dist_double.c" -and \
 	-not -name "tmpl_dist_ldouble.c" -and \
+	-not -name "tmpl_erf_asymptotic_double.c" -and \
+	-not -name "tmpl_erf_chebyshev_double.c" -and \
+	-not -name "tmpl_erf_maclaurin_double.c" -and \
+	-not -name "tmpl_erf_pade_double.c" -and \
 	-not -name "tmpl_exp_neg_kernel_double.c" -and \
 	-not -name "tmpl_exp_neg_kernel_float.c" -and \
 	-not -name "tmpl_exp_pos_kernel_double.c" -and \
