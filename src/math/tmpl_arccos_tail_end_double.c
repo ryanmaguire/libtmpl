@@ -78,7 +78,7 @@
 #define Q3 (-6.88283971605453293030E-01)
 #define Q4 (+7.70381505559019352791e-02)
 
-/*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 double tmpl_Double_Arccos_Tail_End(double x)
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */
