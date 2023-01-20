@@ -2296,6 +2296,94 @@ extern long double tmpl_LDouble_Erf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Erf_Asymptotic                                            *
+ *  Purpose:                                                                  *
+ *      Computes the error function for large positive numbers.               *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erf_x:                                                         *
+ *          The error function of x, Erf(x).                                  *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_erf_asymptotic_double.h>
+#else
+extern float tmpl_Float_Erf_Asymptotic(float x);
+extern double tmpl_Double_Erf_Asymptotic(double x);
+#endif
+
+/*  TODO: Implement long double version.                                      */
+extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Erf_Chebyshev                                             *
+ *  Purpose:                                                                  *
+ *      Computes the error function using a Chebyshev expansion.              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erf_x:                                                         *
+ *          The error function of x, Erf(x).                                  *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_erf_chebyshev_double.h>
+#else
+extern float tmpl_Float_Erf_Chebyshev(float x);
+extern double tmpl_Double_Erf_Chebyshev(double x);
+#endif
+
+/*  TODO: Implement long double version.                                      */
+extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Erf_Maclaurin                                             *
+ *  Purpose:                                                                  *
+ *      Computes the error function of a real number using a Maclaurin series.*
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erf_x:                                                         *
+ *          The error function of x, Erf(x).                                  *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_erf_maclaurin_double.h>
+#else
+extern float tmpl_Float_Erf_Maclaurin(float x);
+extern double tmpl_Double_Erf_Maclaurin(double x);
+#endif
+
+/*  TODO: Implement long double version.                                      */
+extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Erf_Pade                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the error function of a real number.                         *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erf_x:                                                         *
+ *          The error function of x, Erf(x).                                  *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_erf_pade_double.h>
+#else
+extern float tmpl_Float_Erf_Pade(float x);
+extern double tmpl_Double_Erf_Pade(double x);
+#endif
+
+/*  TODO: Implement long double version.                                      */
+extern long double tmpl_LDouble_Erf_Pade(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Erfc                                                      *
  *  Purpose:                                                                  *
  *      Computes the complementary error function of a real number.           *
