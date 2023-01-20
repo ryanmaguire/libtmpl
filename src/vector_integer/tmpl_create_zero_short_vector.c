@@ -74,8 +74,7 @@
 #include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for creating a single-precision zero vector.                     */
-tmpl_ShortVector *
-tmpl_Create_Zero_ShortVector(unsigned long int length)
+tmpl_ShortVector *tmpl_Create_Zero_ShortVector(size_t length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_ShortVector *vec;
@@ -94,7 +93,7 @@ tmpl_Create_Zero_ShortVector(unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, set the data to a NULL pointer.                */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -108,7 +107,7 @@ tmpl_Create_Zero_ShortVector(unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_Zero_ShortVector\n\n"
@@ -123,8 +122,7 @@ tmpl_Create_Zero_ShortVector(unsigned long int length)
 /*  End of tmpl_Create_Zero_ShortVector.                                      */
 
 /*  Function for creating a double-precision zero vector.                     */
-tmpl_UShortVector *
-tmpl_Create_Zero_UShortVector(unsigned long int length)
+tmpl_UShortVector *tmpl_Create_Zero_UShortVector(size_t length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_UShortVector *vec;
@@ -143,7 +141,7 @@ tmpl_Create_Zero_UShortVector(unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, set the data to a NULL pointer.                */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -157,7 +155,7 @@ tmpl_Create_Zero_UShortVector(unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_Zero_UShortVector\n\n"
