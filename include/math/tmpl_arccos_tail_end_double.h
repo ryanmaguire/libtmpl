@@ -16,17 +16,17 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_arccos_tail_end_double_inline                     *
+ *                        tmpl_arccos_tail_end_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes acos(x) for 0.5 < x < 1 at double precision.                 *
+ *      Computes acos(x) for 0.5 <= x < 1 at double precision.                *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Arccos_Tail_End                                           *
  *  Purpose:                                                                  *
- *      Computes arccos for 0.5 < x < 1.0.                                    *
+ *      Computes arccos for 0.5 <= x < 1.0.                                   *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -38,10 +38,10 @@
  *          Computes the square root of a number.                             *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
- * 	        acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *	    Compute this using a Pade approximant.                                *
+ *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
+ *      Compute this using a Pade approximant.                                *
  *  Notes:                                                                    *
- *      Accurate for 0.5 < x < 1.0.                                           *
+ *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -61,11 +61,27 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Check if inline support has been requested.                               */
+/*  Only use this if inline support is requested.                             */
 #if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  The square root function needs to be visible. Give the prototype pending  *
+ *  whether libtmpl algorithms are requested.                                 */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+extern double tmpl_Double_Sqrt(double x);
+#define TMPL_SQUARE_ROOT tmpl_Double_Sqrt
+
+/*  Otherwise use the default libm square root function.                      */
+#else
+
+extern double sqrt(double x);
+#define TMPL_SQUARE_ROOT sqrt
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01)
@@ -82,11 +98,7 @@
 #define Q3 (-6.88283971605453293030E-01)
 #define Q4 (+7.70381505559019352791e-02)
 
-/*  tmpl_Double_Sqrt is declared after tmpl_Double_Arccos_Tail_End in         *
- *  tmpl_math.h. Let the compiler know this function exists.                  */
-extern double tmpl_Double_Sqrt(double x);
-
-/*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_INLINE_DECL
 double tmpl_Double_Arccos_Tail_End(double x)
 {
@@ -97,7 +109,7 @@ double tmpl_Double_Arccos_Tail_End(double x)
     const double p = P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*P5))));
     const double q = Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*Q4)));
     const double r = z*p/q;
-    const double s = tmpl_Double_Sqrt(z);
+    const double s = TMPL_SQUARE_ROOT(z);
     const double t = r*s;
     return 2.0*(s + t);
 }
@@ -115,6 +127,7 @@ double tmpl_Double_Arccos_Tail_End(double x)
 #undef Q2
 #undef Q1
 #undef Q0
+#undef TMPL_SQUARE_ROOT
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
