@@ -114,8 +114,8 @@
  *                   64-Bit Double / 128-Bit Double-Double                    *
  ******************************************************************************/
 
-#define TMPL_BIG_SCALE (1.340780792994259709957402E+154)
-#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965E-155)
+#define TMPL_BIG_SCALE (1.340780792994259709957402E+154L)
+#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965E-155L)
 #define TMPL_EXPO_TOO_HIGH (TMPL_LDOUBLE_BIAS + 0x200U)
 #define TMPL_EXPO_TOO_LOW (TMPL_LDOUBLE_BIAS - 0x1E6U)
 
