@@ -39,7 +39,7 @@
  *      Use Horner's method to evaluate the polynomials for the numerator     *
  *      and denominator.                                                      *
  *                                                                            *
- *          asin(x)+x-pi/2   a0 + a1*x^2 + a2*x^4 + a3*x^6 + a4*x^8 + a5*x^10 *
+ *          acos(x)+x-pi/2   a0 + a1*x^2 + a2*x^4 + a3*x^6 + a4*x^8 + a5*x^10 *
  *          -------------- = ------------------------------------------------ *
  *               x^3               1 + b1*x^2 + b2*x^4 + b3*x^6 + b4*x^8      *
  *  Notes:                                                                    *
@@ -59,7 +59,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only use this if inline support is not requested.                         */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */

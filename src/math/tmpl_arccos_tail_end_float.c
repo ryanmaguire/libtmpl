@@ -16,17 +16,17 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_arccos_tail_end_float                          *
+ *                         tmpl_arccos_tail_end_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes acos(x) for 0.5 < x < 1 at single precision.                 *
+ *      Computes acos(x) for 0.5 <= x < 1 at single precision.                *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Float_Arccos_Tail_End                                            *
  *  Purpose:                                                                  *
- *      Computes arccos for 0.5 < x < 1.0.                                    *
+ *      Computes arccos for 0.5 <= x < 1.0.                                   *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
@@ -38,10 +38,10 @@
  *          Computes the square root of a number.                             *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
- * 	        acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *	    Compute this using a Pade approximant.                                *
+ *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
+ *      Compute this using a Pade approximant.                                *
  *  Notes:                                                                    *
- *      Accurate for 0.5 < x < 1.0.                                           *
+ *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -57,7 +57,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only use this if inline support is not requested.                         */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
@@ -72,7 +72,7 @@
 #define Q0 (+1.0000000000E+00F)
 #define Q1 (-7.0662963390E-01F)
 
-/*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 float tmpl_Float_Arccos_Tail_End(float x)
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */

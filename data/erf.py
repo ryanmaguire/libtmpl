@@ -18,12 +18,18 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Coefficients and tools for the Error Function.                         #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   January 19, 2023.                                                  #
 ################################################################################
 """
+
+# exp, sqrt, and pi found here.
+import math
+
+# Rational numbers found here.
+import fractions
 
 # Muli-precision math routines found here.
 import mpmath
@@ -32,67 +38,46 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Evaluate a polynomial with coeffs "a" at the point "x" using Horner's method.
-def poly_eval(a, x):
-    deg = len(a) - 1
-    P = mpmath.mpf(0)
-
-    # Compute using Horner's method.
-    for n in range(deg + 1):
-        P = x*P + a[deg - n]
-
-    return P
-
-# Compute the derivative of a polynomial using Horner's method.
-def dpoly_eval(a, x):
-    deg = len(a) - 1
-    P = mpmath.mpf(0)
-
-    # Compute the derivative using Horner's method.
-    for n in range(deg):
-        P = x*P + mpmath.mpf(deg - n)*a[deg - n]
-
-    return P
-
-# Print the coefficients for the Chebyshev expansion.
-def print_coeffs(c, ctype = "double"):
-
-    # Number of decimals to print.
-    N = 50
-
-    # Extension for literal constants, depends on data type.
-    if ctype == "ldouble":
-        ext = "L"
-    elif ctype == "float":
-        ext = "F"
+# Function for computing the double factorial, n!! = n*(n-2)*...
+def doublefactorial(n):
+    if n <= 0:
+        return 1
     else:
-        ext = ""
+        double_fact = 1
+        k = n
+        while (k >= 0):
+            double_fact = k*double_fact
+            k = k - 2
 
-    print("/*  Coefficients for the polynomial."
-          "                                          */")
-    for n in range(len(c)):
-        x = mpmath.mpf(c[n])
-        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
-                        min_fixed = 0, max_fixed = 0)
-        s = s.replace("e", "E")
+    return double_fact
 
-        if not s[-2:].isnumeric():
-            s = s[:-1] + "0" + s[-1:]
+# Function for computing the nth coefficient of the Taylor series of erf.
+def taylor(n):
+    num = (-1)**n
+    den = (2*n + 1)*math.factorial(n)
+    out = mpmath.mpf(num) / mpmath.mpf(den)
+    return (mpmath.mpf(2) / mpmath.sqrt(mpmath.pi)) * out
 
-        if x >= 0:
-            print("#define A%02d (+%s%s)" % (n, s, ext))
-        else:
-            print("#define A%02d (%s%s)" % (n, s, ext))
+# Function for computing the nth coefficient of the asymptotic expansion of erf.
+def asym(n):
+    num = doublefactorial(2*n - 1) * (-1)**n
+    den = 2**(n-1)
+    out = mpmath.mpf(num) / mpmath.mpf(den)
+    return (mpmath.mpf(1) / mpmath.sqrt(mpmath.pi)) * out
 
-def print_poly_helper(n, A = "A", skip = 4):
-    print("/*  Helper macro for evaluating a polynomial via Horner's method."
-          "             */")
-    print("#define TMPL_POLY_EVAL(z) \\")
-    for k in range (n-1):
-        print(" "*(skip*k) + "%s%02d + z*(\\" % (A, k))
-    print(" "*(skip*(n-1)) + "%s%02d + z*%s%02d\\" % (A, n-1, A, n))
+# Function for computing the degree N asymptotic expansion of erf.
+def asym_series(x, N):
+    one = mpmath.mpf(1)
+    invx = one / mpmath.mpf(x)
+    invx_sq = invx * invx
+    y = mpmath.mpf(0)
 
-    for k in range(2, n):
-        print(" "*(skip*(n-k)) + ")\\")
+    for n in range(1, N):
+        val = asym(n)
+        y += val * (invx_sq ** (n - 1))
 
-    print(")")
+    y *= invx
+    mpx = mpmath.mpf(x)
+    y *= mpmath.exp(-mpx*mpx)
+
+    return y + one

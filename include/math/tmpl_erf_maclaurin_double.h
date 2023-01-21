@@ -16,44 +16,41 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_arctan_asymptotic_float                        *
+ *                          tmpl_erf_maclaurin_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the asymptotic expansion of atan(x) at single precision.     *
+ *      Computes the Maclaurin series of erf(x) at double precision.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Arctan_Asymptotic                                          *
+ *      tmpl_Double_Erf_Maclaurin                                             *
  *  Purpose:                                                                  *
- *      Computes the asymptotic expansion of atan(x) for large positive x.    *
+ *      Computes the Maclaurin series of erf(x) for small values x.           *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      atan_x (float):                                                       *
- *          The asymptotic expansion of x.                                    *
+ *      erf_x (double):                                                       *
+ *          The Maclaurin series of erf(x).                                   *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute the reciprocal of x, and the square of this, and use Horner's *
- *      method to efficiently evaluate the polynomial.                        *
+ *      Use Horner's method to evaluate the polynomial.                       *
  *                                                                            *
  *                             infty                                          *
  *                             -----                                          *
- *                    pi       \         (-1)^n        1                      *
- *          atan(x) ~ ---  -   /       --------- * ---------     x --> infty  *
- *                     2       -----    (2n + 1)    x^{2n+1}                  *
+ *                      2      \        (-1)^n                                *
+ *          erf(x) = --------  /      ----------- * x^{2n+1}                  *
+ *                   sqrt(pi)  -----  (2n + 1) n!                             *
  *                             n = 0                                          *
  *                                                                            *
- *      Use the first 4 terms (0 <= n <= 3) of this expansion to compute.     *
+ *      Use the first 7 terms (0 <= n <= 6) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for large POSITIVE values. For x > 16, this function    *
- *      is accurate to single precision (10^-8 relative error). The closer    *
- *      the input is to 0, the worse the error.                               *
- *                                                                            *
- *      This function can be used for large negative values via:              *
- *          atan(x) ~= -tmpl_Float_Arctan_Asymptotic(-x).                     *
+ *      Only accurate for small values. For |x| < 0.125 this function is      *
+ *      accurate to double precision (10^-16 relative error). The larger      *
+ *      the input is, the worse the error. By the alternating series theorem, *
+ *      the absolute error is bounded by (1/75600)*|x|^15.                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -63,12 +60,12 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 22, 2022                                            *
+ *  Date:       January 19, 2023                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ARCTAN_ASYMPTOTIC_FLOAT_H
-#define TMPL_ARCTAN_ASYMPTOTIC_FLOAT_H
+#ifndef TMPL_ERF_MACLAURIN_DOUBLE_H
+#define TMPL_ERF_MACLAURIN_DOUBLE_H
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
@@ -79,31 +76,40 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 3 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (1.00000000000000000000000000000E+00F)
-#define A1 (-3.33333333333333333333333333333E-01F)
-#define A2 (2.00000000000000000000000000000E-01F)
-#define A3 (-1.42857142857142857142857142857E-01F)
+/*  Coefficients for the polynomial.                                          */
+#define A00 (+1.1283791670955125738961589031215451716881012586580E+00)
+#define A01 (-3.7612638903183752463205296770718172389603375288600E-01)
+#define A02 (+1.1283791670955125738961589031215451716881012586580E-01)
+#define A03 (-2.6866170645131251759432354836227265992573839491857E-02)
+#define A04 (+5.2239776254421878421118467737108572763338021234167E-03)
+#define A05 (-8.5483270234508528325466583569814028158189489292273E-04)
+#define A06 (+1.2055332981789664251027338708563516791539543361731E-04)
 
-/*  This function computes arctan(x) via the asymptotic expansion.            */
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*A06)))))
+
+/*  Function for computing erf(x) via a Maclaurin series.                     */
 TMPL_INLINE_DECL
-float tmpl_Float_Arctan_Asymptotic(float x)
+double tmpl_Double_Erf_Maclaurin(double x)
 {
-    /*  Declare necessary variables.                                          */
-    const float z = 1.0F / x;
-    const float z2 = z*z;
+    /*  The polynomial is odd, in terms of x^{2n+1}. Compute x^2.             */
+    const double x2 = x*x;
 
-    /*  Use Horner's method to compute the polynomial.                        */
-    return tmpl_Pi_By_Two_F - z*(A0 + z2*(A1 + z2*(A2 + z2*A3)));
+    /*  Evaluate the polynomial using Horner's method and return.             */
+    const double poly = TMPL_POLY_EVAL(x2);
+    return x*poly;
 }
-/*  End of tmpl_Float_Arctan_Asymptotic.                                      */
+/*  End of tmpl_Double_Erf_Maclaurin.                                         */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
+/*  #undef everything in case someone wants to #include this file.            */
+#undef TMPL_POLY_EVAL
+#undef A00
+#undef A01
+#undef A02
+#undef A03
+#undef A04
+#undef A05
+#undef A06
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

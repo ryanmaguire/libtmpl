@@ -142,6 +142,8 @@
  *  Date:       February 12, 2022                                             *
  ******************************************************************************/
 
+/*  TODO: Clean this up. Get rid of unused macro warnings on ppc64.           */
+
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 

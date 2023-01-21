@@ -58,20 +58,6 @@ float tmpl_Float_Erf(float x)
 }
 /*  End of tmpl_Float_Erf.                                                    */
 
-/*  Double precision error function (erf equivalent).                         */
-double tmpl_Double_Erf(double x)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double erf, erfc;
-
-    /*  The error function can be computed by the complimentary error         *
-     *  Erfc via Erf(x) = 1 - Erfc(x). We'll use this.                        */
-    erfc = tmpl_Double_Erfc(x);
-    erf = 1.0 - erfc;
-    return erf;
-}
-/*  End of tmpl_Double_Erf.                                                   */
-
 /*  Long double precision error function (erfl equivalent).                   */
 long double tmpl_LDouble_Erf(long double x)
 {
