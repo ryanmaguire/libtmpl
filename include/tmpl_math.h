@@ -2310,12 +2310,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Erf(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_asymptotic_double.h>
 #else
-extern float tmpl_Float_Erf_Asymptotic(float x);
-extern double tmpl_Double_Erf_Asymptotic(double x);
+TMPL_EXPORT extern float tmpl_Float_Erf_Asymptotic(float x);
+TMPL_EXPORT extern double tmpl_Double_Erf_Asymptotic(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2332,12 +2332,12 @@ extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_chebyshev_double.h>
 #else
-extern float tmpl_Float_Erf_Chebyshev(float x);
-extern double tmpl_Double_Erf_Chebyshev(double x);
+TMPL_EXPORT extern float tmpl_Float_Erf_Chebyshev(float x);
+TMPL_EXPORT extern double tmpl_Double_Erf_Chebyshev(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2354,12 +2354,12 @@ extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_maclaurin_double.h>
 #else
-extern float tmpl_Float_Erf_Maclaurin(float x);
-extern double tmpl_Double_Erf_Maclaurin(double x);
+TMPL_EXPORT extern float tmpl_Float_Erf_Maclaurin(float x);
+TMPL_EXPORT extern double tmpl_Double_Erf_Maclaurin(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2376,12 +2376,12 @@ extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_pade_double.h>
 #else
-extern float tmpl_Float_Erf_Pade(float x);
-extern double tmpl_Double_Erf_Pade(double x);
+TMPL_EXPORT extern float tmpl_Float_Erf_Pade(float x);
+TMPL_EXPORT extern double tmpl_Double_Erf_Pade(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-extern long double tmpl_LDouble_Erf_Pade(long double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Erf_Pade(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *

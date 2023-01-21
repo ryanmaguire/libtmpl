@@ -50,7 +50,7 @@ repos:
         args: [--py36-plus]
   # Formatters
 -   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.5.0
+    rev: v2.6.0
     hooks:
     -   id: pretty-format-yaml
         args: [--autofix, --indent, '4']
@@ -68,7 +68,7 @@ repos:
     hooks:
     -   id: black
 -   repo: https://github.com/asottile/blacken-docs
-    rev: v1.12.1
+    rev: 1.13.0
     hooks:
     -   id: blacken-docs
 
@@ -100,7 +100,7 @@ repos:
         args: [--linelength=120, '--filter=-legal/copyright,-whitespace/braces,-whitespace/newline,-whitespace/blank_line,-whitespace/indent,-build/namespaces,-build/header_guard,-build/include_order,-build/include_subdir, -whitespace/parens,-readability/casting,-runtime/threadsafe_fn,-runtime/int,-runtime/printf,-whitespace/operators,-readability/braces,-whitespace/comma,-whitespace/tab,-readability/fn_size']
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
-    rev: v0.0.215
+    rev: v0.0.228
     hooks:
     -   id: ruff
         # Respect `exclude` and `extend-exclude` settings.
@@ -111,6 +111,7 @@ repos:
       #   - id: clang-format
       #     args: [--style=Google]
     -   id: clang-tidy
+        args: [-p=../build/libtmpl]
 #    -   id: uncrustify
     -   id: cppcheck
 #    -   id: include-what-you-use
