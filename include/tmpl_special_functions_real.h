@@ -1,6 +1,8 @@
 #ifndef TMPL_SPECIAL_FUNCTIONS_REAL_H
 #define TMPL_SPECIAL_FUNCTIONS_REAL_H
 
+#include "tmpl_exports.h"
+
 #include <libtmpl/include/tmpl_config.h>
 
 TMPL_EXPORT extern float tmpl_Float_Bessel_I0(float x);
