@@ -34,14 +34,18 @@ import mpmath
 # Set precision to 1500 bits. Overkill for most things.
 mpmath.mp.prec = 1500
 
-x = mpmath.mpf(1)/(mpmath.mpf(2)*mpmath.pi)
+x = mpmath.pi/mpmath.mpf(2)
 y = binary.float_to_binary(x)
 
-X = [0]*5
-Y = [0]*5
+number = 29
+X = [0]*number
+Y = [0]*number
 
-for n in range(5):
-    ynew = binary.round_up(y, 27+25*n)
+skip = 8
+start = skip
+
+for n in range(number):
+    ynew = binary.round_up(y, start + skip*n)
     xnew = binary.binary_to_float(ynew)
     X[n] = xnew
     Y[n] = ynew
@@ -51,7 +55,7 @@ for n in range(5):
         s = "+" + s
 
     s = s.replace("e", "E")
-    print("#define TMPL_PI_%02d (%s)" % (n, s))
-
+    # print("#define A%d (%s)" % (n, s))
+    print("    %s," % s)
     x = x - xnew
     y = binary.float_to_binary(x)
