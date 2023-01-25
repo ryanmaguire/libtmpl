@@ -17,5 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_special_functions_real_time_tests.h"
-#include <gsl/gsl_sf.h>
-TEST1(double, 0.0, 10.0, tmpl_Double_Bessel_J0, j0)
+#include <boost/math/special_functions/bessel.hpp>
+TEST1(double, 0.0, 1.0E2, tmpl_Double_Bessel_I0, boost::math::detail::bessel_i0)
