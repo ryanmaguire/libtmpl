@@ -32,7 +32,7 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Print the coefficients for the Chebyshev expansion.
+# Print the coefficients for the asymptotic expansion.
 def print_coeffs(c, ctype = "double"):
 
     # Number of decimals to print.
@@ -54,6 +54,7 @@ def print_coeffs(c, ctype = "double"):
                         min_fixed = 0, max_fixed = 0)
         s = s.replace("e", "E")
 
+        # Make the exponent two decimals by adding a zero if necessary.
         if not s[-2:].isnumeric():
             s = s[:-1] + "0" + s[-1:]
 
