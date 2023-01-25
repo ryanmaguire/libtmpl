@@ -45,7 +45,7 @@ def doublefactorial(n):
     else:
         double_fact = 1
         k = n
-        while (k >= 0):
+        while (k > 0):
             double_fact = k*double_fact
             k = k - 2
 
