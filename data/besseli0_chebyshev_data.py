@@ -38,7 +38,7 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Transforms the interval [-1, 1] to [8, inft] and computes the scaled bessel
+# Transforms the interval [-1, 1] to [8, infty] and computes the scaled bessel
 # function I0(y) exp(-y) sqrt(y) in the new variable y.
 def f(x):
     y = mpmath.mpf(16)/mpmath.mpf(x + 1)
