@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_arctan_maclaurin_double_inline                     *
+ *                        tmpl_arctan_maclaurin_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of atan(x) at double precision, inlined.*
+ *      Computes the Maclaurin series of atan(x) at double precision.         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -70,7 +70,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
+/*  Only use this if inline support is requested.                             */
 #if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */

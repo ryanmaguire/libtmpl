@@ -19,14 +19,14 @@
  *                        tmpl_arccos_tail_end_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes acos(x) for 0.5 < x < 1 at double precision.                 *
+ *      Computes acos(x) for 0.5 <= x < 1 at double precision.                *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Arccos_Tail_End                                           *
  *  Purpose:                                                                  *
- *      Computes arccos for 0.5 < x < 1.0.                                    *
+ *      Computes arccos for 0.5 <= x < 1.0.                                   *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -38,10 +38,10 @@
  *          Computes the square root of a number.                             *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
- * 	        acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *	    Compute this using a Pade approximant.                                *
+ *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
+ *      Compute this using a Pade approximant.                                *
  *  Notes:                                                                    *
- *      Accurate for 0.5 < x < 1.0.                                           *
+ *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -57,7 +57,7 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only use this if inline support is not requested.                         */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file where the prototype for the function is defined.              */
@@ -78,7 +78,7 @@
 #define Q3 (-6.88283971605453293030E-01)
 #define Q4 (+7.70381505559019352791e-02)
 
-/*  Function for computing acos(x) for 0.5 < x < 1.0.                         */
+/*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 double tmpl_Double_Arccos_Tail_End(double x)
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */

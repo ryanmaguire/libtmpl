@@ -16,11 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_arctan_asymptotic_ldouble_inline                    *
+ *                       tmpl_arctan_asymptotic_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the asymptotic expansion of atan(x) at long double precision.*
- *      This is the inline version of the one found in src/math.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -80,10 +79,10 @@
 #ifndef TMPL_ARCTAN_ASYMPTOTIC_LDOUBLE_H
 #define TMPL_ARCTAN_ASYMPTOTIC_LDOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
+/*  Only use this if inline support is requested.                             */
 #if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
@@ -98,7 +97,7 @@
  ******************************************************************************/
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 11 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1).*/
+ *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (1.00000000000000000000000000000E+00L)
 #define A1 (-3.33333333333333333333333333333E-01L)
 #define A2 (2.00000000000000000000000000000E-01L)
@@ -107,7 +106,6 @@
 #define A5 (-9.09090909090909090909090909090E-02L)
 
 /*  Long double precision asymptotic expansion for the arctangent function.   */
-TMPL_INLINE_DECL
 long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 {
     /*  Declare necessary variables.                                          */
@@ -136,7 +134,7 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 13 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1).*/
+ *  of degree 6 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (1.0000000000000000000000000000000000000E+00L)
 #define A1 (-3.333333333333333333333333333333333333E-01L)
 #define A2 (2.0000000000000000000000000000000000000E-01L)

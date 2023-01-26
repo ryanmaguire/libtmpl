@@ -43,9 +43,9 @@
  *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
  *          use the reflection formula:                                       *
  *                                                                            *
- * 	            acos(x) = 2*asin(sqrt((1-x)/2))                               *
+ *              acos(x) = 2*asin(sqrt((1-x)/2))                               *
  *                                                                            *
- *	        Compute this using a Pade approximant. For values -1 < x <= -0.5  *
+ *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
  *          use the negation formula:                                         *
  *                                                                            *
  *              acos(x) = pi - acos(-x)                                       *

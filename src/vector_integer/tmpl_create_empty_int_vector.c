@@ -75,8 +75,7 @@
 #include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for allocating memory to an int vector.                          */
-tmpl_IntVector *
-tmpl_Create_Empty_IntVector(unsigned long int length)
+tmpl_IntVector *tmpl_Create_Empty_IntVector(size_t length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_IntVector *vec;
@@ -95,7 +94,7 @@ tmpl_Create_Empty_IntVector(unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, set the data to a NULL pointer.                */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -108,7 +107,7 @@ tmpl_Create_Empty_IntVector(unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_Empty_IntVector\n\n"
@@ -123,8 +122,7 @@ tmpl_Create_Empty_IntVector(unsigned long int length)
 /*  End of tmpl_Create_Empty_IntVector.                                       */
 
 /*  Function for allocating memory to an unsigned int vector.                 */
-tmpl_UIntVector *
-tmpl_Create_Empty_UIntVector(unsigned long int length)
+tmpl_UIntVector *tmpl_Create_Empty_UIntVector(size_t length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_UIntVector *vec;
@@ -143,7 +141,7 @@ tmpl_Create_Empty_UIntVector(unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, set the data to a NULL pointer.                */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -156,7 +154,7 @@ tmpl_Create_Empty_UIntVector(unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_Empty_UIntVector\n\n"

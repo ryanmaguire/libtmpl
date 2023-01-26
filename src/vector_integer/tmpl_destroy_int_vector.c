@@ -60,8 +60,7 @@
 #include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for creating a single-precision zero vector.                     */
-void
-tmpl_Destroy_IntVector(tmpl_IntVector **vec_ptr)
+void tmpl_Destroy_IntVector(tmpl_IntVector **vec_ptr)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_IntVector *vec;
@@ -110,8 +109,7 @@ tmpl_Destroy_IntVector(tmpl_IntVector **vec_ptr)
 /*  End of tmpl_Destroy_IntVector.                                            */
 
 /*  Function for creating a single-precision zero vector.                     */
-void
-tmpl_Destroy_UIntVector(tmpl_UIntVector **vec_ptr)
+void tmpl_Destroy_UIntVector(tmpl_UIntVector **vec_ptr)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_UIntVector *vec;

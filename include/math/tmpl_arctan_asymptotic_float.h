@@ -16,11 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_arctan_asymptotic_float_inline                     *
+ *                        tmpl_arctan_asymptotic_float                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the asymptotic expansion of atan(x) at single precision.     *
- *      This is the inline version of the one found in src/math.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -74,14 +73,14 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
+/*  Only use this if inline support is requested.                             */
 #if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
- *  of degree 7 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
+ *  of degree 3 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (1.00000000000000000000000000000E+00F)
 #define A1 (-3.33333333333333333333333333333E-01F)
 #define A2 (2.00000000000000000000000000000E-01F)
