@@ -143,3 +143,82 @@ double tmpl_Double_LambertW_Negative(double x)
         return tmpl_Double_LambertW_Halley(x, x0, tol);
     }
 }
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef PA0
+#undef PA1
+#undef PA2
+#undef PA3
+#undef PA4
+#undef PA5
+#undef QA0
+#undef QA1
+#undef QA2
+#undef QA3
+#undef QA4
+#undef QA5
+#undef PB0
+#undef PB1
+#undef PB2
+#undef PB3
+#undef PB4
+#undef PB5
+#undef PB6
+#undef QB0
+#undef QB1
+#undef QB2
+#undef QB3
+#undef QB4
+#undef QB5
+#undef QB6
+#undef PC0
+#undef PC1
+#undef PC2
+#undef PC3
+#undef PC4
+#undef PC5
+#undef PC6
+#undef PC7
+#undef QC0
+#undef QC1
+#undef QC2
+#undef QC3
+#undef QC4
+#undef QC5
+#undef QC6
+#undef QC7
+#undef QC8
+#undef PD0
+#undef PD1
+#undef PD2
+#undef PD3
+#undef PD4
+#undef PD5
+#undef PD6
+#undef PD7
+#undef PD8
+#undef QD0
+#undef QD1
+#undef QD2
+#undef QD3
+#undef QD4
+#undef QD5
+#undef QD6
+#undef QD7
+#undef QD8
+
+/*  Undefine the constant offsets for each region.                            */
+#undef A0
+#undef B0
+#undef C0
+#undef D0
+
+/*  Lastly undef the helpers for evaluating a polynomial via Horner's method. */
+#undef TMPL_PA_POLY_EVAL
+#undef TMPL_QA_POLY_EVAL
+#undef TMPL_PB_POLY_EVAL
+#undef TMPL_QB_POLY_EVAL
+#undef TMPL_PC_POLY_EVAL
+#undef TMPL_QC_POLY_EVAL
+#undef TMPL_PD_POLY_EVAL
+#undef TMPL_QD_POLY_EVAL

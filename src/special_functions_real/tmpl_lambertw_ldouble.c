@@ -11,6 +11,37 @@
 
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
+#define TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN 0
+#define TMPL_LDOUBLE_64_BIT_BIG_ENDIAN 1
+#define TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN 2
+#define TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN 3
+#define TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN 4
+#define TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN 5
+#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN 6
+#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN 7
+#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN 8
+#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN 9
+
+/*  These are roughly 2^{number of expo bits} - {number of mantissa bits} for *
+ *  various sizes of long double. This way {expo bits} + TMPL_TOL_OFFSET is   *
+ *  evaluated as {expo bits} - {number of mantissa bits} without conversion   *
+ *  worries since unsigned arithmetic is computed mod 2^{number of expo bits}.*/
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN            || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#define TMPL_TOL_OFFSET (2020U)
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN    || \
+      TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN || \
+      TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN   || \
+      TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
+#define TMPL_TOL_OFFSET (32710U)
+#elif \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#define TMPL_TOL_OFFSET (1948U)
+#else
+#define TMPL_TOL_OFFSET (32660U)
+#endif
+
 long double tmpl_LDouble_LambertW(long double x)
 {
     tmpl_IEEE754_LDouble w;
@@ -92,7 +123,7 @@ long double tmpl_LDouble_LambertW(long double x)
     }
 
     /*  Set the tolerance.                                                    */
-    w.bits.expo -= TMPL_LDOUBLE_MANTISSA_ULENGTH;
+    w.bits.expo += TMPL_TOL_OFFSET;
     tol = w.r;
 
     /*  Use Halley's method to compute the LambertW function with the given   *
@@ -100,6 +131,8 @@ long double tmpl_LDouble_LambertW(long double x)
     return tmpl_LDouble_LambertW_Halley(x, x0, tol);
 }
 /*  End of tmpl_LDouble_LambertW.                                             */
+
+#undef TMPL_TOL_OFFSET
 
 #else
 
