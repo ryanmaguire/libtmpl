@@ -18,10 +18,10 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Compute the Remez coefficient for exp(x) on [-log(2)/256, log(2)/256]. #                              #
+#       Compute the Remez coefficient for exp(x) on [-1/4, 1/4].               #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   January 26, 2023.                                                  #
 ################################################################################
 """
 
@@ -35,8 +35,8 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-start = -mpmath.log(2) / mpmath.mpf(256)
-end = mpmath.log(2) / mpmath.mpf(256)
-deg = 4
-c = remez.remez(mpmath.exp, mpmath.exp, deg, start, end)
+start = -mpmath.mpf(1) / mpmath.mpf(4)
+end = mpmath.mpf(1) / mpmath.mpf(4)
+deg = 10
+c = remez.remez(mpmath.exp, deg, start, end)
 remez.print_coeffs(c)

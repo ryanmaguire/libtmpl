@@ -30,6 +30,9 @@ import mpmath
 
 # Polynomial evaluation found here.
 import poly
+import numpy
+import scipy.signal
+import matplotlib.pyplot as plt
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
@@ -37,9 +40,9 @@ mpmath.mp.dps = 224
 
 # TODO: Add a more detailed explanation of the Remez exchange algorithm.
 
-# Given a function f and derivative fp "f-prime" on the interval [start, end],
+# Given a function f on the interval [start, end],
 # compute the Remez polynomial of degree "deg" using the Remez exchange.
-def remez(f, fp, deg, start, end):
+def remez(f, deg, start, end):
     start = mpmath.mpf(start)
     end = mpmath.mpf(end)
 
@@ -48,6 +51,7 @@ def remez(f, fp, deg, start, end):
     x = [0]*(deg + 2)
     y = [0]*(deg + 2)
     z = [0]*(deg + 1)
+    h = mpmath.mpf(1.0E-20)
 
     # Compute the sample points and the function at these points.
     for m in range(deg + 2):
@@ -73,32 +77,28 @@ def remez(f, fp, deg, start, end):
         b = mpmath.matrix(y)
         c = mpmath.lu_solve(A, b)
         c = list(c)
-        max_err = mpmath.mpf(0)
 
-        # Get a rough estimate to the max error in the polynomial.
-        for n in range(deg + 1):
-            tmp = abs(poly.poly_eval(c[0:deg+1], x[n]) - y[n])
-            if tmp > max_err:
-                max_err = tmp
+        # Plot the error. If the bumps are the same magnitude, stop.
+        xarr = numpy.arange(float(start), float(end), float(dx)*1.0E-3)
+        yarr = numpy.array([abs(float(f(k) - poly.poly_eval(c, k))) for k in xarr])
+
+        plt.plot(xarr, yarr)
+        plt.show()
 
         # Print the error and ask the user if this is adequate.
-        print("%E" % tmp)
         stop = input("Stop? (y/n): ")
 
         # Stop the computation if this is good enough.
         if stop.lower() == "y":
             return c[0:deg+1]
 
-        # Otherwise use Newton's method to compute local mins and maxes near
-        # the sample point, and update the samples to these nodes.
-        for n in range(1, deg):
-            x0 = x[n]
-            fx0 = f(x0)
-            fpx0 = fp(x0)
-            Px0 = poly.poly_eval(c, x0)
-            dPx0 = poly.dpoly_eval(c, x0)
-            x[n] = x0 - (Px0 - fx0)/(dPx0 - fpx0)
-            y[n] = f(x[n])
+        # Otherwise, find the bumps.
+        maxind = scipy.signal.argrelextrema(yarr, numpy.greater_equal)[0]
+
+        # Compute the next set of sample points and repeat.
+        xarr = xarr[maxind]
+        x = [mpmath.mpf(k) for k in xarr]
+        y = [f(k) for k in x]
 
 # Print the coefficients for the Remez polynomial.
 def print_coeffs(c, ctype = "double"):
