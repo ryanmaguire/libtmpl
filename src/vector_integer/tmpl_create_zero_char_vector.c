@@ -74,8 +74,7 @@
 #include <libtmpl/include/tmpl_vector_integer.h>
 
 /*  Function for creating a single-precision zero vector.                     */
-tmpl_CharVector *
-tmpl_Create_Zero_CharVector(unsigned long int length)
+tmpl_CharVector *tmpl_Create_Zero_CharVector(size_t length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_CharVector *vec;
@@ -94,7 +93,7 @@ tmpl_Create_Zero_CharVector(unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, set the data to a NULL pointer.                */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -108,7 +107,7 @@ tmpl_Create_Zero_CharVector(unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_Zero_CharVector\n\n"
@@ -123,8 +122,7 @@ tmpl_Create_Zero_CharVector(unsigned long int length)
 /*  End of tmpl_Create_Zero_CharVector.                                       */
 
 /*  Function for creating a double-precision zero vector.                     */
-tmpl_UCharVector *
-tmpl_Create_Zero_UCharVector(unsigned long int length)
+tmpl_UCharVector *tmpl_Create_Zero_UCharVector(size_t length)
 {
     /*  Declare a variable for the vector pointer we're returning.            */
     tmpl_UCharVector *vec;
@@ -143,7 +141,7 @@ tmpl_Create_Zero_UCharVector(unsigned long int length)
     vec->length = length;
 
     /*  If the length is zero, set the data to a NULL pointer.                */
-    if (length == 0UL)
+    if (length == (size_t)0)
     {
         vec->data = NULL;
         return vec;
@@ -157,7 +155,7 @@ tmpl_Create_Zero_UCharVector(unsigned long int length)
     if (vec->data == NULL)
     {
         vec->error_occurred = tmpl_True;
-        vec->length = 0UL;
+        vec->length = (size_t)0;
         vec->error_message = tmpl_strdup(
             "Error Encountered: libtmpl\n"
             "\tFunction Name: tmpl_Create_Zero_UCharVector\n\n"

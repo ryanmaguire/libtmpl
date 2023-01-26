@@ -190,7 +190,7 @@ extern tmpl_UShortVector *
 tmpl_Create_UShortVector_From_Data(unsigned short int *v, size_t length);
 
 extern tmpl_IntVector *
-tmpl_Create_IntVector_From_Data(int *v, unsigned long length);
+tmpl_Create_IntVector_From_Data(int *v, size_t length);
 
 extern tmpl_UIntVector *
 tmpl_Create_UIntVector_From_Data(unsigned int *v, size_t length);

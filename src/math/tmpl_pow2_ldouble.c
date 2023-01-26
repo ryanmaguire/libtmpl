@@ -47,7 +47,7 @@ long double tmpl_LDouble_Pow2(signed int expo)
     if (expo < -1022)
     {
         if (expo < -1074)
-            return 0.0;
+            return 0.0L;
 
         expo += 52;
         w.bits.expo =
