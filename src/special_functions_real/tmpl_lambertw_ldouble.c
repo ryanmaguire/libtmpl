@@ -11,17 +11,6 @@
 
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
-#define TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN 0
-#define TMPL_LDOUBLE_64_BIT_BIG_ENDIAN 1
-#define TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN 2
-#define TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN 3
-#define TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN 4
-#define TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN 5
-#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN 6
-#define TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN 7
-#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN 8
-#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN 9
-
 /*  These are roughly 2^{number of expo bits} - {number of mantissa bits} for *
  *  various sizes of long double. This way {expo bits} + TMPL_TOL_OFFSET is   *
  *  evaluated as {expo bits} - {number of mantissa bits} without conversion   *
