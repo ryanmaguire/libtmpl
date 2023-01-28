@@ -18,47 +18,37 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for working with asymptotic expansions.                       #
+#       Routines for computing numerical derivatives using five-point stencils.#
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 10, 2023.                                                  #
 ################################################################################
 """
 
-# Muli-precision math routines found here.
-import mpmath
+# Computes the numerical derivative of f at x using a five-point stencil.
+def df(f, x, h):
+    two = mpmath.mpf(2)
+    eight = mpmath.mpf(8)
+    twelve = mpmath.mpf(12)
 
-# The highest precision of long double is 112-bit mantissa. 224 bits is safe
-# enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
+    a = -f(x + two*h)
+    b = eight * f(x + h)
+    c = -eight * f(x - h)
+    d = f(x - two*h)
 
-# Print the coefficients for the asymptotic expansion.
-def print_coeffs(c, ctype = "double"):
+    return (a + b + c + d) / (twelve * h)
 
-    # Number of decimals to print.
-    N = 50
+# Computes the numerical second derivative of f at x using a five-point stencil.
+def d2f(f, x, h):
+    two = mpmath.mpf(2)
+    twelve = mpmath.mpf(12)
+    sixteen = mpmath.mpf(16)
+    thirty = mpmath.mpf(30)
 
-    # Extension for literal constants, depends on data type.
-    if ctype == "ldouble":
-        ext = "L"
-    elif ctype == "float":
-        ext = "F"
-    else:
-        ext = ""
+    a = -f(x + two*h)
+    b = sixteen * f(x + h)
+    c = -thirty * f(x)
+    d = sixteen * f(x - h)
+    e = -f(x - two*h)
 
-    print("/*  Coefficients for the asymptotic expansion."
-          "                                */")
-    for n in range(len(c)):
-        x = mpmath.mpf(c[n])
-        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
-                        min_fixed = 0, max_fixed = 0)
-        s = s.replace("e", "E")
-
-        # Make the exponent two decimals by adding a zero if necessary.
-        if not s[-2:].isnumeric():
-            s = s[:-1] + "0" + s[-1:]
-
-        if x >= 0:
-            print("#define A%02d (+%s%s)" % (n, s, ext))
-        else:
-            print("#define A%02d (%s%s)" % (n, s, ext))
+    return (a + b + c + d + e) / (twelve * h * h)

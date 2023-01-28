@@ -18,7 +18,7 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Computes the Pade coefficients for the modified Bessel Function I0.    #
+#       Computes the asymptotic expansion for the modified Bessel Function I0. #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #

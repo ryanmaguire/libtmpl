@@ -38,24 +38,15 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
+# Transforms the interval [-1, 1] to [8, infty] and computes the scaled bessel
+# function I0(y) exp(-y) sqrt(y) in the new variable y.
 def f(x):
     y = mpmath.mpf(16)/mpmath.mpf(x + 1)
     return mpmath.exp(-y)*mpmath.besseli(0, y)*mpmath.sqrt(y)
 
+# Computes the first N coefficients of the Chebyshev expansion of f.
 def coeffs(N):
     return chebyshev.cheb_coeffs(f, N, 1000)
-
-def cheb_eval(a, x):
-    x = mpmath.mpf(x)
-    y = mpmath.mpf(16)/x - mpmath.mpf(1)
-    z = chebyshev.cheb_eval(a, y)
-    return z/mpmath.sqrt(x)
-
-def poly_eval(a, x):
-    x = mpmath.mpf(x)
-    y = mpmath.mpf(16)/x - mpmath.mpf(1)
-    z = poly.poly_eval(a, y)
-    return z/mpmath.sqrt(x)
 
 c = coeffs(20)
 a = chebyshev.cheb_to_poly(c)

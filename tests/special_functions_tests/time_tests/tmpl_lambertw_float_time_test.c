@@ -18,4 +18,4 @@
  ******************************************************************************/
 #include "tmpl_special_functions_real_time_tests.h"
 #include <gsl/gsl_sf.h>
-TEST1(double, 0.0, 10.0, tmpl_Double_Bessel_J0, j0)
+TEST1(double, -0.30, 1.0E3, tmpl_Float_LambertW, gsl_sf_lambert_W0)

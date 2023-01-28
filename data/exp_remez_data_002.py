@@ -18,12 +18,15 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for working with asymptotic expansions.                       #
+#       Compute the Remez coefficient for exp(x) on [-1/128, 1/128].           #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 10, 2023.                                                  #
+#   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
+
+# Remez routines found here.
+import remez
 
 # Muli-precision math routines found here.
 import mpmath
@@ -32,33 +35,8 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# Print the coefficients for the asymptotic expansion.
-def print_coeffs(c, ctype = "double"):
-
-    # Number of decimals to print.
-    N = 50
-
-    # Extension for literal constants, depends on data type.
-    if ctype == "ldouble":
-        ext = "L"
-    elif ctype == "float":
-        ext = "F"
-    else:
-        ext = ""
-
-    print("/*  Coefficients for the asymptotic expansion."
-          "                                */")
-    for n in range(len(c)):
-        x = mpmath.mpf(c[n])
-        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
-                        min_fixed = 0, max_fixed = 0)
-        s = s.replace("e", "E")
-
-        # Make the exponent two decimals by adding a zero if necessary.
-        if not s[-2:].isnumeric():
-            s = s[:-1] + "0" + s[-1:]
-
-        if x >= 0:
-            print("#define A%02d (+%s%s)" % (n, s, ext))
-        else:
-            print("#define A%02d (%s%s)" % (n, s, ext))
+start = -mpmath.mpf(1) / mpmath.mpf(128)
+end = mpmath.mpf(1) / mpmath.mpf(128)
+deg = 5
+c = remez.remez(mpmath.exp, deg, start, end)
+remez.print_coeffs(c)

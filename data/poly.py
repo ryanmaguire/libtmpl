@@ -54,6 +54,17 @@ def dpoly_eval(a, x):
 
     return P
 
+# Compute the second derivative of a polynomial using Horner's method.
+def d2poly_eval(a, x):
+    deg = len(a) - 1
+    P = mpmath.mpf(0)
+
+    # Compute the derivative using Horner's method.
+    for n in range(deg - 1):
+        P = x*P + mpmath.mpf(deg - n)*mpmath.mpf(deg - n - 1)*a[deg - n]
+
+    return P
+
 # Print the coefficients for the Chebyshev expansion.
 def print_coeffs(c, ctype = "double"):
 
