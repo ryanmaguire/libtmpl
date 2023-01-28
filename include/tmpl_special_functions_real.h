@@ -3,6 +3,8 @@
 
 #include <libtmpl/include/tmpl_config.h>
 
+#include "tmpl_exports.h"
+
 /*  If using with C++ (and not C), wrap the entire header file in an extern   *
  *  "C" statement. Check if C++ is being used with __cplusplus.               */
 #ifdef __cplusplus
