@@ -4,7 +4,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake")
 project(integer_test_unit_test)
 
 file(GLOB sources CONFIGURE_DEPENDS *.c)
-message(STATUS "CMAKE_C_COMPILER_ID: ${CMAKE_C_COMPILER_ID}")
 if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     # Exclude tests that use GCC builtins when not compiling with GCC
     list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/tmpl_trailing_zeros_ushort_unit_test_002.c")
