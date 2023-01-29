@@ -9,6 +9,8 @@
  *      Implement fast rational approximation for large positive values.
  */
 
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+
 #if 1
 
 double tmpl_Double_LambertW(double x)
@@ -87,7 +89,6 @@ double tmpl_Double_LambertW(double x)
 }
 
 #else
-#if TMPL_HAS_IEEE754_DOUBLE == 1
 
 double tmpl_Double_LambertW(double x)
 {
@@ -179,6 +180,8 @@ double tmpl_Double_LambertW(double x)
     return tmpl_Double_LambertW_Halley(x, x0, tol);
 }
 /*  End of tmpl_Double_LambertW.                                              */
+
+#endif
 
 #else
 
@@ -272,5 +275,4 @@ double tmpl_Double_LambertW(double x)
 }
 /*  End of tmpl_Double_LambertW.                                              */
 
-#endif
 #endif

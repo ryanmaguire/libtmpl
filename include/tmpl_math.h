@@ -1292,8 +1292,8 @@ extern const double tmpl_double_cospi_table[128];
 extern const float tmpl_float_cospi_table[128];
 extern const long double tmpl_ldouble_cospi_table[128];
 
-/*  The values exp(k/256) for k = 0, 1, ..., 176, 177.                        */
-extern const double tmpl_double_exp_table[355];
+/*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
+extern const double tmpl_double_exp_table[179];
 extern const float tmpl_float_exp_table[355];
 extern const long double tmpl_ldouble_exp_table[355];
 
@@ -2492,6 +2492,13 @@ extern long double tmpl_LDouble_Exp_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/*  TODO:
+ *      Exp is well optimized for small arguments.
+ *      For |x| < 1 the combination or Pade, Remez, and Maclaurin series does *
+ *      very well. The tmpl_Double_Exp_Pos_Kernel function has better         *
+ *      performance than openlibm (about 1.4x faster, woohoo!), but worse     *
+ *      then glibc (about 0.75x as fast). Try to improve this.                */
 
 /******************************************************************************
  *  Function:                                                                 *
