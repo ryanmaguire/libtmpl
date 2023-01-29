@@ -128,7 +128,7 @@ float tmpl_Float_LambertW(float x)
     }
 
     /*  Avoid underflow. LambertW(x) ~= x for small values.                   */
-    else if (abs_x < DBL_EPSILON)
+    else if (abs_x < FLT_EPSILON)
         return x;
 
     /*  Small inputs, use the Maclaurin series.                               */
@@ -186,7 +186,7 @@ float tmpl_Float_LambertW(float x)
     }
 
     /*  Tolerance is y * EPSILON, found in float.h.                           */
-    tol = y*DBL_EPSILON;
+    tol = y*FLT_EPSILON;
 
     /*  Use Halley's method to compute the LambertW function with the given   *
      *  tolerance and initial guess.                                          */
