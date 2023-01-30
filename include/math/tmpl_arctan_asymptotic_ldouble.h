@@ -106,7 +106,7 @@
 #define A5 (-9.09090909090909090909090909090E-02L)
 
 /*  Long double precision asymptotic expansion for the arctangent function.   */
-long double tmpl_LDouble_Arctan_Asymptotic(long double x)
+inline long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 {
     /*  Declare necessary variables.                                          */
     const long double z = 1.0L / x;
