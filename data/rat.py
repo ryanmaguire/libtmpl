@@ -46,7 +46,7 @@ def rat_eval(a, b, x):
 
     # Apply Horner's method for the denominator.
     for k in range(m + 1):
-        Q = y*Q + b[n-k]
+        Q = y*Q + b[m-k]
 
     # Return the quotient.
     return P/Q

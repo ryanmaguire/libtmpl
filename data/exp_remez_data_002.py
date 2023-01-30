@@ -35,8 +35,11 @@ import mpmath
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
+# We're computing the minimax polynomial on the interval [-1/128, 1/128].
 start = -mpmath.mpf(1) / mpmath.mpf(128)
 end = mpmath.mpf(1) / mpmath.mpf(128)
+
+# Float = 2, Double = 5, Quadruple = 10, double-double = 10, extended = 6
 deg = 5
 c = remez.remez(mpmath.exp, deg, start, end)
 remez.print_coeffs(c)
