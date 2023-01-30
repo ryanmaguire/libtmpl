@@ -30,9 +30,12 @@ import mpmath
 
 # Polynomial evaluation found here.
 import poly
+
+# Arrays.
 import numpy
+
+# argrelextrema found here.
 import scipy.signal
-import matplotlib.pyplot as plt
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
@@ -51,7 +54,8 @@ def remez(f, deg, start, end):
     x = [0]*(deg + 2)
     y = [0]*(deg + 2)
     z = [0]*(deg + 1)
-    h = mpmath.mpf(1.0E-20)
+    xarr = numpy.arange(float(start), float(end), float(dx)*1.0E-3)
+    z = [f(k) for k in xarr]
 
     # Compute the sample points and the function at these points.
     for m in range(deg + 2):
@@ -79,25 +83,40 @@ def remez(f, deg, start, end):
         c = list(c)
 
         # Plot the error. If the bumps are the same magnitude, stop.
-        xarr = numpy.arange(float(start), float(end), float(dx)*1.0E-3)
-        yarr = numpy.array([abs(float(f(k) - poly.poly_eval(c, k))) for k in xarr])
-
-        plt.plot(xarr, yarr)
-        plt.show()
+        yarr = numpy.abs(
+            numpy.array(
+                [
+                    float(z[k] - poly.poly_eval(c, xarr[k]))
+                    for k in range(len(xarr))
+                ]
+            )
+        )
 
         # Print the error and ask the user if this is adequate.
-        stop = input("Stop? (y/n): ")
+        stop = input("Max Err = %.5e | Stop? (y/n): " % numpy.max(yarr))
 
         # Stop the computation if this is good enough.
         if stop.lower() == "y":
             return c[0:deg+1]
 
         # Otherwise, find the bumps.
-        maxind = scipy.signal.argrelextrema(yarr, numpy.greater_equal)[0]
+        maxind = list(scipy.signal.argrelextrema(yarr, numpy.greater_equal)[0])
+
+        # The first and last elements of the interval should be added. Check.
+        if len(xarr)-1 not in maxind:
+            maxind.append(len(yarr)-1)
+
+        if 0 not in maxind:
+            maxind = [0] + maxind
+
+        # Convert back to a numpy array for later.
+        maxind = numpy.array(maxind)
 
         # Compute the next set of sample points and repeat.
-        xarr = xarr[maxind]
-        x = [mpmath.mpf(k) for k in xarr]
+        maxarr = xarr[maxind]
+
+        # Compute the function at these new sample points.
+        x = [mpmath.mpf(k) for k in maxarr]
         y = [f(k) for k in x]
 
 # Print the coefficients for the Remez polynomial.
