@@ -65,12 +65,12 @@
  *              exp(x) ~= ------------------------                            *
  *                         1 + b1 x + ... + bm x^m                            *
  *                                                                            *
- *          For |x| > log(DBL_MAX) ~= 709, use the limit.                     *
+ *          For |x| > log(FLT_MAX) ~= 89, use the limit.                      *
  *                                                                            *
  *              exp(+inf) = +inf                                              *
  *              exp(-inf) = 0                                                 *
  *                                                                            *
- *          For x = +/- NaN, return x. Lastly, for 1 <= |x| <= log(DBL_MAX)   *
+ *          For x = +/- NaN, return x. Lastly, for 1 <= |x| <= log(FLT_MAX)   *
  *          perform the following:                                            *
  *                                                                            *
  *              exp(x) = exp(k*ln(2) + r)           k integer, |r| < ln(2)    *
