@@ -1294,8 +1294,8 @@ extern const long double tmpl_ldouble_cospi_table[128];
 
 /*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
 extern const double tmpl_double_exp_table[179];
-extern const float tmpl_float_exp_table[355];
-extern const long double tmpl_ldouble_exp_table[355];
+extern const float tmpl_float_exp_table[179];
+extern const long double tmpl_ldouble_exp_table[179];
 
 /*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
 extern const double tmpl_double_log_table[128];
@@ -2557,9 +2557,27 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
 /*  No inline support requested.                                              */
 extern double tmpl_Double_Exp_Neg_Kernel(double x);
 extern float tmpl_Float_Exp_Neg_Kernel(float x);
+extern long double tmpl_LDouble_Exp_Neg_Kernel(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp_Remez                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the base e exponential of a real number |x| < 1/4 using      *
+ *      the Remez minimax polynomial.                                         *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+extern float tmpl_Float_Exp_Remez(float x);
+extern double tmpl_Double_Exp_Remez(double x);
+extern long double tmpl_LDouble_Exp_Remez(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
