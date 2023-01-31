@@ -69,7 +69,7 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the polynonial. They are 1 / n!.                         */
+/*  Coefficients for the polynomial. They are 1 / n!.                         */
 #define A0 (1.000000000000000000000000000000000000000E+00F)
 #define A1 (1.000000000000000000000000000000000000000E+00F)
 #define A2 (5.000000000000000000000000000000000000000E-01F)
