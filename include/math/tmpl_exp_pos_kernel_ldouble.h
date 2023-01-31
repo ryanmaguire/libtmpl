@@ -16,17 +16,17 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_exp_neg_kernel_double                         *
+ *                         tmpl_exp_pos_kernel_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes exp(x) for 1 < -x < log(DBL_MAX).                            *
+ *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Exp_Neg_Kernel                                            *
+ *      tmpl_Double_Exp_Pos_Kernel                                            *
  *  Purpose:                                                                  *
- *      Computes exp(x) for negative values, 1 < -x < log(DBL_MAX).           *
+ *      Computes exp(x) for negative values, 1 < x < log(DBL_MAX).            *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number, the argument for exp(x).                           *
@@ -78,11 +78,15 @@
  *      Changed Maclaurin series to Remez Minimax polynomial. Fixed comments. *
  ******************************************************************************/
 
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_EXP_POS_KERNEL_LDOUBLE_H
+#define TMPL_EXP_POS_KERNEL_LDOUBLE_H
+
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is not requested.                */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline support is requested.                    */
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -194,8 +198,9 @@ z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Function for computing exp(x) for 1 < -x < log(LDBL_MAX).                 */
-long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
+/*  Function for computing exp(x) for 1 < x < log(LDBL_MAX).                  */
+TMPL_INLINE_DECL
+long double tmpl_LDouble_Exp_Pos_Kernel(long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_LDouble exp_w;
@@ -208,14 +213,14 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     const long double rcpr_ln_2 = 1.4426950408889634073599246810018921374E+00L;
 
     /*  Compute the correctly rounded down integer part of |x|/log(2).        */
-    const unsigned int k = (unsigned int)(rcpr_ln_2*(-x) + 0.5L);
+    const unsigned int k = (unsigned int)(rcpr_ln_2*x + 0.5L);
     const long double kd = (long double)k;
 
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
      *  Compute the value r by subtracting k*ln(2) from x.                    */
-    const long double hi = x + ln_2_hi*kd;
+    const long double hi = x - ln_2_hi*kd;
     const long double lo = kd*ln_2_lo;
-    const long double r = hi + lo;
+    const long double r = hi - lo;
 
     /*  Split r into r = n/128 + t for an integer n and |t| < 1/128.          */
     const int r128 = (int)(128.0L*r);
@@ -239,15 +244,15 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     {
         tmpl_IEEE754_LDouble two_to_the_minus_k;
         two_to_the_minus_k.r = 1.0L;
-        two_to_the_minus_k.bits.expoa -= k & TMPL_BITMASK;
+        two_to_the_minus_k.bits.expoa += k & TMPL_BITMASK;
         exp_w.r *= two_to_the_minus_k.r;
     }
 #else
-    exp_w.bits.expo -= k & TMPL_BITMASK;
+    exp_w.bits.expo += k & TMPL_BITMASK;
 #endif
     return exp_w.r;
 }
-/*  End of tmpl_LDouble_Exp_Neg_Kernel.                                       */
+/*  End of tmpl_LDouble_Exp_Pos_Kernel.                                       */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
@@ -256,8 +261,9 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Function for computing exp(x) for 1 < -x < log(LDBL_MAX).                 */
-long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
+/*  Function for computing exp(x) for 1 < x < log(LDBL_MAX).                  */
+TMPL_INLINE_DECL
+long double tmpl_LDouble_Exp_Pos_Kernel(long double x)
 {
     /*  log(2) split into two components for extra precision.                 */
     const long double ln_2_hi = TMPL_LN2_HI;
@@ -267,14 +273,14 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     const long double rcpr_ln_2 = 1.4426950408889634073599246810018921374E+00L;
 
     /*  Compute the correctly rounded down integer part of |x|/log(2).        */
-    const signed int k = (signed int)(rcpr_ln_2*(-x) + 0.5L);
+    const signed int k = (signed int)(rcpr_ln_2*x + 0.5L);
     const long double kd = (long double)k;
 
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
      *  Compute the value r by subtracting k*ln(2) from x.                    */
-    const long double hi = x + ln_2_hi*kd;
+    const long double hi = x - ln_2_hi*kd;
     const long double lo = kd*ln_2_lo;
-    const long double r = hi + lo;
+    const long double r = hi - lo;
 
     /*  Split r into r = n/128 + t for an integer n and |t| < 1/128.          */
     const int r128 = (int)(128.0L*r);
@@ -290,9 +296,9 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     const long double poly = TMPL_POLY_EVAL(t);
 
     /*  Compute 2^k*exp(n/128)*exp(t) using the table.                        */
-    return poly*tmpl_ldouble_exp_table[ind]*tmpl_LDouble_Pow2(-k);
+    return poly*tmpl_ldouble_exp_table[ind]*tmpl_LDouble_Pow2(k);
 }
-/*  End of tmpl_LDouble_Exp_Neg_Kernel.                                       */
+/*  End of tmpl_LDouble_Exp_Pos_Kernel.                                       */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
@@ -316,4 +322,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
 #undef TMPL_LN2_LO
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */

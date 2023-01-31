@@ -44,16 +44,22 @@
  *                     = 2^k*exp(r)                                           *
  *                                                                            *
  *              with |r| < ln(2)/2. 2^k can be computed instantly by setting  *
- *              the exponent bit to k. exp(r) is computed via a rational      *
- *              approximation.                                                *
- *      Error:                                                                *
+ *              the exponent bit to k. exp(r) is computed by writing:         *
+ *                                                                            *
+ *                  exp(r) = exp(k/128 + t)                                   *
+ *                         = exp(k/128)*exp(t)                                *
+ *                                                                            *
+ *              with |t| < 1/128. exp(k/128) is computed via a lookup table   *
+ *              and exp(t) is computed using a degree 5 Minimax polynomial.   *
+ *              The coefficients were computed using the Remez exchange       *
+ *              algorithm. Peak theoretical error is 1 x 10^-17. Actual       *
+ *              machine error is about 1 ULP (~2 x 10^-16).                   *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_Double_Pow2 (tmpl_math.h):                                   *
  *              Computes a power of 2.                                        *
  *      Method:                                                               *
  *          Same as IEEE-754 method, but compute 2^k with tmpl_Double_Pow2.   *
- *      Error:                                                                *
  *  Notes:                                                                    *
  *      This function assumes the input x is not infinity, not NaN, and       *
  *      negative between -1 and -log(DBL_MAX) ~= -709 for 64-bit double.      *
@@ -65,13 +71,18 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 07, 2022                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/01/30: Ryan Maguire                                                  *
+ *      Changed Maclaurin series to Remez Minimax polynomial. Fixed comments. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_EXP_NEG_KERNEL_DOUBLE_H
 #define TMPL_EXP_NEG_KERNEL_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  This code is only used if inline support is requested.                    */
@@ -96,7 +107,7 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
+/*  Function for computing exp(x) for 1 < -x < log(DBL_MAX).                  */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Neg_Kernel(double x)
 {
@@ -117,8 +128,8 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
      *  Compute the value r by subtracting k*ln(2) from x.                    */
     const double hi = x + ln_2_hi*kd;
-    const double lo = -kd*ln_2_lo;
-    const double r = hi - lo;
+    const double lo = kd*ln_2_lo;
+    const double r = hi + lo;
 
     /*  Split r into r = n/128 + t for an integer n and |t| < 1/128.          */
     const int r128 = (int)(128.0*r);
@@ -149,18 +160,10 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  This function is declared after this file is included in tmpl_math.h. Give*
- *  the prototype here for safety.                                            */
-extern double tmpl_Double_Pow2(signed int expo);
-
-/*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
+/*  Function for computing exp(x) for 1 < -x < log(DBL_MAX).                  */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Neg_Kernel(double x)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    double r, t, hi, lo;
-    int t256, ind;
-
     /*  log(2) split into two components for extra precision.                 */
     const double ln_2_hi = 6.93147180369123816490e-01;
     const double ln_2_lo = 1.90821492927058770002e-10;
@@ -169,26 +172,32 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
     const double rcpr_ln_2 = 1.44269504088896338700e+00;
 
     /*  Compute the correctly rounded down integer part of |x|/log(2).        */
-    const int k = (int)(rcpr_ln_2*(-x) + 0.5);
-    t = (double)k;
+    const signed int k = (signed int)(rcpr_ln_2*(-x) + 0.5);
+    const double kd = (double)k;
 
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
-     *  exp(r) is computed via a Taylor series for the function               *
-     *  f(r) = r*(exp(r) + 1)/(exp(r) - 1) and solving for exp(r) in          *
-     *  terms of f(r).                                                        */
-    hi = x + ln_2_hi*t;
-    lo = -t*ln_2_lo;
-    t = hi - lo;
+     *  Compute the value r by subtracting k*ln(2) from x.                    */
+    const double hi = x + ln_2_hi*kd;
+    const double lo = kd*ln_2_lo;
+    const double r = hi + lo;
 
-    t256 = (int)(256.0*t);
-    ind = t256 + 177;
-    t = t - 0.00390625*t256;
-    r = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
+    /*  Split r into r = n/128 + t for an integer n and |t| < 1/128.          */
+    const int r128 = (int)(128.0*r);
 
-    /*  Compute exp(x) via 2^k * exp(t).                                      */
-    return r*tmpl_double_exp_table[ind]*tmpl_Double_Pow2(-k);
+    /*  The indices range from -89 to + 89. Shift r128 by 89 to make it a     *
+     *  positive index for the table.                                         */
+    const int ind = r128 + 89;
+
+    /*  Compute t = r - n/128.                                                */
+    const double t = r - TMPL_ONE_BY_128*r128;
+
+    /*  Compute exp(t) via the Remez Minimax polynomial. Peak error ~10^-17.  */
+    const double poly = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
+
+    /*  Compute 2^k*exp(n/128)*exp(t) using the table.                        */
+    return poly*tmpl_double_exp_table[ind]*tmpl_Double_Pow2(-k);
 }
-/*  End of tmpl_Double_Exp_Pos_Kernel.                                        */
+/*  End of tmpl_Double_Exp_Neg_Kernel.                                        */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

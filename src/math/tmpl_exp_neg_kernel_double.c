@@ -206,4 +206,4 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
 #undef TMPL_ONE_BY_128
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

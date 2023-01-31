@@ -44,14 +44,16 @@
  *                     = 2^k*exp(r)                                           *
  *                                                                            *
  *              with |r| < ln(2)/2. 2^k can be computed instantly by setting  *
- *              the exponent bit to k. exp(r) is computed as follows. Write:  *
+ *              the exponent bit to k. exp(r) is computed by writing:         *
  *                                                                            *
- *                       r = k/128 + t (since |r| < log(2), |k| < 89)         *
- *                  exp(r) = exp(k/128)*exp(t), |t| < 1/128                   *
+ *                  exp(r) = exp(k/128 + t)                                   *
+ *                         = exp(k/128)*exp(t)                                *
  *                                                                            *
- *              exp(k/128) is computed via a table and exp(t) is computed     *
- *              using the degree 5 minimax polynomial computed from the Remez *
- *              exchange algorithm on the interval [-1/128, 1/128].           *
+ *              with |t| < 1/128. exp(k/128) is computed via a lookup table   *
+ *              and exp(t) is computed using a degree 5 Minimax polynomial.   *
+ *              The coefficients were computed using the Remez exchange       *
+ *              algorithm. Peak theoretical error is 1 x 10^-17. Actual       *
+ *              machine error is about 1 ULP (~2 x 10^-16).                   *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_Double_Pow2 (tmpl_math.h):                                   *
@@ -69,13 +71,18 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 07, 2022                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/01/30: Ryan Maguire                                                  *
+ *      Changed Maclaurin series to Remez Minimax polynomial. Fixed comments. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_EXP_POS_KERNEL_DOUBLE_H
 #define TMPL_EXP_POS_KERNEL_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  This code is only used if inline support is requested.                    */
@@ -153,10 +160,6 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  This function is declared after this file is included in tmpl_math.h. Give*
- *  the prototype here for safety.                                            */
-extern double tmpl_Double_Pow2(signed int expo);
-
 /*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Pos_Kernel(double x)
@@ -189,10 +192,10 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
     const double t = r - TMPL_ONE_BY_128*r128;
 
     /*  Compute exp(t) via the Remez Minimax polynomial. Peak error ~10^-17.  */
-    const double exp_t = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
+    const double poly = A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))));
 
-    /*  Compute exp(x) via 2^k * exp(n/128) * exp(t).                         */
-    return exp_t*tmpl_double_exp_table[ind]*tmpl_Double_Pow2(k);
+    /*  Compute 2^k*exp(n/128)*exp(t) using the table.                        */
+    return poly*tmpl_double_exp_table[ind]*tmpl_Double_Pow2(k);
 }
 /*  End of tmpl_Double_Exp_Pos_Kernel.                                        */
 

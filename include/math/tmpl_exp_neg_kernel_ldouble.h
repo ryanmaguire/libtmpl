@@ -78,11 +78,15 @@
  *      Changed Maclaurin series to Remez Minimax polynomial. Fixed comments. *
  ******************************************************************************/
 
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_EXP_NEG_KERNEL_LDOUBLE_H
+#define TMPL_EXP_NEG_KERNEL_LDOUBLE_H
+
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is not requested.                */
-#if TMPL_USE_INLINE != 1
+/*  This code is only used if inline support is requested.                    */
+#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -195,6 +199,7 @@ z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
  ******************************************************************************/
 
 /*  Function for computing exp(x) for 1 < -x < log(LDBL_MAX).                 */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -257,6 +262,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
  ******************************************************************************/
 
 /*  Function for computing exp(x) for 1 < -x < log(LDBL_MAX).                 */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
 {
     /*  log(2) split into two components for extra precision.                 */
@@ -316,4 +322,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
 #undef TMPL_LN2_LO
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */
