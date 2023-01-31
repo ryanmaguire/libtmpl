@@ -1,8 +1,12 @@
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_EXP_REMEZ_LDOUBLE_H
+#define TMPL_EXP_REMEZ_LDOUBLE_H
+
 /*  TMPL_USE_INLINE found here                                                */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only use this if inline support is not requested.                         */
-#if TMPL_USE_INLINE != 1
+/*  Only use this if inline support is requested.                             */
+#if TMPL_USE_INLINE == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -215,6 +219,7 @@ A00 + z*(\
 /*  End of quadruple vs. double-double vs. double vs. extended / portable.    */
 
 /*  Function for computing exp(x) for -1/4 < x < 1/4 using minimax polynomial.*/
+TMPL_INLINE_DECL
 long double tmpl_LDouble_Exp_Remez(long double x)
 {
     return TMPL_POLY_EVAL(x);
@@ -244,4 +249,7 @@ long double tmpl_LDouble_Exp_Remez(long double x)
 #undef TMPL_POLY_EVAL
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */
