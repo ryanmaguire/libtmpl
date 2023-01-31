@@ -2593,9 +2593,25 @@ extern long double tmpl_LDouble_Exp_Neg_Kernel(long double x);
  *      double exp_x:                                                         *
  *          The exponential function of x, exp(x).                            *
  ******************************************************************************/
+
+/*  Small polynomial function that should be inlined.                         */
+#if TMPL_USE_INLINE == 1
+
+/*  Use the inlined versions in include/math/.                                */
+#include <libtmpl/include/math/tmpl_exp_remez_double.h>
+#include <libtmpl/include/math/tmpl_exp_remez_float.h>
+#include <libtmpl/include/math/tmpl_exp_remez_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  If inline support is not requested, use the functions in src/math/.       */
 extern float tmpl_Float_Exp_Remez(float x);
 extern double tmpl_Double_Exp_Remez(double x);
 extern long double tmpl_LDouble_Exp_Remez(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

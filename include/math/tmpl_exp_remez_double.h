@@ -1,8 +1,12 @@
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_EXP_REMEZ_DOUBLE_H
+#define TMPL_EXP_REMEZ_DOUBLE_H
+
 /*  TMPL_USE_INLINE found here                                                */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only use this if inline support is not requested.                         */
-#if TMPL_USE_INLINE != 1
+/*  Only use this if inline support is requested.                             */
+#if TMPL_USE_INLINE == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -43,6 +47,7 @@ A00 + x*(\
 )
 
 /*  Function for computing exp(x) for -1/4 < x < 1/4 using minimax polynomial.*/
+TMPL_INLINE_DECL
 double tmpl_Double_Exp_Remez(double x)
 {
     return TMPL_POLY_HELPER(x);
@@ -64,4 +69,7 @@ double tmpl_Double_Exp_Remez(double x)
 #undef TMPL_POLY_HELPER
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */
