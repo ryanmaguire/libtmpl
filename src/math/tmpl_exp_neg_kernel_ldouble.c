@@ -146,7 +146,12 @@ z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
 #define TMPL_LN2_LO (+5.8029889835956905832474897278545862267173858328198E-25)
 
 /*  Bit masked, this is the number of bits in the exponents, written in hex.  */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#define TMPL_BITMASK (0x7FF)
+#else
 #define TMPL_BITMASK (0x7FFF)
+#endif
 
 /*  Lastly, portable and 80-bit extended. Peak error ~1 x 10^-19.             */
 #else
@@ -172,7 +177,9 @@ z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
 #define TMPL_LN2_LO (+1.4286068203094172321215E-06L)
 
 /*  Bit masked, this is the number of bits in the exponents, written in hex.  */
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN
 #define TMPL_BITMASK (0x7FFF)
+#endif
 
 #endif
 /*  End of double vs. extended / portable vs. double-double vs. quadruple.    */
@@ -232,7 +239,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     {
         tmpl_IEEE754_LDouble two_to_the_minus_k;
         two_to_the_minus_k.r = 1.0L;
-        two_to_the_minus_k.bits.expoa -= k & 0x7FF;
+        two_to_the_minus_k.bits.expoa -= k & TMPL_BITMASK;
         exp_w.r *= two_to_the_minus_k.r;
     }
 #else
@@ -261,7 +268,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
 
     /*  Compute the correctly rounded down integer part of |x|/log(2).        */
     const signed int k = (signed int)(rcpr_ln_2*(-x) + 0.5L);
-    const long double kd = (double)k;
+    const long double kd = (long double)k;
 
     /*  Compute exp(x) via exp(x) = exp(k*ln(2)+r) = 2^k * exp(r).            *
      *  Compute the value r by subtracting k*ln(2) from x.                    */
