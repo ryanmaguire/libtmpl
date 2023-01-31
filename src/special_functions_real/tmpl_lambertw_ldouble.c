@@ -112,7 +112,7 @@ long double tmpl_LDouble_LambertW(long double x)
     }
 
     /*  Set the tolerance.                                                    */
-    w.bits.expo += TMPL_TOL_OFFSET;
+    TMPL_LDOUBLE_EXPO_BITS(w) += TMPL_TOL_OFFSET;
     tol = w.r;
 
     /*  Use Halley's method to compute the LambertW function with the given   *
