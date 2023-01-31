@@ -2430,6 +2430,21 @@ extern float tmpl_Float_Exp(float x);
 extern double tmpl_Double_Exp(double x);
 extern long double tmpl_LDouble_Exp(long double x);
 
+/*  TODO:
+ *      For long double, all implementations (extended, quadruple, and
+ *      double-double), libtmpl has better performance than glibc and openlibm
+ *      for large and small inputs.
+ *
+ *      For float and double, libtmpl has better performance when |x| < 1.
+ *      For |x| >= 1, glibc is about 1.6x faster. libtmpl had better
+ *      performance than openlibm in this range as well.
+ *      Read through and understand glibc's implementation and try to improve
+ *      the exponential functions for float and double precision for |x| >= 1.
+ *
+ *  TODO:
+ *      Fix the neg kernel functions for denormal / subnormal outputs.
+ */
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Exp_Maclaurin                                             *
@@ -2449,6 +2464,7 @@ extern long double tmpl_LDouble_Exp(long double x);
 /*  Inline versions found here.                                               */
 #include <libtmpl/include/math/tmpl_exp_maclaurin_double.h>
 #include <libtmpl/include/math/tmpl_exp_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_exp_maclaurin_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2519,6 +2535,7 @@ extern long double tmpl_LDouble_Exp_Pade(long double x);
 /*  Inline support for dist functions found here.                             */
 #include <libtmpl/include/math/tmpl_exp_pos_kernel_double.h>
 #include <libtmpl/include/math/tmpl_exp_pos_kernel_float.h>
+#include <libtmpl/include/math/tmpl_exp_pos_kernel_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2550,6 +2567,7 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
 /*  Inline support for dist functions found here.                             */
 #include <libtmpl/include/math/tmpl_exp_neg_kernel_double.h>
 #include <libtmpl/include/math/tmpl_exp_neg_kernel_float.h>
+#include <libtmpl/include/math/tmpl_exp_neg_kernel_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

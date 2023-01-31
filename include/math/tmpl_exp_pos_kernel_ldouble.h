@@ -261,6 +261,10 @@ long double tmpl_LDouble_Exp_Pos_Kernel(long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+/*  This function is declared after this file is included in tmpl_math.h. Give*
+ *  the prototype here for safety.                                            */
+extern long double tmpl_LDouble_Pow2(signed int expo);
+
 /*  Function for computing exp(x) for 1 < x < log(LDBL_MAX).                  */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Exp_Pos_Kernel(long double x)

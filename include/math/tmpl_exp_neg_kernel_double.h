@@ -160,6 +160,10 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+/*  This function is declared after this file is included in tmpl_math.h. Give*
+ *  the prototype here for safety.                                            */
+extern double tmpl_Double_Pow2(signed int expo);
+
 /*  Function for computing exp(x) for 1 < -x < log(DBL_MAX).                  */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Neg_Kernel(double x)
