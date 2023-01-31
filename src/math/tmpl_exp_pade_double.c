@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_exp_pade_double                             *
+ *                            tmpl_exp_pade_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the (7, 7) Pade approximant of exp(x) at double precision.   *
