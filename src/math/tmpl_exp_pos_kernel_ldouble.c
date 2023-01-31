@@ -316,4 +316,4 @@ long double tmpl_LDouble_Exp_Pos_Kernel(long double x)
 #undef TMPL_LN2_LO
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
