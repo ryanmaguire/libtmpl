@@ -73,7 +73,7 @@
  *          For x = +/- NaN, return x. Lastly, for 1 <= |x| <= log(FLT_MAX)   *
  *          perform the following:                                            *
  *                                                                            *
- *              exp(x) = exp(k*ln(2) + r)           k integer, |r| < ln(2)    *
+ *              exp(x) = exp(k*ln(2) + r)           k integer, |r| < ln(2)/2  *
  *                     = exp(k*ln(2)) * exp(r)                                *
  *                     = 2^k * exp(r)                                         *
  *                     = 2^k * exp(n/128 + t)       n integer, |t| < 1/128    *
