@@ -168,10 +168,10 @@ long double tmpl_LDouble_Exp(long double x)
     }
 
     /*  For |x| < 1/4 use one of two polynomial approximations.               */
-    if (w.bits.expo < TMPL_LDOUBLE_UBIAS - 2U)
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 2U)
     {
         /*  For very small x, the Maclaurin series uses less terms.           */
-        if (w.bits.expo < TMPL_LDOUBLE_UBIAS - 4U)
+        if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 4U)
             return tmpl_LDouble_Exp_Maclaurin(x);
 
         /*  Otherwise, for |x| < 1/4 the minimax polynomial is accurate.      */
@@ -181,7 +181,7 @@ long double tmpl_LDouble_Exp(long double x)
 
     /*  For |x| < 1, the Pade approximant is sufficient and much faster than  *
      *  the kernel functions. Use this.                                       */
-    else if (w.bits.expo < TMPL_LDOUBLE_UBIAS)
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
         return tmpl_LDouble_Exp_Pade(x);
 
     /*  Special cases, if |x| > log(LDBL_MAX) we will overflow or underflow.  */
