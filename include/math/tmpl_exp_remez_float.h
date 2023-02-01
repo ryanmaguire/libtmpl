@@ -20,13 +20,13 @@
 #define A05 (+8.3578093664050040349255591933857725029991815492887E-03F)
 
 /*  Helper macro for evaluating the polynomial via Horner's method.           */
-#define TMPL_POLY_HELPER(z) A00 + x*(A01 + x*(A02 + x*(A03 + x*(A04 + x*A05))))
+#define TMPL_POLY_EVAL(z) A00 + x*(A01 + x*(A02 + x*(A03 + x*(A04 + x*A05))))
 
 /*  Function for computing exp(x) for -1/4 < x < 1/4 using minimax polynomial.*/
 TMPL_INLINE_DECL
 float tmpl_Float_Exp_Remez(float x)
 {
-    return TMPL_POLY_HELPER(x);
+    return TMPL_POLY_EVAL(x);
 }
 /*  End of tmpl_Float_Exp_Remez.                                              */
 
@@ -37,7 +37,7 @@ float tmpl_Float_Exp_Remez(float x)
 #undef A03
 #undef A04
 #undef A05
-#undef TMPL_POLY_HELPER
+#undef TMPL_POLY_EVAL
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

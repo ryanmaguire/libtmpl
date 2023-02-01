@@ -153,7 +153,7 @@ A00 + z*(\
 #define A10 (+2.7599120100813904758992842016718714757809673113599E-07L)
 
 /*  Helper macro for evaluating the polynomial via Horner's method.           */
-#define TMPL_POLY_HELPER(z) \
+#define TMPL_POLY_EVAL(z) \
 A00 + x*(\
     A01 + x*(\
         A02 + x*(\
