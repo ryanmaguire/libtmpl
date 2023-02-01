@@ -25,7 +25,7 @@
 #define A10 (+2.7599120100813904758992842016718714757809673113599E-07)
 
 /*  Helper macro for evaluating the polynomial via Horner's method.           */
-#define TMPL_POLY_HELPER(z) \
+#define TMPL_POLY_EVAL(z) \
 A00 + x*(\
     A01 + x*(\
         A02 + x*(\
@@ -50,7 +50,7 @@ A00 + x*(\
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Remez(double x)
 {
-    return TMPL_POLY_HELPER(x);
+    return TMPL_POLY_EVAL(x);
 }
 /*  End of tmpl_Double_Exp_Remez.                                             */
 
@@ -66,7 +66,7 @@ double tmpl_Double_Exp_Remez(double x)
 #undef A08
 #undef A09
 #undef A10
-#undef TMPL_POLY_HELPER
+#undef TMPL_POLY_EVAL
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
