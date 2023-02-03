@@ -100,7 +100,7 @@ MATH_FLAGS=-lm
 endif
 
 CFLAGS=$(OMP_FLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS=$(OMP_FLAGS) -O3 -flto -shared $(MATH_FLAGS)
+LFLAGS=$(OMP_FLAGS) -O3 -flto -shared $(MATH_FLAGS) $(EXTRA_LFLAGS)
 CWARN=-Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
 
 # libtmpl will check if long long is available in config.c. If you do not want
