@@ -100,7 +100,7 @@ MATH_FLAGS=-lm
 endif
 
 CFLAGS=$(OMP_FLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS=$(OMP_FLAGS) -O3 -flto -shared $(MATH_FLAGS)
+LFLAGS=$(OMP_FLAGS) -O3 -flto -shared $(MATH_FLAGS) $(EXTRA_LFLAGS)
 CWARN=-Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
 
 # libtmpl will check if long long is available in config.c. If you do not want
@@ -212,6 +212,9 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_cospi_maclaurin_double.c" -and \
 	-not -name "tmpl_cospi_maclaurin_float.c" -and \
 	-not -name "tmpl_cospi_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_exp_remez_double.c" -and \
+	-not -name "tmpl_exp_remez_float.c" -and \
+	-not -name "tmpl_exp_remez_ldouble.c" -and \
 	-not -name "tmpl_dist_float.c" -and \
 	-not -name "tmpl_dist_double.c" -and \
 	-not -name "tmpl_dist_ldouble.c" -and \
@@ -221,8 +224,10 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_erf_pade_double.c" -and \
 	-not -name "tmpl_exp_neg_kernel_double.c" -and \
 	-not -name "tmpl_exp_neg_kernel_float.c" -and \
+	-not -name "tmpl_exp_neg_kernel_ldouble.c" -and \
 	-not -name "tmpl_exp_pos_kernel_double.c" -and \
 	-not -name "tmpl_exp_pos_kernel_float.c" -and \
+	-not -name "tmpl_exp_pos_kernel_ldouble.c" -and \
 	-not -name "tmpl_sin_pade_double.c" -and \
 	-not -name "tmpl_sin_pade_float.c" -and \
 	-not -name "tmpl_sin_pade_ldouble.c" -and \

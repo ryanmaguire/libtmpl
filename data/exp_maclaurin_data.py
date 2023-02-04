@@ -18,28 +18,30 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Compute the Remez coefficient for exp(x) on [-1/4, 1/4].               #
+#       Computes the Maclaurin coefficients for exp(x).                        #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 26, 2023.                                                  #
+#   Date:   January 30, 2023.                                                  #
 ################################################################################
 """
 
-# Remez routines found here.
-import remez
+# Polynomial evaluation via Horner's method.
+import poly
 
 # Muli-precision math routines found here.
 import mpmath
+
+# Factorial found here.
+import math
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
 mpmath.mp.dps = 224
 
-# We're computing the minimax polynomial on the interval [-1/4, 1/4].
-start = -mpmath.mpf(1) / mpmath.mpf(4)
-end = mpmath.mpf(1) / mpmath.mpf(4)
+# Function for computing the first N + 1 Maclaurin coefficients for exp(x).
+def coeffs(N):
+    return [mpmath.mpf(1) / mpmath.mpf(math.factorial(n)) for n in range(N + 1)]
 
-# Float = 5, double = 10, extended = 11, quadruple = 18, double-double = 17
-deg = 18
-c = remez.remez(mpmath.exp, deg, start, end)
-remez.print_coeffs(c)
+# Float = 4, double = 8, extended = 10, double-double = 15, quadruple = 16.
+a = coeffs(16)
+poly.print_coeffs(a)

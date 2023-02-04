@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_exp_maclaurin_float_inline                        *
+ *                          tmpl_exp_maclaurin_float                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of exp(x).                              *
@@ -40,9 +40,9 @@
  *                                                                            *
  *                        infty                                               *
  *                        -----                                               *
- *                        \         1                                         *
- *           exp(x)   =   /        ---- * x^{n}                               *
- *                        -----    (n)!                                       *
+ *                        \        1   n                                      *
+ *           exp(x)   =   /       --- x                                       *
+ *                        -----    n!                                         *
  *                        n = 0                                               *
  *                                                                            *
  *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
@@ -64,16 +64,16 @@
 #ifndef TMPL_EXP_MACLAURIN_FLOAT_H
 #define TMPL_EXP_MACLAURIN_FLOAT_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
+/*  This file is only used if inline support is requested.                    */
 #if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the polynonial. They are 1 / (2n)!.                      */
+/*  Coefficients for the polynomial. They are 1 / n!.                         */
 #define A0 (1.000000000000000000000000000000000000000E+00F)
 #define A1 (1.000000000000000000000000000000000000000E+00F)
 #define A2 (5.000000000000000000000000000000000000000E-01F)
