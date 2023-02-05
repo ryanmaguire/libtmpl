@@ -14,6 +14,10 @@ file(GLOB sources CONFIGURE_DEPENDS *.c)
 set(linasm_compare_sources ${sources})
 list(FILTER linasm_compare_sources INCLUDE REGEX .*linasm.*)
 list(FILTER sources EXCLUDE REGEX .*linasm.*)
+if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+    # Exclude tests that use GCC builtins when not compiling with GCC
+    list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sincos_double_time_test.c")
+endif()
 
 foreach(source ${sources})
     cmake_path(GET source STEM app)
@@ -49,15 +53,9 @@ if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
             target_link_libraries(${app} PRIVATE m)
         endif()
 
-    add_test(NAME test_${app} COMMAND ${app})
+        add_test(NAME test_${app} COMMAND ${app})
     endforeach()
 endif()
 
 include(GNUInstallDirs)
-install(
-    TARGETS ${test_apps}
-    RUNTIME
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
+install(TARGETS ${test_apps} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
