@@ -17,5 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-static inline double sinpi(double x){return sin(M_PI*x);}
+static inline double sinpi(double x){return sin(tmpl_One_Pi*x);}
 TEST1(double, -0.25, 0.25, tmpl_Double_SinPi, sinpi)

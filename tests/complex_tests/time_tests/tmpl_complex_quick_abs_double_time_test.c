@@ -16,5 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+
 #include "tmpl_complex_time_tests.h"
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Quick_Abs, cabs)
+
+#ifdef _WIN32
+TEST1(double, tmpl_ComplexDouble, _Dcomplex, tmpl_CDouble_QuickAbs, cabs, _Cbuild)
+#else
+static inline complex double complex_double_construct(double real, double imag) { return u0 + (complex double)_Complex_I*u1; }
+TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_QuickAbs, cabs, complex_double_construct)
+#endif

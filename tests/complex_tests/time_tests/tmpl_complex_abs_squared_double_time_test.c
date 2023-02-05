@@ -18,15 +18,21 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 
+#ifdef _WIN32
+static double complex_abs_squared(_Dcomplex z)
+{
+    double x = creal(z);
+    double y = cimag(z);
+    return x*x + y*y;
+}
+TEST1(double, tmpl_ComplexDouble, _Dcomplex, tmpl_CDouble_Abs_Squared, complex_abs_squared, _Cbuild)
+#else
 static double complex_abs_squared(complex double z)
 {
     double x = creal(z);
     double y = cimag(z);
     return x*x + y*y;
 }
-
-TEST1(double,
-      tmpl_ComplexDouble,
-      complex double,
-      tmpl_CDouble_Abs_Squared,
-      complex_abs_squared)
+static inline complex double complex_double_construct(double real, double imag) { return u0 + (complex double)_Complex_I*u1; }
+TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs_Squared, complex_abs_squared, complex_double_construct)
+#endif

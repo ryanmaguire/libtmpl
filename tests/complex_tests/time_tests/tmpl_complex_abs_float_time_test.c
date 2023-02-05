@@ -17,4 +17,10 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
+
+#ifdef _WIN32
+TEST1(float, tmpl_ComplexFloat, _Fcomplex, tmpl_CFloat_Abs, cabsf, _FCbuild)
+#else
+static inline complex float complex_float_construct(float real, float imag) { return u0 + (complex float)_Complex_I*u1; }
 TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs, cabsf)
+#endif
