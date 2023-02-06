@@ -77,8 +77,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ABS_SQUARED_INLINE_H
-#define TMPL_COMPLEX_ABS_SQUARED_INLINE_H
+#ifndef TMPL_COMPLEX_ABS_SQUARED_DOUBLE_H
+#define TMPL_COMPLEX_ABS_SQUARED_DOUBLE_H
 
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
