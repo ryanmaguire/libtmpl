@@ -17,4 +17,18 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs)
+
+#if 0
+static inline tmpl_ComplexFloat
+ahh(const tmpl_ComplexFloat *z0, const tmpl_ComplexFloat *z1)
+{
+    tmpl_ComplexFloat sum;
+    sum.dat[0] = z0->dat[0] + z1->dat[0];
+    sum.dat[1] = z0->dat[1] + z1->dat[1];
+    return sum;
+}
+
+TEST2(float, tmpl_ComplexFloat, complex float, ahh, +)
+#else
+TEST3(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Add, +)
+#endif

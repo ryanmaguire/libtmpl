@@ -17,4 +17,21 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs)
+
+#if 0
+static inline tmpl_ComplexLongDouble
+ahh(const tmpl_ComplexLongDouble *z0, const tmpl_ComplexLongDouble *z1)
+{
+    tmpl_ComplexLongDouble sum;
+    sum.dat[0] = z0->dat[0] + z1->dat[0];
+    sum.dat[1] = z0->dat[1] + z1->dat[1];
+    return sum;
+}
+
+TEST2(long double, tmpl_ComplexLongDouble, complex long double, ahh, +)
+#else
+TEST3(long double,
+      tmpl_ComplexLongDouble,
+      complex long double,
+      tmpl_CLDouble_Add, +)
+#endif

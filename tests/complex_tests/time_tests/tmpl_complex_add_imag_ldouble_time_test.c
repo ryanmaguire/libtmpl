@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                  LICENSE                                   *
+ *                                 LICENSE                                    *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -17,4 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs)
+static inline complex long double add(long double y, complex long double z)
+{
+    return z + (complex long double)_Complex_I*y;
+}
+TEST5(long double,
+      tmpl_ComplexLongDouble,
+      complex long double,
+      tmpl_CLDouble_Add_Imag, add)

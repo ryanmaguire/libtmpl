@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                  LICENSE                                   *
+ *                                 LICENSE                                    *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -17,4 +17,8 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs)
+static inline complex float add(float y, complex float z)
+{
+    return z + _Complex_I*y;
+}
+TEST5(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Add_Imag, add)
