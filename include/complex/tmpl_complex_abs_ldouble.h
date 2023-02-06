@@ -92,11 +92,15 @@
  *      the real and imaginary parts to tmpl_LDouble_Hypot.                   *
  ******************************************************************************/
 
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_COMPLEX_ABS_LDOUBLE_H
+#define TMPL_COMPLEX_ABS_LDOUBLE_H
+
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only used if inline support is not requested.                */
-#if TMPL_USE_INLINE != 1
+/*  This file is only used if inline support is requested.                    */
+#if TMPL_USE_INLINE == 1
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -105,6 +109,7 @@
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
+TMPL_INLINE_DECL
 long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
 {
     return tmpl_LDouble_Hypot(z.dat[0], z.dat[1]);
@@ -112,4 +117,7 @@ long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
 /*  End of tmpl_CLDouble_Abs.                                                 */
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+#endif
+/*  End of include guard.                                                     */
