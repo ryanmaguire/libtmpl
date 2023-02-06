@@ -17,4 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs)
+TEST1(long double,
+      tmpl_ComplexLongDouble,
+      complex long double,
+      tmpl_CLDouble_Argument, cargl)
