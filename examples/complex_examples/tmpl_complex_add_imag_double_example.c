@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -18,30 +18,9 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides an example of using complex addition.                        *
- *      We can compile this with:                                             *
- *                                                                            *
- *          gcc tmpl_complex_add_real_example.c -o test -ltmpl                *
- *                                                                            *
- *      If libtmpl is not in /usr/local/lib/ (this is the default location it *
- *      is placed in when built via make.sh), change the -L option to the     *
- *      correct location. If /usr/local/include/ is not in your path, add the *
- *      -I option as follows:                                                 *
- *                                                                            *
- *          gcc -I/usr/local/include/ -L/usr/local/lib/                       *
- *              tmpl_complex_add_real_example.c -o test -ltmpl                *
- *                                                                            *
- *      Note, this should all be one line. This outputs an executable "test". *
- *      Running the executable with ./test, this outputs:                     *
- *          (0.000000 + i0.000000) + inf = inf + i0.000000                    *
- *          (1.000000 + i0.000000) + -nan = -nan + i0.000000                  *
- *          (1.000000 + i1.000000) + -4.000000 = -3.000000 + i1.000000        *
- *          (-nan + i0.000000) + 1.000000 = -nan + i0.000000                  *
- *          (inf + i0.000000) + 2.000000 = inf + i0.000000                    *
- *          (nan + inan) + 1.000000 = nan + inan                              *
- *          (inf + iinf) + -inf = -nan + iinf                                 *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
- *  Date:       June 26, 2021                                                 *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       June 03, 2021                                                 *
  ******************************************************************************/
 
 /*  Complex functions defined here.                                           */
@@ -53,12 +32,12 @@
 /*  We'll use stdio to print the results.                                     */
 #include <stdio.h>
 
-/*  Routine for adding a real number to a complex one.                        */
+/*  Routine for adding an imaginary number to a complex one.                  */
 int main(void)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_ComplexDouble z[7], w[7];
-    double x[7];
+    double y[7];
     double re_z, im_z, re_w, im_w;
 
     /*  And declare a variable for indexing.                                  */
@@ -70,23 +49,23 @@ int main(void)
     z[2] = tmpl_CDouble_Rect(1.0, 1.0);
     z[3] = tmpl_CDouble_Rect(TMPL_NAN, 0.0);
     z[4] = tmpl_CDouble_Rect(TMPL_INFINITY, 0.0);
-    z[5] = tmpl_Complex_NaN;
-    z[6] = tmpl_Complex_Infinity;
+    z[5] = TMPL_CNAN;
+    z[6] = TMPL_CINFINITY;
 
-    /*  Set the test values for the array x.                                  */
-    x[0] = TMPL_INFINITY;
-    x[1] = TMPL_NAN;
-    x[2] = -4.0;
-    x[3] = 1.0;
-    x[4] = 2.0;
-    x[5] = 1.0;
-    x[6] = -TMPL_INFINITY;
+    /*  Set the test values for the array y.                                  */
+    y[0] =  TMPL_INFINITY;
+    y[1] =  TMPL_NAN;
+    y[2] = -4.0;
+    y[3] =  1.0;
+    y[4] =  2.0;
+    y[5] =  1.0;
+    y[6] =  -TMPL_INFINITY;
 
     /*  Loop over the results and print them.                                 */
     for (n = 0U; n < 7U; ++n)
     {
-        /*  Compute z + x of the nth value.                                   */
-        w[n] = tmpl_CDouble_Add_Real(x[n], z[n]);
+        /*  Compute z + iy of the nth value.                                  */
+        w[n] = tmpl_CDouble_Add_Imag(y[n], z[n]);
 
         /*  Extract the real and imaginary parts from z[n].                   */
         re_z = tmpl_CDouble_Real_Part(z[n]);
@@ -97,9 +76,9 @@ int main(void)
         im_w = tmpl_CDouble_Imag_Part(w[n]);
 
         /*  And finally, print the result to the screen.                      */
-        printf("(%f + i%f) + %f = %f + i%f\n", re_z, im_z, x[n], re_w, im_w);
+        printf("(%f + i%f) + i%f = %f + i%f\n", re_z, im_z, y[n], re_w, im_w);
     }
-    /*  End of for loop z + x.                                                */
+    /*  End of for loop z + iy.                                               */
 
     return 0;
 }

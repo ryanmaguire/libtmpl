@@ -17,10 +17,10 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides an example of using the complex argument function.           *
+ *      Provides an example of using the complex absolute value function.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       June 26, 2021                                                 *
+ *  Date:       May 24, 2021                                                  *
  ******************************************************************************/
 
 /*  Complex functions defined here.                                           */
@@ -32,42 +32,42 @@
 /*  We'll use stdio to print the results.                                     */
 #include <stdio.h>
 
-/*  Routine for computing arg(z) for several test values.                     */
+/*  Routine for computing |z| for a few test values.                          */
 int main(void)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexDouble z[9];
-    double w[9], re_z, im_z;
+    tmpl_ComplexFloat z[7];
+    float w[7];
+    float re_z, im_z;
 
     /*  And declare a variable for indexing.                                  */
     unsigned int n;
 
     /*  Set the test values in the array z.                                   */
-    z[0] = tmpl_CDouble_Zero;
-    z[1] = tmpl_CDouble_One;
-    z[2] = tmpl_CDouble_Rect(1.0, 1.0);
-    z[3] = tmpl_CDouble_I;
-    z[4] = tmpl_CDouble_Rect(-1.0, 1.0);
-    z[5] = tmpl_CDouble_Rect(-1.0, 0.0);
-    z[6] = tmpl_CDouble_Rect(-1.0, -1.0);
-    z[7] = tmpl_CDouble_Rect(0.0, -1.0);
-    z[8] = tmpl_CDouble_Rect(1.0, -1.0);
+    z[0] = tmpl_CFloat_Zero;
+    z[1] = tmpl_CFloat_One;
+    z[2] = tmpl_CFloat_Rect(1.0F, 1.0F);
+    z[3] = tmpl_CFloat_Rect(TMPL_NANF, 0.0F);
+    z[4] = tmpl_CFloat_Rect(TMPL_INFINITYF, 0.0F);
+    z[5] = TMPL_CNANF;
+    z[6] = TMPL_CINFINITYF;
 
     /*  Loop over the results and print them.                                 */
-    for (n = 0U; n < 9U; ++n)
+    for (n = 0U; n < 7U; ++n)
     {
-        /*  Compute arg(z) of the nth value.                                  */
-        w[n] = tmpl_CDouble_Argument(z[n]);
+        /*  Compute |z| of the nth value.                                     */
+        w[n] = tmpl_CFloat_Abs(z[n]);
 
         /*  Extract the real and imaginary parts from z[n].                   */
-        re_z = tmpl_CDouble_Real_Part(z[n]);
-        im_z = tmpl_CDouble_Imag_Part(z[n]);
+        re_z = tmpl_CFloat_Real_Part(z[n]);
+        im_z = tmpl_CFloat_Imag_Part(z[n]);
 
         /*  And finally, print the result to the screen.                      */
-        printf("arg(%f + i%f) = %f\n", re_z, im_z, w[n]);
+        printf("|%f + i%f| = %f\n", (double)re_z, (double)im_z, (double)w[n]);
     }
-    /*  End of for loop computing arg(z).                                     */
+    /*  End of for loop computing |z|.                                        */
 
     return 0;
 }
 /*  End of main.                                                              */
+
