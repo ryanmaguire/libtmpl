@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -17,30 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides an example of using the absolute value function.             *
- *      We can compile this with:                                             *
- *                                                                            *
- *          gcc tmpl_complex_absl_example.c -o test -ltmpl                    *
- *                                                                            *
- *      If libtmpl is not in /usr/local/lib/ (this is the default location it *
- *      is placed in when built via make.sh), change the -L option to the     *
- *      correct location. If /usr/local/include/ is not in your path, add the *
- *      -I option as follows:                                                 *
- *                                                                            *
- *          gcc -I/usr/local/include/ -L/usr/local/lib/                       *
- *              tmpl_complex_absl_example.c -o test -ltmpl                    *
- *                                                                            *
- *      Note, this should all be one line. This outputs an executable "test". *
- *      Running the executable with ./test, this outputs:                     *
- *          |0.000000 + i0.000000| = 0.000000                                 *
- *          |1.000000 + i0.000000| = 1.000000                                 *
- *          |1.000000 + i1.000000| = 1.414214                                 *
- *          |nan + i0.000000| = nan                                           *
- *          |inf + i0.000000| = inf                                           *
- *          |nan + inan| = nan                                                *
- *          |inf + iinf| = inf                                                *
+ *      Provides an example of using the complex absolute value function.     *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       June 03, 2021                                                 *
  ******************************************************************************/
 
@@ -70,8 +49,8 @@ int main(void)
     z[2] = tmpl_CLDouble_Rect(1.0L, 1.0L);
     z[3] = tmpl_CLDouble_Rect(TMPL_NANL, 0.0L);
     z[4] = tmpl_CLDouble_Rect(TMPL_INFINITYL, 0.0L);
-    z[5] = tmpl_CLDouble_NaN;
-    z[6] = tmpl_CLDouble_Infinity;
+    z[5] = TMPL_CNANL;
+    z[6] = TMPL_CINFINITYL;
 
     /*  Loop over the results and print them.                                 */
     for (n = 0U; n < 7U; ++n)
