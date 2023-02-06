@@ -187,10 +187,27 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_complex_abs_double.c" -and \
 	-not -name "tmpl_complex_abs_float.c" -and \
 	-not -name "tmpl_complex_abs_ldouble.c" -and \
-	-not -name "tmpl_complex_abs_squared.c" -and \
-	-not -name "tmpl_complex_add.c" -and \
-	-not -name "tmpl_complex_addto.c" -and \
-	-not -name "tmpl_complex_quick_abs.c" -and \
+	-not -name "tmpl_complex_abs_squared_double.c" -and \
+	-not -name "tmpl_complex_abs_squared_float.c" -and \
+	-not -name "tmpl_complex_abs_squared_ldouble.c" -and \
+	-not -name "tmpl_complex_add_double.c" -and \
+	-not -name "tmpl_complex_add_float.c" -and \
+	-not -name "tmpl_complex_add_ldouble.c" -and \
+	-not -name "tmpl_complex_add_imag_double.c" -and \
+	-not -name "tmpl_complex_add_imag_float.c" -and \
+	-not -name "tmpl_complex_add_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_add_real_double.c" -and \
+	-not -name "tmpl_complex_add_real_float.c" -and \
+	-not -name "tmpl_complex_add_real_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_double.c" -and \
+	-not -name "tmpl_complex_addto_float.c" -and \
+	-not -name "tmpl_complex_addto_ldouble.c" -and \
+	-not -name "tmpl_complex_argument_double.c" -and \
+	-not -name "tmpl_complex_argument_float.c" -and \
+	-not -name "tmpl_complex_argument_ldouble.c" -and \
+	-not -name "tmpl_complex_quick_abs_double.c" -and \
+	-not -name "tmpl_complex_quick_abs_float.c" -and \
+	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
 	-not -name "tmpl_copysign_ldouble.c" -and \
@@ -416,6 +433,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/numerical/
 	mkdir -p $(BUILD_DIR)/src/optics/
 	mkdir -p $(BUILD_DIR)/src/polynomial/
+	mkdir -p $(BUILD_DIR)/src/polynomial_integer/
 	mkdir -p $(BUILD_DIR)/src/ppm/
 	mkdir -p $(BUILD_DIR)/src/rational/
 	mkdir -p $(BUILD_DIR)/src/special_functions_complex/
