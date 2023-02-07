@@ -660,3 +660,92 @@ int main(void)                                                                 \
     free(Z);                                                                   \
     return 0;                                                                  \
 }
+
+#define TEST6(ftype, ttype, ctype, f, op)                                      \
+int main(void)                                                                 \
+{                                                                              \
+    ftype *X;                                                                  \
+    ttype *Y;                                                                  \
+    ctype *B;                                                                  \
+    const size_t N = NSAMPS(ftype, ttype, ctype) / 4UL;                        \
+    size_t n;                                                                  \
+    clock_t t1, t2;                                                            \
+    long double max_err = 0.0L;                                                \
+    long double rel_err = 0.0L;                                                \
+    long double tmp = 0.0L;                                                    \
+    ftype dx, dy;                                                              \
+                                                                               \
+    X = malloc(sizeof(*X) * N);                                                \
+                                                                               \
+    if (!X)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for X. Aborting.");              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    Y = malloc(sizeof(*Y) * N);                                                \
+                                                                               \
+    if (!Y)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for Y. Aborting.");              \
+        free(X);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    B = malloc(sizeof(*B) * N);                                                \
+                                                                               \
+    if (!B)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for B. Aborting.");              \
+        free(X);                                                               \
+        free(Y);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    for (n = 0U; n < N; ++n)                                                   \
+    {                                                                          \
+        long double u0 = rand_real();                                          \
+        long double u1 = rand_real();                                          \
+        long double v = rand_real();                                           \
+                                                                               \
+        Y[n].dat[0] = (ftype)u0;                                               \
+        Y[n].dat[1] = (ftype)u1;                                               \
+        B[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+                                                                               \
+        X[n] = (ftype)v;                                                       \
+    }                                                                          \
+                                                                               \
+    printf(#f " vs. " #op"\n");                                                \
+    printf("samples: %zu\n", N);                                               \
+    t1 = clock();                                                              \
+    for (n = 0U; n < N; ++n)                                                   \
+        f(&Y[n], X[n]);                                                        \
+    t2 = clock();                                                              \
+    printf("libtmpl: %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
+                                                                               \
+    t1 = clock();                                                              \
+    for (n = 0U; n < N; ++n)                                                   \
+        B[n] op X[n];                                                          \
+    t2 = clock();                                                              \
+    printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
+                                                                               \
+    for (n = 0U; n < N; ++n)                                                   \
+    {                                                                          \
+        dx = Y[n].dat[0] - REPART(B[n]);                                       \
+        dy = Y[n].dat[1] - IMPART(B[n]);                                       \
+        tmp = sqrtl((long double)(dx*dx) + (long double)(dy*dy));              \
+        rel_err += tmp*tmp;                                                    \
+                                                                               \
+        if (max_err < tmp)                                                     \
+            max_err = tmp;                                                     \
+    }                                                                          \
+                                                                               \
+    rel_err = sqrtl(rel_err / (long double)N);                                 \
+                                                                               \
+    printf("max err: %Le\n", max_err);                                         \
+    printf("rel err: %Le\n", rel_err);                                         \
+    free(B);                                                                   \
+    free(X);                                                                   \
+    free(Y);                                                                   \
+    return 0;                                                                  \
+}
