@@ -61,8 +61,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_QUICK_ABS_DOUBLE_H
-#define TMPL_COMPLEX_QUICK_ABS_DOUBLE_H
+#ifndef TMPL_COMPLEX_QUICK_DIST_DOUBLE_H
+#define TMPL_COMPLEX_QUICK_DIST_DOUBLE_H
 
 /*  TMPL_USE_INLINE found here.                                               */
 #include <libtmpl/include/tmpl_config.h>
