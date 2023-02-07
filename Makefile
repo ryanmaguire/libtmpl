@@ -211,6 +211,15 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_complex_argument_double.c" -and \
 	-not -name "tmpl_complex_argument_float.c" -and \
 	-not -name "tmpl_complex_argument_ldouble.c" -and \
+	-not -name "tmpl_complex_conjugate_double.c" -and \
+	-not -name "tmpl_complex_conjugate_float.c" -and \
+	-not -name "tmpl_complex_conjugate_ldouble.c" -and \
+	-not -name "tmpl_complex_conjugateself_double.c" -and \
+	-not -name "tmpl_complex_conjugateself_float.c" -and \
+	-not -name "tmpl_complex_conjugateself_ldouble.c" -and \
+	-not -name "tmpl_complex_dist_double.c" -and \
+	-not -name "tmpl_complex_dist_float.c" -and \
+	-not -name "tmpl_complex_dist_ldouble.c" -and \
 	-not -name "tmpl_complex_quick_abs_double.c" -and \
 	-not -name "tmpl_complex_quick_abs_float.c" -and \
 	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
