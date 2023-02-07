@@ -33,7 +33,7 @@
  *  Arguments:                                                                *
  *      z (tmpl_ComplexLongDouble *):                                         *
  *          A pointer to a complex number. The sum is stored here.            *
- *      w (long double):                                                      *
+ *      y (long double):                                                      *
  *          An imaginary number.                                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
