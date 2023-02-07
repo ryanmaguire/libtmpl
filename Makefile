@@ -202,6 +202,12 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_complex_addto_double.c" -and \
 	-not -name "tmpl_complex_addto_float.c" -and \
 	-not -name "tmpl_complex_addto_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_imag_double.c" -and \
+	-not -name "tmpl_complex_addto_imag_float.c" -and \
+	-not -name "tmpl_complex_addto_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_real_double.c" -and \
+	-not -name "tmpl_complex_addto_real_float.c" -and \
+	-not -name "tmpl_complex_addto_real_ldouble.c" -and \
 	-not -name "tmpl_complex_argument_double.c" -and \
 	-not -name "tmpl_complex_argument_float.c" -and \
 	-not -name "tmpl_complex_argument_ldouble.c" -and \
@@ -268,6 +274,12 @@ ifdef NO_IEEE
 IEEE_FLAG=-DTMPL_SET_TMPL_USE_IEEE_FALSE
 else
 IEEE_FLAG=
+endif
+
+ifdef USE_MEMCPY
+MEMCPY_FLAG=-DTMPL_SET_USE_MEMCPY_TRUE
+else
+MEMCPY_FLAG=
 endif
 
 # Whether or not to try and find fixed-width integer data types.
@@ -394,7 +406,7 @@ ASM_EXCLUDE=
 # End of ifdef NO_ASM.
 endif
 
-ALLCFLAGS=$(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG)
+ALLCFLAGS=$(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG) $(MEMCPY_FLAG)
 INCLUDE=\( $(ASM_INCLUDE) -name "*.c" \)
 EXCLUDE=$(ASM_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
 SRCS=$(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))

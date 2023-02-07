@@ -63,6 +63,9 @@ USEIEEE=1
 # Whether or not to attempt to find fixed-width integers.
 USEINT=1
 
+# Whether or not to use memcpy when possible.
+USEMEMCPY=0
+
 # Compile the entire library by #include'ing all files into one translation
 # unit. The compiler get's to the see the entire library at once and make many
 # optimizations.
@@ -115,6 +118,9 @@ for arg in "$@"; do
 
     elif [ "$arg" == "-longlong" ]; then
         USELONGLONG=1
+
+    elif [ "$arg" == "-memcpy" ]; then
+        USEMEMCPY=1
 
     elif [ "$arg" == "-remove" ]; then
         SONAME="libtmpl.so"
@@ -251,6 +257,12 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_complex_addto_double.c"
     Exclude="$Exclude tmpl_complex_addto_float.c"
     Exclude="$Exclude tmpl_complex_addto_ldouble.c"
+    Exclude="$Exclude tmpl_complex_addto_imag_double.c"
+    Exclude="$Exclude tmpl_complex_addto_imag_float.c"
+    Exclude="$Exclude tmpl_complex_addto_imag_ldouble.c"
+    Exclude="$Exclude tmpl_complex_addto_real_double.c"
+    Exclude="$Exclude tmpl_complex_addto_real_float.c"
+    Exclude="$Exclude tmpl_complex_addto_real_ldouble.c"
     Exclude="$Exclude tmpl_complex_argument_double.c"
     Exclude="$Exclude tmpl_complex_argument_float.c"
     Exclude="$Exclude tmpl_complex_argument_ldouble.c"
@@ -344,6 +356,10 @@ fi
 
 if [ $USEINT == 0 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_NO_INT"
+fi
+
+if [ $USEMEMCPY == 1 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MEMCPY_TRUE"
 fi
 
 # Name of the created Shared Object file (.so).
