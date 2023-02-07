@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CLDouble_Conjugate:                                              *
+ *      tmpl_CLDouble_Conjugate                                               *
  *  Purpose:                                                                  *
  *      Computes the complex conjugate of a complex number.                   *
  *                                                                            *

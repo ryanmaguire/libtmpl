@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Conjugate:                                                *
+ *      tmpl_CFloat_Conjugate                                                 *
  *  Purpose:                                                                  *
  *      Computes the complex conjugate of a complex number.                   *
  *                                                                            *
