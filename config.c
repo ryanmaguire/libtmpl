@@ -1049,6 +1049,12 @@ static int make_config_h(void)
     fprintf(fp, "#define TMPL_USE_MATH_ALGORITHMS 0\n");
 #endif
 
+#ifdef TMPL_SET_USE_MEMCPY_TRUE
+    fprintf(fp, "#define TMPL_USE_MEMCPY 1\n");
+#else
+    fprintf(fp, "#define TMPL_USE_MEMCPY 0\n");
+#endif
+
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");
 
