@@ -62,7 +62,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/30: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
