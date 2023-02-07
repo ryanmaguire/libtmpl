@@ -220,9 +220,15 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_complex_dist_double.c" -and \
 	-not -name "tmpl_complex_dist_float.c" -and \
 	-not -name "tmpl_complex_dist_ldouble.c" -and \
+	-not -name "tmpl_complex_dist_squared_double.c" -and \
+	-not -name "tmpl_complex_dist_squared_float.c" -and \
+	-not -name "tmpl_complex_dist_squared_ldouble.c" -and \
 	-not -name "tmpl_complex_quick_abs_double.c" -and \
 	-not -name "tmpl_complex_quick_abs_float.c" -and \
 	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
+	-not -name "tmpl_complex_quick_dist_double.c" -and \
+	-not -name "tmpl_complex_quick_dist_float.c" -and \
+	-not -name "tmpl_complex_quick_dist_ldouble.c" -and \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
 	-not -name "tmpl_copysign_ldouble.c" -and \
