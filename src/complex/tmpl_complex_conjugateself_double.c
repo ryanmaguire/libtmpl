@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_ConjugateSelf:                                           *
+ *      tmpl_CDouble_ConjugateSelf                                            *
  *  Purpose:                                                                  *
  *      Computes the complex conjugate of a complex number.                   *
  *                                                                            *
