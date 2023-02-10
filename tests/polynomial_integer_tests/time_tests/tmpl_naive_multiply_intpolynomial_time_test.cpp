@@ -66,7 +66,7 @@ int main(void)
             Q1[n].coeffs[m] = coeffs1[m];
         }
 
-        Q2[n] = tmpl_IntPolynomial_Init();
+        tmpl_IntPolynomial_Init(&Q2[n]);
         P0[n] = polynomial<int>(coeffs0, deg);
         P1[n] = polynomial<int>(coeffs1, deg);
         P2[n] = polynomial<int>();

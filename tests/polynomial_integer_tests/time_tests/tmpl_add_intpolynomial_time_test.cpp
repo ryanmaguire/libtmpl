@@ -37,7 +37,7 @@ int main(void)
 {
     size_t n, m;
     clock_t t1, t2;
-    const size_t deg = (size_t)20;
+    const size_t deg = (size_t)100;
     const size_t N = (size_t)1000000;
     polynomial<int> *P0 = (polynomial<int> *)(std::malloc(sizeof(*P0)*N));
     polynomial<int> *P1 = (polynomial<int> *)(std::malloc(sizeof(*P1)*N));
@@ -66,7 +66,7 @@ int main(void)
             Q1[n].coeffs[m] = coeffs1[m];
         }
 
-        Q2[n] = tmpl_IntPolynomial_Init();
+        tmpl_IntPolynomial_Init(&Q2[n]);
         P0[n] = polynomial<int>(coeffs0, deg);
         P1[n] = polynomial<int>(coeffs1, deg);
         P2[n] = polynomial<int>();
