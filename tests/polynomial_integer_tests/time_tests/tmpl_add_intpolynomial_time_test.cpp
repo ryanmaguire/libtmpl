@@ -37,7 +37,7 @@ int main(void)
 {
     size_t n, m;
     clock_t t1, t2;
-    const size_t deg = (size_t)100;
+    const size_t deg = (size_t)20;
     const size_t N = (size_t)1000000;
     polynomial<int> *P0 = (polynomial<int> *)(std::malloc(sizeof(*P0)*N));
     polynomial<int> *P1 = (polynomial<int> *)(std::malloc(sizeof(*P1)*N));
@@ -74,13 +74,13 @@ int main(void)
 
     t1 = clock();
     for (n = (size_t)0; n < N; ++n)
-        tmpl_IntPolynomial_Naive_Multiply(&Q0[n], &Q1[n], &Q2[n]);
+        tmpl_IntPolynomial_Add(&Q0[n], &Q1[n], &Q2[n]);
     t2 = clock();
     std::printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (n = (size_t)0; n < N; ++n)
-        P2[n] = P0[n] * P1[n];
+        P2[n] = P0[n] + P1[n];
     t2 = clock();
     std::printf("boost:   %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
@@ -97,6 +97,7 @@ int main(void)
     }
 
 END:
+
     for (n = 0; n < N; ++n)
     {
         tmpl_IntPolynomial_Destroy(&Q0[n]);
