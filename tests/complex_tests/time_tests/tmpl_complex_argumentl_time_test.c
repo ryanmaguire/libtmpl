@@ -23,12 +23,21 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef _WIN32
+#define ctype _Lcomplex
+#define cconstruct _LCbuild
+#else
+#define ctype complex long double
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return u0 + (complex long double)_Complex_I*u1; }
+#define cconstruct complex_long_double_construct
+#endif
+
 /*  Routine for testing tmpl_CLDouble_Argument.                               */
 int main(void)
 {
     long double **y0, **y1;
     tmpl_ComplexLongDouble **z0;
-    complex long double **z1;
+    ctype **z1;
 
     const unsigned int N = 10000U;
     const long double start = -100.0L;
@@ -59,7 +68,7 @@ int main(void)
             z_x = (long double)x*ds + start;
             z_y = (long double)y*ds + start;
             z0[x][y] = tmpl_CLDouble_Rect(z_x, z_y);
-            z1[x][y] = z_x + (complex long double)_Complex_I*z_y;
+            z1[x][y] = cconstruct(z_x, z_y);
         }
     }
 

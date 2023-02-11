@@ -27,14 +27,23 @@
 #include <stdio.h>
 #include <time.h>
 
-static float abs_err(tmpl_ComplexFloat z, complex float w)
+#ifdef _WIN32
+#define ctype _Fcomplex
+#define cconstruct _FCbuild
+#else
+#define ctype complex float
+static inline complex float complex_float_construct(float real, float imag) { return u0 + (complex float)_Complex_I*u1; }
+#define cconstruct complex_float_construct
+#endif
+
+static float abs_err(tmpl_ComplexFloat z, ctype w)
 {
     float x = tmpl_CFloat_Real_Part(z) - crealf(w);
     float y = tmpl_CFloat_Imag_Part(z) - cimagf(w);
     return sqrtf(x*x + y*y);
 }
 
-static float rel_err(tmpl_ComplexFloat z, complex float w)
+static float rel_err(tmpl_ComplexFloat z, ctype w)
 {
     float x = tmpl_CFloat_Real_Part(z) - crealf(w);
     float y = tmpl_CFloat_Imag_Part(z) - cimagf(w);
@@ -45,11 +54,11 @@ static float rel_err(tmpl_ComplexFloat z, complex float w)
 int main(void)
 {
     tmpl_ComplexFloat **z0, **z1;
-    complex float **w0, **w1;
+    ctype **w0, **w1;
 
     const unsigned int N = 10000U;
     const tmpl_ComplexFloat z = tmpl_CFloat_Rect(1.0F, 2.0F);
-    const complex float w = 1.0F + _Complex_I*2.0F;
+    const ctype w = cconstruct(1.0F, 2.0F);
 
     float z_x, z_y, max_rel, max_abs, temp, r, theta;
     unsigned int x, y;
@@ -77,7 +86,7 @@ int main(void)
             z_x = r*cosf(theta);
             z_y = r*sinf(theta);
             z0[x][y] = tmpl_CFloat_Rect(z_x, z_y);
-            w0[x][y] = z_x + _Complex_I*z_y;
+            w0[x][y] = cconstruct(z_x, z_y);
         }
     }
 
@@ -92,7 +101,7 @@ int main(void)
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            w1[x][y] = w0[x][y] + w;
+            w1[x][y] = cconstruct(crealf(w0[x][y]) + crealf(w), cimagf(w0[x][y]) + cimagf(w));
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 

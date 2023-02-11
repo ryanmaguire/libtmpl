@@ -27,14 +27,23 @@
 #include <stdio.h>
 #include <time.h>
 
-static long double abs_err(tmpl_ComplexLongDouble z, complex long double w)
+#ifdef _WIN32
+#define ctype _Lcomplex
+#define cconstruct _LCbuild
+#else
+#define ctype complex long double
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return u0 + (complex long double)_Complex_I*u1; }
+#define cconstruct complex_long_double_construct
+#endif
+
+static long double abs_err(tmpl_ComplexLongDouble z, ctype w)
 {
     long double x = tmpl_CLDouble_Real_Part(z) - creall(w);
     long double y = tmpl_CLDouble_Imag_Part(z) - cimagl(w);
     return sqrtl(x*x + y*y);
 }
 
-static long double rel_err(tmpl_ComplexLongDouble z, complex long double w)
+static long double rel_err(tmpl_ComplexLongDouble z, ctype w)
 {
     long double x = tmpl_CLDouble_Real_Part(z) - creall(w);
     long double y = tmpl_CLDouble_Imag_Part(z) - cimagl(w);
@@ -45,7 +54,7 @@ static long double rel_err(tmpl_ComplexLongDouble z, complex long double w)
 int main(void)
 {
     tmpl_ComplexLongDouble **z0, **z1;
-    complex long double **w0, **w1;
+    ctype **w0, **w1;
 
     const unsigned int N = 10000U;
     const long double real = 1.0L;
@@ -76,7 +85,7 @@ int main(void)
             z_x = r*cosl(theta);
             z_y = r*sinl(theta);
             z0[x][y] = tmpl_CLDouble_Rect(z_x, z_y);
-            w0[x][y] = z_x + (complex long double)_Complex_I*z_y;
+            w0[x][y] = cconstruct(z_x, z_y);
         }
     }
 
@@ -91,7 +100,7 @@ int main(void)
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            w1[x][y] = w0[x][y] + real;
+            w1[x][y] = cconstruct(creall(w0[x][y]) + real, cimagl(w0[x][y]));
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
