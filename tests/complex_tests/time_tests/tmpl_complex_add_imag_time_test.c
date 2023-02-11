@@ -50,14 +50,14 @@ static double rel_err(tmpl_ComplexDouble z, ctype w)
     return sqrt(x*x + y*y) / cabs(w);
 }
 
-/*  Routine for testing tmpl_CDouble_Add_Real.                                */
+/*  Routine for testing tmpl_CDouble_Add_Imag.                                */
 int main(void)
 {
     tmpl_ComplexDouble **z0, **z1;
     ctype **w0, **w1;
 
     const unsigned int N = 10000U;
-    const double real = 1.0;
+    const double imag = 1.0;
 
     double z_x, z_y, max_rel, max_abs, temp, r, theta;
     unsigned int x, y;
@@ -89,18 +89,18 @@ int main(void)
         }
     }
 
-    puts("Functions: tmpl_CDouble_Add_Real vs complex addition");
+    puts("Functions: tmpl_CDouble_Add_Imag vs complex addition");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            z1[x][y] = tmpl_CDouble_Add_Real(real, z0[x][y]);
+            z1[x][y] = tmpl_CDouble_Add_Imag(imag, z0[x][y]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            w1[x][y] = cconstruct(creal(w0[x][y]) + real, cimag(w0[x][y]));
+            w1[x][y] = cconstruct(creal(w0[x][y]), cimag(w0[x][y]) + imag);
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 

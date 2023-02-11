@@ -28,38 +28,40 @@
 #include <time.h>
 
 #ifdef _WIN32
-#define ctype _Dcomplex
-#define cconstruct _Cbuild
+#define ctype _Lcomplex
+#define cconstruct _LCbuild
 #else
-#define ctype complex double
-static inline complex double complex_double_construct(double real, double imag) { return u0 + (complex double)_Complex_I*u1; }
-#define cconstruct complex_double_construct
+#define ctype complex long double
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return u0 + (complex long double)_Complex_I*u1; }
+#define cconstruct complex_long_double_construct
 #endif
 
-static double abs_err(tmpl_ComplexDouble z, ctype w)
+static long double abs_err(tmpl_ComplexLongDouble z, ctype w)
 {
-    double x = tmpl_CDouble_Real_Part(z) - creal(w);
-    double y = tmpl_CDouble_Imag_Part(z) - cimag(w);
-    return sqrt(x*x + y*y);
+    long double x = tmpl_CLDouble_Real_Part(z) - creall(w);
+    long double y = tmpl_CLDouble_Imag_Part(z) - cimagl(w);
+    return sqrtl(x*x + y*y);
 }
 
-static double rel_err(tmpl_ComplexDouble z, ctype w)
+static long double rel_err(tmpl_ComplexLongDouble z, ctype w)
 {
-    double x = tmpl_CDouble_Real_Part(z) - creal(w);
-    double y = tmpl_CDouble_Imag_Part(z) - cimag(w);
-    return sqrt(x*x + y*y) / cabs(w);
+    long double x = tmpl_CLDouble_Real_Part(z) - creall(w);
+    long double y = tmpl_CLDouble_Imag_Part(z) - cimagl(w);
+    return sqrtl(x*x + y*y) / cabsl(w);
 }
 
-/*  Routine for testing tmpl_CDouble_Add_Real.                                */
+
+/*  Routine for testing tmpl_CLDouble_Add.                                    */
 int main(void)
 {
-    tmpl_ComplexDouble **z0, **z1;
+    tmpl_ComplexLongDouble **z0, **z1;
     ctype **w0, **w1;
 
     const unsigned int N = 10000U;
-    const double real = 1.0;
+    const tmpl_ComplexLongDouble z = tmpl_CLDouble_Rect(1.0L, 2.0L);
+    const ctype w = cconstruct(1.0L, 2.0L);
 
-    double z_x, z_y, max_rel, max_abs, temp, r, theta;
+    long double z_x, z_y, max_rel, max_abs, temp, r, theta;
     unsigned int x, y;
     clock_t t1, t2;
 
@@ -80,32 +82,32 @@ int main(void)
     {
         for (y = 0U; y < N; ++y)
         {
-            theta = tmpl_Two_Pi*rand() / (double)RAND_MAX;
+            theta = tmpl_Two_Pi_L*rand() / (long double)RAND_MAX;
             r = rand();
-            z_x = r*cos(theta);
-            z_y = r*sin(theta);
-            z0[x][y] = tmpl_CDouble_Rect(z_x, z_y);
+            z_x = r*cosl(theta);
+            z_y = r*sinl(theta);
+            z0[x][y] = tmpl_CLDouble_Rect(z_x, z_y);
             w0[x][y] = cconstruct(z_x, z_y);
         }
     }
 
-    puts("Functions: tmpl_CDouble_Add_Real vs complex addition");
+    puts("Functions: tmpl_CLDouble_Add vs complex addition");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            z1[x][y] = tmpl_CDouble_Add_Real(real, z0[x][y]);
+            z1[x][y] = tmpl_CLDouble_Add(z0[x][y], z);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            w1[x][y] = cconstruct(creal(w0[x][y]) + real, cimag(w0[x][y]));
+            w1[x][y] = cconstruct(creall(w0[x][y]) + creall(w), cimagl(w0[x][y]) + cimagl(w));
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
-    max_abs = 0.0;
-    max_rel = 0.0;
+    max_abs = 0.0L;
+    max_rel = 0.0L;
     for (x = 0U; x < N; ++x)
     {
         for (y = 0U; y < N; ++y)
@@ -122,8 +124,8 @@ int main(void)
         }
     }
 
-    printf("Max Abs Error: %.16f\n", max_abs);
-    printf("Max Rel Error: %.16f\n", max_rel);
+    printf("Max Abs Error: %.24Lf\n", max_abs);
+    printf("Max Rel Error: %.24Lf\n", max_rel);
 
     for (x = 0U; x < N; ++x)
     {

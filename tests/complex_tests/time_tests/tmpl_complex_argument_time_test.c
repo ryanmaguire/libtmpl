@@ -18,10 +18,6 @@
  ******************************************************************************/
 
 #include <libtmpl/include/tmpl_complex.h>
-
-/*  2 pi is defined here.                                                     */
-#include <libtmpl/include/tmpl_math.h>
-#include <math.h>
 #include <complex.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,71 +32,58 @@ static inline complex double complex_double_construct(double real, double imag) 
 #define cconstruct complex_double_construct
 #endif
 
-static double abs_err(tmpl_ComplexDouble z, ctype w)
-{
-    double x = tmpl_CDouble_Real_Part(z) - creal(w);
-    double y = tmpl_CDouble_Imag_Part(z) - cimag(w);
-    return sqrt(x*x + y*y);
-}
-
-static double rel_err(tmpl_ComplexDouble z, ctype w)
-{
-    double x = tmpl_CDouble_Real_Part(z) - creal(w);
-    double y = tmpl_CDouble_Imag_Part(z) - cimag(w);
-    return sqrt(x*x + y*y) / cabs(w);
-}
-
-/*  Routine for testing tmpl_CDouble_Add_Real.                                */
+/*  Routine for testing tmpl_CDouble_Argument.                                */
 int main(void)
 {
-    tmpl_ComplexDouble **z0, **z1;
-    ctype **w0, **w1;
+    double **y0, **y1;
+    tmpl_ComplexDouble **z0;
+    ctype **z1;
 
     const unsigned int N = 10000U;
-    const double real = 1.0;
+    const double start = -100.0;
+    const double end = 100.0;
+    const double ds = (end - start) / (double)(N - 1U);
 
-    double z_x, z_y, max_rel, max_abs, temp, r, theta;
+    double z_x, z_y, max_rel, max_abs, temp;
     unsigned int x, y;
     clock_t t1, t2;
 
+    y0 = malloc(sizeof(*y0) * N);
+    y1 = malloc(sizeof(*y1) * N);
     z0 = malloc(sizeof(*z0) * N);
     z1 = malloc(sizeof(*z1) * N);
-    w0 = malloc(sizeof(*w0) * N);
-    w1 = malloc(sizeof(*w1) * N);
 
     for (x = 0U; x < N; ++x)
     {
+        y0[x] = malloc(sizeof(*y0[x]) * N);
+        y1[x] = malloc(sizeof(*y1[x]) * N);
         z0[x] = malloc(sizeof(*z0[x]) * N);
         z1[x] = malloc(sizeof(*z1[x]) * N);
-        w0[x] = malloc(sizeof(*w0[x]) * N);
-        w1[x] = malloc(sizeof(*w1[x]) * N);
     }
 
     for (x = 0U; x < N; ++x)
     {
         for (y = 0U; y < N; ++y)
         {
-            theta = tmpl_Two_Pi*rand() / (double)RAND_MAX;
-            r = rand();
-            z_x = r*cos(theta);
-            z_y = r*sin(theta);
+            z_x = (double)x*ds + start;
+            z_y = (double)y*ds + start;
             z0[x][y] = tmpl_CDouble_Rect(z_x, z_y);
-            w0[x][y] = cconstruct(z_x, z_y);
+            z1[x][y] = cconstruct(z_x, z_y);
         }
     }
 
-    puts("Functions: tmpl_CDouble_Add_Real vs complex addition");
+    puts("Functions: tmpl_CDouble_Argument vs carg");
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            z1[x][y] = tmpl_CDouble_Add_Real(real, z0[x][y]);
+            y0[x][y] = tmpl_CDouble_Argument(z0[x][y]);
     t2 = clock();
     printf("libtmpl: %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
     t1 = clock();
     for (x = 0U; x < N; ++x)
         for (y = 0U; y < N; ++y)
-            w1[x][y] = cconstruct(creal(w0[x][y]) + real, cimag(w0[x][y]));
+            y1[x][y] = carg(z1[x][y]);
     t2 = clock();
     printf("c99:     %f\n", (double)(t2-t1)/CLOCKS_PER_SEC);
 
@@ -110,12 +93,16 @@ int main(void)
     {
         for (y = 0U; y < N; ++y)
         {
-            temp = abs_err(z1[x][y], w1[x][y]);
+            temp = y0[x][y] - y1[x][y];
+            if (temp < 0.0)
+                temp = -temp;
 
             if (max_abs < temp)
                 max_abs = temp;
 
-            temp = rel_err(z1[x][y], w1[x][y]);
+            temp = (y0[x][y] - y1[x][y])/y1[x][y];
+            if (temp < 0.0)
+                temp = -temp;
 
             if (max_rel < temp)
                 max_rel = temp;
@@ -127,16 +114,16 @@ int main(void)
 
     for (x = 0U; x < N; ++x)
     {
+        free(y0[x]);
+        free(y1[x]);
         free(z0[x]);
         free(z1[x]);
-        free(w0[x]);
-        free(w1[x]);
     }
 
+    free(y0);
+    free(y1);
     free(z0);
     free(z1);
-    free(w0);
-    free(w1);
     return 0;
 }
 /*  End of main.                                                              */
