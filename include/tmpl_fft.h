@@ -24,7 +24,7 @@
  *      This file is a fork of the complex library I wrote for rss_ringoccs.  *
  *      rss_ringoccs is also released under GPL 3.                            *
  ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       February 2, 2021                                              *
  ******************************************************************************
  *                             Revision History                               *
@@ -43,6 +43,9 @@
 /*  Complex data types and functions defined here.                            */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  size_t typedef here.                                                      */
+#include <stddef.h>
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_CDouble_FFT_Cooley_Tukey                                         *
@@ -57,9 +60,6 @@
  *          in this pointer when the function is done.                        *
  *      unsigned long N:                                                      *
  *          The number of entries in the array in. This MUST be a power of 2. *
- *      tmpl_Bool inverse:                                                    *
- *          A Boolean for determining if the forward or inverse FFT is        *
- *          computed.                                                         *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  NOTES:                                                                    *
@@ -69,8 +69,14 @@
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
 extern void
-tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
-                              unsigned long N, tmpl_Bool inverse);
+tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in,
+                              tmpl_ComplexDouble *out,
+                              size_t N);
+
+extern void
+tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
+                               tmpl_ComplexDouble *out,
+                               size_t N);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -100,7 +106,12 @@ tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out,
 extern void
 tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
                                    tmpl_ComplexDouble *out,
-                                   unsigned long N, tmpl_Bool inverse);
+                                   size_t N);
+
+extern void
+tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
+                                    tmpl_ComplexDouble *out,
+                                    size_t N);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -128,8 +139,11 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern tmpl_ComplexDouble *
-tmpl_CDouble_FFT(tmpl_ComplexDouble *in, unsigned long N, tmpl_Bool inverse);
+extern void
+tmpl_CDouble_FFT(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out, size_t N);
+
+extern void
+tmpl_CDouble_IFFT(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out, size_t N);
 
 #endif
 /*  End of include guard.                                                     */
