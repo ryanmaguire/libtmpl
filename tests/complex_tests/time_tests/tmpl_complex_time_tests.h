@@ -57,7 +57,7 @@ static inline long double rand_real(void)
     return 2.0L*(x - 0.5L);
 }
 
-#define TEST1(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST1(ftype, ttype, ctype, f0, f1, cconstruct)                                     \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X;                                                                  \
@@ -117,7 +117,7 @@ int main(void)                                                                 \
         X[n].dat[0] = (ftype)u0;                                               \
         X[n].dat[1] = (ftype)u1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+       A[n] = cconstruct((ftype)u0, (ftype)u1);                                \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
@@ -157,7 +157,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST2(ftype, ttype, ctype, f, op)                                      \
+#define TEST2(ftype, ttype, ctype, f, op, cconstruct)                          \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y, *Z;                                                          \
@@ -245,8 +245,8 @@ int main(void)                                                                 \
         Y[n].dat[0] = (ftype)v0;                                               \
         Y[n].dat[1] = (ftype)v1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
-        B[n] = (ftype)v0 + (complex ftype)_Complex_I*(ftype)v1;                \
+        A[n] = cconstruct(u0, u1);                                             \
+        B[n] = cconstruct(v0, v1);                                             \
     }                                                                          \
                                                                                \
     printf(#f " vs. " #op"\n");                                                \
@@ -259,7 +259,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = A[n] op B[n];                                                   \
+        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n]));\
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
@@ -287,7 +287,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST3(ftype, ttype, ctype, f, op)                                      \
+#define TEST3(ftype, ttype, ctype, f, op, cconstruct)                          \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y, *Z;                                                          \
@@ -375,8 +375,8 @@ int main(void)                                                                 \
         Y[n].dat[0] = (ftype)v0;                                               \
         Y[n].dat[1] = (ftype)v1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
-        B[n] = (ftype)v0 + (complex ftype)_Complex_I*(ftype)v1;                \
+        A[n] = cconstruct(u0, u1);                                             \
+        B[n] = cconstruct(v0, v1);                                             \
     }                                                                          \
                                                                                \
     printf(#f " vs. " #op"\n");                                                \
@@ -389,7 +389,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = A[n] op B[n];                                                   \
+        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n])); \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
@@ -417,7 +417,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST4(ftype, ttype, ctype, f, op)                                      \
+#define TEST4(ftype, ttype, ctype, f, op, cconstruct)                          \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -475,7 +475,7 @@ int main(void)                                                                 \
                                                                                \
         X[n].dat[0] = (ftype)u0;                                               \
         X[n].dat[1] = (ftype)u1;                                               \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct((ftype)u0, (ftype)u1);                                \
     }                                                                          \
                                                                                \
     printf(#f " vs. " #op"\n");                                                \

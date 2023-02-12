@@ -23,12 +23,21 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef _WIN32
+#define ctype _Fcomplex
+#define cconstruct _FCbuild
+#else
+#define ctype complex float
+static inline complex float complex_float_construct(float real, float imag) { return u0 + (complex float)_Complex_I*u1; }
+#define cconstruct complex_float_construct
+#endif
+
 /*  Routine for testing tmpl_CFloat_Argument.                                 */
 int main(void)
 {
     float **y0, **y1;
     tmpl_ComplexFloat **z0;
-    complex float **z1;
+    ctype **z1;
 
     const unsigned int N = 10000U;
     const float start = -100.0F;
@@ -59,7 +68,7 @@ int main(void)
             z_x = (float)x*ds + start;
             z_y = (float)y*ds + start;
             z0[x][y] = tmpl_CFloat_Rect(z_x, z_y);
-            z1[x][y] = z_x + _Complex_I*z_y;
+            z1[x][y] = cconstruct(z_x, z_y);
         }
     }
 
