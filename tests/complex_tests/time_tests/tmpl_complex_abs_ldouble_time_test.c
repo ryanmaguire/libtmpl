@@ -26,7 +26,7 @@ TEST1(long double,
       cabsl, 
       _LCbuild)
 #else
-static inline complex long double complex_long_double_construct(long double real, long double imag) { return u0 + (complex long double)_Complex_I*u1; }
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return real + (complex long double)_Complex_I*imag; }
 TEST1(long double,
       tmpl_ComplexLongDouble,
       complex long double,

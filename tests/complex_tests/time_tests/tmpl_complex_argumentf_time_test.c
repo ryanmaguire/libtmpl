@@ -28,7 +28,7 @@
 #define cconstruct _FCbuild
 #else
 #define ctype complex float
-static inline complex float complex_float_construct(float real, float imag) { return u0 + (complex float)_Complex_I*u1; }
+static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
 #define cconstruct complex_float_construct
 #endif
 

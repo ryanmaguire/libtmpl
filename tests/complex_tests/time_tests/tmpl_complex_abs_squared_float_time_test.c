@@ -33,6 +33,6 @@ static float complex_abs_squared(complex float z)
     float y = cimagf(z);
     return x*x + y*y;
 }
-static inline complex float complex_float_construct(float real, float imag) { return u0 + (complex float)_Complex_I*u1; }
+static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
 TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs_Squared, complex_abs_squared)
 #endif
