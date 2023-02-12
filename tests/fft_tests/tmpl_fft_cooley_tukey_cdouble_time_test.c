@@ -33,7 +33,7 @@ int main(void)
     }
 
     t1 = clock();
-    tmpl_CDouble_FFT_Cooley_Tukey(z0, w0, N, tmpl_False);
+    tmpl_CDouble_FFT_Cooley_Tukey(z0, w0, N);
     t2 = clock();
 
     printf("libtmpl: %f\n", (double)(t2 - t1)/CLOCKS_PER_SEC);
