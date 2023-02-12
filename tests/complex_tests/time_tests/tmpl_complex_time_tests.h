@@ -435,7 +435,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST4(ftype, ttype, ctype, f, op, cconstruct)                          \
+#define TEST4(ftype, ttype, ctype, f, op)                                      \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -493,7 +493,7 @@ int main(void)                                                                 \
                                                                                \
         X[n].dat[0] = (ftype)u0;                                               \
         X[n].dat[1] = (ftype)u1;                                               \
-        A[n] = cconstruct((ftype)u0, (ftype)u1);                                \
+        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
     }                                                                          \
                                                                                \
     printf(#f " vs. " #op"\n");                                                \
