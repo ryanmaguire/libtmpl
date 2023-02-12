@@ -3096,6 +3096,29 @@ tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_SinCosPi                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the point on a circle from a given normalized angle.         *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number.                                                    *
+ *      double *x_ptr;                                                        *
+ *          A pointer to the x-coordinate of the point on the circle.         *
+ *      double *y_ptr;                                                        *
+ *          A pointer to the y-coordinate of the point on the circle.         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t);
+extern void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t);
+
+extern void
+tmpl_LDouble_SinCosPi(long double t,
+                      long double *sinpi_t,
+                      long double *cospi_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Sind                                                      *
  *  Purpose:                                                                  *
  *      Computes the sine of a number in degrees.                             *
