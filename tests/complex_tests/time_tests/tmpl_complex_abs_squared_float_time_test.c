@@ -34,5 +34,5 @@ static float complex_abs_squared(complex float z)
     return x*x + y*y;
 }
 static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
-TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs_Squared, complex_abs_squared)
+TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs_Squared, complex_abs_squared, complex_float_construct)
 #endif
