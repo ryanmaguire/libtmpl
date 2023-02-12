@@ -1,14 +1,12 @@
 #include <stdlib.h>
-#include <stdio.h>
-#include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_fft.h>
 
 void
-tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
-                                   tmpl_ComplexDouble *out,
-                                   unsigned long N, tmpl_Bool inverse)
+tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
+                                    tmpl_ComplexDouble *out,
+                                    size_t N)
 {
     /*  The chirp factors range from -(N-1) to N-1, inclusive.                */
     unsigned long chirp_size;
@@ -28,9 +26,8 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     tmpl_ComplexDouble *temp;
 
     /*  And scale factors for the exponential.                                */
-    double chirp_factor;
+    const double chirp_factor = 1.0 / (double)N;
     double m2_chirp_factor;
-    double inverse_factor;
 
     chirp_size = N+N-1;
 
@@ -46,6 +43,7 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     /*  Now we count the number of digits in the binary representation of N.  */
     while(N_pow_2 < chirp_size)
         N_pow_2 = N_pow_2 << 1;
+    /*  TODO: Create a better way of getting next power of two up.            */
 
     /*  Allocate memory for x_in and chirp, which will be a power of two in   *
      *  size. Per C90 guidelines, we do not cast malloc since void pointers   *
@@ -55,11 +53,6 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     x_in       = malloc(sizeof(*x_in)       * N_pow_2);
     temp       = malloc(sizeof(*temp)       * N_pow_2);
 
-    if (inverse)
-        chirp_factor = tmpl_One_Pi/(double)N;
-    else
-        chirp_factor = -tmpl_One_Pi/(double)N;
-
     /*  Set the values for the "chirp" factor, which is simply the complex    *
      *  exponential of (k^2 / 2) * (+/- 2 pi i / N). The +/- depends on       *
      *  whether or not an inverse computation is being performed.             */
@@ -67,7 +60,7 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     {
         m = n+1-N;
         m2_chirp_factor = (double)(m*m)*chirp_factor;
-        chirp[n] = tmpl_CDouble_Polar(1.0, m2_chirp_factor);
+        chirp[n] = tmpl_CDouble_ExpiPi(m2_chirp_factor);
         rcpr_chirp[n] = tmpl_CDouble_Conjugate(chirp[n]);
     }
 
@@ -86,33 +79,26 @@ tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     /*  Lastly, we need to compute the forward FFTs of x_in and chirp, and    *
      *  then compute the inverse fourier transform of the product. We'll need *
      *  to allocate memory for these two.                                     */
-    tmpl_CDouble_FFT_Cooley_Tukey(x_in, x_in, N_pow_2, tmpl_False);
-
-    tmpl_CDouble_FFT_Cooley_Tukey(rcpr_chirp, temp, N_pow_2, tmpl_False);
+    tmpl_CDouble_FFT_Cooley_Tukey(x_in, x_in, N_pow_2);
+    tmpl_CDouble_FFT_Cooley_Tukey(rcpr_chirp, temp, N_pow_2);
 
     for (n=0; n<N_pow_2; ++n)
         x_in[n] = tmpl_CDouble_Multiply(x_in[n], temp[n]);
 
-    tmpl_CDouble_FFT_Cooley_Tukey(x_in, temp, N_pow_2, tmpl_True);
+    tmpl_CDouble_IFFT_Cooley_Tukey(x_in, temp, N_pow_2);
 
     for(n=0; n<N; ++n)
     {
-        m = n+N-1;
+        m = n + N - 1;
         out[n] = tmpl_CDouble_Multiply(temp[m], chirp[m]);
     }
 
-    if (inverse)
-    {
-        inverse_factor = 1.0/(double)N;
-        for (n=0; n<N; ++n)
-            out[n] = tmpl_CDouble_Multiply_Real(inverse_factor, out[n]);
-    }
+    for (n=0; n<N; ++n)
+        out[n] = tmpl_CDouble_Multiply_Real(chirp_factor, out[n]);
 
     /*  Don't forget to free everything!!!                                    */
     free(x_in);
     free(chirp);
     free(rcpr_chirp);
     free(temp);
-
-    return;
 }
