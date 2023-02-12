@@ -28,7 +28,7 @@
 #define cconstruct _LCbuild
 #else
 #define ctype complex long double
-static inline complex long double complex_long_double_construct(long double real, long double imag) { return u0 + (complex long double)_Complex_I*u1; }
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return real + (complex long double)_Complex_I*imag; }
 #define cconstruct complex_long_double_construct
 #endif
 

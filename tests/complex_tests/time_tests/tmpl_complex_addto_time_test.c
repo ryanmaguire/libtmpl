@@ -21,6 +21,6 @@
 #ifdef _WIN32
 TEST4(double, tmpl_ComplexDouble, _Dcomplex, tmpl_CDouble_AddTo, +=, _Cbuild)
 #else
-static inline complex double complex_double_construct(double real, double imag) { return u0 + (complex double)_Complex_I*u1; }
+static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
 TEST4(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_AddTo, +=, complex_double_construct)
 #endif
