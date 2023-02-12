@@ -389,7 +389,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op ciamg(B[n])); \
+        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n])); \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
