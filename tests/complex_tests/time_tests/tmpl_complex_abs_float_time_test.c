@@ -22,5 +22,5 @@
 TEST1(float, tmpl_ComplexFloat, _Fcomplex, tmpl_CFloat_Abs, cabsf, _FCbuild)
 #else
 static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
-TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs, cabsf)
+TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs, cabsf, complex_float_construct)
 #endif
