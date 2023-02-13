@@ -37,6 +37,12 @@
 #ifndef TMPL_FFT_H
 #define TMPL_FFT_H
 
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*  Booleans defined here. Needed for the FFT routines.                       */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -144,6 +150,11 @@ tmpl_CDouble_FFT(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out, size_t N);
 
 extern void
 tmpl_CDouble_IFFT(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out, size_t N);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
