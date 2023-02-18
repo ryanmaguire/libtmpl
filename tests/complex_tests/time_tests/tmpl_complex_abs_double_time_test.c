@@ -17,10 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-
-#ifdef _WIN32
-TEST1(double, tmpl_ComplexDouble, _Dcomplex, tmpl_CDouble_Abs, cabs, _Cbuild)
-#else
-static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs, complex_double_construct)
-#endif
+TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs, cabs)

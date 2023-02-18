@@ -187,10 +187,60 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_complex_abs_double.c" -and \
 	-not -name "tmpl_complex_abs_float.c" -and \
 	-not -name "tmpl_complex_abs_ldouble.c" -and \
-	-not -name "tmpl_complex_abs_squared.c" -and \
-	-not -name "tmpl_complex_add.c" -and \
-	-not -name "tmpl_complex_addto.c" -and \
-	-not -name "tmpl_complex_quick_abs.c" -and \
+	-not -name "tmpl_complex_abs_squared_double.c" -and \
+	-not -name "tmpl_complex_abs_squared_float.c" -and \
+	-not -name "tmpl_complex_abs_squared_ldouble.c" -and \
+	-not -name "tmpl_complex_add_double.c" -and \
+	-not -name "tmpl_complex_add_float.c" -and \
+	-not -name "tmpl_complex_add_ldouble.c" -and \
+	-not -name "tmpl_complex_add_imag_double.c" -and \
+	-not -name "tmpl_complex_add_imag_float.c" -and \
+	-not -name "tmpl_complex_add_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_add_real_double.c" -and \
+	-not -name "tmpl_complex_add_real_float.c" -and \
+	-not -name "tmpl_complex_add_real_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_double.c" -and \
+	-not -name "tmpl_complex_addto_float.c" -and \
+	-not -name "tmpl_complex_addto_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_imag_double.c" -and \
+	-not -name "tmpl_complex_addto_imag_float.c" -and \
+	-not -name "tmpl_complex_addto_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_real_double.c" -and \
+	-not -name "tmpl_complex_addto_real_float.c" -and \
+	-not -name "tmpl_complex_addto_real_ldouble.c" -and \
+	-not -name "tmpl_complex_argument_double.c" -and \
+	-not -name "tmpl_complex_argument_float.c" -and \
+	-not -name "tmpl_complex_argument_ldouble.c" -and \
+	-not -name "tmpl_complex_conjugate_double.c" -and \
+	-not -name "tmpl_complex_conjugate_float.c" -and \
+	-not -name "tmpl_complex_conjugate_ldouble.c" -and \
+	-not -name "tmpl_complex_conjugateself_double.c" -and \
+	-not -name "tmpl_complex_conjugateself_float.c" -and \
+	-not -name "tmpl_complex_conjugateself_ldouble.c" -and \
+	-not -name "tmpl_complex_dist_double.c" -and \
+	-not -name "tmpl_complex_dist_float.c" -and \
+	-not -name "tmpl_complex_dist_ldouble.c" -and \
+	-not -name "tmpl_complex_dist_squared_double.c" -and \
+	-not -name "tmpl_complex_dist_squared_float.c" -and \
+	-not -name "tmpl_complex_dist_squared_ldouble.c" -and \
+	-not -name "tmpl_complex_expipi_double.c" -and \
+	-not -name "tmpl_complex_expipi_float.c" -and \
+	-not -name "tmpl_complex_expipi_ldouble.c" -and \
+	-not -name "tmpl_complex_multiply_double.c" -and \
+	-not -name "tmpl_complex_multiply_float.c" -and \
+	-not -name "tmpl_complex_multiply_ldouble.c" -and \
+	-not -name "tmpl_complex_multiply_imag_double.c" -and \
+	-not -name "tmpl_complex_multiply_imag_float.c" -and \
+	-not -name "tmpl_complex_multiply_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_multiply_real_double.c" -and \
+	-not -name "tmpl_complex_multiply_real_float.c" -and \
+	-not -name "tmpl_complex_multiply_real_ldouble.c" -and \
+	-not -name "tmpl_complex_quick_abs_double.c" -and \
+	-not -name "tmpl_complex_quick_abs_float.c" -and \
+	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
+	-not -name "tmpl_complex_quick_dist_double.c" -and \
+	-not -name "tmpl_complex_quick_dist_float.c" -and \
+	-not -name "tmpl_complex_quick_dist_ldouble.c" -and \
 	-not -name "tmpl_copysign_float.c" -and \
 	-not -name "tmpl_copysign_double.c" -and \
 	-not -name "tmpl_copysign_ldouble.c" -and \
@@ -251,6 +301,12 @@ ifdef NO_IEEE
 IEEE_FLAG=-DTMPL_SET_TMPL_USE_IEEE_FALSE
 else
 IEEE_FLAG=
+endif
+
+ifdef USE_MEMCPY
+MEMCPY_FLAG=-DTMPL_SET_USE_MEMCPY_TRUE
+else
+MEMCPY_FLAG=
 endif
 
 # Whether or not to try and find fixed-width integer data types.
@@ -377,7 +433,7 @@ ASM_EXCLUDE=
 # End of ifdef NO_ASM.
 endif
 
-ALLCFLAGS=$(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG)
+ALLCFLAGS=$(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG) $(MEMCPY_FLAG)
 INCLUDE=\( $(ASM_INCLUDE) -name "*.c" \)
 EXCLUDE=$(ASM_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
 SRCS=$(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
@@ -416,6 +472,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/numerical/
 	mkdir -p $(BUILD_DIR)/src/optics/
 	mkdir -p $(BUILD_DIR)/src/polynomial/
+	mkdir -p $(BUILD_DIR)/src/polynomial_integer/
 	mkdir -p $(BUILD_DIR)/src/ppm/
 	mkdir -p $(BUILD_DIR)/src/rational/
 	mkdir -p $(BUILD_DIR)/src/special_functions_complex/

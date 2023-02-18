@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_complex_abs_ldouble                           *
+ *                          tmpl_complex_abs_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex modulus (absolute value).        *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CLDouble_Abs:                                                    *
+ *      tmpl_CLDouble_Abs                                                     *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
@@ -42,11 +42,14 @@
  *      tmpl_LDouble_Hypot (tmpl_math.h):                                     *
  *          Function for computing the magnitude of the vector (x, y).        *
  *  Error:                                                                    *
- *      Based on 134,217,728 random samples:                                  *
- *          Max Relative Error: 2.220446E-16                                  *
- *          RMS Relative Error: 3.751642e-17                                  *
+ *      Based on 67,108,864 random samples:                                   *
+ *          max err: 1.084200e-19                                             *
+ *          rel err: 2.553109e-20                                             *
+ *      Values assume 80-bit extended precision. For double, double-double,   *
+ *      and quadruple implementations of long double the peak error is also   *
+ *      1 ULP.                                                                *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_USE_INLINE macro found here.                                 *
@@ -58,7 +61,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/30: Ryan Maguire                                                  *
  *      Created file (Wellesley college for librssringoccs).                  *
@@ -92,7 +95,7 @@
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  This file is only used if inline support is not requested.                */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file containing basic math functions.                              */
@@ -107,7 +110,6 @@ long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
     return tmpl_LDouble_Hypot(z.dat[0], z.dat[1]);
 }
 /*  End of tmpl_CLDouble_Abs.                                                 */
-
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

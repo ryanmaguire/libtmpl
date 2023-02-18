@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_abs_float                            *
+ *                           tmpl_complex_abs_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex modulus (absolute value).        *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CFloat_Abs:                                                      *
+ *      tmpl_CFloat_Abs                                                       *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
@@ -42,11 +42,11 @@
  *      tmpl_Float_Hypot (tmpl_math.h):                                       *
  *          Function for computing the magnitude of the vector (x, y).        *
  *  Error:                                                                    *
- *      Based on 134,217,728 random samples:                                  *
- *          Max Relative Error: 2.220446E-16                                  *
- *          RMS Relative Error: 3.751642e-17                                  *
+ *      Based on 268,435,456 random samples:                                  *
+ *          Max Relative Error: 1.192092e-07                                  *
+ *          RMS Relative Error: 3.451446e-08                                  *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_USE_INLINE macro found here.                                 *
@@ -58,7 +58,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2022/12/30: Ryan Maguire                                                  *
  *      Moved main algorithm to tmpl_hypot_float.c Function now passes the    *
@@ -68,7 +68,7 @@
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  This file is only used if inline support is not requested.                */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file containing basic math functions.                              */

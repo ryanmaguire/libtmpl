@@ -59,6 +59,7 @@ installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE."
 
 option(LIBTMPL_USE_LONGLONG "" TRUE)
 option(LIBTMPL_USE_INT "" TRUE)
+option(LIBTMPL_USE_MEMCPY "" TRUE)
 option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests." FALSE)
 option(LIBTMPL_BUILD_EXAMPLES "Set to TRUE to enable the building of examples." FALSE)
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
@@ -168,6 +169,10 @@ if(NOT LIBTMPL_USE_LONGLONG)
     list(APPEND SOURCE_EXCLUSION_LIST "tmpl_abs_llong.c")
 endif()
 
+if(LIBTMPL_USE_MEMCPY)
+target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MEMCPY_TRUE)
+endif()
+
 if(LIBTMPL_USE_OMP)
     # Build with OpenMP, if it is supported by the toolchain
     find_package(OpenMP)
@@ -275,10 +280,60 @@ if(LIBTMPL_USE_INLINE)
         "tmpl_complex_abs_double.c"
         "tmpl_complex_abs_float.c"
         "tmpl_complex_abs_ldouble.c"
-        "tmpl_complex_abs_squared.c"
-        "tmpl_complex_add.c"
-        "tmpl_complex_addto.c"
-        "tmpl_complex_quick_abs.c"
+        "tmpl_complex_abs_squared_double.c"
+        "tmpl_complex_abs_squared_float.c"
+        "tmpl_complex_abs_squared_ldouble.c"
+        "tmpl_complex_add_double.c"
+        "tmpl_complex_add_float.c"
+        "tmpl_complex_add_ldouble.c"
+        "tmpl_complex_add_imag_double.c"
+        "tmpl_complex_add_imag_float.c"
+        "tmpl_complex_add_imag_ldouble.c"
+        "tmpl_complex_add_real_double.c"
+        "tmpl_complex_add_real_float.c"
+        "tmpl_complex_add_real_ldouble.c"
+        "tmpl_complex_addto_double.c"
+        "tmpl_complex_addto_float.c"
+        "tmpl_complex_addto_ldouble.c"
+        "tmpl_complex_addto_imag_double.c"
+        "tmpl_complex_addto_imag_float.c"
+        "tmpl_complex_addto_imag_ldouble.c"
+        "tmpl_complex_addto_real_double.c"
+        "tmpl_complex_addto_real_float.c"
+        "tmpl_complex_addto_real_ldouble.c"
+        "tmpl_complex_argument_double.c"
+        "tmpl_complex_argument_float.c"
+        "tmpl_complex_argument_ldouble.c"
+        "tmpl_complex_conjugate_double.c"
+        "tmpl_complex_conjugate_float.c"
+        "tmpl_complex_conjugate_ldouble.c"
+        "tmpl_complex_conjugateself_double.c"
+        "tmpl_complex_conjugateself_float.c"
+        "tmpl_complex_conjugateself_ldouble.c"
+        "tmpl_complex_dist_double.c"
+        "tmpl_complex_dist_float.c"
+        "tmpl_complex_dist_ldouble.c"
+        "tmpl_complex_dist_squared_double.c"
+        "tmpl_complex_dist_squared_float.c"
+        "tmpl_complex_dist_squared_ldouble.c"
+        "tmpl_complex_expipi_double.c"
+        "tmpl_complex_expipi_float.c"
+        "tmpl_complex_expipi_ldouble.c"
+        "tmpl_complex_multiply_double.c"
+        "tmpl_complex_multiply_float.c"
+        "tmpl_complex_multiply_ldouble.c"
+        "tmpl_complex_multiply_imag_double.c"
+        "tmpl_complex_multiply_imag_float.c"
+        "tmpl_complex_multiply_imag_ldouble.c"
+        "tmpl_complex_multiply_real_double.c"
+        "tmpl_complex_multiply_real_float.c"
+        "tmpl_complex_multiply_real_ldouble.c"
+        "tmpl_complex_quick_abs_double.c"
+        "tmpl_complex_quick_abs_float.c"
+        "tmpl_complex_quick_abs_ldouble.c"
+        "tmpl_complex_quick_dist_double.c"
+        "tmpl_complex_quick_dist_float.c"
+        "tmpl_complex_quick_dist_ldouble.c"
         "tmpl_copysign_float.c"
         "tmpl_copysign_double.c"
         "tmpl_copysign_ldouble.c"
