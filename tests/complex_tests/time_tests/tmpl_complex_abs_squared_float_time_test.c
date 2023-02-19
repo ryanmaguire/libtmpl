@@ -17,22 +17,15 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-
+static float complex_abs_squared(NATIVE_COMPLEX_FLOAT z)
+{
+    float x = crealf(z);
+    float y = cimagf(z);
+    return x*x + y*y;
+}
 #ifdef _WIN32
-static float complex_abs_squared(_Fcomplex z)
-{
-    float x = crealf(z);
-    float y = cimagf(z);
-    return x*x + y*y;
-}
-TEST1(float, tmpl_ComplexFloat, _Fcomplex, tmpl_CFloat_Abs_Squared, complex_abs_squared, _FCbuild)
+TEST1(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Abs_Squared, complex_abs_squared, _FCbuild)
 #else
-static float complex_abs_squared(complex float z)
-{
-    float x = crealf(z);
-    float y = cimagf(z);
-    return x*x + y*y;
-}
 static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
 TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs_Squared, complex_abs_squared, complex_float_construct)
 #endif

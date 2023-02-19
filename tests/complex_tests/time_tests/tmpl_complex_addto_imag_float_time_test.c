@@ -19,6 +19,6 @@
 #include "tmpl_complex_time_tests.h"
 TEST6(float,
       tmpl_ComplexFloat,
-      complex float,
+      NATIVE_COMPLEX_FLOAT,
       tmpl_CFloat_AddTo_Imag,
       += _Complex_I*)

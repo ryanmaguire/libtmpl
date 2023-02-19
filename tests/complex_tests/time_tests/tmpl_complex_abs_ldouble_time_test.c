@@ -21,7 +21,7 @@
 #ifdef _WIN32
 TEST1(long double,
       tmpl_ComplexLongDouble,
-      _Lcomplex,
+      NATIVE_COMPLEX_LDOUBLE,
       tmpl_CLDouble_Abs,
       cabsl, 
       _LCbuild)

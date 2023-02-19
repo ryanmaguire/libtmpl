@@ -17,6 +17,6 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-static float func(complex float z0, complex float z1){return cabsf(z0-z1);}
-TEST8(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Quick_Dist, func)
+static float func(NATIVE_COMPLEX_FLOAT z0, NATIVE_COMPLEX_FLOAT z1){return cabsf(z0-z1);}
+TEST8(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Quick_Dist, func)
 
