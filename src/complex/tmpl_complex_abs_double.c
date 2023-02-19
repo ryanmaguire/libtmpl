@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Abs:                                                     *
+ *      tmpl_CDouble_Abs                                                      *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
@@ -43,10 +43,10 @@
  *          Function for computing the magnitude of the vector (x, y).        *
  *  Error:                                                                    *
  *      Based on 134,217,728 random samples:                                  *
- *          Max Relative Error: 2.220446E-16                                  *
+ *          Max Relative Error: 2.220446e-16                                  *
  *          RMS Relative Error: 3.751642e-17                                  *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_USE_INLINE macro found here.                                 *
@@ -58,7 +58,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/30: Ryan Maguire                                                  *
  *      Created file (Wellesley college for librssringoccs).                  *
@@ -92,7 +92,7 @@
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  This file is only used if inline support is not requested.                */
 #if TMPL_USE_INLINE != 1
 
 /*  Header file containing basic math functions.                              */

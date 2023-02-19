@@ -45,6 +45,12 @@
 #ifndef TMPL_POLYNOMIAL_INTEGER_H
 #define TMPL_POLYNOMIAL_INTEGER_H
 
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*  Macro indicating whether libtmpl has long long support found here.        */
 #include <libtmpl/include/tmpl_inttype.h>
 
@@ -53,6 +59,9 @@
 
 /*  The size_t data type is found here.                                       */
 #include <stddef.h>
+
+/*  FILE data type found here.                                                */
+#include <stdio.h>
 
 /*  Polynomials with integer coefficients, elements of Z[x]. Short data type. */
 typedef struct tmpl_ShortPolynomial_Def {
@@ -134,47 +143,29 @@ typedef struct tmpl_LongLongPolynomial_Def {
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
-/*  Data type for working with elements of Z[x] that are of a high degree     *
- *  where most of the coefficients are zero. This method saves on memory.     */
-typedef struct tmpl_SparseIntPolynomial_Def {
-
-    /*  A pointer to all of the terms. The degree of the terms is stored in   *
-     *  the next pointer.                                                     */
-    signed long int *terms;
-
-    /*  A pointer for the degrees of all of the terms.                        */
-    size_t *degree_of_term;
-
-    /*  The number of non-zero terms.                                         */
-    size_t number_of_terms;
-
-    /*  Boolean for keeping track of errors.                                  */
-    tmpl_Bool error_occurred;
-
-    /*  And an error message in case an error does occur.                     */
-    char *error_message;
-} tmpl_SparseIntPolynomial;
-
-/*  Data type for matrices of polynomials in Z[x].                            */
-typedef struct tmpl_IntPolynomialMatrix_Def {
-
-    /*  An array of polynomials, representing the matrix.                     */
-    tmpl_IntPolynomial *data;
-
-    /*  The number of rows and columns, respectively.                         */
-    size_t number_of_rows;
-    size_t number_of_columns;
-
-    /*  Boolean for keeping track of errors.                                  */
-    tmpl_Bool error_occurred;
-
-    /*  And an error message in case an error does occur.                     */
-    char *error_message;
-} tmpl_IntPolynomialMatrix;
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Add                                                *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x].                                            *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      sum (tmpl_IntPolynomial *):                                           *
+ *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
+                       const tmpl_IntPolynomial *Q,
+                       tmpl_IntPolynomial *sum);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_PolynomialZ_Calloc                                               *
+ *      tmpl_IntPolynomial_Calloc                                             *
  *  Purpose:                                                                  *
  *      Creates a polynomial in Z[x] with number_of_coeffs elements allocated *
  *      for the coeffs array, all of which are initialized to zero. Similar   *
@@ -184,7 +175,7 @@ typedef struct tmpl_IntPolynomialMatrix_Def {
  *          The number of elements allocated to the coeffs array. All         *
  *          elements will be initialized to zero.                             *
  *  Output:                                                                   *
- *      poly (tmpl_PolynomialZ *):                                            *
+ *      poly (tmpl_IntPolynomial *):                                          *
  *          A pointer to a polynomial with all coefficients set to zero.      *
  *  Notes:                                                                    *
  *      If malloc fails this function returns NULL. If calloc fails, the      *
@@ -195,6 +186,53 @@ typedef struct tmpl_IntPolynomialMatrix_Def {
 extern tmpl_ShortPolynomial tmpl_ShortPolynomial_Calloc(size_t length);
 extern tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(size_t length);
 extern tmpl_LongPolynomial tmpl_LongPolynomial_Calloc(size_t length);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Copy                                               *
+ *  Purpose:                                                                  *
+ *      Creates a polynomial in Z[x] with number_of_coeffs elements allocated *
+ *      for the coeffs array, all of which are initialized to zero. Similar   *
+ *      functions are provided for Q[x], R[x], and C[x].                      *
+ *  Arguments:                                                                *
+ *      number_of_coeffs (unsigned long int).                                 *
+ *          The number of elements allocated to the coeffs array. All         *
+ *          elements will be initialized to zero.                             *
+ *  Output:                                                                   *
+ *      poly (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial with all coefficients set to zero.      *
+ *  Notes:                                                                    *
+ *      If malloc fails this function returns NULL. If calloc fails, the      *
+ *      pointer has the error_occurred Boolean set to True.                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_calloc.c                       *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
+                        const tmpl_IntPolynomial *src);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Destroy                                            *
+ *  Purpose:                                                                  *
+ *      Free all of the memory in a tmpl_PolynomialZ pointer and set the      *
+ *      the pointers inside the struct to NULL.                               *
+ *  Arguments:                                                                *
+ *      poly_ptr (tmpl_PolynomialZ **)                                        *
+ *          A pointer a tmpl_PolynomialZ pointer whose memory needs to be     *
+ *          freed. Given a tmpl_Polynomial pointer poly, pass it to this      *
+ *          function by grabbing the address &poly.                           *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      This function should always be called when done with a polynomial     *
+ *      to avoid memory leaks.                                                *
+ *  Source Code:                                                              *
+ *      libtmpl/src/polynomial/tmpl_polynomial_destroy.c                      *
+ ******************************************************************************/
+extern void tmpl_ShortPolynomial_Destroy(tmpl_ShortPolynomial *poly);
+extern void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *poly);
+extern void tmpl_LongPolynomial_Destroy(tmpl_LongPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -213,36 +251,13 @@ extern tmpl_LongPolynomial tmpl_LongPolynomial_Calloc(size_t length);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_create_empty.c                 *
  ******************************************************************************/
-extern tmpl_ShortPolynomial tmpl_ShortPolynomial_Init(void);
-extern tmpl_IntPolynomial tmpl_IntPolynomial_Init(void);
-extern tmpl_LongPolynomial tmpl_LongPolynomial_Init(void);
+extern void tmpl_ShortPolynomial_Init(tmpl_ShortPolynomial *P);
+extern void tmpl_IntPolynomial_Init(tmpl_IntPolynomial *P);
+extern void tmpl_LongPolynomial_Init(tmpl_IntPolynomial *P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Destroy_PolynomialZ                                              *
- *  Purpose:                                                                  *
- *      Free all of the memory in a tmpl_PolynomialZ pointer and set the      *
- *      the pointers inside the struct to NULL.                               *
- *  Arguments:                                                                *
- *      poly_ptr (tmpl_PolynomialZ **)                                        *
- *          A pointer a tmpl_PolynomialZ pointer whose memory needs to be     *
- *          freed. Given a tmpl_Polynomial pointer poly, pass it to this      *
- *          function by grabbing the address &poly.                           *
- *  Output:                                                                   *
- *      None (void).                                                          *
- *  Notes:                                                                    *
- *      This function should always be called when done with a polynomial     *
- *      to avoid memory leaks.                                                *
- *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_destroy.c                      *
- ******************************************************************************/
-extern void tmpl_ShortPolynomial_Destroy(tmpl_ShortPolynomial *poly_ptr);
-extern void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *poly_ptr);
-extern void tmpl_LongPolynomial_Destroy(tmpl_LongPolynomial *poly_ptr);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_PolynomialZ_Multiply                                             *
+ *      tmpl_IntPolynomial_Multiply                                           *
  *  Purpose:                                                                  *
  *      Multiplies two elements of Z[x].                                      *
  *  Arguments:                                                                *
@@ -254,24 +269,31 @@ extern void tmpl_LongPolynomial_Destroy(tmpl_LongPolynomial *poly_ptr);
  *          A pointer to a polynomial, the value P*Q will be stored in it.    *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Notes:                                                                    *
- *      It is assumed none of the three input polynomials are NULL. If        *
- *      prod has it's degree not equal the sum of the two degrees of P and Q, *
- *      realloc will be called on the coeffs pointer.                         *
- *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_multiply_polynomial_z.c                   *
- *  Examples:                                                                 *
- *      libtmpl/examples/bytes/tmpl_determine_endianness_example.c            *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_Multiply(tmpl_PolynomialZ *P,
-                          tmpl_PolynomialZ *Q,
-                          tmpl_PolynomialZ *prod);
+tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
+                            const tmpl_IntPolynomial *Q,
+                            tmpl_IntPolynomial *prod);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Naive_Multiply                                     *
+ *  Purpose:                                                                  *
+ *      Multiplies two elements of Z[x].                                      *
+ *  Arguments:                                                                *
+ *      P (tmpl_PolynomialZ *):                                               *
+ *          A pointer to a polynomial.                                        *
+ *      Q (tmpl_PolynomialZ *):                                               *
+ *          Another pointer to a polynomial.                                  *
+ *      prod (tmpl_PolynomialZ *):                                            *
+ *          A pointer to a polynomial, the value P*Q will be stored in it.    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
 extern void
-tmpl_PolynomialQ_Multiply(tmpl_PolynomialQ *P,
-                          tmpl_PolynomialQ *Q,
-                          tmpl_PolynomialQ *prod);
+tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
+                                  const tmpl_IntPolynomial *Q,
+                                  tmpl_IntPolynomial *prod);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -315,44 +337,7 @@ extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
  *      libtmpl/src/polynomial/tmpl_polynomial_z_print_string.c               *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_PolynomialZ *poly);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_PolynomialZ_Add                                                  *
- *  Purpose:                                                                  *
- *      Adds two elements of Z[x].                                            *
- *  Arguments:                                                                *
- *      P (tmpl_PolynomialZ *):                                               *
- *          A pointer to a polynomial.                                        *
- *      Q (tmpl_PolynomialZ *):                                               *
- *          Another pointer to a polynomial.                                  *
- *      sum (tmpl_PolynomialZ *):                                             *
- *          A pointer to a polynomial, the value P + Q will be stored in it.  *
- *  Output:                                                                   *
- *      None (void).                                                          *
- *  Notes:                                                                    *
- *      It is assumed none of the three input polynomials are NULL. If        *
- *      sum has it's degree not equal to the max of the two degrees of P and  *
- *      Q realloc will be called on the coeffs pointer.                       *
- *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_add.c                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_001.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_002.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_003.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_004.c       *
- *      libtmpl/examples/polynomial/tmpl_add_polynomial_z_example_005.c       *
- ******************************************************************************/
-extern void
-tmpl_PolynomialZ_Add(tmpl_PolynomialZ *P,
-                     tmpl_PolynomialZ *Q,
-                     tmpl_PolynomialZ *sum);
-
-extern void
-tmpl_PolynomialQ_Add(tmpl_PolynomialQ *P,
-                     tmpl_PolynomialQ *Q,
-                     tmpl_PolynomialQ *sum);
+tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -378,9 +363,9 @@ tmpl_PolynomialQ_Add(tmpl_PolynomialQ *P,
  *      libtmpl/examples/polynomial/tmpl_subtract_polynomial_z_example_001.c  *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_Subtract(tmpl_PolynomialZ *P,
-                          tmpl_PolynomialZ *Q,
-                          tmpl_PolynomialZ *diff);
+tmpl_PolynomialZ_Subtract(tmpl_IntPolynomial *P,
+                          tmpl_IntPolynomial *Q,
+                          tmpl_IntPolynomial *diff);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -404,7 +389,7 @@ tmpl_PolynomialZ_Subtract(tmpl_PolynomialZ *P,
  *      libtmpl/src/polynomial/tmpl_polynomial_z_set_term.c                   *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_Set_Term(tmpl_PolynomialZ *poly,
+tmpl_PolynomialZ_Set_Term(tmpl_IntPolynomial *poly,
                           unsigned long int term,
                           signed long int coefficient);
 
@@ -428,11 +413,11 @@ tmpl_PolynomialZ_Set_Term(tmpl_PolynomialZ *poly,
  *      libtmpl/src/polynomial/tmpl_polynomial_z_extract_term.c               *
  ******************************************************************************/
 extern signed long int
-tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term);
+tmpl_PolynomialZ_Extract_Term(tmpl_IntPolynomial *poly, unsigned long int term);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_PolynomialZ_Shrink                                               *
+ *      tmpl_IntPolynomial_Shrink                                             *
  *  Purpose:                                                                  *
  *      Removes all non-zero terms with after the last non-zero term. This    *
  *      effectively "shrinks" the size of the coefficients array.             *
@@ -446,11 +431,7 @@ tmpl_PolynomialZ_Extract_Term(tmpl_PolynomialZ *poly, unsigned long int term);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_shrink.c                     *
  ******************************************************************************/
-extern void
-tmpl_PolynomialZ_Shrink(tmpl_PolynomialZ *poly);
-
-extern void
-tmpl_PolynomialQ_Shrink(tmpl_PolynomialQ *poly);
+extern void tmpl_IntPolynomial_Shrink(tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -472,7 +453,7 @@ tmpl_PolynomialQ_Shrink(tmpl_PolynomialQ *poly);
  *      libtmpl/examples/polynomial/tmpl_deriv_polynomial_z_example_003.c     *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv);
+tmpl_PolynomialZ_Deriv(tmpl_IntPolynomial *poly, tmpl_IntPolynomial *deriv);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -492,9 +473,9 @@ tmpl_PolynomialZ_Deriv(tmpl_PolynomialZ *poly, tmpl_PolynomialZ *deriv);
  *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_Scale(tmpl_PolynomialZ *poly,
+tmpl_PolynomialZ_Scale(tmpl_IntPolynomial *poly,
                        signed long int scale,
-                       tmpl_PolynomialZ *prod);
+                       tmpl_IntPolynomial *prod);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -514,15 +495,12 @@ tmpl_PolynomialZ_Scale(tmpl_PolynomialZ *poly,
  *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
  ******************************************************************************/
 extern void
-tmpl_PolynomialZ_ScaleSelf(tmpl_PolynomialZ *poly, signed long int scale);
+tmpl_PolynomialZ_ScaleSelf(tmpl_IntPolynomial *poly, signed long int scale);
 
-extern void
-tmpl_PolynomialQ_ScaleSelf(tmpl_PolynomialQ *poly, tmpl_RationalNumber scale);
-
-extern void
-tmpl_PolynomialR_ScaleSelf(tmpl_PolynomialR *poly, double scale);
-
-extern void
-tmpl_PolynomialC_ScaleSelf(tmpl_PolynomialC *poly, tmpl_ComplexDouble scale);
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
+/*  End of include guard.                                                     */

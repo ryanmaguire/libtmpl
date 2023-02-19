@@ -30,23 +30,46 @@ import mpmath
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
+mpmath.mp.prec = 224
 
-# Evaluate a rational function given two arrays of coefficients "a" and "b".
-def rat_eval(a, b, x):
-    n = len(a) - 1
-    m = len(b) - 1
-    P = mpmath.mpf(0)
-    Q = mpmath.mpf(0)
-    y = mpmath.mpf(x)
+# Evaluate a rational function given two arrays of coefficients.
+def rat_eval(num_coeffs, den_coeffs, x_val):
+    """
+        Function:
+            rat_eval
+        Purpose:
+            Computes P(x)/Q(x) using Horner's method.
+        Arguments:
+            num_coeffs (list):
+                The coefficients of P(x).
+            den_coeffs (list):
+                The coefficients of Q(x).
+            x_val (float or mpmath.mpf):
+                The input to the rational function P(x)/Q(x).
+        Output:
+            val (mpmath.mpf):
+                The value P(x)/Q(x) at x = x_val.
+    """
+
+    # The degrees of the numerator and denominator are given by the lengths of
+    # the lists of coefficients.
+    num_deg = len(num_coeffs) - 1
+    den_deg = len(den_coeffs) - 1
+
+    # Initialize the numerator and denominator to zero.
+    num = mpmath.mpf(0)
+    den = mpmath.mpf(0)
+
+    # Convert the input to an mpmath object if necessary.
+    x_mpf = mpmath.mpf(x_val)
 
     # Use Horner's method on the numerator.
-    for k in range(n + 1):
-        P = y*P + a[n-k]
+    for k in range(num_deg + 1):
+        num = x_mpf*num + num_coeffs[num_deg-k]
 
     # Apply Horner's method for the denominator.
-    for k in range(m + 1):
-        Q = y*Q + b[m-k]
+    for k in range(den_deg + 1):
+        den = x_mpf*den + den_coeffs[den_deg-k]
 
     # Return the quotient.
-    return P/Q
+    return num/den
