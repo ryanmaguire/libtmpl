@@ -17,11 +17,17 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
+#ifdef _MSC_VER
+static long double func(_Lcomplex z0, _Lcomplex z1){
+    return cabsl(_LCbuild(creall(z0)-creall(z1), cimagl(z0)-cimagl(z1)));
+}
+#else
 static long double func(complex long double z0, complex long double z1){
     return cabsl(z0-z1);
 }
+#endif
 TEST8(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
-      tmpl_CLDouble_Quick_Dist, func)
+      NATIVE_COMPLEX_LDOUBLE,
+      tmpl_CLDouble_Quick_Dist, func, COMPLEX_LDOUBLE_CTOR)
 

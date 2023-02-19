@@ -20,4 +20,4 @@
 TEST1(long double,
       tmpl_ComplexLongDouble,
       complex long double,
-      tmpl_CLDouble_Argument, cargl)
+      tmpl_CLDouble_Argument, cargl, COMPLEX_LDOUBLE_CTOR)
