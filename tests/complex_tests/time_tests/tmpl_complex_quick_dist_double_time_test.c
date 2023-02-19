@@ -17,6 +17,12 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
+#ifdef _MSC_VER
+static double func(_Dcomplex z0, _Dcomplex z1){
+    return cabs(_Cbuild(creal(z0)-creal(z1), cimag(z0)-cimag(z1)));
+}
+#else
 static double func(complex double z0, complex double z1){return cabs(z0-z1);}
-TEST8(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Quick_Dist, func)
+##endif
+TEST8(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Quick_Dist, func, COMPLEX_DOUBLE_CTOR)
 

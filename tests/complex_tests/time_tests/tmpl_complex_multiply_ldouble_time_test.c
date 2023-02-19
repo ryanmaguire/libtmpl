@@ -19,4 +19,4 @@
 #include "tmpl_complex_time_tests.h"
 TEST3(long double,
       tmpl_ComplexLongDouble, complex long double,
-      tmpl_CLDouble_Multiply, *)
+      tmpl_CLDouble_Multiply, *, COMPLEX_LDOUBLE_CTOR)

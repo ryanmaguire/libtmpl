@@ -549,7 +549,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST5(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST5(ftype, ttype, ctype, f0, f1, cconstruct)                         \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Z;                                                              \
@@ -636,7 +636,7 @@ int main(void)                                                                 \
         X[n].dat[1] = (ftype)u1;                                               \
         Y[n] = (ftype)v;                                                       \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct(u0, u1);                                             \
         B[n] = (ftype)v;                                                       \
     }                                                                          \
                                                                                \
@@ -868,7 +868,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST8(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST8(ftype, ttype, ctype, f0, f1, cconstruct)                         \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -956,8 +956,8 @@ int main(void)                                                                 \
         Y[n].dat[0] = (ftype)v0;                                               \
         Y[n].dat[1] = (ftype)v1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
-        B[n] = (ftype)v0 + (complex ftype)_Complex_I*(ftype)v1;                \
+        A[n] = cconstruct(u0, u1);                                             \
+        B[n] = cconstruct(v0, v1);                                             \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \

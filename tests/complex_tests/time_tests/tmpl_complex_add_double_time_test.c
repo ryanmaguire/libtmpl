@@ -28,20 +28,7 @@ ahh(const tmpl_ComplexDouble *z0, const tmpl_ComplexDouble *z1)
     return sum;
 }
 
-#ifdef _WIN32
-TEST2(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, ahh, +, _Cbuild)
+TEST2(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, ahh, +, COMPLEX_DOUBLE_CTOR)
 #else
-static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
-TEST2(double, tmpl_ComplexDouble, complex double, ahh, +, complex_double_construct)
-
-
-#else
-
-#ifdef _WIN32
-TEST3(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Add, +, _Cbuild)
-#else
-static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
-TEST3(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Add, +, complex_double_construct)
-#endif
-
+TEST3(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Add, +, COMPLEX_DOUBLE_CTOR)
 #endif

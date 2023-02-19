@@ -24,19 +24,9 @@ static long double complex_abs_squared(NATIVE_COMPLEX_LDOUBLE z)
     return x*x + y*y;
 }
 
-#ifdef _WIN32
 TEST1(long double,
       tmpl_ComplexLongDouble,
       NATIVE_COMPLEX_LDOUBLE,
       tmpl_CLDouble_Abs_Squared,
       complex_abs_squared,
-      _LCbuild)
-#else
-static inline complex long double complex_long_double_construct(long double real, long double imag) { return real + (complex long double)_Complex_I*imag; }
-TEST1(long double,
-      tmpl_ComplexLongDouble,
-      complex long double,
-      tmpl_CLDouble_Abs_Squared,
-      complex_abs_squared,
-      complex_long_double_construct)
-#endif
+      COMPLEX_LDOUBLE_CTOR)

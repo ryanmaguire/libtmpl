@@ -30,4 +30,4 @@ static inline complex float add(float x, complex float z)
 TEST5(float,
       tmpl_ComplexFloat,
       NATIVE_COMPLEX_FLOAT,
-      tmpl_CFloat_Add_Real, add)
+      tmpl_CFloat_Add_Real, add, COMPLEX_FLOAT_CTOR)
