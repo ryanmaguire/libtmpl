@@ -49,8 +49,12 @@ static size_t memsize()
     return (size_t)(pages * page_size);
 }
 
+static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
 static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return real + (complex long double)_Complex_I*imag; }
+#define COMPLEX_FLOAT_CTOR complex_float_construct
 #define COMPLEX_DOUBLE_CTOR complex_double_construct
+#define COMPLEX_LDOUBLE_CTOR complex_long_double_construct
 #define NATIVE_COMPLEX_FLOAT complex float
 #define NATIVE_COMPLEX_DOUBLE complex double
 #define NATIVE_COMPLEX_LDOUBLE complex long double
