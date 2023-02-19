@@ -34,6 +34,12 @@ static size_t memsize()
     GlobalMemoryStatusEx(&status);
     return (size_t)status.ullTotalPhys;
 }
+#define COMPLEX_FLOAT_CTOR _FCbuild
+#define COMPLEX_DOUBLE_CTOR _Cbuild
+#define COMPLEX_LDOUBLE_CTOR _LCbuild
+#define NATIVE_COMPLEX_FLOAT _Fcomplex
+#define NATIVE_COMPLEX_DOUBLE _Dcomplex
+#define NATIVE_COMPLEX_LDOUBLE _Lcomplex
 #else
 #include <unistd.h>
 static size_t memsize()
@@ -42,6 +48,13 @@ static size_t memsize()
     long page_size = sysconf(_SC_PAGE_SIZE);
     return (size_t)(pages * page_size);
 }
+
+static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
+#define COMPLEX_DOUBLE_CTOR complex_double_construct
+#define NATIVE_COMPLEX_FLOAT complex float
+#define NATIVE_COMPLEX_DOUBLE complex double
+#define NATIVE_COMPLEX_LDOUBLE complex long double
+
 #endif
 #define MAX2(a, b) ((a) > (b) ? (a) : (b))
 #define MAX3(a, b, c) MAX2((a), MAX2((b), (c)))
