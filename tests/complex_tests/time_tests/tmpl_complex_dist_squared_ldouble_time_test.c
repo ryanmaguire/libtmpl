@@ -25,5 +25,5 @@ static long double func(NATIVE_COMPLEX_LDOUBLE z0, NATIVE_COMPLEX_LDOUBLE z1) {
 TEST8(long double,
       tmpl_ComplexLongDouble,
       NATIVE_COMPLEX_LDOUBLE,
-      tmpl_CLDouble_Dist_Squared, func)
+      tmpl_CLDouble_Dist_Squared, func, COMPLEX_LDOUBLE_CTOR)
 

@@ -25,5 +25,5 @@ static double func(NATIVE_COMPLEX_DOUBLE z0, NATIVE_COMPLEX_DOUBLE z1) {
 TEST8(double,
       tmpl_ComplexDouble,
       NATIVE_COMPLEX_DOUBLE,
-      tmpl_CDouble_Dist_Squared, func)
+      tmpl_CDouble_Dist_Squared, func, COMPLEX_LDOUBLE_CTOR)
 
