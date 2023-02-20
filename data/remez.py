@@ -202,8 +202,11 @@ def perform_rational_remez_exchange(x_vals, y_vals, num_deg, den_deg):
     # and then iteratively improve this until the E value stablizes.
     error_guess = mpmath.mpf(0.0)
 
+    # Variable for keeping track of the number of iterations performed.
+    iters = 0
+
     # Iteratively improve the guess for E0.
-    while True:
+    while iters < 100:
         coeff_matrix = []
 
         # Loop over the rows of the matrix.
@@ -235,12 +238,21 @@ def perform_rational_remez_exchange(x_vals, y_vals, num_deg, den_deg):
         # Invert and solve using LU Decomposition.
         data = list(mpmath.lu_solve(coeff_matrix, y_vec))
 
-        # Update the error guess.
-        error_guess = data[-1]
+        # Avoid division by zero.
+        if data[-1] == 0:
+            iters += 1
+            continue
+
+        # Compute the relative difference and check if it is small enough.
+        rel_increment_diff = mpmath.fabs((error_guess - data[-1])/data[-1])
 
         # If the error has stabilized, we're done.
-        if input("error_guess = %e - Stop? (y/n) " % float(error_guess)) == "y":
-            return data[0:deg+1]
+        if rel_increment_diff < mpmath.mpf(1.0E-6):
+            return data
+
+        # Update the error guess.
+        error_guess = data[-1]
+        iters += 1
 
 # Computes the degree "deg" Remez MiniMax polynomial of "f" on [start, end]
 def remez(func, deg, start, end):
@@ -346,8 +358,14 @@ def rat_remez(func, num_deg, den_deg, start, end):
     x_vals = [start + m*dist for m in range(deg + 2)]
     y_vals = [func(m) for m in x_vals]
 
+    # Variable for keeping track of the number of iterations performed.
+    iters = 0
+
+    # The iteration stops when E_{n} and E_{n+1} are close. Keep track of both.
+    previous_error = mpmath.mpf(0)
+
     # Iteratively apply the Remez exchange algorithm until the error is decent.
-    while True:
+    while iters < 100:
 
         # Compute the coefficient of the approximate Minimax polynomial.
         data = perform_rational_remez_exchange(x_vals, y_vals, num_deg, den_deg)
@@ -355,6 +373,13 @@ def rat_remez(func, num_deg, den_deg, start, end):
         # Compute the error. If the bumps are the same magnitude, stop.
         num = data[0:num_deg + 1]
         den = [mpmath.mpf(1)] + data[num_deg + 1: deg + 1]
+
+        # Check if we can stop.
+        if previous_error != mpmath.mpf(0):
+            rel_diff = mpmath.fabs((data[-1] - previous_error)/data[-1])
+            if rel_diff < mpmath.mpf(1.0E-6):
+                return num, den, data[-1]
+
         yarr = numpy.abs(
             numpy.array(
                 [
@@ -364,12 +389,10 @@ def rat_remez(func, num_deg, den_deg, start, end):
             )
         )
 
-        # Stop the computation if this is good enough.
-        if input("Max Err = %.5e | Stop? (y/n): " % numpy.max(yarr)) == "y":
-            return num, den
-
         # Reset the samples to the peaks and compute the function there.
         x_vals, y_vals = reset_samples(func, xarr, yarr)
+        previous_error = data[-1]
+        iters += 1
 
 # Print the coefficients for the Remez polynomial.
 def print_coeffs(coeffs, ctype = "double"):
