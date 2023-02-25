@@ -767,7 +767,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST7(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST7(ftype, ttype, ctype, f0, f1, cconstruct)                          \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -826,7 +826,7 @@ int main(void)                                                                 \
         X[n].dat[0] = (ftype)u0;                                               \
         X[n].dat[1] = (ftype)u1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct(u0, u1);                                             \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
