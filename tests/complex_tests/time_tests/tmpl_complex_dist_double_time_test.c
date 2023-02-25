@@ -18,7 +18,7 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 #ifdef _MSC_VER
-static double func(complex double z0, complex double z1){
+static double func(_Dcomplex z0, _Dcomplex z1){
     return cabs(_Cbuild(creal(z0)-creal(z1), cimag(z0)-cimag(z1)));
 }
 #else
