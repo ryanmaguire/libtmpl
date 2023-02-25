@@ -30,5 +30,5 @@ static inline complex long double add(long double x, complex long double z)
 #endif
 TEST5(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
+      NATIVE_COMPLEX_LDOUBLE,
       tmpl_CLDouble_Add_Real, add, COMPLEX_LDOUBLE_CTOR)

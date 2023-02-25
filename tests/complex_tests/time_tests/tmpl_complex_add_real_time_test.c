@@ -17,7 +17,8 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-static inline _Fcomplex add(float y, _Fcomplex z)
+#ifdef _MSC_VER
+static inline _Fcomplex add(float x, _Fcomplex z)
 {
     return _FCbuild(creall(z) + x, cimagl(z);
 }
