@@ -29,5 +29,5 @@ static double complex_abs_squared(NATIVE_COMPLEX_DOUBLE z)
 TEST1(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Abs_Squared, complex_abs_squared, _Cbuild)
 #else
 static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
-TEST1(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Abs_Squared, complex_abs_squared, complex_double_construct)
+TEST1(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Abs_Squared, complex_abs_squared, complex_double_construct)
 #endif
