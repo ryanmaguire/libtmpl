@@ -23,7 +23,7 @@ static float func(NATIVE_COMPLEX_FLOAT z0, NATIVE_COMPLEX_FLOAT z1){
     }
 #else
 static float func(NATIVE_COMPLEX_FLOAT z0, NATIVE_COMPLEX_FLOAT z1){return cabsf(z0-z1);}
-##endif
+#endif
 
 TEST8(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Dist, func, COMPLEX_FLOAT_CTOR)
 

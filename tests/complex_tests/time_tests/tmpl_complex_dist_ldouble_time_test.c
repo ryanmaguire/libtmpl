@@ -19,7 +19,7 @@
 #include "tmpl_complex_time_tests.h"
 #ifdef _MSC_VER
 static long double func(_Lcomplex z0, _Lcomplex z1){
-    return cabsl(_LCbuild(creall(z0)-creall(z1), cimagl(z0)-cimagl(z1));
+    return cabsl(_LCbuild(creall(z0)-creall(z1), cimagl(z0)-cimagl(z1)));
 }
 #else
 static long double func(complex long double z0, complex long double z1){

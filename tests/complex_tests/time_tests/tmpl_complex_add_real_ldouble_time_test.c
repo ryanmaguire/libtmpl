@@ -18,9 +18,9 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 #ifdef _MSC_VER
-static inline _Lcomplex add(long double y, _Lcomplex z)
+static inline _Lcomplex add(long double x, _Lcomplex z)
 {
-    return _LCbuild(creall(z) + x, cimagl(z);
+    return _LCbuild(creall(z) + x, cimagl(z));
 }
 #else
 static inline complex long double add(long double x, complex long double z)
