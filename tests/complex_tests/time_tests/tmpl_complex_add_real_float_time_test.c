@@ -18,9 +18,9 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 #ifdef _MSC_VER
-static inline _Dcomplex add(double y, _Dcomplex z)
+static inline _Dcomplex add(double x, _Dcomplex z)
 {
-    return _Cbuild(creal(z) + x, cimag(z);
+    return _Cbuild(creal(z) + x, cimag(z));
 }
 #else
 static inline complex double add(double x, complex double z)
@@ -28,4 +28,4 @@ static inline complex double add(double x, complex double z)
     return z + x;
 }
 #endif
-TEST5(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Add_Real, add)
+TEST5(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Add_Real, add, COMPLEX_DOUBLE_CTOR)

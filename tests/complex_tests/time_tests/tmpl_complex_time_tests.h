@@ -49,8 +49,12 @@ static size_t memsize()
     return (size_t)(pages * page_size);
 }
 
+static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
 static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return real + (complex long double)_Complex_I*imag; }
+#define COMPLEX_FLOAT_CTOR complex_float_construct
 #define COMPLEX_DOUBLE_CTOR complex_double_construct
+#define COMPLEX_LDOUBLE_CTOR complex_long_double_construct
 #define NATIVE_COMPLEX_FLOAT complex float
 #define NATIVE_COMPLEX_DOUBLE complex double
 #define NATIVE_COMPLEX_LDOUBLE complex long double
@@ -66,20 +70,37 @@ static inline complex double complex_double_construct(double real, double imag) 
 #ifdef IMPART
 #undef IMPART
 #endif
+#ifdef _MSC_VER
+#define IMPART(x) _Generic((x),   \
+    _Lcomplex: cimagl,            \
+    default: cimag,               \
+    _Fcomplex: cimagf             \
+)(x)
+#else
 #define IMPART(x) _Generic((x),   \
     long double complex: cimagl,  \
     default: cimag,               \
     float complex: cimagf         \
 )(x)
+#endif
 
 #ifdef REPART
 #undef REPART
 #endif
+#ifdef _MSC_VER
+#define REPART(x) _Generic((x),   \
+    _Lcomplex: creall,            \
+    default: creal,               \
+    _Fcomplex: crealf             \
+)(x)
+#else
 #define REPART(x) _Generic((x),   \
     complex long double: creall,  \
     default: creal,               \
     complex float: crealf         \
 )(x)
+#endif
+
 
 static inline long double rand_real(void)
 {
@@ -290,7 +311,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n]));\
+        C[n] = cconstruct(REPART(A[n]) op REPART(B[n]), IMPART(A[n]) op IMPART(B[n]));\
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
@@ -420,7 +441,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n])); \
+        C[n] = cconstruct(REPART(A[n]) op REPART(B[n]), IMPART(A[n]) op IMPART(B[n])); \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
@@ -545,7 +566,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST5(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST5(ftype, ttype, ctype, f0, f1, cconstruct)                         \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Z;                                                              \
@@ -632,7 +653,7 @@ int main(void)                                                                 \
         X[n].dat[1] = (ftype)u1;                                               \
         Y[n] = (ftype)v;                                                       \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct(u0, u1);                                             \
         B[n] = (ftype)v;                                                       \
     }                                                                          \
                                                                                \
@@ -763,7 +784,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST7(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST7(ftype, ttype, ctype, f0, f1, cconstruct)                          \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -822,7 +843,7 @@ int main(void)                                                                 \
         X[n].dat[0] = (ftype)u0;                                               \
         X[n].dat[1] = (ftype)u1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct(u0, u1);                                             \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
@@ -841,7 +862,7 @@ int main(void)                                                                 \
                                                                                \
     for (n = 0U; n < N; ++n)                                                   \
     {                                                                          \
-        if (B[n] != zero)                                                      \
+        if (REPART(B[n]) != zero && IMPART(B[n]) != zero)                      \
         {                                                                      \
             long double dx = (long double)(Y[n].dat[0] - REPART(B[n]));        \
             long double dy = (long double)(Y[n].dat[1] - IMPART(B[n]));        \
@@ -864,7 +885,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST8(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST8(ftype, ttype, ctype, f0, f1, cconstruct)                         \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -952,8 +973,8 @@ int main(void)                                                                 \
         Y[n].dat[0] = (ftype)v0;                                               \
         Y[n].dat[1] = (ftype)v1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
-        B[n] = (ftype)v0 + (complex ftype)_Complex_I*(ftype)v1;                \
+        A[n] = cconstruct(u0, u1);                                             \
+        B[n] = cconstruct(v0, v1);                                             \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \

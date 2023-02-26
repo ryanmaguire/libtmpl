@@ -28,4 +28,4 @@ static inline complex double add(double y, complex double z)
     return z + (complex double)_Complex_I*y;
 }
 #endif
-TEST5(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Add_Imag, add)
+TEST5(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Add_Imag, add, COMPLEX_DOUBLE_CTOR)

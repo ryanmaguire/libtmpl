@@ -19,6 +19,6 @@
 #include "tmpl_complex_time_tests.h"
 TEST6(double,
       tmpl_ComplexDouble,
-      complex double,
+      NATIVE_COMPLEX_DOUBLE,
       tmpl_CDouble_AddTo_Imag,
       += (complex double)_Complex_I*)

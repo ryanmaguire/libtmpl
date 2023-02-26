@@ -25,5 +25,5 @@ static float func(NATIVE_COMPLEX_FLOAT z0, NATIVE_COMPLEX_FLOAT z1) {
 TEST8(float,
       tmpl_ComplexFloat,
       NATIVE_COMPLEX_FLOAT,
-      tmpl_CFloat_Dist_Squared, func)
+      tmpl_CFloat_Dist_Squared, func, COMPLEX_FLOAT_CTOR)
 

@@ -19,5 +19,6 @@
 #include "tmpl_complex_time_tests.h"
 TEST7(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
-      tmpl_CLDouble_Conjugate, conjl)
+      NATIVE_COMPLEX_LDOUBLE,
+      tmpl_CLDouble_Conjugate, conjl,
+      COMPLEX_LDOUBLE_CTOR)

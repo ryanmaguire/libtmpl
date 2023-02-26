@@ -17,6 +17,13 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
+#ifdef _MSC_VER
+static float func(NATIVE_COMPLEX_FLOAT z0, NATIVE_COMPLEX_FLOAT z1){
+    return cabsf(_FCbuild(crealf(z0)-crealf(z1), cimagf(z0)-cimagf(z1)));
+    }
+#else
 static float func(NATIVE_COMPLEX_FLOAT z0, NATIVE_COMPLEX_FLOAT z1){return cabsf(z0-z1);}
-TEST8(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Dist, func)
+#endif
+
+TEST8(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Dist, func, COMPLEX_FLOAT_CTOR)
 

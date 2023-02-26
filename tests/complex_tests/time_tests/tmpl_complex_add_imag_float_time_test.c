@@ -28,4 +28,4 @@ static inline complex float add(float y, complex float z)
     return z + _Complex_I*y;
 }
 #endif
-TEST5(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Add_Imag, add)
+TEST5(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Add_Imag, add, COMPLEX_FLOAT_CTOR)
