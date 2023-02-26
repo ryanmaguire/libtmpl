@@ -17,7 +17,7 @@ foreach(source ${sources})
     add_executable(${app} ${source})
     set_target_properties(
         ${app}
-        PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
+        PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED} C_STANDARD 11
     )
     target_include_directories(
         ${app}
