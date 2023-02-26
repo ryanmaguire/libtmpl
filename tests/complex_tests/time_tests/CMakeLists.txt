@@ -8,7 +8,7 @@ file(GLOB sources CONFIGURE_DEPENDS *.c)
 if(MSVC)
     # Exclude the addto tests as there isn't a simple way to compare with Microsoft's non-standard
     # complex math implementation
-    list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/tmpl_complex_addto_time_test.c")
+    list(FILTER sources EXCLUDE REGEX ".*addto.*")
 endif()
 
 foreach(source ${sources})
