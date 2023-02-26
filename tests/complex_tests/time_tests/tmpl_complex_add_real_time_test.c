@@ -20,7 +20,7 @@
 #ifdef _MSC_VER
 static inline _Fcomplex add(float x, _Fcomplex z)
 {
-    return _FCbuild(creall(z) + x, cimagl(z);
+    return _FCbuild(crealf(z) + x, cimagf(z));
 }
 #else
 static inline complex float add(float x, complex float z)
