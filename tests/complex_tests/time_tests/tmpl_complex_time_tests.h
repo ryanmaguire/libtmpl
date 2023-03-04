@@ -34,6 +34,12 @@ static size_t memsize()
     GlobalMemoryStatusEx(&status);
     return (size_t)status.ullTotalPhys;
 }
+#define COMPLEX_FLOAT_CTOR _FCbuild
+#define COMPLEX_DOUBLE_CTOR _Cbuild
+#define COMPLEX_LDOUBLE_CTOR _LCbuild
+#define NATIVE_COMPLEX_FLOAT _Fcomplex
+#define NATIVE_COMPLEX_DOUBLE _Dcomplex
+#define NATIVE_COMPLEX_LDOUBLE _Lcomplex
 #else
 #include <unistd.h>
 static size_t memsize()
@@ -42,6 +48,17 @@ static size_t memsize()
     long page_size = sysconf(_SC_PAGE_SIZE);
     return (size_t)(pages * page_size);
 }
+
+static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
+static inline complex double complex_double_construct(double real, double imag) { return real + (complex double)_Complex_I*imag; }
+static inline complex long double complex_long_double_construct(long double real, long double imag) { return real + (complex long double)_Complex_I*imag; }
+#define COMPLEX_FLOAT_CTOR complex_float_construct
+#define COMPLEX_DOUBLE_CTOR complex_double_construct
+#define COMPLEX_LDOUBLE_CTOR complex_long_double_construct
+#define NATIVE_COMPLEX_FLOAT complex float
+#define NATIVE_COMPLEX_DOUBLE complex double
+#define NATIVE_COMPLEX_LDOUBLE complex long double
+
 #endif
 #define MAX2(a, b) ((a) > (b) ? (a) : (b))
 #define MAX3(a, b, c) MAX2((a), MAX2((b), (c)))
@@ -549,7 +566,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST5(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST5(ftype, ttype, ctype, f0, f1, cconstruct)                         \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Z;                                                              \
@@ -636,7 +653,7 @@ int main(void)                                                                 \
         X[n].dat[1] = (ftype)u1;                                               \
         Y[n] = (ftype)v;                                                       \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct(u0, u1);                                             \
         B[n] = (ftype)v;                                                       \
     }                                                                          \
                                                                                \
@@ -767,7 +784,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST7(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST7(ftype, ttype, ctype, f0, f1, cconstruct)                          \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -826,7 +843,7 @@ int main(void)                                                                 \
         X[n].dat[0] = (ftype)u0;                                               \
         X[n].dat[1] = (ftype)u1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
+        A[n] = cconstruct(u0, u1);                                             \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \
@@ -868,7 +885,7 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
-#define TEST8(ftype, ttype, ctype, f0, f1)                                     \
+#define TEST8(ftype, ttype, ctype, f0, f1, cconstruct)                         \
 int main(void)                                                                 \
 {                                                                              \
     ttype *X, *Y;                                                              \
@@ -956,8 +973,8 @@ int main(void)                                                                 \
         Y[n].dat[0] = (ftype)v0;                                               \
         Y[n].dat[1] = (ftype)v1;                                               \
                                                                                \
-        A[n] = (ftype)u0 + (complex ftype)_Complex_I*(ftype)u1;                \
-        B[n] = (ftype)v0 + (complex ftype)_Complex_I*(ftype)v1;                \
+        A[n] = cconstruct(u0, u1);                                             \
+        B[n] = cconstruct(v0, v1);                                             \
     }                                                                          \
                                                                                \
     printf(#f0 " vs. " #f1"\n");                                               \

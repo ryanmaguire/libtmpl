@@ -17,4 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-TEST3(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Multiply, *)
+TEST3(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Multiply, *, COMPLEX_FLOAT_CTOR)
