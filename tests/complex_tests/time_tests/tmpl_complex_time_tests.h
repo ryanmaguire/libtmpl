@@ -53,20 +53,37 @@ static size_t memsize()
 #ifdef IMPART
 #undef IMPART
 #endif
+#ifdef _MSC_VER
+#define IMPART(x) _Generic((x),   \
+    _Lcomplex: cimagl,            \
+    default: cimag,               \
+    _Fcomplex: cimagf             \
+)(x)
+#else
 #define IMPART(x) _Generic((x),   \
     long double complex: cimagl,  \
     default: cimag,               \
     float complex: cimagf         \
 )(x)
+#endif
 
 #ifdef REPART
 #undef REPART
 #endif
+#ifdef _MSC_VER
+#define REPART(x) _Generic((x),   \
+    _Lcomplex: creall,            \
+    default: creal,               \
+    _Fcomplex: crealf             \
+)(x)
+#else
 #define REPART(x) _Generic((x),   \
     complex long double: creall,  \
     default: creal,               \
     complex float: crealf         \
 )(x)
+#endif
+
 
 static inline long double rand_real(void)
 {
@@ -277,7 +294,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n]));\
+        C[n] = cconstruct(REPART(A[n]) op REPART(B[n]), IMPART(A[n]) op IMPART(B[n]));\
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
@@ -407,7 +424,7 @@ int main(void)                                                                 \
                                                                                \
     t1 = clock();                                                              \
     for (n = 0U; n < N; ++n)                                                   \
-        C[n] = cconstruct(creal(A[n]) op creal(B[n]), cimag(A[n]) op cimag(B[n])); \
+        C[n] = cconstruct(REPART(A[n]) op REPART(B[n]), IMPART(A[n]) op IMPART(B[n])); \
     t2 = clock();                                                              \
     printf("C:       %f seconds\n", (double)(t2 - t1)/(double)CLOCKS_PER_SEC); \
                                                                                \
@@ -828,7 +845,7 @@ int main(void)                                                                 \
                                                                                \
     for (n = 0U; n < N; ++n)                                                   \
     {                                                                          \
-        if (B[n] != zero)                                                      \
+        if (REPART(B[n]) != zero && IMPART(B[n]) != zero)                      \
         {                                                                      \
             long double dx = (long double)(Y[n].dat[0] - REPART(B[n]));        \
             long double dy = (long double)(Y[n].dat[1] - IMPART(B[n]));        \
