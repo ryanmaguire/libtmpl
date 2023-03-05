@@ -14,7 +14,7 @@ file(GLOB sources CONFIGURE_DEPENDS *.c)
 set(linasm_compare_sources ${sources})
 list(FILTER linasm_compare_sources INCLUDE REGEX .*linasm.*)
 list(FILTER sources EXCLUDE REGEX .*linasm.*)
-if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/math/tmpl_sincos_double.c")
     # Exclude tests that use GCC builtins when not compiling with GCC
     list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sincos_double_time_test.c")
 endif()
