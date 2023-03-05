@@ -132,12 +132,17 @@
     }
   ],
   "buildPresets": [
+    {"name": "ci-base",
+      "hidden": true,
+      "configuration": "Release",
+      "targets": [
+        "install"
+      ]
+    },
     {
       "name": "ci-linux",
       "configurePreset": "ci-linux",
-      "targets": [
-        "install"
-      ],
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Linux",
@@ -147,9 +152,7 @@
     {
       "name": "ci-linux-aarch64-crosscompile",
       "configurePreset": "ci-linux-aarch64-crosscompile",
-      "targets": [
-        "install"
-      ],
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Linux",
@@ -159,9 +162,7 @@
     {
       "name": "ci-linux-armhf-crosscompile",
       "configurePreset": "ci-linux-armhf-crosscompile",
-      "targets": [
-        "install"
-      ],
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Linux",
@@ -171,9 +172,7 @@
     {
       "name": "ci-macos",
       "configurePreset": "ci-macos",
-      "targets": [
-        "install"
-      ],
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Darwin",
@@ -183,9 +182,7 @@
     {
       "name": "ci-windows",
       "configurePreset": "ci-windows",
-      "targets": [
-        "install"
-      ],
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Windows",
@@ -194,9 +191,14 @@
     }
   ],
   "testPresets": [
+    {"name": "ci-base",
+      "hidden": true,
+      "configuration": "Release"
+    },
     {
       "name": "ci-linux",
       "configurePreset": "ci-linux",
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Linux",
@@ -206,6 +208,7 @@
     {
       "name": "ci-linux-aarch64-crosscompile",
       "configurePreset": "ci-linux-aarch64-crosscompile",
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Linux",
@@ -215,6 +218,7 @@
     {
       "name": "ci-linux-armhf-crosscompile",
       "configurePreset": "ci-linux-armhf-crosscompile",
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Linux",
@@ -224,6 +228,7 @@
     {
       "name": "ci-macos",
       "configurePreset": "ci-macos",
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Darwin",
@@ -233,6 +238,7 @@
     {
       "name": "ci-windows",
       "configurePreset": "ci-windows",
+      "inherits": "ci-base",
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Windows",
