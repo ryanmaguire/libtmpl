@@ -3111,10 +3111,10 @@ tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t);
-extern void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t);
+TMPL_EXPORT extern void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t);
+TMPL_EXPORT extern void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDouble_SinCosPi(long double t,
                       long double *sinpi_t,
                       long double *cospi_t);
