@@ -16,6 +16,9 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#endif
 #include "tmpl_math_time_tests.h"
 static void func(double t, double *s, double *c)
 {
