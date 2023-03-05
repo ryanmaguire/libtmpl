@@ -23,9 +23,5 @@ static float complex_abs_squared(NATIVE_COMPLEX_FLOAT z)
     float y = cimagf(z);
     return x*x + y*y;
 }
-#ifdef _WIN32
-TEST1(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Abs_Squared, complex_abs_squared, _FCbuild)
-#else
-static inline complex float complex_float_construct(float real, float imag) { return real + (complex float)_Complex_I*imag; }
-TEST1(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Abs_Squared, complex_abs_squared, complex_float_construct)
-#endif
+
+TEST1(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Abs_Squared, complex_abs_squared, COMPLEX_FLOAT_CTOR)
