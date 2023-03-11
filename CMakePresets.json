@@ -239,6 +239,9 @@
       "name": "ci-windows",
       "configurePreset": "ci-windows",
       "inherits": "ci-base",
+      "environment": {
+        "PATH": "${sourceParentDir}/install/libtmpl/bin${pathListSep}$penv{PATH}"
+      },
       "condition": {
         "lhs": "${hostSystemName}",
         "rhs": "Windows",
