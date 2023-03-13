@@ -34,45 +34,77 @@ import fractions
 # Muli-precision math routines found here.
 import mpmath
 
+# Double factorial function given here.
+import misc_math
+
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
-
-# Function for computing the double factorial, n!! = n*(n-2)*...
-def doublefactorial(n):
-    if n <= 0:
-        return 1
-    else:
-        double_fact = 1
-        k = n
-        while (k > 0):
-            double_fact = k*double_fact
-            k = k - 2
-
-    return double_fact
+mpmath.mp.prec = 224
 
 # Function for computing the nth coefficient of the Taylor series of I0.
-def taylor(n):
+def taylor(ind):
+    """
+        Function:
+            taylor
+        Purpose:
+            Computes the Taylor coefficients for Bessel I0 at x = 0.
+        Arguments:
+            ind (int):
+                The coefficient to be computed.
+        Output:
+            coeff (fraction):
+                The coefficient of the Taylor Series of I0(x) x = 0.
+    """
     num = 1
-    den = (4**n)*(math.factorial(n)**2)
+    den = (4**ind) * (math.factorial(ind)**2)
     return fractions.Fraction(num, den)
 
 # Function for computing the nth coefficient of the asymptotic expansion of I0.
-def asym(n):
-    num = doublefactorial(2*n-1)**2
-    den = math.factorial(n)*(8**n)
+def asym(ind):
+    """
+        Function:
+            asym
+        Purpose:
+            Computes the asymptotic expansion for Bessel I0 at x = 0.
+        Arguments:
+            ind (int):
+                The coefficient to be computed.
+        Output:
+            coeff (fraction):
+                The coefficient of the asymptotic expansion for I0(x).
+    """
+    num = misc_math.double_factorial(2*ind - 1)**2
+    den = math.factorial(ind) * (8**ind)
     return fractions.Fraction(num, den)
 
-# Function for computing the degree N asymptotic expansion of I0.
-def asym_series(x, N):
+# Function for computing the degree deg asymptotic expansion of I0.
+def asym_series(val, deg):
+    """
+        Function:
+            asym_series
+        Purpose:
+            Evaluates I0(x) via asymptotic expansion.
+        Arguments:
+            val (fraction):
+                The input argument.
+            deg (int):
+                The degree of the asymptotic expansion.
+        Output:
+            I0_val (mpmath.mpf):
+                The value I0(x) using the degree "deg" asymptotic expansion.
+    """
+
+    # Various constants used throughout.
     one = mpmath.mpf(1)
-    invx = one / mpmath.mpf(x)
-    y = mpmath.mpf(1)
+    invx = one / mpmath.mpf(val)
+    output = mpmath.mpf(1)
     twopi = mpmath.mpf(2)*mpmath.pi
 
-    for n in range(1, N):
-        val = asym(n)
+    # Lazily compute. Horner's method isn't used, this is the slow way.
+    for ind in range(1, deg):
+        val = asym(ind)
         val = mpmath.mpf(val.numerator) / mpmath.mpf(val.denominator)
-        y += val * (invx ** n)
+        output += val * (invx ** ind)
 
-    return mpmath.exp(x) * y / mpmath.sqrt(twopi*x)
+    # The series is scaled by e^x / sqrt(2 pi x). Compute this and return.
+    return mpmath.exp(val) * output / mpmath.sqrt(twopi*val)
