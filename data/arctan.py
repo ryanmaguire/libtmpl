@@ -29,9 +29,35 @@
 import fractions
 
 # Compute the nth Taylor coefficient of atan(x).
-def taylor(n):
-    return fractions.Fraction((-1)**n, 2*n+1)
+def taylor(ind):
+    """
+        Function:
+            taylor
+        Purpose:
+            Given a non-negative integer n, compute the coefficient of the
+            nth term of the Taylor series for arctan at x = 0.
+        Arguments:
+            ind (int):
+                The index of the coefficient to be computed.
+        Output:
+            coeff (fraction):
+                The coefficient of the Taylor series of arctan(x) at x = 0.
+    """
+    return fractions.Fraction((-1)**ind, 2*ind + 1)
 
 # Compute the nth asymptotic coefficient of atan(x) - pi/2.
-def asym(n):
-    return fractions.Fraction((-1)**(n+1), 2*n+1)
+def asym(ind):
+    """
+        Function:
+            asym
+        Purpose:
+            Given a non-negative integer n, compute the coefficient of the
+            nth term of the asymptotic expansion for arctan.
+        Arguments:
+            ind (int):
+                The index of the coefficient to be computed.
+        Output:
+            coeff (fraction):
+                The coefficient of the asymptotic expansion for arctan.
+    """
+    return fractions.Fraction((-1)**(ind+1), 2*ind + 1)
