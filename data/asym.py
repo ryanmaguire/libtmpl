@@ -30,13 +30,31 @@ import mpmath
 
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
+mpmath.mp.prec = 224
 
 # Print the coefficients for the asymptotic expansion.
-def print_coeffs(c, ctype = "double"):
+def print_coeffs(coeffs, ctype = "double"):
+    """
+        Function:
+            print_coeffs
+        Purpose:
+            Prints the coefficients of an asymptotic expansion in a manner that
+            is easy to copy/paste into a C program using macros.
+        Arguments:
+            coeffs (list):
+                The coefficients.
+        Keywords:
+            ctype (str):
+                "double", "float", or "ldouble". The type of the float.
+        Output:
+            None.
+    """
 
     # Number of decimals to print.
-    N = 50
+    number_of_decimals = 50
+
+    # Variable for keeping track of the indices of the coefficients.
+    current_index = 0
 
     # Extension for literal constants, depends on data type.
     if ctype == "ldouble":
@@ -46,19 +64,23 @@ def print_coeffs(c, ctype = "double"):
     else:
         ext = ""
 
-    print("/*  Coefficients for the asymptotic expansion."
-          "                                */")
-    for n in range(len(c)):
-        x = mpmath.mpf(c[n])
-        s = mpmath.nstr(x, N, show_zero_exponent = True, strip_zeros = False,
-                        min_fixed = 0, max_fixed = 0)
-        s = s.replace("e", "E")
+    print("/*  Coefficients for the asymptotic expansion." + (32*" ") + "*/")
+
+    for coeff in coeffs:
+        coeff_mpf = mpmath.mpf(coeff)
+        coeff_string = mpmath.nstr(
+            coeff_mpf, number_of_decimals, show_zero_exponent = True,
+            strip_zeros = False, min_fixed = 0, max_fixed = 0
+        ).replace("e", "E")
 
         # Make the exponent two decimals by adding a zero if necessary.
-        if not s[-2:].isnumeric():
-            s = s[:-1] + "0" + s[-1:]
+        if not coeff_string[-2:].isnumeric():
+            coeff_string = coeff_string[:-1] + "0" + coeff_string[-1:]
 
-        if x >= 0:
-            print("#define A%02d (+%s%s)" % (n, s, ext))
+        if coeff_mpf >= 0:
+            print("#define A%02d (+%s%s)" % (current_index, coeff_string, ext))
         else:
-            print("#define A%02d (%s%s)" % (n, s, ext))
+            print("#define A%02d (%s%s)" % (current_index, coeff_string, ext))
+
+        # Update the index.
+        current_index += 1
