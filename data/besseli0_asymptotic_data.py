@@ -25,18 +25,18 @@
 ################################################################################
 """
 
+# Muli-precision math routines found here.
+import mpmath
+
 # Print routine given here.
 import asym
 
 # I0 coefficients found here.
 import besseli0
 
-# Muli-precision math routines found here.
-import mpmath
-
 # The highest precision of long double is 112-bit mantissa. 224 bits is safe
 # enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
+mpmath.mp.prec = 224
 
 # Compute and print the coefficients of the asymptotic expansion.
 a = [besseli0.asym(n) for n in range(11)]
