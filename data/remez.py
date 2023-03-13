@@ -517,6 +517,9 @@ def print_rat_coeffs(num_coeffs, den_coeffs, ctype = "double"):
     print("\n/*  Coefficients for the denominator of the Remez rational "
           "approximation.     */")
 
+    # Reset the index to zero for the denominator coefficients.
+    current_ind = 0
+
     # Loop through the denominator coefficients.
     for x_val in den_coeffs:
 
