@@ -18,20 +18,20 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Computes the Pade coefficients for the inverse tangent function, atan. #
+#       Computes the Pade coefficients for the modified Bessel Function I0.    #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# Arctan Taylor coefficients given here.
-import arctan
-
 # Algorithm for computing Pade coefficients given here.
-import pade
+import tmpld.pade
 
-# Compute and print the coefficients for the Pade approximant of (atan(x)-x)/x.
-A = [arctan.taylor(n) for n in range(1, 11)]
-(P, Q) = pade.pade(A, 4, 5)
-pade.print_coeffs(P, Q)
+# I0 coefficients found here.
+import besseli0
+
+# Compute and print the coefficients for the Pade approximant.
+A = [besseli0.taylor(n) for n in range(30)]
+(P, Q) = tmpld.pade.pade(A, 14, 14)
+tmpld.pade.print_coeffs(P, Q)

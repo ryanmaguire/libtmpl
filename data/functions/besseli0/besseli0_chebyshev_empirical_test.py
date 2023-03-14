@@ -18,84 +18,60 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for working with binary representations of floats.            #
+#       Computes the Chebyshev coefficients for the Bessel Function I0.        #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 10, 2023.                                                  #
+#   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# Multi-precision math routines found here.
-import mpmath
+# mpmath imported here.
+import tmpld
 
-# Pi to ~1300 digits is needed for quad precision argument reduction.
-mpmath.mp.prec = 1500
+# Chebyshev evaluation and coefficients.
+import tmpld.chebyshev
 
-def binary_to_float(x):
+# Polynomial evaluation via Horner's method.
+import tmpld.poly
 
-    if x[0] == "-" or x[0] == "+":
-        z = x[1:]
-    else:
-        z = x
+# Evaluates, using the Clenshaw algorithm, the Chebyshev expansion, of the
+# transformed variable. Converts [8, infty] to [-1, 1] and performs the sum.
+def cheb_eval(a, x):
+    x = tmpld.mpmath.mpf(x)
+    y = tmpld.mpmath.mpf(16)/x - tmpld.mpmath.mpf(1)
+    z = tmpld.chebyshev.cheb_eval(a, y)
+    return z/tmpld.mpmath.sqrt(x)
 
-    num_len = len(z) - 1
-    expo = 0
+# Evaluates a polynomial in the transformed variable.
+def poly_eval(a, x):
+    x = tmpld.mpmath.mpf(x)
+    y = tmpld.mpmath.mpf(16)/x - tmpld.mpmath.mpf(1)
+    z = tmpld.poly.poly_eval(a, y)
+    return z/tmpld.mpmath.sqrt(x)
 
-    while (z[expo] != "."):
-        expo = expo + 1
+def diff(a, x):
+    y = cheb_eval(a, x)
+    z = tmpld.mpmath.besseli(0, x)*tmpld.mpmath.exp(-x)
+    return (y - z)/z
 
-    expo = expo - 1
-    z = z.replace(".", "")
-    y = mpmath.mpf(0)
+def diff2(a, b, x):
+    y = cheb_eval(a, x)
+    z = poly_eval(b, x)
+    return (y - z)/z
 
-    for n in range(num_len):
-        y += mpmath.mpf(int(z[n]) * 2**(expo - n))
+# Desired precision.
+EPS = 2**-52
 
-    if x[0] == "-":
-        return -y
-    else:
-        return y
+# Print which values of N achieved double precision.
+x = 20
+N = 21
+for m in range(2, N):
+    a = tmpld.chebyshev.cheb_coeffs(scaled_i0, m, 1000)
+    y = diff(a, x)
 
-def float_to_binary(x):
-    z = mpmath.fabs(x)
-    y = bin(int(z))[2:] + "."
+    # If the expansion was very accurate, move along.
+    if abs(y) < EPS:
+        b = tmpld.chebyshev.cheb_to_poly(a)
+        tmpld.poly.print_coeffs(b)
 
-    z = z - mpmath.mpf(int(z))
-
-    for n in range(1, mpmath.mp.prec):
-        p = 2**-n;
-        if p <= z:
-            y += "1"
-            z = z - mpmath.mpf(p)
-        else:
-            y += "0"
-
-    if x < 0:
-        y = "-" + y
-
-    return y
-
-def round_up(x, n):
-
-    if x[0] == "-" or x[0] == "+":
-        z = x[1:]
-    else:
-        z = x
-
-    expo = 0
-
-    while (z[expo] != "."):
-        expo = expo + 1
-
-    ind = expo + n
-    y = z[0:ind]
-
-    if z[ind+1] == "1" or z[ind] == "1":
-        y += "1"
-    else:
-        y += "0"
-
-    if x[0] == "-":
-        y = "-" + y
-
-    return y;
+        break

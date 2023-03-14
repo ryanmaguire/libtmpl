@@ -18,37 +18,29 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for computing numerical derivatives using five-point stencils.#
+#       Determine the degrees necessary for the bessel I0 asymptotic expansion #
+#       to achieve double precision in certain windows.                        #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 10, 2023.                                                  #
+#   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# Computes the numerical derivative of f at x using a five-point stencil.
-def df(f, x, h):
-    two = mpmath.mpf(2)
-    eight = mpmath.mpf(8)
-    twelve = mpmath.mpf(12)
+# Bessel I0 at double precision found here.
+import scipy.special
 
-    a = -f(x + two*h)
-    b = eight * f(x + h)
-    c = -eight * f(x - h)
-    d = f(x - two*h)
+# Coefficients for the I0 functions found here.
+import besseli0
 
-    return (a + b + c + d) / (twelve * h)
+# Print which values of N achieved double precision.
+for n in range(3, 10):
+    x = 2**n
+    for m in range(2, 18):
+        y = scipy.special.iv(0, x)
+        z = besseli0.asym_series(x, m)
+        diff = (y - z)/y
 
-# Computes the numerical second derivative of f at x using a five-point stencil.
-def d2f(f, x, h):
-    two = mpmath.mpf(2)
-    twelve = mpmath.mpf(12)
-    sixteen = mpmath.mpf(16)
-    thirty = mpmath.mpf(30)
-
-    a = -f(x + two*h)
-    b = sixteen * f(x + h)
-    c = -thirty * f(x)
-    d = sixteen * f(x - h)
-    e = -f(x - two*h)
-
-    return (a + b + c + d + e) / (twelve * h * h)
+        # If the expansion is accurate, print the result.
+        if abs(diff) < 6.0E-16:
+            print(m, x, float(diff))
+            break

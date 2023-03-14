@@ -31,15 +31,14 @@ import math
 # Rational numbers found here.
 import fractions
 
-# Muli-precision math routines found here.
-import mpmath
+# mpmath imported here.
+import tmpld
+
+# mpmath constants.
+import tmpld.constants
 
 # Double factorial function given here.
-import misc_math
-
-# The highest precision of long double is 112-bit mantissa. 224 bits is safe
-# enough for all precisions used by libtmpl long double functions.
-mpmath.mp.prec = 224
+import tmpld.math
 
 # Function for computing the nth coefficient of the Taylor series of I0.
 def taylor(ind):
@@ -73,7 +72,7 @@ def asym(ind):
             coeff (fraction):
                 The coefficient of the asymptotic expansion for I0(x).
     """
-    num = misc_math.double_factorial(2*ind - 1)**2
+    num = tmpld.math.double_factorial(2*ind - 1)**2
     den = math.factorial(ind) * (8**ind)
     return fractions.Fraction(num, den)
 
@@ -95,16 +94,35 @@ def asym_series(val, deg):
     """
 
     # Various constants used throughout.
-    one = mpmath.mpf(1)
-    invx = one / mpmath.mpf(val)
-    output = mpmath.mpf(1)
-    twopi = mpmath.mpf(2)*mpmath.pi
+    inv_val = tmpld.constants.one / tmpld.mpmath.mpf(val)
+    output = tmpld.constants.one
+    twopi = tmpld.constants.two*tmpld.mpmath.pi
 
     # Lazily compute. Horner's method isn't used, this is the slow way.
     for ind in range(1, deg):
-        val = asym(ind)
-        val = mpmath.mpf(val.numerator) / mpmath.mpf(val.denominator)
-        output += val * (invx ** ind)
+        x_val = tmpld.math.fraction_to_mpf(asym(ind))
+        output += x_val * (inv_val ** ind)
 
     # The series is scaled by e^x / sqrt(2 pi x). Compute this and return.
-    return mpmath.exp(val) * output / mpmath.sqrt(twopi*val)
+    return tmpld.mpmath.exp(val) * output / tmpld.mpmath.sqrt(twopi*val)
+
+# Transforms the interval [-1, 1] to [8, infty] and computes the scaled bessel
+# function I0(y) exp(-y) sqrt(y) in the new variable y.
+def scaled_i0(x_val):
+    """
+        Function:
+            scaled_i0
+        Purpose:
+            Computes the scaled Bessel I0 function.
+        Arguments:
+            x_val (mpmath.mpf):
+                A real number.
+        Outputs:
+            i0_x (mpmath.mpf):
+                The scaled Bessel I0 function evaluated at x.
+    """
+    y_val = tmpld.mpmath.mpf(16)/tmpld.mpmath.mpf(x_val + 1)
+    rcpr_exp_y = tmpld.mpmath.exp(-y_val)
+    sqrt_y = tmpld.mpmath.sqrt(y_val)
+    scale = rcpr_exp_y * sqrt_y
+    return tmpld.mpmath.besseli(0, y_val)*scale

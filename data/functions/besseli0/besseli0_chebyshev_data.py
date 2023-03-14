@@ -18,36 +18,23 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Determine the degrees necessary for the bessel I0 asymptotic expansion #
-#       to achieve double precision in certain windows.                        #
+#       Computes the Chebyshev coefficients for the Bessel Function I0.        #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# Coefficients for the I0 functions found here.
+# Chebyshev evaluation and coefficients.
+import tmpld.chebyshev
+
+# Polynomial evaluation via Horner's method.
+import tmpld.poly
+
+# Scaled Bessel I0 function.
 import besseli0
 
-# Bessel I0 at double precision found here.
-import scipy.special as sf
-
-# Function for computing the difference of the approximation with scipy.
-def diff(x, N):
-    y = sf.i0(x)
-    z = besseli0.asym_series(x, N)
-    return (y - z) / y
-
-# Print which values of N achieved double precision.
-for n in range(3, 10):
-    x = 2**n
-    for m in range(2, 18):
-        y = diff(x, m)
-
-        # If the expansion is accurate, print the result.
-        if abs(y) < 1.0E-15:
-            print(m, x, float(y))
-
-        # If the expansion was very accurate, move along.
-        if abs(y) < 4.0E-16:
-            break
+c = tmpld.chebyshev.cheb_coeffs(besseli0.scaled_i0, 20, 1000)
+a = tmpld.chebyshev.cheb_to_poly(c)
+tmpld.chebyshev.print_coeffs(c)
+tmpld.poly.print_coeffs(a)

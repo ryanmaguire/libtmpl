@@ -18,20 +18,26 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Computes the Pade coefficients for the modified Bessel Function I0.    #
+#       Computes the asymptotic expansion for the modified Bessel Function I0. #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# Algorithm for computing Pade coefficients given here.
-import pade
+# mpmath imported here.
+import tmpld
+
+# Print routine given here.
+import tmpld.asym
+
+# Fraction to mpf routine.
+import tmpld.math
 
 # I0 coefficients found here.
 import besseli0
 
-# Compute and print the coefficients for the Pade approximant.
-A = [besseli0.taylor(n) for n in range(30)]
-(P, Q) = pade.pade(A, 14, 14)
-pade.print_coeffs(P, Q)
+# Compute and print the coefficients of the asymptotic expansion.
+a = [besseli0.asym(n) for n in range(11)]
+b = [tmpld.math.fraction_to_mpf(k) for k in a]
+tmpld.asym.print_coeffs(b)

@@ -18,21 +18,15 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for error analysis.                                           #
+#       Routines for evaluating polynomials and derivatives.                   #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   March 14, 2023.                                                    #
 ################################################################################
 """
 
-# Compute the absolute error at the point x of functions f and g.
-def abs_diff(f, g, x):
-    y = f(x)
-    z = g(x)
-    return (y - z)/z
-
-# Compute the relative error at the point x of functions f and g.
-def rel_diff(f, g, x):
-    y = f(x)
-    z = g(x)
-    return (y - z)/z
+from tmpld.poly.d2poly_eval import d2poly_eval
+from tmpld.poly.dpoly_eval import dpoly_eval
+from tmpld.poly.poly_eval import poly_eval
+from tmpld.poly.print_coeffs import print_coeffs
+from tmpld.poly.print_poly_helper import print_poly_helper 

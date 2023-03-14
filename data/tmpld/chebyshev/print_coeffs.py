@@ -58,4 +58,4 @@ def print_coeffs(coeffs, ctype = "double"):
         print(get_c_macro(coeff, ind, ctype = ctype, label = "C"))
 
         # Increment the index to the next element.
-        index += 1
+        ind += 1
