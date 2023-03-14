@@ -25,8 +25,9 @@
 ################################################################################
 """
 
-# String converting tool found here.
+# String converting tools found here.
 from tmpld.string.float_to_c_string import float_to_c_string
+from tmpld.string.get_c_ext import get_c_ext
 
 # Print the coefficients of an asymptotic expansion.
 def print_coeffs(coeffs, ctype = "double", prefix = "A"):
@@ -52,12 +53,7 @@ def print_coeffs(coeffs, ctype = "double", prefix = "A"):
     current_index = 0
 
     # Extension for literal constants, depends on data type.
-    if ctype == "ldouble":
-        ext = "L"
-    elif ctype == "float":
-        ext = "F"
-    else:
-        ext = ""
+    ext = get_c_ext(ctype)
 
     # Comment for the C code describing what the numbers are.
     print("/*  Coefficients for the asymptotic expansion." + (32*" ") + "*/")
