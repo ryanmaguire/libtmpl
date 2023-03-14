@@ -27,3 +27,4 @@
 
 from tmpld.string.float_to_c_string import float_to_c_string
 from tmpld.string.get_c_ext import get_c_ext
+from tmpld.string.get_c_macro import get_c_macro

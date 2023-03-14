@@ -18,44 +18,11 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for working with asymptotic expansions.                       #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   March 14, 2023.                                                    #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
-
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
-    """
-        Function:
-            print_coeffs
-        Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
-        Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
-    """
-
-    # Index corresponding to the given coefficient.
-    ind = 0
-
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
-
-    # Loop through the coefficients.
-    for coeff in coeffs:
-
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
-
-        ind += 1
+from tmpld.asym.print_coeffs import print_coeffs

@@ -18,44 +18,49 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Convert a float to a macro for use in C code.                          #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   March 14, 2023.                                                    #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# Functions for manipulating strings.
+from tmpld.string.get_c_ext import get_c_ext
+from tmpld.string.float_to_c_string import float_to_c_string
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Convert a float to a C macro.
+def get_c_macro(x_val, ind, ctype = "double", label = "A"):
     """
         Function:
-            print_coeffs
+            get_c_macro
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Converts a float to a C macro to be copy / pasted into C code.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
+            x_val (float / mpmath.mpf):
+                A real number.
+            ind (int):
+                The index of this number with regards to some list of numbers.
         Keywords:
             ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
+                The type of the C literal.
+            label (str):
+                The label for the macro in the C code.
+        Outputs:
+            c_macro (str):
+                The input float as a C macro.
     """
 
-    # Index corresponding to the given coefficient.
-    ind = 0
+    # Extension for literal constants, depends on data type.
+    ext = get_c_ext(ctype)
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # Convert the mpmath object to a string.
+    x_string = float_to_c_string(x_val)
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Add plus sign if the coefficient is positive.
+    if x_val >= 0:
+        c_macro = "#define %s%02d (+%s%s)" % (label, ind, x_string, ext)
+    else:
+        c_macro = "#define %s%02d (%s%s)" % (label, ind, x_string, ext)
 
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
-
-        ind += 1
+    return c_macro

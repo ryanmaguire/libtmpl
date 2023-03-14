@@ -18,27 +18,32 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Pade approximants.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
+# Converts fractions to mpf objects.
+from tmpld.math.fraction_to_mpf import fraction_to_mpf
+
+# Function for manipulating strings.
 from tmpld.string.get_c_macro import get_c_macro
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Print the coefficients for the (P, Q) Pade approximant in a manner that is
+# easy to copy / paste into C code.
+def print_coeffs(num_coeffs, den_coeffs, ctype = "double"):
     """
         Function:
             print_coeffs
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Prints the coefficients of a Pade approximant.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
+            num_coeffs (list):
+                The coefficients of the numerator polynomial.
+            den_coeffs (list):
+                The coefficients of the denominator polynomial.
         Keywords:
             ctype (str):
                 "double", "float", or "ldouble". The type of the float.
@@ -46,16 +51,38 @@ def print_coeffs(coeffs, ctype = "double"):
             None.
     """
 
-    # Index corresponding to the given coefficient.
+    # Index for keeping track of the coefficients.
     ind = 0
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # Comment describing what these numbers are.
+    print("/*  Coefficients for the numerator of the Pade approximant."
+          "                   */")
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Loop through the numerator coefficients.
+    for coeff in num_coeffs:
+
+        # Convert the fraction to an mpf.
+        x_val = fraction_to_mpf(coeff)
 
         # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
+        print(get_c_macro(x_val, ind, ctype = ctype, label = "P"))
+
+        ind += 1
+
+    # Comment describing what these numbers are.
+    print("\n/*  Coefficients for the denominator of the Pade approximant."
+          "                 */")
+
+    # Reset the index to zero for the denominator.
+    ind = 0
+
+    # Loop through the denominator coefficients.
+    for coeff in den_coeffs:
+
+        # Convert the fraction to an mpf.
+        x_val = fraction_to_mpf(coeff)
+
+        # Convert and print the current value.
+        print(get_c_macro(x_val, ind, ctype = ctype, label = "Q"))
 
         ind += 1

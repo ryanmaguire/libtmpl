@@ -18,44 +18,50 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Remez polynomials.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# Arrays.
+import numpy
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# argrelextrema found here.
+import scipy.signal
+
+# Computes the peaks of |yarr| and returns the xarr values.
+def get_peaks(xarr, yarr):
     """
         Function:
-            print_coeffs
+            get_peaks
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Given x-data xarr and y-data yarr, with len(xarr) = len(yarr),
+            compute the points xarr[n] such that xarr[n] corresponds to a peak
+            of the absolute value |yarr[n]|.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
+            xarr (list or array):
+                The points in the x-axis the data corresponds to.
+            yarr (list or array):
+                The y-data.
         Output:
-            None.
+            peaks (numpy.array):
+                The x-values corresponding to the peaks of |yarr|.
     """
 
-    # Index corresponding to the given coefficient.
-    ind = 0
+    # scipy has a built-in function that is easy to use.
+    maxind = list(scipy.signal.argrelextrema(yarr, numpy.greater_equal)[0])
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # The first and last elements of the interval should be added. Check.
+    if len(xarr) - 1 not in maxind:
+        maxind.append(len(xarr)-1)
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    if 0 not in maxind:
+        maxind = [0] + maxind
 
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
+    # Convert back to a numpy array to be returned.
+    maxind = numpy.array(maxind)
 
-        ind += 1
+    # Return the points corresponding to peaks as an array.
+    return xarr[maxind]

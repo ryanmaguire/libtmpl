@@ -18,7 +18,7 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Remez polynomials.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
@@ -28,13 +28,13 @@
 # String converting tool found here.
 from tmpld.string.get_c_macro import get_c_macro
 
-# Print the coefficients of a polynomial.
+# Print the coefficients for the Remez polynomial.
 def print_coeffs(coeffs, ctype = "double"):
     """
         Function:
             print_coeffs
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
+            Prints the coefficients of a Minimax polynomial in a manner that is
             easy to copy/paste into a C program using macros.
         Arguments:
             coeffs (list):
@@ -49,13 +49,13 @@ def print_coeffs(coeffs, ctype = "double"):
     # Index corresponding to the given coefficient.
     ind = 0
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # Print a comment describing what the numbers are.
+    print("/*  Coefficients for the Remez polynomial." + (36*" ") + "*/")
 
     # Loop through the coefficients.
     for coeff in coeffs:
 
         # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
+        print(get_c_macro(coeff, ind, ctype = ctype))
 
         ind += 1

@@ -18,44 +18,69 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Pade approximants.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# Many Pade approximants deal with rational coefficients only.
+import fractions
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Used for solving systems of equations with rational numbers.
+import sympy
+
+# Pade coeff matrix here.
+from tmpld.pade.get_coeff_matrix import get_coeff_matrix
+
+# Pade column vector here.
+from tmpld.pade.get_data_vector import get_data_vector
+
+# Given the first n + m + 1 coefficients a_k for the Taylor series,
+# compute the (n, m) Pade approximant.
+def pade(coeffs, num_deg, den_deg):
     """
         Function:
-            print_coeffs
+            pade
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Computes the coefficients of the Pade approximant.
         Arguments:
             coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
+                The coefficients of the Taylor series of the function.
+            num_deg (int):
+                The degree of the numerator.
+            den_deg (int):
+                The degree of the denominator.
+        Outputs:
+            num_poly (list):
+                The coefficients of the numerator.
+            den_poly (list):
+                The coefficients of the denominator.
     """
 
-    # Index corresponding to the given coefficient.
-    ind = 0
+    # Compute the coefficient matrix.
+    coeff_matrix = get_coeff_matrix(coeffs, num_deg, den_deg)
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # And set up the column vector.
+    data_vector = get_data_vector(coeffs, num_deg + den_deg)
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Invert the system to compute the coefficient list.
+    solved_data = list(sympy.linsolve((coeff_matrix, data_vector)))[0]
 
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
+    # The denominator is normalized to have constants term "1".
+    den_poly = [fractions.Fraction(1, 1)]
 
-        ind += 1
+    # The numerator starts with the function value at x = 0.
+    num_poly = [coeffs[0]]
+
+    # Loop through the indices and create the denominator polynomial.
+    for ind in range(den_deg):
+        den_poly.append(solved_data[ind])
+
+    # Do the same thing for the numerator.
+    for ind in range(num_deg):
+        num_poly.append(solved_data[den_deg + ind])
+
+    # Return the two polynomials as a tuple.
+    return (num_poly, den_poly)

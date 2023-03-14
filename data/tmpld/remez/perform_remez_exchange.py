@@ -18,44 +18,46 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Remez polynomials.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# mpmath is import here.
+import tmpld
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Remez coefficient matrix function.
+from tmpld.remez.get_coeff_matrix import get_coeff_matrix
+
+# Given (x_vals, y_vals) data, inverts the Remez matrix and solves.
+def perform_remez_exchange(x_vals, y_vals):
     """
         Function:
-            print_coeffs
+            perform_remez_exchange
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Given data (x_vals, y_vals), inverts the Remez matrix and solves
+            for the coefficients of the approximant Minimax polynomial.
         Arguments:
+            x_vals (list or array):
+                The x-value data.
+            y_vals (list or array):
+                The values func(x_vals) where func is the function being
+                approximated by the Minimax polynomial.
+        Outputs:
             coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
+                The coefficients of the approximate Minimax polynomial.
     """
 
-    # Index corresponding to the given coefficient.
-    ind = 0
+    # The degree of the polynomial is given by the size of the input array.
+    deg = len(x_vals) - 1
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # Convert our list-of-lists to a matrix using mpmath.
+    coeff_matrix = get_coeff_matrix(x_vals)
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Convert the data vector, which is a list, to an actual vector.
+    y_data = tmpld.mpmath.matrix(y_vals)
 
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
-
-        ind += 1
+    # Solve the equation using LU decomposition and return as a list.
+    return list(tmpld.mpmath.lu_solve(coeff_matrix, y_data))[0:deg + 1]

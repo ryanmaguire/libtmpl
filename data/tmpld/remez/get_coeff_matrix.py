@@ -18,44 +18,58 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Remez polynomials.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# mpmath is imported here.
+import tmpld
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Computes the coefficient matrix for the Remez exchange from the data points.
+def get_coeff_matrix(x_vals):
     """
         Function:
-            print_coeffs
+            get_coeff_matrix
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Computes the coefficient matrix for the Remez exchange.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
+            x_vals (list or array):
+                The x-value data.
+            y_vals (list or array):
+                The values func(x_vals) where func is the function being
+                approximated by the Minimax polynomial.
+        Outputs:
+            coeff_matrix (mpmath.matrix):
+                The coefficients matrix of the approximate Minimax polynomial.
     """
 
-    # Index corresponding to the given coefficient.
-    ind = 0
+    # The degree of the polynomial is given by the size of the input array.
+    deg = len(x_vals) - 1
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # We'll compute the entries of the coefficient matrix term-by-term.
+    coeff_matrix = []
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Loop over the rows of the matrix.
+    for row_ind in range(deg + 2):
+        row = []
 
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
+        # And loop over the columns of the matrix.
+        for column_ind in range(deg + 2):
 
-        ind += 1
+            # The last column is given by the error term E. The coefficients
+            # simply osciallate, (-1)^k where k is the row index.
+            if column_ind == deg + 1:
+                row.append(tmpld.mpmath.mpf((-1)**row_ind))
+
+            # Otherwise the elements are given by powers of x.
+            else:
+                row.append(tmpld.mpmath.mpf(x_vals[row_ind]**column_ind))
+
+        # Add this row to the matrix.
+        coeff_matrix.append(row)
+
+    # Convert our list-of-lists to a matrix using mpmath.
+    return tmpld.mpmath.matrix(coeff_matrix)

@@ -18,27 +18,29 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Remez polynomials.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
+# Functions for manipulating strings.
 from tmpld.string.get_c_macro import get_c_macro
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Print the coefficients for the Remez rational approximation.
+def print_rat_coeffs(num_coeffs, den_coeffs, ctype = "double"):
     """
         Function:
             print_coeffs
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
+            Prints the coefficients of a Minimax polynomial in a manner that is
             easy to copy/paste into a C program using macros.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
+            num_coeffs (list):
+                The coefficients of the numerator.
+            den_coeffs (list):
+                The coefficients of the denominator.
         Keywords:
             ctype (str):
                 "double", "float", or "ldouble". The type of the float.
@@ -49,13 +51,29 @@ def print_coeffs(coeffs, ctype = "double"):
     # Index corresponding to the given coefficient.
     ind = 0
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # Comment describing what these numbers are.
+    print("/*  Coefficients for the numerator of the Remez rational "
+          "approximation.       */")
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Loop through the numerator coefficients.
+    for coeff in num_coeffs:
 
         # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
+        print(get_c_macro(coeff, ind, ctype = ctype))
+
+        ind += 1
+
+    # Comment describing what these numbers are.
+    print("\n/*  Coefficients for the denominator of the Remez rational "
+          "approximation.     */")
+
+    # Reset the index to zero for the denominator coefficients.
+    ind = 0
+
+    # Loop through the denominator coefficients.
+    for coeff in den_coeffs:
+
+        # Convert and print the current value.
+        print(get_c_macro(coeff, ind, ctype = ctype))
 
         ind += 1

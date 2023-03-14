@@ -25,11 +25,8 @@
 ################################################################################
 """
 
-# Function for converting a Python float or mpmath.mpf object to a string.
-from tmpld.string.float_to_c_string import float_to_c_string
-
-# Function for extracting the extension of a C constant literal.
-from tmpld.string.get_c_ext import get_c_ext
+# String converting tool found here.
+from tmpld.string.get_c_macro import get_c_macro
 
 # Print the coefficients for the Chebyshev expansion.
 def print_coeffs(coeffs, ctype = "double"):
@@ -49,10 +46,7 @@ def print_coeffs(coeffs, ctype = "double"):
     """
 
     # Index for keeping track of which coefficient we're printing.
-    index = 0
-
-    # Get the extension corresponding to this C type.
-    ext = get_c_ext(ctype)
+    ind = 0
 
     # Print a comment describing what these numbers are.
     print("/*  Coefficients for the Chebyshev approximation." + (29*" ") + "*/")
@@ -60,14 +54,8 @@ def print_coeffs(coeffs, ctype = "double"):
     # Loop over the coefficients in the list.
     for coeff in coeffs:
 
-        # Convert the current coefficient to a string.
-        coeff_string = float_to_c_string(coeff)
-
-        # Negative values have a minus sign. Add a "+" to positive values.
-        if coeff >= 0:
-            print("#define C%02d (+%s%s)" % (index, coeff_string, ext))
-        else:
-            print("#define C%02d (%s%s)" % (index, coeff_string, ext))
+        # Convert and print the current value.
+        print(get_c_macro(coeff, ind, ctype = ctype, label = "C"))
 
         # Increment the index to the next element.
         index += 1

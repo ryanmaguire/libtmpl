@@ -18,44 +18,31 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Converts a fraction to an mpf.                                         #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   March 14, 2023.                                                    #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# mpmath imported here.
+import tmpld
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Converts a fraction to an mpf object.
+def fraction_to_mpf(x_val):
     """
         Function:
-            print_coeffs
+            fraction_to_mpf
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Converts a fraction to an mpmath.mpf object.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
+            x_val (fraction.Fraction):
+                A fraction.
+        Outputs:
+            x_val_as_mpf (mpmath.mpf):
+                The input converted to an mpmath.mpf object.
     """
+    num = tmpld.mpmath.mpf(x_val.numerator)
+    den = tmpld.mpmath.mpf(x_val.denominator)
 
-    # Index corresponding to the given coefficient.
-    ind = 0
-
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
-
-    # Loop through the coefficients.
-    for coeff in coeffs:
-
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
-
-        ind += 1
+    return num / den

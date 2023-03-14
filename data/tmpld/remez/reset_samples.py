@@ -18,44 +18,49 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for computing Remez polynomials.                              #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
 #   Date:   January 8, 2023.                                                   #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# mpmath is imported here.
+import tmpld
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
+# Function for finding local mins and maxes.
+from tmpld.remez.get_peaks import get_peaks
+
+# Resets the x and y samples to correspond to the new peak points.
+def reset_samples(func, xarr, yarr):
     """
         Function:
-            print_coeffs
+            reset_samples
         Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
+            Resets x and y samples to corresponds to peaks in yarr as a function
+            of xarr. That is, the peaks in |yarr| are found and the x-values are
+            stored in x_vals. Then y_vals = func(x_vals) is computed.
         Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
+            func (function):
+                The function being computed.
+            xarr (list or array):
+                The x-data.
+            yarr (list or array):
+                The y-data.
         Output:
-            None.
+            x_vals (list):
+                The x-values of the peak points.
+            y_vals (list):
+                The function func evaluated at x_vals.
     """
 
-    # Index corresponding to the given coefficient.
-    ind = 0
+    # Get the peaks of the error funcion |f(x) - P(x)|.
+    maxarr = get_peaks(xarr, yarr)
 
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
+    # Convert the points to mpmath objects.
+    x_vals = [tmpld.mpmath.mpf(k) for k in maxarr]
 
-    # Loop through the coefficients.
-    for coeff in coeffs:
+    # Evaluate the function at these new points and return.
+    y_vals = [func(k) for k in x_vals]
 
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
-
-        ind += 1
+    return x_vals, y_vals

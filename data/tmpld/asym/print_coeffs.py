@@ -25,12 +25,11 @@
 ################################################################################
 """
 
-# String converting tools found here.
-from tmpld.string.float_to_c_string import float_to_c_string
-from tmpld.string.get_c_ext import get_c_ext
+# String converting tool found here.
+from tmpld.string.get_c_macro import get_c_macro
 
 # Print the coefficients of an asymptotic expansion.
-def print_coeffs(coeffs, ctype = "double", prefix = "A"):
+def print_coeffs(coeffs, ctype = "double", label = "A"):
     """
         Function:
             print_coeffs
@@ -43,17 +42,14 @@ def print_coeffs(coeffs, ctype = "double", prefix = "A"):
         Keywords:
             ctype (str):
                 "double", "float", or "ldouble". The type of the float.
-            prefix (str):
+            label (str):
                 The character that prepends the macro.
         Output:
             None.
     """
 
     # Variable for keeping track of the indices of the coefficients.
-    current_index = 0
-
-    # Extension for literal constants, depends on data type.
-    ext = get_c_ext(ctype)
+    ind = 0
 
     # Comment for the C code describing what the numbers are.
     print("/*  Coefficients for the asymptotic expansion." + (32*" ") + "*/")
@@ -61,20 +57,8 @@ def print_coeffs(coeffs, ctype = "double", prefix = "A"):
     # Loop through the coefficients and print.
     for coeff in coeffs:
 
-        # Convert the number to a string.
-        coeff_string = float_to_c_string(coeff)
-
-        # Create a macro for the current coefficient.
-        macro_tuple = (prefix, current_index, coeff_string, ext)
-
-        # Negative numbers have a minus sign. Add a plus to positive numbers.
-        if coeff >= 0:
-            macro_string = "#define %s%02d (+%s%s)" % macro_tuple
-        else:
-            macro_string = "#define %s%02d (%s%s)" % macro_tuple
-
-        # Lastly, print the macro to the screen.
-        print(macro_string)
+        # Convert and print the value.
+        print(get_c_macro(coeff, ind, ctype = ctype, label = label))
 
         # Update the index.
-        current_index += 1
+        ind += 1

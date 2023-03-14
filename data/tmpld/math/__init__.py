@@ -26,3 +26,4 @@
 """
 
 from tmpld.math.double_factorial import double_factorial
+from tmpld.math.fraction_to_mpf import fraction_to_mpf

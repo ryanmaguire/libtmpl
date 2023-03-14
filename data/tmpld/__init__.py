@@ -18,44 +18,31 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Python routines for obtaining the numerical constants used in          #
+#       libtmpl. This package is not used directly in libtmpl, and the Python  #
+#       language is not needed at all. This code is kept here to remove the    #
+#       mystery as to where various computations come from. A function is      #
+#       usually computed via one of the following means:                       #
+#           1.) Taylor / MacLaurin Series.                                     #
+#           2.) Pade Approximant.                                              #
+#           3.) Remez Exchange (Minimax Polynomial or Minimax Rational)        #
+#           4.) Asymptotic Expansion.                                          #
+#           5.) Chebyshev Polynomials.                                         #
+#       The coefficients for these approximations magically appear in the C    #
+#       code as fixed literal constants. In reality there are algorithms for   #
+#       computing these values, and then one just copy / pastes them into      #
+#       their code. These algorithms are provided with this package.           #
+#                                                                              #
+#           tmpld = tmpl data                                                  #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   January 8, 2023.                                                   #
+#   Date:   March 13, 2023.                                                    #
 ################################################################################
 """
 
-# String converting tool found here.
-from tmpld.string.get_c_macro import get_c_macro
+# Muli-precision math routines found here.
+import mpmath
 
-# Print the coefficients of a polynomial.
-def print_coeffs(coeffs, ctype = "double"):
-    """
-        Function:
-            print_coeffs
-        Purpose:
-            Prints the coefficients of a polynomial in a manner that is
-            easy to copy/paste into a C program using macros.
-        Arguments:
-            coeffs (list):
-                The coefficients of the polynomial.
-        Keywords:
-            ctype (str):
-                "double", "float", or "ldouble". The type of the float.
-        Output:
-            None.
-    """
-
-    # Index corresponding to the given coefficient.
-    ind = 0
-
-    # Print a comments describing what these numbers are.
-    print("/*  Coefficients for the polynomial." + (42*" ") + "*/")
-
-    # Loop through the coefficients.
-    for coeff in coeffs:
-
-        # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype, label = "A"))
-
-        ind += 1
+# The highest precision of long double is 112-bit mantissa. 224 bits is safe
+# enough for all precisions used by libtmpl long double functions.
+mpmath.mp.prec = 224
