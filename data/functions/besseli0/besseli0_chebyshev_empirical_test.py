@@ -34,6 +34,9 @@ import tmpld.chebyshev
 # Polynomial evaluation via Horner's method.
 import tmpld.poly
 
+# Scaled Bessel I0 function.
+import besseli0
+
 # Evaluates, using the Clenshaw algorithm, the Chebyshev expansion, of the
 # transformed variable. Converts [8, infty] to [-1, 1] and performs the sum.
 def cheb_eval(a, x):
@@ -66,7 +69,7 @@ EPS = 2**-52
 x = 20
 N = 21
 for m in range(2, N):
-    a = tmpld.chebyshev.cheb_coeffs(scaled_i0, m, 1000)
+    a = tmpld.chebyshev.cheb_coeffs(besseli0.scaled_i0, m, 1000)
     y = diff(a, x)
 
     # If the expansion was very accurate, move along.
