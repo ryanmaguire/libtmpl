@@ -18,15 +18,11 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Routines for evaluating polynomials and derivatives.                   #
+#       Routines for evaluating rational functions.                            #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   March 14, 2023.                                                    #
+#   Date:   March 17, 2023.                                                    #
 ################################################################################
 """
 
-from tmpld.poly.d2poly_eval import d2poly_eval
-from tmpld.poly.dpoly_eval import dpoly_eval
-from tmpld.poly.poly_eval import poly_eval
-from tmpld.poly.print_coeffs import print_coeffs
-from tmpld.poly.print_poly_helper import print_poly_helper
+from tmpld.rat.rat_eval import rat_eval
