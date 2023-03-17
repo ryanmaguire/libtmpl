@@ -26,37 +26,50 @@
 ################################################################################
 """
 
-# Muli-precision math routines found here.
-import mpmath
+# mpmath imported here.
+import tmpld
 
-# Bessel I0 coefficients given here.
+# Polynomial evaluation via Horner's method.
+import tmpld.poly
+
+# Scaled Bessel I0 function.
 import besseli0
-
-# Polynomial computations here.
-import poly
-
-# The highest precision of long double is 112-bit mantissa. 224 bits is safe
-# enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
 
 # Desired precision.
 EPS = 2**-23
 
 # Function for computing the difference of the approximation with scipy.
-def diff(a, x):
-    y = mpmath.besseli(0, x)
-    z = poly.poly_eval(a, x*x)
-    return (y - z) / y
+def diff(coeffs, x_val):
+    """
+        Function:
+            diff
+        Purpose:
+            Computes relative error of Taylor series.
+        Arguments:
+            coeffs (list):
+                Taylor coefficients.
+            x_val (float / mpmath.mpf):
+                A real number.
+        Outputs:
+            rel_err (mpmath.mpf):
+                The relative error.
+    """
+    y_val = tmpld.mpmath.besseli(0, x_val)
+    z_val = tmpld.poly.poly_eval(coeffs, x_val*x_val)
+    return (y_val - z_val) / y_val
 
 # Print which values of N achieved double precision.
-x = 8
+X_IN = 8
 
 for m in range(2, 50):
     a = [besseli0.taylor(n) for n in range(m)]
-    y = diff(a, x)
+    y = diff(a, X_IN)
 
     # If the expansion was very accurate, move along.
     if abs(y) < EPS:
-        b = [mpmath.mpf(k.numerator) / mpmath.mpf(k.denominator) for k in a]
-        poly.print_coeffs(b)
+        b = [
+            tmpld.mpmath.mpf(k.numerator) / tmpld.mpmath.mpf(k.denominator)
+            for k in a
+        ]
+        tmpld.poly.print_coeffs(b)
         break

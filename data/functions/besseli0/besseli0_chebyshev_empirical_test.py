@@ -37,40 +37,119 @@ import tmpld.poly
 # Scaled Bessel I0 function.
 import besseli0
 
+# Transforms [8, infty] to [-1, 1].
+def transform(x_val):
+    """
+        Function:
+            transform
+        Purpose:
+            Transforms the compactification [8, infty] into [-1, 1].
+        Arguments:
+            x_val (float / mpmath.mpf):
+                A real number 8 <= x <= infty.
+        Outputs:
+            y_val (mpmath.mpf):
+                The transformed value of x.
+    """
+    x_mpf = tmpld.mpmath.mpf(x_val)
+    return tmpld.mpmath.mpf(16)/x_mpf - tmpld.mpmath.mpf(1)
+
 # Evaluates, using the Clenshaw algorithm, the Chebyshev expansion, of the
 # transformed variable. Converts [8, infty] to [-1, 1] and performs the sum.
-def cheb_eval(a, x):
-    x = tmpld.mpmath.mpf(x)
-    y = tmpld.mpmath.mpf(16)/x - tmpld.mpmath.mpf(1)
-    z = tmpld.chebyshev.cheb_eval(a, y)
-    return z/tmpld.mpmath.sqrt(x)
+def cheb_eval(coeffs, x_val):
+    """
+        Function:
+            cheb_eval
+        Purpose:
+            Translates [8, infty] to [-1, 1] and evaluates the Chebyshev
+            approximation of I0(x).
+        Arguments:
+            coeffs (list):
+                The coefficients of the Chebyshev expansion.
+            x_val (float / mpmath.mpf):
+                A real number 8 <= x <= infty.
+        Outputs:
+            I0_x (mpmath.mpf):
+                The Bessel I0 function of x, scaled by 1 / sqrt(x).
+    """
+    y_mpf = transform(x_val)
+    z_mpf = tmpld.chebyshev.cheb_eval(coeffs, y_mpf)
+    return z_mpf/tmpld.mpmath.sqrt(x_val)
 
 # Evaluates a polynomial in the transformed variable.
-def poly_eval(a, x):
-    x = tmpld.mpmath.mpf(x)
-    y = tmpld.mpmath.mpf(16)/x - tmpld.mpmath.mpf(1)
-    z = tmpld.poly.poly_eval(a, y)
-    return z/tmpld.mpmath.sqrt(x)
+def poly_eval(coeffs, x_val):
+    """
+        Function:
+            poly_eval
+        Purpose:
+            Translates [8, infty] to [-1, 1] and evaluates the polynomial
+            approximation of I0(x).
+        Arguments:
+            coeffs (list):
+                The coefficients of the polynomial approximation.
+            x_val (float / mpmath.mpf):
+                A real number 8 <= x <= infty.
+        Outputs:
+            I0_x (mpmath.mpf):
+                The Bessel I0 function of x, scaled by 1 / sqrt(x).
+    """
+    y_mpf = transform(x_val)
+    z_mpf = tmpld.poly.poly_eval(coeffs, y_mpf)
+    return z_mpf/tmpld.mpmath.sqrt(x_val)
 
-def diff(a, x):
-    y = cheb_eval(a, x)
-    z = tmpld.mpmath.besseli(0, x)*tmpld.mpmath.exp(-x)
-    return (y - z)/z
+# Computes the difference of the scaled Bessel function with the Cheb approx.
+def diff(coeffs, x_val):
+    """
+        Function:
+            diff
+        Purpose:
+            Computes the relative error in the Chebyshev expansion of I0(x).
+        Arguments:
+            coeffs (list):
+                The coefficients of the Chebyshev expansion.
+            x_val (float / mpmath.mpf)
+                A real number.
+        Outputs:
+            rel_err (mpmath.mpf):
+                The relative error.
+    """
+    y_val = cheb_eval(coeffs, x_val)
+    z_val = tmpld.mpmath.besseli(0, x_val)*tmpld.mpmath.exp(-x_val)
+    return (y_val - z_val) / z_val
 
-def diff2(a, b, x):
-    y = cheb_eval(a, x)
-    z = poly_eval(b, x)
-    return (y - z)/z
+# Computes the error between poly approx and Cheb approx.
+def diff2(cheb_coeffs, poly_coeffs, x_val):
+    """
+        Function:
+            diff
+        Purpose:
+            Computes the relative error in the Chebyshev expansion and
+            polynomial approximation for I0(x).
+        Arguments:
+            cheb_coeffs (list):
+                The coefficients of the Chebyshev expansion.
+            poly_coeffs (list):
+                The coefficients of the polynomial approximation.
+            x_val (float / mpmath.mpf)
+                A real number.
+        Outputs:
+            rel_err (mpmath.mpf):
+                The relative error.
+    """
+    y_val = cheb_eval(cheb_coeffs, x_val)
+    z_val = poly_eval(poly_coeffs, x_val)
+    return (y_val - z_val)/z_val
 
 # Desired precision.
 EPS = 2**-52
 
 # Print which values of N achieved double precision.
-x = 20
-N = 21
-for m in range(2, N):
+X_IN = 20
+DEG = 21
+
+for m in range(2, DEG):
     a = tmpld.chebyshev.cheb_coeffs(besseli0.scaled_i0, m, 1000)
-    y = diff(a, x)
+    y = diff(a, X_IN)
 
     # If the expansion was very accurate, move along.
     if abs(y) < EPS:
