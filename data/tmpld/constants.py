@@ -38,3 +38,6 @@ sixteen = tmpld.mpmath.mpf(16)
 thirty = tmpld.mpmath.mpf(30)
 
 minus_one = tmpld.mpmath.mpf(-1)
+
+# Fractional constants.
+half = tmpld.mpmath.mpf(0.5)
