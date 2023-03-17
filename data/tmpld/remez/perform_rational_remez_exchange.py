@@ -97,3 +97,5 @@ def perform_rational_remez_exchange(x_vals, y_vals, num_deg, den_deg):
         # Update the error guess.
         error_guess = data[-1]
         iters += 1
+
+    return data

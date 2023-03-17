@@ -32,6 +32,7 @@ import tmpld
 zero = tmpld.mpmath.mpf(0)
 one = tmpld.mpmath.mpf(1)
 two = tmpld.mpmath.mpf(2)
+four = tmpld.mpmath.mpf(4)
 eight = tmpld.mpmath.mpf(8)
 twelve = tmpld.mpmath.mpf(12)
 sixteen = tmpld.mpmath.mpf(16)
@@ -41,3 +42,5 @@ minus_one = tmpld.mpmath.mpf(-1)
 
 # Fractional constants.
 half = tmpld.mpmath.mpf(0.5)
+one_tenth = tmpld.mpmath.mpf(0.1)
+remez_increment = tmpld.mpmath.mpf(1.0E-3)

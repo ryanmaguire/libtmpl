@@ -56,10 +56,13 @@ def start_exchange(func, deg, start, end):
     # Compute the distance between initial samples.
     dist = (end - start)/tmpld.mpmath.mpf(deg + 1)
 
+    # The increment factor.
+    increment = float(tmpld.constants.remez_increment)
+
     # Sample the interval [start, end] with a sufficient number of points so
     # that the peaks can be easily calculated. Compute the corresponding
     # y-vals farr = func(xarr).
-    xarr = numpy.arange(float(start), float(end), float(dist)*1.0E-3)
+    xarr = numpy.arange(float(start), float(end), float(dist)*increment)
     farr = [func(k) for k in xarr]
 
     x_vals = [start + m*dist for m in range(deg + 2)]
