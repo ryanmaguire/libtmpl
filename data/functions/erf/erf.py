@@ -28,56 +28,81 @@
 # exp, sqrt, and pi found here.
 import math
 
-# Rational numbers found here.
-import fractions
+# mpmath imported here.
+import tmpld
 
-# Muli-precision math routines found here.
-import mpmath
+# double_factorial here.
+import tmpld.math
 
-# The highest precision of long double is 112-bit mantissa. 224 bits is safe
-# enough for all precisions used by libtmpl long double functions.
-mpmath.mp.dps = 224
-
-# Function for computing the double factorial, n!! = n*(n-2)*...
-def doublefactorial(n):
-    if n <= 0:
-        return 1
-    else:
-        double_fact = 1
-        k = n
-        while (k >= 0):
-            double_fact = k*double_fact
-            k = k - 2
-
-    return double_fact
+# mpmath constants.
+import tmpld.constants
 
 # Function for computing the nth coefficient of the Taylor series of erf.
-def taylor(n):
-    num = (-1)**n
-    den = (2*n + 1)*math.factorial(n)
-    out = mpmath.mpf(num) / mpmath.mpf(den)
-    return (mpmath.mpf(2) / mpmath.sqrt(mpmath.pi)) * out
+def taylor(deg):
+    """
+        Function:
+            taylor
+        Purpose:
+            Computes the coefficients of the Taylor series of Erf.
+        Arguments:
+            deg (int):
+                The degree of the coefficient to be computed.
+        Outputs:
+            coeff (mpmath.mpf):
+                The deg^{th} coefficients.
+    """
+    num = (-1)**deg
+    den = (2*deg + 1)*math.factorial(deg)
+    out = tmpld.mpmath.mpf(num) / tmpld.mpmath.mpf(den)
+    return (tmpld.constants.two / tmpld.mpmath.sqrt(tmpld.mpmath.pi)) * out
 
 # Function for computing the nth coefficient of the asymptotic expansion of erf.
-def asym(n):
-    num = doublefactorial(2*n - 1) * (-1)**n
-    den = 2**(n-1)
-    out = mpmath.mpf(num) / mpmath.mpf(den)
-    return (mpmath.mpf(1) / mpmath.sqrt(mpmath.pi)) * out
+def asym(deg):
+    """
+        Function:
+            asym
+        Purpose:
+            Computes the coefficients of the asymptotic expansion of Erf.
+        Arguments:
+            deg (int):
+                The degree of the coefficient to be computed.
+        Outputs:
+            coeff (mpmath.mpf):
+                The deg^{th} coefficients.
+    """
+    num = tmpld.math.double_factorial(2*deg - 1) * (-1)**deg
+    den = 2**(deg - 1)
+    out = tmpld.mpmath.mpf(num) / tmpld.mpmath.mpf(den)
+    return (tmpld.constants.one / tmpld.mpmath.sqrt(tmpld.mpmath.pi)) * out
 
 # Function for computing the degree N asymptotic expansion of erf.
-def asym_series(x, N):
-    one = mpmath.mpf(1)
-    invx = one / mpmath.mpf(x)
+def asym_series(x_val, deg):
+    """
+        Function:
+            asym_series
+        Purpose:
+            Evaluates the degree "deg" asymptotic expansion of Erf at "x_val".
+        Arguments:
+            x_val (mpmath.mpf / float):
+                A real number.
+            deg (int):
+                The degree of the expansion.
+        Outputs:
+            erf_x (mpmath.mpf):
+                The asymptotic expansion of Erf(x).
+    """
+    x_mpf = tmpld.mpmath.mpf(x_val)
+    invx = tmpld.constants.one / x_mpf
     invx_sq = invx * invx
-    y = mpmath.mpf(0)
+    erf_x = tmpld.constants.zero
 
-    for n in range(1, N):
-        val = asym(n)
-        y += val * (invx_sq ** (n - 1))
+    # Use Horner's method to compute the sum.
+    for ind in range(1, deg):
+        val = asym(ind)
+        erf_x += val * (invx_sq ** (ind - 1))
 
-    y *= invx
-    mpx = mpmath.mpf(x)
-    y *= mpmath.exp(-mpx*mpx)
+    # Compute the scale factor.
+    erf_x *= invx*tmpld.mpmath.exp(-x_mpf*x_mpf)
 
-    return y + one
+    # The above is the asymptotic expansion for a shifted Erf. Shift back.
+    return erf_x + tmpld.constants.one
