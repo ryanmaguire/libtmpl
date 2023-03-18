@@ -28,6 +28,8 @@
 # Arrays.
 import numpy
 
+import matplotlib.pyplot as plt
+
 # Polynomial evaluation.
 from tmpld.poly.poly_eval import poly_eval
 
@@ -81,6 +83,11 @@ def remez(func, deg, start, end):
                 ]
             )
         )
+
+        # Plot the error. If the local extrema alternate and are of similar
+        # magnitude, the algorithm is complete.
+        plt.plot(xarr, yarr)
+        plt.show()
 
         # Stop the computation if this is good enough.
         if input("Max Err = %.5e | Stop? (y/n): " % numpy.max(yarr)) == "y":

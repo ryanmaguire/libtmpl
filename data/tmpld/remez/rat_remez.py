@@ -28,6 +28,9 @@
 # Basic array manipulations.
 import numpy
 
+# Plots the difference function in the exchange algorithm.
+import matplotlib.pyplot as plt
+
 # mpmath is imported here.
 import tmpld
 
@@ -75,9 +78,6 @@ def rat_remez(func, num_deg, den_deg, start, end):
         func, num_deg + den_deg, start, end
     )
 
-    # The iteration stops when E_{n} and E_{n+1} are close. Keep track of both.
-    previous_error = tmpld.constants.zero
-
     # Iteratively apply the Remez exchange algorithm until the error is decent.
     while True:
 
@@ -88,12 +88,6 @@ def rat_remez(func, num_deg, den_deg, start, end):
         num = data[0:num_deg + 1]
         den = [tmpld.mpmath.mpf(1)] + data[num_deg + 1: num_deg + den_deg + 1]
 
-        # Check if we can stop.
-        if previous_error != tmpld.constants.zero:
-            rel_diff = tmpld.mpmath.fabs((data[-1] - previous_error)/data[-1])
-            if rel_diff < tmpld.mpmath.mpf(1.0E-6):
-                return num, den, data[-1]
-
         yarr = numpy.abs(
             numpy.array(
                 [
@@ -102,6 +96,15 @@ def rat_remez(func, num_deg, den_deg, start, end):
                 ]
             )
         )
+
+        # Plot the error. If the local extrema alternate and are of similar
+        # magnitude, the algorithm is complete.
+        plt.plot(xarr, yarr)
+        plt.show()
+
+        # Check if we can stop.
+        if input("Max Err = %.5e | Stop? (y/n): " % numpy.max(yarr)) == "y":
+            return num, den, data[-1]
 
         # Reset the samples to the peaks and compute the function there.
         x_vals, y_vals = reset_samples(func, xarr, yarr)
@@ -118,5 +121,3 @@ def rat_remez(func, num_deg, den_deg, start, end):
             xarr, farr, x_vals, y_vals = start_exchange(
                 func, num_deg + den_deg, start, end
             )
-
-        previous_error = data[-1]

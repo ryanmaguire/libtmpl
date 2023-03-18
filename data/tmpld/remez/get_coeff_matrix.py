@@ -47,7 +47,7 @@ def get_coeff_matrix(x_vals):
     """
 
     # The degree of the polynomial is given by the size of the input array.
-    deg = len(x_vals) - 1
+    deg = len(x_vals) - 2
 
     # We'll compute the entries of the coefficient matrix term-by-term.
     coeff_matrix = []
