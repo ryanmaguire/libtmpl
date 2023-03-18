@@ -68,7 +68,7 @@
  *              0.000 <= x < 0.125 -> Maclaurin Series.                       *
  *              0.125 <= x < 1.000 -> Chebyshev Expansion.                    *
  *              1.000 <= x < 2.000 -> Pade Approximant.                       *
- *              2.000 <= x < Infty -> Chebyshev and asymptotic expansion.     *
+ *              2.000 <= x < Infty -> Remez polynomial / asymptotic expansion.*
  *                                                                            *
  *      Error:                                                                *
  *          Based on 1,051,958,476 samples with -6 < x < 6.                   *
@@ -138,7 +138,7 @@
 double tmpl_Double_Erf(double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Double w;
+    tmpl_IEEE754_Double w, tmp;
 
     /*  Set the double part of the union to the input.                        */
     w.r = x;
@@ -157,26 +157,35 @@ double tmpl_Double_Erf(double x)
             return 1.0;
     }
 
-    /*  For small values use a Maclaurin series.                              */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
-        return tmpl_Double_Erf_Maclaurin(x);
-
-    /*  For values |x| < 1 use a Chebyshev expansion.                         */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-        return tmpl_Double_Erf_Chebyshev(x);
-
-    /*  For |x| < 2 use a Pade approximant.                                   */
+    /*  For small values use various polynomial and rational approximations.  */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 1U)
-        return tmpl_Double_Erf_Pade(x);
+    {
+        /*  For very small, |x| < 0.125, use a Maclaurin series.              */
+        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+            return tmpl_Double_Erf_Maclaurin(x);
+
+        /*  For values |x| < 1 use a Chebyshev expansion.                     */
+        else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
+            return tmpl_Double_Erf_Chebyshev(x);
+
+        /*  For |x| < 2 use a Pade approximant.                               */
+        else
+            return tmpl_Double_Erf_Pade(x);
+    }
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
-     *  Use the asymptotic values with -erf(-x).                              */
-    else if (w.bits.sign)
-        return -tmpl_Double_Erf_Asymptotic(-x);
+     *  Use the asymptotic values with -erf(-x). First, save the sign of x.   */
+    tmp.bits.sign = w.bits.sign;
 
-    /*  For large positive, use the asymptotics.                              */
-    else
-        return tmpl_Double_Erf_Asymptotic(x);
+    /*  Compute |x| by setting the sign bit to zero.                          */
+    w.bits.sign = 0x00U;
+
+    /*  Compute Erf(|x|) for |x| >= 2.                                        */
+    w.r = tmpl_Double_Erf_Asymptotic(w.r);
+
+    /*  tmp has the original sign of the input. Restore this to the output.   */
+    w.bits.sign = tmp.bits.sign;
+    return w.r;
 }
 /*  End of tmpl_Double_Erf.                                                   */
 
