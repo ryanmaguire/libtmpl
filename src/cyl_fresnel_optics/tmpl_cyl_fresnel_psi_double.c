@@ -44,7 +44,7 @@
  *          The opening angle of the plane. For planetary ring systems this   *
  *          is the ring opening angle of the rings with respect to Earth.     *
  *      D (double):                                                           *
- *          The distance from the source of light to the plane.               *
+ *          The distance from the observer to the point in the plane.         *
  *  Outputs:                                                                  *
  *      psi (double):                                                         *
  *          The cylindrical Fresnel kernel as a function of the inputs.       *
