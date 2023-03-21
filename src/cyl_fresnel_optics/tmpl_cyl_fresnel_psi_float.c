@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_fresnel_cyl_psi_float                         *
+ *                         tmpl_cyl_fresnel_psi_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Cylindrical Fresnel kernel at single precision.          *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Fresnel_Cyl_Psi                                            *
+ *      tmpl_Float_Cyl_Fresnel_Psi                                            *
  *  Purpose:                                                                  *
  *      Computes the cylindrical Fresnel kernel at single precision with all  *
  *      angles in radians. The lengths may be in whatever units, but they     *
@@ -39,9 +39,9 @@
  *      phi (float):                                                          *
  *          The "dummy" azimuthal angle, often integrated over.               *
  *      phi0 (float):                                                         *
- *          The azimuthal angle of the point of interest. Same units as phi.  *
+ *          The azimuthal angle of the point of interest.                     *
  *      B (float):                                                            *
- *          The opening angle of the plane. For planetary ring systems, this  *
+ *          The opening angle of the plane. For planetary ring systems this   *
  *          is the ring opening angle of the rings with respect to Earth.     *
  *      D (float):                                                            *
  *          The distance from the source of light to the plane.               *
@@ -64,7 +64,7 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with cosine and sqrt.                                 *
- *  2.) tmpld_fresnel_cyl_kernel:                                             *
+ *  2.) tmpl_cyl_fresnel_optics.h:                                            *
  *          Header file where the prototype is given.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -80,11 +80,11 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpld_fresnel_cyl_kernel.h>
+#include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
 /*  Function for computing the cylindrical Fresnel kernel.                    */
 float
-tmpl_Float_Fresnel_Cyl_Psi(float k, float r, float r0, float phi,
+tmpl_Float_Cyl_Fresnel_Psi(float k, float r, float r0, float phi,
                            float phi0, float B, float D)
 {
     /*  Compute 1/D and it's square to save the number of divisions we need   *
@@ -105,4 +105,4 @@ tmpl_Float_Fresnel_Cyl_Psi(float k, float r, float r0, float phi,
     /* Sign of xi swapped from MTR86.                                         */
     return k * D * (tmpl_Float_Sqrt(1.0F + eta - 2.0F*xi) + xi - 1.0F);
 }
-/*  End of tmpl_Float_Fresnel_Cyl_Psi.                                        */
+/*  End of tmpl_Float_Cyl_Fresnel_Psi.                                        */
