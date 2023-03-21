@@ -463,6 +463,7 @@ $(BUILD_DIR)/%.fasm.o: %.fasm include/tmpl_config.h
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/bytes/
 	mkdir -p $(BUILD_DIR)/src/complex/
+	mkdir -p $(BUILD_DIR)/src/cyl_fresnel_optics/
 	mkdir -p $(BUILD_DIR)/src/fft/
 	mkdir -p $(BUILD_DIR)/src/graph_theory/
 	mkdir -p $(BUILD_DIR)/src/integer/
