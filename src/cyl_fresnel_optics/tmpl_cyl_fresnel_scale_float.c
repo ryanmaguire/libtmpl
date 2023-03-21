@@ -100,10 +100,10 @@ tmpl_Float_Cyl_Fresnel_Scale(float lambda, float D, float phi, float B)
     cos_B_sin_phi = cos_B * sin_phi;
 
     /*  Use Eqn (6) from MTR86 and compute the square of the Fresnel scale.   */
-    numerator = lambda * D * (1.0 - cos_B_sin_phi*cos_B_sin_phi);
+    numerator = lambda * D * (1.0F - cos_B_sin_phi*cos_B_sin_phi);
 
     /*  Next, compute the denominator of the square of the Fresnel scale.     */
-    denominator = 2.0 * sin_B * sin_B;
+    denominator = 2.0F * sin_B * sin_B;
 
     /*  numerator / denominator gives F^2. Return the square root of this.    */
     return tmpl_Float_Sqrt(numerator / denominator);
