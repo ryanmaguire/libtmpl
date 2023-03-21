@@ -59,6 +59,9 @@
  *  Notes:                                                                    *
  *      Angles must be in radians. Lengths can be in whatever units, but they *
  *      must be the same units.                                               *
+ *  References:                                                               *
+ *      1.) Profiling Saturn's Rings, Marouf, Tyler, Rosen 1986, Icarus 68.   *
+ *      2.) Introduction to Fourier Optics, Joseph Goodman, 2005.             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
