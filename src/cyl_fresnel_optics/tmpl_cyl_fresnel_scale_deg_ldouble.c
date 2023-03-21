@@ -33,7 +33,7 @@
  *      lamda (long double):                                                  *
  *          The wavelength, in the same units as D.                           *
  *      D (long double):                                                      *
- *          The distance from the source of light to the plane.               *
+ *          The distance from the observer to the point in the plane.         *
  *      phi (long double):                                                    *
  *          The azimuthal angle in degrees.                                   *
  *      B (long double):                                                      *

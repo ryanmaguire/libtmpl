@@ -33,7 +33,7 @@
  *      lamda (float):                                                        *
  *          The wavelength, in the same units as D.                           *
  *      D (float):                                                            *
- *          The distance from the source of light to the plane.               *
+ *          The distance from the observer to the point in the plane.         *
  *      phi (float):                                                          *
  *          The azimuthal angle in degrees.                                   *
  *      B (float):                                                            *
