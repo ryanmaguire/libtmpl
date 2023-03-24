@@ -92,7 +92,7 @@ float
 tmpl_Float_Cyl_Fresnel_Observer_Distance(float r, float phi,
                                          float rx, float ry, float rz)
 {
-    /*  Declare necesarry variables. C89 requires this at the top.            */
+    /*  Declare necessary variables. C89 requires this at the top.            */
     float sin_phi, cos_phi, x, y, dx, dy;
 
     /*  Simultaneously compute sine and cosine of phi.                        */

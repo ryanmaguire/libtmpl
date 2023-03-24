@@ -92,7 +92,7 @@ double
 tmpl_Double_Cyl_Fresnel_Observer_Distance(double r, double phi,
                                           double rx, double ry, double rz)
 {
-    /*  Declare necesarry variables. C89 requires this at the top.            */
+    /*  Declare necessary variables. C89 requires this at the top.            */
     double sin_phi, cos_phi, x, y, dx, dy;
 
     /*  Simultaneously compute sine and cosine of phi.                        */
