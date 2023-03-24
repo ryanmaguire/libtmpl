@@ -140,7 +140,7 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
-/*  Computes the partial derivative of psi wit respect to phi with varying D. */
+/*  Computes the partial derivative of psi with respect to phi with varying D.*/
 double
 tmpl_Double_Cyl_Fresnel_dPsi_dPhi_D(double k, double r, double r0,
                                     double phi, double phi0, double B,
