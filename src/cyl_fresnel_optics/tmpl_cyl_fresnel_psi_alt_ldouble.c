@@ -19,14 +19,14 @@
  *                      tmpl_cyl_fresnel_psi_alt_ldouble                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Cylindrical Fresnel kernel at single precision.          *
+ *      Computes the Cylindrical Fresnel kernel at long double precision.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_LDouble_Cyl_Fresnel_Psi_Alt                                      *
  *  Purpose:                                                                  *
- *      Computes the cylindrical Fresnel kernel at single precision with all  *
+ *      Computes the cylindrical Fresnel kernel for long double with all      *
  *      angles in radians. The lengths may be in whatever units, but they     *
  *      must be in the same units. Nearly identical to                        *
  *      tmpl_LDouble_Cyl_Fresnel_Psi, this function takes in the "weighted"   *
