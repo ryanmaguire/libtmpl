@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cyl_Fresnel_Psi_Alt                                       *
+ *      tmpl_Double_Cyl_Fresnel_Psi_Alt_Deg                                   *
  *  Purpose:                                                                  *
  *      Computes the cylindrical Fresnel kernel at double precision with all  *
  *      angles in degrees. The lengths may be in whatever units, but they     *

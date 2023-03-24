@@ -27,7 +27,7 @@
  *      tmpl_LDouble_Cyl_Fresnel_Psi_Deg                                      *
  *  Purpose:                                                                  *
  *      Computes the cylindrical Fresnel kernel for long double with all      *
- *      angles in radians. The lengths may be in whatever units, but they     *
+ *      angles in degrees. The lengths may be in whatever units, but they     *
  *      must be in the same units.                                            *
  *  Arguments:                                                                *
  *      k (long double):                                                      *

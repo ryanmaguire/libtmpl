@@ -19,14 +19,14 @@
  *                    tmpl_cyl_fresnel_psi_alt_deg_ldouble                    *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Cylindrical Fresnel kernel at single precision.          *
+ *      Computes the Cylindrical Fresnel kernel at long double precision.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_LDouble_Cyl_Fresnel_Psi_Alt_Deg                                  *
  *  Purpose:                                                                  *
- *      Computes the cylindrical Fresnel kernel at single precision with all  *
+ *      Computes the cylindrical Fresnel kernel for long double with all      *
  *      angles in degrees. The lengths may be in whatever units, but they     *
  *      must be in the same units. Nearly identical to                        *
  *      tmpl_LDouble_Cyl_Fresnel_Psi, this function takes in the "weighted"   *
@@ -108,8 +108,8 @@ tmpl_LDouble_Cyl_Fresnel_Psi_Alt_Deg(long double kD, long double r,
 
     /*  Compute xi variable (MTR86 Equation 4b) and eta (Equation 4c).        */
     const long double xi = (cos_B * rcpr_D) * (r * cos_phi - r0 * cos_phi0);
-    const long double eta
-        = (r0*r0 + r*r - 2.0L*r*r0*cos_phi_phi0) * rcpr_D_squared;
+    const long double eta =
+        (r0*r0 + r*r - 2.0L*r*r0*cos_phi_phi0) * rcpr_D_squared;
 
     /* Sign of xi swapped from MTR86.                                         */
     return kD * (tmpl_LDouble_Sqrt(1.0L + eta - 2.0L*xi) + xi - 1.0L);
