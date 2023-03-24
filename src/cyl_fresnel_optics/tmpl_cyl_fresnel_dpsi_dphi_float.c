@@ -70,14 +70,21 @@
  *          psi' = (kD [sqrt(1 + eta - 2 xi) + xi - 1])'                      *
  *               = kD ([sqrt(1 + eta - 2 xi)]' + xi')                         *
  *               = kD ([eta' - 2 xi'] / (2 sqrt(1 + eta - 2 xi)) + xi')       *
+ *                                                                            *
  *      We need to compute xi' and eta'.                                      *
+ *                                                                            *
  *          xi' = ([r cos(phi) - r0 cos(phi0)] cos(B) / D)'                   *
  *              = -r sin(phi) cos(B) / D                                      *
+ *                                                                            *
  *      For the eta factor we get:                                            *
+ *                                                                            *
  *          eta' = ([r^2 + r0^2 - 2 r r0 cos(phi - phi0)] / D^2)'             *
  *               = 2 r r0 sin(phi - phi0) / D^2                               *
+ *                                                                            *
  *      The first partial derivative is:                                      *
+ *                                                                            *
  *          kD ([eta' - 2 xi'] / [2 sqrt(1 + eta - 2 xi)) + xi']              *
+ *                                                                            *
  *  Notes:                                                                    *
  *      Angles must be in radians. Lengths can be in whatever units, but they *
  *      must be the same units.                                               *
