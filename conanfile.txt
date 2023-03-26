@@ -1,0 +1,9 @@
+[requires]
+boost/1.80.0
+gsl/2.7
+
+[generators]
+cmake_find_package
+
+[options]
+boost:header_only=True
