@@ -39,6 +39,12 @@ static size_t memsize(void)
     GlobalMemoryStatusEx(&status);
     return (size_t)(status.ullTotalPhys);
 }
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
 #else
 #include <unistd.h>
 static size_t memsize(void)
