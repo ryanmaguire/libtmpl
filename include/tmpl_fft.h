@@ -43,6 +43,8 @@
 extern "C" {
 #endif
 
+#include "tmpl_exports.h"
+
 /*  Booleans defined here. Needed for the FFT routines.                       */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -74,12 +76,12 @@ extern "C" {
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_FFT_Cooley_Tukey(tmpl_ComplexDouble *in,
                               tmpl_ComplexDouble *out,
                               size_t N);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
                                tmpl_ComplexDouble *out,
                                size_t N);
@@ -109,12 +111,12 @@ tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_FFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
                                    tmpl_ComplexDouble *out,
                                    size_t N);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
                                     tmpl_ComplexDouble *out,
                                     size_t N);
@@ -145,10 +147,10 @@ tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
  *      segmentation faults and crashes. See libtmpl/examples/fft_examples/   *
  *      for complete examples of proper usage.                                *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_FFT(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out, size_t N);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_CDouble_IFFT(tmpl_ComplexDouble *in, tmpl_ComplexDouble *out, size_t N);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */

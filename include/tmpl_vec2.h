@@ -56,6 +56,8 @@
 /*  size_t type given here.                                                   */
 #include <stddef.h>
 
+#include "tmpl_exports.h"
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -200,14 +202,14 @@ typedef tmpl_2DPolygonDouble tmpl_2DPolygon;
  *      If m or n are larger than 2, the index is computed mod 2, so no       *
  *      undefined behavior can occur.                                         *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_2x2Float_Component(const tmpl_TwoByTwoMatrixFloat *A, size_t m, size_t n);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_2x2Double_Component(const tmpl_TwoByTwoMatrixDouble *A,
                          size_t m, size_t n);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_2x2LDouble_Component(const tmpl_TwoByTwoMatrixLongDouble *A,
                           size_t m, size_t n);
 
@@ -227,10 +229,10 @@ tmpl_2x2LDouble_Component(const tmpl_TwoByTwoMatrixLongDouble *A,
  *  Notes:                                                                    *
  *      Float and Long Double precisions are also provided.                   *
  ******************************************************************************/
-extern float tmpl_2x2Float_Determinant(const tmpl_TwoByTwoMatrixFloat *A);
-extern double tmpl_2x2Double_Determinant(const tmpl_TwoByTwoMatrixDouble *A);
+TMPL_EXPORT extern float tmpl_2x2Float_Determinant(const tmpl_TwoByTwoMatrixFloat *A);
+TMPL_EXPORT extern double tmpl_2x2Double_Determinant(const tmpl_TwoByTwoMatrixDouble *A);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_2x2LDouble_Determinant(const tmpl_TwoByTwoMatrixLongDouble *A);
 
 #define tmpl_2x2_Determinant tmpl_2x2Double_Determinant
@@ -249,13 +251,13 @@ tmpl_2x2LDouble_Determinant(const tmpl_TwoByTwoMatrixLongDouble *A);
  *  Notes:                                                                    *
  *      Float and Long Double precisions are also provided.                   *
  ******************************************************************************/
-extern tmpl_TwoByTwoMatrixFloat
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixFloat
 tmpl_2x2Float_Inverse(const tmpl_TwoByTwoMatrixFloat *A);
 
-extern tmpl_TwoByTwoMatrixDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixDouble
 tmpl_2x2Double_Inverse(const tmpl_TwoByTwoMatrixDouble *A);
 
-extern tmpl_TwoByTwoMatrixLongDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_Inverse(const tmpl_TwoByTwoMatrixLongDouble *A);
 
 #define tmpl_2x2_Inverse tmpl_2x2Double_Inverse
@@ -277,13 +279,13 @@ tmpl_2x2LDouble_Inverse(const tmpl_TwoByTwoMatrixLongDouble *A);
  *  Outputs:                                                                  *
  *      tmpl_TwoByTwoMatrix:                                                  *
  ******************************************************************************/
-extern tmpl_TwoByTwoMatrixFloat
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixFloat
 tmpl_2x2Float_New(float a, float b, float c, float d);
 
-extern tmpl_TwoByTwoMatrixDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixDouble
 tmpl_2x2Double_New(double a, double b, double c, double d);
 
-extern tmpl_TwoByTwoMatrixLongDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_New(long double a, long double b, long double c, long double d);
 
 #define tmpl_2x2_New tmpl_2x2Double_New
@@ -300,10 +302,10 @@ tmpl_2x2LDouble_New(long double a, long double b, long double c, long double d);
  *      tmpl_TwoByTwoMatrixDouble R:                                          *
  *          The rotation matrix.                                              *
  ******************************************************************************/
-extern tmpl_TwoByTwoMatrixFloat tmpl_2x2Float_Rotation(float theta);
-extern tmpl_TwoByTwoMatrixDouble tmpl_2x2Double_Rotation(double theta);
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixFloat tmpl_2x2Float_Rotation(float theta);
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixDouble tmpl_2x2Double_Rotation(double theta);
 
-extern tmpl_TwoByTwoMatrixLongDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_Rotation(long double theta);
 
 #define tmpl_2x2_Rotation tmpl_2x2Double_Rotation
@@ -322,13 +324,13 @@ tmpl_2x2LDouble_Rotation(long double theta);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoByTwoMatrixFloat
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixFloat
 tmpl_2x2Float_Scale(float r, const tmpl_TwoByTwoMatrixFloat *P);
 
-extern tmpl_TwoByTwoMatrixDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixDouble
 tmpl_2x2Double_Scale(double r, const tmpl_TwoByTwoMatrixDouble *P);
 
-extern tmpl_TwoByTwoMatrixLongDouble
+TMPL_EXPORT extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_Scale(long double r, const tmpl_TwoByTwoMatrixLongDouble *P);
 
 #define tmpl_2x2_Scale tmpl_2x2Double_Scale
@@ -365,13 +367,13 @@ tmpl_2x2LDouble_Scale(long double r, const tmpl_TwoByTwoMatrixLongDouble *P);
  *      tmpl_TwoVectorDouble sum:                                             *
  *          The vector sum P+Q.                                               *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Add(const tmpl_TwoVectorFloat *P, const tmpl_TwoVectorFloat *Q);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Add(const tmpl_TwoVectorDouble *P, const tmpl_TwoVectorDouble *Q);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Add(const tmpl_TwoVectorLongDouble *P,
                    const tmpl_TwoVectorLongDouble *Q);
 
@@ -391,15 +393,15 @@ tmpl_2DLDouble_Add(const tmpl_TwoVectorLongDouble *P,
  *      double dot_prod:                                                      *
  *          The dot product of P and Q.                                       *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_2DFloat_Dot_Product(const tmpl_TwoVectorFloat *P,
                          const tmpl_TwoVectorFloat *Q);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_2DDouble_Dot_Product(const tmpl_TwoVectorDouble *P,
                           const tmpl_TwoVectorDouble *Q);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble *P,
                            const tmpl_TwoVectorLongDouble *Q);
 
@@ -419,13 +421,13 @@ tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble *P,
  *  NOTE:                                                                     *
  *      Float and Long Double precisions are also provided.                   *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Orthogonal(const tmpl_TwoVectorFloat *V);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Orthogonal(const tmpl_TwoVectorDouble *V);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Orthogonal(const tmpl_TwoVectorLongDouble *V);
 
 #define tmpl_2D_Orthogonal tmpl_2DDouble_Orthogonal
@@ -446,15 +448,15 @@ tmpl_2DLDouble_Orthogonal(const tmpl_TwoVectorLongDouble *V);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Matrix_Product(const tmpl_TwoByTwoMatrixFloat *A,
                             const tmpl_TwoVectorFloat *P);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Matrix_Product(const tmpl_TwoByTwoMatrixDouble *A,
                              const tmpl_TwoVectorDouble *P);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Matrix_Product(const tmpl_TwoByTwoMatrixLongDouble *A,
                               const tmpl_TwoVectorLongDouble *P);
 
@@ -472,15 +474,15 @@ tmpl_2DLDouble_Matrix_Product(const tmpl_TwoByTwoMatrixLongDouble *A,
  *      tmpl_TwoVector mid:                                                   *
  *          The midpoint of P and Q, defined to be (P + Q) / 2.               *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Midpoint(const tmpl_TwoVectorFloat *P,
                       const tmpl_TwoVectorFloat *Q);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Midpoint(const tmpl_TwoVectorDouble *P,
                        const tmpl_TwoVectorDouble *Q);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble *P,
                         const tmpl_TwoVectorLongDouble *Q);
 
@@ -503,10 +505,10 @@ tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble *P,
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat tmpl_2DFloat_Rect(float x, float y);
-extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
+TMPL_EXPORT extern tmpl_TwoVectorFloat tmpl_2DFloat_Rect(float x, float y);
+TMPL_EXPORT extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Rect(long double x, long double y);
 
 #define tmpl_TwoVector_Rect tmpl_DoubleTwoVector_Rect
@@ -526,9 +528,9 @@ tmpl_2DLDouble_Rect(long double x, long double y);
  *  Note:                                                                     *
  *      This is not a function, but rather a preprocessor macro.              *
  ******************************************************************************/
-extern float tmpl_2DFloat_X(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_X(const tmpl_TwoVectorDouble *P);
-extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble *P);
+TMPL_EXPORT extern float tmpl_2DFloat_X(const tmpl_TwoVectorFloat *P);
+TMPL_EXPORT extern double tmpl_2DDouble_X(const tmpl_TwoVectorDouble *P);
+TMPL_EXPORT extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble *P);
 
 #define tmpl_2D_X tmpl_2DDouble_X
 
@@ -547,9 +549,9 @@ extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble *P);
  *  Note:                                                                     *
  *      This is not a function, but rather a preprocessor macro.              *
  ******************************************************************************/
-extern float tmpl_2DFloat_Y(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_Y(const tmpl_TwoVectorDouble *P);
-extern long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble *P);
+TMPL_EXPORT extern float tmpl_2DFloat_Y(const tmpl_TwoVectorFloat *P);
+TMPL_EXPORT extern double tmpl_2DDouble_Y(const tmpl_TwoVectorDouble *P);
+TMPL_EXPORT extern long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble *P);
 
 #define tmpl_2D_Y tmpl_2DDouble_Y
 
@@ -573,15 +575,15 @@ extern long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble *P);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Subtract(const tmpl_TwoVectorFloat *P,
                       const tmpl_TwoVectorFloat *Q);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Subtract(const tmpl_TwoVectorDouble *P,
                        const tmpl_TwoVectorDouble *Q);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Subtract(const tmpl_TwoVectorLongDouble *P,
                         const tmpl_TwoVectorLongDouble *Q);
 
@@ -601,19 +603,19 @@ tmpl_2DLDouble_Subtract(const tmpl_TwoVectorLongDouble *P,
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Scale(float r, const tmpl_TwoVectorFloat *P);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Scale(double r, const tmpl_TwoVectorDouble *P);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Scale(long double r, const tmpl_TwoVectorLongDouble *P);
 
-extern tmpl_TwoVectorFloat tmpl_2DFloat_Polar(float r, float theta);
-extern tmpl_TwoVectorDouble tmpl_2DDouble_Polar(double r, double theta);
+TMPL_EXPORT extern tmpl_TwoVectorFloat tmpl_2DFloat_Polar(float r, float theta);
+TMPL_EXPORT extern tmpl_TwoVectorDouble tmpl_2DDouble_Polar(double r, double theta);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Polar(long double r, long double theta);
 
 /******************************************************************************
@@ -635,9 +637,9 @@ tmpl_2DLDouble_Polar(long double r, long double theta);
 #include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_float.h>
 #include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_ldouble.h>
 #else
-extern float tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble *P);
-extern long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P);
+TMPL_EXPORT extern float tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat *P);
+TMPL_EXPORT extern double tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble *P);
+TMPL_EXPORT extern long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P);
 #endif
 
 /******************************************************************************
@@ -652,10 +654,10 @@ extern long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P);
  *      double norm_sq:                                                       *
  *          The value ||P||_2^2 = x^2 + y^2.                                  *
  ******************************************************************************/
-extern float tmpl_2DFloat_L2_Norm_Squared(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble *P);
+TMPL_EXPORT extern float tmpl_2DFloat_L2_Norm_Squared(const tmpl_TwoVectorFloat *P);
+TMPL_EXPORT extern double tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble *P);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble *P);
 
 /******************************************************************************
@@ -672,13 +674,13 @@ tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble *P);
  *  NOTES:                                                                    *
  *      If P is the zero vector P = (0, 0), this function returns (NaN, NaN). *
  ******************************************************************************/
-extern tmpl_TwoVectorFloat
+TMPL_EXPORT extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat *P);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble *P);
 
-extern tmpl_TwoVectorLongDouble
+TMPL_EXPORT extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble *P);
 
 /******************************************************************************
@@ -715,17 +717,17 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble *P);
  *  Location:                                                                 *
  *      The source code is contained in src/kissvg.c                          *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_2DFloat_Rel_Angle(const tmpl_TwoVectorFloat *O,
                        const tmpl_TwoVectorFloat *P,
                        const tmpl_TwoVectorFloat *Q);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_2DDouble_Rel_Angle(const tmpl_TwoVectorDouble *O,
                         const tmpl_TwoVectorDouble *P,
                         const tmpl_TwoVectorDouble *Q);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_2DLDouble_Rel_Angle(const tmpl_TwoVectorLongDouble *O,
                          const tmpl_TwoVectorLongDouble *P,
                          const tmpl_TwoVectorLongDouble *Q);
@@ -747,54 +749,54 @@ tmpl_2DLDouble_Rel_Angle(const tmpl_TwoVectorLongDouble *O,
  *          A Boolean that is true if A, B, and C are collinear, and false    *
  *          otherwise.                                                        *
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_2DFloat_Are_Collinear(const tmpl_TwoVectorFloat *A,
                            const tmpl_TwoVectorFloat *B,
                            const tmpl_TwoVectorFloat *C);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_2DDouble_Are_Collinear(const tmpl_TwoVectorDouble *A,
                             const tmpl_TwoVectorDouble *B,
                             const tmpl_TwoVectorDouble *C);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_2DLDouble_Are_Collinear(const tmpl_TwoVectorLongDouble *A,
                              const tmpl_TwoVectorLongDouble *B,
                              const tmpl_TwoVectorLongDouble *C);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_2DFloat_L2_Dist(const tmpl_TwoVectorFloat *P,
                      const tmpl_TwoVectorFloat *Q);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_2DDouble_L2_Dist(const tmpl_TwoVectorDouble *P,
                       const tmpl_TwoVectorDouble *Q);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble *P,
                        const tmpl_TwoVectorLongDouble *Q);
 
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_LineSegment2D_Intersect(tmpl_2DLineSegment L0, tmpl_2DLineSegment L1);
 
-extern tmpl_TwoVectorDouble
+TMPL_EXPORT extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Point_Inverse(const tmpl_2DCircleDouble *C,
                             const tmpl_TwoVectorDouble *P);
 
-extern tmpl_2DCircleDouble
+TMPL_EXPORT extern tmpl_2DCircleDouble
 tmpl_2DDouble_Circle_Inverse(const tmpl_2DCircleDouble *C0,
                              const tmpl_2DCircleDouble *C1);
 
-extern tmpl_2DCircleDouble
+TMPL_EXPORT extern tmpl_2DCircleDouble
 tmpl_2DDouble_Line_Inverse(const tmpl_2DCircleDouble *C,
                            const tmpl_2DLineDouble *L);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_2DDouble_Circle_As_Line(tmpl_2DCircleDouble *circle,
                              const tmpl_TwoVectorDouble *P,
                              const tmpl_TwoVectorDouble *V);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_2DDouble_Reset_Circle(const tmpl_2DCircleDouble *circle,
                            const tmpl_TwoVector *P, double r);
 

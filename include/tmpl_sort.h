@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+#include "tmpl_exports.h"
+
 /*  size_t typedef given here.                                                */
 #include <stddef.h>
 
@@ -51,9 +53,9 @@ extern "C" {
  *      If malloc fails and returns NULL the algorithm is aborted and 0 is    *
  *      returned. The data will be untouched and still unsorted.              *
  ******************************************************************************/
-int tmpl_Double_Merge_Sort(double *arr, size_t arr_size);
-int tmpl_Float_Merge_Sort(float *arr, size_t arr_size);
-int tmpl_LDouble_Merge_Sort(long double *arr, size_t arr_size);
+TMPL_EXPORT extern int tmpl_Double_Merge_Sort(double *arr, size_t arr_size);
+TMPL_EXPORT extern int tmpl_Float_Merge_Sort(float *arr, size_t arr_size);
+TMPL_EXPORT extern int tmpl_LDouble_Merge_Sort(long double *arr, size_t arr_size);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

@@ -51,6 +51,8 @@
 #ifndef TMPL_RATIONAL_H
 #define TMPL_RATIONAL_H
 
+#include "tmpl_exports.h"
+
 /*  Booleans are found here.                                                  */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -70,8 +72,8 @@ typedef struct tmpl_RationalNumber_Def {
 } tmpl_RationalNumber;
 
 /*  Commonly used rational numbers.                                           */
-extern const tmpl_RationalNumber tmpl_RationalNumber_Zero;
-extern const tmpl_RationalNumber tmpl_RationalNumber_One;
+TMPL_EXPORT extern const tmpl_RationalNumber tmpl_RationalNumber_Zero;
+TMPL_EXPORT extern const tmpl_RationalNumber tmpl_RationalNumber_One;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -89,7 +91,7 @@ extern const tmpl_RationalNumber tmpl_RationalNumber_One;
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_add.c                              *
  ******************************************************************************/
-extern tmpl_RationalNumber
+TMPL_EXPORT extern tmpl_RationalNumber
 tmpl_RationalNumber_Add(const tmpl_RationalNumber *p,
                         const tmpl_RationalNumber *q);
 
@@ -108,7 +110,7 @@ tmpl_RationalNumber_Add(const tmpl_RationalNumber *p,
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_add.c                              *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_RationalNumber_AddTo(tmpl_RationalNumber *p, const tmpl_RationalNumber *q);
 
 /******************************************************************************
@@ -127,7 +129,7 @@ tmpl_RationalNumber_AddTo(tmpl_RationalNumber *p, const tmpl_RationalNumber *q);
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_create.c                           *
  ******************************************************************************/
-extern tmpl_RationalNumber
+TMPL_EXPORT extern tmpl_RationalNumber
 tmpl_RationalNumber_Create(signed long int numer, signed long int denom);
 
 /******************************************************************************
@@ -146,7 +148,7 @@ tmpl_RationalNumber_Create(signed long int numer, signed long int denom);
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_are_equal.c                        *
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_RationalNumber_Are_Equal(const tmpl_RationalNumber *p,
                               const tmpl_RationalNumber *q);
 
@@ -164,7 +166,7 @@ tmpl_RationalNumber_Are_Equal(const tmpl_RationalNumber *p,
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_is_zero.c                          *
  ******************************************************************************/
-extern tmpl_Bool
+TMPL_EXPORT extern tmpl_Bool
 tmpl_RationalNumber_Is_Zero(const tmpl_RationalNumber *p);
 
 /******************************************************************************
@@ -183,7 +185,7 @@ tmpl_RationalNumber_Is_Zero(const tmpl_RationalNumber *p);
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_divide.c                           *
  ******************************************************************************/
-extern tmpl_RationalNumber
+TMPL_EXPORT extern tmpl_RationalNumber
 tmpl_RationalNumber_Divide(const tmpl_RationalNumber *p,
                            const tmpl_RationalNumber *q);
 
@@ -203,7 +205,7 @@ tmpl_RationalNumber_Divide(const tmpl_RationalNumber *p,
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_multiply.c                         *
  ******************************************************************************/
-extern tmpl_RationalNumber
+TMPL_EXPORT extern tmpl_RationalNumber
 tmpl_RationalNumber_Multiply(const tmpl_RationalNumber *p,
                              const tmpl_RationalNumber *q);
 
@@ -221,7 +223,7 @@ tmpl_RationalNumber_Multiply(const tmpl_RationalNumber *p,
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_reduce.c                           *
  ******************************************************************************/
-extern tmpl_RationalNumber
+TMPL_EXPORT extern tmpl_RationalNumber
 tmpl_RationalNumber_Reduce(const tmpl_RationalNumber *p);
 
 /******************************************************************************
@@ -240,7 +242,7 @@ tmpl_RationalNumber_Reduce(const tmpl_RationalNumber *p);
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_subtract.c                         *
  ******************************************************************************/
-extern tmpl_RationalNumber
+TMPL_EXPORT extern tmpl_RationalNumber
 tmpl_RationalNumber_Subtract(const tmpl_RationalNumber *p,
                              const tmpl_RationalNumber *q);
 
@@ -259,7 +261,7 @@ tmpl_RationalNumber_Subtract(const tmpl_RationalNumber *p,
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_print_string.c                     *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_RationalNumber_Print_String(FILE *fp, tmpl_RationalNumber p);
 
 /******************************************************************************
@@ -277,9 +279,9 @@ tmpl_RationalNumber_Print_String(FILE *fp, tmpl_RationalNumber p);
  *  Source Code:                                                              *
  *      libtmpl/src/rational/tmpl_rational_as_real.c                          *
  ******************************************************************************/
-extern float tmpl_RationalNumber_As_Float(const tmpl_RationalNumber *p);
-extern double tmpl_RationalNumber_As_Double(const tmpl_RationalNumber *p);
-extern long double tmpl_RationalNumber_As_LDouble(const tmpl_RationalNumber *p);
+TMPL_EXPORT extern float tmpl_RationalNumber_As_Float(const tmpl_RationalNumber *p);
+TMPL_EXPORT extern double tmpl_RationalNumber_As_Double(const tmpl_RationalNumber *p);
+TMPL_EXPORT extern long double tmpl_RationalNumber_As_LDouble(const tmpl_RationalNumber *p);
 
 #endif
 /*  End of include guard.                                                     */

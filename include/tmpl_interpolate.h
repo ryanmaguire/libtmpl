@@ -43,7 +43,7 @@
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_INTERPOLATE_H
 #define TMPL_INTERPOLATE_H
-
+#include "tmpl_exports.h"
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Sorted_Interp1d                                           *
@@ -69,15 +69,15 @@
  *      It is assumed the pointer x has it's data sorted and strictly         *
  *      monotonically increasing. That is, x[n] < x[n+1] for all valid n.     *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Float_Sorted_Interp1d(float *x, float *y, unsigned long N,
                            float *x_new, float *y_new, unsigned long N_new);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Double_Sorted_Interp1d(double *x, double *y, unsigned long N,
                             double *x_new, double *y_new, unsigned long N_new);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDouble_Sorted_Interp1d(long double *x, long double *y, unsigned long N,
                              long double *x_new, long double *y_new,
                              unsigned long N_new);

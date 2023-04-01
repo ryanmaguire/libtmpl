@@ -26,13 +26,13 @@ typedef enum {
     tmpl_Sunday
 } tmpl_Weekday;
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Gregorian_Date_To_Julian_Date(unsigned long int year,
                                           tmpl_Month month,
                                           unsigned char day,
                                           double hour);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_UTC_To_Julian_Date(double year, double month, double day,
                                double hour, double minute, double second);
 

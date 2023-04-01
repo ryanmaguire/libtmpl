@@ -156,7 +156,7 @@ float tmpl_Float_Exp_Neg_Kernel(float x)
 
 /*  This function is declared after this file is included in tmpl_math.h. Give*
  *  the prototype here for safety.                                            */
-extern float tmpl_Float_Pow2(signed int expo);
+TMPL_EXPORT extern float tmpl_Float_Pow2(signed int expo);
 
 /*  Function for computing exp(x) for 1 < -x < log(FLT_MAX).                  */
 TMPL_INLINE_DECL
