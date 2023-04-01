@@ -28,7 +28,7 @@ ahh(const tmpl_ComplexFloat *z0, const tmpl_ComplexFloat *z1)
     return sum;
 }
 
-TEST2(float, tmpl_ComplexFloat, complex float, ahh, +)
+TEST2(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, ahh, +, COMPLEX_FLOAT_CTOR)
 #else
-TEST3(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Add, +)
+TEST3(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Add, +, COMPLEX_FLOAT_CTOR)
 #endif

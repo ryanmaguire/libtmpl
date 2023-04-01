@@ -17,11 +17,18 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
+#ifdef _MSC_VER
+static inline _Fcomplex add(float x, _Fcomplex z)
+{
+    return _FCbuild(crealf(z) + x, cimagf(z));
+}
+#else
 static inline complex float add(float x, complex float z)
 {
     return z + x;
 }
+#endif
 TEST5(float,
       tmpl_ComplexFloat,
-      complex float,
-      tmpl_CFloat_Add_Real, add)
+      NATIVE_COMPLEX_FLOAT,
+      tmpl_CFloat_Add_Real, add, COMPLEX_FLOAT_CTOR)
