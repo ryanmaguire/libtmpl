@@ -17,9 +17,11 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-static void func(double t, double *s, double *c)
+static const float d2r = 0.01745329251994329576923690768488612713443F;
+static void func(float t, float *s, float *c)
 {
-    *s = sin(t);
-    *c = cos(t);
+    const float arg = fmodf(t, 360.0F) * d2r;
+    *s = sinf(arg);
+    *c = cosf(arg);
 }
-TEST4(double, -1.0E6, 1.0E6, tmpl_Double_SinCos, func)
+TEST4(float, -1.0E6F, 1.0E6F, tmpl_Float_SinCosd, func)

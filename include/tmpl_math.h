@@ -3083,10 +3083,10 @@ TMPL_EXPORT extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
  *  Arguments:                                                                *
  *      double t:                                                             *
  *          A real number.                                                    *
- *      double *x_ptr;                                                        *
- *          A pointer to the x-coordinate of the point on the circle.         *
- *      double *y_ptr;                                                        *
+ *      double *sin_t:                                                        *
  *          A pointer to the y-coordinate of the point on the circle.         *
+ *      double *cos_t:                                                        *
+ *          A pointer to the x-coordinate of the point on the circle.         *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
@@ -3098,16 +3098,37 @@ tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_SinCosd                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the point on a circle from an angle given in degrees.        *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          The angle in degrees.                                             *
+ *      double *sind_t:                                                       *
+ *          A pointer to the y-coordinate of the point on the circle.         *
+ *      double *cosd_t:                                                       *
+ *          A pointer to the x-coordinate of the point on the circle.         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinCosd(float t, float *sind_t, float *cosd_t);
+extern void tmpl_Double_SinCosd(double t, double *sind_t, double *cosd_t);
+
+extern void
+tmpl_LDouble_SinCosd(long double t, long double *sind_t, long double *cosd_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_SinCosPi                                                  *
  *  Purpose:                                                                  *
  *      Computes the point on a circle from a given normalized angle.         *
  *  Arguments:                                                                *
  *      double t:                                                             *
  *          A real number.                                                    *
- *      double *x_ptr;                                                        *
- *          A pointer to the x-coordinate of the point on the circle.         *
- *      double *y_ptr;                                                        *
+ *      double *sinpi_t:                                                      *
  *          A pointer to the y-coordinate of the point on the circle.         *
+ *      double *cospi_t:                                                      *
+ *          A pointer to the x-coordinate of the point on the circle.         *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
