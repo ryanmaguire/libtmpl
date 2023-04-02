@@ -60,6 +60,8 @@ extern "C" {
 /*  The size_t data type is found here.                                       */
 #include <stddef.h>
 
+#include "tmpl_exports.h"
+
 /*  FILE data type found here.                                                */
 #include <stdio.h>
 
@@ -158,7 +160,7 @@ typedef struct tmpl_LongLongPolynomial_Def {
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
                        const tmpl_IntPolynomial *Q,
                        tmpl_IntPolynomial *sum);
@@ -183,9 +185,9 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_calloc.c                       *
  ******************************************************************************/
-extern tmpl_ShortPolynomial tmpl_ShortPolynomial_Calloc(size_t length);
-extern tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(size_t length);
-extern tmpl_LongPolynomial tmpl_LongPolynomial_Calloc(size_t length);
+TMPL_EXPORT extern tmpl_ShortPolynomial tmpl_ShortPolynomial_Calloc(size_t length);
+TMPL_EXPORT extern tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(size_t length);
+TMPL_EXPORT extern tmpl_LongPolynomial tmpl_LongPolynomial_Calloc(size_t length);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -207,7 +209,7 @@ extern tmpl_LongPolynomial tmpl_LongPolynomial_Calloc(size_t length);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_calloc.c                       *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
                         const tmpl_IntPolynomial *src);
 
@@ -230,9 +232,9 @@ tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_destroy.c                      *
  ******************************************************************************/
-extern void tmpl_ShortPolynomial_Destroy(tmpl_ShortPolynomial *poly);
-extern void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *poly);
-extern void tmpl_LongPolynomial_Destroy(tmpl_LongPolynomial *poly);
+TMPL_EXPORT extern void tmpl_ShortPolynomial_Destroy(tmpl_ShortPolynomial *poly);
+TMPL_EXPORT extern void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *poly);
+TMPL_EXPORT extern void tmpl_LongPolynomial_Destroy(tmpl_LongPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -251,9 +253,9 @@ extern void tmpl_LongPolynomial_Destroy(tmpl_LongPolynomial *poly);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_create_empty.c                 *
  ******************************************************************************/
-extern void tmpl_ShortPolynomial_Init(tmpl_ShortPolynomial *P);
-extern void tmpl_IntPolynomial_Init(tmpl_IntPolynomial *P);
-extern void tmpl_LongPolynomial_Init(tmpl_IntPolynomial *P);
+TMPL_EXPORT extern void tmpl_ShortPolynomial_Init(tmpl_ShortPolynomial *P);
+TMPL_EXPORT extern void tmpl_IntPolynomial_Init(tmpl_IntPolynomial *P);
+TMPL_EXPORT extern void tmpl_LongPolynomial_Init(tmpl_IntPolynomial *P);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -270,7 +272,7 @@ extern void tmpl_LongPolynomial_Init(tmpl_IntPolynomial *P);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
                             const tmpl_IntPolynomial *Q,
                             tmpl_IntPolynomial *prod);
@@ -290,7 +292,7 @@ tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
                                   const tmpl_IntPolynomial *Q,
                                   tmpl_IntPolynomial *prod);
@@ -316,7 +318,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_get_string.c                 *
  ******************************************************************************/
-extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
+TMPL_EXPORT extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -336,7 +338,7 @@ extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_print_string.c               *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_IntPolynomial *poly);
 
 /******************************************************************************
@@ -362,7 +364,7 @@ tmpl_PolynomialZ_Print_String(FILE *fp, tmpl_IntPolynomial *poly);
  *  Examples:                                                                 *
  *      libtmpl/examples/polynomial/tmpl_subtract_polynomial_z_example_001.c  *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PolynomialZ_Subtract(tmpl_IntPolynomial *P,
                           tmpl_IntPolynomial *Q,
                           tmpl_IntPolynomial *diff);
@@ -388,7 +390,7 @@ tmpl_PolynomialZ_Subtract(tmpl_IntPolynomial *P,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_set_term.c                   *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PolynomialZ_Set_Term(tmpl_IntPolynomial *poly,
                           unsigned long int term,
                           signed long int coefficient);
@@ -412,7 +414,7 @@ tmpl_PolynomialZ_Set_Term(tmpl_IntPolynomial *poly,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_extract_term.c               *
  ******************************************************************************/
-extern signed long int
+TMPL_EXPORT extern signed long int
 tmpl_PolynomialZ_Extract_Term(tmpl_IntPolynomial *poly, unsigned long int term);
 
 /******************************************************************************
@@ -431,7 +433,7 @@ tmpl_PolynomialZ_Extract_Term(tmpl_IntPolynomial *poly, unsigned long int term);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_shrink.c                     *
  ******************************************************************************/
-extern void tmpl_IntPolynomial_Shrink(tmpl_IntPolynomial *poly);
+TMPL_EXPORT extern void tmpl_IntPolynomial_Shrink(tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -452,7 +454,7 @@ extern void tmpl_IntPolynomial_Shrink(tmpl_IntPolynomial *poly);
  *      libtmpl/examples/polynomial/tmpl_deriv_polynomial_z_example_002.c     *
  *      libtmpl/examples/polynomial/tmpl_deriv_polynomial_z_example_003.c     *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PolynomialZ_Deriv(tmpl_IntPolynomial *poly, tmpl_IntPolynomial *deriv);
 
 /******************************************************************************
@@ -472,7 +474,7 @@ tmpl_PolynomialZ_Deriv(tmpl_IntPolynomial *poly, tmpl_IntPolynomial *deriv);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PolynomialZ_Scale(tmpl_IntPolynomial *poly,
                        signed long int scale,
                        tmpl_IntPolynomial *prod);
@@ -494,7 +496,7 @@ tmpl_PolynomialZ_Scale(tmpl_IntPolynomial *poly,
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PolynomialZ_ScaleSelf(tmpl_IntPolynomial *poly, signed long int scale);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
