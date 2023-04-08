@@ -30,7 +30,7 @@ jobs:
                     cmake_preset: ci-linux
 
         steps:
-        -   uses: actions/checkout@v2
+        -   uses: actions/checkout@v3
 
         -   uses: seanmiddleditch/gha-setup-ninja@master
 
