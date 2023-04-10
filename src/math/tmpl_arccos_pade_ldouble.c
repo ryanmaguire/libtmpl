@@ -109,7 +109,7 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
     return tmpl_Pi_By_Two_L - (x + x*r);
 }
-/*  End of tmpl_Double_Arccos_Pade.                                           */
+/*  End of tmpl_LDouble_Arccos_Pade.                                          */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef P5
