@@ -109,15 +109,22 @@ def rat_remez(func, num_deg, den_deg, start, end):
         # Reset the samples to the peaks and compute the function there.
         x_vals, y_vals = reset_samples(func, xarr, yarr)
 
-        # If there were not enough samples in x_vals, shrink the increment.
+        # If there were not enough samples in x_vals, add some.
         if len(x_vals) != num_deg + den_deg + 2:
-            tmpld.constants.remez_increment *= tmpld.constants.one_tenth
+            for value in x_vals:
+                tmpld.mpmath.nprint(value)
 
             print(
-                "rat_remez: shrinking increment size. new increment = %E" %
-                float(tmpld.constants.remez_increment)
+                "Please Add %d Missing Points. Captured Points Printed Above."
+                % (num_deg + den_deg + 2) - len(x_vals)
             )
 
-            xarr, farr, x_vals, y_vals = start_exchange(
-                func, num_deg + den_deg, start, end
-            )
+            plt.show()
+            plt.ion()
+            plt.plot(xarr, yarr)
+
+            for _ in range(num_deg + den_deg + 2 - len(x_vals)):
+                x_vals.append(tmpld.mpmath.mpf(float(input("Select Point: "))))
+                y_vals.append(func(x_vals[-1]))
+
+            plt.close()
