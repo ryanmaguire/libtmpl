@@ -18,13 +18,37 @@
 #   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          #
 ################################################################################
 #   Purpose:                                                                   #
-#       Provide various functions that appear in Taylor series, etc.           #
+#       Computes the rising factorial of 1/2.                                  #
 ################################################################################
 #   Author: Ryan Maguire                                                       #
-#   Date:   March 13, 2023.                                                    #
+#   Date:   April 17, 2023.                                                    #
 ################################################################################
 """
 
-from tmpld.math.double_factorial import double_factorial
-from tmpld.math.fraction_to_mpf import fraction_to_mpf
-from tmpld.math.half_rising_factorial import half_rising_factorial
+# Output is a fraction.
+import fractions
+
+# Double factorial needed.
+from . import double_factorial
+
+# Function for computing the double factorial, n!! = n*(n-2)*...
+def half_rising_factorial(value):
+    """
+        Function:
+            half_rising_factorial
+        Purpose:
+            Computes the rising factorial (1/2) ^ (value)
+        Arguments:
+            value (int):
+                An integer.
+        Output:
+            rising_fact (int):
+                The rising factorial of (1/2) 'value' times.
+    """
+    # The numerator is given by the double factorial.
+    num = double_factorial(2*value - 1)
+
+    # The denominator is a power of two.
+    den = 2 ** value
+
+    return fractions.Fraction(num, den)
