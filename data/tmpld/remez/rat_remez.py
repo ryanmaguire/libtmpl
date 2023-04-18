@@ -50,6 +50,9 @@ from tmpld.remez.reset_samples import reset_samples
 from tmpld.remez.perform_rational_remez_exchange import \
     perform_rational_remez_exchange
 
+# Function for updating points.
+from tmpld.remez.select_points import select_points
+
 # Computes the rational Minimax function using the Remez exchange.
 def rat_remez(func, num_deg, den_deg, start, end):
     """
@@ -116,15 +119,7 @@ def rat_remez(func, num_deg, den_deg, start, end):
 
             print(
                 "Please Add %d Missing Points. Captured Points Printed Above."
-                % (num_deg + den_deg + 2) - len(x_vals)
+                % ((num_deg + den_deg + 2) - len(x_vals))
             )
 
-            plt.show()
-            plt.ion()
-            plt.plot(xarr, yarr)
-
-            for _ in range(num_deg + den_deg + 2 - len(x_vals)):
-                x_vals.append(tmpld.mpmath.mpf(float(input("Select Point: "))))
-                y_vals.append(func(x_vals[-1]))
-
-            plt.close()
+            select_points(func, x_vals, y_vals, xarr, yarr, num_deg + den_deg)
