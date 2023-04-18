@@ -1,7 +1,6 @@
 #ifndef TMPL_SINCOS_COS_PRECISE_EVAL_H
 #define TMPL_SINCOS_COS_PRECISE_EVAL_H
 
-#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/math/tmpl_sincos_data_double.h>
 
@@ -15,7 +14,7 @@
 
 #define TMPL_BIG_NUMBER (5.2776558133248E13)
 
-TMPL_INLINE_DECL
+static
 double tmpl_Double_Cos_Precise_Eval(double x, double dx)
 {
     tmpl_IEEE754_Double w;

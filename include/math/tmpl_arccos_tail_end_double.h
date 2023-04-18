@@ -46,23 +46,25 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/04/18: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_arccos_tail_end_double.c to include this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_ARCCOS_TAIL_END_DOUBLE_H
 #define TMPL_ARCCOS_TAIL_END_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -128,9 +130,6 @@ double tmpl_Double_Arccos_Tail_End(double x)
 #undef Q1
 #undef Q0
 #undef TMPL_SQUARE_ROOT
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
