@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_arccos_pade_float_inline                         *
+ *                           tmpl_arccos_pade_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the (4, 2) Pade approximant of acos(x) at single precision.  *
@@ -39,7 +39,7 @@
  *      Use Horner's method to evaluate the polynomials for the numerator     *
  *      and denominator.                                                      *
  *                                                                            *
- *          asin(x)+x-pi/2   a0 + a1*x^2 + a2*x^4                             *
+ *          acos(x)+x-pi/2   a0 + a1*x^2 + a2*x^4                             *
  *          -------------- = --------------------                             *
  *               x^3              1 + b1*x^2                                  *
  *  Notes:                                                                    *
@@ -48,23 +48,25 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/04/18: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_arccos_pade_float.c to just include this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_ARCCOS_PADE_FLOAT_H
 #define TMPL_ARCCOS_PADE_FLOAT_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Check if inline support has been requested.                               */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -101,9 +103,6 @@ float tmpl_Float_Arccos_Pade(float x)
 #undef P0
 #undef Q1
 #undef Q0
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
