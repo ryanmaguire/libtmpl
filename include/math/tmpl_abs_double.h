@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_abs_double_inline                           *
+ *                              tmpl_abs_double                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x) = |x| at double precision, inline version.              *
+ *      Computes f(x) = |x| at double precision.                              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -81,12 +81,34 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 5, 2022                                             *
+ *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/10/18: Ryan Maguire                                                  *
- *      Moved to own file.                                                    *
+ *  2020/11/01: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2020/12/08: Ryan Maguire                                                  *
+ *      Frozen for v1.3 of librssringoccs.                                    *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied file from rss_ringoccs.                                        *
+ *  2021/02/24: Ryan Maguire                                                  *
+ *      Added IEEE 754 code for computing the absolute value function.        *
+ *  2021/09/10: Ryan Maguire                                                  *
+ *      Moved float and long double to their own files.                       *
+ *  2022/03/01: Ryan Maguire                                                  *
+ *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
+ *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
+ *  2022/05/05: Ryan Maguire                                                  *
+ *      Adding inline support. This is about 2x faster. It is now the default *
+ *      configuration in the Makefile.                                        *
+ *  2022/05/31: Ryan Maguire                                                  *
+ *      Added benchmarks.                                                     *
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Removed math.h version (fabs alias). This version is now a macro for  *
+ *      the fabs function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS is *
+ *      set to zero).                                                         *
+ *  2023/04/18: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_abs_double.c to just include this file.         *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -95,9 +117,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -150,9 +169,6 @@ double tmpl_Double_Abs(double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
