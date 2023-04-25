@@ -39,7 +39,7 @@ void tmpl_IntPolynomial_Shrink(tmpl_IntPolynomial *P)
         P->error_occurred = tmpl_True;
         P->error_message = tmpl_strdup(
             "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Naive_Multiply\n\n"
+            "    tmpl_IntPolynomial_Shrink\n\n"
             "realloc failed. Aborting.\n\n"
         );
     }

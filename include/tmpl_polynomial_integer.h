@@ -343,7 +343,7 @@ tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_IntPolynomial_Naive_Multiply                                     *
+ *      tmpl_IntPolynomial_Multiply_Naive                                     *
  *  Purpose:                                                                  *
  *      Multiplies two elements of Z[x].                                      *
  *  Arguments:                                                                *
@@ -357,7 +357,7 @@ tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
+tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
                                   const tmpl_IntPolynomial *Q,
                                   tmpl_IntPolynomial *prod);
 

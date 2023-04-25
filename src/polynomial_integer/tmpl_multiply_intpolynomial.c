@@ -10,5 +10,5 @@ tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
                             const tmpl_IntPolynomial *Q,
                             tmpl_IntPolynomial *prod)
 {
-    tmpl_IntPolynomial_Naive_Multiply(P, Q, prod);
+    tmpl_IntPolynomial_Multiply_Naive(P, Q, prod);
 }
