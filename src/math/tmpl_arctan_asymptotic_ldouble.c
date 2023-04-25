@@ -26,14 +26,5 @@
  *  Date:       September 20, 2022                                            *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is not requested.                         */
-#if TMPL_USE_INLINE != 1
-
 /*  Implemented in include/math/tmpl_arctan_asymptotic_ldouble.h.             */
 #include "../../include/math/tmpl_arctan_asymptotic_ldouble.h"
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
