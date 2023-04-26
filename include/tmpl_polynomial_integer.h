@@ -323,6 +323,49 @@ extern void tmpl_IntPolynomial_Init(tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Multiply_Monomial_Kernel                           *
+ *  Purpose:                                                                  *
+ *      Multiplies a polynomial P(x) by coeff*x^deg.                          *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      deg (size_t):                                                         *
+ *          The degree of the monomial.                                       *
+ *      coeff (int):                                                          *
+ *          The coefficient of the monomial.                                  *
+ *      prod (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial, the product coeff*x^deg * P(x).        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Multiply_Monomial_Kernel(const tmpl_IntPolynomial *P,
+                                            size_t deg, int coeff,
+                                            tmpl_IntPolynomial *prod);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Multiply_Monomial                                  *
+ *  Purpose:                                                                  *
+ *      Multiplies a polynomial P(x) by coeff*x^deg.                          *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      deg (size_t):                                                         *
+ *          The degree of the monomial.                                       *
+ *      coeff (int):                                                          *
+ *          The coefficient of the monomial.                                  *
+ *      prod (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial, the product coeff*x^deg * P(x).        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *P, size_t deg,
+                                     int coeff, tmpl_IntPolynomial *prod);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_IntPolynomial_Multiply                                           *
  *  Purpose:                                                                  *
  *      Multiplies two elements of Z[x].                                      *
@@ -406,39 +449,51 @@ extern void tmpl_IntPolynomial_Print_String(FILE *fp, tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_PolynomialZ_Subtract                                             *
+ *      tmpl_IntPolynomial_Subtract_Kernel                                    *
  *  Purpose:                                                                  *
- *      Subtracts two elements of Z[x].                                       *
+ *      Subtracts two elements of Z[x] without error checks.                  *
  *  Arguments:                                                                *
- *      P (tmpl_PolynomialZ *):                                               *
+ *      P (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
- *      Q (tmpl_PolynomialZ *):                                               *
+ *      Q (const tmpl_IntPolynomial *):                                       *
  *          Another pointer to a polynomial.                                  *
- *      diff (tmpl_PolynomialZ *):                                            *
+ *      diff (tmpl_IntPolynomial *):                                          *
  *          A pointer to a polynomial, the value P - Q will be stored in it.  *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Notes:                                                                    *
- *      It is assumed none of the three input polynomials are NULL. If        *
- *      sum has it's degree not equal to the max of the two degrees of P and  *
- *      Q realloc will be called on the coeffs pointer.                       *
- *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_subtract_polynomial_z.c                   *
- *  Examples:                                                                 *
- *      libtmpl/examples/polynomial/tmpl_subtract_polynomial_z_example_001.c  *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_Subtract(tmpl_IntPolynomial *P,
-                            tmpl_IntPolynomial *Q,
+tmpl_IntPolynomial_Subtract_Kernel(const tmpl_IntPolynomial *P,
+                                   const tmpl_IntPolynomial *Q,
+                                   tmpl_IntPolynomial *diff);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Subtract                                           *
+ *  Purpose:                                                                  *
+ *      Subtracts two elements of Z[x].                                       *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      diff (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial, the value P - Q will be stored in it.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Subtract(const tmpl_IntPolynomial *P,
+                            const tmpl_IntPolynomial *Q,
                             tmpl_IntPolynomial *diff);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_PolynomialZ_Set_Term                                             *
+ *      tmpl_IntPolynomial_Set_Term                                           *
  *  Purpose:                                                                  *
  *      Set the coefficient of a given term to the given value.               *
  *  Arguments:                                                                *
- *      poly (tmpl_PolynomialZ *):                                            *
+ *      poly (tmpl_IntPolynomial *):                                          *
  *          A pointer to a polynomial.                                        *
  *      term (size_t):                                                        *
  *          The term to be set.                                               *
@@ -454,7 +509,7 @@ tmpl_IntPolynomial_Subtract(tmpl_IntPolynomial *P,
  *      libtmpl/src/polynomial/tmpl_polynomial_z_set_term.c                   *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_SetTerm(tmpl_IntPolynomial *poly, size_t term, int value);
+tmpl_IntPolynomial_Set_Term(tmpl_IntPolynomial *poly, size_t term, int value);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -496,20 +551,37 @@ tmpl_IntPolynomial_Deriv(tmpl_IntPolynomial *poly, tmpl_IntPolynomial *deriv);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_PolynomialZ_Scale                                                *
+ *      tmpl_IntPolynomial_Scale_Kernel                                       *
  *  Purpose:                                                                  *
- *      Multiply a polynomial by an integer.                                  *
+ *      Multiply a polynomial by an integer without error checks.             *
  *  Arguments:                                                                *
- *      poly (tmpl_PolynomialZ *):                                            *
+ *      poly (const tmpl_IntPolynomial *):                                    *
  *          A pointer to a polynomial.                                        *
- *      scale (signed long int):                                              *
+ *      scale (int):                                                          *
  *          The integer the polynomial is multiplied with.                    *
- *      prod (tmpl_PolynomialZ *):                                            *
+ *      prod (tmpl_IntPolynomial *):                                          *
  *          The product of poly and scale.                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Scale_Kernel(const tmpl_IntPolynomial *poly,
+                                int scale, tmpl_IntPolynomial *prod);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Scale                                              *
+ *  Purpose:                                                                  *
+ *      Multiply a polynomial by an integer.                                  *
+ *  Arguments:                                                                *
+ *      poly (const tmpl_IntPolynomial *):                                    *
+ *          A pointer to a polynomial.                                        *
+ *      scale (int):                                                          *
+ *          The integer the polynomial is multiplied with.                    *
+ *      prod (tmpl_IntPolynomial *):                                          *
+ *          The product of poly and scale.                                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
  ******************************************************************************/
 extern void
 tmpl_IntPolynomial_Scale(const tmpl_IntPolynomial *poly,
@@ -517,20 +589,32 @@ tmpl_IntPolynomial_Scale(const tmpl_IntPolynomial *poly,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_PolynomialZ_ScaleSelf                                            *
+ *      tmpl_IntPolynomial_ScaleSelf_Kernel                                   *
  *  Purpose:                                                                  *
- *      Multiply a polynomial by an integer.                                  *
+ *      Multiply a polynomial by an integer without error checks.             *
  *  Arguments:                                                                *
- *      poly (tmpl_PolynomialZ *):                                            *
+ *      poly (tmpl_IntPolynomial *):                                          *
  *          A pointer to a polynomial.                                        *
  *      scale (signed long int):                                              *
  *          The integer the polynomial is multiplied with.                    *
- *      prod (tmpl_PolynomialZ *):                                            *
- *          The product of poly and scale.                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_scale.c                      *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_ScaleSelf_Kernel(tmpl_IntPolynomial *poly, int scale);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_ScaleSelf                                          *
+ *  Purpose:                                                                  *
+ *      Multiply a polynomial by an integer.                                  *
+ *  Arguments:                                                                *
+ *      poly (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial.                                        *
+ *      scale (signed long int):                                              *
+ *          The integer the polynomial is multiplied with.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
  ******************************************************************************/
 extern void
 tmpl_IntPolynomial_ScaleSelf(tmpl_IntPolynomial *poly, int scale);
