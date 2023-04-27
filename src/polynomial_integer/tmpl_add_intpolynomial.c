@@ -38,9 +38,11 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_IntPolynomial_Add_Kernel (tmpl_polynomial_int.h):                *
+ *      tmpl_IntPolynomial_Add_Kernel (tmpl_polynomial_integer.h):            *
  *          Adds two polynomials without error checking or shrinking.         *
- *      tmpl_IntPolynomial_Shrink (tmpl_polynomial_int.h):                    *
+ *      tmpl_IntPolynomial_Copy (tmpl_polynomial_integer.h):                  *
+ *          Copies the data in a polynomial to another.                       *
+ *      tmpl_IntPolynomial_Shrink (tmpl_polynomial_integer.h):                *
  *          Shrinks a polynomial by removing all terms past the largest       *
  *          non-zero coefficient.                                             *
  *      tmpl_strdup (tmpl_string.h):                                          *
@@ -82,6 +84,10 @@
  *      overwrite data when enlarging an array. However it is faster to call  *
  *      tmpl_IntPolynomial_Scale when P = Q or tmpl_IntPolynomial_AddTo when  *
  *      P = sum or Q = sum.                                                   *
+ *                                                                            *
+ *      If P or Q are the empty polynomial, tmpl_IntPolynomial_Copy is called *
+ *      instead. That is, if P is the empty polynomial, Q is copied to sum.   *
+ *      Similarly if Q is the empty polynomial, P is copied to sum.           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -147,6 +153,12 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
         );
         return;
     }
+
+    /*  Final special cases. If P or Q are the empty polynomial, use copy.    */
+    if (!P->coeffs)
+        tmpl_IntPolynomial_Copy(sum, Q);
+    else if (!Q->coeffs)
+        tmpl_IntPolynomial_Copy(sum, P);
 
     /*  Add the polynomials and store the result in sum.                      */
     tmpl_IntPolynomial_Add_Kernel(P, Q, sum);
