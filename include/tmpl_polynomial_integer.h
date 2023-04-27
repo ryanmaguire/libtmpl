@@ -275,13 +275,29 @@ extern void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *poly);
  *      tmpl_IntPolynomial_Empty                                              *
  *  Purpose:                                                                  *
  *      Creates an empty polynomial with pointers set to NULL.                *
- *  Inputs:                                                                   *
+ *  Arguments:                                                                *
  *      None (void).                                                          *
  *  Outputs:                                                                  *
  *      poly (tmpl_IntPolynomial):                                            *
  *          The empty polynomial.                                             *
  ******************************************************************************/
 tmpl_IntPolynomial tmpl_IntPolynomial_Empty(void);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Eval                                               *
+ *  Purpose:                                                                  *
+ *      Evaluates an integer polynomial at an integer.                        *
+ *  Arguments:                                                                *
+ *      poly (const tmpl_IntPolynomial *):                                    *
+ *          A pointer to a polynomial.                                        *
+ *      val (int):                                                            *
+ *          The integer at which we're evaluating the polynomial.             *
+ *  Outputs:                                                                  *
+ *      eval (int):                                                           *
+ *          The value of poly at the integer val.                             *
+ ******************************************************************************/
+int tmpl_IntPolynomial_Eval(const tmpl_IntPolynomial *poly, int val);
 
 /******************************************************************************
  *  Function:                                                                 *
