@@ -36,7 +36,7 @@
  *          A polynomial with its coeffs pointer allocated memory.            *
  *  Called Functions:                                                         *
  *      calloc (stdlib.h):                                                    *
- *          Creates an array an initializes all elements to zero.             *
+ *          Creates an array and initializes all elements to zero.            *
  *      tmpl_strdup (tmpl_string.h):                                          *
  *          Duplicates a string. Equivalent to the POSIX function strdup.     *
  *  Method:                                                                   *
