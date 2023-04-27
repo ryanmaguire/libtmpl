@@ -5,7 +5,7 @@
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
 void
-tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *P, size_t deg,
+tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *poly, size_t deg,
                                      int coeff, tmpl_IntPolynomial *prod)
 {
     if (!prod)
@@ -14,8 +14,8 @@ tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *P, size_t deg,
     if (prod->error_occurred)
         return;
 
-    /*  If P is NULL set an error and return.                                 */
-    if (!P)
+    /*  If poly is NULL set an error and return.                              */
+    if (!poly)
     {
         prod->error_occurred = tmpl_True;
         prod->error_message = tmpl_strdup(
@@ -26,8 +26,8 @@ tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *P, size_t deg,
         return;
     }
 
-    /*  Similarly if P has an error set.                                      */
-    if (P->error_occurred)
+    /*  Similarly if poly has an error set.                                   */
+    if (poly->error_occurred)
     {
         prod->error_occurred = tmpl_True;
         prod->error_message = tmpl_strdup(
@@ -39,20 +39,20 @@ tmpl_IntPolynomial_Multiply_Monomial(const tmpl_IntPolynomial *P, size_t deg,
     }
 
     /*  If the polynomial is empty there is nothing to scale.                 */
-    if (!P->coeffs)
+    if (!poly->coeffs)
     {
-        /*  Scaling by the empty polynomial should result in an empty         *
-         *  polynomial. Avoid memory leaks, check if anything should be freed.*/
-        if (prod->coeffs)
-            free(prod->coeffs);
-
-        /*  Set the product to the empty polynomial.                          */
-        prod->coeffs = NULL;
-        prod->degree = (size_t)0;
+        tmpl_IntPolynomial_Make_Empty(prod);
         return;
     }
 
-    tmpl_IntPolynomial_Multiply_Monomial_Kernel(P, deg, coeff, prod);
+    /*  If the coefficient is zero the result is the zero polynomial.         */
+    if (coeff == 0)
+    {
+        tmpl_IntPolynomial_Make_Zero(prod);
+        return;
+    }
 
-
+    /*  Legal inputs, use the kernel function to perform the main computation.*/
+    tmpl_IntPolynomial_Multiply_Monomial_Kernel(poly, deg, coeff, prod);
 }
+/*  End of tmpl_IntPolynomial_Multiply_Monomial.                              */

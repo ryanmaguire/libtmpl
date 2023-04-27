@@ -339,6 +339,32 @@ extern void tmpl_IntPolynomial_Init(tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Make_Empty                                         *
+ *  Purpose:                                                                  *
+ *      Converts an already initialized polynomial into an empty polynomial.  *
+ *  Inputs:                                                                   *
+ *      poly (tmpl_IntPolynomial *):                                          *
+ *          A pointer to the polynomial that is to be made empty.             *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_IntPolynomial_Make_Empty(tmpl_IntPolynomial *poly);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Make_Zero                                          *
+ *  Purpose:                                                                  *
+ *      Converts an already initialized polynomial into the zero polynomial.  *
+ *  Inputs:                                                                   *
+ *      poly (tmpl_IntPolynomial *):                                          *
+ *          A pointer to the polynomial that is to be made empty.             *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_IntPolynomial_Make_Zero(tmpl_IntPolynomial *poly);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_IntPolynomial_Multiply_Monomial_Kernel                           *
  *  Purpose:                                                                  *
  *      Multiplies a polynomial P(x) by coeff*x^deg.                          *
