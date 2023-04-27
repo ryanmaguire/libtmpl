@@ -77,6 +77,11 @@
  *          4.) realloc fails to resize the coefficient array.                *
  *      One can safely handle all cases by inspecting "sum" after using this  *
  *      function. First check if it is NULL, then if error_occurred = true.   *
+ *                                                                            *
+ *      It does not matter if P = Q, P = sum, or if Q = sum. realloc does not *
+ *      overwrite data when enlarging an array. However it is faster to call  *
+ *      tmpl_IntPolynomial_Scale when P = Q or tmpl_IntPolynomial_AddTo when  *
+ *      P = sum or Q = sum.                                                   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
