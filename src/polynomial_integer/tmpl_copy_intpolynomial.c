@@ -138,6 +138,5 @@ tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
 
     /*  Call the kernel function to perform the copying and resizing.         */
     tmpl_IntPolynomial_Copy_Kernel(dest, src);
-
 }
 /*  End of tmpl_IntPolynomial_Copy.                                           */
