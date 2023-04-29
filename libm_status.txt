@@ -1,0 +1,29 @@
+Key:
+    s = single
+    d = double
+    e = extended
+    q = quadruple
+    D = double-double
+
+Time Comparisons (vs. glibc)
+    0 = Too Slow, Must Fix (< 0.5x)
+    1 = Much Slower (0.5x - 0.75x)
+    2 = A Little Slower (0.75x - 0.95x)
+    3 = About Equal (0.95x - 1.15x)
+    4 = A Little Faster (1.15x - 1.5x)
+    5 = Much Faster (1.5x - 2x)
+    6 = Insanely Faster (> 2x)
+
+Goal:
+    3 or higher for all functions while
+    achieving the appropriate precision.
+
+Function | Completed |   Speed   |
+----------------------------------
+         | s d e q D | s d e q D |
+----------------------------------
+fabs     | Y-Y-Y-Y-Y | 3-4-4-3-3 |
+acos     | Y-Y-Y-Y-Y | 4-5-5-3-4 |
+atan     |           | 5-5-4-3-3 |
+atan2    |           | 6-6-3-3-3 |
+cbrt     |           | 6-5-5-4-6 |

@@ -58,7 +58,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -75,22 +75,19 @@
 #ifndef TMPL_ARCTAN_ASYMPTOTIC_DOUBLE_H
 #define TMPL_ARCTAN_ASYMPTOTIC_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (1.00000000000000000000000000000E+00)
+#define A0 (+1.00000000000000000000000000000E+00)
 #define A1 (-3.33333333333333333333333333333E-01)
-#define A2 (2.00000000000000000000000000000E-01)
+#define A2 (+2.00000000000000000000000000000E-01)
 #define A3 (-1.42857142857142857142857142857E-01)
-#define A4 (1.11111111111111111111111111111E-01)
+#define A4 (+1.11111111111111111111111111111E-01)
 #define A5 (-9.09090909090909090909090909090E-02)
 
 /*  Asymptotic expansion for the inverse tangent function.                    */
@@ -114,9 +111,6 @@ double tmpl_Double_Arctan_Asymptotic(double x)
 #undef A3
 #undef A4
 #undef A5
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

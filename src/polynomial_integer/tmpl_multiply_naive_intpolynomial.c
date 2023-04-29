@@ -49,7 +49,7 @@
 
 /*  Function for multiplying two polynomials.                                 */
 void
-tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
+tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
                                   const tmpl_IntPolynomial *Q,
                                   tmpl_IntPolynomial *prod)
 {
@@ -70,7 +70,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
         prod->error_occurred = tmpl_True;
         prod->error_message = tmpl_strdup(
             "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Multiply\n\n"
+            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
             "Input polynomial is NULL. Aborting.\n\n"
         );
         return;
@@ -82,7 +82,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
         prod->error_occurred = tmpl_True;
         prod->error_message = tmpl_strdup(
             "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Naive_Multiply\n\n"
+            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"
         );
         return;
@@ -113,7 +113,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
             prod->error_occurred = tmpl_True;
             prod->error_message = tmpl_strdup(
                 "\nError Encountered:\n"
-                "    tmpl_IntPolynomial_Naive_Multiply\n\n"
+                "    tmpl_IntPolynomial_Multiply_Naive\n\n"
                 "realloc failed. Aborting.\n\n"
             );
 
@@ -132,13 +132,13 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
 
     tmpl_IntPolynomial_Shrink(prod);
 }
-/*  End of tmpl_IntPolynomial_Naive_Multiply.                                 */
+/*  End of tmpl_IntPolynomial_Multiply_Naive.                                 */
 
 #else
 /*  Else for #if TMPL_INTPOLY_MUL_ALG == 1. Cauchy diagonal method below.     */
 
 void
-tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
+tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
                                   const tmpl_IntPolynomial *Q,
                                   tmpl_IntPolynomial *prod)
 {
@@ -160,7 +160,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
         prod->error_occurred = tmpl_True;
         prod->error_message = tmpl_strdup(
             "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Multiply\n\n"
+            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
             "Input polynomial is NULL. Aborting.\n\n"
         );
         return;
@@ -172,7 +172,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
         prod->error_occurred = tmpl_True;
         prod->error_message = tmpl_strdup(
             "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Naive_Multiply\n\n"
+            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"
         );
         return;
@@ -203,7 +203,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
             prod->error_occurred = tmpl_True;
             prod->error_message = tmpl_strdup(
                 "\nError Encountered:\n"
-                "    tmpl_IntPolynomial_Naive_Multiply\n\n"
+                "    tmpl_IntPolynomial_Multiply_Naive\n\n"
                 "realloc failed. Aborting.\n\n"
             );
 
@@ -247,7 +247,7 @@ tmpl_IntPolynomial_Naive_Multiply(const tmpl_IntPolynomial *P,
 
     tmpl_IntPolynomial_Shrink(prod);
 }
-/*  End of tmpl_IntPolynomial_Naive_Multiply.                                 */
+/*  End of tmpl_IntPolynomial_Multiply_Naive.                                 */
 
 #endif
 /*  End of #if TMPL_INTPOLY_MUL_ALG == 1.                                     */

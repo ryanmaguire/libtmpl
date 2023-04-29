@@ -16,11 +16,46 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                         tmpl_destroy_intpolynomial                         *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Free all memory associated with a polynomial.                         *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_IntPolynomial_Destroy                                            *
+ *  Purpose:                                                                  *
+ *      Free all memory in a tmpl_IntPolynomial and set pointers to NULL.     *
+ *  Arguments:                                                                *
+ *      poly (tmpl_IntPolynomial *):                                          *
+ *          A pointer to the polynomial that is to be destroyed.              *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      free (stdlib.h):                                                      *
+ *          Free's data allocated by malloc, calloc, or realloc.              *
+ *  Method:                                                                   *
+ *      Check for non-NULL pointers and free them. Then set these pointers to *
+ *      NULL to prevent the possibility of double-free's.                     *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stdlib.h:                                                             *
+ *          Standard library file where free is provided.                     *
+ *  2.) tmpl_bool.h:                                                          *
+ *          Header file providing Booleans.                                   *
+ *  3.) tmpl_polynomial_integer.h:                                            *
+ *          Header file where the function prototype is given.                *
+ ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 8, 2023                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/04/25: Ryan Maguire                                                  *
+ *      Added doc-string and comments.                                        *
  ******************************************************************************/
-
-/*  TODO: Add "doc-string" above, description of function, etc.               */
 
 /*  free is declared here.                                                    */
 #include <stdlib.h>
