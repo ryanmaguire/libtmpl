@@ -123,6 +123,12 @@ MATH_EXCLUDE=\
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
 	-not -name "tmpl_abs_ldouble.c" -and \
+	-not -name "tmpl_arccos_double.c" -and \
+	-not -name "tmpl_arccos_float.c" -and \
+	-not -name "tmpl_arccos_ldouble.c" -and \
+	-not -name "tmpl_arcsin_double.c" -and \
+	-not -name "tmpl_arcsin_float.c" -and \
+	-not -name "tmpl_arcsin_ldouble.c" -and \
 	-not -name "tmpl_arctan2_double.c" -and \
 	-not -name "tmpl_arctan2_float.c" -and \
 	-not -name "tmpl_arctan2_ldouble.c" -and \
@@ -160,6 +166,12 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_arccos_tail_end_double.c" -and \
 	-not -name "tmpl_arccos_tail_end_float.c" -and \
 	-not -name "tmpl_arccos_tail_end_ldouble.c" -and \
+	-not -name "tmpl_arcsin_pade_double.c" -and \
+	-not -name "tmpl_arcsin_pade_float.c" -and \
+	-not -name "tmpl_arcsin_pade_ldouble.c" -and \
+	-not -name "tmpl_arcsin_tail_end_double.c" -and \
+	-not -name "tmpl_arcsin_tail_end_float.c" -and \
+	-not -name "tmpl_arcsin_tail_end_ldouble.c" -and \
 	-not -name "tmpl_arctan_asymptotic_double.c" -and \
 	-not -name "tmpl_arctan_asymptotic_float.c" -and \
 	-not -name "tmpl_arctan_asymptotic_ldouble.c" -and \
