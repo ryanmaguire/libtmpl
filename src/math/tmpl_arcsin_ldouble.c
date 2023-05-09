@@ -54,35 +54,35 @@
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
  *          return asin(-1) = -pi/2 and acos(1) = pi/2.                       *
  *      Error (64-bit Double):                                                *
- *          Based on 788,968,857 samples with -1 < x < 1.                     *
- *              max relative error: 2.2204459059627917e-16                    *
- *              rms relative error: 8.3796804351081161e-17                    *
- *              max absolute error: 4.4408920985006262e-16                    *
- *              rms absolute error: 1.4737238548161158e-16                    *
+ *          Based on 2,247,723,417 samples with -1 < x < 1.                   *
+ *              max relative error: 4.2407395318771891e-16                    *
+ *              rms relative error: 8.3076997568096430e-17                    *
+ *              max absolute error: 2.2204460492503131e-16                    *
+ *              rms absolute error: 6.8741875746543622e-17                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *      Error (80-bit Extended):                                              *
- *          Based on 394,484,428 samples with -1 < x < 1.                     *
- *              max relative error: 2.1646973539415815e-19                    *
- *              rms relative error: 4.0762969454067788e-20                    *
- *              max absolute error: 2.1684043449710089e-19                    *
- *              rms absolute error: 6.9155008767105195e-20                    *
+ *          Based on 1,123,861,708 samples with -1 < x < 1.                   *
+ *              max relative error: 2.0706735476097611e-19                    *
+ *              rms relative error: 3.9602805968592018e-20                    *
+ *              max absolute error: 1.0842021724855044e-19                    *
+ *              rms absolute error: 3.1783437893237120e-20                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *      Error (128-bit Quadruple):                                            *
  *          Based on 10,000,000 samples with -1 < x < 1.                      *
- *              max relative error: 2.1493423806776799e-34                    *
- *              rms relative error: 7.1883692991558038e-35                    *
+ *              max relative error: 3.6782130678749438e-34                    *
+ *              rms relative error: 6.7349669592990903e-35                    *
  *              max absolute error: 1.9259299443872359e-34                    *
- *              rms absolute error: 5.3481009953614647e-35                    *
+ *              rms absolute error: 5.4568366756721229e-35                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-34).                                    *
  *      Error (128-bit Double-Double):                                        *
  *          Based on 10,000,000 samples with -1 < x < 1.                      *
- *              max relative error: 4.8287083179936863e-32                    *
- *              rms relative error: 5.8808472000117189e-33                    *
- *              max absolute error: 7.0874221953450279e-32                    *
- *              rms absolute error: 9.0797583993958255e-33                    *
+ *              max relative error: 6.9424846583969969e-32                    *
+ *              rms relative error: 6.0718675348168530e-33                    *
+ *              max absolute error: 4.9303806576313238e-32                    *
+ *              rms absolute error: 4.6144017473307887e-33                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~5 x 10^-32).                                    *
  *  Portable Version:                                                         *
@@ -98,11 +98,11 @@
  *          input using the absolute value function and comparing the output  *
  *          to the numbers 0.5 and 1.0.                                       *
  *      Error:                                                                *
- *          Based on 394,484,428 samples with -1 < x < 1.                     *
- *              max relative error: 2.1646973539415815e-19                    *
- *              rms relative error: 4.0762969454067788e-20                    *
- *              max absolute error: 2.1684043449710089e-19                    *
- *              rms absolute error: 6.9155008767105195e-20                    *
+ *          Based on 1,123,861,708 samples with -1 < x < 1.                   *
+ *              max relative error: 2.0706735476097611e-19                    *
+ *              rms relative error: 3.9602805968592018e-20                    *
+ *              max absolute error: 1.0842021724855044e-19                    *
+ *              rms absolute error: 3.1783437893237120e-20                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *  Notes:                                                                    *
