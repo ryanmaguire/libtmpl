@@ -48,11 +48,11 @@
  *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
  *          use the negation formula:                                         *
  *                                                                            *
- *              asin(x) = -acos(-x)                                           *
+ *              asin(x) = -asin(-x)                                           *
  *                                                                            *
  *          Use this and compute asin(-x) via the tail-end function.          *
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
- *          return asin(-1) = -pi/2 and acos(1) = pi/2.                       *
+ *          return asin(-1) = -pi/2 and asin(1) = pi/2.                       *
  *      Error (64-bit Double):                                                *
  *          Based on 2,247,723,417 samples with -1 < x < 1.                   *
  *              max relative error: 4.2407395318771891e-16                    *
@@ -213,7 +213,7 @@ long double tmpl_LDouble_Arcsin(long double x)
     /*  Otherwise use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).   */
     else if (abs_x < 1.0L)
     {
-        /*  For negative inputs use the formula asin(x) = -acos(-x).          */
+        /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (x < 0.0L)
             return -tmpl_LDouble_Arcsin_Tail_End(abs_x);
 
