@@ -19,7 +19,7 @@
  *                           tmpl_arccos_pade_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 2) Pade approximant of acos(x) at single precision.  *
+ *      Computes the (4, 4) Pade approximant of acos(x) at single precision.  *
  *      See include/math/tmpl_arccos_pade_float.h for details.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
