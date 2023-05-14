@@ -40,10 +40,15 @@
  *      [4, 6]. For x > 6, return 1 since |1 - Erf(x)| < 2^-52.               *
  *      The coefficients for the minimax polynomials were precomputed using   *
  *      the Remez exchange algorithm.                                         *
+ *  Method (Alternative):                                                     *
+ *      Use two rational minimax functions, one on [2, 4] and the other on    *
+ *      [4, 6]. The orders are (9, 8) and (7, 6), respectively. This is about *
+ *      twice as fast as the minimax polynomials. Theoretical error is below  *
+ *      double precision (less than 10^-16) but floating point roundoff       *
+ *      errors in the computation yield max errors of 10^-15 on [2, 4] and    *
+ *      10^-13 on [4, 6]. RMS error is much better, ~4x10^-16. Nevertheless   *
+ *      if extremely accurate computations are needed do not use this method. *
  *  Method (Old):                                                             *
- *      This method is hidden by an #if 0 preprocessor statement. It is       *
- *      slow than the current method and should be avoided.                   *
- *                                                                            *
  *      For arguments greater than 6 we can return erf(x) = 1. Otherwise      *
  *      compute using a Chebyshev approximation on the interval [2, 6].       *
  *      The function:                                                         *
@@ -114,6 +119,237 @@
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
+
+/******************************************************************************
+ *  Three implementations provided for larger inputs (2 <= x < infty).        *
+ *      Method 0                                                              *
+ *          Two rational Remez approximations on [2, 4] and [4, 6].           *
+ *      Method 1                                                              *
+ *          Two Remez polynomials on [2, 4] and [4, 6].                       *
+ *      Method 2                                                              *
+ *          One Chebyshev expansion on [2, 6].                                *
+ *  All methods return 1 for x >= 6 since to double precision Erf(x) = 1.     *
+ *  Method 0 is faster than method 1 which is faster than method 2. Method 0  *
+ *  has floating point roundoff problems that cause the peak relative error   *
+ *  to be 2x10^-15 (rms relative error is 2x10^-16) on [2, 4] and 2x10^-13 on *
+ *  [4, 6] (rms relative error 5x10^-16). Method 1, the Remez polynomial,     *
+ *  does not suffer from such problems but is slower. Method 2 is accurate,   *
+ *  but very slow. It should be avoided.                                      *
+ ******************************************************************************/
+#ifndef TMPL_ERF_IMPLEMENTATION
+
+/*  Default implementation is Remez polynomial. Fast and accurate.            */
+#define TMPL_ERF_IMPLEMENTATION 1
+#endif
+
+/*  Fastest method, use rational Remez approximations.                        */
+#if TMPL_ERF_IMPLEMENTATION == 0
+
+/******************************************************************************
+ *  Order (9, 8) rational Remez approximation for Erf(x + 3) on the interval  *
+ *  [-1, 1]. Max theoretical error is ~2 x 10^-16. Floating point roundoff    *
+ *  causes max rel error to be ~2x10^-15 and rms rel error to be ~3x10^-16.   *
+ *                                                                            *
+ *  Evaluation is 2x faster than the Remez polynomial provided below.         *
+ ******************************************************************************/
+
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define A00 (+9.9997790950300169390152237217075747091064215681192E-01)
+#define A01 (+1.7234800569210478799713938740116442220025728190736E+00)
+#define A02 (+1.6571262106630805739284908883503957932178261795696E+00)
+#define A03 (+1.0611869960214990335604167233665094115325112772575E+00)
+#define A04 (+4.8806545626286922731045426616367239533990998352380E-01)
+#define A05 (+1.6268299758105545838363230973036563492617716692450E-01)
+#define A06 (+3.7952659706696277584080960343545345763817333308860E-02)
+#define A07 (+5.6748733825276711037533989251955170958449685299198E-03)
+#define A08 (+4.0768676489485271290111775890624532067677979875267E-04)
+#define A09 (+2.7293766510316760485071859880275192918130563678553E-07)
+
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define B01 (+1.7233788741649484765705923559579218588657314457128E+00)
+#define B02 (+1.6573405955285319991774924881409973310426686159853E+00)
+#define B03 (+1.0609104990016522014236956648888133636057243445752E+00)
+#define B04 (+4.8830535589108475438405439801471184465252734249320E-01)
+#define B05 (+1.6253733264945687666150457216286895715074169045606E-01)
+#define B06 (+3.8014762648461803562598720981877677025203850014829E-02)
+#define B07 (+5.6568846094112022427885434860640397915217150799567E-03)
+#define B08 (+4.1090985964304809709526192219722212708060633515958E-04)
+
+/******************************************************************************
+ *  Order (7, 6) rational Remez approximation for Erf(x + 5) on the interval  *
+ *  [-1, 1]. Max theoretical error is ~1.2 x 10^-16. Floating point roundoff  *
+ *  causes max rel error to be ~2x10^-13 and rms rel error to be ~5x10^-16.   *
+ *                                                                            *
+ *  Evaluation is 2x faster than the Remez polynomial provided below.         *
+ ******************************************************************************/
+
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define C00 (+9.9999999999846245843490813330267815315827054559597E-01)
+#define C01 (+3.4872176345954420572057191295826138028833080897642E+00)
+#define C02 (+5.4474082276580598104238260423325675822385551693589E+00)
+#define C03 (+4.8532656988750981998795007760926308089883113538506E+00)
+#define C04 (+2.5864866905062084726007117044876386581512674936172E+00)
+#define C05 (+7.7724608649724151872063265312066900065031942673881E-01)
+#define C06 (+1.0227741279265197848826482600801971915526292908129E-01)
+#define C07 (+7.5407643928860718504587877942281862217448235394393E-12)
+
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define D00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define D01 (+3.4872176345851319136524776147629056313426834006256E+00)
+#define D02 (+5.4474082276901317756438332688381554415929177412466E+00)
+#define D03 (+4.8532656988144795807430549549595277954781072205889E+00)
+#define D04 (+2.5864866905822989611040119062264342279370416615467E+00)
+#define D05 (+7.7724608643354065261206413654496098927187275137234E-01)
+#define D06 (+1.0227741282512070731986948900216375850892657569066E-01)
+
+/*  Horner's method for the numerator of the first rational Remez function.   */
+#define TMPL_NUM_A_EVAL(z) \
+A00 + z*(\
+    A01 + z*(\
+        A02 + z*(\
+            A03 + z*(\
+                A04 + z*(\
+                    A05 + z*(\
+                        A06 + z*(\
+                            A07 + z*(\
+                                A08 + z*A09\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Horner's method for the denominator of the first rational Remez function. */
+#define TMPL_DEN_A_EVAL(z) \
+B00 + z*(\
+    B01 + z*(\
+        B02 + z*(\
+            B03 + z*(\
+                B04 + z*(\
+                    B05 + z*(\
+                        B06 + z*(\
+                            B07 + z*B08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Horner's method for the numerator of the second rational Remez function.  */
+#define TMPL_NUM_B_EVAL(z) \
+C00 + z*(\
+    C01 + z*(\
+        C02 + z*(\
+            C03 + z*(\
+                C04 + z*(\
+                    C05 + z*(\
+                        C06 + z*C07\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Horner's method for the denominator of the second rational Remez function.*/
+#define TMPL_DEN_B_EVAL(z) \
+D00 + z*(\
+    D01 + z*(\
+        D02 + z*(\
+            D03 + z*(\
+                D04 + z*(\
+                    D05 + z*D06\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Function for computing erf(x) for x >= 2.                                 */
+double tmpl_Double_Erf_Asymptotic(double x)
+{
+    /*  For x >= 6 we have |1 - erf(x)| < 2^-52, double epsilon. Return 1.    */
+    if (x >= 6.0)
+        return 1.0;
+
+    /*  For values in [2, 4] use the first rational function.                 */
+    else if (x < 4.0)
+    {
+        /*  Shift the interval [2, 4] to [-1, 1] for the rational function.   */
+        const double z = x - 3.0;
+        const double num = TMPL_NUM_A_EVAL(z);
+        const double den = TMPL_DEN_A_EVAL(z);
+        return num / den;
+    }
+
+    /*  Lastly, use the second Minimax function for arguments in [4, 6].      */
+    else
+    {
+        /*  Shift the interval [4, 6] to [-1, 1] for the rational function.   */
+        const double z = x - 5.0;
+        const double num = TMPL_NUM_B_EVAL(z);
+        const double den = TMPL_DEN_B_EVAL(z);
+        return num / den;
+    }
+}
+/*  End of tmpl_Double_Erf_Asymptotic.                                        */
+
+/*  Undefine coefficients for the numerator of the first function.            */
+#undef A00
+#undef A01
+#undef A02
+#undef A03
+#undef A04
+#undef A05
+#undef A06
+#undef A07
+#undef A08
+#undef A09
+
+/*  Undefine coefficients for the denominator of the first function.          */
+#undef B00
+#undef B01
+#undef B02
+#undef B03
+#undef B04
+#undef B05
+#undef B06
+#undef B07
+#undef B08
+
+/*  Undefine coefficients for the numerator of the second function.           */
+#undef C00
+#undef C01
+#undef C02
+#undef C03
+#undef C04
+#undef C05
+#undef C06
+#undef C07
+
+/*  Undefine coefficients for the denominator of the second function.         */
+#undef D00
+#undef D01
+#undef D02
+#undef D03
+#undef D04
+#undef D05
+#undef D06
+
+/*  Lastly, undefine the polynomial helper functions.                         */
+#undef TMPL_NUM_A_EVAL
+#undef TMPL_DEN_A_EVAL
+#undef TMPL_NUM_B_EVAL
+#undef TMPL_DEN_B_EVAL
+
+/*  Second method. Higher precision for 64-bit double, but slower.            */
+#elif TMPL_ERF_IMPLEMENTATION == 1
 
 /*  Coefficients for the Remez polynomial on [2, 4].                          */
 #define A00 (+9.9997790950300142278863355722471061050296451720368E-01)
@@ -257,7 +493,7 @@ double tmpl_Double_Erf_Asymptotic(double x)
     /*  Lastly, use the second Remez polynomial for arguments in [4, 6].      */
     else
     {
-        /*  Shift the interval [4, 2] to [-1, 1] for the polynomial.          */
+        /*  Shift the interval [4, 6] to [-1, 1] for the polynomial.          */
         const double z = x - 5.0;
         return TMPL_POLYB_EVAL(z);
     }
@@ -312,7 +548,7 @@ double tmpl_Double_Erf_Asymptotic(double x)
 /*  Previously a single Chebyshev expansion on [2, 6] was used. It is much    *
  *  faster to use two Remez minimax polynomials on [2, 4] and then [4, 6]     *
  *  instead. The old Chebyshev coefficients are kept here for later study.    */
-#if 0
+#else
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+9.9999998458274208175762223432456249549502926125902E-01)
@@ -455,7 +691,7 @@ double tmpl_Double_Erf_Asymptotic(double x)
 #undef A28
 
 #endif
-/*  End of #if 0 for older version of this function.                          */
+/*  End of #if TMPL_ERF_IMPLEMENTATION == 0.                                  */
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

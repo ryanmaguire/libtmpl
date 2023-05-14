@@ -55,7 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -67,25 +67,22 @@
 #ifndef TMPL_ARCTAN_MACLAURIN_DOUBLE_H
 #define TMPL_ARCTAN_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (1.00000000000000000000000000000E+00)
+#define A0 (+1.00000000000000000000000000000E+00)
 #define A1 (-3.33333333333333333333333333333E-01)
-#define A2 (2.00000000000000000000000000000E-01)
+#define A2 (+2.00000000000000000000000000000E-01)
 #define A3 (-1.42857142857142857142857142857E-01)
-#define A4 (1.11111111111111111111111111111E-01)
+#define A4 (+1.11111111111111111111111111111E-01)
 #define A5 (-9.09090909090909090909090909090E-02)
-#define A6 (7.69230769230769230769230769231E-02)
+#define A6 (+7.69230769230769230769230769231E-02)
 #define A7 (-6.66666666666666666666666666667E-02)
-#define A8 (5.88235294117647058823529411765E-02)
+#define A8 (+5.88235294117647058823529411765E-02)
 
 /*  Maclaurin series for arctan, double precision, to 9 terms.                */
 TMPL_INLINE_DECL
@@ -109,9 +106,6 @@ double tmpl_Double_Arctan_Maclaurin(double x)
 #undef A6
 #undef A7
 #undef A8
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

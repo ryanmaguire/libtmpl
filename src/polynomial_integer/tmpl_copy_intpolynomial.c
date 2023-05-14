@@ -16,17 +16,59 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                          tmpl_copy_intpolynomial                           *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Copies the data in one polynomial to another.                         *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_IntPolynomial_Copy                                               *
+ *  Purpose:                                                                  *
+ *      Copies the coefficients of one polynomial into another.               *
+ *  Arguments:                                                                *
+ *      dest (tmpl_IntPolynomial *):                                          *
+ *          A pointer to the "destination" polynomial. src is copied here.    *
+ *      src (const tmpl_IntPolynomial *):                                     *
+ *          A pointer to the "source" polynomial. This will be copied to dest.*
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      free (stdlib.h):                                                      *
+ *          Free's data allocated by malloc, calloc, or realloc.              *
+ *      tmpl_strdup (tmpl_string.h):                                          *
+ *          Duplicates a string. Equivalent to the POSIX function strdup.     *
+ *      tmpl_IntPolynomial_Copy_Kernel (tmpl_polynomial_integer.h):           *
+ *          Copies polynomial data without error checks.                      *
+ *  Method:                                                                   *
+ *      Check for valid inputs and call tmpl_IntPolynomial_Copy_Kernel.       *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stdlib.h:                                                             *
+ *          Standard library file where free is provided.                     *
+ *  2.) tmpl_bool.h:                                                          *
+ *          Header file providing Booleans.                                   *
+ *  3.) tmpl_string.h:                                                        *
+ *          Header file where tmpl_strdup is declared.                        *
+ *  4.) tmpl_polynomial_integer.h:                                            *
+ *          Header file where the function prototype is given.                *
+ ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 8, 2023                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/04/25: Ryan Maguire                                                  *
+ *      Added doc-string and comments.                                        *
  ******************************************************************************/
 
-/*  TODO: Add "doc-string" above, description of function, etc.               */
-
-/*  realloc and free functions are declared here.                             */
+/*  free function declared here.                                              */
 #include <stdlib.h>
 
-/*  TMPL_USE_MEMCPY macro is here.                                            */
-#include <libtmpl/include/tmpl_config.h>
+/*  tmpl_Bool, tmpl_False, and tmpl_True are given here.                      */
+#include <libtmpl/include/tmpl_bool.h>
 
 /*  tmpl_strdup function found here.                                          */
 #include <libtmpl/include/tmpl_string.h>
@@ -34,26 +76,11 @@
 /*  Polynomial typedefs and function prototypes given here.                   */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  On some computers memcpy may be faster than copying the data with a       *
- *  for-loop. On the devices I've tested the for-loop is slightly faster,     *
- *  however. To use memcpy build libtmpl with USE_MEMCPY=1 set.               */
-#if TMPL_USE_MEMCPY == 1
-#include <string.h>
-#endif
-
 /*  Function for copying the coefficients of one polynomial to another.       */
 void
 tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
                         const tmpl_IntPolynomial *src)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    size_t len;
-
-    /*  If we're not using memcpy, we need another variable to index the loop.*/
-#if TMPL_USE_MEMCPY != 1
-    size_t n;
-#endif
-
     /*  If the destination pointer is NULL, there's nothing to be done.       */
     if (!dest)
         return;
@@ -109,53 +136,7 @@ tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
         return;
     }
 
-    /*  Otherwise we will be copying degree + 1 elements from src to dest     *
-     *  where degree is the degree of the src polynomial.                     */
-    len = src->degree + (size_t)1;
-
-    /*  Check if we need to reallocate the memory for the dest coefficients.  */
-    if (dest->degree != src->degree)
-    {
-        /*  Use realloc to resize the memory for the coefficients array.      */
-        void *tmp;
-        tmp = realloc(dest->coeffs, len);
-
-        /*  If realloc succeeded, set the dest coefficients to the new memory.*
-         *  Also reset the degree variable to the new size.                   */
-        if (tmp)
-        {
-            dest->coeffs = tmp;
-            dest->degree = src->degree;
-        }
-
-        /*  Otherwise abort with an error message.                            */
-        else
-        {
-            dest->error_occurred = tmpl_False;
-            dest->error_message = tmpl_strdup(
-                "\nError Encountered: libtmpl\n"
-                "    tmpl_IntPolynomial_Copy\n\n"
-                "Realloc failed to resize dest->coeffs. Aborting.\n\n"
-            );
-            return;
-        }
-    }
-
-    /*  If the user requested memcpy, use this to copy the data.              */
-#if TMPL_USE_MEMCPY == 1
-
-    /*  memcpy syntax is (void *dest, const void *src, size_t num).           */
-    memcpy(dest->coeffs, src->coeffs, len*sizeof(*src->coeffs));
-
-#else
-/*  Else for #if TMPL_USE_MEMCPY == 1.                                        */
-
-    /*  Otherwise use a simple for-loop to copy the data term by term.        */
-    for (n = (size_t)0; n < len; ++n)
-        dest->coeffs[n] = src->coeffs[n];
-
-#endif
-/*  End of #if TMPL_USE_MEMCPY == 1.                                          */
-
+    /*  Call the kernel function to perform the copying and resizing.         */
+    tmpl_IntPolynomial_Copy_Kernel(dest, src);
 }
 /*  End of tmpl_IntPolynomial_Copy.                                           */

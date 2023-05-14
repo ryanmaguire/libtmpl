@@ -1,7 +1,6 @@
 #ifndef TMPL_SINCOS_REDUCTION_VERY_LARGE_H
 #define TMPL_SINCOS_REDUCTION_VERY_LARGE_H
 
-#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 
 static const double split = 134217729.0; /* 2^27 + 1 */
@@ -33,8 +32,7 @@ static const double toverp[75] = { /*  2/ PI base 24*/
     12875403.0,  9837734.0, 14528324.0, 13719321.0,   343717.0
 };
 
-TMPL_INLINE_DECL
-unsigned int
+static unsigned int
 tmpl_Double_SinCos_Reduction_Very_Large(double x, double *a, double *aa)
 {
     unsigned int k;
