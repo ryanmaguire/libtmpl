@@ -161,7 +161,8 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
         tmpl_IntPolynomial_Copy(sum, P);
 
     /*  Add the polynomials and store the result in sum.                      */
-    tmpl_IntPolynomial_Add_Kernel(P, Q, sum);
+    else
+        tmpl_IntPolynomial_Add_Kernel(P, Q, sum);
 
     /*  Remove all terms past the largest non-zero entry.                     */
     tmpl_IntPolynomial_Shrink(sum);
