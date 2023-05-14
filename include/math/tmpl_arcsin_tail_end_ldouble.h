@@ -74,13 +74,13 @@
  *  whether libtmpl algorithms are requested.                                 */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-extern long double tmpl_LDouble_Sqrt(long double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Sqrt(long double x);
 #define TMPL_SQUARE_ROOT tmpl_LDouble_Sqrt
 
 /*  Otherwise use the default libm square root function.                      */
 #else
 
-extern long double sqrtl(long double x);
+TMPL_EXPORT extern long double sqrtl(long double x);
 #define TMPL_SQUARE_ROOT sqrtl
 
 #endif
