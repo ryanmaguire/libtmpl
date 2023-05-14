@@ -100,21 +100,6 @@
 #define TMPL_POLY_EVAL(z) \
 A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 
-/*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Arccos_Maclaurin(long double x)
-{
-    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
-    const long double x2 = x*x;
-
-    /*  Compute the Maclaurin series of asin(x) / x.                          */
-    const long double poly = TMPL_POLY_EVAL(x2);
-
-    /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x*poly;
-}
-/*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
-
 /*  128-bit quadruple and double-double, a few more terms.                    */
 #elif \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
@@ -170,21 +155,6 @@ A00 + z*(\
     )\
 )
 
-/*  Computes the degree 27 Maclaurin polynomial for acos(x).                  */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Arccos_Maclaurin(long double x)
-{
-    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
-    const long double x2 = x*x;
-
-    /*  Compute the Maclaurin series of asin(x) / x.                          */
-    const long double poly = TMPL_POLY_EVAL(x2);
-
-    /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x*poly;
-}
-/*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
-
 /*  Lastly, extended precision and portable versions.                         */
 #else
 
@@ -224,7 +194,10 @@ A00 + z*(\
     )\
 )
 
-/*  Computes the degree 19 Maclaurin polynomial for acos(x).                  */
+#endif
+/*  End of 80-bit extended / portable version.                                */
+
+/*  Computes the Maclaurin polynomial for acos(x).                            */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Arccos_Maclaurin(long double x)
 {
@@ -238,9 +211,6 @@ long double tmpl_LDouble_Arccos_Maclaurin(long double x)
     return TMPL_PI_BY_TWO - x*poly;
 }
 /*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
-
-#endif
-/*  End of 80-bit extended / portable version.                                */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef A00

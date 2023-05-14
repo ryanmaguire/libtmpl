@@ -98,55 +98,30 @@
  ******************************************************************************/
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.6666666666666666666666666666666666666666666666667E-01)
-#define P1 (-4.5183467789315450573566044285447580081757824962844E-01)
-#define P2 (+4.5268338285839953885847747489466534382453836599311E-01)
-#define P3 (-2.0451170074586957459619221134199241262964264122754E-01)
-#define P4 (+4.0161699156136797388526896443437389593682105247059E-02)
-#define P5 (-2.6043612272315037174810668430207303056407157408729E-03)
-#define P6 (+8.5298365158969137130716621168483153368286640425841E-06)
+#define P00 (+1.6666666666666666666666666666666666666666666666667E-01)
+#define P01 (-4.5183467789315450573566044285447580081757824962844E-01)
+#define P02 (+4.5268338285839953885847747489466534382453836599311E-01)
+#define P03 (-2.0451170074586957459619221134199241262964264122754E-01)
+#define P04 (+4.0161699156136797388526896443437389593682105247059E-02)
+#define P05 (-2.6043612272315037174810668430207303056407157408729E-03)
+#define P06 (+8.5298365158969137130716621168483153368286640425841E-06)
 
 /*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00)
-#define Q1 (-3.1610080673589270344139626571268548049054694977706E+00)
-#define Q2 (+3.8706967846047715414942909022179338680118343270983E+00)
-#define Q3 (-2.3044768347428901379839394147005695603073114886090E+00)
-#define Q4 (+6.8318346338074073586036792129413385817260793401216E-01)
-#define Q5 (-9.1189047491786682631147583983250333633502470655541E-02)
-#define Q6 (+3.9268447888541310343247866236378900929051188393826E-03)
+#define Q00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define Q01 (-3.1610080673589270344139626571268548049054694977706E+00)
+#define Q02 (+3.8706967846047715414942909022179338680118343270983E+00)
+#define Q03 (-2.3044768347428901379839394147005695603073114886090E+00)
+#define Q04 (+6.8318346338074073586036792129413385817260793401216E-01)
+#define Q05 (-9.1189047491786682631147583983250333633502470655541E-02)
+#define Q06 (+3.9268447888541310343247866236378900929051188393826E-03)
 
-/*  Function for computing the (12, 12) Pade approximant of acos(x).          */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Arccos_Pade(long double x)
-{
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const long double x2 = x*x;
+/*  Helper macro for evaluating the numerator of the Pade approximant.        */
+#define TMPL_NUM_EVAL(z) \
+P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*(P05 + z*P06)))))
 
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const long double p = P0+x2*(P1+x2*(P2+x2*(P3+x2*(P4+x2*(P5+x2*P6)))));
-    const long double q = Q0+x2*(Q1+x2*(Q2+x2*(Q3+x2*(Q4+x2*(Q5+x2*Q6)))));
-    const long double r = x2*p/q;
-
-    /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return tmpl_Pi_By_Two_L - (x + x*r);
-}
-/*  End of tmpl_LDouble_Arccos_Pade.                                          */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef P6
-#undef P5
-#undef P4
-#undef P3
-#undef P2
-#undef P1
-#undef P0
-#undef Q6
-#undef Q5
-#undef Q4
-#undef Q3
-#undef Q2
-#undef Q1
-#undef Q0
+/*  Helper macro for evaluating the denominator of the Pade approximant.      */
+#define TMPL_DEN_EVAL(z) \
+Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*(Q05 + z*Q06)))))
 
 /*  128-bit quadruple and double-double, a few more terms.                    */
 #elif \
@@ -229,7 +204,45 @@ Q00 + z*(\
     )\
 )
 
-/*  Function for computing the (20, 20) Pade approximant of acos(x).          */
+/*  Lastly, extended precision and portable versions.                         */
+#else
+
+/******************************************************************************
+ *                         80-Bit Extended / Portable                         *
+ ******************************************************************************/
+
+/*  Coefficients for the numerator of the Pade approximant.                   */
+#define P00 (+1.6666666666666666666666666666666666666666666666667E-01)
+#define P01 (-5.3573326769405420816393341782881509990761203454372E-01)
+#define P02 (+6.6987758889115211750747634491190241241775771566337E-01)
+#define P03 (-4.0975961857187703437256612304838429537335133802760E-01)
+#define P04 (+1.2604458970786184280594914762157680635033223820909E-01)
+#define P05 (-1.7779970446209616665880258200688356097871890998536E-02)
+#define P06 (+8.4937383297103285108739995420852009073640185085804E-04)
+#define P07 (-1.9067288402719086953642842729138569648135874825351E-06)
+
+/*  Coefficients for the denominator of the Pade approximant.                 */
+#define Q00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define Q01 (-3.6643996061643252489836005069728905994456722072623E+00)
+#define Q02 (+5.4003882132637162099446211547520723871142416443911E+00)
+#define Q03 (-4.0894884652725854756851070745133807453995212364344E+00)
+#define Q04 (+1.6837613474905420665264405525852747541955827534249E+00)
+#define Q05 (-3.6565290180353386952194977935294488267885730631395E-01)
+#define Q06 (+3.6937863813830793659677653967692005806636822071947E-02)
+#define Q07 (-1.2264650631348465850650285033738693891166864249171E-03)
+
+/*  Helper macro for evaluating the numerator of the Pade approximant.        */
+#define TMPL_NUM_EVAL(z) \
+P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*(P05 + z*(P06 + z*P07))))))
+
+/*  Helper macro for evaluating the denominator of the Pade approximant.      */
+#define TMPL_DEN_EVAL(z) \
+Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*(Q05 + z*(Q06 + z*Q07))))))
+
+#endif
+/*  End of 80-bit extended / portable version.                                */
+
+/*  Function for computing a Pade approximant for acos(x).                    */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Arccos_Pade(long double x)
 {
@@ -271,81 +284,6 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
 #undef Q00
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
-
-/*  Lastly, extended precision and portable versions.                         */
-#else
-
-/******************************************************************************
- *                         80-Bit Extended / Portable                         *
- ******************************************************************************/
-
-/*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.6666666666666666666666666666666666666666666666667E-01)
-#define P1 (-5.3573326769405420816393341782881509990761203454372E-01)
-#define P2 (+6.6987758889115211750747634491190241241775771566337E-01)
-#define P3 (-4.0975961857187703437256612304838429537335133802760E-01)
-#define P4 (+1.2604458970786184280594914762157680635033223820909E-01)
-#define P5 (-1.7779970446209616665880258200688356097871890998536E-02)
-#define P6 (+8.4937383297103285108739995420852009073640185085804E-04)
-#define P7 (-1.9067288402719086953642842729138569648135874825351E-06)
-
-/*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00)
-#define Q1 (-3.6643996061643252489836005069728905994456722072623E+00)
-#define Q2 (+5.4003882132637162099446211547520723871142416443911E+00)
-#define Q3 (-4.0894884652725854756851070745133807453995212364344E+00)
-#define Q4 (+1.6837613474905420665264405525852747541955827534249E+00)
-#define Q5 (-3.6565290180353386952194977935294488267885730631395E-01)
-#define Q6 (+3.6937863813830793659677653967692005806636822071947E-02)
-#define Q7 (-1.2264650631348465850650285033738693891166864249171E-03)
-
-/*  Helper macro for evaluating the numerator of the Pade approximant.        */
-#define TMPL_NUM_EVAL(z) \
-P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*(P5 + z*(P6 + z*P7))))))
-
-/*  Helper macro for evaluating the denominator of the Pade approximant.      */
-#define TMPL_DEN_EVAL(z) \
-Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*(Q4 + z*(Q5 + z*(Q6 + z*Q7))))))
-
-/*  Function for computing the (14, 14) Pade approximant of acos(x).          */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Arccos_Pade(long double x)
-{
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const long double x2 = x*x;
-
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const long double p = TMPL_NUM_EVAL(x2);
-    const long double q = TMPL_DEN_EVAL(x2);
-    const long double r = x2*p/q;
-
-    /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return tmpl_Pi_By_Two_L - (x + x*r);
-}
-/*  End of tmpl_LDouble_Arccos_Pade.                                          */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef P7
-#undef P6
-#undef P5
-#undef P4
-#undef P3
-#undef P2
-#undef P1
-#undef P0
-#undef Q7
-#undef Q6
-#undef Q5
-#undef Q4
-#undef Q3
-#undef Q2
-#undef Q1
-#undef Q0
-#undef TMPL_NUM_EVAL
-#undef TMPL_DEN_EVAL
-
-#endif
-/*  End of 80-bit extended / portable version.                                */
 
 #endif
 /*  End of include guard.                                                     */
