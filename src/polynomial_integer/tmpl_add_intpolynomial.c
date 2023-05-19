@@ -38,15 +38,17 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_IntPolynomial_Add_Kernel (tmpl_polynomial_integer.h):            *
- *          Adds two polynomials without error checking or shrinking.         *
- *      tmpl_IntPolynomial_Copy (tmpl_polynomial_integer.h):                  *
- *          Copies the data in a polynomial to another.                       *
- *      tmpl_IntPolynomial_Shrink (tmpl_polynomial_integer.h):                *
- *          Shrinks a polynomial by removing all terms past the largest       *
- *          non-zero coefficient.                                             *
- *      tmpl_strdup (tmpl_string.h):                                          *
- *          Duplicates a string. Equivalent to the POSIX function strdup.     *
+ *      tmpl_polynomial_integer.h:                                            *
+ *          tmpl_IntPolynomial_Add_Kernel:                                    *
+ *              Adds two polynomials without error checking or shrinking.     *
+ *          tmpl_IntPolynomial_Copy:                                          *
+ *              Copies the data in a polynomial to another.                   *
+ *          tmpl_IntPolynomial_Shrink:                                        *
+ *              Shrinks a polynomial by removing all terms past the largest   *
+ *              non-zero coefficient.                                         *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_strdup:                                                      *
+ *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
  *      O(max(deg(P), deg(Q)). That is, if we have:                           *
@@ -74,9 +76,8 @@
  *  Notes:                                                                    *
  *      There are several possible ways for an error to occur.                *
  *          1.) The "sum" variable is NULL, or has error_occurred = true.     *
- *          2.) An input polynomial (P or Q) is NULL.                         *
- *          3.) An input polynomial (P or Q) has error_occurred = true.       *
- *          4.) realloc fails to resize the coefficient array.                *
+ *          2.) An input polynomial (P or Q) has error_occurred = true.       *
+ *          3.) realloc fails to resize the coefficient array.                *
  *      One can safely handle all cases by inspecting "sum" after using this  *
  *      function. First check if it is NULL, then if error_occurred = true.   *
  *                                                                            *
@@ -105,6 +106,8 @@
  ******************************************************************************
  *  2023/04/25: Ryan Maguire                                                  *
  *      Added doc-string and comments.                                        *
+ *  2023/05/18: Ryan Maguire                                                  *
+ *      Changed behavior so that a NULL summand is treated as zero.           *
  ******************************************************************************/
 
 /*  Booleans given here.                                                      */
@@ -130,19 +133,25 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
     if (sum->error_occurred)
         return;
 
-    /*  If either P or Q are NULL, set an error and return.                   */
-    if (!P || !Q)
+    /*  If P is NULL treat is as a zero polynomial. The sum is thus Q.        */
+    if (!P)
     {
-        sum->error_occurred = tmpl_True;
-        sum->error_message = tmpl_strdup(
-            "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Add\n\n"
-            "Input polynomial is NULL. Aborting.\n\n"
-        );
+        /*  Copy the data in Q to sum and then shrink the redundant terms.    */
+        tmpl_IntPolynomial_Copy(sum, Q);
+        tmpl_IntPolynomial_Shrink(sum);
         return;
     }
 
-    /*  Similarly if either P or Q have an error.                             */
+    /*  Similarly if Q is NULL the sum should be P.                           */
+    if (!Q)
+    {
+        /*  Copy the data in P to sum and then shrink the redundant terms.    */
+        tmpl_IntPolynomial_Copy(sum, P);
+        tmpl_IntPolynomial_Shrink(sum);
+        return;
+    }
+
+    /*  If either P or Q have an error abort the computation.                 */
     if (P->error_occurred || Q->error_occurred)
     {
         sum->error_occurred = tmpl_True;
@@ -154,9 +163,12 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
         return;
     }
 
-    /*  Final special cases. If P or Q are the empty polynomial, use copy.    */
+    /*  Special case. If the coefficients of P are NULL we have an empty      *
+     *  polynomial, which can be treated as the zero polynomial. Return Q.    */
     if (!P->coeffs)
         tmpl_IntPolynomial_Copy(sum, Q);
+
+    /*  Same idea if Q is an empty polynomial.                                */
     else if (!Q->coeffs)
         tmpl_IntPolynomial_Copy(sum, P);
 
