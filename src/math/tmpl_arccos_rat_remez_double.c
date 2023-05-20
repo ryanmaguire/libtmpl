@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_arccos_pade_float                           *
+ *                        tmpl_arccos_rat_remez_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of acos(x) at single precision.  *
- *      See include/math/tmpl_arccos_pade_float.h for details.                *
+ *      Computes a rational minimax approximation for acos(x) at double       *
+ *      precision. See include/math/tmpl_arccos_rat_remez_double.h.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       January 2, 2023                                               *
+ *  Date:       May 13, 2023                                                  *
  ******************************************************************************/
 
-/*  Implemented in include/math/tmpl_arccos_pade_float.h. Include this.       */
-#include "../../include/math/tmpl_arccos_pade_float.h"
+/*  Implemented in include/math/tmpl_arccos_rat_remez_double.h. Include this. */
+#include "../../include/math/tmpl_arccos_rat_remez_double.h"

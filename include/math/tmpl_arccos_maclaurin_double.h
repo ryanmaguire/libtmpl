@@ -16,39 +16,31 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_arccos_pade_float                           *
+ *                        tmpl_arccos_maclaurin_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of acos(x) at single precision.  *
+ *      Computes a Maclaurin series for acos(x) at double precision.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Arccos_Pade                                                *
+ *      tmpl_Double_Arccos_Maclaurin                                          *
  *  Purpose:                                                                  *
- *      Computes the Pade approximant of order (4, 4) for arccos.             *
+ *      Computes the degree 15 Maclaurin series for acos(x).                  *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      acos_x (float):                                                       *
- *          The Pade approximation of acos(x).                                *
+ *      acos_x (double):                                                      *
+ *          The degree 15 Maclaurin series of acos(x).                        *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomials for the numerator     *
- *      and denominator.                                                      *
- *                                                                            *
- *          acos(x)+x-pi/2   a0 + a1*x^2 + a2*x^4                             *
- *          -------------- = --------------------                             *
- *               x^3          1 + b1*x^2 + a2*x^4                             *
+ *      Use Horner's method to evaluate the polynomial.                       *
  *  Notes:                                                                    *
- *      Accurate to single precision for |x| < 0.5. For |x| < 0.9 the peak    *
- *      error is bounded by 10^-3. Not accurate for |x| near 1.               *
- *                                                                            *
- *      It is a lot faster (~3-4x) to call this function than the main        *
- *      arccos routine. If you don't need perfect accuracy, and if |x| is not *
- *      near 1, you may benefit from using this.                              *
+ *      Accurate to double precision for |x| < 0.15. For |x| < 0.5 the        *
+ *      approximation is accurate to 7 decimals. The computation is very fast *
+ *      and can easily be inlined.                                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -58,20 +50,12 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       January 2, 2023                                               *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2023/04/18: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_arccos_pade_float.c to just include this file.  *
- *  2023/05/14: Ryan Maguire                                                  *
- *      Changed so that this computes an actual Pade approximant. It was a    *
- *      Remez rational minimax approximation before, improperly labelled.     *
+ *  Date:       May 13, 2023                                                  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ARCCOS_PADE_FLOAT_H
-#define TMPL_ARCCOS_PADE_FLOAT_H
+#ifndef TMPL_ARCCOS_MACLAURIN_DOUBLE_H
+#define TMPL_ARCCOS_MACLAURIN_DOUBLE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -79,40 +63,49 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.6666666666666666666666666666666666666666666666667E-01F)
-#define P1 (-1.1262038994597134132017852948085506225041108762039E-01F)
-#define P2 (+4.3770531076732627120224019448825650376037972937198E-03F)
+/*  The constant term is Pi/2.                                                */
+#define TMPL_PI_BY_TWO (1.5707963267948966192313216916397514420985846996875E+00)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define Q1 (-1.1257223396758280479210711768851303735024665257223E+00F)
-#define Q2 (+2.6498022864301934069375929841046120115887557748023E-01F)
+/*  Only the odd non-constant terms have non-zero coefficients.               */
+#define A0 (1.0000000000000000000000000000000000000000000000000E+00)
+#define A1 (1.6666666666666666666666666666666666666666666666667E-01)
+#define A2 (7.5000000000000000000000000000000000000000000000000E-02)
+#define A3 (4.4642857142857142857142857142857142857142857142857E-02)
+#define A4 (3.0381944444444444444444444444444444444444444444444E-02)
+#define A5 (2.2372159090909090909090909090909090909090909090909E-02)
+#define A6 (1.7352764423076923076923076923076923076923076923077E-02)
+#define A7 (1.3964843750000000000000000000000000000000000000000E-02)
 
-/*  Function for computing the (4, 4) Pade approximant of acos(x).            */
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) \
+A0 + z*(A1 + z*(A2 + z*(A3 + z*(A4 + z*(A5 + z*(A6 + z*A7))))))
+
+/*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
 TMPL_INLINE_DECL
-float tmpl_Float_Arccos_Pade(float x)
+double tmpl_Double_Arccos_Maclaurin(double x)
 {
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
-    const float x2 = x*x;
+    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
+    const double x2 = x*x;
 
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = P0 + x2*(P1 + x2*P2);
-    const float q = Q0 + x2*(Q1 + x2*Q2);
-    const float r = x2*p/q;
+    /*  Compute the Maclaurin series of asin(x) / x.                          */
+    const double poly = TMPL_POLY_EVAL(x2);
 
-    /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return tmpl_Pi_By_Two_F - (x + x*r);
+    /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
+    return TMPL_PI_BY_TWO - x*poly;
 }
-/*  End of tmpl_Float_Arccos_Pade.                                            */
+/*  End of tmpl_Double_Arccos_Maclaurin.                                      */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef P2
-#undef P1
-#undef P0
-#undef Q2
-#undef Q1
-#undef Q0
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
+#undef A6
+#undef A7
+#undef TMPL_PI_BY_TWO
+#undef TMPL_POLY_EVAL
 
 #endif
 /*  End of include guard.                                                     */
