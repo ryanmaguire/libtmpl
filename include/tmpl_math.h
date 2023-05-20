@@ -1476,6 +1476,82 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Pade(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Maclaurin                                          *
+ *  Purpose:                                                                  *
+ *      Compute arc-cosine using a Maclaurin polynomial.                      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arccos_maclaurin_float.c                        *
+ *      libtmpl/src/math/tmpl_arccos_maclaurin_double.c                       *
+ *      libtmpl/src/math/tmpl_arccos_maclaurin_ldouble.c                      *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_arccos_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_arccos_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_arccos_maclaurin_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arccos_Maclaurin(float x);
+extern double tmpl_Double_Arccos_Maclaurin(double x);
+extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arccos_Rat_Remez                                          *
+ *  Purpose:                                                                  *
+ *      Compute arc-cosine using a rational minimax approximation.            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arccos_rat_remez_float.c                        *
+ *      libtmpl/src/math/tmpl_arccos_rat_remez_double.c                       *
+ *      libtmpl/src/math/tmpl_arccos_rat_remez_ldouble.c                      *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_arccos_rat_remez_double.h>
+#include <libtmpl/include/math/tmpl_arccos_rat_remez_float.h>
+#include <libtmpl/include/math/tmpl_arccos_rat_remez_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arccos_Rat_Remez(float x);
+extern double tmpl_Double_Arccos_Rat_Remez(double x);
+extern long double tmpl_LDouble_Arccos_Rat_Remez(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Arccos_Tail_End                                           *
  *  Purpose:                                                                  *
  *      Compute the arccos (inverse cosine) for values near 1.                *

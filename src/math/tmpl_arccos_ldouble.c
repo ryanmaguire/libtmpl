@@ -35,18 +35,18 @@
  *          The arc-cosine of x.                                              *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Arccos_Pade (tmpl_math.h):                           *
- *              Computes acos(x) via a Pade approximant for |x| < 0.5.        *
+ *          tmpl_LDouble_Arccos_Rat_Remez (tmpl_math.h):                      *
+ *              Computes acos(x) via a minimax approximation for |x| < 0.5.   *
  *          tmpl_LDouble_Arccos_Tail_End (tmpl_math.h):                       *
  *              Computes acos(x) for 0.5 <= x < 1.0.                          *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
- *          use the reflection formula:                                       *
+ *          For small x, |x| < 0.5, use a minimax approximation. For          *
+ *          0.5 <= x < 1 use the reflection formula:                          *
  *                                                                            *
  *              acos(x) = 2*asin(sqrt((1-x)/2))                               *
  *                                                                            *
- *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
- *          use the negation formula:                                         *
+ *          Compute this using a minimax approximation. For values            *
+ *          -1 < x <= -0.5 use the negation formula:                          *
  *                                                                            *
  *              acos(x) = pi - acos(-x)                                       *
  *                                                                            *
@@ -89,8 +89,8 @@
  *      Called Functions:                                                     *
  *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
  *              Computes the absolute value of a real number.                 *
- *          tmpl_LDouble_Arccos_Pade (tmpl_math.h):                           *
- *              Computes acos(x) via a Pade approximant for |x| < 0.5.        *
+ *          tmpl_LDouble_Arccos_Rat_Remez (tmpl_math.h):                      *
+ *              Computes acos(x) via a minimax approximation for |x| < 0.5.   *
  *          tmpl_LDouble_Arccos_Tail_End (tmpl_math.h):                       *
  *              Computes acos(x) for 0.5 <= x < 1.0.                          *
  *      Method:                                                               *
@@ -163,9 +163,9 @@ long double tmpl_LDouble_Arccos(long double x)
     /*  Set the long double part of the word to the input.                    */
     w.r = x;
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  For |x| < 0.5 use the minimax approximation.                          */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 1U)
-        return tmpl_LDouble_Arccos_Pade(x);
+        return tmpl_LDouble_Arccos_Rat_Remez(x);
 
     /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
@@ -211,9 +211,9 @@ long double tmpl_LDouble_Arccos(long double x)
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  For |x| < 0.5 use the minimax approximation.                          */
     if (abs_x < 0.5L)
-        return tmpl_LDouble_Arccos_Pade(x);
+        return tmpl_LDouble_Arccos_Rat_Remez(x);
 
     /*  Otherwise use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).      */
     else if (abs_x < 1.0L)
