@@ -44,7 +44,10 @@ long int tmpl_Long_Abs(long int n)
 TMPL_INLINE_DECL
 long long int tmpl_LLong_Abs(long long int n)
 {
-    return (n < 0LL ? -n : n);
+    if (n < 0LL)
+        return -n;
+    else
+        return n;
 }
 #endif
 
