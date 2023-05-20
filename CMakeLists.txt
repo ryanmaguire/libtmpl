@@ -170,7 +170,7 @@ if(NOT LIBTMPL_USE_LONGLONG)
 endif()
 
 if(LIBTMPL_USE_MEMCPY)
-target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MEMCPY_TRUE)
+    target_compile_definitions(tmpl_config PUBLIC TMPL_SET_USE_MEMCPY_TRUE)
 endif()
 
 if(LIBTMPL_USE_OMP)
@@ -218,6 +218,12 @@ if(NOT LIBTMPL_USE_MATH)
         "tmpl_abs_double.c"
         "tmpl_abs_float.c"
         "tmpl_abs_ldouble.c"
+        "tmpl_arccos_double.c"
+        "tmpl_arccos_float.c"
+        "tmpl_arccos_ldouble.c"
+        "tmpl_arcsin_double.c"
+        "tmpl_arcsin_float.c"
+        "tmpl_arcsin_ldouble.c"
         "tmpl_arctan2_double.c"
         "tmpl_arctan2_float.c"
         "tmpl_arctan2_ldouble.c"
@@ -253,6 +259,12 @@ if(LIBTMPL_USE_INLINE)
         "tmpl_arccos_tail_end_double.c"
         "tmpl_arccos_tail_end_float.c"
         "tmpl_arccos_tail_end_ldouble.c"
+        "tmpl_arcsin_pade_double.c"
+        "tmpl_arcsin_pade_float.c"
+        "tmpl_arcsin_pade_ldouble.c"
+        "tmpl_arcsin_tail_end_double.c"
+        "tmpl_arcsin_tail_end_float.c"
+        "tmpl_arcsin_tail_end_ldouble.c"
         "tmpl_arctan_asymptotic_double.c"
         "tmpl_arctan_asymptotic_float.c"
         "tmpl_arctan_asymptotic_ldouble.c"
