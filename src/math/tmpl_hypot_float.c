@@ -71,6 +71,8 @@
  *  Date:       December 30, 2022                                             *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
@@ -96,10 +98,7 @@ float tmpl_Float_Hypot(float x, float y)
 
     /*  Compute the maximum of |x| and |y| and store it in the float          *
      *  part of the tmpl_IEEE754_Float union w.                               */
-    if (abs_x < abs_y)
-        w.r = abs_y;
-    else
-        w.r = abs_x;
+    w.r = TMPL_MAX(abs_x, abs_y);
 
     /*  We want to check if the exponent is less than 64, which is 0x40 in    *
      *  hexidecimal. The exponent of a float is offset by a bias. To check    *
@@ -173,10 +172,8 @@ float tmpl_Float_Hypot(float x, float y)
     float abs_x = tmpl_Float_Abs(x);
     float abs_y = tmpl_Float_Abs(y);
 
-    /*  Compute the maximum of |x| and |y|. This syntax from the C language   *
-     *  is a bit strange. a = (b < c ? c : b) says if b is less than c, set a *
-     *  to c, otherwise set a to b.                                           */
-    const float t = (abs_x < abs_y ? abs_y : abs_x);
+    /*  Compute the maximum of |x| and |y|.                                   */
+    const float t = TMPL_MAX(abs_x, abs_y);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
      *  |z| is zero, |z| = 0. Return this.                                    */
