@@ -89,6 +89,8 @@
 /*  realloc found here.                                                       */
 #include <stdlib.h>
 
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  TMPL_USE_MEMCPY macro is here.                                            */
 #include <libtmpl/include/tmpl_config.h>
 
@@ -108,7 +110,7 @@ tmpl_IntPolynomial_Subtract_Kernel(const tmpl_IntPolynomial *P,
                                    tmpl_IntPolynomial *diff)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    const size_t degree = (P->degree > Q->degree ? P->degree : Q->degree);
+    const size_t degree = TMPL_MAX(P->degree, Q->degree);
     size_t n;
 
     /*  Check if sum needs to be resized.                                     */

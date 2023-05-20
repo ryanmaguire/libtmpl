@@ -194,6 +194,144 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Add_Same_Degree                                    *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x] with the same degree.                       *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      sum (tmpl_IntPolynomial *):                                           *
+ *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Add_Same_Degree(const tmpl_IntPolynomial *P,
+                                   const tmpl_IntPolynomial *Q,
+                                   tmpl_IntPolynomial *sum);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Add_Same_Degree_Kernel                             *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x] with the same degree without error checking *
+ *      or shrinking the final result.                                        *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      sum (tmpl_IntPolynomial *):                                           *
+ *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
+                                          const tmpl_IntPolynomial *Q,
+                                          tmpl_IntPolynomial *sum);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo                                              *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x]. The redundant zeros of the sum are removed.*
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *P, const tmpl_IntPolynomial *Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Kernel                                       *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x] without error checks or shrinking the sum.  *
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      Use this if you are absolutely certain P, Q, and sum are not NULL and *
+ *      do not have error_occurred set to true, and you don't want the final  *
+ *      result to be shrunk (i.e. have its padded zeros removed).             *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
+                                const tmpl_IntPolynomial *Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Product                                      *
+ *  Purpose:                                                                  *
+ *      Computes P += A*B.                                                    *
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      A (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      B (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Product(tmpl_IntPolynomial *P,
+                                 const tmpl_IntPolynomial *A,
+                                 const tmpl_IntPolynomial *B);
+
+extern void
+tmpl_IntPolynomial_AddTo_Sum_Product(tmpl_IntPolynomial *P,
+                                     const tmpl_IntPolynomial *A0,
+                                     const tmpl_IntPolynomial *A1,
+                                     const tmpl_IntPolynomial *B);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Same_Degree                                  *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x]. The redundant zeros of the sum are removed.*
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Same_Degree(tmpl_IntPolynomial *P,
+                                     const tmpl_IntPolynomial *Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Same_Degree_Kernel                           *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x].                                            *
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Same_Degree_Kernel(tmpl_IntPolynomial *P,
+                                            const tmpl_IntPolynomial *Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_IntPolynomial_Calloc                                             *
  *  Purpose:                                                                  *
  *      Creates a polynomial in Z[x] with "length" elements allocated         *
@@ -432,6 +570,26 @@ tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
  *  Purpose:                                                                  *
  *      Multiplies two elements of Z[x].                                      *
  *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      prod (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial, the value P*Q will be stored in it.    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
+                                  const tmpl_IntPolynomial *Q,
+                                  tmpl_IntPolynomial *prod);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Multiply_Naive_Kernel                              *
+ *  Purpose:                                                                  *
+ *      Multiplies two elements of Z[x].                                      *
+ *  Arguments:                                                                *
  *      P (tmpl_PolynomialZ *):                                               *
  *          A pointer to a polynomial.                                        *
  *      Q (tmpl_PolynomialZ *):                                               *
@@ -442,9 +600,9 @@ tmpl_IntPolynomial_Multiply(const tmpl_IntPolynomial *P,
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
-                                  const tmpl_IntPolynomial *Q,
-                                  tmpl_IntPolynomial *prod);
+tmpl_IntPolynomial_Multiply_Naive_Kernel(const tmpl_IntPolynomial *P,
+                                         const tmpl_IntPolynomial *Q,
+                                         tmpl_IntPolynomial *prod);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -487,7 +645,8 @@ extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
  *  Source Code:                                                              *
  *      libtmpl/src/polynomial/tmpl_polynomial_z_print_string.c               *
  ******************************************************************************/
-extern void tmpl_IntPolynomial_Print_String(FILE *fp, tmpl_IntPolynomial *poly);
+extern void
+tmpl_IntPolynomial_Print_String(FILE *fp, const tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -660,6 +819,17 @@ tmpl_IntPolynomial_ScaleSelf_Kernel(tmpl_IntPolynomial *poly, int scale);
  ******************************************************************************/
 extern void
 tmpl_IntPolynomial_ScaleSelf(tmpl_IntPolynomial *poly, int scale);
+
+extern void
+tmpl_IntPolynomial_Steal(size_t cut_start, size_t cut_end,
+                         tmpl_IntPolynomial *dest,
+                         const tmpl_IntPolynomial *src);
+
+extern void
+tmpl_IntPolynomial_Positive_Degree_Shift(size_t shift, tmpl_IntPolynomial *P);
+
+extern tmpl_IntPolynomial
+tmpl_IntPolynomial_Random(size_t degree);
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
