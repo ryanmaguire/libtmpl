@@ -1505,9 +1505,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Pade(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arccos_Maclaurin(float x);
-extern double tmpl_Double_Arccos_Maclaurin(double x);
-extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arccos_Maclaurin(float x);
+TMPL_EXPORT extern double tmpl_Double_Arccos_Maclaurin(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1543,9 +1543,9 @@ extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arccos_Rat_Remez(float x);
-extern double tmpl_Double_Arccos_Rat_Remez(double x);
-extern long double tmpl_LDouble_Arccos_Rat_Remez(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arccos_Rat_Remez(float x);
+TMPL_EXPORT extern double tmpl_Double_Arccos_Rat_Remez(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Rat_Remez(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
