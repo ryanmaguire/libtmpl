@@ -22,6 +22,7 @@
  *  Date:   2022/05/12                                                        *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_minmax.h>
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Binary GCD Algorithm for unsigned integers.                               */
@@ -54,7 +55,6 @@ unsigned long int tmpl_ULong_GCD(unsigned long int m, unsigned long int n)
         m -= n;
         m >>= TMPL_ULONG_TRAILING_ZEROS(m);
     }
-    m = m << (m_zeros < n_zeros ? m_zeros : n_zeros);
-    return m;
+    return m << TMPL_MIN(m_zeros, n_zeros);
 }
 /*  End of tmpl_ULong_GCD.                                                    */
