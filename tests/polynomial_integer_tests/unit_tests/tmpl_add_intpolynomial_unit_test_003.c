@@ -16,66 +16,12 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
-
-/*  Tests tmpl_IntPolynomial_Add with an empty polynomial.                    */
-
-#include <libtmpl/include/tmpl_polynomial_integer.h>
-#include <stdio.h>
-
-int main(void)
-{
-    /*  Input data for the test.                                              */
-    const int P_data[4] = {1, 2, 3, 4};
-    const int *Q_data = NULL;
-    const int result[4] = {1, 2, 3, 4};
-
-    /*  Variable for indexing over the arrays.                                */
-    size_t n;
-
-    /*  Lengths of the arrays defining the polynomials, including the sum.    */
-    const size_t P_len = sizeof(P_data) / sizeof(P_data[0]);
-    const size_t Q_len = (size_t)0;
-    const size_t result_len = sizeof(result) / sizeof(result[0]);
-
-    /*  Initialize the polynomials from the data.                             */
-    tmpl_IntPolynomial P = tmpl_IntPolynomial_Create_From_Data(P_data, P_len);
-    tmpl_IntPolynomial Q = tmpl_IntPolynomial_Create_From_Data(Q_data, Q_len);
-
-    /*  Create an empty polynomial for the sum, to be computed next.          */
-    tmpl_IntPolynomial sum = tmpl_IntPolynomial_Empty();
-
-    /*  Add P and Q and store the result in sum.                              */
-    tmpl_IntPolynomial_Add(&P, &Q, &sum);
-
-    /*  Check for possible errors.                                            */
-    if (!sum.coeffs)
-    {
-        puts("FAIL: realloc failed and returned NULL for sum.coeffs.");
-        goto CLEANUP;
-    }
-
-    if (sum.error_occurred)
-    {
-        puts("FAIL: tmpl_IntPolynomial_Add set sum.error_occurred = true.");
-        goto CLEANUP;
-    }
-
-    /*  Check if the adding function succeeded.                               */
-    for (n = (size_t)0; n < result_len; ++n)
-    {
-        if (sum.coeffs[n] != result[n])
-        {
-            puts("FAIL: sum.coeffs != result");
-            goto CLEANUP;
-        }
-    }
-
-    /*  Inform the user that the test passed and conclude.                    */
-    puts("PASS");
-
-CLEANUP:
-    tmpl_IntPolynomial_Destroy(&P);
-    tmpl_IntPolynomial_Destroy(&Q);
-    tmpl_IntPolynomial_Destroy(&sum);
-    return 0;
-}
+#include "tmpl_polynomial_integer_unit_tests.h"
+#define func tmpl_IntPolynomial_Add
+#define pdat {1, 2, 3, 4}
+#define rdat {1, 2, 3, 4}
+#define type int
+#define ptype tmpl_IntPolynomial
+#define pcreate tmpl_IntPolynomial_Create_From_Data
+#define destroy tmpl_IntPolynomial_Destroy
+TEST2(func, pdat, rdat, type, ptype, pcreate, destroy)
