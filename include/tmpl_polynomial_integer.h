@@ -25,7 +25,11 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- *  2.) stdio.h:                                                              *
+ *  2.) tmpl_inttype.h:                                                       *
+ *          Header file with TMPL_HAS_LONGLONG for long long support.         *
+ *  3.) stddef.h:                                                             *
+ *          Standard C header file with size_t data type.                     *
+ *  4.) stdio.h:                                                              *
  *          Standard C header file containing the FILE data type.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -56,11 +60,11 @@
 extern "C" {
 #endif
 
-/*  Macro indicating whether libtmpl has long long support found here.        */
-#include <libtmpl/include/tmpl_inttype.h>
-
 /*  Booleans located here.                                                    */
 #include <libtmpl/include/tmpl_bool.h>
+
+/*  Macro indicating whether libtmpl has long long support found here.        */
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  The size_t data type is found here.                                       */
 #include <stddef.h>
@@ -122,21 +126,11 @@ typedef struct tmpl_LongPolynomial_Def {
 /*  Polynomials with integer coefficients, elements of Z[x]. long long data.  */
 typedef struct tmpl_LongLongPolynomial_Def {
 
-    /*  A pointer to a signed long int array containing the coefficients.     */
+    /*  A pointer to a signed long long int array containing the coefficients.*/
     signed long long int *coeffs;
 
-    /*  The number of elements in the coeffs array.                           */
-    size_t number_of_coeffs;
-
-    /*  The smallest degree in the polynomial. The degree of the nth term in  *
-     *  the coeffs array is min_degree + n;                                   */
-    size_t min_degree;
-
-    /*  Boolean for keeping track of the coeffs pointer.                      */
-    tmpl_Bool coeffs_can_be_freed;
-
-    /*  Boolean for keeping track of the entire polynomial.                   */
-    tmpl_Bool poly_can_be_freed;
+    /*  The degree of the polynomial. coeffs has degree + 1 elements.         */
+    size_t degree;
 
     /*  Boolean for keeping track of errors.                                  */
     tmpl_Bool error_occurred;
@@ -147,6 +141,27 @@ typedef struct tmpl_LongLongPolynomial_Def {
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_Add                                                *
+ *  Purpose:                                                                  *
+ *      Adds two elements of Z[x]. The redundant zeros of the sum are removed.*
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      sum (tmpl_IntPolynomial *):                                           *
+ *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
+                       const tmpl_IntPolynomial *Q,
+                       tmpl_IntPolynomial *sum);
+
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -174,26 +189,6 @@ tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_IntPolynomial_Add                                                *
- *  Purpose:                                                                  *
- *      Adds two elements of Z[x]. The redundant zeros of the sum are removed.*
- *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
- *      sum (tmpl_IntPolynomial *):                                           *
- *          A pointer to a polynomial, the value P + Q will be stored in it.  *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-extern void
-tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
-                       const tmpl_IntPolynomial *Q,
-                       tmpl_IntPolynomial *sum);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_IntPolynomial_Add_Same_Degree                                    *
  *  Purpose:                                                                  *
  *      Adds two elements of Z[x] with the same degree.                       *
@@ -201,11 +196,14 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
  *      P (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
  *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *          Another pointer to a polynomial, with the same degree as P.       *
  *      sum (tmpl_IntPolynomial *):                                           *
  *          A pointer to a polynomial, the value P + Q will be stored in it.  *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      This is a "utility" function used by other main functions during      *
+ *      intermediate computations.                                            *
  ******************************************************************************/
 extern void
 tmpl_IntPolynomial_Add_Same_Degree(const tmpl_IntPolynomial *P,
@@ -222,11 +220,16 @@ tmpl_IntPolynomial_Add_Same_Degree(const tmpl_IntPolynomial *P,
  *      P (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
  *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *          Another pointer to a polynomial, with the same degree as P.       *
  *      sum (tmpl_IntPolynomial *):                                           *
  *          A pointer to a polynomial, the value P + Q will be stored in it.  *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      Use with caution. This function assumes the degrees of P and Q are    *
+ *      the same, that the coeffs arrays have been allocated memory, that sum *
+ *      is not NULL, and that error_occurred is false for all polynomials.    *
+ *      This is another utility function used by other routines.              *
  ******************************************************************************/
 extern void
 tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
@@ -237,7 +240,8 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
  *  Function:                                                                 *
  *      tmpl_IntPolynomial_AddTo                                              *
  *  Purpose:                                                                  *
- *      Adds two elements of Z[x]. The redundant zeros of the sum are removed.*
+ *      Adds two elements of Z[x]. The redundant zeros of the sum are removed *
+ *      and the result is stored in the first variable. That is, P += Q.      *
  *  Arguments:                                                                *
  *      P (tmpl_IntPolynomial *):                                             *
  *          A pointer to a polynomial. The sum is stored here.                *
@@ -245,6 +249,9 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
  *          Another pointer to a polynomial.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      This provides a "+=" operator for polynomials. It is faster to use    *
+ *      this routine than tmpl_IntPolynomial_Add(P, Q, P).                    *
  ******************************************************************************/
 extern void
 tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *P, const tmpl_IntPolynomial *Q);
@@ -254,6 +261,7 @@ tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *P, const tmpl_IntPolynomial *Q);
  *      tmpl_IntPolynomial_AddTo_Kernel                                       *
  *  Purpose:                                                                  *
  *      Adds two elements of Z[x] without error checks or shrinking the sum.  *
+ *      The result is stored in the first variable. That is, P += Q.          *
  *  Arguments:                                                                *
  *      P (tmpl_IntPolynomial *):                                             *
  *          A pointer to a polynomial. The sum is stored here.                *
@@ -262,7 +270,7 @@ tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *P, const tmpl_IntPolynomial *Q);
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
- *      Use this if you are absolutely certain P, Q, and sum are not NULL and *
+ *      Use this if you are absolutely certain P and Q are not NULL and       *
  *      do not have error_occurred set to true, and you don't want the final  *
  *      result to be shrunk (i.e. have its padded zeros removed).             *
  ******************************************************************************/
@@ -272,23 +280,50 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_IntPolynomial_AddTo_Product                                      *
+ *      tmpl_IntPolynomial_AddTo_Product_Naive                                *
  *  Purpose:                                                                  *
- *      Computes P += A*B.                                                    *
+ *      Computes P += A*B. Redundant zeros are removed from the result.       *
  *  Arguments:                                                                *
  *      P (tmpl_IntPolynomial *):                                             *
  *          A pointer to a polynomial. The sum is stored here.                *
  *      A (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
  *      B (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      Mostly used as a utility function for Karatsuba multiplication, but a *
+ *      user may find it useful as a standalone. The product A*B is performed *
+ *      the naive way which runs in O(deg(A)*deg(B)) time. The Karatsuba      *
+ *      algorithm (roughly O(max(deg(A), deg(B))^log_2(3))) uses this         *
+ *      function to perform multiplication after the recursive steps have     *
+ *      reduced the degree to small enough value.                             *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Product_Naive(tmpl_IntPolynomial *P,
+                                       const tmpl_IntPolynomial *A,
+                                       const tmpl_IntPolynomial *B);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Product_Naive_Kernel                         *
+ *  Purpose:                                                                  *
+ *      Computes P += A*B without error checking or shrinking the result.     *
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      A (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
+ *      B (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_AddTo_Product(tmpl_IntPolynomial *P,
-                                 const tmpl_IntPolynomial *A,
-                                 const tmpl_IntPolynomial *B);
+tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
+                                              const tmpl_IntPolynomial *A,
+                                              const tmpl_IntPolynomial *B);
 
 extern void
 tmpl_IntPolynomial_AddTo_Sum_Product(tmpl_IntPolynomial *P,
