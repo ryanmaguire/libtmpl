@@ -33,7 +33,7 @@
  *      P (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
  *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *          Another pointer to a polynomial, of the same degree as P.         *
  *      sum (tmpl_IntPolynomial *):                                           *
  *          A pointer to a polynomial. The sum is stored here.                *
  *  Output:                                                                   *
@@ -73,6 +73,9 @@
  *      after calling this function to safely handle errors.                  *
  *                                                                            *
  *      Using this function assumes P and Q are of the same degree.           *
+ *      This function also assumes P and Q do not have empty coefficients.    *
+ *      That is, P->coeffs and Q->coeffs should have at least one element     *
+ *      allocated (the value can be zero, however).                           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

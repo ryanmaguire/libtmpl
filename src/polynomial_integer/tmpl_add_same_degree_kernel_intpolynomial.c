@@ -27,12 +27,12 @@
  *      tmpl_IntPolynomial_Add_Same_Degree_Kernel                             *
  *  Purpose:                                                                  *
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
- *      That is, given polynomials P, Q in Z[x], computes P + Q.              *
+ *      Given polynomials P, Q in Z[x] of the same degree this computes P + Q.*
  *  Arguments:                                                                *
  *      P (const tmpl_IntPolynomial *):                                       *
  *          A pointer to a polynomial.                                        *
  *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *          Another pointer to a polynomial, of the same degree as P.         *
  *      sum (tmpl_IntPolynomial *):                                           *
  *          A pointer to a polynomial. The sum is stored here.                *
  *  Output:                                                                   *
