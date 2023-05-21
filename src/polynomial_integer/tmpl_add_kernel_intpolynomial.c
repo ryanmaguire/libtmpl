@@ -117,9 +117,15 @@
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
 /*  It may be faster, pending computer, to use memcpy to copy the larger      *
- *  polynomial into the output, rather than using a for loop. On computers    *
+ *  polynomial into the output, rather than using a for-loop. On computers    *
  *  tested the for-loop is slightly faster. Nevertheless, to use this version *
- *  build libtmpl with USE_MEMCPY=1 set.                                      */
+ *  build libtmpl with USE_MEMCPY=1 set.                                      *
+ *                                                                            *
+ *  WARNING:                                                                  *
+ *      If you use memcpy instead of a for-loop, calling this function with   *
+ *      P == sum or Q == sum may result in undefined behavior. For this       *
+ *      reason, and since the for-loop seems to be slightly faster, default   *
+ *      behavior is to avoid memcpy.                                          */
 #if TMPL_USE_MEMCPY == 1
 #include <string.h>
 #endif
