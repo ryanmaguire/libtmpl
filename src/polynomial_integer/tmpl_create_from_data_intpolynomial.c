@@ -1,6 +1,7 @@
 
 
 #include <stdlib.h>
+#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_bool.h>
 #include <libtmpl/include/tmpl_string.h>
 #include <libtmpl/include/tmpl_polynomial_integer.h>
