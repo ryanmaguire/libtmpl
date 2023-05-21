@@ -133,7 +133,7 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
     if (sum->error_occurred)
         return;
 
-    /*  If P is NULL treat is as a zero polynomial. The sum is thus Q.        */
+    /*  If P is NULL treat it as a zero polynomial. The sum is thus Q.        */
     if (!P)
     {
         /*  Copy the data in Q to sum and then shrink the redundant terms.    */
