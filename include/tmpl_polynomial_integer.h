@@ -866,6 +866,9 @@ tmpl_IntPolynomial_Positive_Degree_Shift(size_t shift, tmpl_IntPolynomial *P);
 extern tmpl_IntPolynomial
 tmpl_IntPolynomial_Random(size_t degree);
 
+extern tmpl_IntPolynomial
+tmpl_IntPolynomial_Create_From_Data(const int *data, size_t len);
+
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
 }
