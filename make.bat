@@ -33,34 +33,53 @@ IF EXIST *.so (del *.so)
 :: See if the user specified which compiler to use.
 IF %1.==. GOTO MakeCL
 IF %1 == cl GOTO MakeCL
-IF %1 == clang-cl GOTO MakeClangGCC
-IF %1 == clang GOTO MakeClangGCC
-IF %1 == gcc GOTO MakeClangGCC
+IF %1 == clang-cl GOTO MakeClang
+IF %1 == clang GOTO MakeClang
+IF %1 == gcc GOTO MakeGCC
 
-:MakeClangGCC
-
-    :: Select the requested compiler.
-    IF %1 == gcc SET CCOMPILER=gcc ELSE SET CCOMPILER=clang-cl
+:MakeClang
 
     :: Arguments for the compiler.
     SET CMACR=-DTMPL_SET_USE_MATH_TRUE
-    SET CWARN=-Wall -Wextra -Wpedantic
-
-    :: A few warnings that do not really matter for libtmpl. These are disabled.
-    SET CNOWARN=-Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+    SET CWARN=-Weverything -Wno-padded -Wno-float-equal -Wno-reserved-id-macro
     SET CARGS=-O2 -I..\ -c
 
     :: Create include\tmpl_endianness.h
-    %CCOMPILER% %CMACR% config.c -o config.exe
+    clang-cl %CMACR% config.c -o config.exe
     config.exe
     del *.exe *.obj
 
     :: Compile the library.
     FOR /D %%d in (.\src\*) DO (
-        if "%%d" == ".\src\assembly" (
+        IF "%%d" == ".\src\assembly" (
             ECHO Skipping src\assembly\
         ) ELSE (
-            %CCOMPILER% %CWARN% %CNOWARN% %CARGS% %%d\*.c
+            clang-cl %CWARN% %CARGS% %%d\*.c
+        )
+    )
+
+    :: Go to the Linking stage.
+    GOTO LinkLib
+
+:MakeGCC
+
+    :: Arguments for the compiler.
+    SET CMACR=-DTMPL_SET_USE_MATH_TRUE
+    SET CWARN=-Wall -Wextra -Wpedantic
+    SET CNOWARN=-Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+    SET CARGS=-O2 -I..\ -c
+
+    :: Create include\tmpl_endianness.h
+    gcc %CMACR% config.c -o config.exe
+    config.exe
+    del *.exe *.obj
+
+    :: Compile the library.
+    FOR /D %%d in (.\src\*) DO (
+        IF "%%d" == ".\src\assembly" (
+            ECHO Skipping src\assembly\
+        ) ELSE (
+            gcc %CWARN% %CNOWARN% %CARGS% %%d\*.c
         )
     )
 
