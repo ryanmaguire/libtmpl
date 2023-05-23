@@ -222,3 +222,68 @@ CLEANUP:                                                                       \
     destroy(&Q);                                                               \
     return 0;                                                                  \
 }
+
+#define TEST7(func, pdat, rdat, type, ptype, pcreate, destroy)                 \
+int main(void)                                                                 \
+{                                                                              \
+    const type P_data[] = pdat;                                                \
+    const type result[] = rdat;                                                \
+    const size_t P_len = sizeof(P_data) / sizeof(P_data[0]);                   \
+    const size_t result_len = sizeof(result) / sizeof(result[0]);              \
+    ptype P = pcreate(P_data, P_len);                                          \
+    ptype Q = pcreate(NULL, (size_t)0);                                        \
+    size_t n;                                                                  \
+    func(&P, &Q);                                                              \
+                                                                               \
+    if (!P.coeffs)                                                             \
+    {                                                                          \
+        puts("FAIL: P.coeffs is NULL.");                                       \
+        goto CLEANUP;                                                          \
+    }                                                                          \
+                                                                               \
+    if (P.error_occurred)                                                      \
+    {                                                                          \
+        puts("FAIL: Function set P.error_occurred = true.");                   \
+        goto CLEANUP;                                                          \
+    }                                                                          \
+                                                                               \
+    for (n = (size_t)0; n < result_len; ++n)                                   \
+    {                                                                          \
+        if (P.coeffs[n] != result[n])                                          \
+        {                                                                      \
+            puts("FAIL: P.coeffs != result");                                  \
+            goto CLEANUP;                                                      \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    puts("PASS");                                                              \
+                                                                               \
+CLEANUP:                                                                       \
+    destroy(&P);                                                               \
+    destroy(&Q);                                                               \
+    return 0;                                                                  \
+}
+
+#define TEST8(func, ptype, pcreate, destroy)                                   \
+int main(void)                                                                 \
+{                                                                              \
+    ptype P = pcreate(NULL, (size_t)0);                                        \
+    ptype Q = pcreate(NULL, (size_t)0);                                        \
+    func(&P, &Q);                                                              \
+                                                                               \
+    if (P.error_occurred)                                                      \
+    {                                                                          \
+        puts("FAIL: Function set P.error_occurred = true.");                   \
+        goto CLEANUP;                                                          \
+    }                                                                          \
+                                                                               \
+    if (P.coeffs == NULL && P.degree == (size_t)0)                             \
+        puts("PASS");                                                          \
+    else                                                                       \
+        puts("FAIL: Output is not the empty polynomial.");                     \
+                                                                               \
+CLEANUP:                                                                       \
+    destroy(&P);                                                               \
+    destroy(&Q);                                                               \
+    return 0;                                                                  \
+}
