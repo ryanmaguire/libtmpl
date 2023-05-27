@@ -16,35 +16,35 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_subtract_kernel_intpolynomial                     *
+ *                       tmpl_addto_kernel_intpolynomial                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Subtracts two polynomials with integer coefficients.                  *
+ *      Adds two polynomials with integer coefficients.                       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_IntPolynomial_Subtract_Kernel                                    *
+ *      tmpl_IntPolynomial_AddTo_Kernel                                       *
  *  Purpose:                                                                  *
- *      Computes the difference of two polynomials over Z[x] with 'int'       *
- *      coefficients. That is, given polynomials P, Q in Z[x], computes P - Q.*
+ *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
+ *      That is, given polynomials P, Q in Z[x], computes P += Q.             *
  *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
  *      Q (const tmpl_IntPolynomial *):                                       *
  *          Another pointer to a polynomial.                                  *
- *      diff (tmpl_IntPolynomial *):                                          *
- *          A pointer to a polynomial. The difference is stored here.         *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      realloc (stdlib.h):                                                   *
- *          Resizes an array.                                                 *
- *      tmpl_strdup (tmpl_string.h):                                          *
- *          Duplicates a string. Equivalent to the POSIX function strdup.     *
+ *      stdlib.h:                                                             *
+ *          realloc:                                                          *
+ *              Resizes an array.                                             *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_strdup:                                                      *
+ *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
- *      Polynomial subtraction is performed term-by-term. The complexity is   *
- *      thus O(max(deg(P), deg(Q)). That is, if we have:                      *
+ *      Polynomial addition is performed term-by-term. The complexity is thus *
+ *      O(max(deg(P), deg(Q)). That is, if we have:                           *
  *                                                                            *
  *                   N                       M                                *
  *                 -----                   -----                              *
@@ -53,12 +53,12 @@
  *                 -----   n               -----   m                          *
  *                 n = 0                   m = 0                              *
  *                                                                            *
- *      The difference is defined by:                                         *
+ *      The sum is defined by:                                                *
  *                                                                            *
  *                          K                                                 *
  *                        -----                                               *
  *                        \                 k                                 *
- *          P(x) - Q(x) = /      (a  - b ) x                                  *
+ *          P(x) + Q(x) = /      (a  + b ) x                                  *
  *                        -----    k    k                                     *
  *                        k = 0                                               *
  *                                                                            *
@@ -68,7 +68,7 @@
  *      degree polynomial for min(N, M) < k <= max(N, M).                     *
  *  Notes:                                                                    *
  *      This function does not check for NULL pointers nor shrinks the end    *
- *      result. Use tmpl_IntPolynomial_Subtract for a safer alternative. That *
+ *      result. Use tmpl_IntPolynomial_AddTo for a safer alternative. That    *
  *      function checks the inputs and then calls this function.              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
@@ -77,19 +77,26 @@
  *          Standard library file with realloc and size_t.                    *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  3.) tmpl_string.h:                                                        *
+ *  3.) tmpl_minmax.h:                                                        *
+ *          Provides the TMPL_MAX macro.                                      *
+ *  4.) tmpl_string.h:                                                        *
  *          Header file where tmpl_strdup is declared.                        *
- *  4.) tmpl_polynomial_integer.h:                                            *
+ *  5.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
+ *  6.) string.h (optional):                                                  *
+ *          Standard library file with the memcpy function.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       April 26, 2023                                                *
+ *  Date:       April 25, 2023                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/04/25: Ryan Maguire                                                  *
+ *      Added doc-string and comments.                                        *
  ******************************************************************************/
 
 /*  realloc found here.                                                       */
 #include <stdlib.h>
-
-#include <libtmpl/include/tmpl_minmax.h>
 
 /*  TMPL_USE_MEMCPY macro is here.                                            */
 #include <libtmpl/include/tmpl_config.h>
@@ -97,36 +104,42 @@
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
+/*  TMPL_MAX macro provided here.                                             */
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  tmpl_strdup function provided here.                                       */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  Function for subtracting two polynomials over Z[x].                       */
+/*  Function for adding two polynomials over Z[x].                            */
 void
-tmpl_IntPolynomial_Subtract_Kernel(const tmpl_IntPolynomial *P,
-                                   const tmpl_IntPolynomial *Q,
-                                   tmpl_IntPolynomial *diff)
+tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
+                                const tmpl_IntPolynomial *Q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    const size_t degree = TMPL_MAX(P->degree, Q->degree);
     size_t n;
 
-    /*  Check if sum needs to be resized.                                     */
-    if (diff->degree != degree)
+    /*  The degree of the sum.                                                */
+    const size_t degree = TMPL_MAX(P->degree, Q->degree);
+
+    /*  The number of elements in the final array.                            */
+    const size_t len = degree + (size_t)1;
+
+    /*  Check if the sum needs to be resized.                                 */
+    if (P->degree != degree)
     {
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
-        const size_t len = degree + (size_t)1;
-        void *tmp = realloc(diff->coeffs, sizeof(*diff->coeffs)*len);
+        void *tmp = realloc(P->coeffs, sizeof(*P->coeffs) * len);
 
         /*  Check if realloc failed.                                          */
         if (!tmp)
         {
-            diff->error_occurred = tmpl_True;
-            diff->error_message = tmpl_strdup(
+            P->error_occurred = tmpl_True;
+            P->error_message = tmpl_strdup(
                 "\nError Encountered:\n"
-                "    tmpl_IntPolynomial_Subtract_Kernel\n\n"
+                "    tmpl_IntPolynomial_AddTo_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
             );
 
@@ -134,36 +147,16 @@ tmpl_IntPolynomial_Subtract_Kernel(const tmpl_IntPolynomial *P,
         }
 
         /*  Otherwise reset the degree and the coefficients pointer.          */
-        else
-        {
-            diff->coeffs = tmp;
-            diff->degree = degree;
-        }
+        P->coeffs = tmp;
+        P->degree = degree;
+
+        /*  Initialize the new entries to zero.                               */
+        for (n = P->degree + (size_t)1; n < len; ++n)
+            P->coeffs[n] = 0;
     }
 
-    /*  If P is larger than Q we compute the difference for the first deg(Q)  *
-     *  terms and then copy the remaining deg(P)-deg(Q) terms of P.           */
-    if (P->degree > Q->degree)
-    {
-        /*  Perform a_k - b_k up to the degree of Q.                          */
-        for (n = (size_t)0; n <= Q->degree; ++n)
-            diff->coeffs[n] = P->coeffs[n] - Q->coeffs[n];
-
-        /*  For the remaining terms store the values of P.                    */
-        for (n = Q->degree + (size_t)1; n <= P->degree; ++n)
-            diff->coeffs[n] = P->coeffs[n];
-    }
-
-    /*  Otherwise we flip this and copy the negative of the terms of Q.       */
-    else
-    {
-        /*  Perform a_k - b_k up to the degree of P.                          */
-        for (n = (size_t)0; n <= P->degree; ++n)
-            diff->coeffs[n] = P->coeffs[n] - Q->coeffs[n];
-
-        /*  For the remaining terms store the negative values of Q.           */
-        for (n = P->degree + (size_t)1; n <= Q->degree; ++n)
-            diff->coeffs[n] = -Q->coeffs[n];
-    }
+    /*  Compute the sum term by term.                                         */
+    for (n = (size_t)0; n < len; ++n)
+        P->coeffs[n] += Q->coeffs[n];
 }
-/*  End of tmpl_IntPolynomial_Subtract_Kernel.                                */
+/*  End of tmpl_IntPolynomial_AddTo_Kernel.                                   */

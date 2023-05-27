@@ -65,6 +65,7 @@
 
 /*  Rational numbers and function prototype found here.                       */
 #include <libtmpl/include/tmpl_rational.h>
+#include <libtmpl/include/tmpl_integer.h>
 #include <stdlib.h>
 
 /*  Function for reducing a rational number.                                  */
@@ -86,8 +87,8 @@ tmpl_RationalNumber_Reduce(const tmpl_RationalNumber *p)
     else if (p->numerator == 0L)
         return tmpl_RationalNumber_Zero;
 
-    abs_numer = (p->numerator > 0L ? p->numerator : -p->numerator);
-    abs_denom = (p->denominator > 0L ? p->denominator : -p->denominator);
+    abs_numer = tmpl_Long_Abs(p->numerator);
+    abs_denom = tmpl_Long_Abs(p->denominator);
 
     /*  Get the GCD.                                                          */
     while(abs_numer != abs_denom)

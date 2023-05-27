@@ -22,6 +22,7 @@
  *  Date:   2021/07/29                                                        *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_minmax.h>
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Make sure this macro is available. It should be.                          */
@@ -97,7 +98,7 @@ long int tmpl_Long_GCD(long int m, long int n)
      *  these values as m_zeros and n_zeros, respectively. Compute the        *
      *  minimum of these two and then bit-shift m to the left by this min.    *
      *  This is the equivalent of multiplying m by 2^min(m_zeros, n_zeros).   */
-    return m << (m_zeros < n_zeros ? m_zeros : n_zeros);
+    return m << TMPL_MIN(m_zeros, n_zeros);
 }
 /*  End of tmpl_Long_GCD.                                                     */
 
@@ -137,7 +138,7 @@ long int tmpl_Long_GCD(long int m, long int n)
 
     /*  Save the smaller of n_zeros and m_zeros for later. Before returning   *
      *  the output we need to bit shift to the left by this value.            */
-    shift = (m_zeros < n_zeros ? m_zeros : n_zeros);
+    shift = TMPL_MIN(m_zeros, n_zeros);
 
     /*  Apply the Euclidean and Binary reductions repeatedly, decreasing m    *
      *  and n at each step, until one of the values is zero or one.           */
@@ -164,7 +165,11 @@ long int tmpl_Long_GCD(long int m, long int n)
             n = tmp;
         }
     }
-    return (n == 1L ? n : m) << shift;
+
+    if (n == 1L)
+        return 1L << shift;
+
+    return m << shift;
 }
 /*  End of tmpl_Long_GCD.                                                     */
 

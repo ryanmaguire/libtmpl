@@ -35,12 +35,17 @@
  *  Outputs:                                                                  *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      free (stdlib.h):                                                      *
- *          Free's data allocated by malloc, calloc, or realloc.              *
- *      tmpl_strdup (tmpl_string.h):                                          *
- *          Duplicates a string. Equivalent to the POSIX function strdup.     *
- *      tmpl_IntPolynomial_Copy_Kernel (tmpl_polynomial_integer.h):           *
- *          Copies polynomial data without error checks.                      *
+ *      stdlib.h:                                                             *
+ *          free:                                                             *
+ *              Free's data allocated by malloc, calloc, or realloc.          *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_strdup:                                                      *
+ *              Duplicates a string. Equivalent to the POSIX function strdup. *
+ *      tmpl_polynomial_integer.h:                                            *
+ *          tmpl_IntPolynomial_Copy_Kernel:                                   *
+ *              Copies polynomial data without error checks.                  *
+ *          tmpl_IntPolynomial_Make_Empty:                                    *
+ *              Makes a polynomial "empty" with NULL coefficients.            *
  *  Method:                                                                   *
  *      Check for valid inputs and call tmpl_IntPolynomial_Copy_Kernel.       *
  ******************************************************************************
@@ -62,6 +67,9 @@
  ******************************************************************************
  *  2023/04/25: Ryan Maguire                                                  *
  *      Added doc-string and comments.                                        *
+ *  2023/05/18: Ryan Maguire                                                  *
+ *      Changed behavior so that copying a NULL pointer results in making the *
+ *      "dest" polynomial empty.                                              *
  ******************************************************************************/
 
 /*  free function declared here.                                              */
@@ -93,25 +101,18 @@ tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
     if (dest == src)
         return;
 
-    /*  If the src pointer is NULL there is nothing to copy. This should be   *
-     *  considered an error (the user shouldn't pass a NULL pointer here).    */
+    /*  If the src polynomial is NULL make the dest polynomial empty.         */
     if (!src)
     {
-        /*  Set the error_occurred Boolean and add an error message.          */
-        dest->error_occurred = tmpl_True;
-        dest->error_message = tmpl_strdup(
-            "\nError Encountered: libtmpl\n"
-            "    tmpl_IntPolynomial_Copy\n\n"
-            "src pointer is NULL. Aborting.\n\n"
-        );
+        /*  Safely free any data in the polynomial to make it empty.          */
+        tmpl_IntPolynomial_Make_Empty(dest);
         return;
     }
 
-    /*  If the src pointer is flawed in some manner, consider this an error   *
-     *  too. Check the error_occurred Boolean for this.                       */
+    /*  If the src pointer is flawed in some manner, consider this an error.  */
     if (src->error_occurred)
     {
-        /*  As above, set the error_occurred Boolean and add an error message.*/
+        /*  Set the error_occurred Boolean and add an error message.          */
         dest->error_occurred = tmpl_True;
         dest->error_message = tmpl_strdup(
             "\nError Encountered: libtmpl\n"
@@ -125,14 +126,8 @@ tmpl_IntPolynomial_Copy(tmpl_IntPolynomial *dest,
      *  the dest polynomial to be empty as well.                              */
     if (!src->coeffs)
     {
-        /*  To avoid memory leaks, check to see if dest already has           *
-         *  coefficients. If it does, free them.                              */
-        if (dest->coeffs)
-            free(dest->coeffs);
-
-        /*  Set the coefficients to NULL and the degree to zero, then return. */
-        dest->coeffs = NULL;
-        dest->degree = (size_t)0;
+        /*  Safely free any data in the polynomial to make it empty.          */
+        tmpl_IntPolynomial_Make_Empty(dest);
         return;
     }
 

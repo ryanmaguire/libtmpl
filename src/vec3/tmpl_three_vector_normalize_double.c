@@ -57,7 +57,11 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
+ *  1.) tmpl_minmax.h:                                                        *
+ *          Provides the TMPL_MAX macro.                                      *
+ *  2.) tmpl_math.h:                                                          *
+ *          Provides the square root function.                                *
+ *  3.) tmpl_vec3.h:                                                          *
  *          Header containing ThreeVector typedef and the function prototype. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -69,11 +73,14 @@
  *      Removed function calls, added doc-string.                             *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  TMPL_MAX3 macro provided here.                                            */
+#include <libtmpl/include/tmpl_minmax.h>
 
 /*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Function prototype and three-vector typedef found here.                   */
+#include <libtmpl/include/tmpl_vec3.h>
 
 /*  We can get a significant speed boost if IEEE-754 support is available.    */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -96,11 +103,8 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
     double z = tmpl_Double_Abs(P->dat[2]);
 
     /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
-     *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
-     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
-     *  c, set a to c, otherwise set a to b. Below we do this twice, setting  *
-     *  w.r to the maximum of |x|, |y|, and |z|.                              */
-    w.r = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+     *  part of the tmpl_IEEE754_Double union w.                              */
+    w.r = TMPL_MAX3(x, y, z);
 
     /*  If all values are large, scale them by 2^-512.                        */
     if (w.bits.expo > TMPL_DOUBLE_BIAS + 0x1FFU)
@@ -148,12 +152,8 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
     double y = tmpl_Double_Abs(P->dat[1]);
     double z = tmpl_Double_Abs(P->dat[2]);
 
-    /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
-     *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
-     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
-     *  c, set a to c, otherwise set a to b. Below we do this twice, setting  *
-     *  w.r to the maximum of |x|, |y|, and |z|.                              */
-    t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+    /*  Compute the maximum of |x|, |y|, and |z|.                             */
+    t = TMPL_MAX3(x, y, z);
 
     /*  Get the norm of the input vector P.                                   */
     rcpr_t = 1.0 / t;

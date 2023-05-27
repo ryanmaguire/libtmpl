@@ -99,6 +99,8 @@
  *      Changed algorithm to incorporate IEEE-754 tricks. 1.4x speed up.      *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -156,10 +158,7 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
     long double abs_x = tmpl_LDouble_Abs(x);
     long double abs_y = tmpl_LDouble_Abs(y);
 
-    if (x < y)
-        w.r = abs_y;
-    else
-        w.r = abs_x;
+    w.r = TMPL_MAX(abs_x, abs_y);
 
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_EXPO_TOO_HIGH)
     {
@@ -202,10 +201,8 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
     long double abs_x = tmpl_LDouble_Abs(x);
     long double abs_y = tmpl_LDouble_Abs(y);
 
-    /*  Compute the maximum of |x| and |y|. This syntax from the C language   *
-     *  is a bit strange. a = (b < c ? c : b) says if b is less than c, set a *
-     *  to c, otherwise set a to b.                                           */
-    const long double t = (abs_x < abs_y ? abs_y : abs_x);
+    /*  Compute the maximum of |x| and |y|.                                   */
+    const long double t = TMPL_MAX(abs_x, abs_y);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
      *  |z| is zero, |z| = 0. Return this.                                    */

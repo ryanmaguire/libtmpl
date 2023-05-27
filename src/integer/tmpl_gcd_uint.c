@@ -141,6 +141,8 @@
  *      and then mixed-binary. The "by-hand" algorithm is the slowest.        *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  Function prototype is found here.                                         */
 #include <libtmpl/include/tmpl_integer.h>
 
@@ -213,7 +215,7 @@ unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
      *  these values as m_zeros and n_zeros, respectively. Compute the        *
      *  minimum of these two and then bit-shift m to the left by this min.    *
      *  This is the equivalent of multiplying m by 2^min(m_zeros, n_zeros).   */
-    return m << (m_zeros < n_zeros ? m_zeros : n_zeros);
+    return m << TMPL_MIN(m_zeros, n_zeros);
 }
 /*  End of tmpl_UInt_GCD.                                                     */
 
@@ -249,7 +251,7 @@ unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
 
     /*  Save the smaller of n_zeros and m_zeros for later. Before returning   *
      *  the output we need to bit shift to the left by this value.            */
-    shift = (m_zeros < n_zeros ? m_zeros : n_zeros);
+    shift = TMPL_MIN(m_zeros, n_zeros);
 
     /*  Apply the Euclidean and Binary reductions repeatedly, decreasing m    *
      *  and n at each step, until one of the values is zero or one.           */
@@ -276,7 +278,11 @@ unsigned int tmpl_UInt_GCD(unsigned int m, unsigned int n)
             n = tmp;
         }
     }
-    return (n == 1U ? n : m) << shift;
+
+    if (n == 1U)
+        return 1U << shift;
+
+    return m << shift;
 }
 /*  End of tmpl_UInt_GCD.                                                     */
 
