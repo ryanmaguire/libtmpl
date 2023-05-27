@@ -1,0 +1,5 @@
+add_subdirectory("glynn_fractals")
+add_subdirectory("halley_fractals")
+add_subdirectory("julia_set")
+add_subdirectory("mandelbrot_set")
+add_subdirectory("newton_fractals")
