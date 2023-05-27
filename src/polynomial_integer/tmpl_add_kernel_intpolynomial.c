@@ -38,10 +38,16 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      realloc (stdlib.h):                                                   *
- *          Resizes an array.                                                 *
- *      tmpl_strdup (tmpl_string.h):                                          *
- *          Duplicates a string. Equivalent to the POSIX function strdup.     *
+ *      stdlib.h:                                                             *
+ *          realloc:                                                          *
+ *              Resizes an array.                                             *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_strdup:                                                      *
+ *              Duplicates a string. Equivalent to the POSIX function strdup. *
+ *      string.h:                                                             *
+ *          memcpy:                                                           *
+ *              Copies data from one chunk of memory to another. Only used if *
+ *              TMPL_USE_MEMCPY is set to 1.                                  *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
  *      O(max(deg(P), deg(Q)). That is, if we have:                           *
@@ -75,13 +81,15 @@
  ******************************************************************************
  *  1.) stdlib.h:                                                             *
  *          Standard library file with realloc and size_t.                    *
- *  2.) tmpl_bool.h:                                                          *
+ *  2.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_USE_MEMCPY macro.                 *
+ *  3.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  3.) tmpl_string.h:                                                        *
+ *  4.) tmpl_string.h:                                                        *
  *          Header file where tmpl_strdup is declared.                        *
- *  4.) tmpl_polynomial_integer.h:                                            *
+ *  5.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
- *  5.) string.h (optional):                                                  *
+ *  6.) string.h (optional):                                                  *
  *          Standard library file with the memcpy function.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -109,9 +117,15 @@
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
 /*  It may be faster, pending computer, to use memcpy to copy the larger      *
- *  polynomial into the output, rather than using a for loop. On computers    *
+ *  polynomial into the output, rather than using a for-loop. On computers    *
  *  tested the for-loop is slightly faster. Nevertheless, to use this version *
- *  build libtmpl with USE_MEMCPY=1 set.                                      */
+ *  build libtmpl with USE_MEMCPY=1 set.                                      *
+ *                                                                            *
+ *  WARNING:                                                                  *
+ *      If you use memcpy instead of a for-loop, calling this function with   *
+ *      P == sum or Q == sum may result in undefined behavior. For this       *
+ *      reason, and since the for-loop seems to be slightly faster, default   *
+ *      behavior is to avoid memcpy.                                          */
 #if TMPL_USE_MEMCPY == 1
 #include <string.h>
 #endif
@@ -161,11 +175,8 @@ tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
         }
 
         /*  Otherwise reset the degree and the coefficients pointer.          */
-        else
-        {
-            sum->coeffs = tmp;
-            sum->degree = first->degree;
-        }
+        sum->coeffs = tmp;
+        sum->degree = first->degree;
     }
 
     /*  If the user requested memcpy, use this to copy the data.              */

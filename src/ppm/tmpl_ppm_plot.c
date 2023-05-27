@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_ppm.h>
+#include <libtmpl/include/tmpl_minmax.h>
 
 /*  Routine for plotting the absolute value function.                         */
 void tmpl_PPM_Plot(const char *filename,
@@ -21,8 +22,8 @@ void tmpl_PPM_Plot(const char *filename,
     /*  Declare variables for the pixel (x, y).                               */
     unsigned int x, y;
 
-    const double start = (x_min < x_max ? x_min : x_max);
-    const double end = (x_min < x_max ? x_max : x_min);
+    const double start = TMPL_MIN(x_min, x_max);
+    const double end = TMPL_MAX(x_min, x_max);
     const double dx = (end - start) / (double)(x_size - 1U);
     const double xaxis_thickness = 2.0*dx;
 

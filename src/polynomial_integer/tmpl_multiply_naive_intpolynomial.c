@@ -16,14 +16,101 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                      tmpl_multiply_naive_intpolynomial                     *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Multiply two polynomials with integer coefficients.                   *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_IntPolynomial_Multiply_Naive                                     *
+ *  Purpose:                                                                  *
+ *      Computes the product of two polynomials over Z[x] with 'int'          *
+ *      coefficients. That is, given polynomials P, Q in Z[x], computes P * Q.*
+ *      The naive / classical algorithm is used that is O(deg(P)*deg(Q)) in   *
+ *      complexity. For large degree polynomials the Karatsuba and FFT        *
+ *      algorithms are much more efficient.                                   *
+ *  Arguments:                                                                *
+ *      P (const tmpl_IntPolynomial *):                                       *
+ *          A pointer to a polynomial.                                        *
+ *      Q (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *      prod (tmpl_IntPolynomial *):                                          *
+ *          A pointer to a polynomial. The product is stored here.            *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      tmpl_polynomial_integer.h:                                            *
+ *          tmpl_IntPolynomial_Multiply_Naive_Kernel:                         *
+ *              Multiply two polynomials without error checking or shrinking. *
+ *          tmpl_IntPolynomial_Make_Zero:                                     *
+ *              Converts a polynomial into the zero polynomial.               *
+ *          tmpl_IntPolynomial_Shrink:                                        *
+ *              Shrinks a polynomial by removing all terms past the largest   *
+ *              non-zero coefficient.                                         *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_strdup:                                                      *
+ *              Duplicates a string. Equivalent to the POSIX function strdup. *
+ *  Method:                                                                   *
+ *      Naive polynomial multiply is performed by using the distributive law. *
+ *      The complexity is thus O(deg(P) * deg(Q)). That is, if we have:       *
+ *                                                                            *
+ *                   N                       M                                *
+ *                 -----                   -----                              *
+ *                 \          n            \          m                       *
+ *          P(x) = /      a  x      Q(x) = /      b  x                        *
+ *                 -----   n               -----   m                          *
+ *                 n = 0                   m = 0                              *
+ *                                                                            *
+ *      The product is defined by:                                            *
+ *                                                                            *
+ *                          N     M                                           *
+ *                        ----- -----                                         *
+ *                        \     \               n + m                         *
+ *          P(x) * Q(x) = /     /      a  * b  x                              *
+ *                        ----- -----   n    m                                *
+ *                        n = 0 m = 0                                         *
+ *                                                                            *
+ *      This is "rectangular" product. We can also compute the "diagonal"     *
+ *      product using the Cauchy method.                                      *
+ *                                                                            *
+ *                        N + M   n                                           *
+ *                        ----- -----                                         *
+ *                        \     \                    n                        *
+ *          P(x) * Q(x) = /     /      a      *  b  x                         *
+ *                        ----- -----   {n-m}     m                           *
+ *                        n = 0 m = 0                                         *
+ *                                                                            *
+ *      Where we pad a_n and b_m with zeros for indices beyond deg(P) and     *
+ *      deg(Q), respectively.                                                 *
+ *  Notes:                                                                    *
+ *      There are several possible ways for an error to occur.                *
+ *          1.) The "prod" variable is NULL, or has error_occurred = true.    *
+ *          2.) An input polynomial (P or Q) has error_occurred = true.       *
+ *          3.) realloc fails to resize the coefficient array.                *
+ *      One can safely handle all cases by inspecting "prod" after using this *
+ *      function. First check if it is NULL, then if error_occurred = true.   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header file providing Booleans.                                   *
+ *  2.) tmpl_string.h:                                                        *
+ *          Header file where tmpl_strdup is declared.                        *
+ *  3.) tmpl_polynomial_integer.h:                                            *
+ *          Header file where the function prototype is given.                *
+ ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 8, 2023                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/05/19: Ryan Maguire                                                  *
+ *      Added doc-string and comments.                                        *
+ *  2023/05/19: Ryan Maguire                                                  *
+ *      Changed behavior so that a NULL product is treated as zero.           *
  ******************************************************************************/
-
-/*  TODO: Add "doc-string" above, description of function, etc.               */
-
-/*  realloc found here.                                                       */
-#include <stdlib.h>
 
 /*  Boolean given here.                                                       */
 #include <libtmpl/include/tmpl_bool.h>
@@ -34,28 +121,12 @@
 /*  Polynomial typedefs and function prototype.                               */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  Two algorithms, both O(n*m) where n and m are the degrees of P and Q,     *
- *  respectively, are provided. One is the "rectangular" method, and the      *
- *  other uses the diagonal Cauchy product method. The Cauchy product has     *
- *  the benefit of requiring fewer initializations and additions.             *
- *      1 = Rectangle.                                                        *
- *      2 = Diagonal (Cauchy Product)                                         */
-#ifndef TMPL_INTPOLY_MUL_ALG
-#define TMPL_INTPOLY_MUL_ALG 2
-#endif
-
-/*  Rectangular method.                                                       */
-#if TMPL_INTPOLY_MUL_ALG == 1
-
 /*  Function for multiplying two polynomials.                                 */
 void
 tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
                                   const tmpl_IntPolynomial *Q,
                                   tmpl_IntPolynomial *prod)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    size_t m, n;
-
     /*  If the output pointer is NULL there's nothing to be done.             */
     if (!prod)
         return;
@@ -64,15 +135,10 @@ tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
     if (prod->error_occurred)
         return;
 
-    /*  If either P or Q are NULL, set an error and return.                   */
+    /*  Treat NULL polynomials as zero. Product with a zero polyomial is zero.*/
     if (!P || !Q)
     {
-        prod->error_occurred = tmpl_True;
-        prod->error_message = tmpl_strdup(
-            "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
-            "Input polynomial is NULL. Aborting.\n\n"
-        );
+        tmpl_IntPolynomial_Make_Zero(prod);
         return;
     }
 
@@ -85,169 +151,21 @@ tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
             "    tmpl_IntPolynomial_Multiply_Naive\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"
         );
+
         return;
     }
 
-    /*  Check if prod needs to be resized.                                    */
-    if (prod->degree != P->degree + Q->degree)
+    /*  If either polynomial is empty return zero.                            */
+    if (!P->coeffs || !Q->coeffs)
     {
-        /*  The degree of the product is the sum of the two degrees.          */
-        const size_t deg = P->degree + Q->degree;
-
-        /*  The number of elements is 1 plus degree (const terms included).   */
-        const size_t len = deg + (size_t)1;
-
-        /*  Try to allocate memory for the product.                           */
-        void *tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*len);
-
-        /*  If realloc succeeds, reset the pointer.                           */
-        if (tmp)
-        {
-            prod->coeffs = tmp;
-            prod->degree = deg;
-        }
-
-        /*  Otherwise abort with an error.                                    */
-        else
-        {
-            prod->error_occurred = tmpl_True;
-            prod->error_message = tmpl_strdup(
-                "\nError Encountered:\n"
-                "    tmpl_IntPolynomial_Multiply_Naive\n\n"
-                "realloc failed. Aborting.\n\n"
-            );
-
-            return;
-        }
+        tmpl_IntPolynomial_Make_Zero(prod);
+        return;
     }
 
-    /*  Initialize all of the coefficients to zero so we can loop over them.  */
-    for (n = (size_t)0; n <= prod->degree; ++n)
-        prod->coeffs[n] = 0;
+    /*  Multiply the polynomials using the classical algorithm.               */
+    tmpl_IntPolynomial_Multiply_Naive_Kernel(P, Q, prod);
 
-    /*  Perform the rectangular sum of the product.                           */
-    for (m = (size_t)0; m <= P->degree; ++m)
-        for (n = (size_t)0; n <= Q->degree; ++n)
-            prod->coeffs[m + n] += P->coeffs[m] * Q->coeffs[n];
-
+    /*  Shrink the result by removing redundant terms.                        */
     tmpl_IntPolynomial_Shrink(prod);
 }
 /*  End of tmpl_IntPolynomial_Multiply_Naive.                                 */
-
-#else
-/*  Else for #if TMPL_INTPOLY_MUL_ALG == 1. Cauchy diagonal method below.     */
-
-void
-tmpl_IntPolynomial_Multiply_Naive(const tmpl_IntPolynomial *P,
-                                  const tmpl_IntPolynomial *Q,
-                                  tmpl_IntPolynomial *prod)
-{
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    size_t m, n;
-    const tmpl_IntPolynomial *first, *second;
-
-    /*  If the output pointer is NULL there's nothing to be done.             */
-    if (!prod)
-        return;
-
-    /*  If an error occurred before this function was called, abort.          */
-    if (prod->error_occurred)
-        return;
-
-    /*  If either P or Q are NULL, set an error and return.                   */
-    if (!P || !Q)
-    {
-        prod->error_occurred = tmpl_True;
-        prod->error_message = tmpl_strdup(
-            "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
-            "Input polynomial is NULL. Aborting.\n\n"
-        );
-        return;
-    }
-
-    /*  Similarly if either P or Q have an error.                             */
-    if (P->error_occurred || Q->error_occurred)
-    {
-        prod->error_occurred = tmpl_True;
-        prod->error_message = tmpl_strdup(
-            "\nError Encountered:\n"
-            "    tmpl_IntPolynomial_Multiply_Naive\n\n"
-            "Input polynomial has error_occurred set to true. Aborting.\n\n"
-        );
-        return;
-    }
-
-    /*  Check if prod needs to be resized.                                    */
-    if (prod->degree != P->degree + Q->degree)
-    {
-        /*  The degree of the product is the sum of the two degrees.          */
-        const size_t deg = P->degree + Q->degree;
-
-        /*  The number of elements is 1 plus degree (const terms included).   */
-        const size_t len = deg + (size_t)1;
-
-        /*  Try to allocate memory for the product.                           */
-        void *tmp = realloc(prod->coeffs, sizeof(*prod->coeffs)*len);
-
-        /*  If realloc succeeds, reset the pointer.                           */
-        if (tmp)
-        {
-            prod->coeffs = tmp;
-            prod->degree = deg;
-        }
-
-        /*  Otherwise abort with an error.                                    */
-        else
-        {
-            prod->error_occurred = tmpl_True;
-            prod->error_message = tmpl_strdup(
-                "\nError Encountered:\n"
-                "    tmpl_IntPolynomial_Multiply_Naive\n\n"
-                "realloc failed. Aborting.\n\n"
-            );
-
-            return;
-        }
-    }
-
-    /*  Sort the polynomials in terms of degree.                              */
-    if (P->degree <= Q->degree)
-    {
-        first = P;
-        second = Q;
-    }
-    else
-    {
-        first = Q;
-        second = P;
-    }
-
-    /*  Perform the Cauchy product on P and Q.                                */
-    for (n = (size_t)0; n < first->degree; ++n)
-    {
-        prod->coeffs[n] = first->coeffs[n] * second->coeffs[0];
-        for (m = (size_t)1; m <= n; ++m)
-            prod->coeffs[n] += first->coeffs[n-m] * second->coeffs[m];
-    }
-
-    for (n = first->degree; n < second->degree; ++n)
-    {
-        prod->coeffs[n] = (size_t)0;
-        for (m = n - first->degree; m <= n; ++m)
-            prod->coeffs[n] += first->coeffs[n-m] * second->coeffs[m];
-    }
-
-    for (n = second->degree; n <= prod->degree; ++n)
-    {
-        prod->coeffs[n] = (size_t)0;
-        for (m = n - first->degree; m <= second->degree; ++m)
-            prod->coeffs[n] += first->coeffs[n-m] * second->coeffs[m];
-    }
-
-    tmpl_IntPolynomial_Shrink(prod);
-}
-/*  End of tmpl_IntPolynomial_Multiply_Naive.                                 */
-
-#endif
-/*  End of #if TMPL_INTPOLY_MUL_ALG == 1.                                     */
