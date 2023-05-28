@@ -279,7 +279,7 @@ tmpl_Find_Crossing_Indices(tmpl_VirtualKnot *K);
 TMPL_EXPORT extern void
 tmpl_Reidemeister_One_Reduction(tmpl_VirtualKnot *K);
 
-unsigned long int
+TMPL_EXPORT extern unsigned long int
 tmpl_Virtual_Knot_Genus(tmpl_VirtualKnot *K);
 
 TMPL_EXPORT extern tmpl_PolynomialZ *
