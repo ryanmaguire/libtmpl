@@ -70,8 +70,8 @@ int main(void)
     /*  Free everything.                                                      */
     free(Pprimestr);
     free(Pstr);
-    tmpl_Destroy_PolynomialZ(&P);
-    tmpl_Destroy_PolynomialZ(&Pprime);
+    tmpl_PolynomialZ_Destroy(&P);
+    tmpl_PolynomialZ_Destroy(&Pprime);
     return 0;
 }
 /*  End of main.                                                              */

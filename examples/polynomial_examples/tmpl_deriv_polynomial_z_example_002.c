@@ -69,7 +69,7 @@ int main(void)
     /*  Free everything.                                                      */
     free(Pprimestr);
     free(Pstr);
-    tmpl_Destroy_PolynomialZ(&P);
+    tmpl_PolynomialZ_Destroy(&P);
     return 0;
 }
 /*  End of main.                                                              */

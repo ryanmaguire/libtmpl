@@ -50,7 +50,7 @@ int main(void)
     P->coeffs[1] = 1L;
 
     /*  Create an empty polynomial to store the sum in.                       */
-    sum = tmpl_Create_Empty_PolynomialZ();
+    sum = tmpl_PolynomialZ_Create_Empty();
 
     /*  Compute the sum of P with itself, and store it in sum.                */
     tmpl_PolynomialZ_Add(P, P, sum);
@@ -65,8 +65,8 @@ int main(void)
     /*  Free everything.                                                      */
     free(sumstr);
     free(Pstr);
-    tmpl_Destroy_PolynomialZ(&P);
-    tmpl_Destroy_PolynomialZ(&sum);
+    tmpl_PolynomialZ_Destroy(&P);
+    tmpl_PolynomialZ_Destroy(&sum);
     return 0;
 }
 /*  End of main.                                                              */
