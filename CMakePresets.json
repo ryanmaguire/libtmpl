@@ -9,7 +9,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
-        "LIBTMPL_BUILD_EXAMPLES": true,
+        "LIBTMPL_BUILD_EXAMPLES": false,
         "LIBTMPL_BUILD_TESTS": true,
         "LIBTMPL_ENABLE_VERBOSE": true,
         "LIBTMPL_STDVER": "-std=c11"
