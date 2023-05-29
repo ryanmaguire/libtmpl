@@ -54,11 +54,10 @@ repos:
     hooks:
     -   id: pretty-format-yaml
         args: [--autofix, --indent, '4']
--   repo: https://github.com/BlankSpruce/gersemi #cmake formatter
-    rev: 0.9.0
+-   repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
     hooks:
-    -   id: gersemi
-        args: [--line-length, '120']
+    - id: cmake-format
 -   repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.2.0
     hooks:
