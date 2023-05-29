@@ -200,7 +200,7 @@ long double tmpl_LDouble_Arccos_Rat_Remez(long double x)
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const long double p = TMPL_NUM_EVAL(x2);
-    const long double q = TMPL_NUM_EVAL(x2);
+    const long double q = TMPL_DEN_EVAL(x2);
     const long double r = x2*p/q;
 
     /*  p/q is the rational minimax approximation for (acos(x)-pi/2+x)/x^3.   */
