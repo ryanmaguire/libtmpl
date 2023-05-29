@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
-if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+if(UNIX
+   AND NOT APPLE
+   AND NOT CYGWIN
+   AND SYSTEM_PROCESSOR STREQUAL "x86_64"
+)
     include(FetchLinAsm)
 endif()
 
@@ -14,7 +18,9 @@ file(GLOB sources CONFIGURE_DEPENDS *.c)
 set(linasm_compare_sources ${sources})
 list(FILTER linasm_compare_sources INCLUDE REGEX .*linasm.*)
 list(FILTER sources EXCLUDE REGEX .*linasm.*)
-if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/math/tmpl_sincos_double.c")
+if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR NOT EXISTS
+                                                  "${CMAKE_CURRENT_SOURCE_DIR}/src/math/tmpl_sincos_double.c"
+)
     # Exclude tests that use GCC builtins when not compiling with GCC
     list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/tmpl_sincos_double_time_test.c")
 endif()
@@ -37,7 +43,11 @@ foreach(source ${sources})
     add_test(NAME test_${app} COMMAND ${app})
 endforeach()
 
-if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
+if(UNIX
+   AND NOT APPLE
+   AND NOT CYGWIN
+   AND SYSTEM_PROCESSOR STREQUAL "x86_64"
+)
     foreach(source ${linasm_compare_sources})
         cmake_path(GET source STEM app)
         list(APPEND test_apps ${app})
@@ -58,4 +68,8 @@ if(UNIX AND NOT APPLE AND NOT CYGWIN AND SYSTEM_PROCESSOR STREQUAL "x86_64")
 endif()
 
 include(GNUInstallDirs)
-install(TARGETS ${test_apps} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(
+    TARGETS ${test_apps}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)

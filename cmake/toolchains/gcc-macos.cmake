@@ -10,8 +10,5 @@ find_program(
 if(GCC)
     set(CMAKE_C_COMPILER ${GCC})
 else()
-    message(
-        FATAL_ERROR
-        "gcc was not found. Please install it using Homebrew or Macports."
-    )
+    message(FATAL_ERROR "gcc was not found. Please install it using Homebrew or Macports.")
 endif()

@@ -2,19 +2,14 @@ cmake_minimum_required(VERSION 3.23)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_BINARY_DIR})
 include(ParseCStandard)
 
-option(
-    LIBTMPL_USE_OMP
-    "Compile with `OpenMP` support (highly recommended).
+option(LIBTMPL_USE_OMP "Compile with `OpenMP` support (highly recommended).
 **WARNING** Apple's version of clang does **NOT** support OpenMP, and the `-fopenmp` option will result in an error.
-Homebrew has versions of clang and gcc that do support OpenMP."
-    TRUE
+Homebrew has versions of clang and gcc that do support OpenMP." TRUE
 )
 option(
-    LIBTMPL_USE_INLINE
-    "Use inline code. If disabled, this results in a slightly smaller `libtmpl.so` file, but several
+    LIBTMPL_USE_INLINE "Use inline code. If disabled, this results in a slightly smaller `libtmpl.so` file, but several
 functions become significantly slower (not recommended). If your compiler does not support `C99` or higher, and
-does not support the `gcc` `inline` extension, set this option to FALSE."
-    TRUE
+does not support the `gcc` `inline` extension, set this option to FALSE." TRUE
 )
 option(
     LIBTMPL_USE_MATH
@@ -50,11 +45,9 @@ This is handled in assembly code. If you're not using a compiler that has these 
 FALSE (not recommended)."
     TRUE
 )
-option(
-    LIBTMPL_USE_FASM
-    "Use the flat assembler instead of the assembly language used by `gcc` and `clang`. You must have `fasm`
-installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE."
-    TRUE
+option(LIBTMPL_USE_FASM
+       "Use the flat assembler instead of the assembly language used by `gcc` and `clang`. You must have `fasm`
+installed to use this. This option is ignored if `LIBTMPL_USE_ASM` is FALSE." TRUE
 )
 
 option(LIBTMPL_USE_LONGLONG "" TRUE)
@@ -65,25 +58,33 @@ option(LIBTMPL_BUILD_EXAMPLES "Set to TRUE to enable the building of examples." 
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
 
 if(NOT DEFINED LIBTMPL_STDVER)
-    set(LIBTMPL_STDVER "-std=c89" CACHE STRING "" FORCE)
+    set(LIBTMPL_STDVER
+        "-std=c89"
+        CACHE STRING "" FORCE
+    )
 endif()
 
 # Download automatically, you can also just copy the conan.cmake file
 if((LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES) AND NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conan.cmake")
     message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(
-        DOWNLOAD
-            "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
-            "${CMAKE_BINARY_DIR}/conan.cmake"
-        TLS_VERIFY ON
+    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
+         "${CMAKE_BINARY_DIR}/conan.cmake" TLS_VERIFY ON
     )
 endif()
 
 # Construct file lists
-file(GLOB_RECURSE headers LIST_DIRECTORIES FALSE *.h)
+file(
+    GLOB_RECURSE headers
+    LIST_DIRECTORIES FALSE
+    *.h
+)
 configure_file(cmake/headerList.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/headerList.cmake @ONLY)
 
-file(GLOB_RECURSE sources LIST_DIRECTORIES FALSE *.c)
+file(
+    GLOB_RECURSE sources
+    LIST_DIRECTORIES FALSE
+    *.c
+)
 configure_file(cmake/sourceList.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/sourceList.cmake @ONLY)
 
 project(libtmpl LANGUAGES C)
@@ -93,11 +94,12 @@ if(LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES)
 
     conan_cmake_autodetect(settings)
 
-    conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
-                        BUILD missing
-                        REMOTE conancenter
-                        SETTINGS ${settings}
-                        PROFILE     "${CONAN_PROFILE_FILE}"
+    conan_cmake_install(
+        PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
+        BUILD missing
+        REMOTE conancenter
+        SETTINGS ${settings}
+        PROFILE "${CONAN_PROFILE_FILE}"
     )
 endif()
 
@@ -106,11 +108,8 @@ cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
 add_library(tmpl SHARED)
 add_library(tmpl::tmpl ALIAS tmpl)
 target_include_directories(
-    tmpl
-    PUBLIC
-        "$<INSTALL_INTERFACE:include>"
-        "$<BUILD_INTERFACE:${TMPL_PARENT_DIR}>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+    tmpl PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${TMPL_PARENT_DIR}>"
+                "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
 )
 
 if(MSVC)
@@ -125,33 +124,29 @@ add_custom_command(
     OUTPUT "include/tmpl_config.h" "include/tmpl_inttype.h" "include/tmpl_limits.h"
     DEPENDS tmpl_config
     COMMAND ${CROSSCOMPILING_EMULATOR} "$<TARGET_FILE:tmpl_config>"
-    COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h ${CMAKE_CURRENT_SOURCE_DIR}/include
-    COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h ${CMAKE_CURRENT_SOURCE_DIR}/include
-    COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_limits.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_config.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_inttype.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_limits.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM
 )
 
 target_sources(
-    tmpl
-    PUBLIC FILE_SET HEADERS BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include
+    tmpl PUBLIC FILE_SET HEADERS BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 add_subdirectory("include")
 # Copy the export header to include/
 add_custom_command(
     TARGET tmpl
     POST_BUILD
-    COMMAND
-        ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_exports.h ${CMAKE_CURRENT_SOURCE_DIR}/include
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/include/tmpl_exports.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-set_c_standard(TARGET tmpl
-    STDVER "${LIBTMPL_STDVER}"
-    ENABLE_VERBOSE ${LIBTMPL_ENABLE_VERBOSE}
-)
+set_c_standard(TARGET tmpl STDVER "${LIBTMPL_STDVER}" ENABLE_VERBOSE ${LIBTMPL_ENABLE_VERBOSE})
 
 include(CheckIPOSupported)
 # Optional IPO. Do not use IPO if it's not supported by compiler.
@@ -180,9 +175,7 @@ if(LIBTMPL_USE_OMP)
         message(STATUS "OpenMP ${OpenMP_C_VERSION} found")
         target_link_libraries(tmpl PUBLIC OpenMP::OpenMP_C)
     else()
-        message(
-            WARNING
-            "OpenMP was requested, but OpenMP support was not detected for this compiler: \
+        message(WARNING "OpenMP was requested, but OpenMP support was not detected for this compiler: \
             ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}"
         )
     endif()
@@ -191,15 +184,13 @@ endif()
 if(LIBTMPL_USE_INLINE)
     if(LIBTMPL_STDVER STREQUAL "-std=c89")
         message(
-            FATAL_ERROR
-            "Error: inline mode cannot be used with C89.\n        Set -std to a version supporting inline."
+            FATAL_ERROR "Error: inline mode cannot be used with C89.\n        Set -std to a version supporting inline."
         )
     endif()
 
     if(LIBTMPL_STDVER STREQUAL "-std=c90")
         message(
-            FATAL_ERROR
-            "Error: inline mode cannot be used with C90.\n        Set -std to a version supporting inline."
+            FATAL_ERROR "Error: inline mode cannot be used with C90.\n        Set -std to a version supporting inline."
         )
     endif()
 endif()
@@ -421,7 +412,11 @@ if(LIBTMPL_USE_ASM)
         enable_language(ASM)
 
         if(LIBTMPL_USE_FASM)
-            if(UNIX AND NOT APPLE AND NOT CYGWIN AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+            if(UNIX
+               AND NOT APPLE
+               AND NOT CYGWIN
+               AND ${CMAKE_SIZEOF_VOID_P} EQUAL 8
+            )
                 enable_language(ASM_FASM)
                 add_subdirectory("src/assembly/fasm")
             else()
@@ -467,17 +462,18 @@ install(
     TARGETS tmpl
     COMPONENT libtmpl_Runtime
     EXPORT libtmpl_Runtime
-    RUNTIME
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    FILE_SET HEADERS
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            FILE_SET HEADERS
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+    INCLUDES
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
 )
-set(LIBTMPL_RUNTIME_CONFIG_FILE libtmpl_Runtime.cmake CACHE INTERNAL "")
+set(LIBTMPL_RUNTIME_CONFIG_FILE
+    libtmpl_Runtime.cmake
+    CACHE INTERNAL ""
+)
 install(
     EXPORT libtmpl_Runtime
     NAMESPACE tmpl::
@@ -486,14 +482,11 @@ install(
 )
 set(cmakeModulesDir cmake)
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libtmplConfig.cmake.in
-    ${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libtmplConfig.cmake.in ${PROJECT_NAME}Config.cmake
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     PATH_VARS cmakeModulesDir
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    NO_SET_AND_CHECK_MACRO NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )

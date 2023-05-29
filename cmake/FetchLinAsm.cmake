@@ -10,17 +10,15 @@ if(NOT DEFINED LIBTMPL_LINASM_SRC)
 endif()
 
 if(NOT EXISTS "${LIBTMPL_LINASM_SRC}")
-    fetchcontent_declare(
+    FetchContent_Declare(
         linasm-checkout
         GIT_REPOSITORY https://github.com/rurban/linasm.git
         GIT_TAG ${LIBTMPL_LINASM_BRANCH}
-        SOURCE_DIR
-        ${LIBTMP_LINASM_SRC}
-        GIT_PROGRESS
-        TRUE
+        SOURCE_DIR ${LIBTMP_LINASM_SRC}
+        GIT_PROGRESS TRUE
     )
 
-    fetchcontent_makeavailable(linasm-checkout)
+    FetchContent_MakeAvailable(linasm-checkout)
 endif()
 
 set(linasm_INCLUDE_DIR "${LIBTMP_LINASM_SRC}/include")

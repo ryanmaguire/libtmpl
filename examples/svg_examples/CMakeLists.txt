@@ -22,9 +22,7 @@ if(UNIX)
     include(GNUInstallDirs)
     install(
         TARGETS ${test_apps}
-        RUNTIME
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 endif()

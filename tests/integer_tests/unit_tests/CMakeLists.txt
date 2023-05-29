@@ -9,7 +9,6 @@ if(NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/tmpl_trailing_zeros_ushort_unit_test_002.c")
 endif()
 
-
 foreach(source ${sources})
     cmake_path(GET source STEM app)
     list(APPEND test_apps ${app})
@@ -25,4 +24,8 @@ foreach(source ${sources})
 endforeach()
 
 include(GNUInstallDirs)
-install(TARGETS ${test_apps} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(
+    TARGETS ${test_apps}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)

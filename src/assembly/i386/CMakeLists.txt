@@ -1,23 +1,22 @@
 target_sources(
     tmpl
-    PRIVATE
-        tmpl_floor_double_i386.S
-        tmpl_floor_float_i386.S
-        tmpl_floor_ldouble_i386.S
-        tmpl_sqrt_double_i386.S
-        tmpl_sqrt_float_i386.S
-        tmpl_sqrt_ldouble_i386.S
-        tmpl_trailing_zeros_char_i386.S
-        tmpl_trailing_zeros_int_i386.S
-        tmpl_trailing_zeros_long_i386.S
-        tmpl_trailing_zeros_short_i386.S
-        tmpl_trailing_zeros_uchar_i386.S
-        tmpl_trailing_zeros_uint_i386.S
-        tmpl_trailing_zeros_ulong_i386.S
-        tmpl_trailing_zeros_ushort_i386.S
+    PRIVATE tmpl_floor_double_i386.S
+            tmpl_floor_float_i386.S
+            tmpl_floor_ldouble_i386.S
+            tmpl_sqrt_double_i386.S
+            tmpl_sqrt_float_i386.S
+            tmpl_sqrt_ldouble_i386.S
+            tmpl_trailing_zeros_char_i386.S
+            tmpl_trailing_zeros_int_i386.S
+            tmpl_trailing_zeros_long_i386.S
+            tmpl_trailing_zeros_short_i386.S
+            tmpl_trailing_zeros_uchar_i386.S
+            tmpl_trailing_zeros_uint_i386.S
+            tmpl_trailing_zeros_ulong_i386.S
+            tmpl_trailing_zeros_ushort_i386.S
 )
 
-#TODO do we need to install the header with our header file set?
+# TODO do we need to install the header with our header file set?
 target_include_directories(tmpl PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 list(
@@ -39,4 +38,7 @@ list(
     "tmpl_floor_ldouble.c"
 )
 
-set(SOURCE_EXCLUSION_LIST ${SOURCE_EXCLUSION_LIST} PARENT_SCOPE)
+set(SOURCE_EXCLUSION_LIST
+    ${SOURCE_EXCLUSION_LIST}
+    PARENT_SCOPE
+)

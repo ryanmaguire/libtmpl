@@ -1,20 +1,19 @@
 target_sources(
     tmpl
-    PRIVATE
-        tmpl_floor_double_x86_64.fasm
-        tmpl_floor_float_x86_64.fasm
-        tmpl_floor_ldouble_x86_64.fasm
-        tmpl_sqrt_double_x86_64.fasm
-        tmpl_sqrt_float_x86_64.fasm
-        tmpl_sqrt_ldouble_x86_64.fasm
-        tmpl_trailing_zeros_char_x86_64.fasm
-        tmpl_trailing_zeros_int_x86_64.fasm
-        tmpl_trailing_zeros_long_x86_64.fasm
-        tmpl_trailing_zeros_short_x86_64.fasm
-        tmpl_trailing_zeros_uchar_x86_64.fasm
-        tmpl_trailing_zeros_uint_x86_64.fasm
-        tmpl_trailing_zeros_ulong_x86_64.fasm
-        tmpl_trailing_zeros_ushort_x86_64.fasm
+    PRIVATE tmpl_floor_double_x86_64.fasm
+            tmpl_floor_float_x86_64.fasm
+            tmpl_floor_ldouble_x86_64.fasm
+            tmpl_sqrt_double_x86_64.fasm
+            tmpl_sqrt_float_x86_64.fasm
+            tmpl_sqrt_ldouble_x86_64.fasm
+            tmpl_trailing_zeros_char_x86_64.fasm
+            tmpl_trailing_zeros_int_x86_64.fasm
+            tmpl_trailing_zeros_long_x86_64.fasm
+            tmpl_trailing_zeros_short_x86_64.fasm
+            tmpl_trailing_zeros_uchar_x86_64.fasm
+            tmpl_trailing_zeros_uint_x86_64.fasm
+            tmpl_trailing_zeros_ulong_x86_64.fasm
+            tmpl_trailing_zeros_ushort_x86_64.fasm
 )
 
 list(
@@ -35,4 +34,7 @@ list(
     "tmpl_floor_float.c"
     "tmpl_floor_ldouble.c"
 )
-set(SOURCE_EXCLUSION_LIST ${SOURCE_EXCLUSION_LIST} PARENT_SCOPE)
+set(SOURCE_EXCLUSION_LIST
+    ${SOURCE_EXCLUSION_LIST}
+    PARENT_SCOPE
+)

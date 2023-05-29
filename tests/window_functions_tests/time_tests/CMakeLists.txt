@@ -29,10 +29,7 @@ foreach(source ${cpp_sources})
     list(APPEND test_apps ${app})
     add_executable(${app} ${source})
     set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
-    target_include_directories(
-        ${app}
-        PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
-    )
+    target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
@@ -44,8 +41,6 @@ endforeach()
 include(GNUInstallDirs)
 install(
     TARGETS ${test_apps}
-    RUNTIME
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

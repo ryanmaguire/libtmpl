@@ -32,11 +32,7 @@ if(NOT CMAKE_ASM${ASM_DIALECT}_COMPILER)
         endif()
     endif()
 
-    set(_CMAKE_ASM_FASM_COMPILER_PATHS
-        "${FASM_HOME}"
-        "$ENV{FASM_HOME}"
-        ${_CMAKE_ASM_FASM_COMPILER_PATHS}
-    )
+    set(_CMAKE_ASM_FASM_COMPILER_PATHS "${FASM_HOME}" "$ENV{FASM_HOME}" ${_CMAKE_ASM_FASM_COMPILER_PATHS})
 
     find_program(
         CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT
@@ -46,15 +42,10 @@ if(NOT CMAKE_ASM${ASM_DIALECT}_COMPILER)
 
     if(CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT)
         set(FASM_FOUND TRUE)
-        message(
-            STATUS
-            "FASM (flat assembler) found: ${CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT}"
-        )
+        message(STATUS "FASM (flat assembler) found: ${CMAKE_ASM${ASM_DIALECT}_COMPILER_INIT}")
     else()
         set(FASM_FOUND FALSE)
-        message(
-            FATAL_ERROR
-            "FASM was not found at FASM_HOME '${FASM_HOME}' nor at the environment
+        message(FATAL_ERROR "FASM was not found at FASM_HOME '${FASM_HOME}' nor at the environment
     variable FASM_HOME: '$ENV{FASM_HOME}'."
         )
     endif()
