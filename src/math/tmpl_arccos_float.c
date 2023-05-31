@@ -37,14 +37,14 @@
  *      Called Functions:                                                     *
  *          tmpl_math.h:                                                      *
  *              tmpl_Float_Arccos_Maclaurin:                                  *
- *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
+ *                  Computes acos via a Maclaurin series for |x| < 0.25.      *
  *              tmpl_Float_Arccos_Rat_Remez:                                  *
  *                  Computes acos via a minimax approximation for |x| < 0.5.  *
  *              tmpl_Float_Arccos_Tail_End:                                   *
  *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          For very small x, |x| < 2^-26, return pi / 2. For slightly larger *
- *          x, |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5    *
+ *          x, |x| < 0.25, use a Maclaurin series. For 0.25 <= |x| < 0.5      *
  *          use a minimax approximation. For 0.5 <= x < 1 use the             *
  *          reflection formula:                                               *
  *                                                                            *
@@ -72,7 +72,7 @@
  *              tmpl_Float_Abs:                                               *
  *                  Computes the absolute value of a real number.             *
  *              tmpl_Float_Arccos_Maclaurin:                                  *
- *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
+ *                  Computes acos via a Maclaurin series for |x| < 0.25.      *
  *              tmpl_Float_Arccos_Rat_Remez:                                  *
  *                  Computes acos via a minimax approximation for |x| < 0.5.  *
  *              tmpl_Float_Arccos_Tail_End:                                   *
@@ -117,7 +117,7 @@
  *  2023/01/13: Ryan Maguire                                                  *
  *      Added comments, algorithm description, and fixed error values.        *
  *  2023/05/31: Ryan Maguire                                                  *
- *      Added optimizations for small x, |x| < 0.125, and denormal values.    *
+ *      Added optimizations for small x, |x| < 0.25, and denormal values.     *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -156,11 +156,11 @@ float tmpl_Float_Arccos(float x)
         if (w.bits.expo < TMPL_FLOAT_UBIAS - 26U)
             return tmpl_Pi_By_Two_F;
 
-        /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
-        else if (w.bits.expo < TMPL_FLOAT_UBIAS - 3U)
+        /*  For small x, |x| < 2^-2, the Maclaurin series is sufficient.      */
+        else if (w.bits.expo < TMPL_FLOAT_UBIAS - 2U)
             return tmpl_Float_Arccos_Maclaurin(x);
 
-        /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
+        /*  For 0.25 <= |x| < 0.5 use the minimax approximation.              */
         return tmpl_Float_Arccos_Rat_Remez(x);
     }
 
@@ -209,8 +209,8 @@ float tmpl_Float_Arccos(float x)
         if (abs_x < 1.4901161193847656E-08F)
             return tmpl_Pi_By_Two_F;
 
-        /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
-        else if (abs_x < 0.125F)
+        /*  Small inputs, |x| < 0.25, use the Maclaurin series.               */
+        else if (abs_x < 0.25F)
             return tmpl_Float_Arccos_Maclaurin(x);
 
         /*  Otherwise use the Remez rational minimax function.                */
