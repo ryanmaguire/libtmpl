@@ -69,7 +69,7 @@
  *          sign. This can be computed via the exclusive or, or XOR. The sign *
  *          of abs_lo is the exclusive or of the signs of x_hi and x_lo.      *
  *      Error:                                                                *
- *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
+ *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
