@@ -68,12 +68,15 @@
  *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Abs (tmpl_math.h):                                     *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_Float_Arccos_Rat_Remez (tmpl_math.h):                        *
- *              Computes acos(x) via a minimax approximation for |x| < 0.5.   *
- *          tmpl_Float_Arccos_Tail_End (tmpl_math.h):                         *
- *              Computes acos(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Float_Arccos_Maclaurin:                                  *
+ *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
+ *              tmpl_Float_Arccos_Rat_Remez:                                  *
+ *                  Computes acos via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arccos_Tail_End:                                   *
+ *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
@@ -203,7 +206,7 @@ float tmpl_Float_Arccos(float x)
     if (abs_x < 0.5F)
     {
         /*  For very small inputs return pi / 2.                              */
-        if (abs_x < 1.4901161193847656e-08F)
+        if (abs_x < 1.4901161193847656E-08F)
             return tmpl_Pi_By_Two_F;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
