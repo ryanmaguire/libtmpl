@@ -1663,6 +1663,82 @@ extern long double tmpl_LDouble_Arcsin_Pade(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Maclaurin                                          *
+ *  Purpose:                                                                  *
+ *      Compute arc-sine using a Maclaurin polynomial.                        *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double asin_x:                                                        *
+ *          The inverse sine of x, cos^-1(x).                                 *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arcsin_maclaurin_float.c                        *
+ *      libtmpl/src/math/tmpl_arcsin_maclaurin_double.c                       *
+ *      libtmpl/src/math/tmpl_arcsin_maclaurin_ldouble.c                      *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_arcsin_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_arcsin_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_arcsin_maclaurin_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arcsin_Maclaurin(float x);
+extern double tmpl_Double_Arcsin_Maclaurin(double x);
+extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin_Rat_Remez                                          *
+ *  Purpose:                                                                  *
+ *      Compute arc-sine using a rational minimax approximation.              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double asin_x:                                                        *
+ *          The inverse cosine of x, sin^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arcsin_rat_remez_float.c                        *
+ *      libtmpl/src/math/tmpl_arcsin_rat_remez_double.c                       *
+ *      libtmpl/src/math/tmpl_arcsin_rat_remez_ldouble.c                      *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_arcsin_rat_remez_double.h>
+#include <libtmpl/include/math/tmpl_arcsin_rat_remez_float.h>
+#include <libtmpl/include/math/tmpl_arcsin_rat_remez_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arcsin_Rat_Remez(float x);
+extern double tmpl_Double_Arcsin_Rat_Remez(double x);
+extern long double tmpl_LDouble_Arcsin_Rat_Remez(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Arcsin_Tail_End                                           *
  *  Purpose:                                                                  *
  *      Compute the arcsin (inverse sine) for values near 1.                  *
