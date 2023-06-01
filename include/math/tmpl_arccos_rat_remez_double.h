@@ -39,7 +39,7 @@
  *  Method:                                                                   *
  *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
  *      the coefficients for the rational minimax function R(x) of degree     *
- *      (5, 4) for f(x). The odd terms have zero coefficients. We may thus    *
+ *      (10, 8) for f(x). The odd terms have zero coefficients. We may thus   *
  *      compute the minimax approximation via:                                *
  *                                                                            *
  *                                   a0 + a2 x^2 + ... + a10 x^10             *
@@ -47,7 +47,7 @@
  *                                   b0 + b2 x^2 + ... + b8 x^8               *
  *                                                                            *
  *      Where the coefficients a_n and b_n are for the rational minimax       *
- *      approximation for f(x. These were pre-computed by the rational        *
+ *      approximation for f(x). These were pre-computed by the rational       *
  *      Remez exchange algorithm.                                             *
  *  Notes:                                                                    *
  *      Accurate for |x| < 0.5.                                               *
