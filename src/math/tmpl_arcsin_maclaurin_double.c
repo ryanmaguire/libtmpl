@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_arcsin_pade_float                           *
+ *                        tmpl_arcsin_maclaurin_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of ains(x) at single precision.  *
- *      See include/math/tmpl_arcsin_pade_float.h for details.                *
+ *      Computes a Maclaurin series of asin(x) at double precision.           *
+ *      See include/math/tmpl_arcsin_maclaurin_double.h for details.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 9, 2023                                                   *
+ *  Date:       June 1, 2023                                                  *
  ******************************************************************************/
 
-/*  Implemented in include/math/tmpl_arcsin_pade_float.h. Include this.       */
-#include "../../include/math/tmpl_arcsin_pade_float.h"
+/*  Implemented in include/math/tmpl_arcsin_maclaurin_double.h. Include this. */
+#include "../../include/math/tmpl_arcsin_maclaurin_double.h"

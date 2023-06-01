@@ -19,7 +19,7 @@
  *                          tmpl_arcsin_pade_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (10, 8) Pade approximant of asin(x) at double precision. *
+ *      Computes the (12, 12) Pade approximant of asin(x) at double precision.*
  *      See include/math/tmpl_arcsin_pade_double.h for details.               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *

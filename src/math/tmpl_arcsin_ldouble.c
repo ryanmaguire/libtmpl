@@ -141,6 +141,47 @@
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
+/*  The trade off from very tiny to very small to small depends on how long   *
+ *  double is implemented. Save these values as macros.                       */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/*  asin(x) = x to double precision for |x| < 2^-57.                          */
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 57U)
+
+/*  For 64-bit double the Maclaurin series is accurate to double precision    *
+ *  |x| < 0.15 meaning we can safely use this for |x| < 2^-3.                 */
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
+
+/*  128-bit quadruple and double-double require smaller exponents.            */
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/*  For |x| < 2^-105 asin(x) = x to double-double precision and for           *
+ *  |x| < 2^-116 asin(x) = x to quadruple precision. Use 2^-116 for both      *
+ *  double-double and quadruple precisions for simplicity.                    */
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 116U)
+
+/*  The Maclaurin series is accurate to quadruple precision for |x| < 0.1 so  *
+ *  it is safe to use for |x| < 2^-4.                                         */
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 4U)
+
+/*  Lastly, extended precision. 15-bit exponent and 64 bit mantissa.          */
+#else
+
+/*  For |x| < 2^-65 asin(x) = x to extended precision.                        */
+#define TMPL_ARCSIN_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 65U)
+
+/*  The Maclaurin series is accurate to extended precision for |x| < 0.17.    *
+ *  The function is thus safe to use for |x| < 2^-3.                          */
+#define TMPL_ARCSIN_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
+
+#endif
+/*  End of double vs. extended vs. double-double vs. quadruple.               */
+
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
@@ -158,9 +199,20 @@ long double tmpl_LDouble_Arcsin(long double x)
     /*  Set the long double part of the word to the input.                    */
     w.r = x;
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 1U)
-        return tmpl_LDouble_Arcsin_Pade(x);
+    {
+        /*  For very small x, asin(x) = x to long double precision.           */
+        if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCSIN_TINY_EXPONENT)
+            return x;
+
+        /*  For small x the Maclaurin series is sufficient.                   */
+        else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCSIN_SMALL_EXPONENT)
+            return tmpl_LDouble_Arcsin_Maclaurin(x);
+
+        /*  For all other x with |x| < 0.5 use the minimax approximation.     */
+        return tmpl_LDouble_Arcsin_Rat_Remez(x);
+    }
 
     /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
     else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
@@ -170,8 +222,7 @@ long double tmpl_LDouble_Arcsin(long double x)
             return -tmpl_LDouble_Arcsin_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_LDouble_Arcsin_Tail_End(x);
+        return tmpl_LDouble_Arcsin_Tail_End(x);
     }
 
     /*  Special cases, |x| >= 1 or x = NaN.                                   */

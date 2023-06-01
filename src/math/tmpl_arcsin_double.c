@@ -134,9 +134,20 @@ double tmpl_Double_Arcsin(double x)
     /*  Set the double part of the word to the input.                         */
     w.r = x;
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS - 1U)
-        return tmpl_Double_Arcsin_Pade(x);
+    {
+        /*  For |x| < 2^-57, asin(x) = x to double precision.                 */
+        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 57U)
+            return x;
+
+        /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
+        else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+            return tmpl_Double_Arcsin_Maclaurin(x);
+
+        /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
+        return tmpl_Double_Arcsin_Rat_Remez(x);
+    }
 
     /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
@@ -146,26 +157,20 @@ double tmpl_Double_Arcsin(double x)
             return -tmpl_Double_Arcsin_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_Double_Arcsin_Tail_End(x);
+        return tmpl_Double_Arcsin_Tail_End(x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN.                                   */
-    else
-    {
-        /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                    */
-        if (x == -1.0)
-            return -tmpl_Pi_By_Two;
-        else if (x == 1.0)
-            return tmpl_Pi_By_Two;
+    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    if (x == -1.0)
+        return -tmpl_Pi_By_Two;
+    else if (x == 1.0)
+        return tmpl_Pi_By_Two;
 
-        /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.  *
-         *  Note, this catches NaN and infinity since we are checking the     *
-         *  exponent of the input, not the input. For x = NaN or Inf, the     *
-         *  exponent is greater than TMPL_DOUBLE_UBIAS, hence NaN will return.*/
-        else
-            return TMPL_NAN;
-    }
+    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN. Note *
+     *  this catches NaN and infinity since we are checking the exponent of   *
+     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
+     *  than TMPL_DOUBLE_UBIAS, hence NaN will return.                        */
+    return TMPL_NAN;
 }
 /*  End of tmpl_Double_Arcsin.                                                */
 
@@ -182,11 +187,22 @@ double tmpl_Double_Arcsin(double x)
     /*  Declare necessary variables. C89 requires this at the top.            */
     const double abs_x = tmpl_Double_Abs(x);
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5)
-        return tmpl_Double_Arcsin_Pade(x);
+    {
+        /*  For very small inputs return x, asin(x) = x + O(x^3).             */
+        if (abs_x < 6.938893903907228E-18)
+            return x;
 
-    /*  Otherwise use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).   */
+        /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
+        else if (abs_x < 0.125)
+            return tmpl_Double_Arcsin_Maclaurin(x);
+
+        /*  Otherwise use the Remez rational minimax function.                */
+        return tmpl_Double_Arcsin_Rat_Remez(x);
+    }
+
+    /*  For |x| < 1 use the formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).      */
     else if (abs_x < 1.0)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
@@ -194,24 +210,17 @@ double tmpl_Double_Arcsin(double x)
             return -tmpl_Double_Arcsin_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_Double_Arcsin_Tail_End(abs_x);
+        return tmpl_Double_Arcsin_Tail_End(abs_x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN. Note, since comparison with       *
-     *  NaN always returns false, an input of NaN will end up on this branch. */
-    else
-    {
-        /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                    */
-        if (x == -1.0)
-            return -tmpl_Pi_By_Two;
-        else if (x == 1.0)
-            return tmpl_Pi_By_Two;
+    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    if (x == -1.0)
+        return -tmpl_Pi_By_Two;
+    else if (x == 1.0)
+        return tmpl_Pi_By_Two;
 
-        /*  For |x| > 1 the function is undefined. Return NaN.                */
-        else
-            return TMPL_NAN;
-    }
+    /*  For |x| > 1 the function is undefined. Return NaN.                    */
+    return TMPL_NAN;
 }
 /*  End of tmpl_Double_Arcsin.                                                */
 
