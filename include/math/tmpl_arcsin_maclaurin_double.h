@@ -16,35 +16,31 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_arcsin_pade_double                           *
+ *                        tmpl_arcsin_maclaurin_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (12, 12) Pade approximant of asin(x) at double precision.*
+ *      Computes a Maclaurin series for asin(x) at double precision.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Arcsin_Pade                                               *
+ *      tmpl_Double_Arcsin_Maclaurin                                          *
  *  Purpose:                                                                  *
- *      Computes the Pade approximant of order (12, 12) for arcsin.           *
+ *      Computes the degree 15 Maclaurin series for asin(x).                  *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      asin_x (double):                                                      *
- *          The Pade approximation of asin(x).                                *
+ *          The degree 15 Maclaurin series of asin(x).                        *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomials for the numerator     *
- *      and denominator.                                                      *
- *                                                                            *
- *          asin(x) - x   a0 + a1*x^2 + ... + a5*x^10 + a6*x^12               *
- *          ----------- = -------------------------------------               *
- *              x^3        1 + b1*x^2 + ... + a5*x^10 + b6*x^12               *
+ *      Use Horner's method to evaluate the polynomial.                       *
  *  Notes:                                                                    *
- *      Accurate for |x| < 0.6. For |x| < 0.9 this is accurate to about       *
- *      single precision (10^-7 relative error). Not accurate for |x| near 1. *
+ *      Accurate to double precision for |x| < 0.13. For |x| < 0.5 the        *
+ *      approximation is accurate to 7 decimals. The computation is very fast *
+ *      and can easily be inlined.                                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -54,18 +50,12 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 9, 2023                                                   *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2023/06/01: Ryan Maguire                                                  *
- *      Changed so that this computes an actual Pade approximant. It was a    *
- *      Remez rational minimax approximation before, improperly labelled.     *
+ *  Date:       June 1, 2023                                                  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ARCSIN_PADE_DOUBLE_H
-#define TMPL_ARCSIN_PADE_DOUBLE_H
+#ifndef TMPL_ARCSIN_MACLAURIN_DOUBLE_H
+#define TMPL_ARCSIN_MACLAURIN_DOUBLE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -73,62 +63,45 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.6666666666666666666666666666666666666666666666667E-01)
-#define P1 (-4.5183467789315450573566044285447580081757824962844E-01)
-#define P2 (+4.5268338285839953885847747489466534382453836599311E-01)
-#define P3 (-2.0451170074586957459619221134199241262964264122754E-01)
-#define P4 (+4.0161699156136797388526896443437389593682105247059E-02)
-#define P5 (-2.6043612272315037174810668430207303056407157408729E-03)
-#define P6 (+8.5298365158969137130716621168483153368286640425841E-06)
+/*  Only the odd non-constant terms have non-zero coefficients.               */
+#define A0 (1.0000000000000000000000000000000000000000000000000E+00)
+#define A1 (1.6666666666666666666666666666666666666666666666667E-01)
+#define A2 (7.5000000000000000000000000000000000000000000000000E-02)
+#define A3 (4.4642857142857142857142857142857142857142857142857E-02)
+#define A4 (3.0381944444444444444444444444444444444444444444444E-02)
+#define A5 (2.2372159090909090909090909090909090909090909090909E-02)
+#define A6 (1.7352764423076923076923076923076923076923076923077E-02)
+#define A7 (1.3964843750000000000000000000000000000000000000000E-02)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00)
-#define Q1 (-3.1610080673589270344139626571268548049054694977706E+00)
-#define Q2 (+3.8706967846047715414942909022179338680118343270983E+00)
-#define Q3 (-2.3044768347428901379839394147005695603073114886090E+00)
-#define Q4 (+6.8318346338074073586036792129413385817260793401216E-01)
-#define Q5 (-9.1189047491786682631147583983250333633502470655541E-02)
-#define Q6 (+3.9268447888541310343247866236378900929051188393826E-03)
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) \
+A0 + z*(A1 + z*(A2 + z*(A3 + z*(A4 + z*(A5 + z*(A6 + z*A7))))))
 
-/*  Helper macros for evaluating a polynomial via Horner's method.            */
-#define TMPL_NUM_EVAL(z) P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*(P5 + z*P6)))))
-#define TMPL_DEN_EVAL(z) Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*(Q4 + z*(Q5 + z*Q6)))))
-
-/*  Function for computing the (12, 12) Pade approximant of asin(x).          */
+/*  Computes the degree 15 Maclaurin polynomial for asin(x).                  */
 TMPL_INLINE_DECL
-double tmpl_Double_Arcsin_Pade(double x)
+double tmpl_Double_Arcsin_Maclaurin(double x)
 {
-    /*  The polynomials for the numerator and denominator are in terms of x^2.*/
+    /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
     const double x2 = x*x;
 
-    /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = TMPL_NUM_EVAL(x2);
-    const double q = TMPL_DEN_EVAL(x2);
-    const double r = x2*p/q;
+    /*  Compute the Maclaurin series of asin(x) / x.                          */
+    const double poly = TMPL_POLY_EVAL(x2);
 
-    /*  p/q is the Pade approximant for (asin(x) - x) / x^3.                  */
-    return x*r + x;
+    /*  Scale by the input to complete the computation.                       */
+    return x*poly;
 }
-/*  End of tmpl_Double_Arcsin_Pade.                                           */
+/*  End of tmpl_Double_Arcsin_Maclaurin.                                      */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef P6
-#undef P5
-#undef P4
-#undef P3
-#undef P2
-#undef P1
-#undef P0
-#undef Q6
-#undef Q5
-#undef Q4
-#undef Q3
-#undef Q2
-#undef Q1
-#undef Q0
-#undef TMPL_NUM_EVAL
-#undef TMPL_DEN_EVAL
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
+#undef A6
+#undef A7
+#undef TMPL_POLY_EVAL
 
 #endif
 /*  End of include guard.                                                     */
