@@ -75,9 +75,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The constant term is Pi/2.                                                */
-#define TMPL_PI_BY_TWO (1.570796326794896619231321691639751442098584699687E+00L)
-
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
@@ -208,7 +205,7 @@ long double tmpl_LDouble_Arccos_Maclaurin(long double x)
     const long double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x*poly;
+    return tmpl_Pi_By_Two_L - x*poly;
 }
 /*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
 
@@ -227,7 +224,6 @@ long double tmpl_LDouble_Arccos_Maclaurin(long double x)
 #undef A11
 #undef A12
 #undef A13
-#undef TMPL_PI_BY_TWO
 #undef TMPL_POLY_EVAL
 
 #endif

@@ -63,9 +63,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The constant term is Pi/2.                                                */
-#define TMPL_PI_BY_TWO (1.570796326794896619231321691639751442098584699687E+00F)
-
 /*  Only the odd non-constant terms have non-zero coefficients.               */
 #define A0 (1.0000000000000000000000000000000000000000000000000E+00F)
 #define A1 (1.6666666666666666666666666666666666666666666666667E-01F)
@@ -87,7 +84,7 @@ float tmpl_Float_Arccos_Maclaurin(float x)
     const float poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return TMPL_PI_BY_TWO - x*poly;
+    return tmpl_Pi_By_Two_F - x*poly;
 }
 /*  End of tmpl_Float_Arccos_Maclaurin.                                       */
 
@@ -97,7 +94,6 @@ float tmpl_Float_Arccos_Maclaurin(float x)
 #undef A2
 #undef A3
 #undef A4
-#undef TMPL_PI_BY_TWO
 #undef TMPL_POLY_EVAL
 
 #endif
