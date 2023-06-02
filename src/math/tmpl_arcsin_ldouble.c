@@ -290,7 +290,7 @@ long double tmpl_LDouble_Arcsin(long double x)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (x < 0.0L)
-            return -tmpl_LDouble_Arcsin_Tail_End(-x);
+            return -tmpl_LDouble_Arcsin_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_LDouble_Arcsin_Tail_End(x);
