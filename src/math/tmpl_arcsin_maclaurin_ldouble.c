@@ -19,7 +19,7 @@
  *                        tmpl_arcsin_maclaurin_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a Maclaurin series of ains(x) at long double precision.      *
+ *      Computes a Maclaurin series of asin(x) at long double precision.      *
  *      See include/math/tmpl_arcsin_maclaurin_ldouble.h for details.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
