@@ -35,38 +35,53 @@
  *          The arc-sine of x.                                                *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Arcsin_Pade (tmpl_math.h):                           *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_LDouble_Arcsin_Tail_End (tmpl_math.h):                       *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_LDouble_Arcsin_Maclaurin:                                *
+ *                  Computes asin via a Maclaurin series for small x.         *
+ *              tmpl_LDouble_Arcsin_Rat_Remez:                                *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_LDouble_Arcsin_Tail_End:                                 *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
- *          use the reflection formula:                                       *
+ *          For tiny x return x. For small x use a Maclaurin series.          *
+ *          For |x| < 0.5 use a minimax approximation.                        *
+ *          For 0.5 <= x < 1 use the reflection formula:                      *
  *                                                                            *
  *              asin(x) = pi/2 - 2*asin(sqrt((1-x)/2))                        *
  *                                                                            *
- *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
- *          use the negation formula:                                         *
+ *          Compute this using a minimax approximation. For values            *
+ *          -1 < x <= -0.5 use the negation formula:                          *
  *                                                                            *
  *              asin(x) = -asin(-x)                                           *
  *                                                                            *
  *          Use this and compute asin(-x) via the tail-end function.          *
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
  *          return asin(-1) = -pi/2 and asin(1) = pi/2.                       *
+ *                                                                            *
+ *          "Tiny" and "small" depends on how long double is implemented.     *
+ *              64-bit double:                                                *
+ *                  Tiny:   |x| < 2^-57                                       *
+ *                  Small:  |x| < 2^-3                                        *
+ *              128-bit double-double / 128-bit quadruple:                    *
+ *                  Tiny:   |x| < 2^-116                                      *
+ *                  Small:  |x| < 2^-4                                        *
+ *              80-bit extended / portable:                                   *
+ *                  Tiny:   |x| < 2^-65                                       *
+ *                  Small:  |x| < 2^-3                                        *
  *      Error (64-bit Double):                                                *
  *          Based on 2,247,723,417 samples with -1 < x < 1.                   *
- *              max relative error: 4.2407395318771891e-16                    *
- *              rms relative error: 8.3076997568096430e-17                    *
+ *              max relative error: 4.2407377049860399e-16                    *
+ *              rms relative error: 8.9299037249761967e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
- *              rms absolute error: 6.8741875746543622e-17                    *
+ *              rms absolute error: 6.8769466580146019e-17                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *      Error (80-bit Extended):                                              *
  *          Based on 1,123,861,708 samples with -1 < x < 1.                   *
- *              max relative error: 2.0706735476097611e-19                    *
- *              rms relative error: 3.9602805968592018e-20                    *
+ *              max relative error: 2.0706731640977783e-19                    *
+ *              rms relative error: 4.2582538550661163e-20                    *
  *              max absolute error: 1.0842021724855044e-19                    *
- *              rms absolute error: 3.1783437893237120e-20                    *
+ *              rms absolute error: 3.1802280310166060e-20                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *      Error (128-bit Quadruple):                                            *
@@ -87,22 +102,25 @@
  *          less than 1 ULP (~5 x 10^-32).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_LDouble_Arcsin_Pade (tmpl_math.h):                           *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_LDouble_Arcsin_Tail_End (tmpl_math.h):                       *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_LDouble_Abs:                                             *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_LDouble_Arcsin_Maclaurin:                                *
+ *                  Computes asin via a Maclaurin series for small x.         *
+ *              tmpl_LDouble_Arcsin_Rat_Remez:                                *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_LDouble_Arcsin_Tail_End:                                 *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
  *          to the numbers 0.5 and 1.0.                                       *
  *      Error:                                                                *
  *          Based on 1,123,861,708 samples with -1 < x < 1.                   *
- *              max relative error: 2.0706735476097611e-19                    *
- *              rms relative error: 3.9602805968592018e-20                    *
+ *              max relative error: 2.0706731640977783e-19                    *
+ *              rms relative error: 4.2582538550661163e-20                    *
  *              max absolute error: 1.0842021724855044e-19                    *
- *              rms absolute error: 3.1783437893237120e-20                    *
+ *              rms absolute error: 3.1802280310166060e-20                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-19).                                    *
  *  Notes:                                                                    *
@@ -225,22 +243,17 @@ long double tmpl_LDouble_Arcsin(long double x)
         return tmpl_LDouble_Arcsin_Tail_End(x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN.                                   */
-    else
-    {
-        /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                    */
-        if (x == -1.0L)
-            return -tmpl_Pi_By_Two_L;
-        else if (x == 1.0L)
-            return tmpl_Pi_By_Two_L;
+    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    if (x == -1.0L)
+        return -tmpl_Pi_By_Two_L;
+    else if (x == 1.0L)
+        return tmpl_Pi_By_Two_L;
 
-        /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.  *
-         *  Note, this catches NaN and infinity since we are checking the     *
-         *  exponent of the input, not the input. For x = NaN or Inf, the     *
-         *  exponent is greater than TMPL_LDOUBLE_UBIAS, so NaN will return.  */
-        else
-            return TMPL_NANL;
-    }
+    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.      *
+     *  Note, this catches NaN and infinity since we are checking the         *
+     *  exponent of the input, not the input. For x = NaN or Inf, the         *
+     *  exponent is greater than TMPL_LDOUBLE_UBIAS, so NaN will return.      */
+    return TMPL_NANL;
 }
 /*  End of tmpl_LDouble_Arcsin.                                               */
 
@@ -257,36 +270,40 @@ long double tmpl_LDouble_Arcsin(long double x)
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5L)
-        return tmpl_LDouble_Arcsin_Pade(x);
+    {
+        /*  For very small inputs return x, asin(x) = x + O(x^3).             */
+        if (abs_x < 2.710505431213760E-20L)
+            return x;
+
+        /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
+        else if (abs_x < 0.125L)
+            return tmpl_LDouble_Arcsin_Maclaurin(x);
+
+        /*  Otherwise use the Remez rational minimax function.                */
+        return tmpl_LDouble_Arcsin_Rat_Remez(x);
+    }
 
     /*  Otherwise use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).   */
     else if (abs_x < 1.0L)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
         if (x < 0.0L)
-            return -tmpl_LDouble_Arcsin_Tail_End(abs_x);
+            return -tmpl_LDouble_Arcsin_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_LDouble_Arcsin_Tail_End(abs_x);
+        return tmpl_LDouble_Arcsin_Tail_End(x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN. Note, since comparison with       *
-     *  NaN always returns false, an input of NaN will end up on this branch. */
-    else
-    {
-        /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                    */
-        if (x == -1.0L)
-            return -tmpl_Pi_By_Two_L;
-        else if (x == 1.0L)
-            return tmpl_Pi_By_Two_L;
+    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    if (x == -1.0L)
+        return -tmpl_Pi_By_Two_L;
+    else if (x == 1.0L)
+        return tmpl_Pi_By_Two_L;
 
-        /*  For |x| > 1 the function is undefined. Return NaN.                */
-        else
-            return TMPL_NANL;
-    }
+    /*  For |x| > 1 the function is undefined. Return NaN.                    */
+    return TMPL_NANL;
 }
 /*  End of tmpl_LDouble_Arcsin.                                               */
 
