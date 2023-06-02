@@ -35,18 +35,23 @@
  *          The arc-sine of x.                                                *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Arcsin_Pade (tmpl_math.h):                             *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Float_Arcsin_Tail_End (tmpl_math.h):                         *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Arcsin_Maclaurin:                                  *
+ *                  Computes asin(x) via a Maclaurin series.                  *
+ *              tmpl_Float_Arcsin_Rat_Remez:                                  *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arcsin_Tail_End:                                   *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
- *          use the reflection formula:                                       *
+ *          For very small x, |x| < 2^-26, return x. For slightly larger x,   *
+ *          |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5 use a *
+ *          minimax approximation. For 0.5 <= x < 1 use the reflection        *
+ *          formula:                                                          *
  *                                                                            *
  *              asin(x) = pi/2 - 2*asin(sqrt((1-x)/2))                        *
  *                                                                            *
- *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
- *          use the negation formula:                                         *
+ *          Compute this using a minimax approximation. For values            *
+ *          -1 < x <= -0.5 use the negation formula:                          *
  *                                                                            *
  *              asin(x) = -asin(-x)                                           *
  *                                                                            *
@@ -55,30 +60,33 @@
  *          return asin(-1) = -pi/2 and asin(1) = pi/2.                       *
  *      Error:                                                                *
  *          Based on 4,495,446,834 samples with -1 < x < 1.                   *
- *              max relative error: 2.2767285656755121e-07                    *
- *              rms relative error: 5.5656314960486353e-08                    *
+ *              max relative error: 2.2767265761558519e-07                    *
+ *              rms relative error: 4.2472893065347384e-08                    *
  *              max absolute error: 1.1920928955078125e-07                    *
- *              rms absolute error: 4.2467209023774953e-08                    *
+ *              rms absolute error: 4.2472893065347384e-08                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Abs (tmpl_math.h):                                     *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_Float_Arcsin_Pade (tmpl_math.h):                             *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Float_Arcsin_Tail_End (tmpl_math.h):                         *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Float_Arcsin_Maclaurin:                                  *
+ *                  Computes asin(x) via a Maclaurin series.                  *
+ *              tmpl_Float_Arcsin_Rat_Remez:                                  *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arcsin_Tail_End:                                   *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
  *          to the numbers 0.5 and 1.0.                                       *
  *      Error:                                                                *
  *          Based on 4,495,446,834 samples with -1 < x < 1.                   *
- *              max relative error: 2.2767285656755121e-07                    *
- *              rms relative error: 5.5656314960486353e-08                    *
+ *              max relative error: 2.2767265761558519e-07                    *
+ *              rms relative error: 4.2472893065347384e-08                    *
  *              max absolute error: 1.1920928955078125e-07                    *
- *              rms absolute error: 4.2467209023774953e-08                    *
+ *              rms absolute error: 4.2472893065347384e-08                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Notes:                                                                    *

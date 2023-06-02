@@ -36,6 +36,8 @@
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Arcsin_Maclaurin:                                 *
+ *                  Computes asin(x) via a Maclaurin series.                  *
  *              tmpl_Double_Arcsin_Rat_Remez:                                 *
  *                  Computes asin via a minimax approximation for |x| < 0.5.  *
  *              tmpl_Double_Arcsin_Tail_End:                                  *
@@ -68,7 +70,9 @@
  *      Called Functions:                                                     *
  *          tmpl_math.h:                                                      *
  *              tmpl_Double_Abs:                                              *
- *                  Computes the absolute value of a number.                  *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Double_Arcsin_Maclaurin:                                 *
+ *                  Computes asin(x) via a Maclaurin series.                  *
  *              tmpl_Double_Arcsin_Rat_Remez:                                 *
  *                  Computes asin via a minimax approximation for |x| < 0.5.  *
  *              tmpl_Double_Arcsin_Tail_End:                                  *
