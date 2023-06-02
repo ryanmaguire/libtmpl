@@ -58,7 +58,7 @@
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
  *          return acos(-1) = pi and acos(1) = 0.                             *
  *                                                                            *
- *          "Tiny" and "small" depends on how long double is implementated.   *
+ *          "Tiny" and "small" depends on how long double is implemented.     *
  *              64-bit double:                                                *
  *                  Tiny:   |x| < 2^-57                                       *
  *                  Small:  |x| < 2^-3                                        *
