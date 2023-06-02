@@ -35,50 +35,54 @@
  *          The arc-sine of x.                                                *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Arcsin_Pade (tmpl_math.h):                            *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Double_Arcsin_Tail_End (tmpl_math.h):                        *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Arcsin_Rat_Remez:                                 *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Double_Arcsin_Tail_End:                                  *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
- *          use the reflection formula:                                       *
+ *          For very small x, |x| < 2^-57, return x. For slightly larger x,   *
+ *          |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5 use a *
+ *          minimax approximation. For 0.5 <= x < 1 use the reflection        *
+ *          formula:                                                          *
  *                                                                            *
  *              asin(x) = pi/2 - 2*asin(sqrt((1-x)/2))                        *
  *                                                                            *
- *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
- *          use the negation formula:                                         *
+ *          Compute this using a minimax approximation. For values            *
+ *          -1 < x <= -0.5 use the negation formula:                          *
  *                                                                            *
  *              asin(x) = -asin(-x)                                           *
  *                                                                            *
  *          Use this and compute asin(-x) via the tail-end function.          *
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
- *          return asin(-1) = -pi / 2 and asin(1) = pi / 2.                   *
+ *          return asin(-1) = -pi/2 and asin(1) = pi/2.                       *
  *      Error:                                                                *
  *          Based on 2,247,723,417 samples with -1 < x < 1.                   *
- *              max relative error: 4.2407395318771891e-16                    *
- *              rms relative error: 8.3076997568096430e-17                    *
+ *              max relative error: 4.2407377049860399e-16                    *
+ *              rms relative error: 8.9299037249761967e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
- *              rms absolute error: 6.8741875746543622e-17                    *
+ *              rms absolute error: 6.8769466580146019e-17                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Abs (tmpl_math.h):                                    *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_Double_Arcsin_Pade (tmpl_math.h):                            *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Double_Arcsin_Tail_End (tmpl_math.h):                        *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a number.                  *
+ *              tmpl_Double_Arcsin_Rat_Remez:                                 *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Double_Arcsin_Tail_End:                                  *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
  *          to the numbers 0.5 and 1.0.                                       *
  *      Error:                                                                *
  *          Based on 2,247,723,417 samples with -1 < x < 1.                   *
- *              max relative error: 4.2407395318771891e-16                    *
- *              rms relative error: 8.3076997568096430e-17                    *
+ *              max relative error: 4.2407377049860399e-16                    *
+ *              rms relative error: 8.9299037249761967e-17                    *
  *              max absolute error: 2.2204460492503131e-16                    *
- *              rms absolute error: 6.8741875746543622e-17                    *
+ *              rms absolute error: 6.8769466580146019e-17                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Notes:                                                                    *

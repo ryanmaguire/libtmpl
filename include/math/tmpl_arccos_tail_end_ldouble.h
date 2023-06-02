@@ -34,8 +34,9 @@
  *      acos_x (long double):                                                 *
  *          The inverse cosine of x.                                          *
  *  Called Functions:                                                         *
- *      tmpl_LDouble_Sqrt (tmpl_math.h):                                      *
- *          Computes the square root of a number.                             *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_LDouble_Sqrt:                                                *
+ *              Computes the square root of a number.                         *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
  *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
