@@ -86,9 +86,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The offset term is Pi/2.                                                  */
-#define TMPL_PI_BY_TWO (1.570796326794896619231321691639751442098584699687E+00)
-
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01)
 #define P1 (-3.25565818622400915405E-01)
@@ -117,7 +114,7 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
     const double r = x2*p/q;
 
     /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return tmpl_Pi_By_Two - (x + x*r);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
 
@@ -133,7 +130,6 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
 #undef Q2
 #undef Q1
 #undef Q0
-#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

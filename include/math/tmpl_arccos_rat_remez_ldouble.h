@@ -37,13 +37,18 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomials for the numerator     *
- *      and denominator.                                                      *
+ *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
+ *      the coefficients for the rational minimax function R(x). The odd      *
+ *      terms have zero coefficients. We may thus compute the minimax         *
+ *      approximation via:                                                    *
  *                                                                            *
- *          acos(x)+x-pi/2   a0 + a2*x^2 + a4*x^4 + ... + an*x^n              *
- *          -------------- = -----------------------------------              *
- *               x^3          1 + b2*x^2 + b4*x^4 + ... + am*x^m              *
+ *                                   a0 + a2 x^2 + ... + an x^n               *
+ *          acos(x) = pi/2 - x + x^3 --------------------------               *
+ *                                   b0 + b2 x^2 + ... + bm x^m               *
  *                                                                            *
+ *      Where the coefficients a_n and b_n are for the rational minimax       *
+ *      approximation for f(x). These were pre-computed by the rational       *
+ *      Remez exchange algorithm.                                             *
  *      64-bit double:                                                        *
  *          Order (10, 8) approximation.                                      *
  *      80-bit extended / portable:                                           *
@@ -82,9 +87,6 @@
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  The offset term is Pi/2.                                                  */
-#define TMPL_PI_BY_TWO (1.570796326794896619231321691639751442098584699687E+00L)
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -204,7 +206,7 @@ long double tmpl_LDouble_Arccos_Rat_Remez(long double x)
     const long double r = x2*p/q;
 
     /*  p/q is the rational minimax approximation for (acos(x)-pi/2+x)/x^3.   */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return tmpl_Pi_By_Two_L - (x + x*r);
 }
 /*  End of tmpl_LDouble_Arccos_Rat_Remez.                                     */
 
@@ -231,7 +233,6 @@ long double tmpl_LDouble_Arccos_Rat_Remez(long double x)
 #undef Q0
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
-#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */
