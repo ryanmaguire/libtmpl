@@ -35,18 +35,23 @@
  *          The arc-sine of x.                                                *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Arcsin_Pade (tmpl_math.h):                             *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Float_Arcsin_Tail_End (tmpl_math.h):                         *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Arcsin_Maclaurin:                                  *
+ *                  Computes asin(x) via a Maclaurin series.                  *
+ *              tmpl_Float_Arcsin_Rat_Remez:                                  *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arcsin_Tail_End:                                   *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
- *          use the reflection formula:                                       *
+ *          For very small x, |x| < 2^-26, return x. For slightly larger x,   *
+ *          |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5 use a *
+ *          minimax approximation. For 0.5 <= x < 1 use the reflection        *
+ *          formula:                                                          *
  *                                                                            *
  *              asin(x) = pi/2 - 2*asin(sqrt((1-x)/2))                        *
  *                                                                            *
- *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
- *          use the negation formula:                                         *
+ *          Compute this using a minimax approximation. For values            *
+ *          -1 < x <= -0.5 use the negation formula:                          *
  *                                                                            *
  *              asin(x) = -asin(-x)                                           *
  *                                                                            *
@@ -55,30 +60,33 @@
  *          return asin(-1) = -pi/2 and asin(1) = pi/2.                       *
  *      Error:                                                                *
  *          Based on 4,495,446,834 samples with -1 < x < 1.                   *
- *              max relative error: 2.2767285656755121e-07                    *
- *              rms relative error: 5.5656314960486353e-08                    *
+ *              max relative error: 2.2767265761558519e-07                    *
+ *              rms relative error: 4.2472893065347384e-08                    *
  *              max absolute error: 1.1920928955078125e-07                    *
- *              rms absolute error: 4.2467209023774953e-08                    *
+ *              rms absolute error: 4.2472893065347384e-08                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Abs (tmpl_math.h):                                     *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_Float_Arcsin_Pade (tmpl_math.h):                             *
- *              Computes asin(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Float_Arcsin_Tail_End (tmpl_math.h):                         *
- *              Computes asin(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Float_Arcsin_Maclaurin:                                  *
+ *                  Computes asin(x) via a Maclaurin series.                  *
+ *              tmpl_Float_Arcsin_Rat_Remez:                                  *
+ *                  Computes asin via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arcsin_Tail_End:                                   *
+ *                  Computes asin(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
  *          to the numbers 0.5 and 1.0.                                       *
  *      Error:                                                                *
  *          Based on 4,495,446,834 samples with -1 < x < 1.                   *
- *              max relative error: 2.2767285656755121e-07                    *
- *              rms relative error: 5.5656314960486353e-08                    *
+ *              max relative error: 2.2767265761558519e-07                    *
+ *              rms relative error: 4.2472893065347384e-08                    *
  *              max absolute error: 1.1920928955078125e-07                    *
- *              rms absolute error: 4.2467209023774953e-08                    *
+ *              rms absolute error: 4.2472893065347384e-08                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Notes:                                                                    *
@@ -134,9 +142,20 @@ float tmpl_Float_Arcsin(float x)
     /*  Set the float part of the word to the input.                          */
     w.r = x;
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (w.bits.expo < TMPL_FLOAT_UBIAS - 1U)
-        return tmpl_Float_Arcsin_Pade(x);
+    {
+        /*  For |x| < 2^-26, asin(x) = x to single precision.                 */
+        if (w.bits.expo < TMPL_FLOAT_UBIAS - 26U)
+            return x;
+
+        /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
+        else if (w.bits.expo < TMPL_FLOAT_UBIAS - 3U)
+            return tmpl_Float_Arcsin_Maclaurin(x);
+
+        /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
+        return tmpl_Float_Arcsin_Rat_Remez(x);
+    }
 
     /*  For |x| < 1 use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2). */
     else if (w.bits.expo < TMPL_FLOAT_UBIAS)
@@ -146,26 +165,20 @@ float tmpl_Float_Arcsin(float x)
             return -tmpl_Float_Arcsin_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_Float_Arcsin_Tail_End(x);
+        return tmpl_Float_Arcsin_Tail_End(x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN.                                   */
-    else
-    {
-        /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                    */
-        if (x == -1.0F)
-            return -tmpl_Pi_By_Two_F;
-        else if (x == 1.0F)
-            return tmpl_Pi_By_Two_F;
+    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    if (x == -1.0F)
+        return -tmpl_Pi_By_Two_F;
+    else if (x == 1.0F)
+        return tmpl_Pi_By_Two_F;
 
-        /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.  *
-         *  Note, this catches NaN and infinity since we are checking the     *
-         *  exponent of the input, not the input. For x = NaN or Inf, the     *
-         *  exponent is greater than TMPL_FLOAT_UBIAS, hence NaN will return. */
-        else
-            return TMPL_NANF;
-    }
+    /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN. Note *
+     *  this catches NaN and infinity since we are checking the exponent of   *
+     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
+     *  than TMPL_FLOAT_UBIAS, hence NaN will return.                         */
+    return TMPL_NANF;
 }
 /*  End of tmpl_Float_Arcsin.                                                 */
 
@@ -182,11 +195,22 @@ float tmpl_Float_Arcsin(float x)
     /*  Declare necessary variables. C89 requires this at the top.            */
     const float abs_x = tmpl_Float_Abs(x);
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5F)
-        return tmpl_Float_Arcsin_Pade(x);
+    {
+        /*  For very small inputs return x, asin(x) = x + O(x^3).             */
+        if (abs_x < 1.4901161193847656E-08F)
+            return x;
 
-    /*  Otherwise use the tail formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).   */
+        /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
+        else if (abs_x < 0.125F)
+            return tmpl_Float_Arcsin_Maclaurin(x);
+
+        /*  Otherwise use the Remez rational minimax function.                */
+        return tmpl_Float_Arcsin_Rat_Remez(x);
+    }
+
+    /*  For |x| < 1 use the formula asin(x) = pi/2 - 2asin(sqrt(1-x)/2).      */
     else if (abs_x < 1.0F)
     {
         /*  For negative inputs use the formula asin(x) = -asin(-x).          */
@@ -194,24 +218,17 @@ float tmpl_Float_Arcsin(float x)
             return -tmpl_Float_Arcsin_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_Float_Arcsin_Tail_End(abs_x);
+        return tmpl_Float_Arcsin_Tail_End(abs_x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN. Note, since comparison with       *
-     *  NaN always returns false, an input of NaN will end up on this branch. */
-    else
-    {
-        /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                    */
-        if (x == -1.0F)
-            return -tmpl_Pi_By_Two_F;
-        else if (x == 1.0F)
-            return tmpl_Pi_By_Two_F;
+    /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
+    if (x == -1.0F)
+        return -tmpl_Pi_By_Two_F;
+    else if (x == 1.0F)
+        return tmpl_Pi_By_Two_F;
 
-        /*  For |x| > 1 the function is undefined. Return NaN.                */
-        else
-            return TMPL_NANF;
-    }
+    /*  For |x| > 1 the function is undefined. Return NaN.                    */
+    return TMPL_NANF;
 }
 /*  End of tmpl_Float_Arcsin.                                                 */
 

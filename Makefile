@@ -160,15 +160,27 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
 	-not -name "tmpl_abs_ldouble.c" -and \
+	-not -name "tmpl_arccos_maclaurin_double.c" -and \
+	-not -name "tmpl_arccos_maclaurin_float.c" -and \
+	-not -name "tmpl_arccos_maclaurin_ldouble.c" -and \
 	-not -name "tmpl_arccos_pade_double.c" -and \
 	-not -name "tmpl_arccos_pade_float.c" -and \
 	-not -name "tmpl_arccos_pade_ldouble.c" -and \
+	-not -name "tmpl_arccos_rat_remez_double.c" -and \
+	-not -name "tmpl_arccos_rat_remez_float.c" -and \
+	-not -name "tmpl_arccos_rat_remez_ldouble.c" -and \
 	-not -name "tmpl_arccos_tail_end_double.c" -and \
 	-not -name "tmpl_arccos_tail_end_float.c" -and \
 	-not -name "tmpl_arccos_tail_end_ldouble.c" -and \
+	-not -name "tmpl_arcsin_maclaurin_double.c" -and \
+	-not -name "tmpl_arcsin_maclaurin_float.c" -and \
+	-not -name "tmpl_arcsin_maclaurin_ldouble.c" -and \
 	-not -name "tmpl_arcsin_pade_double.c" -and \
 	-not -name "tmpl_arcsin_pade_float.c" -and \
 	-not -name "tmpl_arcsin_pade_ldouble.c" -and \
+	-not -name "tmpl_arcsin_rat_remez_double.c" -and \
+	-not -name "tmpl_arcsin_rat_remez_float.c" -and \
+	-not -name "tmpl_arcsin_rat_remez_ldouble.c" -and \
 	-not -name "tmpl_arcsin_tail_end_double.c" -and \
 	-not -name "tmpl_arcsin_tail_end_float.c" -and \
 	-not -name "tmpl_arcsin_tail_end_ldouble.c" -and \
@@ -516,6 +528,7 @@ clean:
 	rm -f $(TARGET_LIB)
 
 install:
+	mkdir -p /usr/local/lib/
 	mkdir -p /usr/local/include/libtmpl/
 	cp -r ./include /usr/local/include/libtmpl/
 	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)

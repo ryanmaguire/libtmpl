@@ -209,15 +209,27 @@ if [ $USEINLINE == 1 ]; then
     Exclude="$Exclude tmpl_abs_double.c"
     Exclude="$Exclude tmpl_abs_float.c"
     Exclude="$Exclude tmpl_abs_ldouble.c"
+    Exclude="$Exclude tmpl_arccos_maclaurin_double.c"
+    Exclude="$Exclude tmpl_arccos_maclaurin_float.c"
+    Exclude="$Exclude tmpl_arccos_maclaurin_ldouble.c"
     Exclude="$Exclude tmpl_arccos_pade_double.c"
     Exclude="$Exclude tmpl_arccos_pade_float.c"
     Exclude="$Exclude tmpl_arccos_pade_ldouble.c"
+    Exclude="$Exclude tmpl_arccos_rat_remez_double.c"
+    Exclude="$Exclude tmpl_arccos_rat_remez_float.c"
+    Exclude="$Exclude tmpl_arccos_rat_remez_ldouble.c"
     Exclude="$Exclude tmpl_arccos_tail_end_double.c"
     Exclude="$Exclude tmpl_arccos_tail_end_float.c"
     Exclude="$Exclude tmpl_arccos_tail_end_ldouble.c"
+    Exclude="$Exclude tmpl_arcsin_maclaurin_double.c"
+    Exclude="$Exclude tmpl_arcsin_maclaurin_float.c"
+    Exclude="$Exclude tmpl_arcsin_maclaurin_ldouble.c"
     Exclude="$Exclude tmpl_arcsin_pade_double.c"
     Exclude="$Exclude tmpl_arcsin_pade_float.c"
     Exclude="$Exclude tmpl_arcsin_pade_ldouble.c"
+    Exclude="$Exclude tmpl_arcsin_rat_remez_double.c"
+    Exclude="$Exclude tmpl_arcsin_rat_remez_float.c"
+    Exclude="$Exclude tmpl_arcsin_rat_remez_ldouble.c"
     Exclude="$Exclude tmpl_arcsin_tail_end_double.c"
     Exclude="$Exclude tmpl_arcsin_tail_end_float.c"
     Exclude="$Exclude tmpl_arcsin_tail_end_ldouble.c"
@@ -564,8 +576,9 @@ if [ $INPLACE == 0 ]; then
 
     # Copy the header files to the appropriate directory.
     echo "Copying include/ directory to $INCLUDE_TARGET"
+    mkdir -p /usr/local/lib/
     mkdir -p "$INCLUDE_TARGET"
-    cp -r ./include/ "$INCLUDE_TARGET"
+    cp -r ./include "$INCLUDE_TARGET"
 
     # Move the shared object file to the appropriate directory.
     echo "Moving $SONAME to $SODIR"
