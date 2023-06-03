@@ -34,12 +34,13 @@
  *      acos_x (float):                                                       *
  *          The inverse cosine of x.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Float_Sqrt (tmpl_math.h):                                        *
- *          Computes the square root of a number.                             *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Float_Sqrt:                                                  *
+ *              Computes the square root of a number.                         *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
  *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *      Compute this using a Pade approximant.                                *
+ *      Compute this using a Remez rational minimax approximation.            *
  *  Notes:                                                                    *
  *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
@@ -104,9 +105,14 @@ float tmpl_Float_Arccos_Tail_End(float x)
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const float p = P0 + z*(P1 + z*P2);
     const float q = Q0 + z*Q1;
+
+    /*  p(z) / q(z) is the rational minimax approximant for                   *
+     *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
     const float r = z*p/q;
     const float s = TMPL_SQUARE_ROOT(z);
     const float t = r*s;
+
+    /*  We now have asin(z) - sqrt(z). We need 2*asin(sqrt(z)).               */
     return 2.0F*(s + t);
 }
 /*  End of tmpl_Float_Arccos_Tail_End.                                        */

@@ -39,7 +39,7 @@
  *  Method:                                                                   *
  *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
  *      the coefficients for the rational minimax function R(x) of degree     *
- *      (5, 4) for f(x). The odd terms have zero coefficients. We may thus    *
+ *      (10, 8) for f(x). The odd terms have zero coefficients. We may thus   *
  *      compute the minimax approximation via:                                *
  *                                                                            *
  *                                   a0 + a2 x^2 + ... + a10 x^10             *
@@ -47,7 +47,7 @@
  *                                   b0 + b2 x^2 + ... + b8 x^8               *
  *                                                                            *
  *      Where the coefficients a_n and b_n are for the rational minimax       *
- *      approximation for f(x. These were pre-computed by the rational        *
+ *      approximation for f(x). These were pre-computed by the rational       *
  *      Remez exchange algorithm.                                             *
  *  Notes:                                                                    *
  *      Accurate for |x| < 0.5.                                               *
@@ -86,9 +86,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The offset term is Pi/2.                                                  */
-#define TMPL_PI_BY_TWO (1.570796326794896619231321691639751442098584699687E+00)
-
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01)
 #define P1 (-3.25565818622400915405E-01)
@@ -117,7 +114,7 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
     const double r = x2*p/q;
 
     /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return tmpl_Pi_By_Two - (x + x*r);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
 
@@ -133,7 +130,6 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
 #undef Q2
 #undef Q1
 #undef Q0
-#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

@@ -35,13 +35,17 @@
  *          The arc-cosine of x.                                              *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Arccos_Rat_Remez (tmpl_math.h):                      *
- *              Computes acos(x) via a minimax approximation for |x| < 0.5.   *
- *          tmpl_LDouble_Arccos_Tail_End (tmpl_math.h):                       *
- *              Computes acos(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_LDouble_Arccos_Maclaurin:                                *
+ *                  Computes acos via a Maclaurin series for small x.         *
+ *              tmpl_LDouble_Arccos_Rat_Remez:                                *
+ *                  Computes acos via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_LDouble_Arccos_Tail_End:                                 *
+ *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a minimax approximation. For          *
- *          0.5 <= x < 1 use the reflection formula:                          *
+ *          For tiny x return pi / 2. For small x use a Maclaurin series.     *
+ *          For |x| < 0.5 use a minimax approximation.                        *
+ *          For 0.5 <= x < 1 use the reflection formula:                      *
  *                                                                            *
  *              acos(x) = 2*asin(sqrt((1-x)/2))                               *
  *                                                                            *
@@ -53,6 +57,17 @@
  *          Use this and compute acos(-x) via the tail-end function.          *
  *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
  *          return acos(-1) = pi and acos(1) = 0.                             *
+ *                                                                            *
+ *          "Tiny" and "small" depends on how long double is implemented.     *
+ *              64-bit double:                                                *
+ *                  Tiny:   |x| < 2^-57                                       *
+ *                  Small:  |x| < 2^-3                                        *
+ *              128-bit double-double / 128-bit quadruple:                    *
+ *                  Tiny:   |x| < 2^-116                                      *
+ *                  Small:  |x| < 2^-4                                        *
+ *              80-bit extended / portable:                                   *
+ *                  Tiny:   |x| < 2^-65                                       *
+ *                  Small:  |x| < 2^-3                                        *
  *      Error (64-bit Double):                                                *
  *          Based on 788,968,857 samples with -1 < x < 1.                     *
  *              max relative error: 2.2204459059627917e-16                    *
@@ -87,12 +102,15 @@
  *          less than 1 ULP (~5 x 10^-32).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_LDouble_Arccos_Rat_Remez (tmpl_math.h):                      *
- *              Computes acos(x) via a minimax approximation for |x| < 0.5.   *
- *          tmpl_LDouble_Arccos_Tail_End (tmpl_math.h):                       *
- *              Computes acos(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_LDouble_Abs:                                             *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_LDouble_Arccos_Maclaurin:                                *
+ *                  Computes acos via a Maclaurin series for small x.         *
+ *              tmpl_LDouble_Arccos_Rat_Remez:                                *
+ *                  Computes acos via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_LDouble_Arccos_Tail_End:                                 *
+ *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
@@ -132,6 +150,8 @@
  ******************************************************************************
  *  2023/01/13: Ryan Maguire                                                  *
  *      Added comments, algorithm description, and fixed error values.        *
+ *  2023/05/31: Ryan Maguire                                                  *
+ *      Added optimizations for small x and denormal values.                  *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -145,6 +165,47 @@
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
+
+/*  The trade off from very tiny to very small to small depends on how long   *
+ *  double is implemented. Save these values as macros.                       */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/*  acos(x) = pi / 2 to double precision for |x| < 2^-57.                     */
+#define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 57U)
+
+/*  For 64-bit double the Maclaurin series is accurate to double precision    *
+ *  |x| < 0.15 meaning we can safely use this for |x| < 2^-3.                 */
+#define TMPL_ARCCOS_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
+
+/*  128-bit quadruple and double-double require smaller exponents.            */
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/*  For |x| < 2^-105 acos(x) = pi / 2 to double-double precision and for      *
+ *  |x| < 2^-116 acos(x) = pi / 2 to quadruple precision. Use 2^-116 for both *
+ *  double-double and quadruple precisions for simplicity.                    */
+#define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 116U)
+
+/*  The Maclaurin series is accurate to quadruple precision for |x| < 0.1 so  *
+ *  it is safe to use for |x| < 2^-4.                                         */
+#define TMPL_ARCCOS_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 4U)
+
+/*  Lastly, extended precision. 15-bit exponent and 64 bit mantissa.          */
+#else
+
+/*  For |x| < 2^-65 acos(x) = pi / 2 to extended precision.                   */
+#define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 65U)
+
+/*  The Maclaurin series is accurate to extended precision for |x| < 0.17.    *
+ *  The function is thus safe to use for |x| < 2^-3.                          */
+#define TMPL_ARCCOS_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
+
+#endif
+/*  End of double vs. extended vs. double-double vs. quadruple.               */
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
@@ -163,9 +224,20 @@ long double tmpl_LDouble_Arccos(long double x)
     /*  Set the long double part of the word to the input.                    */
     w.r = x;
 
-    /*  For |x| < 0.5 use the minimax approximation.                          */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 1U)
+    {
+        /*  For very small x, acos(x) = pi / 2 to long double precision.      */
+        if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_TINY_EXPONENT)
+            return tmpl_Pi_By_Two_L;
+
+        /*  For small x the Maclaurin series is sufficient.                   */
+        else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_SMALL_EXPONENT)
+            return tmpl_LDouble_Arccos_Maclaurin(x);
+
+        /*  For all other x with |x| < 0.5 use the minimax approximation.     */
         return tmpl_LDouble_Arccos_Rat_Remez(x);
+    }
 
     /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
@@ -175,28 +247,26 @@ long double tmpl_LDouble_Arccos(long double x)
             return tmpl_One_Pi_L - tmpl_LDouble_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_LDouble_Arccos_Tail_End(x);
+        return tmpl_LDouble_Arccos_Tail_End(x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN.                                   */
-    else
-    {
-        /*  acos(-1) = pi and acos(1) = 0. Use this.                          */
-        if (x == -1.0L)
-            return tmpl_One_Pi_L;
-        else if (x == 1.0L)
-            return 0.0L;
+    /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
+    if (x == -1.0L)
+        return tmpl_One_Pi_L;
+    else if (x == 1.0L)
+        return 0.0L;
 
-        /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN.  *
-         *  Note, this catches NaN and infinity since we are checking the     *
-         *  exponent of the input, not the input. For x = NaN or Inf, the     *
-         *  exponent is greater than TMPL_LDOUBLE_UBIAS, so NaN will return.  */
-        else
-            return TMPL_NANL;
-    }
+    /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN. Note *
+     *  this catches NaN and infinity since we are checking the exponent of   *
+     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
+     *  than TMPL_LDOUBLE_UBIAS, so NaN will return.                          */
+    return TMPL_NANL;
 }
 /*  End of tmpl_LDouble_Arccos.                                               */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_ARCCOS_TINY_EXPONENT
+#undef TMPL_ARCCOS_SMALL_EXPONENT
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
@@ -211,11 +281,22 @@ long double tmpl_LDouble_Arccos(long double x)
     /*  Declare necessary variables. C89 requires this at the top.            */
     const long double abs_x = tmpl_LDouble_Abs(x);
 
-    /*  For |x| < 0.5 use the minimax approximation.                          */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5L)
-        return tmpl_LDouble_Arccos_Rat_Remez(x);
+    {
+        /*  For very small inputs return pi / 2.                              */
+        if (abs_x < 2.710505431213760E-20L)
+            return tmpl_Pi_By_Two_L;
 
-    /*  Otherwise use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).      */
+        /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
+        else if (abs_x < 0.125L)
+            return tmpl_LDouble_Arccos_Maclaurin(x);
+
+        /*  Otherwise use the Remez rational minimax function.                */
+        return tmpl_LDouble_Arccos_Rat_Remez(x);
+    }
+
+    /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (abs_x < 1.0L)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
@@ -223,24 +304,17 @@ long double tmpl_LDouble_Arccos(long double x)
             return tmpl_One_Pi_L - tmpl_LDouble_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_LDouble_Arccos_Tail_End(abs_x);
+        return tmpl_LDouble_Arccos_Tail_End(abs_x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN. Note, since comparison with       *
-     *  NaN always returns false, an input of NaN will end up on this branch. */
-    else
-    {
-        /*  acos(-1) = pi and acos(1) = 0. Use this.                          */
-        if (x == -1.0L)
-            return tmpl_One_Pi_L;
-        else if (x == 1.0L)
-            return 0.0L;
+    /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
+    if (x == -1.0L)
+        return tmpl_One_Pi_L;
+    else if (x == 1.0L)
+        return 0.0L;
 
-        /*  For |x| > 1 the function is undefined. Return NaN.                */
-        else
-            return TMPL_NANL;
-    }
+    /*  For |x| > 1 the function is undefined. Return NaN.                    */
+    return TMPL_NANL;
 }
 /*  End of tmpl_LDouble_Arccos.                                               */
 

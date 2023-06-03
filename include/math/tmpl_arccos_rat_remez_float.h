@@ -37,12 +37,18 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomials for the numerator     *
- *      and denominator.                                                      *
+ *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
+ *      the coefficients for the rational minimax function R(x) of degree     *
+ *      (4, 2) for f(x). The odd terms have zero coefficients. We may thus    *
+ *      compute the minimax approximation via:                                *
  *                                                                            *
- *          acos(x)+x-pi/2   a0 + a2*x^2 + a4*x^4                             *
- *          -------------- = --------------------                             *
- *               x^3              1 + b2*x^2                                  *
+ *                                   a0 + a2 x^2 + a4 x^4                     *
+ *          acos(x) = pi/2 - x + x^3 --------------------                     *
+ *                                        b0 + b2 x^2                         *
+ *                                                                            *
+ *      Where the coefficients a_n and b_n are for the rational minimax       *
+ *      approximation for f(x). These were pre-computed by the rational       *
+ *      Remez exchange algorithm.                                             *
  *  Notes:                                                                    *
  *      Accurate for |x| < 0.5.                                               *
  ******************************************************************************
@@ -76,9 +82,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The offset term is Pi/2.                                                  */
-#define TMPL_PI_BY_TWO (1.570796326794896619231321691639751442098584699687E+00F)
-
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.6666586697E-01F)
 #define P1 (-4.2743422091E-02F)
@@ -101,7 +104,7 @@ float tmpl_Float_Arccos_Rat_Remez(float x)
     const float r = x2*p/q;
 
     /*  p/q is the minimax approximation for (acos(x) - pi/2 + x) / x^3.      */
-    return TMPL_PI_BY_TWO - (x + x*r);
+    return tmpl_Pi_By_Two_F - (x + x*r);
 }
 /*  End of tmpl_Float_Arccos_Rat_Remez.                                       */
 
@@ -111,7 +114,6 @@ float tmpl_Float_Arccos_Rat_Remez(float x)
 #undef P0
 #undef Q1
 #undef Q0
-#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

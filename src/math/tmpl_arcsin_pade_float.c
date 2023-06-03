@@ -19,12 +19,21 @@
  *                           tmpl_arcsin_pade_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 2) Pade approximant of asin(x) at single precision.  *
+ *      Computes the (4, 4) Pade approximant of asin(x) at single precision.  *
  *      See include/math/tmpl_arcsin_pade_float.h for details.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 9, 2023                                                   *
  ******************************************************************************/
 
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Only used if inline support is not available.                             */
+#if TMPL_USE_INLINE != 1
+
 /*  Implemented in include/math/tmpl_arcsin_pade_float.h. Include this.       */
 #include "../../include/math/tmpl_arcsin_pade_float.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

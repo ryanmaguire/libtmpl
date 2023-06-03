@@ -97,6 +97,10 @@
 #define Q5 (-9.1189047491786682631147583983250333633502470655541E-02)
 #define Q6 (+3.9268447888541310343247866236378900929051188393826E-03)
 
+/*  Helper macros for evaluating a polynomial via Horner's method.            */
+#define TMPL_NUM_EVAL(z) P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*(P5 + z*P6)))))
+#define TMPL_DEN_EVAL(z) Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*(Q4 + z*(Q5 + z*Q6)))))
+
 /*  Function for computing the (12, 12) Pade approximant of acos(x).          */
 TMPL_INLINE_DECL
 double tmpl_Double_Arccos_Pade(double x)
@@ -105,8 +109,8 @@ double tmpl_Double_Arccos_Pade(double x)
     const double x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = P0+x2*(P1+x2*(P2+x2*(P3+x2*(P4+x2*(P5+x2*P6)))));
-    const double q = Q0+x2*(Q1+x2*(Q2+x2*(Q3+x2*(Q4+x2*(Q5+x2*Q6)))));
+    const double p = TMPL_NUM_EVAL(x2);
+    const double q = TMPL_DEN_EVAL(x2);
     const double r = x2*p/q;
 
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
@@ -129,6 +133,8 @@ double tmpl_Double_Arccos_Pade(double x)
 #undef Q2
 #undef Q1
 #undef Q0
+#undef TMPL_NUM_EVAL
+#undef TMPL_DEN_EVAL
 
 #endif
 /*  End of include guard.                                                     */
