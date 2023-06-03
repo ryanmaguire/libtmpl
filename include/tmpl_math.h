@@ -1694,9 +1694,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Pade(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arcsin_Maclaurin(float x);
-extern double tmpl_Double_Arcsin_Maclaurin(double x);
-extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arcsin_Maclaurin(float x);
+TMPL_EXPORT extern double tmpl_Double_Arcsin_Maclaurin(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1732,9 +1732,9 @@ extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-extern float tmpl_Float_Arcsin_Rat_Remez(float x);
-extern double tmpl_Double_Arcsin_Rat_Remez(double x);
-extern long double tmpl_LDouble_Arcsin_Rat_Remez(long double x);
+TMPL_EXPORT extern float tmpl_Float_Arcsin_Rat_Remez(float x);
+TMPL_EXPORT extern double tmpl_Double_Arcsin_Rat_Remez(double x);
+TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Rat_Remez(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
