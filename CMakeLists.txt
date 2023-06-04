@@ -56,6 +56,7 @@ option(LIBTMPL_USE_MEMCPY "" TRUE)
 option(LIBTMPL_BUILD_TESTS "Set to TRUE to enable the building of tests." FALSE)
 option(LIBTMPL_BUILD_EXAMPLES "Set to TRUE to enable the building of examples." FALSE)
 option(LIBTMPL_ENABLE_VERBOSE "" FALSE)
+option(LIBTMPL_INSTALL "Set to TRUE to enable the install rules for libtmpl." TRUE)
 
 if(NOT DEFINED LIBTMPL_STDVER)
     set(LIBTMPL_STDVER
@@ -470,35 +471,38 @@ endif()
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-install(
-    TARGETS tmpl
-    COMPONENT libtmpl_Runtime
-    EXPORT libtmpl_Runtime
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            FILE_SET HEADERS
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-    INCLUDES
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
-)
-set(LIBTMPL_RUNTIME_CONFIG_FILE
-    libtmpl_Runtime.cmake
-    CACHE INTERNAL ""
-)
-install(
-    EXPORT libtmpl_Runtime
-    NAMESPACE tmpl::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    FILE ${LIBTMPL_RUNTIME_CONFIG_FILE}
-)
-set(cmakeModulesDir cmake)
-configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libtmplConfig.cmake.in ${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    PATH_VARS cmakeModulesDir
-    NO_SET_AND_CHECK_MACRO NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+if(LIBTMPL_INSTALL)
+    install(
+        TARGETS tmpl
+        COMPONENT libtmpl_Runtime
+        EXPORT libtmpl_Runtime
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                FILE_SET HEADERS
+                DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+        INCLUDES
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}}
+    )
+
+    set(LIBTMPL_RUNTIME_CONFIG_FILE
+        libtmpl_Runtime.cmake
+        CACHE INTERNAL ""
+    )
+    install(
+        EXPORT libtmpl_Runtime
+        NAMESPACE tmpl::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-)
+        FILE ${LIBTMPL_RUNTIME_CONFIG_FILE}
+    )
+    set(cmakeModulesDir cmake)
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libtmplConfig.cmake.in ${PROJECT_NAME}Config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        PATH_VARS cmakeModulesDir
+        NO_SET_AND_CHECK_MACRO NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    )
+endif()
