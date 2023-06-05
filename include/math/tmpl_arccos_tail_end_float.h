@@ -112,7 +112,7 @@ float tmpl_Float_Arccos_Tail_End(float x)
     const float s = TMPL_SQUARE_ROOT(z);
     const float t = r*s;
 
-    /*  We now have asin(z) - sqrt(z). We need 2*asin(sqrt(z)).               */
+    /*  We now have asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).         */
     return 2.0F*(s + t);
 }
 /*  End of tmpl_Float_Arccos_Tail_End.                                        */
