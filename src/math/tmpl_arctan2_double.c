@@ -180,9 +180,7 @@
 double tmpl_Double_Arctan2(double y, double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Double wx, wy, w, out;
-    double arg, v, atan_v;
-    unsigned int ind;
+    tmpl_IEEE754_Double wx, wy, wz, out;
 
     /*  Set the double part of the words to the two inputs.                   */
     wx.r = x;
@@ -222,13 +220,13 @@ double tmpl_Double_Arctan2(double y, double x)
 
         /*  y is finite and x is infinite. The angle is 0 or pi.              */
         if (wx.bits.sign)
-            w.r = tmpl_One_Pi;
+            out.r = tmpl_One_Pi;
         else
-            w.r = 0.0;
+            out.r = 0.0;
 
         /*  Preserve the sign of y.                                           */
-        w.bits.sign = wy.bits.sign;
-        return w.r;
+        out.bits.sign = wy.bits.sign;
+        return out.r;
     }
 
     /*  Check if y is infinite or NaN.                                        */
@@ -239,11 +237,11 @@ double tmpl_Double_Arctan2(double y, double x)
             return y;
 
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
-        w.r = tmpl_Pi_By_Two;
+        out.r = tmpl_Pi_By_Two;
 
         /*  The sign of the output is the same as the sign of y. Copy this.   */
-        w.bits.sign = wy.bits.sign;
-        return w.r;
+        out.bits.sign = wy.bits.sign;
+        return out.r;
     }
 
     /*  Next special case, y = 0.                                             */
@@ -253,11 +251,11 @@ double tmpl_Double_Arctan2(double y, double x)
         if (wx.bits.sign)
         {
             /*  Preserve the sign of y. If y is a negative zero, return -Pi.  */
-            w.r = tmpl_One_Pi;
+            out.r = tmpl_One_Pi;
 
             /*  The sign of the output is the same as the sign of y.          */
-            w.bits.sign = wy.bits.sign;
-            return w.r;
+            out.bits.sign = wy.bits.sign;
+            return out.r;
         }
 
         /*  Otherwise, return 0. To preserve the sign of y, return y.         */
@@ -268,43 +266,43 @@ double tmpl_Double_Arctan2(double y, double x)
     else if (x == 0.0)
     {
         /*  y is not zero, so the answer is +/- pi/2.                         */
-        w.r = tmpl_Pi_By_Two;
+        out.r = tmpl_Pi_By_Two;
 
         /*  The sign of the output is the same as the sign of y. Copy this.   */
-        w.bits.sign = wy.bits.sign;
-        return w.r;
+        out.bits.sign = wy.bits.sign;
+        return out.r;
     }
 
     /*  We have z = y/x. Compute the absolute value by setting sign to 0.     */
-    w.r = wy.r / wx.r;
-    w.bits.sign = 0x00U;
+    wz.r = wy.r / wx.r;
+    wz.bits.sign = 0x00U;
 
     /*  Small values, |z| < 1/16.                                             */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
+    if (wz.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
     {
         /*  For very small values, |z| < 2^-60, use atan(z) = z to avoid      *
          *  underflow. atan(z) = z + O(z^3), so the error is negligible.      */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 60U)
-            out.r = w.r;
+        if (wz.bits.expo < TMPL_DOUBLE_UBIAS - 60U)
+            out.r = wz.r;
 
         /*  Otherwise use a Maclaurin series to a few terms.                  */
         else
-            out.r = tmpl_Double_Arctan_Very_Small(w.r);
+            out.r = tmpl_Double_Arctan_Very_Small(wz.r);
     }
 
     /*  Large values, |z| >= 16.                                              */
-    else if (w.bits.expo > TMPL_DOUBLE_UBIAS + 3U)
+    else if (wz.bits.expo > TMPL_DOUBLE_UBIAS + 3U)
     {
         /*  For very large values, |z| > 2^60, use the limiting value of pi/2.*
          *  The error goes like atan(z) = pi/2 + O(1/z). For |z| > 2^60 the   *
          *  remainder term is less than double precision epsilon (2^-52) so   *
          *  we can safely return pi/2.                                        */
-        if (w.bits.expo > TMPL_DOUBLE_UBIAS + 60U)
+        if (wz.bits.expo > TMPL_DOUBLE_UBIAS + 60U)
             out.r = tmpl_Pi_By_Two;
 
         /*  Otherwise use the asymptotic expansion.                           */
         else
-            out.r = tmpl_Double_Arctan_Asymptotic(w.r);
+            out.r = tmpl_Double_Arctan_Asymptotic(wz.r);
     }
 
     /*  Otherwise use the lookup table to reduce. Note we have reduced to the *
@@ -316,14 +314,16 @@ double tmpl_Double_Arctan2(double y, double x)
          *  is the exponent of the number z. Compute this. The exponent       *
          *  in the IEEE-754 representation of a number is offset by a bias.   *
          *  Subtract off this bias to compute the actual index.               */
-        ind = (w.bits.expo + 4U) - TMPL_DOUBLE_UBIAS;
+        const unsigned int ind = (wz.bits.expo + 4U) - TMPL_DOUBLE_UBIAS;
 
         /*  Get the corresponding values from the lookup tables.              */
-        v = tmpl_atan_double_v[ind];
-        atan_v = tmpl_atan_double_atan_of_v[ind];
+        const double v = tmpl_atan_double_v[ind];
+        const double atan_v = tmpl_atan_double_atan_of_v[ind];
 
         /*  Use 4.4.34 from Abramowitz and Stegun to compute the new argument.*/
-        arg = (w.r - v) / (1.0 + w.r*v);
+        const double arg = (wz.r - v) / (1.0 + wz.r*v);
+
+        /*  "arg" is small and we can compute with a Maclaurin polynomial.    */
         out.r = atan_v + tmpl_Double_Arctan_Maclaurin(arg);
     }
 
