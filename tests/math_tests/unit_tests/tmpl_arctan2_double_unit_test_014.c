@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 5, 2022                                              *
+ *  Date:       June 6, 2023                                                  *
  ******************************************************************************/
 #include "tmpl_math_unit_tests.h"
 #define indata {{1.0E80, 1.0}, {-1.0E80, -1.0}, {-1.0E80, 1.0}, {1.0E80, -1.0}}
