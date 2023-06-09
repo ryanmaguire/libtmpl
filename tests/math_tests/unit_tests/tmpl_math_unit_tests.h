@@ -100,7 +100,7 @@
 #define DNUM DBL_MIN
 #define BNUM DBL_MAX
 #endif
-#define EPS (10.0 * DBL_EPSILON)
+#define EPS (8.0 * DBL_EPSILON)
 #define TINFF tmpl_Float_Infinity()
 #define TNANF tmpl_Float_NaN()
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -110,7 +110,7 @@
 #define DNUMF FLT_MIN
 #define BNUMF FLT_MAX
 #endif
-#define EPSF (10.0F * FLT_EPSILON)
+#define EPSF (8.0F * FLT_EPSILON)
 #define TINFL tmpl_LDouble_Infinity()
 #define TNANL tmpl_LDouble_NaN()
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
@@ -120,7 +120,7 @@
 #define DNUML LDBL_MIN
 #define BNUML LDBL_MAX
 #endif
-#define EPSL (10.0L * LDBL_EPSILON)
+#define EPSL (8.0L * LDBL_EPSILON)
 
 #ifdef GET_EPS
 #undef GET_EPS
@@ -218,7 +218,46 @@ int main(void)                                                                 \
             }                                                                  \
         }                                                                      \
         else if (out1 == zero)                                                 \
-            err = tmpl_LDouble_Abs((long double)(out0 - out1));                \
+            err = tmpl_LDouble_Abs((long double)out0);                         \
+        else                                                                   \
+            err = tmpl_LDouble_Abs((long double)((out0 - out1)/out1));         \
+                                                                               \
+        if (err > eps)                                                         \
+        {                                                                      \
+            puts("FAIL");                                                      \
+            return -1;                                                         \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    puts("PASS");                                                              \
+    return 0;                                                                  \
+}
+
+#define TEST4(type, func0, func1, indata)                                      \
+int main(void)                                                                 \
+{                                                                              \
+    const type in[] = indata;                                                  \
+    type out0, out1;                                                           \
+    size_t n;                                                                  \
+    const long double eps = (long double)GET_EPS(out0);                        \
+    long double err = 0.0L;                                                    \
+    type zero = (type)0;                                                       \
+                                                                               \
+    for (n = (size_t)0; n < sizeof(in)/sizeof(in[0]); ++n)                     \
+    {                                                                          \
+        out0 = func0(in[n]);                                                   \
+        out1 = func1(in[n]);                                                   \
+                                                                               \
+        if (CHECK_NAN(out0))                                                   \
+        {                                                                      \
+            if (!CHECK_NAN(out1))                                              \
+            {                                                                  \
+                puts("FAIL");                                                  \
+                return -1;                                                     \
+            }                                                                  \
+        }                                                                      \
+        else if (out1 == zero)                                                 \
+            err = tmpl_LDouble_Abs((long double)out0);                         \
         else                                                                   \
             err = tmpl_LDouble_Abs((long double)((out0 - out1)/out1));         \
                                                                                \
