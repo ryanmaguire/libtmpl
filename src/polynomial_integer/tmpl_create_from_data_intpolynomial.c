@@ -39,6 +39,7 @@ tmpl_IntPolynomial_Create_From_Data(const int *data, size_t len)
         return out;
     }
 
+    out.error_message = NULL;
     out.error_occurred = tmpl_False;
     out.degree = len - (size_t)1;
 

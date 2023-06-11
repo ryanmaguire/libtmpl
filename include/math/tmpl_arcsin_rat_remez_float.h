@@ -101,7 +101,7 @@ float tmpl_Float_Arcsin_Rat_Remez(float x)
     const float q = Q0 + x2*Q1;
     const float r = x2*p/q;
 
-    /*  p/q is the Pade approximant for (asin(x) - x) / x^3.                  */
+    /*  p/q is the minimax approximant for (asin(x) - x) / x^3.               */
     return x*r + x;
 }
 /*  End of tmpl_Float_Arcsin_Rat_Remez.                                       */

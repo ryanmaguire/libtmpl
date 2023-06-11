@@ -111,7 +111,7 @@ double tmpl_Double_Arcsin_Rat_Remez(double x)
     const double q = Q0 + x2*(Q1 + x2*(Q2 + x2*(Q3 + x2*Q4)));
     const double r = x2*p/q;
 
-    /*  p/q is the Pade approximant for (asin(x) - x) / x^3.                  */
+    /*  p/q is the minimax approximant for (asin(x) - x) / x^3.               */
     return x*r + x;
 }
 /*  End of tmpl_Double_Arcsin_Rat_Remez.                                      */

@@ -205,7 +205,7 @@ long double tmpl_LDouble_Arcsin_Rat_Remez(long double x)
     const long double q = TMPL_DEN_EVAL(x2);
     const long double r = x2*p/q;
 
-    /*  p/q is the Pade approximant for (asin(x) - x) / x^3.                  */
+    /*  p/q is the minimax approximant for (asin(x) - x) / x^3.               */
     return x*r + x;
 }
 /*  End of tmpl_LDouble_Arcsin_Rat_Remez.                                     */
