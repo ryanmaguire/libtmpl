@@ -118,7 +118,7 @@ double tmpl_Double_Arccos_Tail_End(double x)
     const double s = TMPL_SQUARE_ROOT(z);
     const double t = r*s;
 
-    /*  We now have asin(z) - sqrt(z). We need 2*asin(sqrt(z)).               */
+    /*  We now have asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).         */
     return 2.0*(s + t);
 }
 /*  End of tmpl_Double_Arccos_Tail_End.                                       */
