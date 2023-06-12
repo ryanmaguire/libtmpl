@@ -3211,6 +3211,50 @@ tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Positive_Difference                                       *
+ *  Purpose:                                                                  *
+ *      Computes the "positive difference" of two real numbers. Equivalent to *
+ *      the C99 function "fdim". Returns max(x-y, 0).                         *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double fdim:                                                          *
+ *          The positive difference of x with respect to y, max(x-y, 0).      *
+ ******************************************************************************/
+
+/*  Alias functions to fdim from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Positive_Difference fdimf
+#define tmpl_Double_Positive_Difference fdim
+#define tmpl_LDouble_Positive_Difference fdiml
+
+/*  These functions are small enough that they can be inlined.                */
+#elif TMPL_USE_INLINE == 1
+
+/*  Inline support for positive difference functions are found here.          */
+#include <libtmpl/include/math/tmpl_positive_difference_float.h>
+#include <libtmpl/include/math/tmpl_positive_difference_double.h>
+#include <libtmpl/include/math/tmpl_positive_difference_ldouble.h>
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Otherwise use the functions in src/math/                                  */
+extern float tmpl_Float_Positive_Difference(float x, float y);
+extern double tmpl_Double_Positive_Difference(double x, double y);
+
+extern long double
+tmpl_LDouble_Positive_Difference(long double x, long double y);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Pow2                                                      *
  *  Purpose:                                                                  *
  *      Computes an integer power of 2.                                       *
