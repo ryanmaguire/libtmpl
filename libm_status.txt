@@ -24,6 +24,10 @@ Function | Completed |   Speed   |
 ----------------------------------
 fabs     | Y-Y-Y-Y-Y | 3-4-4-3-3 |
 acos     | Y-Y-Y-Y-Y | 4-5-5-3-4 |
+asin     | Y-Y-Y-Y-Y | 4-5-5-3-4 |
 atan     |           | 5-5-4-3-3 |
 atan2    |           | 6-6-3-3-3 |
 cbrt     |           | 6-5-5-4-6 |
+copysign | Y-Y-Y-Y-Y | 4-4-6-5-6 |
+fdim     | Y-Y-Y-Y-Y | 6-3-3-5-3 |
+isinf    | Y-Y-Y-Y-Y | 6-5-6-6-6 |
