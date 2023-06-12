@@ -2964,7 +2964,7 @@ extern long double tmpl_LDouble_Infinity(void);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Float_Is_Inf                                                     *
+ *      tmpl_Double_Is_Inf                                                    *
  *  Purpose:                                                                  *
  *      This function tests if a number is positive or negative infinity.     *
  *  Arguments:                                                                *
@@ -2973,18 +2973,40 @@ extern long double tmpl_LDouble_Infinity(void);
  *  Output:                                                                   *
  *      is_inf (tmpl_Bool):                                                   *
  *          A Boolean indicating if x is +/- infinity or not.                 *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are also provided.                  *
  *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_is_inf.c                                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_is_inf_float_example.c            *
- *      libtmpl/examples/math_examples/tmpl_is_inf_double_example.c           *
- *      libtmpl/examples/math_examples/tmpl_is_inf_ldouble_example.c          *
+ *      libtmpl/include/math/                                                 *
+ *          tmpl_is_inf_double.h                                              *
+ *          tmpl_is_inf_float.h                                               *
+ *          tmpl_is_inf_ldouble.h                                             *
  ******************************************************************************/
+
+/*  Alias functions to isinf from math.h if libtmpl algorithms not requested. */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Is_Inf isinff
+#define tmpl_Double_Is_Inf isinf
+#define tmpl_LDouble_Is_Inf isinfl
+
+/*  These functions are small enough that they should be inlined.             */
+#elif TMPL_USE_INLINE == 1
+
+/*  Inline support for is_inf functions are found here.                       */
+#include <libtmpl/include/math/tmpl_is_inf_float.h>
+#include <libtmpl/include/math/tmpl_is_inf_double.h>
+#include <libtmpl/include/math/tmpl_is_inf_ldouble.h>
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
 extern tmpl_Bool tmpl_Float_Is_Inf(float x);
 extern tmpl_Bool tmpl_Double_Is_Inf(double x);
 extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
