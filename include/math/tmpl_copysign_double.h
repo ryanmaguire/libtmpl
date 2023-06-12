@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_copysign_double_inline                         *
+ *                            tmpl_copysign_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x, y) = |x|*sgn(y), where sgn is the sign function.        *
@@ -48,19 +48,20 @@
  *          Copysign(x, y) can be computing by setting the sign bit of x      *
  *          equal to the sign bit of y.                                       *
  *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -10^2 < x, y < 10^2.          *
+ *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Abs (tmpl_math.h):                                    *
- *              Computes the absolute value of a real number.                 *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a real number.             *
  *      Method:                                                               *
  *          Use an if-then statement to check the sign of y.                  *
  *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -10^2 < x, y < 10^2.          *
+ *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -72,7 +73,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -83,6 +84,8 @@
  ******************************************************************************
  *  2022/10/24: Ryan Maguire                                                  *
  *      Added license.                                                        *
+ *  2023/06/12: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_copysign_double.c to include this file.         *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -91,9 +94,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -105,7 +105,7 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision coypsign function (coypsign equivalent).                 */
+/*  Double precision copysign function (copysign equivalent).                 */
 TMPL_INLINE_DECL
 double tmpl_Double_Copysign(double x, double y)
 {
@@ -144,16 +144,12 @@ double tmpl_Double_Copysign(double x, double y)
         return tmpl_Double_Abs(x);
 
     /*  And lastly, if y is zero, return x.                                   */
-    else
-        return x;
+    return x;
 }
 /*  End of tmpl_Double_Copysign.                                              */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

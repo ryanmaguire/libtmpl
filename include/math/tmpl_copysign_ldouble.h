@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_copysign_ldouble_inline                        *
+ *                            tmpl_copysign_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes f(x, y) = |x|*sgn(y), where sgn is the sign function.        *
@@ -41,7 +41,7 @@
  *      Method:                                                               *
  *          Copy the sign bit of y into x.                                    *
  *      Error:                                                                *
- *          Based on 843,061,299 samples with -10^2 < x, y < 10^2.            *
+ *          Based on 843,061,299 samples with -100 < x, y < 100.              *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -52,19 +52,20 @@
  *      Method:                                                               *
  *          Compare the signs of the high word, negating x if needed.         *
  *      Error:                                                                *
- *          Based on 10,000,000 samples with -10^2 < x < 10^2.                *
+ *          Based on 10,000,000 samples with -100 < x < 100.                  *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Abs (tmpl_math.h):                                   *
- *              Computes the absolute value of a real number.                 *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_LDouble_Abs:                                             *
+ *                  Computes the absolute value of a real number.             *
  *      Method:                                                               *
  *          Use an if-then statement to check the sign of y.                  *
  *      Error:                                                                *
- *          Based on 843,061,299 samples with -10^2 < x, y < 10^2.            *
+ *          Based on 843,061,299 samples with -100 < x, y < 100.              *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -76,7 +77,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -87,6 +88,8 @@
  ******************************************************************************
  *  2022/10/24: Ryan Maguire                                                  *
  *      Added license.                                                        *
+ *  2023/06/12: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_copysign_ldouble.c to include this file.        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -95,9 +98,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -115,7 +115,7 @@
  *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
  ******************************************************************************/
 
-/*  Long double precision coypsign function (coypsignl equivalent).           */
+/*  Long double precision copysign function (copysignl equivalent).           */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Copysign(long double x, long double y)
 {
@@ -141,7 +141,7 @@ long double tmpl_LDouble_Copysign(long double x, long double y)
  *                       128-bit Double-Double Version                        *
  ******************************************************************************/
 
-/*  Long double precision coypsign function (coypsignl equivalent).           */
+/*  Long double precision copysign function (copysignl equivalent).           */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Copysign(long double x, long double y)
 {
@@ -154,7 +154,7 @@ long double tmpl_LDouble_Copysign(long double x, long double y)
 
     /*  Compare the sign bits, negating if needed.                            */
     if (wx.bits.signa != wy.bits.signa)
-        wx.r = -wx.r;
+        return -wx.r;
 
     /*  Return the long double part of the union.                             */
     return wx.r;
@@ -184,16 +184,12 @@ long double tmpl_LDouble_Copysign(long double x, long double y)
         return tmpl_LDouble_Abs(x);
 
     /*  And lastly, if y is zero, return x.                                   */
-    else
-        return x;
+    return x;
 }
 /*  End of tmpl_LDouble_Copysign.                                             */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
