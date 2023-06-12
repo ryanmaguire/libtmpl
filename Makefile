@@ -302,6 +302,9 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_exp_pos_kernel_double.c" -and \
 	-not -name "tmpl_exp_pos_kernel_float.c" -and \
 	-not -name "tmpl_exp_pos_kernel_ldouble.c" -and \
+	-not -name "tmpl_positive_difference_double.c" -and \
+	-not -name "tmpl_positive_difference_float.c" -and \
+	-not -name "tmpl_positive_difference_ldouble.c" -and \
 	-not -name "tmpl_sin_pade_double.c" -and \
 	-not -name "tmpl_sin_pade_float.c" -and \
 	-not -name "tmpl_sin_pade_ldouble.c" -and \
