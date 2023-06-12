@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,100 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_is_inf                                   *
+ *                            tmpl_is_inf_ldouble                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Determines if the input is +/- infinity.                              *
- ******************************************************************************
- *                             DEFINED FUNCTIONS                              *
- ******************************************************************************
- *  Function Name:                                                            *
- *      tmpl_Float_Is_Inf:                                                    *
- *      tmpl_Double_Is_Inf:                                                   *
- *      tmpl_LDouble_Is_Inf:                                                  *
- *  Purpose:                                                                  *
- *      Determines if the input is +/- infinity.                              *
- *  Arguments:                                                                *
- *      x (double):                                                           *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      is_inf (tmpl_Bool):                                                   *
- *          Boolean for if x is +/- infinity.                                 *
- *  Method:                                                                   *
- *      If IEEE-754 support is available, check if the bits correspond to     *
- *      +/- infinity. IEEE-754 states infinity is when all exponent bits are  *
- *      1 and all mantissa bits are 0. The sign can be zero or 1.             *
- *                                                                            *
- *      If IEEE-754 is not available, a portable way to check is by comparing *
- *      x + x == x. This will return True in 3 cases: x = 0, x = +infinity,   *
- *      and x = -infinity. Checking if x + x == x and if x != 0 suffices.     *
- ******************************************************************************
- *                               DEPENDENCIES                                 *
- ******************************************************************************
- *  1.) tmpl_Bool.h:                                                          *
- *          Header containing Booleans.                                       *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *      See include/math/tmpl_is_inf_ldouble.h for details. This function     *
+ *      determines if a long double is infinity.                              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2021                                              *
  ******************************************************************************/
 
-/*  Booleans found here.                                                      */
-#include <libtmpl/include/tmpl_bool.h>
+/*  Location of the TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.      */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototypes here.                                                 */
-#include <libtmpl/include/tmpl_math.h>
+/*  Only used if libtmpl algorithms are requested and inline support is not.  */
+#if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  With IEEE-754 support we can check the bits to see if they represent inf. */
-#if TMPL_HAS_IEEE754_LDOUBLE == 1
-
-/******************************************************************************
- *                              IEEE-754 Version                              *
- ******************************************************************************/
-
-/*  Function for testing if a long double is +/- infinity.                    */
-tmpl_Bool tmpl_LDouble_Is_Inf(long double x)
-{
-    /*  Declare necessary variables.                                          */
-    tmpl_IEEE754_LDouble w;
-
-    /*  Set the long double part to the input.                                */
-    w.r = x;
-
-    /*  Check the bits and see if they correspond to infinity.                */
-    if (TMPL_LDOUBLE_IS_NAN_OR_INF(w) && !TMPL_LDOUBLE_IS_NAN(w))
-        return tmpl_True;
-    else
-        return tmpl_False;
-}
-/*  End of tmpl_LDouble_Is_Inf.                                               */
-
-#else
-/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
-
-/******************************************************************************
- *                              Portable Version                              *
- ******************************************************************************/
-
-/*  Function for testing if a long double is +/- infinity.                    */
-tmpl_Bool tmpl_LDouble_Is_Inf(long double x)
-{
-    /*  A portable way to check (without IEEE-754 support) is to see if       *
-     *  x = x + x, and x is not zero. x == x + 1 is another way to check, but *
-     *  this can return true for finite numbers if x is greater in magnitude  *
-     *  than the precision implemented for long double. x == x + x avoids     *
-     *  this. To avoid the compiler trying to optimize this code away,        *
-     *  declare y as volatile.                                                */
-    volatile long double y = x + x;
-
-    /*  If x == x + x, then either x = 0 or x = +/- infinity.                 */
-    if (x == y && x != 0.0L)
-        return tmpl_True;
-    else
-        return tmpl_False;
-}
-/*  End of tmpl_LDouble_Is_Inf.                                               */
+/*  Implemented in include/math/tmpl_is_inf_ldouble.h.                        */
+#include "../../include/math/tmpl_is_inf_ldouble.h"
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+/*  End of #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1.         */
