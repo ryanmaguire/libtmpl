@@ -192,8 +192,8 @@ long double tmpl_LDouble_Abs(long double x)
      *  The sign of abs_xlo depends on the signs of xhi and xlo. That is,     *
      *  whether or not they are the same. Indeed, the sign of abs_xlo is the  *
      *  exlusive or, also called XOR, of the signs of xhi and xlo. Use this.  */
-    w.bits.signb = w.bits.signa ^ w.bits.signb;
-    w.bits.signa = 0x0U;
+    w.bits.signl = w.bits.sign ^ w.bits.signl;
+    w.bits.sign = 0x0U;
 
     /*  Return the long double part of the union.                             */
     return w.r;

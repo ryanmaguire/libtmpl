@@ -153,7 +153,7 @@ long double tmpl_LDouble_Copysign(long double x, long double y)
     wy.r = y;
 
     /*  Compare the sign bits, negating if needed.                            */
-    if (wx.bits.signa != wy.bits.signa)
+    if (wx.bits.sign != wy.bits.sign)
         return -wx.r;
 
     /*  Return the long double part of the union.                             */
