@@ -238,6 +238,10 @@
  *                                                                            *
  ******************************************************************************/
 
+/******************************************************************************
+ *                          Float Macros and Unions                           *
+ ******************************************************************************/
+
 /*  Check if TMPL_FLOAT_ENDIANNESS was defined in tmpl_config.h. It           *
  *  should be unless there was a problem when building libtmpl.               */
 #if !defined(TMPL_FLOAT_ENDIANNESS)
@@ -245,8 +249,15 @@
 /*  If not, there is a problem with libtmpl. Abort compiling.                 */
 #error "tmpl_math.h: TMPL_FLOAT_ENDIANNESS is undefined."
 
-#elif TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN
-/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
+/*  If TMPL_FLOAT_ENDIANNESS is neither big nor little endian it is likely    *
+ *  unknown. We will not use IEEE-754 features in this case.                  */
+#elif TMPL_FLOAT_ENDIANNESS == TMPL_UNKNOWN_ENDIAN
+
+/*  No IEEE-754 support. Set TMPL_HAS_IEEE754_FLOAT to zero.                  */
+#define TMPL_HAS_IEEE754_FLOAT 0
+
+/*  Otherwise we have IEEE-754 support and can define macros for using it.    */
+#else
 
 /*  Macro indicating support for IEEE-754 single precision.                   */
 #define TMPL_HAS_IEEE754_FLOAT 1
@@ -270,6 +281,26 @@
 
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
+
+/*  Macro for determining if a word is NaN.                                   */
+#define TMPL_FLOAT_IS_NOT_A_NUMBER(w) \
+(TMPL_FLOAT_IS_NAN_OR_INF((w)) && TMPL_FLOAT_IS_NAN((w)))
+
+/*  Macro for determining if a word is infinite.                              */
+#define TMPL_FLOAT_IS_INFINITY(w) \
+(TMPL_FLOAT_IS_NAN_OR_INF((w)) && !TMPL_FLOAT_IS_NAN((w)))
+
+/*  Macro for examining the exponent bits of a float.                         */
+#define TMPL_FLOAT_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a float.                              */
+#define TMPL_FLOAT_IS_NEGATIVE(w) ((w).bits.sign)
+
+#endif
+/*  End of #if !defined(TMPL_FLOAT_ENDIANNESS).                               */
+
+/*  Big-endian 32-bit float.                                                  */
+#if TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN
 
 /*  To access the binary representation of a floating point number, we use    *
  *  unions. Unions allow us to have different data types share the same block *
@@ -303,31 +334,8 @@ typedef union tmpl_IEEE754_Float_Def {
     float r;
 } tmpl_IEEE754_Float;
 
+/*  Little-endian 32-bit float.                                               */
 #elif TMPL_FLOAT_ENDIANNESS == TMPL_LITTLE_ENDIAN
-/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
-
-/*  Macro indicating support for IEEE-754 single precision.                   */
-#define TMPL_HAS_IEEE754_FLOAT 1
-
-/*  32-bit single precision bias is 127.                                      */
-#define TMPL_FLOAT_BIAS (0x7F)
-#define TMPL_FLOAT_UBIAS (0x7FU)
-
-/*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
-#define TMPL_FLOAT_NANINF_EXP (0xFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_FLOAT_MANTISSA_LENGTH (23)
-#define TMPL_FLOAT_MANTISSA_ULENGTH (23U)
-
-/*  The value 2**23, used to normalize subnormal/denormal values.             */
-#define TMPL_FLOAT_NORMALIZE (8.388608E+06F)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_FLOAT_IS_NAN_OR_INF(w) ((w).bits.expo == 0xFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
 
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
@@ -342,25 +350,29 @@ typedef union tmpl_IEEE754_Float_Def {
     float r;
 } tmpl_IEEE754_Float;
 
-#else
-/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
-
-/*  The macro TMPL_FLOAT_ENDIANNESS is likely set to unknown endian, meaning  *
- *  we can't assume IEEE-754 support. Set TMPL_HAS_IEEE754_FLOAT to zero.     */
-#define TMPL_HAS_IEEE754_FLOAT 0
-
 #endif
-/*  End of #if !defined(TMPL_FLOAT_ENDIANNESS).                               */
+/*  End of #if TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN.                      */
 
-/*  Same thing for double precision.                                          */
+/******************************************************************************
+ *                          Double Macros and Unions                          *
+ ******************************************************************************/
+
+/*  Sanity check. This macro should be defined.                               */
 #if !defined(TMPL_DOUBLE_ENDIANNESS)
 
 /*  If TMPL_DOUBLE_ENDIANNESS is undefined, there is a problem with libtmpl.  *
  *  Abort compiling.                                                          */
 #error "tmpl_math.h: TMPL_DOUBLE_ENDIANNESS is undefined."
 
-#elif TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
-/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
+/*  If TMPL_DOUBLE_ENDIANNESS is set to neither big nor little endian it is   *
+ *  likely unknown. We will not use IEEE-754 features in this case.           */
+#elif TMPL_DOUBLE_ENDIANNESS == TMPL_UNKNOWN_ENDIAN
+
+/*  IEEE-754 support not available. Set this macro to zero.                   */
+#define TMPL_HAS_IEEE754_DOUBLE 0
+
+/*  Otherwise we have IEEE-754 support and can provide macros for using this. */
+#else
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_DOUBLE 1
@@ -385,6 +397,26 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_DOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for determining if a word is NaN.                                   */
+#define TMPL_DOUBLE_IS_NOT_A_NUMBER(w) \
+(TMPL_DOUBLE_IS_NAN_OR_INF((w)) && TMPL_DOUBLE_IS_NAN((w)))
+
+/*  Macro for determining if a word is infinite.                              */
+#define TMPL_DOUBLE_IS_INFINITY(w) \
+(TMPL_DOUBLE_IS_NAN_OR_INF((w)) && !TMPL_DOUBLE_IS_NAN((w)))
+
+/*  Macro for examining the exponent bits of a double.                        */
+#define TMPL_DOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a double.                             */
+#define TMPL_DOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
+#endif
+/*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
+
+/*  Big-Endian 64-bit double.                                                 */
+#if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
 
 /*  Same idea as the union used for float, but for a 64-bit double.           */
 typedef union tmpl_IEEE754_Double_Def {
@@ -399,32 +431,8 @@ typedef union tmpl_IEEE754_Double_Def {
     double r;
 } tmpl_IEEE754_Double;
 
+/*  Little-Endian 64-bit double.                                              */
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
-/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_DOUBLE 1
-
-/*  64-bit double precision has exponent bias of 1,023.                       */
-#define TMPL_DOUBLE_BIAS (0x3FF)
-#define TMPL_DOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
-#define TMPL_DOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_DOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_DOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_DOUBLE_NORMALIZE (4.503599627370496E+15)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_DOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_DOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
 
 /*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
  *  endianness. See the above comments for information on this data type.     */
@@ -440,14 +448,12 @@ typedef union tmpl_IEEE754_Double_Def {
     double r;
 } tmpl_IEEE754_Double;
 
-#else
-/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
-
-/*  TMPL_DOUBLE_ENDIANNESS is likely set to unknown. Set this to zero.        */
-#define TMPL_HAS_IEEE754_DOUBLE 0
-
 #endif
-/*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
+/*  End of #if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN.                     */
+
+/******************************************************************************
+ *                        Long Double Macros and Unions                       *
+ ******************************************************************************/
 
 /*  Same thing for long double. Long double is not as standardized as float   *
  *  and double and there are several ways to implement it. This includes      *
@@ -460,11 +466,31 @@ typedef union tmpl_IEEE754_Double_Def {
  *  Abort compiling.                                                          */
 #error "tmpl_math.h: TMPL_LDOUBLE_ENDIANNESS is undefined."
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+/*  If TMPL_LDOUBLE_ENDIANNESS is not set to double, extended, quadruple, or  *
+ *  double-double, we do not have IEEE-754 support and can not use it.        */
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
+
+/*  No support for IEEE-754 long double. Set this to zero.                    */
+#define TMPL_HAS_IEEE754_LDOUBLE 0
+
+/*  Otherwise we have IEEE-754 support and can define macros for using it.    *
+ *  The macros are very sensitive to how long double is represented and we    *
+ *  need to examine the TMPL_LDOUBLE_ENDIANNESS macro carefully.              */
+#else
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  64-bit double and 128-bit double-double have the same macros.             */
+#if \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                64-bit Double / 128-bit Double-Double Macros                *
+ ******************************************************************************/
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_LDOUBLE_BIAS (0x3FF)
@@ -487,14 +513,93 @@ typedef union tmpl_IEEE754_Double_Def {
 #define TMPL_LDOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
 
+/*  Some of the macros for 80-bit extended are the same as 128-bit quadruple. */
+#else
+
+/******************************************************************************
+ *                 80-bit Extended / 128-bit Quadruple Macros                 *
+ ******************************************************************************/
+
+/*  80-bit extended precision and 128-bit quadruple have a bias of 16,383.    */
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
+
+/*  The exponent that corresponds to NaN/infinity for extended / quadruple.   */
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
+
+/*  The following macros are different for quadruple and extended precisions. */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                          128-bit Quadruple Macros                          *
+ ******************************************************************************/
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
+
+/*  The value 2**112, used to normalize subnormal/denormal values.            */
+#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
+  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
+
+/*  These are the macros for 80-bit extended precision.                       */
+#else
+
+/******************************************************************************
+ *                           80-bit Extended Macros                           *
+ ******************************************************************************/
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
+
+/*  The value 2**63, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+#endif
+/*  End of difference between extended and quadruple precision.               */
+
+#endif
+/*  End of quadruple / extended vs. double / double-double.                   */
+
+/*  All types have these macros in common.                                    */
+
+/*  Macro for determining if a word is NaN.                                   */
+#define TMPL_LDOUBLE_IS_NOT_A_NUMBER(w) \
+(TMPL_LDOUBLE_IS_NAN_OR_INF((w)) && TMPL_LDOUBLE_IS_NAN((w)))
+
+/*  Macro for determining if a word is infinite.                              */
+#define TMPL_LDOUBLE_IS_INFINITY(w) \
+(TMPL_LDOUBLE_IS_NAN_OR_INF((w)) && !TMPL_LDOUBLE_IS_NAN((w)))
+
 /*  Macro for examining the exponent bits of a long double.                   */
 #define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
 
 /*  Macro for examining the sign bit of a long double.                        */
 #define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
-/*  MIPS little endian uses the same structure as double, 64 bit. The         *
- *  Microsoft compiler MSVC also uses this for x86_64.                        */
+#endif
+/*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
+
+/*  Little-endian 64-bit long double. Same idea as 64-bit double.             */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
+
+/*  Same struct for 64-bit double, little-endian.                             */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
@@ -507,41 +612,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian 64-bit long double. Uses the same struct as big-endian double. */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  64-bit double precision has exponent bias of 1,023.                       */
-#define TMPL_LDOUBLE_BIAS (0x3FF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  MIPS for big endian. PowerPC and S390 also implement long double          *
- *  using this style, which is the same as double.                            */
+/*  Same struct for 64-bit double, big-endian.                                */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -554,41 +628,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Little-endian, 80-bit extended precision with 16 bits of padding.         */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  The i386 architecture uses a 96-bit implementation. This uses the         *
- *  80-bit extended precision with 16 bits of padding.                        */
+/*  80-bit extended precision struct with 16 bits of padding, 96 bits total.  */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
@@ -605,40 +648,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian, 80-bit extended precision with 16 bits of padding.            */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  Big endian version of i386 method.                                        */
+/*  80-bit extended precision struct with 16 bits of padding, 96 bits total.  */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -655,38 +668,8 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Little-endian, 80-bit extended precision with 48 bits of padding.         */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
@@ -716,40 +699,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian, 80-bit extended precision with 48 bits of padding.            */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  Big endian version of the amd64 method. GCC uses this for ia64.           */
+/*  80-bit extended precision struct with 48 bits of padding, 128 bits total. */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int pad0 : 16;
@@ -768,41 +721,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Little-endian, 128-bit quadruple precision long double.                   */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
-
-/*  The value 2**112, used to normalize subnormal/denormal values.            */
-#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
-  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  aarch64 uses the 128-bit quadruple precision for long double.             */
+/*  128-bit quadruple precision, 15 bit exponent, 112 bit mantissa.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man6 : 16;
@@ -818,41 +740,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian, 128-bit quadruple precision long double.                      */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
-
-/*  The value 2**112, used to normalize subnormal/denormal values.            */
-#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
-  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  Similar to aarch64, but with big endianness.                              */
+/*  128-bit quadruple precision, 15 bit exponent, 112 bit mantissa.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -868,57 +759,27 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  128-bit double-double, little-endian. Made from two doubles.              */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit double-double has exponent bias of 1,023, same as double.         */
-#define TMPL_LDOUBLE_BIAS (0x3FF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit double-double.  */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expoa == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0a || (w).bits.man1a || (w).bits.man2a || (w).bits.man3a))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expoa)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.signa)
-
-/*  Double-double representation. Literally two doubles stacked together.     */
+/*  Double-double representation. Two doubles stacked together.               */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         /*  The most significant double.                                      */
-        unsigned int man3a : 16;
-        unsigned int man2a : 16;
-        unsigned int man1a : 16;
-        unsigned int man0a : 4;
-        unsigned int expoa : 11;
-        unsigned int signa : 1;
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 4;
+        unsigned int expo : 11;
+        unsigned int sign : 1;
 
         /*  The least significant double.                                     */
-        unsigned int man3b : 16;
-        unsigned int man2b : 16;
-        unsigned int man1b : 16;
-        unsigned int man0b : 4;
-        unsigned int expob : 11;
-        unsigned int signb : 1;
+        unsigned int man3l : 16;
+        unsigned int man2l : 16;
+        unsigned int man1l : 16;
+        unsigned int man0l : 4;
+        unsigned int expol : 11;
+        unsigned int signl : 1;
     } bits;
 
     /*  The two doubles making up r. r = d[0] + d[1].                         */
@@ -928,57 +789,27 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  128-bit double-double, big-endian. Made from two doubles.                 */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit double-double has exponent bias of 1,023, same as double.         */
-#define TMPL_LDOUBLE_BIAS (0x3FF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit double-double.  */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expoa == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0a || (w).bits.man1a || (w).bits.man2a || (w).bits.man3a))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expoa)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.signa)
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         /*  The most significant double.                                      */
-        unsigned int signa : 1;
-        unsigned int expoa : 11;
-        unsigned int man0a : 4;
-        unsigned int man1a : 16;
-        unsigned int man2a : 16;
-        unsigned int man3a : 16;
+        unsigned int sign : 1;
+        unsigned int expo : 11;
+        unsigned int man0 : 4;
+        unsigned int man1 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
 
         /*  The least significant double.                                     */
-        unsigned int signb : 1;
-        unsigned int expob : 11;
-        unsigned int man0b : 4;
-        unsigned int man1b : 16;
-        unsigned int man2b : 16;
-        unsigned int man3b : 16;
+        unsigned int signl : 1;
+        unsigned int expol : 11;
+        unsigned int man0l : 4;
+        unsigned int man1l : 16;
+        unsigned int man2l : 16;
+        unsigned int man3l : 16;
     } bits;
 
     /*  The two doubles making up r. r = d[0] + d[1].                         */
@@ -988,14 +819,8 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#else
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  No support for IEEE-754 long double. Set this to zero.                    */
-#define TMPL_HAS_IEEE754_LDOUBLE 0
-
 #endif
-/*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
+/*  End of #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN.  */
 
 /*  Sanity check for all of the above code. The following macros should be    *
  *  defined. Abort compiling if not.                                          */
@@ -1047,6 +872,22 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #error "tmpl_math.h: TMPL_FLOAT_IS_NAN_OR_INF undefined."
 #endif
 
+#ifndef TMPL_FLOAT_IS_NOT_A_NUMBER
+#error "tmpl_math.h: TMPL_FLOAT_IS_NOT_A_NUMBER undefined."
+#endif
+
+#ifndef TMPL_FLOAT_IS_INFINITY
+#error "tmpl_math.h: TMPL_FLOAT_IS_INFINITY undefined."
+#endif
+
+#ifndef TMPL_FLOAT_EXPO_BITS
+#error "tmpl_math.h: TMPL_FLOAT_EXPO_BITS undefined."
+#endif
+
+#ifndef TMPL_FLOAT_IS_NEGATIVE
+#error "tmpl_math.h: TMPL_FLOAT_IS_NEGATIVE undefined."
+#endif
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
@@ -1085,6 +926,22 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #error "tmpl_math.h: TMPL_DOUBLE_IS_NAN_OR_INF undefined."
 #endif
 
+#ifndef TMPL_DOUBLE_IS_NOT_A_NUMBER
+#error "tmpl_math.h: TMPL_DOUBLE_IS_NOT_A_NUMBER undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_INFINITY
+#error "tmpl_math.h: TMPL_DOUBLE_IS_INFINITY undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_EXPO_BITS
+#error "tmpl_math.h: TMPL_DOUBLE_EXPO_BITS undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_NEGATIVE
+#error "tmpl_math.h: TMPL_DOUBLE_IS_NEGATIVE undefined."
+#endif
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
@@ -1121,6 +978,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 #ifndef TMPL_LDOUBLE_IS_NAN
 #error "tmpl_math.h: TMPL_LDOUBLE_IS_NAN_OR_INF undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_IS_NOT_A_NUMBER
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_NOT_A_NUMBER undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_IS_INFINITY
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_INFINITY undefined."
 #endif
 
 #ifndef TMPL_LDOUBLE_EXPO_BITS
@@ -3010,27 +2875,49 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Float_Is_NaN                                                     *
+ *      tmpl_Double_Is_NaN                                                    *
  *  Purpose:                                                                  *
  *      This function tests if a number is Not-a-Number.                      *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      is_nan (tmpl_Bool):                                                   *
- *          A Boolean indicating if x is +/- nan or not.                      *
+ *          A Boolean indicating if x is NaN or not.                          *
  *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
+ *      Float and long double equivalents are also provided.                  *
  *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_is_nan.c                                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_is_nan_float_example.c            *
- *      libtmpl/examples/math_examples/tmpl_is_nan_double_example.c           *
- *      libtmpl/examples/math_examples/tmpl_is_nan_ldouble_example.c          *
+ *      libtmpl/include/math/                                                 *
+ *          tmpl_is_nan_double.h                                              *
+ *          tmpl_is_nan_float.h                                               *
+ *          tmpl_is_nan_ldouble.h                                             *
  ******************************************************************************/
+
+/*  Alias functions to isnan from math.h if libtmpl algorithms not requested. */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Is_NaN isnanf
+#define tmpl_Double_Is_NaN isnan
+#define tmpl_LDouble_Is_NaN isnanl
+
+/*  These functions are small enough that they should be inlined.             */
+#elif TMPL_USE_INLINE == 1
+
+/*  Inline support for is_nan functions are found here.                       */
+#include <libtmpl/include/math/tmpl_is_nan_float.h>
+#include <libtmpl/include/math/tmpl_is_nan_double.h>
+#include <libtmpl/include/math/tmpl_is_nan_ldouble.h>
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
 extern tmpl_Bool tmpl_Float_Is_NaN(float x);
 extern tmpl_Bool tmpl_Double_Is_NaN(double x);
 extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
