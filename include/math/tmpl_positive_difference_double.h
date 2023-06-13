@@ -106,11 +106,11 @@ double tmpl_Double_Positive_Difference(double x, double y)
     wy.r = y;
 
     /*  Check if x is NaN. Return NaN if it is.                               */
-    if (TMPL_DOUBLE_IS_NAN_OR_INF(wx) && TMPL_DOUBLE_IS_NAN(wx))
+    if (TMPL_DOUBLE_IS_NOT_A_NUMBER(wx))
         return x;
 
     /*  Same check for y.                                                     */
-    else if (TMPL_DOUBLE_IS_NAN_OR_INF(wy) && TMPL_DOUBLE_IS_NAN(wy))
+    if (TMPL_DOUBLE_IS_NOT_A_NUMBER(wy))
         return y;
 
     /*  Otherwise compute the positive difference. If y is greater than or    *

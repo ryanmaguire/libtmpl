@@ -106,11 +106,11 @@ float tmpl_Float_Positive_Difference(float x, float y)
     wy.r = y;
 
     /*  Check if x is NaN. Return NaN if it is.                               */
-    if (TMPL_FLOAT_IS_NAN_OR_INF(wx) && TMPL_FLOAT_IS_NAN(wx))
+    if (TMPL_FLOAT_IS_NOT_A_NUMBER(wx))
         return x;
 
     /*  Same check for y.                                                     */
-    else if (TMPL_FLOAT_IS_NAN_OR_INF(wy) && TMPL_FLOAT_IS_NAN(wy))
+    if (TMPL_FLOAT_IS_NOT_A_NUMBER(wy))
         return y;
 
     /*  Otherwise compute the positive difference. If y is greater than or    *
