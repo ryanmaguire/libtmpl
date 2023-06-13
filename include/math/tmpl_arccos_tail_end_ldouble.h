@@ -76,22 +76,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The square root function needs to be visible. Give the prototype pending  *
- *  whether libtmpl algorithms are requested.                                 */
-#if TMPL_USE_MATH_ALGORITHMS == 1
-
-extern long double tmpl_LDouble_Sqrt(long double x);
-#define TMPL_SQUARE_ROOT tmpl_LDouble_Sqrt
-
-/*  Otherwise use the default libm square root function.                      */
-#else
-
-extern long double sqrtl(long double x);
-#define TMPL_SQUARE_ROOT sqrtl
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
-
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
@@ -212,7 +196,7 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
     const long double r = z*p/q;
-    const long double s = TMPL_SQUARE_ROOT(z);
+    const long double s = tmpl_LDouble_Sqrt(z);
     const long double t = r*s;
 
     /*  We now have asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).         */
@@ -243,7 +227,6 @@ long double tmpl_LDouble_Arccos_Tail_End(long double x)
 #undef Q0
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
-#undef TMPL_SQUARE_ROOT
 
 #endif
 /*  End of include guard.                                                     */
