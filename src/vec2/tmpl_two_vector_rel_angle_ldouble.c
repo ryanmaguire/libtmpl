@@ -54,8 +54,9 @@ tmpl_2DLDouble_Rel_Angle(const tmpl_TwoVectorLongDouble *O,
     const long double dot = tmpl_2DLDouble_Dot_Product(&OP, &OQ);
 
     /*  abs_prod represents the quantity ||OP|| * ||OQ||.                     */
-    const long double prod =
-        tmpl_2DLDouble_L2_Norm(&OP)*tmpl_2DLDouble_L2_Norm(&OQ);
+    const long double OP_Norm = tmpl_2DLDouble_L2_Norm(&OP);
+    const long double OQ_Norm = tmpl_2DLDOUBLE_L2_Norm(&OQ);
+    const long double prod = OP_Norm * OQ_Norm;
 
     /*  If norm(OP)norm(OQ) is non-zero, we may use the angle formula.        */
     return tmpl_LDouble_Arccos(dot/prod);
