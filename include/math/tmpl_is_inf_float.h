@@ -38,7 +38,7 @@
  *          None.                                                             *
  *      Method:                                                               *
  *          Check if the bits correspond to +/- infinity. IEEE-754 states     *
- *          infinity occurs is when all exponent bits are 1 and all mantissa  *
+ *          infinity occurs when all exponent bits are 1 and all mantissa     *
  *          bits are 0. The sign can be 0 or 1, corresponding to positive     *
  *          and negative infinity, respectively.                              *
  *  Portable Version:                                                         *
@@ -99,11 +99,9 @@ tmpl_Bool tmpl_Float_Is_Inf(float x)
     /*  Set the float part of the word to the input.                          */
     w.r = x;
 
-    /*  Infinity has the exponent set to all 1's and the mantissa set to all  *
-     *  zeros. The sign can be 0 or 1 for +/- infinity. The                   *
-     *  TMPL_FLOAT_IS_NAN_OR_INF macro checks the exponent value, and the     *
-     *  TMPL_FLOAT_IS_NAN macro checks the mantissa.                          */
-    if (TMPL_FLOAT_IS_NAN_OR_INF(w) && !TMPL_FLOAT_IS_NAN(w))
+    /*  The TMPL_FLOAT_IS_INFINITY macro checks the bits to see if they       *
+     *  correspond to infinity. Use this.                                     */
+    if (TMPL_FLOAT_IS_INFINITY(w))
         return tmpl_True;
 
     /*  Otherwise we have a float that is finite or NaN. Return false.        */
