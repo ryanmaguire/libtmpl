@@ -818,3 +818,83 @@ int main(void)                                                                 \
     free(x);                                                                   \
     return 0;                                                                  \
 }
+
+#define TEST10(type, begin, finish, f0, f1)                                    \
+int main(void)                                                                 \
+{                                                                              \
+    type *x;                                                                   \
+    int *y0;                                                                   \
+    tmpl_Bool *y1;                                                             \
+    size_t n;                                                                  \
+    clock_t t1, t2;                                                            \
+                                                                               \
+    const type start = (type)begin;                                            \
+    const type end = (type)finish;                                             \
+    const size_t N = NSAMPS(type);                                             \
+    const type dx = (end - start) / (type)N;                                   \
+                                                                               \
+    x = malloc(sizeof(*x) * N);                                                \
+                                                                               \
+    if (!x)                                                                    \
+    {                                                                          \
+        puts("malloc failed and returned NULL for x. Aborting.");              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    y0 = malloc(sizeof(*y0) * N);                                              \
+                                                                               \
+    if (!y0)                                                                   \
+    {                                                                          \
+        puts("malloc failed and returned NULL for y0. Aborting.");             \
+        free(x);                                                               \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    y1 = malloc(sizeof(*y1) * N);                                              \
+                                                                               \
+    if (!y1)                                                                   \
+    {                                                                          \
+        puts("malloc failed and returned NULL for y1. Aborting.");             \
+        free(x);                                                               \
+        free(y0);                                                              \
+        return -1;                                                             \
+    }                                                                          \
+                                                                               \
+    printf(#f0 " vs. " #f1 "\n");                                              \
+    printf("start:   %.16Le\n", (long double)start);                           \
+    printf("end:     %.16Le\n", (long double)end);                             \
+    printf("samples: %zu\n", N);                                               \
+    printf("dx:      %.16Le\n", (long double)dx);                              \
+                                                                               \
+    x[0] = start;                                                              \
+    for (n = (size_t)1; n < N; ++n)                                            \
+        x[n] = x[n-1] + dx;                                                    \
+                                                                               \
+    t1 = clock();                                                              \
+    for (n = (size_t)0; n < N; ++n)                                            \
+        y0[n] = f0(x[n]);                                                      \
+    t2 = clock();                                                              \
+    printf("libtmpl: %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    t1 = clock();                                                              \
+    for (n = (size_t)0; n < N; ++n)                                            \
+        y1[n] = f1(x[n]);                                                      \
+    t2 = clock();                                                              \
+    printf("C:       %f seconds\n", (double)(t2-t1)/CLOCKS_PER_SEC);           \
+                                                                               \
+    for (n = (size_t)0; n < N; ++n)                                            \
+    {                                                                          \
+        if ((y0[n] && !y1[n]) || (!y0[n] && y1[n]))                            \
+        {                                                                      \
+            puts("FAIL");                                                      \
+            goto FINISH;                                                       \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    puts("PASS");                                                              \
+FINISH:                                                                        \
+    free(x);                                                                   \
+    free(y0);                                                                  \
+    free(y1);                                                                  \
+    return 0;                                                                  \
+}

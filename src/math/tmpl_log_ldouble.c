@@ -340,10 +340,10 @@ long double tmpl_LDouble_Log(long double x)
 
     polya = -s * (1.0L + s * (ONE_HALF + s * ONE_THIRD));
 
-    exponent = xhi.bits.expoa - TMPL_LDOUBLE_BIAS;
-    xhi.bits.expoa = TMPL_LDOUBLE_BIAS;
+    exponent = xhi.bits.expo - TMPL_LDOUBLE_BIAS;
+    xhi.bits.expo = TMPL_LDOUBLE_BIAS;
 
-    ind = w.bits.man0a;
+    ind = w.bits.man0;
     ind = (ind << 3U) + (w.bits.man1a >> 13U);
 
     s = xhi.r*tmpl_ldouble_rcpr_table[ind];

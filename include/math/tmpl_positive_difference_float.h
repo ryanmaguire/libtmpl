@@ -16,47 +16,55 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_dist_double                              *
+ *                       tmpl_positive_difference_float                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the distance from x to y on the number line.                 *
+ *      Computes the positive difference of two numbers, max(x-y, 0).         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Dist                                                      *
+ *      tmpl_Float_Positive_Difference                                        *
  *  Purpose:                                                                  *
- *      Computes the Euclidean distance d(x, y) = |x - y|.                    *
+ *      Computes max(x-y, 0). Equivalent to the C99 fdimf function.           *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
- *      y (double):                                                           *
- *          A real number.                                                    *
+ *      y (float):                                                            *
+ *          Another real number.                                              *
  *  Output:                                                                   *
- *      dist (double):                                                        *
- *          The distance |x - y|.                                             *
+ *      fdim_xy (float):                                                      *
+ *          The positive difference of x and y, max(x-y, 0).                  *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Computes x - y and then sets the sign bit to zero.                *
+ *          Check if either input is NaN, returning NaN if so. Otherwise      *
+ *          compute max(x-y, 0).                                              *
  *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
+ *          Based on 4,334,124,512 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
+ *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          None.                                                             *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Is_NaN:                                            *
+ *                  Determines if a float is Not-a-Number.                    *
  *      Method:                                                               *
- *          Compute y - x if x < y and x - y otherwise.                       *
+ *          Same as the IEEE-754 method, but uses tmpl_Float_Is_NaN to check  *
+ *          if either input is not-a-number.                                  *
  *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
+ *          Based on 4,334,124,512 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
+ *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
+ *          less than 1 ULP (~1 x 10^-7).                                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -66,19 +74,12 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 24, 2022                                              *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2022/10/24: Ryan Maguire                                                  *
- *      Added license.                                                        *
- *  2023/06/13: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_dist_double.c to include this file.             *
+ *  Date:       June 12, 2023                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DIST_DOUBLE_H
-#define TMPL_DIST_DOUBLE_H
+#ifndef TMPL_POSITIVE_DIFFERENCE_FLOAT_H
+#define TMPL_POSITIVE_DIFFERENCE_FLOAT_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -87,52 +88,72 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support.                                               */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision 1-D distance function.                                   */
+/*  Single precision positive difference (fdimf equivalent).                  */
 TMPL_INLINE_DECL
-double tmpl_Double_Dist(double x, double y)
+float tmpl_Float_Positive_Difference(float x, float y)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Double w;
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    tmpl_IEEE754_Float wx, wy;
 
-    /*  Set the double part of the word to the signed distance x - y.         */
-    w.r = x - y;
+    /*  Set the float part of the words to the inputs.                        */
+    wx.r = x;
+    wy.r = y;
 
-    /*  Set the sign bit to zero to compute the absolute value.               */
-    w.bits.sign = 0x00U;
+    /*  Check if x is NaN. Return NaN if it is.                               */
+    if (TMPL_FLOAT_IS_NOT_A_NUMBER(wx))
+        return x;
 
-    /*  Return the double part of the union.                                  */
-    return w.r;
+    /*  Same check for y.                                                     */
+    if (TMPL_FLOAT_IS_NOT_A_NUMBER(wy))
+        return y;
+
+    /*  Otherwise compute the positive difference. If y is greater than or    *
+     *  equal to x, the positive difference is zero.                          */
+    if (y >= x)
+        return 0.0F;
+
+    /*  Lastly, if x > y, the positive difference is the difference x - y.    */
+    return x - y;
 }
-/*  End of tmpl_Double_Dist.                                                  */
+/*  End of tmpl_Float_Positive_Difference.                                    */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
+/*  Single precision positive difference (fdimf equivalent).                  */
 TMPL_INLINE_DECL
-double tmpl_Double_Dist(double x, double y)
+float tmpl_Float_Positive_Difference(float x, float y)
 {
-    /*  If x < y we have |x - y| = y - x. Compute this.                       */
-    if (x < y)
-        return y - x;
+    /*  Check if x is NaN, returning NaN if so.                               */
+    if (tmpl_Float_Is_NaN(x))
+        return x;
 
-    /*  Otherwise |x - y| = x - y. Compute this and return.                   */
+    /*  Same check for y.                                                     */
+    else if (tmpl_Float_Is_NaN(y))
+        return y;
+
+    /*  Otherwise compute the positive difference. If y is greater than or    *
+     *  equal to x, the positive difference is zero.                          */
+    if (y >= x)
+        return 0.0F;
+
+    /*  Lastly, if x > y, the positive difference is the difference x - y.    */
     return x - y;
 }
-/*  End of tmpl_Double_Dist.                                                  */
+/*  End of tmpl_Float_Positive_Difference.                                    */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
 /*  End of include guard.                                                     */

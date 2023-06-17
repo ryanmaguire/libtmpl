@@ -65,22 +65,6 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  The square root function needs to be visible. Give the prototype pending  *
- *  whether libtmpl algorithms are requested.                                 */
-#if TMPL_USE_MATH_ALGORITHMS == 1
-
-TMPL_EXPORT extern float tmpl_Float_Sqrt(float x);
-#define TMPL_SQUARE_ROOT tmpl_Float_Sqrt
-
-/*  Otherwise use the default libm square root function.                      */
-#else
-
-TMPL_EXPORT extern float sqrtf(float x);
-#define TMPL_SQUARE_ROOT sqrtf
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
-
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.6666586697E-01F)
 #define P1 (-4.2743422091E-02F)
@@ -104,7 +88,7 @@ float tmpl_Float_Arcsin_Tail_End(float x)
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
     const float r = z*p/q;
-    const float s = TMPL_SQUARE_ROOT(z);
+    const float s = tmpl_Float_Sqrt(z);
     const float t = r*s;
 
     /*  We now have asin(sqrt(z)) - sqrt(z). We need pi/2 - 2*asin(sqrt(z)).  */
@@ -118,7 +102,6 @@ float tmpl_Float_Arcsin_Tail_End(float x)
 #undef P0
 #undef Q1
 #undef Q0
-#undef TMPL_SQUARE_ROOT
 
 #endif
 /*  End of include guard.                                                     */

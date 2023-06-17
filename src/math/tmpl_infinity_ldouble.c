@@ -140,12 +140,12 @@ long double tmpl_LDouble_Infinity(void)
     tmpl_IEEE754_LDouble x;
 
     /*  Set the high double to infinity, bit-by-bit.                          */
-    x.bits.signa = 0x0U;
-    x.bits.expoa = TMPL_LDOUBLE_NANINF_EXP;
-    x.bits.man0a = 0x0U;
-    x.bits.man1a = 0x0U;
-    x.bits.man2a = 0x0U;
-    x.bits.man3a = 0x0U;
+    x.bits.sign = 0x0U;
+    x.bits.expo = TMPL_LDOUBLE_NANINF_EXP;
+    x.bits.man0 = 0x0U;
+    x.bits.man1 = 0x0U;
+    x.bits.man2 = 0x0U;
+    x.bits.man3 = 0x0U;
 
     /*  Set the low double to zero and return.                                */
     x.d[1] = 0.0;

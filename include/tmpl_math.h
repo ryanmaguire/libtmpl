@@ -99,8 +99,6 @@
 /*  size_t typedef given here.                                                */
 #include <stddef.h>
 
-#include "tmpl_exports.h"
-
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -240,6 +238,10 @@
  *                                                                            *
  ******************************************************************************/
 
+/******************************************************************************
+ *                          Float Macros and Unions                           *
+ ******************************************************************************/
+
 /*  Check if TMPL_FLOAT_ENDIANNESS was defined in tmpl_config.h. It           *
  *  should be unless there was a problem when building libtmpl.               */
 #if !defined(TMPL_FLOAT_ENDIANNESS)
@@ -247,8 +249,15 @@
 /*  If not, there is a problem with libtmpl. Abort compiling.                 */
 #error "tmpl_math.h: TMPL_FLOAT_ENDIANNESS is undefined."
 
-#elif TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN
-/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
+/*  If TMPL_FLOAT_ENDIANNESS is neither big nor little endian it is likely    *
+ *  unknown. We will not use IEEE-754 features in this case.                  */
+#elif TMPL_FLOAT_ENDIANNESS == TMPL_UNKNOWN_ENDIAN
+
+/*  No IEEE-754 support. Set TMPL_HAS_IEEE754_FLOAT to zero.                  */
+#define TMPL_HAS_IEEE754_FLOAT 0
+
+/*  Otherwise we have IEEE-754 support and can define macros for using it.    */
+#else
 
 /*  Macro indicating support for IEEE-754 single precision.                   */
 #define TMPL_HAS_IEEE754_FLOAT 1
@@ -272,6 +281,26 @@
 
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
+
+/*  Macro for determining if a word is NaN.                                   */
+#define TMPL_FLOAT_IS_NOT_A_NUMBER(w) \
+(TMPL_FLOAT_IS_NAN_OR_INF((w)) && TMPL_FLOAT_IS_NAN((w)))
+
+/*  Macro for determining if a word is infinite.                              */
+#define TMPL_FLOAT_IS_INFINITY(w) \
+(TMPL_FLOAT_IS_NAN_OR_INF((w)) && !TMPL_FLOAT_IS_NAN((w)))
+
+/*  Macro for examining the exponent bits of a float.                         */
+#define TMPL_FLOAT_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a float.                              */
+#define TMPL_FLOAT_IS_NEGATIVE(w) ((w).bits.sign)
+
+#endif
+/*  End of #if !defined(TMPL_FLOAT_ENDIANNESS).                               */
+
+/*  Big-endian 32-bit float.                                                  */
+#if TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN
 
 /*  To access the binary representation of a floating point number, we use    *
  *  unions. Unions allow us to have different data types share the same block *
@@ -305,31 +334,8 @@ typedef union tmpl_IEEE754_Float_Def {
     float r;
 } tmpl_IEEE754_Float;
 
+/*  Little-endian 32-bit float.                                               */
 #elif TMPL_FLOAT_ENDIANNESS == TMPL_LITTLE_ENDIAN
-/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
-
-/*  Macro indicating support for IEEE-754 single precision.                   */
-#define TMPL_HAS_IEEE754_FLOAT 1
-
-/*  32-bit single precision bias is 127.                                      */
-#define TMPL_FLOAT_BIAS (0x7F)
-#define TMPL_FLOAT_UBIAS (0x7FU)
-
-/*  The exponent that corresponds to NaN/infinity for 32-bit float.           */
-#define TMPL_FLOAT_NANINF_EXP (0xFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_FLOAT_MANTISSA_LENGTH (23)
-#define TMPL_FLOAT_MANTISSA_ULENGTH (23U)
-
-/*  The value 2**23, used to normalize subnormal/denormal values.             */
-#define TMPL_FLOAT_NORMALIZE (8.388608E+06F)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_FLOAT_IS_NAN_OR_INF(w) ((w).bits.expo == 0xFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_FLOAT_IS_NAN(w) (((w).bits.man0 || (w).bits.man1))
 
 /*  Same type of union as above, but for little endian. See the above union   *
  *  for comments on this data type. Little endianness simply means we need    *
@@ -344,25 +350,29 @@ typedef union tmpl_IEEE754_Float_Def {
     float r;
 } tmpl_IEEE754_Float;
 
-#else
-/*  Else statement for #if !defined(TMPL_FLOAT_ENDIANNESS).                   */
-
-/*  The macro TMPL_FLOAT_ENDIANNESS is likely set to unknown endian, meaning  *
- *  we can't assume IEEE-754 support. Set TMPL_HAS_IEEE754_FLOAT to zero.     */
-#define TMPL_HAS_IEEE754_FLOAT 0
-
 #endif
-/*  End of #if !defined(TMPL_FLOAT_ENDIANNESS).                               */
+/*  End of #if TMPL_FLOAT_ENDIANNESS == TMPL_BIG_ENDIAN.                      */
 
-/*  Same thing for double precision.                                          */
+/******************************************************************************
+ *                          Double Macros and Unions                          *
+ ******************************************************************************/
+
+/*  Sanity check. This macro should be defined.                               */
 #if !defined(TMPL_DOUBLE_ENDIANNESS)
 
 /*  If TMPL_DOUBLE_ENDIANNESS is undefined, there is a problem with libtmpl.  *
  *  Abort compiling.                                                          */
 #error "tmpl_math.h: TMPL_DOUBLE_ENDIANNESS is undefined."
 
-#elif TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
-/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
+/*  If TMPL_DOUBLE_ENDIANNESS is set to neither big nor little endian it is   *
+ *  likely unknown. We will not use IEEE-754 features in this case.           */
+#elif TMPL_DOUBLE_ENDIANNESS == TMPL_UNKNOWN_ENDIAN
+
+/*  IEEE-754 support not available. Set this macro to zero.                   */
+#define TMPL_HAS_IEEE754_DOUBLE 0
+
+/*  Otherwise we have IEEE-754 support and can provide macros for using this. */
+#else
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_DOUBLE 1
@@ -387,6 +397,26 @@ typedef union tmpl_IEEE754_Float_Def {
 /*  Macro for determining if a word is NaN. Only use after checking expo.     */
 #define TMPL_DOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+/*  Macro for determining if a word is NaN.                                   */
+#define TMPL_DOUBLE_IS_NOT_A_NUMBER(w) \
+(TMPL_DOUBLE_IS_NAN_OR_INF((w)) && TMPL_DOUBLE_IS_NAN((w)))
+
+/*  Macro for determining if a word is infinite.                              */
+#define TMPL_DOUBLE_IS_INFINITY(w) \
+(TMPL_DOUBLE_IS_NAN_OR_INF((w)) && !TMPL_DOUBLE_IS_NAN((w)))
+
+/*  Macro for examining the exponent bits of a double.                        */
+#define TMPL_DOUBLE_EXPO_BITS(w) ((w).bits.expo)
+
+/*  Macro for examining the sign bit of a double.                             */
+#define TMPL_DOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
+
+#endif
+/*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
+
+/*  Big-Endian 64-bit double.                                                 */
+#if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
 
 /*  Same idea as the union used for float, but for a 64-bit double.           */
 typedef union tmpl_IEEE754_Double_Def {
@@ -401,32 +431,8 @@ typedef union tmpl_IEEE754_Double_Def {
     double r;
 } tmpl_IEEE754_Double;
 
+/*  Little-Endian 64-bit double.                                              */
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
-/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_DOUBLE 1
-
-/*  64-bit double precision has exponent bias of 1,023.                       */
-#define TMPL_DOUBLE_BIAS (0x3FF)
-#define TMPL_DOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
-#define TMPL_DOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_DOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_DOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_DOUBLE_NORMALIZE (4.503599627370496E+15)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_DOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_DOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
 
 /*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
  *  endianness. See the above comments for information on this data type.     */
@@ -442,14 +448,12 @@ typedef union tmpl_IEEE754_Double_Def {
     double r;
 } tmpl_IEEE754_Double;
 
-#else
-/*  Else statement for #if !defined(TMPL_DOUBLE_ENDIANNESS).                  */
-
-/*  TMPL_DOUBLE_ENDIANNESS is likely set to unknown. Set this to zero.        */
-#define TMPL_HAS_IEEE754_DOUBLE 0
-
 #endif
-/*  End of #if !defined(TMPL_DOUBLE_ENDIANNESS).                              */
+/*  End of #if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN.                     */
+
+/******************************************************************************
+ *                        Long Double Macros and Unions                       *
+ ******************************************************************************/
 
 /*  Same thing for long double. Long double is not as standardized as float   *
  *  and double and there are several ways to implement it. This includes      *
@@ -462,11 +466,31 @@ typedef union tmpl_IEEE754_Double_Def {
  *  Abort compiling.                                                          */
 #error "tmpl_math.h: TMPL_LDOUBLE_ENDIANNESS is undefined."
 
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
+/*  If TMPL_LDOUBLE_ENDIANNESS is not set to double, extended, quadruple, or  *
+ *  double-double, we do not have IEEE-754 support and can not use it.        */
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
+
+/*  No support for IEEE-754 long double. Set this to zero.                    */
+#define TMPL_HAS_IEEE754_LDOUBLE 0
+
+/*  Otherwise we have IEEE-754 support and can define macros for using it.    *
+ *  The macros are very sensitive to how long double is represented and we    *
+ *  need to examine the TMPL_LDOUBLE_ENDIANNESS macro carefully.              */
+#else
 
 /*  Define this macro to 1, indicating IEEE-754 support.                      */
 #define TMPL_HAS_IEEE754_LDOUBLE 1
+
+/*  64-bit double and 128-bit double-double have the same macros.             */
+#if \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                64-bit Double / 128-bit Double-Double Macros                *
+ ******************************************************************************/
 
 /*  64-bit double precision has exponent bias of 1,023.                       */
 #define TMPL_LDOUBLE_BIAS (0x3FF)
@@ -489,14 +513,93 @@ typedef union tmpl_IEEE754_Double_Def {
 #define TMPL_LDOUBLE_IS_NAN(w) \
 (((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
 
+/*  Some of the macros for 80-bit extended are the same as 128-bit quadruple. */
+#else
+
+/******************************************************************************
+ *                 80-bit Extended / 128-bit Quadruple Macros                 *
+ ******************************************************************************/
+
+/*  80-bit extended precision and 128-bit quadruple have a bias of 16,383.    */
+#define TMPL_LDOUBLE_BIAS (0x3FFF)
+#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
+
+/*  The exponent that corresponds to NaN/infinity for extended / quadruple.   */
+#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
+
+/*  The following macros are different for quadruple and extended precisions. */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                          128-bit Quadruple Macros                          *
+ ******************************************************************************/
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
+
+/*  The value 2**112, used to normalize subnormal/denormal values.            */
+#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
+  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
+
+/*  These are the macros for 80-bit extended precision.                       */
+#else
+
+/******************************************************************************
+ *                           80-bit Extended Macros                           *
+ ******************************************************************************/
+
+/*  The number of bits in the mantissa.                                       */
+#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
+#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
+
+/*  The value 2**63, used to normalize subnormal/denormal values.             */
+#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
+
+/*  Macro for determining if a word is NaN or Infinity.                       */
+#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
+
+/*  Macro for determining if a word is NaN. Only use after checking expo.     */
+#define TMPL_LDOUBLE_IS_NAN(w) \
+(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
+
+#endif
+/*  End of difference between extended and quadruple precision.               */
+
+#endif
+/*  End of quadruple / extended vs. double / double-double.                   */
+
+/*  All types have these macros in common.                                    */
+
+/*  Macro for determining if a word is NaN.                                   */
+#define TMPL_LDOUBLE_IS_NOT_A_NUMBER(w) \
+(TMPL_LDOUBLE_IS_NAN_OR_INF((w)) && TMPL_LDOUBLE_IS_NAN((w)))
+
+/*  Macro for determining if a word is infinite.                              */
+#define TMPL_LDOUBLE_IS_INFINITY(w) \
+(TMPL_LDOUBLE_IS_NAN_OR_INF((w)) && !TMPL_LDOUBLE_IS_NAN((w)))
+
 /*  Macro for examining the exponent bits of a long double.                   */
 #define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
 
 /*  Macro for examining the sign bit of a long double.                        */
 #define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
-/*  MIPS little endian uses the same structure as double, 64 bit. The         *
- *  Microsoft compiler MSVC also uses this for x86_64.                        */
+#endif
+/*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
+
+/*  Little-endian 64-bit long double. Same idea as 64-bit double.             */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
+
+/*  Same struct for 64-bit double, little-endian.                             */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
@@ -509,41 +612,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian 64-bit long double. Uses the same struct as big-endian double. */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  64-bit double precision has exponent bias of 1,023.                       */
-#define TMPL_LDOUBLE_BIAS (0x3FF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 64-bit double.          */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  MIPS for big endian. PowerPC and S390 also implement long double          *
- *  using this style, which is the same as double.                            */
+/*  Same struct for 64-bit double, big-endian.                                */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -556,41 +628,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Little-endian, 80-bit extended precision with 16 bits of padding.         */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  The i386 architecture uses a 96-bit implementation. This uses the         *
- *  80-bit extended precision with 16 bits of padding.                        */
+/*  80-bit extended precision struct with 16 bits of padding, 96 bits total.  */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
@@ -607,40 +648,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian, 80-bit extended precision with 16 bits of padding.            */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  Big endian version of i386 method.                                        */
+/*  80-bit extended precision struct with 16 bits of padding, 96 bits total.  */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -657,38 +668,8 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Little-endian, 80-bit extended precision with 48 bits of padding.         */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
 
 /*  The most common type of long double for personal computers is the         *
  *  little endian amd64 format (also the x86_64 format). This uses            *
@@ -718,40 +699,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian, 80-bit extended precision with 48 bits of padding.            */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  80-bit extended precision has exponent bias of 16,383.                    */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 80-bit long double.     */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FFF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
-
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || (w).bits.man3))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  Big endian version of the amd64 method. GCC uses this for ia64.           */
+/*  80-bit extended precision struct with 48 bits of padding, 128 bits total. */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int pad0 : 16;
@@ -770,41 +721,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Little-endian, 128-bit quadruple precision long double.                   */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
-
-/*  The value 2**112, used to normalize subnormal/denormal values.            */
-#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
-  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  aarch64 uses the 128-bit quadruple precision for long double.             */
+/*  128-bit quadruple precision, 15 bit exponent, 112 bit mantissa.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man6 : 16;
@@ -820,41 +740,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  Big-endian, 128-bit quadruple precision long double.                      */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit quadruple precision has exponent bias of 16,383.                  */
-#define TMPL_LDOUBLE_BIAS (0x3FFF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit long double.    */
-#define TMPL_LDOUBLE_NANINF_EXP 0x7FFF
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
-
-/*  The value 2**112, used to normalize subnormal/denormal values.            */
-#define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expo == 0x7FFFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0 || (w).bits.man1 || (w).bits.man2 || \
-  (w).bits.man3 || (w).bits.man4 || (w).bits.man5 || (w).bits.man6))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expo)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.sign)
-
-/*  Similar to aarch64, but with big endianness.                              */
+/*  128-bit quadruple precision, 15 bit exponent, 112 bit mantissa.           */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -870,57 +759,27 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  128-bit double-double, little-endian. Made from two doubles.              */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
 
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit double-double has exponent bias of 1,023, same as double.         */
-#define TMPL_LDOUBLE_BIAS (0x3FF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit double-double.  */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expoa == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0a || (w).bits.man1a || (w).bits.man2a || (w).bits.man3a))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expoa)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.signa)
-
-/*  Double-double representation. Literally two doubles stacked together.     */
+/*  Double-double representation. Two doubles stacked together.               */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         /*  The most significant double.                                      */
-        unsigned int man3a : 16;
-        unsigned int man2a : 16;
-        unsigned int man1a : 16;
-        unsigned int man0a : 4;
-        unsigned int expoa : 11;
-        unsigned int signa : 1;
+        unsigned int man3 : 16;
+        unsigned int man2 : 16;
+        unsigned int man1 : 16;
+        unsigned int man0 : 4;
+        unsigned int expo : 11;
+        unsigned int sign : 1;
 
         /*  The least significant double.                                     */
-        unsigned int man3b : 16;
-        unsigned int man2b : 16;
-        unsigned int man1b : 16;
-        unsigned int man0b : 4;
-        unsigned int expob : 11;
-        unsigned int signb : 1;
+        unsigned int man3l : 16;
+        unsigned int man2l : 16;
+        unsigned int man1l : 16;
+        unsigned int man0l : 4;
+        unsigned int expol : 11;
+        unsigned int signl : 1;
     } bits;
 
     /*  The two doubles making up r. r = d[0] + d[1].                         */
@@ -930,57 +789,27 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
+/*  128-bit double-double, big-endian. Made from two doubles.                 */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  Define this macro to 1, indicating IEEE-754 support.                      */
-#define TMPL_HAS_IEEE754_LDOUBLE 1
-
-/*  128-bit double-double has exponent bias of 1,023, same as double.         */
-#define TMPL_LDOUBLE_BIAS (0x3FF)
-#define TMPL_LDOUBLE_UBIAS (0x3FFU)
-
-/*  The exponent that corresponds to NaN/infinity for 128-bit double-double.  */
-#define TMPL_LDOUBLE_NANINF_EXP (0x7FF)
-
-/*  The number of bits in the mantissa.                                       */
-#define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
-#define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
-
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
-#define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
-
-/*  Macro for determining if a word is NaN or Infinity.                       */
-#define TMPL_LDOUBLE_IS_NAN_OR_INF(w) ((w).bits.expoa == 0x7FFU)
-
-/*  Macro for determining if a word is NaN. Only use after checking expo.     */
-#define TMPL_LDOUBLE_IS_NAN(w) \
-(((w).bits.man0a || (w).bits.man1a || (w).bits.man2a || (w).bits.man3a))
-
-/*  Macro for examining the exponent bits of a long double.                   */
-#define TMPL_LDOUBLE_EXPO_BITS(w) ((w).bits.expoa)
-
-/*  Macro for examining the sign bit of a long double.                        */
-#define TMPL_LDOUBLE_IS_NEGATIVE(w) ((w).bits.signa)
 
 /*  Big endian version of double-double. Same as little with order flipped.   */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         /*  The most significant double.                                      */
-        unsigned int signa : 1;
-        unsigned int expoa : 11;
-        unsigned int man0a : 4;
-        unsigned int man1a : 16;
-        unsigned int man2a : 16;
-        unsigned int man3a : 16;
+        unsigned int sign : 1;
+        unsigned int expo : 11;
+        unsigned int man0 : 4;
+        unsigned int man1 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
 
         /*  The least significant double.                                     */
-        unsigned int signb : 1;
-        unsigned int expob : 11;
-        unsigned int man0b : 4;
-        unsigned int man1b : 16;
-        unsigned int man2b : 16;
-        unsigned int man3b : 16;
+        unsigned int signl : 1;
+        unsigned int expol : 11;
+        unsigned int man0l : 4;
+        unsigned int man1l : 16;
+        unsigned int man2l : 16;
+        unsigned int man3l : 16;
     } bits;
 
     /*  The two doubles making up r. r = d[0] + d[1].                         */
@@ -990,14 +819,8 @@ typedef union tmpl_IEEE754_LDouble_Def {
     long double r;
 } tmpl_IEEE754_LDouble;
 
-#else
-/*  Else for #if !defined(TMPL_LDOUBLE_ENDIANNESS).                           */
-
-/*  No support for IEEE-754 long double. Set this to zero.                    */
-#define TMPL_HAS_IEEE754_LDOUBLE 0
-
 #endif
-/*  End of #if !defined(TMPL_LDOUBLE_ENDIANNESS).                             */
+/*  End of #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN.  */
 
 /*  Sanity check for all of the above code. The following macros should be    *
  *  defined. Abort compiling if not.                                          */
@@ -1049,6 +872,22 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #error "tmpl_math.h: TMPL_FLOAT_IS_NAN_OR_INF undefined."
 #endif
 
+#ifndef TMPL_FLOAT_IS_NOT_A_NUMBER
+#error "tmpl_math.h: TMPL_FLOAT_IS_NOT_A_NUMBER undefined."
+#endif
+
+#ifndef TMPL_FLOAT_IS_INFINITY
+#error "tmpl_math.h: TMPL_FLOAT_IS_INFINITY undefined."
+#endif
+
+#ifndef TMPL_FLOAT_EXPO_BITS
+#error "tmpl_math.h: TMPL_FLOAT_EXPO_BITS undefined."
+#endif
+
+#ifndef TMPL_FLOAT_IS_NEGATIVE
+#error "tmpl_math.h: TMPL_FLOAT_IS_NEGATIVE undefined."
+#endif
+
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
@@ -1085,6 +924,22 @@ typedef union tmpl_IEEE754_LDouble_Def {
 
 #ifndef TMPL_DOUBLE_IS_NAN
 #error "tmpl_math.h: TMPL_DOUBLE_IS_NAN_OR_INF undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_NOT_A_NUMBER
+#error "tmpl_math.h: TMPL_DOUBLE_IS_NOT_A_NUMBER undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_INFINITY
+#error "tmpl_math.h: TMPL_DOUBLE_IS_INFINITY undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_EXPO_BITS
+#error "tmpl_math.h: TMPL_DOUBLE_EXPO_BITS undefined."
+#endif
+
+#ifndef TMPL_DOUBLE_IS_NEGATIVE
+#error "tmpl_math.h: TMPL_DOUBLE_IS_NEGATIVE undefined."
 #endif
 
 #endif
@@ -1125,6 +980,14 @@ typedef union tmpl_IEEE754_LDouble_Def {
 #error "tmpl_math.h: TMPL_LDOUBLE_IS_NAN_OR_INF undefined."
 #endif
 
+#ifndef TMPL_LDOUBLE_IS_NOT_A_NUMBER
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_NOT_A_NUMBER undefined."
+#endif
+
+#ifndef TMPL_LDOUBLE_IS_INFINITY
+#error "tmpl_math.h: TMPL_LDOUBLE_IS_INFINITY undefined."
+#endif
+
 #ifndef TMPL_LDOUBLE_EXPO_BITS
 #error "tmpl_math.h: TMPL_LDOUBLE_EXPO_BITS undefined."
 #endif
@@ -1141,109 +1004,109 @@ typedef union tmpl_IEEE754_LDouble_Def {
  ******************************************************************************/
 
 /*  sqrt( 1 / (2pi) )                                                         */
-TMPL_EXPORT extern const float tmpl_Sqrt_One_By_Two_Pi_F;
-TMPL_EXPORT extern const double tmpl_Sqrt_One_By_Two_Pi;
-TMPL_EXPORT extern const long double tmpl_Sqrt_One_By_Two_Pi_L;
+extern const float tmpl_Sqrt_One_By_Two_Pi_F;
+extern const double tmpl_Sqrt_One_By_Two_Pi;
+extern const long double tmpl_Sqrt_One_By_Two_Pi_L;
 
 /*  sqrt( pi / 8 )                                                            */
-TMPL_EXPORT extern const float tmpl_Sqrt_Pi_By_Eight_F;
-TMPL_EXPORT extern const double tmpl_Sqrt_Pi_By_Eight;
-TMPL_EXPORT extern const long double tmpl_Sqrt_Pi_By_Eight_L;
+extern const float tmpl_Sqrt_Pi_By_Eight_F;
+extern const double tmpl_Sqrt_Pi_By_Eight;
+extern const long double tmpl_Sqrt_Pi_By_Eight_L;
 
 /*  sqrt( pi / 2 )                                                            */
-TMPL_EXPORT extern const float tmpl_Sqrt_Pi_By_Two_F;
-TMPL_EXPORT extern const double tmpl_Sqrt_Pi_By_Two;
-TMPL_EXPORT extern const long double tmpl_Sqrt_Pi_By_Two_L;
+extern const float tmpl_Sqrt_Pi_By_Two_F;
+extern const double tmpl_Sqrt_Pi_By_Two;
+extern const long double tmpl_Sqrt_Pi_By_Two_L;
 
 /*  sqrt( 1 / pi )                                                            */
-TMPL_EXPORT extern const float tmpl_Sqrt_One_By_Pi_F;
-TMPL_EXPORT extern const double tmpl_Sqrt_One_By_Pi;
-TMPL_EXPORT extern const long double tmpl_Sqrt_One_By_Pi_L;
+extern const float tmpl_Sqrt_One_By_Pi_F;
+extern const double tmpl_Sqrt_One_By_Pi;
+extern const long double tmpl_Sqrt_One_By_Pi_L;
 
 /*  sqrt( 2 / pi )                                                            */
-TMPL_EXPORT extern const float tmpl_Sqrt_Two_By_Pi_F;
-TMPL_EXPORT extern const double tmpl_Sqrt_Two_By_Pi;
-TMPL_EXPORT extern const long double tmpl_Sqrt_Two_By_Pi_L;
+extern const float tmpl_Sqrt_Two_By_Pi_F;
+extern const double tmpl_Sqrt_Two_By_Pi;
+extern const long double tmpl_Sqrt_Two_By_Pi_L;
 
 /*  1 / pi.                                                                   */
-TMPL_EXPORT extern const float tmpl_One_By_Pi_F;
-TMPL_EXPORT extern const double tmpl_One_By_Pi;
-TMPL_EXPORT extern const long double tmpl_One_By_Pi_L;
+extern const float tmpl_One_By_Pi_F;
+extern const double tmpl_One_By_Pi;
+extern const long double tmpl_One_By_Pi_L;
 
 /*  2 / sqrt( pi )                                                            */
-TMPL_EXPORT extern const float tmpl_Two_By_Sqrt_Pi_F;
-TMPL_EXPORT extern const double tmpl_Two_By_Sqrt_Pi;
-TMPL_EXPORT extern const long double tmpl_Two_By_Sqrt_Pi_L;
+extern const float tmpl_Two_By_Sqrt_Pi_F;
+extern const double tmpl_Two_By_Sqrt_Pi;
+extern const long double tmpl_Two_By_Sqrt_Pi_L;
 
 /*  pi / 2                                                                    */
-TMPL_EXPORT extern const float tmpl_Pi_By_Two_F;
-TMPL_EXPORT extern const double tmpl_Pi_By_Two;
-TMPL_EXPORT extern const long double tmpl_Pi_By_Two_L;
+extern const float tmpl_Pi_By_Two_F;
+extern const double tmpl_Pi_By_Two;
+extern const long double tmpl_Pi_By_Two_L;
 
 /*  3 pi / 4                                                                  */
-TMPL_EXPORT extern const float tmpl_Three_Pi_By_Four_F;
-TMPL_EXPORT extern const double tmpl_Three_Pi_By_Four;
-TMPL_EXPORT extern const long double tmpl_Three_Pi_By_Four_L;
+extern const float tmpl_Three_Pi_By_Four_F;
+extern const double tmpl_Three_Pi_By_Four;
+extern const long double tmpl_Three_Pi_By_Four_L;
 
 /*  pi / 4                                                                    */
-TMPL_EXPORT extern const float tmpl_Pi_By_Four_F;
-TMPL_EXPORT extern const double tmpl_Pi_By_Four;
-TMPL_EXPORT extern const long double tmpl_Pi_By_Four_L;
+extern const float tmpl_Pi_By_Four_F;
+extern const double tmpl_Pi_By_Four;
+extern const long double tmpl_Pi_By_Four_L;
 
 /*  pi                                                                        */
-TMPL_EXPORT extern const float tmpl_One_Pi_F;
-TMPL_EXPORT extern const double tmpl_One_Pi;
-TMPL_EXPORT extern const long double tmpl_One_Pi_L;
+extern const float tmpl_One_Pi_F;
+extern const double tmpl_One_Pi;
+extern const long double tmpl_One_Pi_L;
 
 /*  2 pi                                                                      */
-TMPL_EXPORT extern const float tmpl_Two_Pi_F;
-TMPL_EXPORT extern const double tmpl_Two_Pi;
-TMPL_EXPORT extern const long double tmpl_Two_Pi_L;
+extern const float tmpl_Two_Pi_F;
+extern const double tmpl_Two_Pi;
+extern const long double tmpl_Two_Pi_L;
 
 /*  sqrt( 2 )                                                                 */
-TMPL_EXPORT extern const float tmpl_Sqrt_Two_F;
-TMPL_EXPORT extern const double tmpl_Sqrt_Two;
-TMPL_EXPORT extern const long double tmpl_Sqrt_Two_L;
+extern const float tmpl_Sqrt_Two_F;
+extern const double tmpl_Sqrt_Two;
+extern const long double tmpl_Sqrt_Two_L;
 
 /*  e = exp( 1 )                                                              */
-TMPL_EXPORT extern const float tmpl_Euler_E_F;
-TMPL_EXPORT extern const double tmpl_Euler_E;
-TMPL_EXPORT extern const long double tmpl_Euler_E_L;
+extern const float tmpl_Euler_E_F;
+extern const double tmpl_Euler_E;
+extern const long double tmpl_Euler_E_L;
 
 /*  1 / e = exp( -1 )                                                         */
-TMPL_EXPORT extern const float tmpl_Rcpr_Euler_E_F;
-TMPL_EXPORT extern const double tmpl_Rcpr_Euler_E;
-TMPL_EXPORT extern const long double tmpl_Rcpr_Euler_E_L;
+extern const float tmpl_Rcpr_Euler_E_F;
+extern const double tmpl_Rcpr_Euler_E;
+extern const long double tmpl_Rcpr_Euler_E_L;
 
 /*  log_e( 2 ) = ln( 2 )                                                      */
-TMPL_EXPORT extern const float tmpl_Natural_Log_of_Two_F;
-TMPL_EXPORT extern const double tmpl_Natural_Log_of_Two;
-TMPL_EXPORT extern const long double tmpl_Natural_Log_of_Two_L;
+extern const float tmpl_Natural_Log_of_Two_F;
+extern const double tmpl_Natural_Log_of_Two;
+extern const long double tmpl_Natural_Log_of_Two_L;
 
 /*  log_e( 10 ) = ln( 10 )                                                    */
-TMPL_EXPORT extern const float tmpl_Natural_Log_of_Ten_F;
-TMPL_EXPORT extern const double tmpl_Natural_Log_of_Ten;
-TMPL_EXPORT extern const long double tmpl_Natural_Log_of_Ten_L;
+extern const float tmpl_Natural_Log_of_Ten_F;
+extern const double tmpl_Natural_Log_of_Ten;
+extern const long double tmpl_Natural_Log_of_Ten_L;
 
 /*  pi / 180                                                                  */
-TMPL_EXPORT extern const float tmpl_Deg_to_Rad_F;
-TMPL_EXPORT extern const double tmpl_Deg_to_Rad;
-TMPL_EXPORT extern const long double tmpl_Deg_to_Rad_L;
+extern const float tmpl_Deg_to_Rad_F;
+extern const double tmpl_Deg_to_Rad;
+extern const long double tmpl_Deg_to_Rad_L;
 
 /*  180 / pi                                                                  */
-TMPL_EXPORT extern const float tmpl_Rad_to_Deg_F;
-TMPL_EXPORT extern const double tmpl_Rad_to_Deg;
-TMPL_EXPORT extern const long double tmpl_Rad_to_Deg_L;
+extern const float tmpl_Rad_to_Deg_F;
+extern const double tmpl_Rad_to_Deg;
+extern const long double tmpl_Rad_to_Deg_L;
 
 /*  Largest value such that exp(x) will not return infinity.                  */
-TMPL_EXPORT extern const float tmpl_Max_Float_Base_E;
-TMPL_EXPORT extern const double tmpl_Max_Double_Base_E;
-TMPL_EXPORT extern const long double tmpl_Max_LDouble_Base_E;
+extern const float tmpl_Max_Float_Base_E;
+extern const double tmpl_Max_Double_Base_E;
+extern const long double tmpl_Max_LDouble_Base_E;
 
 /*  Smallest value such that exp(x) will not return zero.                     */
-TMPL_EXPORT extern const float tmpl_Min_Float_Base_E;
-TMPL_EXPORT extern const double tmpl_Min_Double_Base_E;
-TMPL_EXPORT extern const long double tmpl_Min_LDouble_Base_E;
+extern const float tmpl_Min_Float_Base_E;
+extern const double tmpl_Min_Double_Base_E;
+extern const long double tmpl_Min_LDouble_Base_E;
 
 /******************************************************************************
  *                              Tables and Data                               *
@@ -1253,10 +1116,10 @@ TMPL_EXPORT extern const long double tmpl_Min_LDouble_Base_E;
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  The values v and atan(v) used in atan and atan2 routines.                 */
-TMPL_EXPORT extern const float tmpl_atan_float_v[8];
-TMPL_EXPORT extern const float tmpl_atan_float_atan_of_v[8];
-TMPL_EXPORT extern const double tmpl_atan_double_v[8];
-TMPL_EXPORT extern const double tmpl_atan_double_atan_of_v[8];
+extern const float tmpl_atan_float_v[8];
+extern const float tmpl_atan_float_atan_of_v[8];
+extern const double tmpl_atan_double_v[8];
+extern const double tmpl_atan_double_atan_of_v[8];
 
 /*  The long double version of these tables depends on how long double is     *
  *  implemented. 80-bit extended and 64-bit double implementations, as well   *
@@ -1270,54 +1133,1288 @@ TMPL_EXPORT extern const double tmpl_atan_double_atan_of_v[8];
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
-TMPL_EXPORT extern const long double tmpl_atan_ldouble_v[8];
-TMPL_EXPORT extern const long double tmpl_atan_ldouble_atan_of_v[8];
+extern const long double tmpl_atan_ldouble_v[8];
+extern const long double tmpl_atan_ldouble_atan_of_v[8];
 #else
-TMPL_EXPORT extern const long double tmpl_ldouble_atan_n_by_8[129];
+extern const long double tmpl_ldouble_atan_n_by_8[129];
 #endif
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-TMPL_EXPORT extern const double tmpl_double_cbrt_table[128];
-TMPL_EXPORT extern const float tmpl_float_cbrt_table[128];
-TMPL_EXPORT extern const long double tmpl_ldouble_cbrt_table[128];
+extern const double tmpl_double_cbrt_table[128];
+extern const float tmpl_float_cbrt_table[128];
+extern const long double tmpl_ldouble_cbrt_table[128];
 
 /*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
-TMPL_EXPORT extern const double tmpl_double_cosd_table[180];
-TMPL_EXPORT extern const float tmpl_float_cosd_table[180];
-TMPL_EXPORT extern const long double tmpl_ldouble_cosd_table[180];
+extern const double tmpl_double_cosd_table[180];
+extern const float tmpl_float_cosd_table[180];
+extern const long double tmpl_ldouble_cosd_table[180];
 
 /*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
-TMPL_EXPORT extern const double tmpl_double_cospi_table[128];
-TMPL_EXPORT extern const float tmpl_float_cospi_table[128];
-TMPL_EXPORT extern const long double tmpl_ldouble_cospi_table[128];
+extern const double tmpl_double_cospi_table[128];
+extern const float tmpl_float_cospi_table[128];
+extern const long double tmpl_ldouble_cospi_table[128];
 
 /*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
-TMPL_EXPORT extern const double tmpl_double_exp_table[179];
-TMPL_EXPORT extern const float tmpl_float_exp_table[179];
-TMPL_EXPORT extern const long double tmpl_ldouble_exp_table[179];
+extern const double tmpl_double_exp_table[179];
+extern const float tmpl_float_exp_table[179];
+extern const long double tmpl_ldouble_exp_table[179];
 
 /*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
-TMPL_EXPORT extern const double tmpl_double_log_table[128];
-TMPL_EXPORT extern const float tmpl_float_log_table[128];
-TMPL_EXPORT extern const long double tmpl_ldouble_log_table[128];
+extern const double tmpl_double_log_table[128];
+extern const float tmpl_float_log_table[128];
+extern const long double tmpl_ldouble_log_table[128];
 
 /*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
-TMPL_EXPORT extern const double tmpl_double_rcpr_table[128];
-TMPL_EXPORT extern const float tmpl_float_rcpr_table[128];
-TMPL_EXPORT extern const long double tmpl_ldouble_rcpr_table[128];
+extern const double tmpl_double_rcpr_table[128];
+extern const float tmpl_float_rcpr_table[128];
+extern const long double tmpl_ldouble_rcpr_table[128];
 
 /*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
-TMPL_EXPORT extern const double tmpl_double_sind_table[180];
-TMPL_EXPORT extern const float tmpl_float_sind_table[180];
-TMPL_EXPORT extern const long double tmpl_ldouble_sind_table[180];
+extern const double tmpl_double_sind_table[180];
+extern const float tmpl_float_sind_table[180];
+extern const long double tmpl_ldouble_sind_table[180];
 
 /*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
-TMPL_EXPORT extern const double tmpl_double_sinpi_table[128];
-TMPL_EXPORT extern const float tmpl_float_sinpi_table[128];
-TMPL_EXPORT extern const long double tmpl_ldouble_sinpi_table[128];
+extern const double tmpl_double_sinpi_table[128];
+extern const float tmpl_float_sinpi_table[128];
+extern const long double tmpl_ldouble_sinpi_table[128];
+
+/******************************************************************************
+ *                           Non-Inlined Functions                            *
+ ******************************************************************************/
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arccos                                                    *
+ *  Purpose:                                                                  *
+ *      Compute the arccos (inverse cosine) of a real number.                 *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/                                                     *
+ *          tmpl_arccos_double.c                                              *
+ *          tmpl_arccos_float.c                                               *
+ *          tmpl_arccos_ldouble.c                                             *
+ ******************************************************************************/
+
+/*  Alias functions to acos from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Arccos acosf
+#define tmpl_Double_Arccos acos
+#define tmpl_LDouble_Arccos acosl
+
+#else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
+
+/*  Otherwise use the functions in src/math/.                                 */
+extern float tmpl_Float_Arccos(float x);
+extern double tmpl_Double_Arccos(double x);
+extern long double tmpl_LDouble_Arccos(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arcsin                                                    *
+ *  Purpose:                                                                  *
+ *      Compute the arcsin (inverse sine) of a real number.                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double asin_x:                                                        *
+ *          The inverse sine of x, sin^-1(x).                                 *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/                                                     *
+ *          tmpl_arcsin_double.c                                              *
+ *          tmpl_arcsin_float.c                                               *
+ *          tmpl_arcsin_ldouble.c                                             *
+ ******************************************************************************/
+
+/*  Alias functions to asin from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Arcsin asinf
+#define tmpl_Double_Arcsin asin
+#define tmpl_LDouble_Arcsin asinl
+
+#else
+/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
+
+/*  Otherwise use the functions in src/math/.                                 */
+extern float tmpl_Float_Arcsin(float x);
+extern double tmpl_Double_Arcsin(double x);
+extern long double tmpl_LDouble_Arcsin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arctan2                                                   *
+ *  Purpose:                                                                  *
+ *      Compute the 2-dimensional arctan (inverse tangent) of a point in the  *
+ *      Cartesian plane. This is the angle the point makes with the positive  *
+ *      x-axis.                                                               *
+ *  Arguments:                                                                *
+ *      double y:                                                             *
+ *          A real number.                                                    *
+ *      double x:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double atan:                                                          *
+ *          The angle the point (x,y) makes with (1,0) in the plane.          *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *                                                                            *
+ *      By convention dating back to (at least) the 1970s, Arctan2 takes the  *
+ *      input as (y,x), not (x,y). i.e. the first argument is the y           *
+ *      component and the second argument is the x component. This is contrary*
+ *      to most 2 dimensional functions that want their inputs as (x,y).      *
+ *      This is probably because we are trying to compute tan^-1(y/x) but     *
+ *      need to be careful about the signs of y and x, so we write            *
+ *      arctan(y,x).                                                          *
+ *                                                                            *
+ *      This returns a number between -pi and pi, so there is a "branch cut"  *
+ *      along the negative x axis. Because of this, use of this function      *
+ *      in complex routines results in actual branch cuts.                    *
+ ******************************************************************************/
+
+/*  If libtmpl math algorithms are not requested, alias functions to atan2.   */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Arctan2 atan2f
+#define tmpl_Double_Arctan2 atan2
+#define tmpl_LDouble_Arctan2 atan2l
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arctan2(float y, float x);
+extern double tmpl_Double_Arctan2(double y, double x);
+extern long double tmpl_LDouble_Arctan2(long double y, long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Arctan                                                    *
+ *  Purpose:                                                                  *
+ *      Compute the arctan (inverse tangent) of a real number.                *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double atan_x:                                                        *
+ *          The inverse tangent of x, tan^-1(x).                              *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/                                                     *
+ *          tmpl_arctan_float.c                                               *
+ *          tmpl_arctan_double.c                                              *
+ *          tmpl_arctan_ldouble.c                                             *
+ ******************************************************************************/
+
+/*  Alias functions to atan from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Arctan atanf
+#define tmpl_Double_Arctan atan
+#define tmpl_LDouble_Arctan atanl
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arctan(float x);
+extern double tmpl_Double_Arctan(double x);
+extern long double tmpl_LDouble_Arctan(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_Max                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the maximum of an array of doubles.                           *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      double max:                                                           *
+ *          The maximum of arr. NaN's in the array are skipped.               *
+ ******************************************************************************/
+extern float tmpl_Float_Array_Max(float *arr, size_t len);
+extern double tmpl_Double_Array_Max(double *arr, size_t len);
+extern long double tmpl_LDouble_Array_Max(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_Max_Index                                           *
+ *  Purpose:                                                                  *
+ *      Compute the index of the maximum of an array of doubles.              *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      size_t ind:                                                           *
+ *          The index of the maximum of arr. NaN's in the array are skipped.  *
+ ******************************************************************************/
+extern size_t tmpl_Float_Array_Max_Index(float *arr, size_t len);
+extern size_t tmpl_Double_Array_Max_Index(double *arr, size_t len);
+extern size_t tmpl_LDouble_Array_Max_Index(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_Min                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the minimum of an array of doubles.                           *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      double min:                                                           *
+ *          The minimum of arr. NaN's in the array are skipped.               *
+ ******************************************************************************/
+extern float tmpl_Float_Array_Min(float *arr, size_t len);
+extern double tmpl_Double_Array_Min(double *arr, size_t len);
+extern long double tmpl_LDouble_Array_Min(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_Min_Index                                           *
+ *  Purpose:                                                                  *
+ *      Compute the index of the maximum of an array of doubles.              *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      size_t ind:                                                           *
+ *          The index of the maximum of arr. NaN's in the array are skipped.  *
+ ******************************************************************************/
+extern size_t tmpl_Float_Array_Min_Index(float *arr, size_t len);
+extern size_t tmpl_Double_Array_Min_Index(double *arr, size_t len);
+extern size_t tmpl_LDouble_Array_Min_Index(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_MinMax                                              *
+ *  Purpose:                                                                  *
+ *      Compute the min and max of an array of doubles.                       *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *      double *min:                                                          *
+ *          A pointer to a double. The minimum will be stored here.           *
+ *      double *max:                                                          *
+ *          A pointer to a double. The max is stored here.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Float_Array_MinMax(float *arr, size_t len,
+                        float *min, float *max);
+
+extern void
+tmpl_Double_Array_MinMax(double *arr, size_t len,
+                         double *min, double *max);
+
+extern void
+tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
+                          long double *min, long double *max);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_MinMax_Index                                        *
+ *  Purpose:                                                                  *
+ *      Compute the indices of the min and max of an array of doubles.        *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          An array of doubles.                                              *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *      size_t *minind:                                                       *
+ *          A pointer to a double. The index of the min will be stored here.  *
+ *      size_t *maxind:                                                       *
+ *          A pointer to a double. The index of the max will be stored here.  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Float_Array_MinMax_Index(float *arr, size_t len,
+                              size_t *minind, size_t *maxind);
+
+extern void
+tmpl_Double_Array_MinMax_Index(double *arr, size_t len,
+                               size_t *minind, size_t *maxind);
+
+extern void
+tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
+                                size_t *minind, size_t *maxind);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Array_Reverse                                             *
+ *  Purpose:                                                                  *
+ *      Reverses the order of a pointer to an array of real numbers.          *
+ *  Arguments:                                                                *
+ *      double *arr:                                                          *
+ *          A pointer to an array.                                            *
+ *      size_t len:                                                           *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      None (void):                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_Array_Reverse(float *arr, size_t len);
+extern void tmpl_Double_Array_Reverse(double *arr, size_t len);
+extern void tmpl_LDouble_Array_Reverse(long double *arr, size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Base2_Mant_and_Exp                                        *
+ *  Purpose:                                                                  *
+ *      Given a real number x, compute the numbers m and e such that          *
+ *      x = +/- m * 2^e with 1 < m < 2. If x = 0, m = 0 and e = 0 is returned.*
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double *mant:                                                         *
+ *          Pointer to a double. The mantissa of x is stored here.            *
+ *      signed int *expo:                                                     *
+ *          A pointer to a signed integer. The exponent is stored here.       *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Float_Base2_Mant_and_Exp(float x, float *mant, signed int *expo);
+
+extern void
+tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo);
+
+extern void
+tmpl_LDouble_Base2_Mant_and_Exp(long double x,
+                                long double *mant,
+                                signed int *expo);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cbrt                                                      *
+ *  Purpose:                                                                  *
+ *      Compute the cube root of a real number.                               *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cbrt_x:                                                        *
+ *          The cube root of x, x^{1/3}.                                      *
+ ******************************************************************************/
+extern float tmpl_Float_Cbrt(float x);
+extern double tmpl_Double_Cbrt(double x);
+extern long double tmpl_LDouble_Cbrt(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cos                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the cosine of a real number.                                 *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_x:                                                         *
+ *          The cosine of x, cos(x).                                          *
+ ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS == 1
+extern float tmpl_Float_Cos(float x);
+extern double tmpl_Double_Cos(double x);
+extern long double tmpl_LDouble_Cos(long double x);
+#else
+#define tmpl_Float_Cos cosf
+#define tmpl_Double_Cos cos
+#define tmpl_LDouble_Cos cosl
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cosd                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the cosine of a number in degrees.                           *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cosd_x:                                                        *
+ *          The cosine of x in degrees.                                       *
+ ******************************************************************************/
+extern float tmpl_Float_Cosd(float x);
+extern double tmpl_Double_Cosd(double x);
+extern long double tmpl_LDouble_Cosd(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_CosPi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the normalized cosine of a real number, f(x) = cos(pi x).    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_pix:                                                       *
+ *          The normalized cosine of x, cos(pi x).                            *
+ ******************************************************************************/
+extern float tmpl_Float_CosPi(float x);
+extern double tmpl_Double_CosPi(double x);
+extern long double tmpl_LDouble_CosPi(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cosh                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the hyperbolic cosine of a real number.                      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double cos_x:                                                         *
+ *          The hyperbolic cosine of x, cosh(x).                              *
+ ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS == 1
+extern float tmpl_Float_Cosh(float x);
+extern double tmpl_Double_Cosh(double x);
+extern long double tmpl_LDouble_Cosh(long double x);
+#else
+#define tmpl_Float_Cosh coshf
+#define tmpl_Double_Cosh cosh
+#define tmpl_LDouble_Cosh coshl
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Erf                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the error function of a real number.                         *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erf_x:                                                         *
+ *          The error function of x, Erf(x).                                  *
+ ******************************************************************************/
+extern float tmpl_Float_Erf(float x);
+extern double tmpl_Double_Erf(double x);
+extern long double tmpl_LDouble_Erf(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Erfc                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the complementary error function of a real number.           *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erfc_x:                                                        *
+ *          The complementary error function of x, Erfc(x).                   *
+ ******************************************************************************/
+extern float tmpl_Float_Erfc(float x);
+extern double tmpl_Double_Erfc(double x);
+extern long double tmpl_LDouble_Erfc(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Erfc                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the scaled error function of a real number.                  *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double erfcx_x:                                                       *
+ *          The scaled error function of x, Erfc(x).                          *
+ ******************************************************************************/
+extern float tmpl_Float_Erfcx(float x);
+extern double tmpl_Double_Erfcx(double x);
+extern long double tmpl_LDouble_Erfcx(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the base e exponential of a real number.                     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+extern float tmpl_Float_Exp(float x);
+extern double tmpl_Double_Exp(double x);
+extern long double tmpl_LDouble_Exp(long double x);
+
+/*  TODO:
+ *      For long double, all implementations (extended, quadruple, and
+ *      double-double), libtmpl has better performance than glibc and openlibm
+ *      for large and small inputs.
+ *
+ *      For float and double, libtmpl has better performance when |x| < 1.
+ *      For |x| >= 1, glibc is about 1.6x faster. libtmpl had better
+ *      performance than openlibm in this range as well.
+ *      Read through and understand glibc's implementation and try to improve
+ *      the exponential functions for float and double precision for |x| >= 1.
+ *
+ *  TODO:
+ *      Fix the neg kernel functions for denormal / subnormal outputs.
+ */
+
+/*  TODO:
+ *      Exp is well optimized for small arguments.
+ *      For |x| < 1 the combination or Pade, Remez, and Maclaurin series does *
+ *      very well. The tmpl_Double_Exp_Pos_Kernel function has better         *
+ *      performance than openlibm (about 1.4x faster, woohoo!), but worse     *
+ *      then glibc (about 0.75x as fast). Try to improve this.                */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp_Pos_Kernel                                            *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for dist functions found here.                             */
+#include <libtmpl/include/math/tmpl_exp_pos_kernel_double.h>
+#include <libtmpl/include/math/tmpl_exp_pos_kernel_float.h>
+#include <libtmpl/include/math/tmpl_exp_pos_kernel_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested.                                              */
+extern float tmpl_Float_Exp_Pos_Kernel(float x);
+extern double tmpl_Double_Exp_Pos_Kernel(double x);
+extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Exp_Neg_Kernel                                            *
+ *  Purpose:                                                                  *
+ *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double exp_x:                                                         *
+ *          The exponential function of x, exp(x).                            *
+ ******************************************************************************/
+
+/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for dist functions found here.                             */
+#include <libtmpl/include/math/tmpl_exp_neg_kernel_double.h>
+#include <libtmpl/include/math/tmpl_exp_neg_kernel_float.h>
+#include <libtmpl/include/math/tmpl_exp_neg_kernel_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support requested.                                              */
+extern double tmpl_Double_Exp_Neg_Kernel(double x);
+extern float tmpl_Float_Exp_Neg_Kernel(float x);
+extern long double tmpl_LDouble_Exp_Neg_Kernel(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Factorial                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the factorial of an integer, stored as a double.             *
+ *  Arguments:                                                                *
+ *      unsigned int n:                                                       *
+ *          An integer.                                                       *
+ *  Output:                                                                   *
+ *      double n!:                                                            *
+ *          The factorial of n.                                               *
+ *  Notes:                                                                    *
+ *      Returns +Inf on overflow.                                             *
+ ******************************************************************************/
+extern float tmpl_Float_Factorial(unsigned int n);
+extern double tmpl_Double_Factorial(unsigned int n);
+extern long double tmpl_LDouble_Factorial(unsigned int n);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Faddeeva_Im                                               *
+ *  Purpose:                                                                  *
+ *      Computes the imaginary part of the Faddeeva function.                 *
+ *      Given w(x) = re(x) + i * im(x), this returns im(x).                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double fa_im_x:                                                       *
+ *          The imaginary part of the Faddeeva function of x.                 *
+ ******************************************************************************/
+extern float tmpl_Float_Faddeeva_Im(float x);
+extern double tmpl_Double_Faddeeva_Im(double x);
+extern long double tmpl_LDouble_Faddeeva_Im(long double x);
+
+extern unsigned long
+tmpl_Falling_Factorial(unsigned int x, unsigned int N);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Floor                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the floor function, the largest integer less than the input. *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double floor_x:                                                       *
+ *          The floor function evaluated at x.                                *
+ ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Floor floorf
+#define tmpl_Double_Floor floor
+#define tmpl_LDouble_Floor floorl
+#else
+extern float tmpl_Float_Floor(float x);
+extern double tmpl_Double_Floor(double x);
+extern long double tmpl_LDouble_Floor(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Infinity                                                   *
+ *  Purpose:                                                                  *
+ *      Returns positive infinity.                                            *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      inf (float):                                                          *
+ *          Positive infinity.                                                *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *      If IEEE-754 support is available, this code creates infinity using    *
+ *      the format. If not, the function mimics glibc's method, returning     *
+ *      the number 1.0E10000 which is guaranteed to overflow.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_infinity.c                                      *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_infinity_example.c                *
+ ******************************************************************************/
+extern float tmpl_Float_Infinity(void);
+extern double tmpl_Double_Infinity(void);
+extern long double tmpl_LDouble_Infinity(void);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Is_NaN_Or_Inf                                              *
+ *  Purpose:                                                                  *
+ *      This function tests if a number is Not-a-Number or infinity.          *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      is_nan_or_inf (tmpl_Bool):                                            *
+ *          A Boolean indicating if x is +/- nan/inf or not.                  *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_is_nan_or_inf.c                                 *
+ ******************************************************************************/
+extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
+extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
+extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Hypot                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the length of the point (x, y).                              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double mag:                                                           *
+ *          The magnitude of (x, y).                                          *
+ ******************************************************************************/
+extern float tmpl_Float_Hypot(float x, float y);
+extern double tmpl_Double_Hypot(double x, double y);
+extern long double tmpl_LDouble_Hypot(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Log                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the natural log function of the input.                       *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double log_x:                                                         *
+ *          The natural log function evaluated at x.                          *
+ ******************************************************************************/
+extern float tmpl_Float_Log(float x);
+extern double tmpl_Double_Log(double x);
+extern long double tmpl_LDouble_Log(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Max                                                       *
+ *  Purpose:                                                                  *
+ *      Compute the maximum of two doubles.                                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double max:                                                           *
+ *          The maximum of x and y.                                           *
+ ******************************************************************************/
+extern float tmpl_Float_Max(float x, float y);
+extern double tmpl_Double_Max(double x, double y);
+extern long double tmpl_LDouble_Max(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Min                                                       *
+ *  Purpose:                                                                  *
+ *      Compute the minimum of two doubles.                                   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
+ *  Output:                                                                   *
+ *      double max:                                                           *
+ *          The minimum of x and y.                                           *
+ ******************************************************************************/
+extern float tmpl_Float_Min(float x, float y);
+extern double tmpl_Double_Min(double x, double y);
+extern long double tmpl_LDouble_Min(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Mod_2                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the remainder after division by 2 of the input.              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double x_mod_2:                                                       *
+ *          The value x mod 2.                                                *
+ ******************************************************************************/
+extern float tmpl_Float_Mod_2(float x);
+extern double tmpl_Double_Mod_2(double n);
+extern long double tmpl_LDouble_Mod_2(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Mod_360                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the remainder after division by 360 of the input.            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double x_mod_360:                                                     *
+ *          The value x mod 360.                                              *
+ ******************************************************************************/
+extern float tmpl_Float_Mod_360(float x);
+extern double tmpl_Double_Mod_360(double n);
+extern long double tmpl_LDouble_Mod_360(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_NaN                                                        *
+ *  Purpose:                                                                  *
+ *      Returns Not-A-Number.                                                 *
+ *  Arguments:                                                                *
+ *      None (void).                                                          *
+ *  Output:                                                                   *
+ *      nan (float):                                                          *
+ *          Not-a-Number.                                                     *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *      If IEEE-754 support is available, this code creates NaN using         *
+ *      the format. If not, the function mimics glibc's method, returning     *
+ *      the number 0.0 / 0.0 which should be NaN.                             *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_nan.c                                           *
+ *  Examples:                                                                 *
+ *      libtmpl/examples/math_examples/tmpl_nan_example.c                     *
+ ******************************************************************************/
+extern float tmpl_Float_NaN(void);
+extern double tmpl_Double_NaN(void);
+extern long double tmpl_LDouble_NaN(void);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_Eval                                                 *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the       *
+ *      the polynomial with the given coefficient at that point.              *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      size_t degree:                                                        *
+ *          The degree of the polynomial.                                     *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double poly:                                                          *
+ *          The polynomial evaluated at x.                                    *
+ ******************************************************************************/
+extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
+extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
+extern long double
+tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_Deriv_Eval                                           *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the nth   *
+ *      derivative of the the polynomial at that point.                       *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      unsigned int degree:                                                  *
+ *          The degree of the polynomial.                                     *
+ *      unsigned int deriv:                                                   *
+ *          The order of the derivative being applied to the polynomial.      *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double dpoly:                                                         *
+ *          The nth derivative of the polynomial evaluated at x.              *
+ ******************************************************************************/
+extern float
+tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
+                           unsigned int deriv, float x);
+
+extern double
+tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
+                            unsigned int deriv, double x);
+
+extern long double
+tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
+                             unsigned int deriv, long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Pow2                                                      *
+ *  Purpose:                                                                  *
+ *      Computes an integer power of 2.                                       *
+ *  Arguments:                                                                *
+ *      signed int expo:                                                      *
+ *          An, the power of 2.                                               *
+ *  Output:                                                                   *
+ *      double pow2_expo:                                                     *
+ *          The value 2^expo.                                                 *
+ ******************************************************************************/
+extern float tmpl_Float_Pow2(signed int expo);
+extern double tmpl_Double_Pow2(signed int expo);
+extern long double tmpl_LDouble_Pow2(signed int expo);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sinc                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the sinc function sinc(x) = sin(x)/x (with limit 1 at x = 0).*
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sinc_x:                                                        *
+ *          The sinc of x.                                                    *
+ ******************************************************************************/
+extern float tmpl_Float_Sinc(float x);
+extern double tmpl_Double_Sinc(double x);
+extern long double tmpl_LDouble_Sinc(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SincPi                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the normalized sinc function sinc(x) = sin(pi x)/(pi x).     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sincpi_x:                                                      *
+ *          The normalized sinc of x.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_SincPi(float x);
+extern double tmpl_Double_SincPi(double x);
+extern long double tmpl_LDouble_SincPi(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sin                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the sine function sin(x).                                    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS == 1
+extern float tmpl_Float_Sin(float x);
+extern double tmpl_Double_Sin(double x);
+extern long double tmpl_LDouble_Sin(long double x);
+#else
+#define tmpl_Float_Sin sinf
+#define tmpl_Double_Sin sin
+#define tmpl_LDouble_Sin sinl
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sin_Very_Small                                            *
+ *  Purpose:                                                                  *
+ *      Computes the sine function sin(x) using the Maclaurin series for      *
+ *      very small inputs.                                                    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_sin_very_small.h>
+#else
+extern double tmpl_Double_Sin_Very_Small(double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sin_Pade                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the Pade approximant of the sine function sin(x).            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_sin_pade.h>
+#else
+extern float tmpl_Float_Sin_Pade(float x);
+extern double tmpl_Double_Sin_Pade(double x);
+extern long double tmpl_LDouble_Sin_Pade(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sin_Pade_Pi                                               *
+ *  Purpose:                                                                  *
+ *      Computes the Pade approximant of the sine centered at pi.             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_x:                                                         *
+ *          The sine of x.                                                    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_sin_pade_pi.h>
+#else
+extern float tmpl_Float_Sin_Pade_Pi(float x);
+extern double tmpl_Double_Sin_Pade_Pi(double x);
+extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinCos                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the point on a circle corresponding to a given angle.        *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number.                                                    *
+ *      double *sin_t:                                                        *
+ *          A pointer to the y-coordinate of the point on the circle.         *
+ *      double *cos_t:                                                        *
+ *          A pointer to the x-coordinate of the point on the circle.         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinCos(float t, float *sin_t, float *cos_t);
+extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
+
+extern void
+tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinCosd                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the point on a circle from an angle given in degrees.        *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          The angle in degrees.                                             *
+ *      double *sind_t:                                                       *
+ *          A pointer to the y-coordinate of the point on the circle.         *
+ *      double *cosd_t:                                                       *
+ *          A pointer to the x-coordinate of the point on the circle.         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinCosd(float t, float *sind_t, float *cosd_t);
+extern void tmpl_Double_SinCosd(double t, double *sind_t, double *cosd_t);
+
+extern void
+tmpl_LDouble_SinCosd(long double t, long double *sind_t, long double *cosd_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinCosPi                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the point on a circle from a given normalized angle.         *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number.                                                    *
+ *      double *sinpi_t:                                                      *
+ *          A pointer to the y-coordinate of the point on the circle.         *
+ *      double *cospi_t:                                                      *
+ *          A pointer to the x-coordinate of the point on the circle.         *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t);
+extern void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t);
+
+extern void
+tmpl_LDouble_SinCosPi(long double t,
+                      long double *sinpi_t,
+                      long double *cospi_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sind                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the sine of a number in degrees.                             *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sind_x:                                                        *
+ *          The sine of x in degrees.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_Sind(float x);
+extern double tmpl_Double_Sind(double x);
+extern long double tmpl_LDouble_Sind(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sind_Maclaurin                                            *
+ *  Purpose:                                                                  *
+ *      Computes the Maclaurin series of sine in degrees.                     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sind_x:                                                        *
+ *          The sine of x in degrees.                                         *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_sind_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_sind_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_sind_maclaurin_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support, use external functions in src/math.                    */
+extern float tmpl_Float_Sind_Maclaurin(float x);
+extern double tmpl_Double_Sind_Maclaurin(double x);
+extern long double tmpl_LDouble_Sind_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sinh                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the hyperbolic sine function sinh(x).                        *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sinh_x:                                                        *
+ *          The hyperbolic sine of x.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_Sinh(float x);
+extern double tmpl_Double_Sinh(double x);
+extern long double tmpl_LDouble_Sinh(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinPi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the normalized sine of a real number, f(x) = sin(pi x).      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_pix:                                                       *
+ *          The normalized sine of x, sin(pi x).                              *
+ ******************************************************************************/
+extern float tmpl_Float_SinPi(float x);
+extern double tmpl_Double_SinPi(double x);
+extern long double tmpl_LDouble_SinPi(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_SinPi_Maclaurin                                           *
+ *  Purpose:                                                                  *
+ *      Computes the Maclaurin series of the normalized sine, sin(pi x).      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sin_pix:                                                       *
+ *          The normalized sine of x, sin(pi x).                              *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_sinpi_maclaurin_double.h>
+#include <libtmpl/include/math/tmpl_sinpi_maclaurin_float.h>
+#include <libtmpl/include/math/tmpl_sinpi_maclaurin_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  No inline support, use external functions in src/math.                    */
+extern float tmpl_Float_SinPi_Maclaurin(float x);
+extern double tmpl_Double_SinPi_Maclaurin(double x);
+extern long double tmpl_LDouble_SinPi_Maclaurin(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Sqrt                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the square root function sqrt(x).                            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double sqrt_x:                                                        *
+ *          The square root of x.                                             *
+ ******************************************************************************/
+extern float tmpl_Float_Sqrt(float x);
+extern double tmpl_Double_Sqrt(double x);
+extern long double tmpl_LDouble_Sqrt(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Tan                                                       *
+ *  Purpose:                                                                  *
+ *      Computes the tangent function tan(x).                                 *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double tan_x:                                                         *
+ *          The tangent of x.                                                 *
+ ******************************************************************************/
+extern float tmpl_Float_Tan(float x);
+extern double tmpl_Double_Tan(double x);
+extern long double tmpl_LDouble_Tan(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Tanh                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the hyperbolic tangent function tanh(x).                     *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double tanh_x:                                                        *
+ *          The hyperbolic tangent of x.                                      *
+ ******************************************************************************/
+extern float tmpl_Float_Tanh(float x);
+extern double tmpl_Double_Tanh(double x);
+extern long double tmpl_LDouble_Tanh(long double x);
+
+/*  Macro for positive infinity                                               */
+#define TMPL_INFINITYF (tmpl_Float_Infinity())
+#define TMPL_INFINITY (tmpl_Double_Infinity())
+#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
+
+/*  Macro for Not-A-Number.                                                   */
+#define TMPL_NANF (tmpl_Float_NaN())
+#define TMPL_NAN (tmpl_Double_NaN())
+#define TMPL_NANL (tmpl_LDouble_NaN())
+
+
+/******************************************************************************
+ *                       Independent Inlined Functions                        *
+ ******************************************************************************/
+
+/*  These functions make no calls to external routines and are completely     *
+ *  self-contained. They are also small enough that they should be inlined.   */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1379,59 +2476,9 @@ TMPL_EXPORT extern const long double tmpl_ldouble_sinpi_table[128];
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Abs(float x);
-TMPL_EXPORT extern double tmpl_Double_Abs(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Abs(long double x);
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Arccos                                                    *
- *  Purpose:                                                                  *
- *      Compute the arccos (inverse cosine) of a real number.                 *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double acos_x:                                                        *
- *          The inverse cosine of x, cos^-1(x).                               *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_arccos_float.c                                  *
- *      libtmpl/src/math/tmpl_arccos_double.c                                 *
- *      libtmpl/src/math/tmpl_arccos_ldouble.c                                *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_arccos_float_example.c            *
- *      libtmpl/examples/math_examples/tmpl_arccos_double_example.c           *
- *      libtmpl/examples/math_examples/tmpl_arccos_ldouble_example.c          *
- *  Tests:                                                                    *
- *      libtmpl/tests/math_tests/time_tests/                                  *
- *          tmpl_arccos_float_time_test.c                                     *
- *          tmpl_arccos_double_time_test.c                                    *
- *          tmpl_arccos_ldouble_time_test.c                                   *
- *      libtmpl/tests/math_tests/accuracy_tests/                              *
- *          tmpl_arccos_float_accuracy_test.c                                 *
- *          tmpl_arccos_double_accuracy_test.c                                *
- *          tmpl_arccos_ldouble_accuracy_test.c                               *
- ******************************************************************************/
-
-/*  Alias functions to acos from math.h if libtmpl algorithms not requested.  */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-
-#define tmpl_Float_Arccos acosf
-#define tmpl_Double_Arccos acos
-#define tmpl_LDouble_Arccos acosl
-
-#else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
-
-/*  Otherwise use the functions in src/math/.                                 */
-TMPL_EXPORT extern float tmpl_Float_Arccos(float x);
-TMPL_EXPORT extern double tmpl_Double_Arccos(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arccos(long double x);
+extern float tmpl_Float_Abs(float x);
+extern double tmpl_Double_Abs(double x);
+extern long double tmpl_LDouble_Abs(long double x);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
@@ -1467,9 +2514,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arccos(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arccos_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Arccos_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Pade(long double x);
+extern float tmpl_Float_Arccos_Pade(float x);
+extern double tmpl_Double_Arccos_Pade(double x);
+extern long double tmpl_LDouble_Arccos_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1505,9 +2552,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Pade(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arccos_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Arccos_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
+extern float tmpl_Float_Arccos_Maclaurin(float x);
+extern double tmpl_Double_Arccos_Maclaurin(double x);
+extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1543,87 +2590,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Maclaurin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arccos_Rat_Remez(float x);
-TMPL_EXPORT extern double tmpl_Double_Arccos_Rat_Remez(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Rat_Remez(long double x);
+extern float tmpl_Float_Arccos_Rat_Remez(float x);
+extern double tmpl_Double_Arccos_Rat_Remez(double x);
+extern long double tmpl_LDouble_Arccos_Rat_Remez(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Arccos_Tail_End                                           *
- *  Purpose:                                                                  *
- *      Compute the arccos (inverse cosine) for values near 1.                *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double acos_x:                                                        *
- *          The inverse cosine of x, cos^-1(x).                               *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_arccos_tail_end_float.c                         *
- *      libtmpl/src/math/tmpl_arccos_tail_end_double.c                        *
- *      libtmpl/src/math/tmpl_arccos_tail_end_ldouble.c                       *
- ******************************************************************************/
-
-/*  These functions are small enough to inline.                               */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_arccos_tail_end_double.h>
-#include <libtmpl/include/math/tmpl_arccos_tail_end_float.h>
-#include <libtmpl/include/math/tmpl_arccos_tail_end_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arccos_Tail_End(float x);
-TMPL_EXPORT extern double tmpl_Double_Arccos_Tail_End(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arccos_Tail_End(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Arcsin                                                    *
- *  Purpose:                                                                  *
- *      Compute the arcsin (inverse sine) of a real number.                   *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double asin_x:                                                        *
- *          The inverse sine of x, sin^-1(x).                                 *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_arcsin_float.c                                  *
- *      libtmpl/src/math/tmpl_arcsin_double.c                                 *
- *      libtmpl/src/math/tmpl_arcsin_ldouble.c                                *
- ******************************************************************************/
-
-/*  Alias functions to asin from math.h if libtmpl algorithms not requested.  */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-
-#define tmpl_Float_Arcsin asinf
-#define tmpl_Double_Arcsin asin
-#define tmpl_LDouble_Arcsin asinl
-
-#else
-/*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
-
-/*  Otherwise use the functions in src/math/.                                 */
-TMPL_EXPORT extern float tmpl_Float_Arcsin(float x);
-TMPL_EXPORT extern double tmpl_Double_Arcsin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arcsin(long double x);
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1656,9 +2628,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arcsin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arcsin_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Arcsin_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Pade(long double x);
+extern float tmpl_Float_Arcsin_Pade(float x);
+extern double tmpl_Double_Arcsin_Pade(double x);
+extern long double tmpl_LDouble_Arcsin_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1694,9 +2666,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Pade(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arcsin_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Arcsin_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
+extern float tmpl_Float_Arcsin_Maclaurin(float x);
+extern double tmpl_Double_Arcsin_Maclaurin(double x);
+extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
@@ -1732,149 +2704,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Maclaurin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arcsin_Rat_Remez(float x);
-TMPL_EXPORT extern double tmpl_Double_Arcsin_Rat_Remez(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Rat_Remez(long double x);
+extern float tmpl_Float_Arcsin_Rat_Remez(float x);
+extern double tmpl_Double_Arcsin_Rat_Remez(double x);
+extern long double tmpl_LDouble_Arcsin_Rat_Remez(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Arcsin_Tail_End                                           *
- *  Purpose:                                                                  *
- *      Compute the arcsin (inverse sine) for values near 1.                  *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double asin_x:                                                        *
- *          The inverse sine of x, sin^-1(x).                                 *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_arcsin_tail_end_float.c                         *
- *      libtmpl/src/math/tmpl_arcsin_tail_end_double.c                        *
- *      libtmpl/src/math/tmpl_arcsin_tail_end_ldouble.c                       *
- ******************************************************************************/
-
-/*  These functions are small enough to inline.                               */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_arcsin_tail_end_double.h>
-#include <libtmpl/include/math/tmpl_arcsin_tail_end_float.h>
-#include <libtmpl/include/math/tmpl_arcsin_tail_end_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arcsin_Tail_End(float x);
-TMPL_EXPORT extern double tmpl_Double_Arcsin_Tail_End(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arcsin_Tail_End(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Arctan2                                                   *
- *  Purpose:                                                                  *
- *      Compute the 2-dimensional arctan (inverse tangent) of a point in the  *
- *      Cartesian plane. This is the angle the point makes with the positive  *
- *      x-axis.                                                               *
- *  Arguments:                                                                *
- *      double y:                                                             *
- *          A real number.                                                    *
- *      double x:                                                             *
- *          Another real number.                                              *
- *  Output:                                                                   *
- *      double atan:                                                          *
- *          The angle the point (x,y) makes with (1,0) in the plane.          *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- *                                                                            *
- *      By convention dating back to (at least) the 1970s, Arctan2 takes the  *
- *      input as (y,x), not (x,y). i.e. the first argument is the y           *
- *      component and the second argument is the x component. This is contrary*
- *      to most 2 dimensional functions that want their inputs as (x,y).      *
- *      This is probably because we are trying to compute tan^-1(y/x) but     *
- *      need to be careful about the signs of y and x, so we write            *
- *      arctan(y,x).                                                          *
- *                                                                            *
- *      This returns a number between -pi and pi, so there is a "branch cut"  *
- *      along the negative x axis. Because of this, use of this function      *
- *      in complex routines results in actual branch cuts.                    *
- ******************************************************************************/
-
-/*  If libtmpl math algorithms are not requested, alias functions to atan2.   */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-
-#define tmpl_Float_Arctan2 atan2f
-#define tmpl_Double_Arctan2 atan2
-#define tmpl_LDouble_Arctan2 atan2l
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arctan2(float y, float x);
-TMPL_EXPORT extern double tmpl_Double_Arctan2(double y, double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arctan2(long double y, long double x);
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Arctan                                                    *
- *  Purpose:                                                                  *
- *      Compute the arctan (inverse tangent) of a real number.                *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double atan_x:                                                        *
- *          The inverse tangent of x, tan^-1(x).                              *
- *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_arctan_float.c                                  *
- *      libtmpl/src/math/tmpl_arctan_double.c                                 *
- *      libtmpl/src/math/tmpl_arctan_ldouble.c                                *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_arctan_float_example.c            *
- *      libtmpl/examples/math_examples/tmpl_arctan_double_example.c           *
- *      libtmpl/examples/math_examples/tmpl_arctan_ldouble_example.c          *
- *  Tests:                                                                    *
- *      libtmpl/tests/math_tests/time_tests/                                  *
- *          tmpl_arctan_float_time_test.c                                     *
- *          tmpl_arctan_double_time_test.c                                    *
- *          tmpl_arctan_ldouble_time_test.c                                   *
- *      libtmpl/tests/math_tests/accuracy_tests/                              *
- *          tmpl_arctan_float_accuracy_test.c                                 *
- *          tmpl_arctan_double_accuracy_test.c                                *
- *          tmpl_arctan_ldouble_accuracy_test.c                               *
- ******************************************************************************/
-
-/*  Alias functions to atan from math.h if libtmpl algorithms not requested.  */
-#if TMPL_USE_MATH_ALGORITHMS != 1
-
-#define tmpl_Float_Arctan atanf
-#define tmpl_Double_Arctan atan
-#define tmpl_LDouble_Arctan atanl
-
-#else
-/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
-
-/*  Inline not requested, use the external functions in src/math.             */
-TMPL_EXPORT extern float tmpl_Float_Arctan(float x);
-TMPL_EXPORT extern double tmpl_Double_Arctan(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arctan(long double x);
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1904,9 +2739,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arctan(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Otherwise use the external ones in src/math.                              */
-TMPL_EXPORT extern float tmpl_Float_Arctan_Asymptotic(float x);
-TMPL_EXPORT extern double tmpl_Double_Arctan_Asymptotic(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
+extern float tmpl_Float_Arctan_Asymptotic(float x);
+extern double tmpl_Double_Arctan_Asymptotic(double x);
+extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -1941,9 +2776,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Asymptotic(long double x);
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-TMPL_EXPORT extern float tmpl_Float_Arctan_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Arctan_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
+extern float tmpl_Float_Arctan_Maclaurin(float x);
+extern double tmpl_Double_Arctan_Maclaurin(double x);
+extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -1977,9 +2812,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Maclaurin(long double x);
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-TMPL_EXPORT extern float tmpl_Float_Arctan_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Arctan_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Pade(long double x);
+extern float tmpl_Float_Arctan_Pade(float x);
+extern double tmpl_Double_Arctan_Pade(double x);
+extern long double tmpl_LDouble_Arctan_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -2013,202 +2848,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Pade(long double x);
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-TMPL_EXPORT extern float tmpl_Float_Arctan_Very_Small(float x);
-TMPL_EXPORT extern double tmpl_Double_Arctan_Very_Small(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
+extern float tmpl_Float_Arctan_Very_Small(float x);
+extern double tmpl_Double_Arctan_Very_Small(double x);
+extern long double tmpl_LDouble_Arctan_Very_Small(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_Max                                                 *
- *  Purpose:                                                                  *
- *      Compute the maximum of an array of doubles.                           *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          An array of doubles.                                              *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      double max:                                                           *
- *          The maximum of arr. NaN's in the array are skipped.               *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Array_Max(float *arr, size_t len);
-TMPL_EXPORT extern double tmpl_Double_Array_Max(double *arr, size_t len);
-TMPL_EXPORT extern long double tmpl_LDouble_Array_Max(long double *arr, size_t len);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_Max_Index                                           *
- *  Purpose:                                                                  *
- *      Compute the index of the maximum of an array of doubles.              *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          An array of doubles.                                              *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      size_t ind:                                                           *
- *          The index of the maximum of arr. NaN's in the array are skipped.  *
- ******************************************************************************/
-TMPL_EXPORT extern size_t tmpl_Float_Array_Max_Index(float *arr, size_t len);
-TMPL_EXPORT extern size_t tmpl_Double_Array_Max_Index(double *arr, size_t len);
-TMPL_EXPORT extern size_t tmpl_LDouble_Array_Max_Index(long double *arr, size_t len);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_Min                                                 *
- *  Purpose:                                                                  *
- *      Compute the minimum of an array of doubles.                           *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          An array of doubles.                                              *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      double min:                                                           *
- *          The minimum of arr. NaN's in the array are skipped.               *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Array_Min(float *arr, size_t len);
-TMPL_EXPORT extern double tmpl_Double_Array_Min(double *arr, size_t len);
-TMPL_EXPORT extern long double tmpl_LDouble_Array_Min(long double *arr, size_t len);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_Min_Index                                           *
- *  Purpose:                                                                  *
- *      Compute the index of the maximum of an array of doubles.              *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          An array of doubles.                                              *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      size_t ind:                                                           *
- *          The index of the maximum of arr. NaN's in the array are skipped.  *
- ******************************************************************************/
-TMPL_EXPORT extern size_t tmpl_Float_Array_Min_Index(float *arr, size_t len);
-TMPL_EXPORT extern size_t tmpl_Double_Array_Min_Index(double *arr, size_t len);
-TMPL_EXPORT extern size_t tmpl_LDouble_Array_Min_Index(long double *arr, size_t len);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_MinMax                                              *
- *  Purpose:                                                                  *
- *      Compute the min and max of an array of doubles.                       *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          An array of doubles.                                              *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *      double *min:                                                          *
- *          A pointer to a double. The minimum will be stored here.           *
- *      double *max:                                                          *
- *          A pointer to a double. The max is stored here.                    *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void
-tmpl_Float_Array_MinMax(float *arr, size_t len,
-                        float *min, float *max);
-
-TMPL_EXPORT extern void
-tmpl_Double_Array_MinMax(double *arr, size_t len,
-                         double *min, double *max);
-
-TMPL_EXPORT extern void
-tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
-                          long double *min, long double *max);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_MinMax_Index                                        *
- *  Purpose:                                                                  *
- *      Compute the indices of the min and max of an array of doubles.        *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          An array of doubles.                                              *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *      size_t *minind:                                                       *
- *          A pointer to a double. The index of the min will be stored here.  *
- *      size_t *maxind:                                                       *
- *          A pointer to a double. The index of the max will be stored here.  *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void
-tmpl_Float_Array_MinMax_Index(float *arr, size_t len,
-                              size_t *minind, size_t *maxind);
-
-TMPL_EXPORT extern void
-tmpl_Double_Array_MinMax_Index(double *arr, size_t len,
-                               size_t *minind, size_t *maxind);
-
-TMPL_EXPORT extern void
-tmpl_LDouble_Array_MinMax_Index(long double *arr, size_t len,
-                                size_t *minind, size_t *maxind);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Array_Reverse                                             *
- *  Purpose:                                                                  *
- *      Reverses the order of a pointer to an array of real numbers.          *
- *  Arguments:                                                                *
- *      double *arr:                                                          *
- *          A pointer to an array.                                            *
- *      size_t len:                                                           *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      None (void):                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void tmpl_Float_Array_Reverse(float *arr, size_t len);
-TMPL_EXPORT extern void tmpl_Double_Array_Reverse(double *arr, size_t len);
-TMPL_EXPORT extern void tmpl_LDouble_Array_Reverse(long double *arr, size_t len);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Base2_Mant_and_Exp                                        *
- *  Purpose:                                                                  *
- *      Given a real number x, compute the numbers m and e such that          *
- *      x = +/- m * 2^e with 1 < m < 2. If x = 0, m = 0 and e = 0 is returned.*
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *      double *mant:                                                         *
- *          Pointer to a double. The mantissa of x is stored here.            *
- *      signed int *expo:                                                     *
- *          A pointer to a signed integer. The exponent is stored here.       *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void
-tmpl_Float_Base2_Mant_and_Exp(float x, float *mant, signed int *expo);
-
-TMPL_EXPORT extern void
-tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo);
-
-TMPL_EXPORT extern void
-tmpl_LDouble_Base2_Mant_and_Exp(long double x,
-                                long double *mant,
-                                signed int *expo);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Cbrt                                                      *
- *  Purpose:                                                                  *
- *      Compute the cube root of a real number.                               *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cbrt_x:                                                        *
- *          The cube root of x, x^{1/3}.                                      *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Cbrt(float x);
-TMPL_EXPORT extern double tmpl_Double_Cbrt(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cbrt(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2227,9 +2872,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cbrt(long double x);
 #include <libtmpl/include/math/tmpl_cbrt_pade_float.h>
 #include <libtmpl/include/math/tmpl_cbrt_pade_ldouble.h>
 #else
-TMPL_EXPORT extern float tmpl_Float_Cbrt_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Cbrt_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cbrt_Pade(long double x);
+extern float tmpl_Float_Cbrt_Pade(float x);
+extern double tmpl_Double_Cbrt_Pade(double x);
+extern long double tmpl_LDouble_Cbrt_Pade(long double x);
 #endif
 
 /******************************************************************************
@@ -2249,9 +2894,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cbrt_Pade(long double x);
 #include <libtmpl/include/math/tmpl_cbrt_taylor_float.h>
 #include <libtmpl/include/math/tmpl_cbrt_taylor_ldouble.h>
 #else
-TMPL_EXPORT extern float tmpl_Float_Cbrt_Taylor(float x);
-TMPL_EXPORT extern double tmpl_Double_Cbrt_Taylor(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
+extern float tmpl_Float_Cbrt_Taylor(float x);
+extern double tmpl_Double_Cbrt_Taylor(double x);
+extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
 #endif
 
 /******************************************************************************
@@ -2288,50 +2933,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
 /*  No inline support requested.                                              */
-TMPL_EXPORT extern float tmpl_Float_Copysign(float x, float y);
-TMPL_EXPORT extern double tmpl_Double_Copysign(double x, double y);
-TMPL_EXPORT extern long double tmpl_LDouble_Copysign(long double x, long double y);
+extern float tmpl_Float_Copysign(float x, float y);
+extern double tmpl_Double_Copysign(double x, double y);
+extern long double tmpl_LDouble_Copysign(long double x, long double y);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Cos                                                       *
- *  Purpose:                                                                  *
- *      Computes the cosine of a real number.                                 *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cos_x:                                                         *
- *          The cosine of x, cos(x).                                          *
- ******************************************************************************/
-#if TMPL_USE_MATH_ALGORITHMS == 1
-TMPL_EXPORT extern float tmpl_Float_Cos(float x);
-TMPL_EXPORT extern double tmpl_Double_Cos(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cos(long double x);
-#else
-#define tmpl_Float_Cos cosf
-#define tmpl_Double_Cos cos
-#define tmpl_LDouble_Cos cosl
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Cosd                                                      *
- *  Purpose:                                                                  *
- *      Computes the cosine of a number in degrees.                           *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cosd_x:                                                        *
- *          The cosine of x in degrees.                                       *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Cosd(float x);
-TMPL_EXPORT extern double tmpl_Double_Cosd(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cosd(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2356,28 +2963,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cosd(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  No inline support, use external functions in src/math.                    */
-TMPL_EXPORT extern float tmpl_Float_Cosd_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Cosd_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cosd_Maclaurin(long double x);
+extern float tmpl_Float_Cosd_Maclaurin(float x);
+extern double tmpl_Double_Cosd_Maclaurin(double x);
+extern long double tmpl_LDouble_Cosd_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_CosPi                                                     *
- *  Purpose:                                                                  *
- *      Computes the normalized cosine of a real number, f(x) = cos(pi x).    *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cos_pix:                                                       *
- *          The normalized cosine of x, cos(pi x).                            *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_CosPi(float x);
-TMPL_EXPORT extern double tmpl_Double_CosPi(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_CosPi(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2402,9 +2993,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_CosPi(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  No inline support, use external functions in src/math.                    */
-TMPL_EXPORT extern float tmpl_Float_CosPi_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_CosPi_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_CosPi_Maclaurin(long double x);
+extern float tmpl_Float_CosPi_Maclaurin(float x);
+extern double tmpl_Double_CosPi_Maclaurin(double x);
+extern long double tmpl_LDouble_CosPi_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -2421,31 +3012,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_CosPi_Maclaurin(long double x);
  *      double cos_pix:                                                       *
  *          The normalized cosine of x, cos(pi x).                            *
  ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_CosPi_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_CosPi_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_CosPi_Pade(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Cosh                                                      *
- *  Purpose:                                                                  *
- *      Computes the hyperbolic cosine of a real number.                      *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cos_x:                                                         *
- *          The hyperbolic cosine of x, cosh(x).                              *
- ******************************************************************************/
-#if TMPL_USE_MATH_ALGORITHMS == 1
-TMPL_EXPORT extern float tmpl_Float_Cosh(float x);
-TMPL_EXPORT extern double tmpl_Double_Cosh(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cosh(long double x);
-#else
-#define tmpl_Float_Cosh coshf
-#define tmpl_Double_Cosh cosh
-#define tmpl_LDouble_Cosh coshl
-#endif
+extern float tmpl_Float_CosPi_Pade(float x);
+extern double tmpl_Double_CosPi_Pade(double x);
+extern long double tmpl_LDouble_CosPi_Pade(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2472,9 +3041,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cosh(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline support not requested, use functions in src/math.                  */
-TMPL_EXPORT extern float tmpl_Float_Cosh_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Cosh_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
+extern float tmpl_Float_Cosh_Maclaurin(float x);
+extern double tmpl_Double_Cosh_Maclaurin(double x);
+extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -2504,9 +3073,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cosh_Maclaurin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Inline support not requested, use functions in src/math.                  */
-TMPL_EXPORT extern float tmpl_Float_Cosh_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Cosh_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Cosh_Pade(long double x);
+extern float tmpl_Float_Cosh_Pade(float x);
+extern double tmpl_Double_Cosh_Pade(double x);
+extern long double tmpl_LDouble_Cosh_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -2538,28 +3107,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Cosh_Pade(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  No inline support requested.                                              */
-TMPL_EXPORT extern float tmpl_Float_Dist(float x, float y);
-TMPL_EXPORT extern double tmpl_Double_Dist(double x, double y);
-TMPL_EXPORT extern long double tmpl_LDouble_Dist(long double x, long double y);
+extern float tmpl_Float_Dist(float x, float y);
+extern double tmpl_Double_Dist(double x, double y);
+extern long double tmpl_LDouble_Dist(long double x, long double y);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Erf                                                       *
- *  Purpose:                                                                  *
- *      Computes the error function of a real number.                         *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double erf_x:                                                         *
- *          The error function of x, Erf(x).                                  *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Erf(float x);
-TMPL_EXPORT extern double tmpl_Double_Erf(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Erf(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2576,12 +3129,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Erf(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_asymptotic_double.h>
 #else
-TMPL_EXPORT extern float tmpl_Float_Erf_Asymptotic(float x);
-TMPL_EXPORT extern double tmpl_Double_Erf_Asymptotic(double x);
+extern float tmpl_Float_Erf_Asymptotic(float x);
+extern double tmpl_Double_Erf_Asymptotic(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-TMPL_EXPORT extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
+extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2598,12 +3151,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Erf_Asymptotic(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_chebyshev_double.h>
 #else
-TMPL_EXPORT extern float tmpl_Float_Erf_Chebyshev(float x);
-TMPL_EXPORT extern double tmpl_Double_Erf_Chebyshev(double x);
+extern float tmpl_Float_Erf_Chebyshev(float x);
+extern double tmpl_Double_Erf_Chebyshev(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-TMPL_EXPORT extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
+extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2620,12 +3173,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Erf_Chebyshev(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_maclaurin_double.h>
 #else
-TMPL_EXPORT extern float tmpl_Float_Erf_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Erf_Maclaurin(double x);
+extern float tmpl_Float_Erf_Maclaurin(float x);
+extern double tmpl_Double_Erf_Maclaurin(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-TMPL_EXPORT extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
+extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2642,75 +3195,12 @@ TMPL_EXPORT extern long double tmpl_LDouble_Erf_Maclaurin(long double x);
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/math/tmpl_erf_pade_double.h>
 #else
-TMPL_EXPORT extern float tmpl_Float_Erf_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Erf_Pade(double x);
+extern float tmpl_Float_Erf_Pade(float x);
+extern double tmpl_Double_Erf_Pade(double x);
 #endif
 
 /*  TODO: Implement long double version.                                      */
-TMPL_EXPORT extern long double tmpl_LDouble_Erf_Pade(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Erfc                                                      *
- *  Purpose:                                                                  *
- *      Computes the complementary error function of a real number.           *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double erfc_x:                                                        *
- *          The complementary error function of x, Erfc(x).                   *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Erfc(float x);
-TMPL_EXPORT extern double tmpl_Double_Erfc(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Erfc(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Erfc                                                      *
- *  Purpose:                                                                  *
- *      Computes the scaled error function of a real number.                  *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double erfcx_x:                                                       *
- *          The scaled error function of x, Erfc(x).                          *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Erfcx(float x);
-TMPL_EXPORT extern double tmpl_Double_Erfcx(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Erfcx(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Exp                                                       *
- *  Purpose:                                                                  *
- *      Computes the base e exponential of a real number.                     *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double exp_x:                                                         *
- *          The exponential function of x, exp(x).                            *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Exp(float x);
-TMPL_EXPORT extern double tmpl_Double_Exp(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Exp(long double x);
-
-/*  TODO:
- *      For long double, all implementations (extended, quadruple, and
- *      double-double), libtmpl has better performance than glibc and openlibm
- *      for large and small inputs.
- *
- *      For float and double, libtmpl has better performance when |x| < 1.
- *      For |x| >= 1, glibc is about 1.6x faster. libtmpl had better
- *      performance than openlibm in this range as well.
- *      Read through and understand glibc's implementation and try to improve
- *      the exponential functions for float and double precision for |x| >= 1.
- *
- *  TODO:
- *      Fix the neg kernel functions for denormal / subnormal outputs.
- */
+extern long double tmpl_LDouble_Erf_Pade(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -2737,9 +3227,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Exp(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  No inline support requested, use functions in src/math.                   */
-TMPL_EXPORT extern float tmpl_Float_Exp_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Exp_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Exp_Maclaurin(long double x);
+extern float tmpl_Float_Exp_Maclaurin(float x);
+extern double tmpl_Double_Exp_Maclaurin(double x);
+extern long double tmpl_LDouble_Exp_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -2769,80 +3259,9 @@ TMPL_EXPORT extern long double tmpl_LDouble_Exp_Maclaurin(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  No inline support requested, use functions in src/math.                   */
-TMPL_EXPORT extern float tmpl_Float_Exp_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Exp_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Exp_Pade(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/*  TODO:
- *      Exp is well optimized for small arguments.
- *      For |x| < 1 the combination or Pade, Remez, and Maclaurin series does *
- *      very well. The tmpl_Double_Exp_Pos_Kernel function has better         *
- *      performance than openlibm (about 1.4x faster, woohoo!), but worse     *
- *      then glibc (about 0.75x as fast). Try to improve this.                */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Exp_Pos_Kernel                                            *
- *  Purpose:                                                                  *
- *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double exp_x:                                                         *
- *          The exponential function of x, exp(x).                            *
- ******************************************************************************/
-
-/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_double.h>
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_float.h>
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support requested.                                              */
-TMPL_EXPORT extern float tmpl_Float_Exp_Pos_Kernel(float x);
-TMPL_EXPORT extern double tmpl_Double_Exp_Pos_Kernel(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Exp_Pos_Kernel                                            *
- *  Purpose:                                                                  *
- *      Computes exp(x) for 1 < x < log(DBL_MAX).                             *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double exp_x:                                                         *
- *          The exponential function of x, exp(x).                            *
- ******************************************************************************/
-
-/*  Several functions (exp, cosh, sinh, etc.) benefit from inlining this.     */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_exp_neg_kernel_double.h>
-#include <libtmpl/include/math/tmpl_exp_neg_kernel_float.h>
-#include <libtmpl/include/math/tmpl_exp_neg_kernel_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support requested.                                              */
-TMPL_EXPORT extern double tmpl_Double_Exp_Neg_Kernel(double x);
-TMPL_EXPORT extern float tmpl_Float_Exp_Neg_Kernel(float x);
-TMPL_EXPORT extern long double tmpl_LDouble_Exp_Neg_Kernel(long double x);
+extern float tmpl_Float_Exp_Pade(float x);
+extern double tmpl_Double_Exp_Pade(double x);
+extern long double tmpl_LDouble_Exp_Pade(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -2873,100 +3292,16 @@ TMPL_EXPORT extern long double tmpl_LDouble_Exp_Neg_Kernel(long double x);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  If inline support is not requested, use the functions in src/math/.       */
-TMPL_EXPORT extern float tmpl_Float_Exp_Remez(float x);
-TMPL_EXPORT extern double tmpl_Double_Exp_Remez(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Exp_Remez(long double x);
+extern float tmpl_Float_Exp_Remez(float x);
+extern double tmpl_Double_Exp_Remez(double x);
+extern long double tmpl_LDouble_Exp_Remez(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Factorial                                                 *
- *  Purpose:                                                                  *
- *      Computes the factorial of an integer, stored as a double.             *
- *  Arguments:                                                                *
- *      unsigned int n:                                                       *
- *          An integer.                                                       *
- *  Output:                                                                   *
- *      double n!:                                                            *
- *          The factorial of n.                                               *
- *  Notes:                                                                    *
- *      Returns +Inf on overflow.                                             *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Factorial(unsigned int n);
-TMPL_EXPORT extern double tmpl_Double_Factorial(unsigned int n);
-TMPL_EXPORT extern long double tmpl_LDouble_Factorial(unsigned int n);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Faddeeva_Im                                               *
- *  Purpose:                                                                  *
- *      Computes the imaginary part of the Faddeeva function.                 *
- *      Given w(x) = re(x) + i * im(x), this returns im(x).                   *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double fa_im_x:                                                       *
- *          The imaginary part of the Faddeeva function of x.                 *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Faddeeva_Im(float x);
-TMPL_EXPORT extern double tmpl_Double_Faddeeva_Im(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Faddeeva_Im(long double x);
-
-TMPL_EXPORT extern unsigned long
-tmpl_Falling_Factorial(unsigned int x, unsigned int N);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Floor                                                     *
- *  Purpose:                                                                  *
- *      Computes the floor function, the largest integer less than the input. *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double floor_x:                                                       *
- *          The floor function evaluated at x.                                *
- ******************************************************************************/
-#if TMPL_USE_MATH_ALGORITHMS != 1
-#define tmpl_Float_Floor floorf
-#define tmpl_Double_Floor floor
-#define tmpl_LDouble_Floor floorl
-#else
-TMPL_EXPORT extern float tmpl_Float_Floor(float x);
-TMPL_EXPORT extern double tmpl_Double_Floor(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Floor(long double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Float_Infinity                                                   *
- *  Purpose:                                                                  *
- *      Returns positive infinity.                                            *
- *  Arguments:                                                                *
- *      None (void).                                                          *
- *  Output:                                                                   *
- *      inf (float):                                                          *
- *          Positive infinity.                                                *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
- *      If IEEE-754 support is available, this code creates infinity using    *
- *      the format. If not, the function mimics glibc's method, returning     *
- *      the number 1.0E10000 which is guaranteed to overflow.                 *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_infinity.c                                      *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_infinity_example.c                *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Infinity(void);
-TMPL_EXPORT extern double tmpl_Double_Infinity(void);
-TMPL_EXPORT extern long double tmpl_LDouble_Infinity(void);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Float_Is_Inf                                                     *
+ *      tmpl_Double_Is_Inf                                                    *
  *  Purpose:                                                                  *
  *      This function tests if a number is positive or negative infinity.     *
  *  Arguments:                                                                *
@@ -2975,601 +3310,213 @@ TMPL_EXPORT extern long double tmpl_LDouble_Infinity(void);
  *  Output:                                                                   *
  *      is_inf (tmpl_Bool):                                                   *
  *          A Boolean indicating if x is +/- infinity or not.                 *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are also provided.                  *
  *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_is_inf.c                                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_is_inf_float_example.c            *
- *      libtmpl/examples/math_examples/tmpl_is_inf_double_example.c           *
- *      libtmpl/examples/math_examples/tmpl_is_inf_ldouble_example.c          *
+ *      libtmpl/include/math/                                                 *
+ *          tmpl_is_inf_double.h                                              *
+ *          tmpl_is_inf_float.h                                               *
+ *          tmpl_is_inf_ldouble.h                                             *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_Bool tmpl_Float_Is_Inf(float x);
-TMPL_EXPORT extern tmpl_Bool tmpl_Double_Is_Inf(double x);
-TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
+
+/*  Alias functions to isinf from math.h if libtmpl algorithms not requested. */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Is_Inf isinff
+#define tmpl_Double_Is_Inf isinf
+#define tmpl_LDouble_Is_Inf isinfl
+
+/*  These functions are small enough that they should be inlined.             */
+#elif TMPL_USE_INLINE == 1
+
+/*  Inline support for is_inf functions are found here.                       */
+#include <libtmpl/include/math/tmpl_is_inf_float.h>
+#include <libtmpl/include/math/tmpl_is_inf_double.h>
+#include <libtmpl/include/math/tmpl_is_inf_ldouble.h>
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern tmpl_Bool tmpl_Float_Is_Inf(float x);
+extern tmpl_Bool tmpl_Double_Is_Inf(double x);
+extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Float_Is_NaN                                                     *
+ *      tmpl_Double_Is_NaN                                                    *
  *  Purpose:                                                                  *
  *      This function tests if a number is Not-a-Number.                      *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      is_nan (tmpl_Bool):                                                   *
- *          A Boolean indicating if x is +/- nan or not.                      *
+ *          A Boolean indicating if x is NaN or not.                          *
  *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
+ *      Float and long double equivalents are also provided.                  *
  *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_is_nan.c                                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_is_nan_float_example.c            *
- *      libtmpl/examples/math_examples/tmpl_is_nan_double_example.c           *
- *      libtmpl/examples/math_examples/tmpl_is_nan_ldouble_example.c          *
+ *      libtmpl/include/math/                                                 *
+ *          tmpl_is_nan_double.h                                              *
+ *          tmpl_is_nan_float.h                                               *
+ *          tmpl_is_nan_ldouble.h                                             *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_Bool tmpl_Float_Is_NaN(float x);
-TMPL_EXPORT extern tmpl_Bool tmpl_Double_Is_NaN(double x);
-TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
+
+/*  Alias functions to isnan from math.h if libtmpl algorithms not requested. */
+#if TMPL_USE_MATH_ALGORITHMS != 1
+
+#define tmpl_Float_Is_NaN isnanf
+#define tmpl_Double_Is_NaN isnan
+#define tmpl_LDouble_Is_NaN isnanl
+
+/*  These functions are small enough that they should be inlined.             */
+#elif TMPL_USE_INLINE == 1
+
+/*  Inline support for is_nan functions are found here.                       */
+#include <libtmpl/include/math/tmpl_is_nan_float.h>
+#include <libtmpl/include/math/tmpl_is_nan_double.h>
+#include <libtmpl/include/math/tmpl_is_nan_ldouble.h>
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern tmpl_Bool tmpl_Float_Is_NaN(float x);
+extern tmpl_Bool tmpl_Double_Is_NaN(double x);
+extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *                        Dependent Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Either the IEEE-754 version or the portable version (or both) of these    *
+ *  functions make calls to external routines.                                */
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Float_Is_NaN_Or_Inf                                              *
+ *      tmpl_Double_Arccos_Tail_End                                           *
  *  Purpose:                                                                  *
- *      This function tests if a number is Not-a-Number or infinity.          *
+ *      Compute the arccos (inverse cosine) for values near 1.                *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      double x:                                                             *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      is_nan_or_inf (tmpl_Bool):                                            *
- *          A Boolean indicating if x is +/- nan/inf or not.                  *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
+ *      double acos_x:                                                        *
+ *          The inverse cosine of x, cos^-1(x).                               *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
  *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_is_nan_or_inf.c                                 *
- ******************************************************************************/
-TMPL_EXPORT extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
-TMPL_EXPORT extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
-TMPL_EXPORT extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Hypot                                                     *
- *  Purpose:                                                                  *
- *      Computes the length of the point (x, y).                              *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *      double y:                                                             *
- *          Another real number.                                              *
- *  Output:                                                                   *
- *      double mag:                                                           *
- *          The magnitude of (x, y).                                          *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Hypot(float x, float y);
-TMPL_EXPORT extern double tmpl_Double_Hypot(double x, double y);
-TMPL_EXPORT extern long double tmpl_LDouble_Hypot(long double x, long double y);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Log                                                       *
- *  Purpose:                                                                  *
- *      Computes the natural log function of the input.                       *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double log_x:                                                         *
- *          The natural log function evaluated at x.                          *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Log(float x);
-TMPL_EXPORT extern double tmpl_Double_Log(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Log(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Max                                                       *
- *  Purpose:                                                                  *
- *      Compute the maximum of two doubles.                                   *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *      double y:                                                             *
- *          Another real number.                                              *
- *  Output:                                                                   *
- *      double max:                                                           *
- *          The maximum of x and y.                                           *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Max(float x, float y);
-TMPL_EXPORT extern double tmpl_Double_Max(double x, double y);
-TMPL_EXPORT extern long double tmpl_LDouble_Max(long double x, long double y);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Min                                                       *
- *  Purpose:                                                                  *
- *      Compute the minimum of two doubles.                                   *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *      double y:                                                             *
- *          Another real number.                                              *
- *  Output:                                                                   *
- *      double max:                                                           *
- *          The minimum of x and y.                                           *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Min(float x, float y);
-TMPL_EXPORT extern double tmpl_Double_Min(double x, double y);
-TMPL_EXPORT extern long double tmpl_LDouble_Min(long double x, long double y);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Mod_2                                                     *
- *  Purpose:                                                                  *
- *      Computes the remainder after division by 2 of the input.              *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double x_mod_2:                                                       *
- *          The value x mod 2.                                                *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Mod_2(float x);
-TMPL_EXPORT extern double tmpl_Double_Mod_2(double n);
-TMPL_EXPORT extern long double tmpl_LDouble_Mod_2(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Mod_360                                                   *
- *  Purpose:                                                                  *
- *      Computes the remainder after division by 360 of the input.            *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double x_mod_360:                                                     *
- *          The value x mod 360.                                              *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Mod_360(float x);
-TMPL_EXPORT extern double tmpl_Double_Mod_360(double n);
-TMPL_EXPORT extern long double tmpl_LDouble_Mod_360(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Float_NaN                                                        *
- *  Purpose:                                                                  *
- *      Returns Not-A-Number.                                                 *
- *  Arguments:                                                                *
- *      None (void).                                                          *
- *  Output:                                                                   *
- *      nan (float):                                                          *
- *          Not-a-Number.                                                     *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
- *      If IEEE-754 support is available, this code creates NaN using         *
- *      the format. If not, the function mimics glibc's method, returning     *
- *      the number 0.0 / 0.0 which should be NaN.                             *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_nan.c                                           *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_nan_example.c                     *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_NaN(void);
-TMPL_EXPORT extern double tmpl_Double_NaN(void);
-TMPL_EXPORT extern long double tmpl_LDouble_NaN(void);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Poly_Eval                                                 *
- *  Purpose:                                                                  *
- *      Given an array of coefficients and a real number, evaluates the       *
- *      the polynomial with the given coefficient at that point.              *
- *  Arguments:                                                                *
- *      double *coeffs:                                                       *
- *          The coefficients. There must be degree + 1 elements in the array. *
- *      size_t degree:                                                        *
- *          The degree of the polynomial.                                     *
- *      double x:                                                             *
- *          The point where the polynomial is being evaluated.                *
- *  Output:                                                                   *
- *      double poly:                                                          *
- *          The polynomial evaluated at x.                                    *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
-TMPL_EXPORT extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
-TMPL_EXPORT extern long double
-tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Poly_Deriv_Eval                                           *
- *  Purpose:                                                                  *
- *      Given an array of coefficients and a real number, evaluates the nth   *
- *      derivative of the the polynomial at that point.                       *
- *  Arguments:                                                                *
- *      double *coeffs:                                                       *
- *          The coefficients. There must be degree + 1 elements in the array. *
- *      unsigned int degree:                                                  *
- *          The degree of the polynomial.                                     *
- *      unsigned int deriv:                                                   *
- *          The order of the derivative being applied to the polynomial.      *
- *      double x:                                                             *
- *          The point where the polynomial is being evaluated.                *
- *  Output:                                                                   *
- *      double dpoly:                                                         *
- *          The nth derivative of the polynomial evaluated at x.              *
- ******************************************************************************/
-TMPL_EXPORT extern float
-tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
-                           unsigned int deriv, float x);
-
-TMPL_EXPORT extern double
-tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
-                            unsigned int deriv, double x);
-
-TMPL_EXPORT extern long double
-tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
-                             unsigned int deriv, long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Pow2                                                      *
- *  Purpose:                                                                  *
- *      Computes an integer power of 2.                                       *
- *  Arguments:                                                                *
- *      signed int expo:                                                      *
- *          An, the power of 2.                                               *
- *  Output:                                                                   *
- *      double pow2_expo:                                                     *
- *          The value 2^expo.                                                 *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Pow2(signed int expo);
-TMPL_EXPORT extern double tmpl_Double_Pow2(signed int expo);
-TMPL_EXPORT extern long double tmpl_LDouble_Pow2(signed int expo);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sinc                                                      *
- *  Purpose:                                                                  *
- *      Computes the sinc function sinc(x) = sin(x)/x (with limit 1 at x = 0).*
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sinc_x:                                                        *
- *          The sinc of x.                                                    *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Sinc(float x);
-TMPL_EXPORT extern double tmpl_Double_Sinc(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sinc(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_SincPi                                                    *
- *  Purpose:                                                                  *
- *      Computes the normalized sinc function sinc(x) = sin(pi x)/(pi x).     *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sincpi_x:                                                      *
- *          The normalized sinc of x.                                         *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_SincPi(float x);
-TMPL_EXPORT extern double tmpl_Double_SincPi(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_SincPi(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin                                                       *
- *  Purpose:                                                                  *
- *      Computes the sine function sin(x).                                    *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_MATH_ALGORITHMS == 1
-TMPL_EXPORT extern float tmpl_Float_Sin(float x);
-TMPL_EXPORT extern double tmpl_Double_Sin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sin(long double x);
-#else
-#define tmpl_Float_Sin sinf
-#define tmpl_Double_Sin sin
-#define tmpl_LDouble_Sin sinl
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin_Very_Small                                            *
- *  Purpose:                                                                  *
- *      Computes the sine function sin(x) using the Maclaurin series for      *
- *      very small inputs.                                                    *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sin_very_small.h>
-#else
-TMPL_EXPORT extern double tmpl_Double_Sin_Very_Small(double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin_Pade                                                  *
- *  Purpose:                                                                  *
- *      Computes the Pade approximant of the sine function sin(x).            *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sin_pade.h>
-#else
-TMPL_EXPORT extern float tmpl_Float_Sin_Pade(float x);
-TMPL_EXPORT extern double tmpl_Double_Sin_Pade(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sin_Pade(long double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin_Pade_Pi                                               *
- *  Purpose:                                                                  *
- *      Computes the Pade approximant of the sine centered at pi.             *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sin_pade_pi.h>
-#else
-TMPL_EXPORT extern float tmpl_Float_Sin_Pade_Pi(float x);
-TMPL_EXPORT extern double tmpl_Double_Sin_Pade_Pi(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_SinCos                                                    *
- *  Purpose:                                                                  *
- *      Computes the point on a circle corresponding to a given angle.        *
- *  Arguments:                                                                *
- *      double t:                                                             *
- *          A real number.                                                    *
- *      double *sin_t:                                                        *
- *          A pointer to the y-coordinate of the point on the circle.         *
- *      double *cos_t:                                                        *
- *          A pointer to the x-coordinate of the point on the circle.         *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void tmpl_Float_SinCos(float t, float *sin_t, float *cos_t);
-TMPL_EXPORT extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
-
-TMPL_EXPORT extern void
-tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_SinCosd                                                   *
- *  Purpose:                                                                  *
- *      Computes the point on a circle from an angle given in degrees.        *
- *  Arguments:                                                                *
- *      double t:                                                             *
- *          The angle in degrees.                                             *
- *      double *sind_t:                                                       *
- *          A pointer to the y-coordinate of the point on the circle.         *
- *      double *cosd_t:                                                       *
- *          A pointer to the x-coordinate of the point on the circle.         *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void tmpl_Float_SinCosd(float t, float *sind_t, float *cosd_t);
-TMPL_EXPORT extern void tmpl_Double_SinCosd(double t, double *sind_t, double *cosd_t);
-
-TMPL_EXPORT extern void
-tmpl_LDouble_SinCosd(long double t, long double *sind_t, long double *cosd_t);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_SinCosPi                                                  *
- *  Purpose:                                                                  *
- *      Computes the point on a circle from a given normalized angle.         *
- *  Arguments:                                                                *
- *      double t:                                                             *
- *          A real number.                                                    *
- *      double *sinpi_t:                                                      *
- *          A pointer to the y-coordinate of the point on the circle.         *
- *      double *cospi_t:                                                      *
- *          A pointer to the x-coordinate of the point on the circle.         *
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-TMPL_EXPORT extern void tmpl_Float_SinCosPi(float t, float *sinpi_t, float *cospi_t);
-TMPL_EXPORT extern void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t);
-
-TMPL_EXPORT extern void
-tmpl_LDouble_SinCosPi(long double t,
-                      long double *sinpi_t,
-                      long double *cospi_t);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sind                                                      *
- *  Purpose:                                                                  *
- *      Computes the sine of a number in degrees.                             *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sind_x:                                                        *
- *          The sine of x in degrees.                                         *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Sind(float x);
-TMPL_EXPORT extern double tmpl_Double_Sind(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sind(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sind_Maclaurin                                            *
- *  Purpose:                                                                  *
- *      Computes the Maclaurin series of sine in degrees.                     *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sind_x:                                                        *
- *          The sine of x in degrees.                                         *
+ *      libtmpl/src/math/tmpl_arccos_tail_end_float.c                         *
+ *      libtmpl/src/math/tmpl_arccos_tail_end_double.c                        *
+ *      libtmpl/src/math/tmpl_arccos_tail_end_ldouble.c                       *
  ******************************************************************************/
 
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sind_maclaurin_double.h>
-#include <libtmpl/include/math/tmpl_sind_maclaurin_float.h>
-#include <libtmpl/include/math/tmpl_sind_maclaurin_ldouble.h>
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_arccos_tail_end_double.h>
+#include <libtmpl/include/math/tmpl_arccos_tail_end_float.h>
+#include <libtmpl/include/math/tmpl_arccos_tail_end_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  No inline support, use external functions in src/math.                    */
-TMPL_EXPORT extern float tmpl_Float_Sind_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_Sind_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sind_Maclaurin(long double x);
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arccos_Tail_End(float x);
+extern double tmpl_Double_Arccos_Tail_End(double x);
+extern long double tmpl_LDouble_Arccos_Tail_End(long double x);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Sinh                                                      *
+ *      tmpl_Double_Arcsin_Tail_End                                           *
  *  Purpose:                                                                  *
- *      Computes the hyperbolic sine function sinh(x).                        *
+ *      Compute the arcsin (inverse sine) for values near 1.                  *
  *  Arguments:                                                                *
  *      double x:                                                             *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      double sinh_x:                                                        *
- *          The hyperbolic sine of x.                                         *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Sinh(float x);
-TMPL_EXPORT extern double tmpl_Double_Sinh(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sinh(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_SinPi                                                     *
- *  Purpose:                                                                  *
- *      Computes the normalized sine of a real number, f(x) = sin(pi x).      *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_pix:                                                       *
- *          The normalized sine of x, sin(pi x).                              *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_SinPi(float x);
-TMPL_EXPORT extern double tmpl_Double_SinPi(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_SinPi(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_SinPi_Maclaurin                                           *
- *  Purpose:                                                                  *
- *      Computes the Maclaurin series of the normalized sine, sin(pi x).      *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_pix:                                                       *
- *          The normalized sine of x, sin(pi x).                              *
+ *      double asin_x:                                                        *
+ *          The inverse sine of x, sin^-1(x).                                 *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_arcsin_tail_end_float.c                         *
+ *      libtmpl/src/math/tmpl_arcsin_tail_end_double.c                        *
+ *      libtmpl/src/math/tmpl_arcsin_tail_end_ldouble.c                       *
  ******************************************************************************/
 
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sinpi_maclaurin_double.h>
-#include <libtmpl/include/math/tmpl_sinpi_maclaurin_float.h>
-#include <libtmpl/include/math/tmpl_sinpi_maclaurin_ldouble.h>
+
+/*  Inline support for absolute value functions are found here.               */
+#include <libtmpl/include/math/tmpl_arcsin_tail_end_double.h>
+#include <libtmpl/include/math/tmpl_arcsin_tail_end_float.h>
+#include <libtmpl/include/math/tmpl_arcsin_tail_end_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  No inline support, use external functions in src/math.                    */
-TMPL_EXPORT extern float tmpl_Float_SinPi_Maclaurin(float x);
-TMPL_EXPORT extern double tmpl_Double_SinPi_Maclaurin(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_SinPi_Maclaurin(long double x);
+/*  Inline not requested, use the external functions in src/math.             */
+extern float tmpl_Float_Arcsin_Tail_End(float x);
+extern double tmpl_Double_Arcsin_Tail_End(double x);
+extern long double tmpl_LDouble_Arcsin_Tail_End(long double x);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Sqrt                                                      *
+ *      tmpl_Double_Positive_Difference                                       *
  *  Purpose:                                                                  *
- *      Computes the square root function sqrt(x).                            *
+ *      Computes the "positive difference" of two real numbers. Equivalent to *
+ *      the C99 function "fdim". Returns max(x-y, 0).                         *
  *  Arguments:                                                                *
  *      double x:                                                             *
  *          A real number.                                                    *
+ *      double y:                                                             *
+ *          Another real number.                                              *
  *  Output:                                                                   *
- *      double sqrt_x:                                                        *
- *          The square root of x.                                             *
+ *      double fdim:                                                          *
+ *          The positive difference of x with respect to y, max(x-y, 0).      *
  ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Sqrt(float x);
-TMPL_EXPORT extern double tmpl_Double_Sqrt(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Sqrt(long double x);
 
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Tan                                                       *
- *  Purpose:                                                                  *
- *      Computes the tangent function tan(x).                                 *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double tan_x:                                                         *
- *          The tangent of x.                                                 *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Tan(float x);
-TMPL_EXPORT extern double tmpl_Double_Tan(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Tan(long double x);
+/*  Alias functions to fdim from math.h if libtmpl algorithms not requested.  */
+#if TMPL_USE_MATH_ALGORITHMS != 1
 
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Tanh                                                      *
- *  Purpose:                                                                  *
- *      Computes the hyperbolic tangent function tanh(x).                     *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double tanh_x:                                                        *
- *          The hyperbolic tangent of x.                                      *
- ******************************************************************************/
-TMPL_EXPORT extern float tmpl_Float_Tanh(float x);
-TMPL_EXPORT extern double tmpl_Double_Tanh(double x);
-TMPL_EXPORT extern long double tmpl_LDouble_Tanh(long double x);
+#define tmpl_Float_Positive_Difference fdimf
+#define tmpl_Double_Positive_Difference fdim
+#define tmpl_LDouble_Positive_Difference fdiml
 
-/*  Macro for positive infinity                                               */
-#define TMPL_INFINITYF (tmpl_Float_Infinity())
-#define TMPL_INFINITY (tmpl_Double_Infinity())
-#define TMPL_INFINITYL (tmpl_LDouble_Infinity())
+/*  These functions are small enough that they can be inlined.                */
+#elif TMPL_USE_INLINE == 1
 
-/*  Macro for Not-A-Number.                                                   */
-#define TMPL_NANF (tmpl_Float_NaN())
-#define TMPL_NAN (tmpl_Double_NaN())
-#define TMPL_NANL (tmpl_LDouble_NaN())
+/*  Inline support for positive difference functions are found here.          */
+#include <libtmpl/include/math/tmpl_positive_difference_float.h>
+#include <libtmpl/include/math/tmpl_positive_difference_double.h>
+#include <libtmpl/include/math/tmpl_positive_difference_ldouble.h>
+
+#else
+/*  Else for #elif TMPL_USE_INLINE == 1.                                      */
+
+/*  Otherwise use the functions in src/math/                                  */
+extern float tmpl_Float_Positive_Difference(float x, float y);
+extern double tmpl_Double_Positive_Difference(double x, double y);
+
+extern long double
+tmpl_LDouble_Positive_Difference(long double x, long double y);
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
 #endif
 /*  End of include guard.                                                     */

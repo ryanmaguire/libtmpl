@@ -723,7 +723,7 @@ long double tmpl_LDouble_Cbrt(long double x)
     whi.r *= tmpl_ldouble_cbrt_data[parity]*tmpl_double_cbrt_table[ind];
 
     /*  Cbrt is an odd function. Negate if needed.                            */
-    whi.bits.sign = w.bits.signa;
+    whi.bits.sign = w.bits.sign;
 
     /*  The double part has cbrt(x) to about 10 decimals. The low part of the *
      *  word was zeroed out. We can triple this to 32 decimals using          *
