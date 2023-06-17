@@ -16,100 +16,98 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_dist_double                              *
+ *                             tmpl_is_inf_double                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the distance from x to y on the number line.                 *
+ *      Determines if the input is +/- infinity.                              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Dist                                                      *
+ *      tmpl_Double_Is_Inf                                                    *
  *  Purpose:                                                                  *
- *      Computes the Euclidean distance d(x, y) = |x - y|.                    *
+ *      Determines if the input is +/- infinity.                              *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
- *      y (double):                                                           *
- *          A real number.                                                    *
  *  Output:                                                                   *
- *      dist (double):                                                        *
- *          The distance |x - y|.                                             *
+ *      is_inf (tmpl_Bool):                                                   *
+ *          Boolean for if x is +/- infinity.                                 *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Computes x - y and then sets the sign bit to zero.                *
- *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
- *              max relative error: 0.0                                       *
- *              rms relative error: 0.0                                       *
- *              max absolute error: 0.0                                       *
- *              rms absolute error: 0.0                                       *
+ *          Check if the bits correspond to +/- infinity. IEEE-754 states     *
+ *          infinity occurs when all exponent bits are 1 and all mantissa     *
+ *          bits are 0. The sign can be 0 or 1, corresponding to positive     *
+ *          and negative infinity, respectively.                              *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Compute y - x if x < y and x - y otherwise.                       *
- *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -100 < x, y < 100.            *
- *              max relative error: 0.0                                       *
- *              rms relative error: 0.0                                       *
- *              max absolute error: 0.0                                       *
- *              rms absolute error: 0.0                                       *
+ *          If IEEE-754 is not available, a portable way to check is by       *
+ *          comparing x + x == x. This will return True in 3 cases: x = 0,    *
+ *          x = +infinity, and x = -infinity. Checking if x + x == x and if   *
+ *          x != 0 suffices.                                                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
+ *  1.) tmpl_bool.h:                                                          *
+ *          Header containing Booleans.                                       *
+ *  2.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_INLINE_DECL.                          *
+ *  3.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 24, 2022                                              *
+ *  Date:       October 21, 2021                                              *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/10/24: Ryan Maguire                                                  *
- *      Added license.                                                        *
- *  2023/06/13: Ryan Maguire                                                  *
- *      Changed src/math/tmpl_dist_double.c to include this file.             *
+ *  2023/06/12: Ryan Maguire                                                  *
+ *      Added inline support. Changed src/math/tmpl_is_inf_double.c to        *
+ *      include this file.                                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DIST_DOUBLE_H
-#define TMPL_DIST_DOUBLE_H
+#ifndef TMPL_IS_INF_DOUBLE_H
+#define TMPL_IS_INF_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Booleans found here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
+
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
+/*  Function prototypes here.                                                 */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Check for IEEE-754 support.                                               */
+/*  Check for IEEE-754 support. This is the easiest way to work with inf.     */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Double precision 1-D distance function.                                   */
+/*  Function for testing if a double is +/- infinity (isinf equivalent).      */
 TMPL_INLINE_DECL
-double tmpl_Double_Dist(double x, double y)
+tmpl_Bool tmpl_Double_Is_Inf(double x)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    /*  Declare a variable for the IEEE-754 double object.                    */
     tmpl_IEEE754_Double w;
 
-    /*  Set the double part of the word to the signed distance x - y.         */
-    w.r = x - y;
+    /*  Set the double part of the word to the input.                         */
+    w.r = x;
 
-    /*  Set the sign bit to zero to compute the absolute value.               */
-    w.bits.sign = 0x00U;
+    /*  The TMPL_DOUBLE_IS_INFINITY macro checks the bits to see if they      *
+     *  correspond to infinity. Use this.                                     */
+    if (TMPL_DOUBLE_IS_INFINITY(w))
+        return tmpl_True;
 
-    /*  Return the double part of the union.                                  */
-    return w.r;
+    /*  Otherwise we have a double that is finite or NaN. Return false.       */
+    return tmpl_False;
 }
-/*  End of tmpl_Double_Dist.                                                  */
+/*  End of tmpl_Double_Is_Inf.                                                */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
@@ -118,18 +116,26 @@ double tmpl_Double_Dist(double x, double y)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
+/*  Function for testing if a double is +/- infinity (isinf equivalent).      */
 TMPL_INLINE_DECL
-double tmpl_Double_Dist(double x, double y)
+tmpl_Bool tmpl_Double_Is_Inf(double x)
 {
-    /*  If x < y we have |x - y| = y - x. Compute this.                       */
-    if (x < y)
-        return y - x;
+    /*  A portable way to check (without IEEE-754 support) is to see if       *
+     *  x = x + x, and x is not zero. x == x + 1 is another way to check, but *
+     *  this can return true for finite numbers if x is greater in magnitude  *
+     *  than the precision implemented for double. x == x + x avoids this     *
+     *  problem. To avoid the compiler trying to optimize this code away,     *
+     *  declare y as volatile.                                                */
+    const volatile double y = x + x;
 
-    /*  Otherwise |x - y| = x - y. Compute this and return.                   */
-    return x - y;
+    /*  If x == x + x, then either x = 0 or x = +/- infinity.                 */
+    if (x == y && x != 0.0)
+        return tmpl_True;
+
+    /*  Otherwise we have a double that is finite or NaN. Return false.       */
+    return tmpl_False;
 }
-/*  End of tmpl_Double_Dist.                                                  */
+/*  End of tmpl_Double_Is_Inf.                                                */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

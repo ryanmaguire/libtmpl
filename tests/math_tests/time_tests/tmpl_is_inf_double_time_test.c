@@ -15,24 +15,6 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *                              tmpl_dist_float                               *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      Computes |x - y|. See include/math/tmpl_dist_float.h for details.     *
- ******************************************************************************
- *  Author:     Ryan Maguire                                                  *
- *  Date:       October 24, 2022                                              *
  ******************************************************************************/
-
-/*  Location of the TMPL_USE_INLINE macro.                                    */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
-
-/*  Implemented in include/math/tmpl_dist_float.h.                            */
-#include "../../include/math/tmpl_dist_float.h"
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+#include "tmpl_math_time_tests.h"
+TEST10(double, -1.0E6, 1.0E6, tmpl_Double_Is_Inf, isinf)

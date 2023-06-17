@@ -16,23 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_dist_float                               *
+ *                      tmpl_positive_difference_ldouble                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes |x - y|. See include/math/tmpl_dist_float.h for details.     *
+ *      See include/math/tmpl_positive_difference_ldouble.h for details. This *
+ *      function computes max(x-y, 0). Equivalent to the C99 fdiml function.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 24, 2022                                              *
+ *  Date:       June 12, 2023                                                 *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_USE_INLINE and TMPL_USE_MATH_ALGORITHMS macros.      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
+/*  Only used if libtmpl algorithms are requested and inline support is not.  */
+#if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Implemented in include/math/tmpl_dist_float.h.                            */
-#include "../../include/math/tmpl_dist_float.h"
+/*  Implemented in include/math/tmpl_positive_difference_ldouble.h.           */
+#include "../../include/math/tmpl_positive_difference_ldouble.h"
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1.         */

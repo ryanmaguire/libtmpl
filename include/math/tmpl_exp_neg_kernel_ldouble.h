@@ -244,7 +244,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     {
         tmpl_IEEE754_LDouble two_to_the_minus_k;
         two_to_the_minus_k.r = 1.0L;
-        two_to_the_minus_k.bits.expoa -= k & TMPL_BITMASK;
+        two_to_the_minus_k.bits.expo -= k & TMPL_BITMASK;
         exp_w.r *= two_to_the_minus_k.r;
     }
 #else
