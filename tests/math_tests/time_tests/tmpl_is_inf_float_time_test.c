@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-#ifndef __GNUC__
+#if defined(__APPLE__) || defined(_MSC_VER)
 int isinff(float value) {
 	return isinf(value);
 }
