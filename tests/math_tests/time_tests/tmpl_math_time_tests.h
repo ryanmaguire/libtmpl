@@ -54,7 +54,7 @@ static size_t memsize(void)
     return (size_t)(pages * page_size);
 }
 #endif
-#define NSAMPS(a) (4*memsize()/(5*sizeof(a)))
+#define NSAMPS(a) (2*memsize()/(5*sizeof(a)))
 #else
 #define NSAMPS(a) (size_t)TMPL_NSAMPS
 #endif
