@@ -1,0 +1,82 @@
+name: CMake
+
+on:
+    push:
+        branches:
+        -   master
+        -   add-cmake-build-system-redo
+        -   add-qemu-to-pipeline
+    pull_request:
+        branches:
+        -   master
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+    BUILD_TYPE: Release
+
+jobs:
+    build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                include:
+                -   cmake_preset: ci-linux-aarch64-crosscompile
+                    qemu_platform: arm64
+                    gcc_package: gcc-aarch64-linux-gnu
+                    gpp_package: g++-aarch64-linux-gnu
+
+        steps:
+        -   uses: actions/checkout@v3
+
+        -   uses: seanmiddleditch/gha-setup-ninja@master
+
+        -   uses: stevenwdv/setup-fasm@v1
+
+        -   name: Select Python 3.10
+              # otherwise turtlebrowser/get-conan@v1.1 fails on macos-12
+            uses: actions/setup-python@v4
+            with:
+                python-version: '3.10'
+
+        -   name: Setup Ninja
+            uses: ashutoshvarma/setup-ninja@master
+            with:
+                  # ninja version to download. Default: 1.10.0
+                version: 1.10.0
+
+        -   name: Install cross-compiling tooling
+            run: |
+                sudo apt-get update
+                sudo apt-get install {{ matrix.gcc_package }} {{ matrix.gpp_package }} qemu-user qemu-user-static
+
+        -   name: Install Conan
+            id: conan
+            uses: turtlebrowser/get-conan@main
+            with:
+                version: 1.59.0
+
+        -   name: Create default Conan profile
+            run: conan profile new default --detect
+
+        -   name: Conan install dependencies
+            run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl --build=missing
+
+        -   name: Check CMake version
+            run: cmake --version
+
+        -   name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+            run: cmake --preset ${{matrix.cmake_preset}}  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+        -   name: Build
+      # Build your program with the given configuration
+            run: cmake --build --preset ${{matrix.cmake_preset}} --config ${{env.BUILD_TYPE}}
+
+        -   name: Test
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+            run: ctest --preset ${{matrix.cmake_preset}} --build-config ${{env.BUILD_TYPE}}
