@@ -50,7 +50,7 @@ jobs:
         -   name: Install cross-compiling tooling
             run: |
                 sudo apt-get update
-                sudo apt-get install {{ matrix.gcc_package }} {{ matrix.gpp_package }} qemu-user qemu-user-static
+                sudo apt-get install ${{matrix.gcc_package}} ${{matrix.gpp_package}} qemu-user qemu-user-static
 
         -   name: Install Conan
             id: conan
