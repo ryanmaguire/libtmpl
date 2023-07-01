@@ -92,7 +92,7 @@ repos:
     rev: 1.4.2
     hooks:
     -   id: cmakelint
-        args: [--linelength=120]
+        args: [--linelength=120, --filter=-whitespace/indent]
 -   repo: https://github.com/cpplint/cpplint
     rev: 1.6.1
     hooks:
