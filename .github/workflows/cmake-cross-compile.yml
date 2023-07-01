@@ -1,4 +1,4 @@
-name: CMake
+name: CMake Cross Compile
 
 on:
     push:
@@ -60,9 +60,6 @@ jobs:
 
         -   name: Create default Conan profile
             run: conan profile new default --detect
-
-        -   name: Conan install dependencies
-            run: conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build/libtmpl --build=missing
 
         -   name: Check CMake version
             run: cmake --version
