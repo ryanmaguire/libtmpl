@@ -95,13 +95,10 @@ if(LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES)
 
     if(DEFINED ENV{CONAN_CMAKE_SYSTEM_PROCESSOR})
         # We're cross compiling
-        conan_cmake_autodetect(settings ARCH $ENV{CONAN_CMAKE_SYSTEM_PROCESSOR})
-
         conan_cmake_install(
             PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
             BUILD missing
-            REMOTE conancenter
-            SETTINGS ${settings} PROFILE_BUILD "${CONAN_PROFILE_FILE}"
+            REMOTE conancenter PROFILE_BUILD "${CONAN_PROFILE_FILE}"
         )
     else()
         conan_cmake_autodetect(settings)
