@@ -59,7 +59,7 @@
  *          Similarly for values x_new[m] > x[len-1] the set value is         *
  *          y_new[m] = y[len-1]. No extrapolating is done.                    *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Float_Sorted_Interp1d(const float *x,
                            const float *y,
                            size_t len,
@@ -67,7 +67,7 @@ tmpl_Float_Sorted_Interp1d(const float *x,
                            float *y_new,
                            size_t len_new);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_Double_Sorted_Interp1d(const double *x,
                             const double *y,
                             size_t len,
@@ -75,7 +75,7 @@ tmpl_Double_Sorted_Interp1d(const double *x,
                             double *y_new,
                             size_t len_new);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDouble_Sorted_Interp1d(const long double *x,
                              const long double *y,
                              size_t len,
