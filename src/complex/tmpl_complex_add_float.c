@@ -19,88 +19,20 @@
  *                           tmpl_complex_add_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex addition.                        *
- ******************************************************************************
- *                             DEFINED FUNCTIONS                              *
- ******************************************************************************
- *  Function Name:                                                            *
- *      tmpl_CFloat_Add                                                       *
- *  Purpose:                                                                  *
- *      Adds two complex numbers:                                             *
- *                                                                            *
- *          z + w = (a + ib) + (c + id) = (a + c) + i(b + d)                  *
- *                                                                            *
- *  Arguments:                                                                *
- *      z (tmpl_ComplexFloat):                                                *
- *          A complex number.                                                 *
- *      w (tmpl_ComplexFloat):                                                *
- *          Another complex number.                                           *
- *  Output:                                                                   *
- *      sum (tmpl_ComplexFloat):                                              *
- *          The sum of z and w.                                               *
- *  Called Functions:                                                         *
- *      None.                                                                 *
- *  Method:                                                                   *
- *      Extract the real and imaginary parts and compute a component-wise sum.*
- *  Notes:                                                                    *
- *      This file is a fork of the code I wrote for rss_ringoccs.             *
- *      librssringoccs is also released under GPL3.                           *
- ******************************************************************************
- *                                DEPENDENCIES                                *
- ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_USE_INLINE macro.                               *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *      Complex addition. See include/complex/tmpl_complex_add_float.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/12/02: Ryan Maguire                                                  *
- *      Frozen for v1.3 of rss_ringoccs.                                      *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *      Edited to make compatibile with libtmpl.                              *
- *      Soft freeze for alpha release of libtmpl.                             *
- *  2021/05/11: Ryan Maguire                                                  *
- *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
- *      No more changes unless something breaks.                              *
- *  2022/09/08: Ryan Maguire                                                  *
- *      Greatly simplified code. Added inline support.                        *
- *  2023/02/06: Ryan Maguire                                                  *
- *      Moved float and long double to their own files.                       *
  ******************************************************************************/
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only used if inline support is not requested.                */
+/*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  In C99, since _Complex is a built-in data type, given float _Complex z0   *
- *  and float _Complex z1, you can just do z0 + z1. With C89 we use structs   *
- *  to define complex numbers. Structs cannot be added, so we need a function *
- *  for computing the sum of two complex values.                              */
-
-/*  Single precision complex addition.                                        */
-tmpl_ComplexFloat tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexFloat sum;
-
-    /*  The sum of two complex numbers simply adds their components.          */
-    sum.dat[0] = z0.dat[0] + z1.dat[0];
-    sum.dat[1] = z0.dat[1] + z1.dat[1];
-    return sum;
-}
-/*  End of tmpl_CFloat_Add.                                                   */
+/*  Implemented in include/complex/tmpl_complex_add_float.h.                  */
+#include "../../include/complex/tmpl_complex_add_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
