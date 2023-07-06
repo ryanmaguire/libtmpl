@@ -75,7 +75,7 @@
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own files.                       *
  *  2023/07/06: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_abs_squared_double.c to use this.    *
+ *      Changed src/complex/tmpl_complex_abs_squared_ldouble.c to use this.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
