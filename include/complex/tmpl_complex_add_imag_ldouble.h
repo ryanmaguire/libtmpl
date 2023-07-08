@@ -86,9 +86,9 @@
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  In C99, since _Complex is a built-in data type, doubles and _Complex      *
- *  doubles can be added via y*_Complex_I + z. With C89 we use structs to     *
- *  define complex numbers. Since we can't add a double to a struct, and      *
+/*  In C99, since _Complex is a built-in data type, long doubles and _Complex *
+ *  long doubles can be added via y*_Complex_I + z. With C89 we use structs to*
+ *  define complex numbers. Since we can't add a long double to a struct, and *
  *  since the _Complex_I macro is undefined, we need a function for computing *
  *  the sum of complex numbers with imaginary ones.                           */
 
