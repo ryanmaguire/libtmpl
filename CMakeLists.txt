@@ -471,7 +471,7 @@ if(SOURCE_EXCLUSION_LIST_SIZE GREATER 1)
 endif()
 
 add_subdirectory("src")
-if(LIBTMPL_BUILD_TESTS)
+if(LIBTMPL_BUILD_TESTS AND NOT DEFINED CROSSCOMPILING_EMULATOR)
     enable_testing()
     add_subdirectory("tests")
 endif()
