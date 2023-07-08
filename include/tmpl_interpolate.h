@@ -32,6 +32,7 @@
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
+#include "tmpl_exports.h"
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Sorted_Interp1d                                           *
