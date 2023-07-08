@@ -38,13 +38,15 @@
  *  Output:                                                                   *
  *      w (tmpl_ComplexFloat):                                                *
  *          The sum of z and x.                                               *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Add the real-valued input to the real part of the complex number.     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where the TMPL_USE_INLINE macro is found.             *
+ *          Header file where the TMPL_INLINE_DECL macro is found.            *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -67,17 +69,16 @@
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own files. Inlined routines.     *
  *      Updated and added comments.                                           *
+ *  2023/07/08: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_add_real_float.c to use this file.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ADD_REAL_FLOAT_H
 #define TMPL_COMPLEX_ADD_REAL_FLOAT_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -96,9 +97,6 @@ tmpl_ComplexFloat tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z)
     return z;
 }
 /*  End of tmpl_CFloat_Add_Real.                                              */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
