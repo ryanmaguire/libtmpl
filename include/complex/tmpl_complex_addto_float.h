@@ -41,11 +41,14 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Compute the component-wise sum and store it in the first pointer.     *
+ *  Notes:                                                                    *
+ *      This provides a "+=" operator to tmpl_ComplexFloat. It is faster to   *
+ *      use tmpl_CFloat_AddTo(&z, &w) instead of z = tmpl_CFloat_Add(z, w).   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_USE_INLINE macro.                               *
+ *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -56,17 +59,16 @@
  ******************************************************************************
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double versions to their own files.              *
+ *  2023/07/08: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_addto_float.c to include this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ADDTO_FLOAT_H
 #define TMPL_COMPLEX_ADDTO_FLOAT_H
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -85,9 +87,6 @@ void tmpl_CFloat_AddTo(tmpl_ComplexFloat *z, const tmpl_ComplexFloat *w)
     z->dat[1] += w->dat[1];
 }
 /*  End of tmpl_CFloat_AddTo.                                                 */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

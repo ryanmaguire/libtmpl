@@ -48,7 +48,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where the macro TMPL_USE_INLINE is found.             *
+ *          Header file where the macro TMPL_INLINE_DECL is found.            *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -74,17 +74,16 @@
  *      Added this function as an optional inline function.                   *
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own files.                       *
+ *  2023/07/06: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_abs_squared_double.c to use this.    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ABS_SQUARED_DOUBLE_H
 #define TMPL_COMPLEX_ABS_SQUARED_DOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  The TMPL_INLINE_DECL macro is found here.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are given and where complex types are defined.       */
 #include <libtmpl/include/tmpl_complex.h>
@@ -97,9 +96,6 @@ double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z)
     return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
 }
 /*  End of tmpl_CDouble_Abs_Squared.                                          */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

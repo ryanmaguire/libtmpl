@@ -38,13 +38,15 @@
  *  Output:                                                                   *
  *      w (tmpl_ComplexLongDouble):                                           *
  *          The sum of z and x.                                               *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Add the real-valued input to the real part of the complex number.     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where the TMPL_USE_INLINE macro is found.             *
+ *          Header file where the TMPL_INLINE_DECL macro is found.            *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -67,25 +69,24 @@
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own files. Inlined routines.     *
  *      Updated and added comments.                                           *
+ *  2023/07/08: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_add_real_ldouble.c to use this file. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ADD_REAL_LDOUBLE_H
 #define TMPL_COMPLEX_ADD_REAL_LDOUBLE_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  In C99, since _Complex is a built-in data type, doubles and _Complex      *
- *  doubles can be added via x + z. With C89 we use structs to define complex *
- *  numbers. Since we can't add a double to a struct, we need a function      *
- *  for computing the sum of complex numbers with real ones.                  */
+/*  In C99, since _Complex is a built-in data type, long doubles and _Complex *
+ *  long doubles can be added via x + z. With C89 we use structs to define    *
+ *  complex numbers. Since we can't add a long double to a struct, we need a  *
+ *  function for computing the sum of complex numbers with real ones.         */
 
 /*  Long double precision complex addition where one variable is real.        */
 TMPL_INLINE_DECL
@@ -97,9 +98,6 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z)
     return z;
 }
 /*  End of tmpl_CLDouble_Add_Real.                                            */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

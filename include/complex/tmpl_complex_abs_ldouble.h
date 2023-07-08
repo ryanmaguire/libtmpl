@@ -39,12 +39,13 @@
  *      abs_z (long double):                                                  *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_LDouble_Hypot (tmpl_math.h):                                     *
- *          Function for computing the magnitude of the vector (x, y).        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_LDouble_Hypot:                                               *
+ *              Function for computing the magnitude of the vector (x, y).    *
  *  Error:                                                                    *
  *      Based on 67,108,864 random samples:                                   *
- *          max err: 1.084200e-19                                             *
- *          rel err: 2.553109e-20                                             *
+ *          Max Relative Error: 1.084200e-19                                  *
+ *          RMS Relative Error: 2.553109e-20                                  *
  *      Values assume 80-bit extended precision. For double, double-double,   *
  *      and quadruple implementations of long double the peak error is also   *
  *      1 ULP.                                                                *
@@ -52,7 +53,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          TMPL_USE_INLINE macro found here.                                 *
+ *          TMPL_INLINE_DECL macro found here.                                *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
  *  3.) tmpl_complex.h:                                                       *
@@ -82,7 +83,7 @@
  *      No more changes unless something breaks.                              *
  *  2021/10/19: Ryan Maguire                                                  *
  *      Changed the algorithm to prevent certain numbers from overflowing.    *
- *      Complex numbers with a magnitude greater than sqrt(DBL_MAX) will      *
+ *      Complex numbers with a magnitude greater than sqrt(LDBL_MAX) will     *
  *      overflow, even though they shouldn't for a proper implementation.     *
  *      This has been fixed, albeit at the expense of speed.                  *
  *  2022/04/28: Ryan Maguire                                                  *
@@ -90,17 +91,16 @@
  *  2022/12/30: Ryan Maguire                                                  *
  *      Moved main algorithm to tmpl_hypot_ldouble.c Function now passes the  *
  *      the real and imaginary parts to tmpl_LDouble_Hypot.                   *
+ *  2023/07/06: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_abs_ldouble.c to include this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ABS_LDOUBLE_H
 #define TMPL_COMPLEX_ABS_LDOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  The TMPL_INLINE_DECL macro is found here.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -115,9 +115,6 @@ long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z)
     return tmpl_LDouble_Hypot(z.dat[0], z.dat[1]);
 }
 /*  End of tmpl_CLDouble_Abs.                                                 */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
