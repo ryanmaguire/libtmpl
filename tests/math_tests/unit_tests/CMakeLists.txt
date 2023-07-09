@@ -15,8 +15,10 @@ foreach(source ${sources})
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED}
                    C_STANDARD 11
                    C_STANDARD_REQUIRED ON
-                   CROSSCOMPILING_EMULATOR ${CROSSCOMPILING_EMULATOR}
-    )
+                   )
+    if(DEFINED CROSSCOMPILING_EMULATOR)
+        set_target_properties(${app} PROPERTIES CROSSCOMPILING_EMULATOR ${CROSSCOMPILING_EMULATOR})
+    endif()
     target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}")
     target_link_libraries(${app} PRIVATE tmpl::tmpl)
     if(UNIX)

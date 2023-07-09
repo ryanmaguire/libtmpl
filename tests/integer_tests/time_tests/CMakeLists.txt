@@ -35,9 +35,10 @@ foreach(source ${c_sources})
     list(APPEND test_c_apps ${app})
     add_executable(${app} ${source})
     set_target_properties(
-        ${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED} CROSSCOMPILING_EMULATOR
-                                                                        ${CROSSCOMPILING_EMULATOR}
-    )
+        ${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED} )
+    if(DEFINED CROSSCOMPILING_EMULATOR)
+        set_target_properties(${app} PROPERTIES CROSSCOMPILING_EMULATOR ${CROSSCOMPILING_EMULATOR})
+    endif()
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -54,9 +55,10 @@ foreach(source ${cpp_sources})
     list(APPEND test_cpp_apps ${app})
     add_executable(${app} ${source})
     set_target_properties(
-        ${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED} CROSSCOMPILING_EMULATOR
-                                                                        ${CROSSCOMPILING_EMULATOR}
-    )
+        ${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED} )
+    if(DEFINED CROSSCOMPILING_EMULATOR)
+        set_target_properties(${app} PROPERTIES CROSSCOMPILING_EMULATOR ${CROSSCOMPILING_EMULATOR})
+    endif()
     target_include_directories(
         ${app}
         PUBLIC "${TMPL_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
