@@ -19,6 +19,7 @@ arch=armv7hf
 arch_build=x86_64
 compiler=gcc
 compiler.libcxx=libstdc++
+compiler.version=11
 os=Linux
 os_build=Linux
 [options]

@@ -93,15 +93,26 @@ project(libtmpl LANGUAGES C)
 if(LIBTMPL_BUILD_TESTS OR LIBTMPL_BUILD_EXAMPLES)
     include(${CMAKE_CURRENT_BINARY_DIR}/conan.cmake)
 
-    conan_cmake_autodetect(settings)
+    if(DEFINED ENV{CONAN_CMAKE_SYSTEM_PROCESSOR})
+        # We're cross compiling
+        conan_cmake_autodetect(settings)
 
-    conan_cmake_install(
-        PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
-        BUILD missing
-        REMOTE conancenter
-        SETTINGS ${settings}
-        PROFILE "${CONAN_PROFILE_FILE}"
-    )
+        conan_cmake_install(
+            PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
+            BUILD missing
+            REMOTE conancenter SETTINGS_BUILD "${settings}" PROFILE_HOST "${CONAN_PROFILE_FILE}"
+        )
+    else()
+        conan_cmake_autodetect(settings)
+
+        conan_cmake_install(
+            PATH_OR_REFERENCE ${CMAKE_CURRENT_SOURCE_DIR}
+            BUILD missing
+            REMOTE conancenter
+            SETTINGS ${settings}
+            PROFILE "${CONAN_PROFILE_FILE}"
+        )
+    endif()
 endif()
 
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH TMPL_PARENT_DIR)
@@ -469,7 +480,7 @@ if(SOURCE_EXCLUSION_LIST_SIZE GREATER 1)
 endif()
 
 add_subdirectory("src")
-if(LIBTMPL_BUILD_TESTS)
+if(LIBTMPL_BUILD_TESTS AND NOT DEFINED CROSSCOMPILING_EMULATOR)
     enable_testing()
     add_subdirectory("tests")
 endif()
