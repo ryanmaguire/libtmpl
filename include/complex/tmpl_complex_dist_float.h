@@ -19,7 +19,7 @@
  *                          tmpl_complex_dist_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the function f(z,w) = |z - w|.           *
+ *      Contains the source code for the function f(z, w) = |z - w|.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -39,16 +39,17 @@
  *      dist (float):                                                         *
  *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      tmpl_Float_Hypot (tmpl_math.h):                                       *
- *          Computes the magnitude of the vector (x, y).                      *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Float_Hypot:                                                 *
+ *              Computes the magnitude of the vector (x, y).                  *
  *  Method:                                                                   *
  *      Treat the points as elements of the Euclidean plane and use           *
  *      the Pythagorean formula.                                              *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_USE_INLINE is found.                       *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  *  3.) tmpl_math.h:                                                          *
@@ -57,7 +58,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/23: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
@@ -70,17 +71,16 @@
  *      Changed algorithm to be safe, avoid overflow for large elements.      *
  *      Moved float and long double versions to their own files.              *
  *      Added inline support.                                                 *
+ *  2023/07/13: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_dist_float.c to include this file.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_DIST_FLOAT_H
 #define TMPL_COMPLEX_DIST_FLOAT_H
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file containing the hypot function.                                */
 #include <libtmpl/include/tmpl_math.h>
@@ -98,9 +98,6 @@ float tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1)
     return tmpl_Float_Hypot(dx, dy);
 }
 /*  End of tmpl_CFloat_Dist.                                                  */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
