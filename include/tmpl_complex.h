@@ -919,6 +919,28 @@ tmpl_CLDouble_Exp(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Expi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes z = exp(i t)                                                 *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number, the phase angle.                                   *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          The value on the circle exp(i t).                                 *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_expi_double.h>
+#include <libtmpl/include/complex/tmpl_complex_expi_float.h>
+#include <libtmpl/include/complex/tmpl_complex_expi_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_Expi(float t);
+extern tmpl_ComplexDouble tmpl_CDouble_Expi(double z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Expi(long double t);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_ExpiPi                                                   *
  *  Purpose:                                                                  *
  *      Computes z = exp(i pi t)                                              *

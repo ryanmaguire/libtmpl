@@ -16,13 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_complex_expipi_float                          *
+ *                          tmpl_complex_expi_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Compute e^{i pi t}. See include/complex/tmpl_complex_expipi_float.h.  *
+ *      Computes e^{i t}. See include/complex/tmpl_complex_expi_double.h.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 12, 2023                                             *
+ *  Date:       July 13, 2023                                                 *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -31,8 +31,8 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Implemented in include/complex/tmpl_complex_expipi_float.h.               */
-#include "../../include/complex/tmpl_complex_expipi_float.h"
+/*  Implemented in include/complex/tmpl_complex_expi_double.h.                */
+#include "../../include/complex/tmpl_complex_expi_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

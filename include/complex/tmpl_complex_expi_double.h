@@ -16,35 +16,34 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_complex_expipi_double                         *
+ *                          tmpl_complex_expi_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the f(t) = exp(i pi t) for real t.       *
+ *      Contains the source code for the f(t) = exp(i t) for real t.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_ExpiPi                                                   *
+ *      tmpl_CDouble_Expi                                                     *
  *  Purpose:                                                                  *
- *      Computes the point on the unit circle corresponding to a normalized   *
- *      phase t. That, given a real number t, this computes:                  *
+ *      Computes the point on the unit circle corresponding to a real angle t.*
  *                                                                            *
- *          f(t) = e^{i pi t}                                                 *
- *               = exp(i pi t)                                                *
- *               = (cos(pi t), sin(pi t))                                     *
+ *          f(t) = e^{i t}                                                    *
+ *               = exp(i t)                                                   *
+ *               = (cos(t), sin(t))                                           *
  *                                                                            *
  *  Arguments:                                                                *
  *      t (double):                                                           *
- *          The normalized phase.                                             *
+ *          The angle of the point.                                           *
  *  Output:                                                                   *
- *      exp_i_pi_t (tmpl_ComplexDouble):                                      *
+ *      exp_i_t (tmpl_ComplexDouble):                                         *
  *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosPi:                                             *
- *              Computes sin(pi t) and cos(pi t) simultaneously.              *
+ *          tmpl_Double_SinCos:                                               *
+ *              Computes sin(t) and cos(t) simultaneously.                    *
  *  Method:                                                                   *
- *      Compute x = cos(pi t) and y = sin(pi t) and return z = x + iy.        *
+ *      Compute x = cos(t) and y = sin(t) and return z = x + iy.              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -56,17 +55,12 @@
  *          Header containing various math functions.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 12, 2023                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2023/07/13: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_expipi_double.c to include this.     *
+ *  Date:       July 13, 2023                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_EXPIPI_DOUBLE_H
-#define TMPL_COMPLEX_EXPIPI_DOUBLE_H
+#ifndef TMPL_COMPLEX_EXPI_DOUBLE_H
+#define TMPL_COMPLEX_EXPI_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
@@ -77,19 +71,19 @@
 /*  Complex routines and data types defined here.                             */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Computes the point on the unit circle with angle pi*t from the real axis. */
+/*  Computes the point on the unit circle with angle t from the real axis.    */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble tmpl_CDouble_ExpiPi(double t)
+tmpl_ComplexDouble tmpl_CDouble_Expi(double t)
 {
     /*  Declare a variable for the output.                                    */
     tmpl_ComplexDouble z;
 
-    /*  Use SinCosPi to compute sin(pi t) and cos(pi t), simultaneously, and  *
-     *  store the results in the imaginary and real part of z, respectively.  */
-    tmpl_Double_SinCosPi(t, &z.dat[1], &z.dat[0]);
+    /*  Use SinCos to compute sin(t) and cos(t), simultaneously, and store    *
+     *  the results in the imaginary and real part of z, respectively.        */
+    tmpl_Double_SinCos(t, &z.dat[1], &z.dat[0]);
     return z;
 }
-/*  End of tmpl_CDouble_ExpiPi.                                               */
+/*  End of tmpl_CDouble_Expi.                                                 */
 
 #endif
 /*  End of include guard.                                                     */
