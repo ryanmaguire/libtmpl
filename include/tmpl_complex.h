@@ -1023,14 +1023,9 @@ tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z);
  *      ln is the real valued natural log. Because of this there is a branch  *
  *      cut along the negative x axis.                                        *
  ******************************************************************************/
-extern tmpl_ComplexFloat
-tmpl_CFloat_Log(tmpl_ComplexFloat z);
-
-extern tmpl_ComplexDouble
-tmpl_CDouble_Log(tmpl_ComplexDouble z);
-
-extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Log(tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Log(tmpl_ComplexDouble z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1183,14 +1178,17 @@ tmpl_CLDouble_Negate(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble z:                                                 *
  *          The complex number r exp(i theta).                                *
  ******************************************************************************/
-extern tmpl_ComplexFloat
-tmpl_CFloat_Polar(float r, float theta);
-
-extern tmpl_ComplexDouble
-tmpl_CDouble_Polar(double r, double theta);
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_polar_double.h>
+#include <libtmpl/include/complex/tmpl_complex_polar_float.h>
+#include <libtmpl/include/complex/tmpl_complex_polar_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_Polar(float r, float theta);
+extern tmpl_ComplexDouble tmpl_CDouble_Polar(double r, double theta);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Polar(long double r, long double theta);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

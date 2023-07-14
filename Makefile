@@ -262,6 +262,9 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_complex_multiply_real_double.c" -and \
 	-not -name "tmpl_complex_multiply_real_float.c" -and \
 	-not -name "tmpl_complex_multiply_real_ldouble.c" -and \
+	-not -name "tmpl_complex_polar_double.c" -and \
+	-not -name "tmpl_complex_polar_float.c" -and \
+	-not -name "tmpl_complex_polar_ldouble.c" -and \
 	-not -name "tmpl_complex_quick_abs_double.c" -and \
 	-not -name "tmpl_complex_quick_abs_float.c" -and \
 	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
