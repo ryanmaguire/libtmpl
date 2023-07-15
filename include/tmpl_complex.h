@@ -64,6 +64,8 @@
 extern "C" {
 #endif
 
+#include "tmpl_exports.h"
+
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 
