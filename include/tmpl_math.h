@@ -2306,6 +2306,27 @@ extern long double tmpl_LDouble_Sinh(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_SinhCosh                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the point on a "hyperblic" circle corresponding to angle t.  *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number.                                                    *
+ *      double *sinh_t:                                                       *
+ *          A pointer to a double. sinh(t) is stored here.                    *
+ *      double *cosh_t:                                                       *
+ *          A pointer to a double. cosh(t) is stored here.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_Float_SinhCosh(float t, float *sinh_t, float *cosh_t);
+extern void tmpl_Double_SinhCosh(double t, double *sinh_t, double *cosh_t);
+
+extern void
+tmpl_LDouble_SinhCosh(long double t, long double *sinh_t, long double *cosh_t);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_SinPi                                                     *
  *  Purpose:                                                                  *
  *      Computes the normalized sine of a real number, f(x) = sin(pi x).      *

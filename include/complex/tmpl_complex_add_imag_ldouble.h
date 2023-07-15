@@ -80,7 +80,7 @@
 #ifndef TMPL_COMPLEX_ADD_IMAG_LDOUBLE_H
 #define TMPL_COMPLEX_ADD_IMAG_LDOUBLE_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Where the prototypes are declared and where complex types are defined.    */

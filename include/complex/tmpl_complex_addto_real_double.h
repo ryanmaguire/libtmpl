@@ -45,23 +45,25 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_USE_INLINE macro.                               *
+ *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 6, 2023                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_addto_real_double.c to include this. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ADDTO_REAL_DOUBLE_H
 #define TMPL_COMPLEX_ADDTO_REAL_DOUBLE_H
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -78,9 +80,6 @@ void tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble *z, double x)
     z->dat[0] += x;
 }
 /*  End of tmpl_CDouble_AddTo_Real.                                           */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

@@ -53,7 +53,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_USE_INLINE macro.                 *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing 2D arctan.                                 *
  *  3.) tmpl_complex.h:                                                       *
@@ -62,7 +62,7 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2020/11/30: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
@@ -77,17 +77,16 @@
  *      No more changes unless something breaks.                              *
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own files. Inlined routines.     *
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_argument_double.c to include this.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ARGUMENT_LDOUBLE_H
 #define TMPL_COMPLEX_ARGUMENT_LDOUBLE_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Arctan2 function found here.                                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -103,9 +102,6 @@ long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z)
     return tmpl_LDouble_Arctan2(z.dat[1], z.dat[0]);
 }
 /*  End of tmpl_CLDouble_Argument.                                            */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

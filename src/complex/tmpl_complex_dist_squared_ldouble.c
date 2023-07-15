@@ -19,65 +19,21 @@
  *                     tmpl_complex_dist_squared_ldouble                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the function f(z, w) = |z - w|^2.        *
- ******************************************************************************
- *                             DEFINED FUNCTIONS                              *
- ******************************************************************************
- *  Function Name:                                                            *
- *      tmpl_CLDouble_Dist_Squared                                            *
- *  Purpose:                                                                  *
- *      Computes the distance between two complex numbers:                    *
- *                                                                            *
- *          dist(z, w) = dist(a + ib, c + id)^2                               *
- *                     = (c - a)^2 + (d - b)^2                                *
- *                                                                            *
- *      This is provided so that users can avoid redundant and expensive      *
- *      calls to the square root function made with tmpl_CLDouble_Dist.       *
- *  Arguments:                                                                *
- *      z (tmpl_ComplexLongDouble):                                           *
- *          A complex number.                                                 *
- *      w (tmpl_ComplexLongDouble):                                           *
- *          Another complex number.                                           *
- *  Output:                                                                   *
- *      dist (long double):                                                   *
- *          The distance between z and w.                                     *
- *  Method:                                                                   *
- *      Treat the points as elements of the Euclidean plane and use           *
- *      the Pythagorean formula.                                              *
- ******************************************************************************
- *                                DEPENDENCIES                                *
- ******************************************************************************
- *  1.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *      Distance squared function. Implemented in                             *
+ *      include/complex/tmpl_complex_dist_squared_ldouble.h.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2021/02/16: Ryan Maguire                                                  *
- *      Created file                                       .                  *
  ******************************************************************************/
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only used if inline support is not requested.                */
+/*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  Long double precision distance squared function for complex variables.    */
-long double
-tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
-{
-    /*  Compute the difference in both components and use Pythagoras.         */
-    const long double dx = z0.dat[0] - z1.dat[0];
-    const long double dy = z0.dat[1] - z1.dat[1];
-    return dx*dx + dy*dy;
-}
-/*  End of tmpl_CLDouble_Dist_Squared.                                        */
+/*  Implemented in include/complex/tmpl_complex_dist_squared_ldouble.h.       */
+#include "../../include/complex/tmpl_complex_dist_squared_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
