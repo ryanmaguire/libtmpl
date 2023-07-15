@@ -35,29 +35,33 @@
  *          A pointer to a complex number.                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Negate the imaginary part of z and return.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_USE_INLINE is found.                       *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 07, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_conjugateself_float.c to use this.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_CONJUGATESELF_FLOAT_H
 #define TMPL_COMPLEX_CONJUGATESELF_FLOAT_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -70,9 +74,6 @@ void tmpl_CFloat_ConjugateSelf(tmpl_ComplexFloat *z)
     z->dat[1] = -z->dat[1];
 }
 /*  End of tmpl_CFloat_Conjugate.                                             */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

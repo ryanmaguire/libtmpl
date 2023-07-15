@@ -64,8 +64,6 @@
 extern "C" {
 #endif
 
-#include "tmpl_exports.h"
-
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -100,25 +98,25 @@ typedef tmpl_ComplexDouble tmpl_Complex;
 /*  Useful constants used throughout computations.                            */
 
 /*  The imaginary unit, z = 0 + i 1.                                          */
-TMPL_EXPORT extern const tmpl_ComplexFloat tmpl_CFloat_I;
-TMPL_EXPORT extern const tmpl_ComplexDouble tmpl_CDouble_I;
-TMPL_EXPORT extern const tmpl_ComplexLongDouble tmpl_CLDouble_I;
+extern const tmpl_ComplexFloat tmpl_CFloat_I;
+extern const tmpl_ComplexDouble tmpl_CDouble_I;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_I;
 
 /*  Complex zero, z = 0 + i0.                                                 */
-TMPL_EXPORT extern const tmpl_ComplexFloat tmpl_CFloat_Zero;
-TMPL_EXPORT extern const tmpl_ComplexDouble tmpl_CDouble_Zero;
-TMPL_EXPORT extern const tmpl_ComplexLongDouble tmpl_CLDouble_Zero;
+extern const tmpl_ComplexFloat tmpl_CFloat_Zero;
+extern const tmpl_ComplexDouble tmpl_CDouble_Zero;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_Zero;
 
 /*  Complex one, z = 1 + i0.                                                  */
-TMPL_EXPORT extern const tmpl_ComplexFloat tmpl_CFloat_One;
-TMPL_EXPORT extern const tmpl_ComplexDouble tmpl_CDouble_One;
-TMPL_EXPORT extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
+extern const tmpl_ComplexFloat tmpl_CFloat_One;
+extern const tmpl_ComplexDouble tmpl_CDouble_One;
+extern const tmpl_ComplexLongDouble tmpl_CLDouble_One;
 
 /*  Complex infinity, set to inf + i inf. This is the "north pole" on the     *
  *  Riemann sphere.                                                           */
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Infinity(void);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Infinity(void);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Infinity(void);
+extern tmpl_ComplexFloat tmpl_CFloat_Infinity(void);
+extern tmpl_ComplexDouble tmpl_CDouble_Infinity(void);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Infinity(void);
 
 /*  WARNING:                                                                  *
  *      On older versions of TCC (the Tiny C Compiler), it is essentially     *
@@ -131,9 +129,9 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Infinity(void);
  *      compile these expressions, as can PCC (the Portable C Compiler).      */
 
 /*  Complex NaN, defined as NaN + i NaN.                                      */
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_NaN(void);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_NaN(void);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
+extern tmpl_ComplexFloat tmpl_CFloat_NaN(void);
+extern tmpl_ComplexDouble tmpl_CDouble_NaN(void);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -177,9 +175,9 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  If inline support is not available, use the code in src/complex/.         */
-TMPL_EXPORT extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
-TMPL_EXPORT extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
-TMPL_EXPORT extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -228,9 +226,9 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the external functions in src/complex/        */
-TMPL_EXPORT extern float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
-TMPL_EXPORT extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
-TMPL_EXPORT extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -283,13 +281,13 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble 
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
@@ -337,10 +335,10 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Add_Imag(double y, tmpl_ComplexDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Add_Imag(double y, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
 
 #endif
@@ -393,10 +391,10 @@ tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Add_Real(double x, tmpl_ComplexDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Add_Real(double x, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
 
 #endif
@@ -428,13 +426,13 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern void
+extern void
 tmpl_CFloat_AddTo(tmpl_ComplexFloat *z, const tmpl_ComplexFloat *w);
 
-TMPL_EXPORT extern void
+extern void
 tmpl_CDouble_AddTo(tmpl_ComplexDouble *z, const tmpl_ComplexDouble *w);
 
-TMPL_EXPORT extern void
+extern void
 tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w);
 
 #endif
@@ -466,9 +464,9 @@ tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern void tmpl_CFloat_AddTo_Imag(tmpl_ComplexFloat *z, float y);
-TMPL_EXPORT extern void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble *z, double y);
-TMPL_EXPORT extern void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y);
+extern void tmpl_CFloat_AddTo_Imag(tmpl_ComplexFloat *z, float y);
+extern void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble *z, double y);
+extern void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -499,9 +497,9 @@ TMPL_EXPORT extern void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat *z, float x);
-TMPL_EXPORT extern void tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble *z, double x);
-TMPL_EXPORT extern void tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble *z, long double x);
+extern void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat *z, float x);
+extern void tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble *z, double x);
+extern void tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble *z, long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -539,9 +537,9 @@ TMPL_EXPORT extern void tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble *z, long
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions found in src/complex/.          */
-TMPL_EXPORT extern float tmpl_CFloat_Argument(tmpl_ComplexFloat z);
-TMPL_EXPORT extern double tmpl_CDouble_Argument(tmpl_ComplexDouble z);
-TMPL_EXPORT extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Argument(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Argument(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -562,13 +560,13 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
  *      tmpl_Bool comp:                                                       *
  *          A Boolean indicating whether or not z0 and z1 are the same.       *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_Bool
+extern tmpl_Bool
 tmpl_CFloat_Compare(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern tmpl_Bool
+extern tmpl_Bool
 tmpl_CDouble_Compare(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern tmpl_Bool
+extern tmpl_Bool
 tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
@@ -598,9 +596,9 @@ tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Conjugate(tmpl_ComplexFloat z);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Conjugate(tmpl_ComplexDouble z);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Conjugate(tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Conjugate(tmpl_ComplexDouble z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z);
 
 #endif
 /*  End if #if TMPL_USE_INLINE == 1.                                          */
@@ -629,9 +627,9 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLo
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern void tmpl_CFloat_ConjugateSelf(tmpl_ComplexFloat *z);
-TMPL_EXPORT extern void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble *z);
-TMPL_EXPORT extern void tmpl_CLDouble_ConjugateSelf(tmpl_ComplexLongDouble *z);
+extern void tmpl_CFloat_ConjugateSelf(tmpl_ComplexFloat *z);
+extern void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble *z);
+extern void tmpl_CLDouble_ConjugateSelf(tmpl_ComplexLongDouble *z);
 
 #endif
 /*  End if #if TMPL_USE_INLINE == 1.                                          */
@@ -652,9 +650,9 @@ TMPL_EXPORT extern void tmpl_CLDouble_ConjugateSelf(tmpl_ComplexLongDouble *z);
  *      and then invoke the definition of hyperbolic cosine and hyperbolic    *
  *      sine yielding cos(x+iy) = cos(x)cosh(y) - i * sin(x)sinh(y).          *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Cos(tmpl_ComplexFloat z);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Cos(tmpl_ComplexDouble z);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Cos(tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Cos(tmpl_ComplexDouble z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Cos(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -668,9 +666,9 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Cos(tmpl_ComplexLongDoub
  *      tmpl_ComplexDouble cosh_z:                                            *
  *          The hyperbolic cosine of z.                                       *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Cosh(tmpl_ComplexFloat z);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Cosh(tmpl_ComplexDouble z);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Cosh(tmpl_ComplexLongDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Cosh(tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Cosh(tmpl_ComplexDouble z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Cosh(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -703,10 +701,10 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Cosh(tmpl_ComplexLongDou
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern float tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
-TMPL_EXPORT extern double tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+extern float tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+extern double tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern long double
+extern long double
 tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
@@ -740,13 +738,13 @@ tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #else
 
-TMPL_EXPORT extern float
+extern float
 tmpl_CFloat_Dist_Squared(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern double
+extern double
 tmpl_CDouble_Dist_Squared(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern long double
+extern long double
 tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0,
                            tmpl_ComplexLongDouble z1);
 
@@ -774,13 +772,13 @@ tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0,
  *      Division is not commutative, so given (z0, z1), this returns z0/z1 and*
  *      not z1/z0. That is, we divide the first entry by the second.          *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Divide(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Divide(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
@@ -805,13 +803,13 @@ tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      Division is not commutative, so given (y, z), this returns y/z and    *
  *      not z/y. That is, we divide the first entry by the second.            *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Divide_Imag(float y, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Divide_Imag(double y, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Divide_Imag(long double y, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -836,13 +834,13 @@ tmpl_CLDouble_Divide_Imag(long double y, tmpl_ComplexLongDouble z);
  *      Division is not commutative, so given (y, z), this returns y/z and    *
  *      not z/y. That is, we divide the first entry by the second.            *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Divide_Real(float x, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Divide_Real(double x, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Divide_Real(long double x, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -857,13 +855,13 @@ tmpl_CLDouble_Divide_Real(long double x, tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble erf_z:                                             *
  *          The error function evaluated at z.                                *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Erf(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Erf(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Erf(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -878,13 +876,13 @@ tmpl_CLDouble_Erf(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble erf_z:                                             *
  *          The complementary error function evaluated at z.                  *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Erfc(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Erfc(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Erfc(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -910,14 +908,36 @@ tmpl_CLDouble_Erfc(tmpl_ComplexLongDouble z);
  *                 = exp(x)cos(y) + i exp(x)sin(y)                            *
  *      So we compute using the trig functions and the real exponential.      *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Exp(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Exp(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Exp(tmpl_ComplexLongDouble z);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Expi                                                     *
+ *  Purpose:                                                                  *
+ *      Computes z = exp(i t)                                                 *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number, the phase angle.                                   *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          The value on the circle exp(i t).                                 *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_expi_double.h>
+#include <libtmpl/include/complex/tmpl_complex_expi_float.h>
+#include <libtmpl/include/complex/tmpl_complex_expi_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_Expi(float t);
+extern tmpl_ComplexDouble tmpl_CDouble_Expi(double z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Expi(long double t);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -936,9 +956,9 @@ tmpl_CLDouble_Exp(tmpl_ComplexLongDouble z);
 #include <libtmpl/include/complex/tmpl_complex_expipi_float.h>
 #include <libtmpl/include/complex/tmpl_complex_expipi_ldouble.h>
 #else
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_ExpiPi(float t);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_ExpiPi(double z);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_ExpiPi(long double t);
+extern tmpl_ComplexFloat tmpl_CFloat_ExpiPi(float t);
+extern tmpl_ComplexDouble tmpl_CDouble_ExpiPi(double z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_ExpiPi(long double t);
 #endif
 
 /******************************************************************************
@@ -954,13 +974,13 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_ExpiPi(long double t);
  *      tmpl_ComplexDouble w_z:                                               *
  *          The Faddeeva function evaluated at z.                             *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Faddeeva(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -976,13 +996,13 @@ tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z);
  *      double real:                                                          *
  *          The imaginary part of z.                                          *
  ******************************************************************************/
-TMPL_EXPORT extern float
+extern float
 tmpl_CFloat_Imag_Part(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern double
+extern double
 tmpl_CDouble_Imag_Part(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern long double
+extern long double
 tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1003,14 +1023,9 @@ tmpl_CLDouble_Imag_Part(tmpl_ComplexLongDouble z);
  *      ln is the real valued natural log. Because of this there is a branch  *
  *      cut along the negative x axis.                                        *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
-tmpl_CFloat_Log(tmpl_ComplexFloat z);
-
-TMPL_EXPORT extern tmpl_ComplexDouble
-tmpl_CDouble_Log(tmpl_ComplexDouble z);
-
-TMPL_EXPORT extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Log(tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Log(tmpl_ComplexDouble z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1027,13 +1042,13 @@ tmpl_CLDouble_Log(tmpl_ComplexLongDouble z);
  *      Using log rules we can avoid a redudant call to the square root       *
  *      function. This increases performance and accuracy.                    *
  ******************************************************************************/
-TMPL_EXPORT extern float
+extern float
 tmpl_CFloat_Log_Abs(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern double
+extern double
 tmpl_CDouble_Log_Abs(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern long double
+extern long double
 tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1068,13 +1083,13 @@ tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
@@ -1094,13 +1109,13 @@ tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      tmpl_ComplexDouble prod:                                              *
  *          The product y * z.                                                *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply_Imag(float y, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Multiply_Imag(double y, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1117,13 +1132,13 @@ tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble prod:                                              *
  *          The product x * z.                                                *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply_Real(float x, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Multiply_Real(double x, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1139,13 +1154,13 @@ tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble neg_z:                                             *
  *          The negative of z.                                                *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Negate(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Negate(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Negate(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1163,14 +1178,17 @@ tmpl_CLDouble_Negate(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble z:                                                 *
  *          The complex number r exp(i theta).                                *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
-tmpl_CFloat_Polar(float r, float theta);
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_polar_double.h>
+#include <libtmpl/include/complex/tmpl_complex_polar_float.h>
+#include <libtmpl/include/complex/tmpl_complex_polar_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_Polar(float r, float theta);
+extern tmpl_ComplexDouble tmpl_CDouble_Polar(double r, double theta);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
-tmpl_CDouble_Polar(double r, double theta);
-
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Polar(long double r, long double theta);
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1203,14 +1221,14 @@ tmpl_CLDouble_Polar(long double r, long double theta);
  *          The complex number given by the polynomial                        *
  *          a_0 + a_1 z + ... a_N z^N                                         *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Poly_Complex_Coeffs(tmpl_ComplexFloat *coeffs,
                                 unsigned int degree, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Poly_Complex_Coeffs(tmpl_ComplexDouble *coeffs,
                                  unsigned int degree, tmpl_ComplexDouble z);
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Poly_Complex_Coeffs(tmpl_ComplexLongDouble *coeffs,
                                   unsigned int degree,
                                   tmpl_ComplexLongDouble z);
@@ -1245,20 +1263,20 @@ tmpl_CLDouble_Poly_Complex_Coeffs(tmpl_ComplexLongDouble *coeffs,
  *          The complex number given by the polynomial                        *
  *          a_0 + a_1 z + ... a_N z^N                                         *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Poly_Real_Coeffs(float *coeffs, unsigned int degree,
                              tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Poly_Real_Coeffs(double *coeffs, unsigned int degree,
                               tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Poly_Real_Coeffs(long double *coeffs, unsigned int degree,
                                tmpl_ComplexLongDouble z);
 
 /*  TODO: Finalize this.                                                      */
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs, unsigned int degree,
                                     unsigned int deriv, tmpl_ComplexDouble z);
 
@@ -1286,13 +1304,13 @@ tmpl_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs, unsigned int degree,
  *      0^0 will return NaN. This is because the output will be:              *
  *          0^0 = exp(0 * ln(0)) = exp(0 * -infinifty) = exp(NaN) = NaN.      *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Pow(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Pow(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Pow(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
@@ -1315,13 +1333,13 @@ tmpl_CLDouble_Pow(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      0^0 will return NaN. This is because the output will be:              *
  *          0^0 = exp(0 * ln(0)) = exp(0 * -infinifty) = exp(NaN) = NaN.      *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Pow_Real(tmpl_ComplexFloat z, float x);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Pow_Real(tmpl_ComplexDouble z, double x);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
 
 /******************************************************************************
@@ -1363,9 +1381,9 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-TMPL_EXPORT extern float tmpl_CFloat_Quick_Abs(tmpl_ComplexFloat z);
-TMPL_EXPORT extern double tmpl_CDouble_Quick_Abs(tmpl_ComplexDouble z);
-TMPL_EXPORT extern long double tmpl_CLDouble_Quick_Abs(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Quick_Abs(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Quick_Abs(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Quick_Abs(tmpl_ComplexLongDouble z);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -1400,13 +1418,13 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Quick_Abs(tmpl_ComplexLongDouble z)
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-TMPL_EXPORT extern float
+extern float
 tmpl_CFloat_Quick_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern double
+extern double
 tmpl_CDouble_Quick_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern long double
+extern long double
 tmpl_CLDouble_Quick_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
@@ -1425,9 +1443,9 @@ tmpl_CLDouble_Quick_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      double real:                                                          *
  *          The real part of z.                                               *
  ******************************************************************************/
-TMPL_EXPORT extern float tmpl_CFloat_Real_Part(tmpl_ComplexFloat z);
-TMPL_EXPORT extern double tmpl_CDouble_Real_Part(tmpl_ComplexDouble z);
-TMPL_EXPORT extern long double tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z);
+extern float tmpl_CFloat_Real_Part(tmpl_ComplexFloat z);
+extern double tmpl_CDouble_Real_Part(tmpl_ComplexDouble z);
+extern long double tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1446,10 +1464,10 @@ TMPL_EXPORT extern long double tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z)
  *      real and imaginary parts, or an error will occur. On MacOS and        *
  *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Reciprocal(tmpl_ComplexFloat z);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Reciprocal(tmpl_ComplexDouble z);
+extern tmpl_ComplexFloat tmpl_CFloat_Reciprocal(tmpl_ComplexFloat z);
+extern tmpl_ComplexDouble tmpl_CDouble_Reciprocal(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Reciprocal(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1472,9 +1490,9 @@ tmpl_CLDouble_Reciprocal(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble z:                                                 *
  *          The complex number x + iy.                                        *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat tmpl_CFloat_Rect(float x, float y);
-TMPL_EXPORT extern tmpl_ComplexDouble tmpl_CDouble_Rect(double x, double y);
-TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Rect(long double x, long double y);
+extern tmpl_ComplexFloat tmpl_CFloat_Rect(float x, float y);
+extern tmpl_ComplexDouble tmpl_CDouble_Rect(double x, double y);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Rect(long double x, long double y);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1492,13 +1510,13 @@ TMPL_EXPORT extern tmpl_ComplexLongDouble tmpl_CLDouble_Rect(long double x, long
  *      and then invoke the definition of hyperbolic cosine and hyperbolic    *
  *      sine yielding sin(x+iy) = sin(x)cosh(y) + i * cos(x)sinh(y).          *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Sin(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Sin(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1513,13 +1531,13 @@ tmpl_CLDouble_Sin(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble sinh_z:                                            *
  *          The hyperbolic sine of z.                                         *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Sinh(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Sinh(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Sinh(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1543,13 +1561,13 @@ tmpl_CLDouble_Sinh(tmpl_ComplexLongDouble z);
  *      along the negative x axis. libtmpl does not provide the option        *
  *      to choose a different branch.                                         *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Sqrt(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Sqrt(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Sqrt(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1566,13 +1584,13 @@ tmpl_CLDouble_Sqrt(tmpl_ComplexLongDouble z);
  *  NOTE:                                                                     *
  *      If x is non-negative, returns sqrt(x). Otherwise, isqrt(|x|).         *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Sqrt_Real(float x);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Sqrt_Real(double x);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Sqrt_Real(long double x);
 
 /******************************************************************************
@@ -1592,13 +1610,13 @@ tmpl_CLDouble_Sqrt_Real(long double x);
  *      Subtraction is not commutative, so given (z0, z1), this computes      *
  *      the first entry minus the second. That is, z0 - z1.                   *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Subtract(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Subtract(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Subtract(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 /******************************************************************************
@@ -1622,13 +1640,13 @@ tmpl_CLDouble_Subtract(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      -x and z. tmpl_ComplexDouble's are structs, so -z is undefined, but   *
  *      x is a double and -x is well defined.                                 *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Subtract_Real(float x, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Subtract_Real(double x, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Subtract_Real(long double x, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1652,13 +1670,13 @@ tmpl_CLDouble_Subtract_Real(long double x, tmpl_ComplexLongDouble z);
  *      -y and z. tmpl_ComplexDouble's are structs, so -z is undefined, but   *
  *      y is a double and -y is well defined.                                 *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Subtract_Imag(float y, tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Subtract_Imag(double y, tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Subtract_Imag(long double y, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1676,13 +1694,13 @@ tmpl_CLDouble_Subtract_Imag(long double y, tmpl_ComplexLongDouble z);
  *      We compute this via tan(z) = sin(z)/cos(z) using the complex versions *
  *      of cosine and sine.                                                   *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Tan(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Tan(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Tan(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
@@ -1697,13 +1715,13 @@ tmpl_CLDouble_Tan(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble tanh_z:                                            *
  *          The hyperbolic tangent of z.                                      *
  ******************************************************************************/
-TMPL_EXPORT extern tmpl_ComplexFloat
+extern tmpl_ComplexFloat
 tmpl_CFloat_Tanh(tmpl_ComplexFloat z);
 
-TMPL_EXPORT extern tmpl_ComplexDouble
+extern tmpl_ComplexDouble
 tmpl_CDouble_Tanh(tmpl_ComplexDouble z);
 
-TMPL_EXPORT extern tmpl_ComplexLongDouble
+extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
 
 /*  Macro for complex infinity                                                */

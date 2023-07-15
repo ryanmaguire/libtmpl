@@ -45,33 +45,35 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_USE_INLINE macro.                               *
+ *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 6, 2023                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_addto_imag_ldouble.c to include this.*
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ADDTO_IMAG_LDOUBLE_H
 #define TMPL_COMPLEX_ADDTO_IMAG_LDOUBLE_H
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
- *  and double y, you can just do z += _Complex_I*y. With C89 we use structs  *
- *  to define complex numbers. Structs cannot be added, so we need a function *
- *  for computing the sum.                                                    */
+/*  In C99, since _Complex is a built-in data type, given long double         *
+ *  _Complex z and long double y, you can just do z += _Complex_I*y. With C89 *
+ *  we use structs to define complex numbers. Structs cannot be added, so we  *
+ *  need a function for computing the sum.                                    */
 
-/*  Double precision complex addition. Equivalent of += operation.            */
+/*  Long double precision complex addition. Equivalent of += operation.       */
 TMPL_INLINE_DECL
 void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y)
 {
@@ -79,9 +81,6 @@ void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y)
     z->dat[1] += y;
 }
 /*  End of tmpl_CLDouble_AddTo_Imag.                                          */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

@@ -36,13 +36,15 @@
  *  Output:                                                                   *
  *      conj_z (tmpl_ComplexFloat):                                           *
  *          The complex conjugate of z.                                       *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Negate the imaginary part of z and return.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_USE_INLINE is found.                       *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -60,17 +62,16 @@
  *      Soft freeze for alpha release of libtmpl.                             *
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own file. Added inline support.  *
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_conjugate_float.c to use this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_CONJUGATE_FLOAT_H
 #define TMPL_COMPLEX_CONJUGATE_FLOAT_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
@@ -84,9 +85,6 @@ tmpl_ComplexFloat tmpl_CFloat_Conjugate(tmpl_ComplexFloat z)
     return z;
 }
 /*  End of tmpl_CFloat_Conjugate.                                             */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
