@@ -2321,10 +2321,10 @@ TMPL_EXPORT extern long double tmpl_LDouble_Sinh(long double x);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Float_SinhCosh(float t, float *sinh_t, float *cosh_t);
-extern void tmpl_Double_SinhCosh(double t, double *sinh_t, double *cosh_t);
+TMPL_EXPORT extern void tmpl_Float_SinhCosh(float t, float *sinh_t, float *cosh_t);
+TMPL_EXPORT extern void tmpl_Double_SinhCosh(double t, double *sinh_t, double *cosh_t);
 
-extern void
+TMPL_EXPORT extern void
 tmpl_LDouble_SinhCosh(long double t, long double *sinh_t, long double *cosh_t);
 
 /******************************************************************************
