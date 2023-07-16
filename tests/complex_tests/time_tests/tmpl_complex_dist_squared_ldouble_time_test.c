@@ -17,13 +17,13 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-static long double func(complex long double z0, complex long double z1) {
+static long double func(NATIVE_COMPLEX_LDOUBLE z0, NATIVE_COMPLEX_LDOUBLE z1) {
     const long double dx = creall(z0) - creall(z1);
     const long double dy = cimagl(z0) - cimagl(z1);
     return dx*dx + dy*dy;
 }
 TEST8(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
-      tmpl_CLDouble_Dist_Squared, func)
+      NATIVE_COMPLEX_LDOUBLE,
+      tmpl_CLDouble_Dist_Squared, func, COMPLEX_LDOUBLE_CTOR)
 

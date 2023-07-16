@@ -17,8 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-
-static long double complex_abs_squared(complex long double z)
+static long double complex_abs_squared(NATIVE_COMPLEX_LDOUBLE z)
 {
     long double x = creall(z);
     long double y = cimagl(z);
@@ -27,6 +26,7 @@ static long double complex_abs_squared(complex long double z)
 
 TEST1(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
+      NATIVE_COMPLEX_LDOUBLE,
       tmpl_CLDouble_Abs_Squared,
-      complex_abs_squared)
+      complex_abs_squared,
+      COMPLEX_LDOUBLE_CTOR)

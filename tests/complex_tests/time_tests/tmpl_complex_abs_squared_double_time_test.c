@@ -18,15 +18,11 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 
-static double complex_abs_squared(complex double z)
+static double complex_abs_squared(NATIVE_COMPLEX_DOUBLE z)
 {
     double x = creal(z);
     double y = cimag(z);
     return x*x + y*y;
 }
 
-TEST1(double,
-      tmpl_ComplexDouble,
-      complex double,
-      tmpl_CDouble_Abs_Squared,
-      complex_abs_squared)
+TEST1(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Abs_Squared, complex_abs_squared, COMPLEX_DOUBLE_CTOR)
