@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
  ******************************************************************************
- *            rss_ringoccs_right_straightedge_fresnel_diffraction             *
+ *            rss_ringoccs_left_straightedge_fresnel_diffraction              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the Fresnel diffraction of a right       *
+ *      Contains the source code for the Fresnel diffraction of a left        *
  *      straightedge.                                                         *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
@@ -49,16 +49,24 @@
 /*  Definition of rssringoccs_ComplexDouble found here.                       */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  The Fresnel integrals are found here.                                     */
+#include <libtmpl/include/tmpl_special_functions_real.h>
+
 /*  Header file containing the prototypes for the functions.                  */
-#include <libtmpl/include/tmpl_optics.h>
+#include <libtmpl/include/tmpl_fresnel_diffraction.h>
 
 tmpl_ComplexDouble
-tmpl_CDouble_Right_Straightedge_Diffraction(double x, double edge, double F)
+tmpl_CDouble_Fresnel_Diffraction_Left_Straightedge(double x,
+                                                   double edge,
+                                                   double fresnel_scale)
 {
-    tmpl_ComplexDouble left_edge, T_hat;
+    tmpl_ComplexDouble T;
+    const double scale_factor = tmpl_Sqrt_Pi_By_Two / fresnel_scale;
+    const double arg = scale_factor * (edge - x);
+    const double re = tmpl_Double_Fresnel_Cos(arg);
+    const double im = tmpl_Double_Fresnel_Sin(arg);
 
-    left_edge = tmpl_CDouble_Left_Straightedge_Diffraction(x, edge, F);
-    T_hat = tmpl_CDouble_Subtract_Real(1.0, left_edge);
-    return T_hat;
+    T.dat[0] = 0.5 + re + im;
+    T.dat[1] = im - re;
+    return T;
 }
-

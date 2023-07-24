@@ -332,7 +332,19 @@ INLINE_EXCLUDE=\
 	-not -name "tmpl_sin_very_small_double.c" -and \
 	-not -name "tmpl_two_vector_l2_norm_double.c" -and \
 	-not -name "tmpl_two_vector_l2_norm_float.c" -and \
-	-not -name "tmpl_two_vector_l2_norm_ldouble.c" -and
+	-not -name "tmpl_two_vector_l2_norm_ldouble.c" -and \
+	-not -name "tmpl_frequency_to_wavelength_double.c" -and \
+	-not -name "tmpl_frequency_to_wavelength_float.c" -and \
+	-not -name "tmpl_frequency_to_wavelength_ldouble.c" -and \
+	-not -name "tmpl_frequency_to_wavenumber_double.c" -and \
+	-not -name "tmpl_frequency_to_wavenumber_float.c" -and \
+	-not -name "tmpl_frequency_to_wavenumber_ldouble.c" -and \
+	-not -name "tmpl_wavelength_to_wavenumber_double.c" -and \
+	-not -name "tmpl_wavelength_to_wavenumber_float.c" -and \
+	-not -name "tmpl_wavelength_to_wavenumber_ldouble.c" -and \
+	-not -name "tmpl_optical_transmittance_double.c" -and \
+	-not -name "tmpl_optical_transmittance_float.c" -and \
+	-not -name "tmpl_optical_transmittance_ldouble.c" -and
 endif
 
 # Whether or not to use the strictly portable code, of IEEE-754 compliant code.
@@ -512,6 +524,8 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/math/
 	mkdir -p $(BUILD_DIR)/src/numerical/
 	mkdir -p $(BUILD_DIR)/src/optics/
+	mkdir -p $(BUILD_DIR)/src/fraunhofer_diffraction/
+	mkdir -p $(BUILD_DIR)/src/fresnel_diffraction/
 	mkdir -p $(BUILD_DIR)/src/polynomial/
 	mkdir -p $(BUILD_DIR)/src/polynomial_integer/
 	mkdir -p $(BUILD_DIR)/src/ppm/
@@ -522,6 +536,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/sort/
 	mkdir -p $(BUILD_DIR)/src/string/
 	mkdir -p $(BUILD_DIR)/src/svg/
+	mkdir -p $(BUILD_DIR)/src/utility/
 	mkdir -p $(BUILD_DIR)/src/vec2/
 	mkdir -p $(BUILD_DIR)/src/vec3/
 	mkdir -p $(BUILD_DIR)/src/vector_integer/

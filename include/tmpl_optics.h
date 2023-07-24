@@ -2,92 +2,175 @@
 #define TMPL_OPTICS_H
 
 /*  The speed of light in km/s.                                               */
-#define tmpl_Speed_Of_Light_KMS_F  299792.4580F
-#define tmpl_Speed_Of_Light_KMS    299792.4580
-#define tmpl_Speed_Of_Light_KMS_L  299792.4580L
+#define tmpl_Speed_Of_Light_KMS_F (299792.4580F)
+#define tmpl_Speed_Of_Light_KMS (299792.4580)
+#define tmpl_Speed_Of_Light_KMS_L (299792.4580L)
 
+#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_complex.h>
-
-extern float
-Fresnel_Scale_Float(float lambda, float d, float phi, float b);
-
-extern double
-Fresnel_Scale_Double(double lambda, double d, double phi, double b);
-
-extern long double
-Fresnel_Scale_LDouble(long double lambda, long double d,
-                      long double phi, long double b);
 
 extern float tmpl_Float_Resolution_Inverse(float x);
 extern double tmpl_Double_Resolution_Inverse(double x);
 extern long double tmpl_LDouble_Resolution_Inverse(long double x);
 
-extern float tmpl_Float_Wavelength_To_Wavenumber(float x);
-extern double tmpl_Double_Wavelength_To_Wavenumber(double x);
-extern long double tmpl_LDouble_Wavelength_To_Wavenumber(long double x);
-
-extern float tmpl_Float_Frequency_To_Wavelength(float x);
-extern double tmpl_Double_Frequency_To_Wavelength(double x);
-extern long double tmpl_LDouble_Frequency_To_Wavelength(long double x);
-
-/*  The ringlet and gap modeling functions.                                   */
-extern tmpl_ComplexDouble
-tmpl_CDouble_Ringlet_Diffraction(double x, double a, double b, double F);
-
-extern tmpl_ComplexDouble
-tmpl_CDouble_Gap_Diffraction(double x, double a, double b, double F);
-
-/*  Functions for computing the phase of a ringlet.                           */
-
-extern float
-tmpl_Float_Ringlet_Diffraction_Phase(float x, float a, float b, float F);
-
-extern double
-tmpl_Double_Ringlet_Diffraction_Phase(double x, double a, double b, double F);
-
-extern tmpl_ComplexDouble
-tmpl_CDouble_Square_Wave_Diffraction(double x, double W, double F,
-                                     unsigned int N);
-
-extern long double
-tmpl_LDouble_Ringlet_Diffraction_Phase(long double x, long double a,
-                                       long double b, long double F);
-
-/*  Left and right straightedge modeling tools.                               */
-extern tmpl_ComplexDouble
-tmpl_CDouble_Right_Straightedge_Diffraction(double x, double edge, double F);
-
-extern tmpl_ComplexDouble
-tmpl_CDouble_Left_Straightedge_Diffraction(double x, double edge, double F);
-
 /******************************************************************************
- *--------------------Single Slit Fraunhofer Diffraction----------------------*
+ *  Function:                                                                 *
+ *      tmpl_Double_Frequency_To_Wavelength                                   *
+ *  Purpose:                                                                  *
+ *      Converts the frequency of light to the corresponding wavelength.      *
+ *  Arguments:                                                                *
+ *      frequency (double):                                                   *
+ *          The frequency of the light ray.                                   *
+ *  Outputs:                                                                  *
+ *      lambda (double):                                                      *
+ *          The wavelength corresponding to the given frequency.              *
  ******************************************************************************/
 
-extern float
-tmpl_Float_One_Slit_Fraunhofer_Diffraction(float x, float z, float a);
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
 
-extern double
-tmpl_Double_One_Slit_Fraunhofer_Diffraction(double x, double z, double a);
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_frequency_to_wavelength_float.h>
+#include <libtmpl/include/optics/tmpl_frequency_to_wavelength_double.h>
+#include <libtmpl/include/optics/tmpl_frequency_to_wavelength_ldouble.h>
 
-extern long double
-tmpl_LDouble_One_Slit_Fraunhofer_Diffraction(long double x, long double z,
-                                             long double a);
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
+extern float tmpl_Float_Frequency_To_Wavelength(float frequency);
+extern double tmpl_Double_Frequency_To_Wavelength(double frequency);
+extern long double tmpl_LDouble_Frequency_To_Wavelength(long double frequency);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
- *--------------------Double Slit Fraunhofer Diffraction----------------------*
+ *  Function:                                                                 *
+ *      tmpl_Double_Frequency_To_Wavenumber                                   *
+ *  Purpose:                                                                  *
+ *      Converts the wave number of light for the given frequency.            *
+ *  Arguments:                                                                *
+ *      frequency (double):                                                   *
+ *          The frequency of the light ray.                                   *
+ *  Outputs:                                                                  *
+ *      wavenumber (double):                                                  *
+ *          The wave number corresponding to the given frequency.             *
  ******************************************************************************/
 
-extern float
-tmpl_Float_Two_Slit_Fraunhofer_Diffraction(float x, float z, float a,
-                                           float d, float lambda);
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
 
-extern double
-tmpl_Double_Two_Slit_Fraunhofer_Diffraction(double x, double z, double a,
-                                            double d, double lambda);
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_frequency_to_wavenumber_float.h>
+#include <libtmpl/include/optics/tmpl_frequency_to_wavenumber_double.h>
+#include <libtmpl/include/optics/tmpl_frequency_to_wavenumber_ldouble.h>
 
-extern long double
-tmpl_LDouble_Two_Slit_Fraunhofer_Diffraction(long double x, long double z,
-                                             long double a, long double d,
-                                             long double lambda);
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
+extern float tmpl_Float_Frequency_To_Wavenumber(float frequency);
+extern double tmpl_Double_Frequency_To_Wavenumber(double frequency);
+extern long double tmpl_LDouble_Frequency_To_Wavenumber(long double frequency);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Wavelength_To_Wavenumber                                  *
+ *  Purpose:                                                                  *
+ *      Computes the wave number of light given the wavelength.               *
+ *  Arguments:                                                                *
+ *      lambda (double):                                                      *
+ *          The wavelength of the light ray.                                  *
+ *  Outputs:                                                                  *
+ *      wavenumber (double):                                                  *
+ *          The wave number corresponding to the given wavelength.            *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_wavelength_to_wavenumber_float.h>
+#include <libtmpl/include/optics/tmpl_wavelength_to_wavenumber_double.h>
+#include <libtmpl/include/optics/tmpl_wavelength_to_wavenumber_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
+extern float tmpl_Float_Wavelength_To_Wavenumber(float lambda);
+extern double tmpl_Double_Wavelength_To_Wavenumber(double lambda);
+extern long double tmpl_LDouble_Wavelength_To_Wavenumber(long double lambda);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Optical_Transmittance                                    *
+ *  Purpose:                                                                  *
+ *      Computes the complex transmittance from optical power and phase.      *
+ *  Arguments:                                                                *
+ *      power (double):                                                       *
+ *          The normalized optical power, normalized to 1.                    *
+ *      phase (double):                                                       *
+ *          The phase, in radians.                                            *
+ *  Outputs:                                                                  *
+ *      T (tmpl_ComplexDouble):                                               *
+ *          The complex transmittance, sqrt(power) * e^{i phase}.             *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_optical_transmittance_float.h>
+#include <libtmpl/include/optics/tmpl_optical_transmittance_double.h>
+#include <libtmpl/include/optics/tmpl_optical_transmittance_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
+extern tmpl_ComplexFloat
+tmpl_CFloat_Optical_Transmittance(float power, float phase);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Optical_Transmittance(double power, double phase);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Optical_Transmittance(long double power, long double phase);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Optical_Transmittance_Degrees                            *
+ *  Purpose:                                                                  *
+ *      Computes the complex transmittance from optical power and phase,      *
+ *      where the phase is given in degrees.                                  *
+ *  Arguments:                                                                *
+ *      power (double):                                                       *
+ *          The normalized optical power, normalized to 1.                    *
+ *      phase (double):                                                       *
+ *          The phase, in degrees.                                            *
+ *  Outputs:                                                                  *
+ *      T (tmpl_ComplexDouble):                                               *
+ *          The complex transmittance, sqrt(power) * e^{i phase}.             *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_CFloat_Optical_Transmittance_Degrees(float power, float phase_deg);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Optical_Transmittance_Degrees(double power, double phase_deg);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Optical_Transmittance_Degrees(long double power,
+                                            long double phase_deg);
+
 #endif

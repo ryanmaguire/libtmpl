@@ -48,35 +48,37 @@
 /*  Definition of rssringoccs_ComplexDouble found here.                       */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  The Fresnel integrals are found here.                                     */
+#include <libtmpl/include/tmpl_special_functions_real.h>
+
 /*  Header file containing the prototypes for the functions.                  */
-#include <libtmpl/include/tmpl_optics.h>
+#include <libtmpl/include/tmpl_fresnel_diffraction.h>
 
 tmpl_ComplexDouble
-tmpl_CDouble_Square_Wave_Diffraction(double x, double W,
-                                     double F, unsigned int N)
+tmpl_CDouble_Fresnel_Diffraction_Square_Wave(double x,
+                                             double well_width,
+                                             double fresnel_scale,
+                                             unsigned int number_of_wells)
 {
-    unsigned int n, N_Waves;
-    double a, b, wave_start;
+    unsigned int n;
     tmpl_ComplexDouble T_hat, summand;
 
-    wave_start = tmpl_Double_Floor(x/2.0*W);
-    a = 2.0*W*wave_start - (double)N;
+    const unsigned int n_waves = 2U*number_of_wells;
+    const double wave_start = tmpl_Double_Floor(0.5* x * well_width);
+    double a = 2.0*well_width*wave_start - (double)number_of_wells;
+    double b = a + well_width;
+    const double shift = 2.0 * well_width;
 
-    if (a<0)
-        a=0;
+    T_hat = tmpl_CDouble_Fresnel_Diffraction_Gap(x, a, b, fresnel_scale);
 
-    b = a+W;
-
-    T_hat = tmpl_CDouble_Gap_Diffraction(x, a, b, F);
-    N_Waves = 2*N;
-
-    for (n=0; n<N_Waves; ++n)
+    for (n = 0U; n < n_waves; ++n)
     {
-        a += 2*W;
-        b += 2*W;
+        a += shift;
+        b += shift;
 
-        summand = tmpl_CDouble_Gap_Diffraction(x, a, b, F);
-        T_hat = tmpl_CDouble_Add(summand, T_hat);
+        summand = tmpl_CDouble_Fresnel_Diffraction_Gap(x, a, b, fresnel_scale);
+        tmpl_CDouble_AddTo(&T_hat, &summand);
     }
+
     return T_hat;
 }

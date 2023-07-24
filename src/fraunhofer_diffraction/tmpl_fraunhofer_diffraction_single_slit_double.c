@@ -16,10 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
  ******************************************************************************
- *                rss_ringoccs_ringlet_fresnel_diffraction                    *
+ *              rss_ringoccs_one_slit_fraunhofer_diffraction                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the Fresnel diffraction of a ringlet.    *
+ *      Contains the source code for the Fraunhofer diffraction modeling of   *
+ *      a single slit.                                                        *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -28,9 +29,6 @@
  *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
  *          provides aliases for the functions, and if C89 math.h is used     *
  *          it defines the functions missing in the earlier version.          *
- *  2.) rss_ringoccs_complex.h:                                               *
- *          Header file where rssringoccs_ComplexDouble is defined, as well   *
- *          as the prototype for rssringoccs_Complex_Cos.                     *
  ******************************************************************************
  *  Author:     Ryan Maguire, Wellesley College                               *
  *  Date:       November 27, 2020                                             *
@@ -45,40 +43,23 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Definition of rssringoccs_ComplexDouble found here.                       */
-#include <libtmpl/include/tmpl_complex.h>
+/*  The Fresnel integrals are found here.                                     */
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Header file containing the prototypes for the functions.                  */
-#include <libtmpl/include/tmpl_optics.h>
+#include <libtmpl/include/tmpl_fraunhofer_diffraction.h>
 
-/******************************************************************************
- *  Function:                                                                 *
- *      Inverted_Square_Well_Diffraction_Float                                *
- *  Purpose:                                                                  *
- *      Compute the diffraction pattern from a plane wave incident on a       *
- *      square well, assuming the Fresnel approximation is valid.             *
- *  Arguments:                                                                *
- *      x (float):                                                            *
- *          The location on the x-axis for the point being computed.          *
- *      a (float):                                                            *
- *          The left-most endpoint of the square well.                        *
- *      b (float):                                                            *
- *          The right-most endpoint of the square well.                       *
- *      F (float):                                                            *
- *          The Fresnel scale.                                                *
- *  Notes:                                                                    *
- *      1.) This function relies on the C99 standard, or higher.              *
- ******************************************************************************/
-
-tmpl_ComplexDouble
-tmpl_CDouble_Ringlet_Diffraction(double x, double a, double b, double F)
+double
+tmpl_Double_Fraunhofer_Diffraction_Single_Slit(double x, double z, double a)
 {
-    tmpl_ComplexDouble gap, out;
+    double result;
 
-    /*  The ringlet is just 1 - gap, so compute the gap and subtract.         */
-    gap = tmpl_CDouble_Gap_Diffraction(x, a, b, F);
-    out = tmpl_CDouble_Subtract_Real(1.0, gap);
+    /*  If z is zero we'll return 0.0. Sinc(x) tends to zero for both         *
+     *  x -> +infinity and x -> -infinity.                                    */
+    if (z == 0.0)
+        return 0.0;
 
-    return out;
+    /*  Single slit is computed in terms of the sinc function.                */
+    result = tmpl_Double_Sinc(a*x/z);
+    return result*result;
 }
-

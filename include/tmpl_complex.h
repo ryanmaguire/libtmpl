@@ -941,6 +941,28 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Expi(long double t);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Expid                                                    *
+ *  Purpose:                                                                  *
+ *      Computes z = exp(i t)                                                 *
+ *  Arguments:                                                                *
+ *      double t:                                                             *
+ *          A real number, the phase in degrees.                              *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          The value on the circle exp(i pi t).                              *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_expid_double.h>
+#include <libtmpl/include/complex/tmpl_complex_expid_float.h>
+#include <libtmpl/include/complex/tmpl_complex_expid_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_Expid(float t);
+extern tmpl_ComplexDouble tmpl_CDouble_Expid(double z);
+extern tmpl_ComplexLongDouble tmpl_CLDouble_Expid(long double t);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_ExpiPi                                                   *
  *  Purpose:                                                                  *
  *      Computes z = exp(i pi t)                                              *
@@ -1188,6 +1210,60 @@ extern tmpl_ComplexDouble tmpl_CDouble_Polar(double r, double theta);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Polar(long double r, long double theta);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Polard                                                   *
+ *  Purpose:                                                                  *
+ *      Create a complex number given it's components in polar format. That   *
+ *      is, given (r, theta), return r*exp(i * theta).                        *
+ *  Arguments:                                                                *
+ *      double r:                                                             *
+ *          A non-negative real number. The magnitude of z.                   *
+ *      double theta:                                                         *
+ *          The argument of z, given in degrees.                              *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          The complex number r exp(i theta).                                *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_polard_double.h>
+#include <libtmpl/include/complex/tmpl_complex_polard_float.h>
+#include <libtmpl/include/complex/tmpl_complex_polard_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_Polard(float r, float theta);
+extern tmpl_ComplexDouble tmpl_CDouble_Polard(double r, double theta);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Polard(long double r, long double theta);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_PolarPi                                                  *
+ *  Purpose:                                                                  *
+ *      Create a complex number given it's components in polar format. That   *
+ *      is, given (r, theta), return r*exp(i * pi * theta).                   *
+ *  Arguments:                                                                *
+ *      double r:                                                             *
+ *          A non-negative real number. The magnitude of z.                   *
+ *      double theta:                                                         *
+ *          The argument of z, given in normalized units.                     *
+ *  Output:                                                                   *
+ *      tmpl_ComplexDouble z:                                                 *
+ *          The complex number r exp(i pi theta).                             *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/complex/tmpl_complex_polarpi_double.h>
+#include <libtmpl/include/complex/tmpl_complex_polarpi_float.h>
+#include <libtmpl/include/complex/tmpl_complex_polarpi_ldouble.h>
+#else
+extern tmpl_ComplexFloat tmpl_CFloat_PolarPi(float r, float theta);
+extern tmpl_ComplexDouble tmpl_CDouble_PolarPi(double r, double theta);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_PolarPi(long double r, long double theta);
 #endif
 
 /******************************************************************************

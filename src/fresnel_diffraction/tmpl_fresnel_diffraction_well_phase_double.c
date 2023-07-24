@@ -49,44 +49,7 @@
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Header file containing the prototypes for the functions.                  */
-#include <libtmpl/include/tmpl_optics.h>
-
-/******************************************************************************
- *  Function:                                                                 *
- *      Ringlet_Diffraction_Phase_Float                                       *
- *  Purpose:                                                                  *
- *      Compute the phase from the diffraction pattern of a square well.      *
- *  Arguments:                                                                *
- *      x (float):                                                            *
- *          The location on the x-axis for the point being computed.          *
- *      a (float):                                                            *
- *          The left-most endpoint of the ringlet.                            *
- *      b (float):                                                            *
- *          The right-most endpoint of the ringlet.                           *
- *      F (float):                                                            *
- *          The Fresnel scale.                                                *
- *  Notes:                                                                    *
- *      1.) This function relies on the C99 standard, or higher.              *
- ******************************************************************************/
-float
-tmpl_Float_Ringlet_Diffraction_Phase(float x, float a, float b, float F)
-{
-    float re, im, arg1, arg2, fs1, fs2, fc1, fc2, out;
-
-    arg1 = tmpl_Sqrt_Pi_By_Two_F*(a-x)/F;
-    arg2 = tmpl_Sqrt_Pi_By_Two_F*(b-x)/F;
-
-    fs1 = tmpl_Float_Fresnel_Sin(arg1);
-    fs2 = tmpl_Float_Fresnel_Sin(arg2);
-    fc1 = tmpl_Float_Fresnel_Cos(arg1);
-    fc2 = tmpl_Float_Fresnel_Cos(arg2);
-
-    im = tmpl_Sqrt_One_By_Two_Pi_F * (fs2 - fs1 -  fc2 + fc1);
-    re = 1.0F - tmpl_Sqrt_One_By_Two_Pi_F * (fc2 - fc1 + fs2 - fs1);
-    out = tmpl_Float_Arctan2(im, re);
-
-    return out;
-}
+#include <libtmpl/include/tmpl_fresnel_diffraction.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -106,60 +69,21 @@ tmpl_Float_Ringlet_Diffraction_Phase(float x, float a, float b, float F)
  *      1.) This function relies on the C99 standard, or higher.              *
  ******************************************************************************/
 double
-tmpl_Double_Ringlet_Diffraction_Phase(double x, double a, double b, double F)
+tmpl_Double_Fresnel_Diffraction_Well_Phase(double x,
+                                           double a,
+                                           double b,
+                                           double fresnel_scale)
 {
-    double re, im, arg1, arg2, fs1, fs2, fc1, fc2, out;
+    const double scale_factor = tmpl_Sqrt_Pi_By_Two / fresnel_scale;
+    const double arg1 = scale_factor*(a - x);
+    const double arg2 = scale_factor*(b - x);
 
-    arg1 = tmpl_Sqrt_Pi_By_Two*(a-x)/F;
-    arg2 = tmpl_Sqrt_Pi_By_Two*(b-x)/F;
+    const double fs1 = tmpl_Double_Fresnel_Sin(arg1);
+    const double fs2 = tmpl_Double_Fresnel_Sin(arg2);
+    const double fc1 = tmpl_Double_Fresnel_Cos(arg1);
+    const double fc2 = tmpl_Double_Fresnel_Cos(arg2);
 
-    fs1 = tmpl_Double_Fresnel_Sin(arg1);
-    fs2 = tmpl_Double_Fresnel_Sin(arg2);
-    fc1 = tmpl_Double_Fresnel_Cos(arg1);
-    fc2 = tmpl_Double_Fresnel_Cos(arg2);
-
-    im = tmpl_Sqrt_One_By_Two_Pi * (fs2 - fs1 -  fc2 + fc1);
-    re = 1.0 - tmpl_Sqrt_One_By_Two_Pi * (fc2 - fc1 + fs2 - fs1);
-    out = tmpl_Double_Arctan2(im, re);
-
-    return out;
+    const double im = tmpl_Sqrt_One_By_Two_Pi * (fs2 - fs1 -  fc2 + fc1);
+    const double re = 1.0 - tmpl_Sqrt_One_By_Two_Pi * (fc2 - fc1 + fs2 - fs1);
+    return tmpl_Double_Arctan2(im, re);
 }
-
-/******************************************************************************
- *  Function:                                                                 *
- *      Ringlet_Diffraction_Phase_Long_Double                                 *
- *  Purpose:                                                                  *
- *      Compute the phase from the diffraction pattern of a square well.      *
- *  Arguments:                                                                *
- *      x (float):                                                            *
- *          The location on the x-axis for the point being computed.          *
- *      a (float):                                                            *
- *          The left-most endpoint of the ringlet.                            *
- *      b (float):                                                            *
- *          The right-most endpoint of the ringlet.                           *
- *      F (float):                                                            *
- *          The Fresnel scale.                                                *
- *  Notes:                                                                    *
- *      1.) This function relies on the C99 standard, or higher.              *
- ******************************************************************************/
-long double
-tmpl_LDouble_Ringlet_Diffraction_Phase(long double x, long double a,
-                                       long double b, long double F)
-{
-    long double re, im, arg1, arg2, fs1, fs2, fc1, fc2, out;
-
-    arg1 = tmpl_Sqrt_Pi_By_Two_L*(a-x)/F;
-    arg2 = tmpl_Sqrt_Pi_By_Two_L*(b-x)/F;
-
-    fs1 = tmpl_LDouble_Fresnel_Sin(arg1);
-    fs2 = tmpl_LDouble_Fresnel_Sin(arg2);
-    fc1 = tmpl_LDouble_Fresnel_Cos(arg1);
-    fc2 = tmpl_LDouble_Fresnel_Cos(arg2);
-
-    im = tmpl_Sqrt_One_By_Two_Pi_L * (fs2 - fs1 -  fc2 + fc1);
-    re = 1.0L - tmpl_Sqrt_One_By_Two_Pi_L * (fc2 - fc1 + fs2 - fs1);
-    out = tmpl_LDouble_Arctan2(im, re);
-
-    return out;
-}
-

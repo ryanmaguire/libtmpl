@@ -16,11 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
  ******************************************************************************
- *            rss_ringoccs_left_straightedge_fresnel_diffraction              *
+ *                rss_ringoccs_ringlet_fresnel_diffraction                    *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the Fresnel diffraction of a left        *
- *      straightedge.                                                         *
+ *      Contains the source code for the Fresnel diffraction of a ringlet.    *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -50,27 +49,55 @@
 #include <libtmpl/include/tmpl_complex.h>
 
 /*  The Fresnel integrals are found here.                                     */
-#include <libtmpl/include/tmpl_special_functions_real.h>
+#include <libtmpl/include/tmpl_special_functions_complex.h>
 
 /*  Header file containing the prototypes for the functions.                  */
-#include <libtmpl/include/tmpl_optics.h>
+#include <libtmpl/include/tmpl_fresnel_diffraction.h>
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      Inverted_Square_Well_Diffraction_Float                                *
+ *  Purpose:                                                                  *
+ *      Compute the diffraction pattern from a plane wave incident on a       *
+ *      square well, assuming the Fresnel approximation is valid.             *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          The location on the x-axis for the point being computed.          *
+ *      a (float):                                                            *
+ *          The left-most endpoint of the square well.                        *
+ *      b (float):                                                            *
+ *          The right-most endpoint of the square well.                       *
+ *      F (float):                                                            *
+ *          The Fresnel scale.                                                *
+ *  Notes:                                                                    *
+ *      1.) This function relies on the C99 standard, or higher.              *
+ ******************************************************************************/
 
 tmpl_ComplexDouble
-tmpl_CDouble_Left_Straightedge_Diffraction(double x, double edge, double F)
+tmpl_CDouble_Fresnel_Diffraction_Well(double x,
+                                      double left_edge,
+                                      double right_edge,
+                                      double fresnel_scale)
 {
-    tmpl_ComplexDouble T_hat, scale;
-    double re, im;
+    tmpl_ComplexDouble out;
 
-    scale = tmpl_CDouble_Rect(tmpl_Sqrt_One_By_Two_Pi,
-                              -tmpl_Sqrt_One_By_Two_Pi);
-    x = tmpl_Sqrt_Pi_By_Two*(edge-x)/F;
+    /*  The bounds of the integral are sqrt(pi/2)(a-x)/F and                  *
+     *  sqrt(pi/2)(b-x)/F, and the output is computed in terms of this.       */
+    const double scale_factor = tmpl_Sqrt_Pi_By_Two / fresnel_scale;
+    const double arg1 = scale_factor * (left_edge - x);
+    const double arg2 = scale_factor * (right_edge - x);
 
-    im = tmpl_Double_Fresnel_Sin(x);
-    re = tmpl_Double_Fresnel_Cos(x);
+    /*  Compute the Fresnel integrals of the two arguments.                   */
+    const tmpl_ComplexDouble z1 = tmpl_CDouble_Fresnel_Integral_Real(arg1);
+    const tmpl_ComplexDouble z2 = tmpl_CDouble_Fresnel_Integral_Real(arg2);
 
-    T_hat = tmpl_CDouble_Rect(re, im);
-    T_hat = tmpl_CDouble_Multiply(scale, T_hat);
-    T_hat = tmpl_CDouble_Add_Real(0.5, T_hat);
-    return T_hat;
+    /*  The output is the difference of z2 and z1 scaled by the factor        *
+     *  sqrt(1/2 pi) * (1 - i), so compute this.                              */
+    out.dat[0] = (z2.dat[0] + z2.dat[1]) - (z1.dat[0] + z1.dat[1]);
+    out.dat[1] = (z2.dat[1] - z2.dat[0]) - (z1.dat[1] - z1.dat[0]);
+
+    out.dat[0] = 1.0 - tmpl_Sqrt_One_By_Two_Pi*out.dat[0];
+    out.dat[1] *= -tmpl_Sqrt_One_By_Two_Pi;
+    return out;
 }
 

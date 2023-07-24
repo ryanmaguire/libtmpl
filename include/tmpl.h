@@ -49,6 +49,7 @@
 #include <libtmpl/include/tmpl_spherical_geometry.h>
 #include <libtmpl/include/tmpl_string.h>
 #include <libtmpl/include/tmpl_svg.h>
+#include <libtmpl/include/tmpl_utility.h>
 #include <libtmpl/include/tmpl_vec2.h>
 #include <libtmpl/include/tmpl_vec3.h>
 #include <libtmpl/include/tmpl_vector_complex.h>

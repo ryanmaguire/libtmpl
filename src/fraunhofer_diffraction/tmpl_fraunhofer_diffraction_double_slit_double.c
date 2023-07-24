@@ -16,10 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
  ******************************************************************************
- *                  rss_ringoccs_gap_fresnel_diffraction                      *
+ *              rss_ringoccs_two_slit_fraunhofer_diffraction                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the Fresnel diffraction of a gap.        *
+ *      Contains the source code for the Fraunhofer diffraction modeling of   *
+ *      a double slit.                                                        *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -28,9 +29,6 @@
  *          header files (C89 vs C99 math.h). If C99 math.h exists, it simply *
  *          provides aliases for the functions, and if C89 math.h is used     *
  *          it defines the functions missing in the earlier version.          *
- *  2.) rss_ringoccs_complex.h:                                               *
- *          Header file where rssringoccs_ComplexDouble is defined, as well   *
- *          as the prototype for rssringoccs_Complex_Cos.                     *
  ******************************************************************************
  *  Author:     Ryan Maguire, Wellesley College                               *
  *  Date:       November 27, 2020                                             *
@@ -45,57 +43,45 @@
  *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Definition of rssringoccs_ComplexDouble found here.                       */
-#include <libtmpl/include/tmpl_complex.h>
-
 /*  The Fresnel integrals are found here.                                     */
-#include <libtmpl/include/tmpl_special_functions_complex.h>
+#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Header file containing the prototypes for the functions.                  */
-#include <libtmpl/include/tmpl_optics.h>
+#include <libtmpl/include/tmpl_fraunhofer_diffraction.h>
 
-/******************************************************************************
- *  Function:                                                                 *
- *      Inverted_Square_Well_Diffraction_Float                                *
- *  Purpose:                                                                  *
- *      Compute the diffraction pattern from a plane wave incident on a       *
- *      square well, assuming the Fresnel approximation is valid.             *
- *  Arguments:                                                                *
- *      x (float):                                                            *
- *          The location on the x-axis for the point being computed.          *
- *      a (float):                                                            *
- *          The left-most endpoint of the square well.                        *
- *      b (float):                                                            *
- *          The right-most endpoint of the square well.                       *
- *      F (float):                                                            *
- *          The Fresnel scale.                                                *
- *  Notes:                                                                    *
- *      1.) This function relies on the C99 standard, or higher.              *
- ******************************************************************************/
-
-tmpl_ComplexDouble
-tmpl_CDouble_Gap_Diffraction(double x, double a, double b, double F)
+double
+tmpl_Double_Fraunhofer_Diffraction_Double_Slit(double x,
+                                               double z,
+                                               double a,
+                                               double d,
+                                               double lambda)
 {
-    double arg1, arg2;
-    tmpl_ComplexDouble z1, z2, out, scale;
+    /*  Declare all necessary variables.                                      */
+    double sin_theta, var_1, var_2, var_3, scaled_a, scaled_d, out;
 
-    /*  The scale factor for the integral is (1-i)/sqrt(2 pi).                */
-    scale = tmpl_CDouble_Rect(tmpl_Sqrt_One_By_Two_Pi,
-                              -tmpl_Sqrt_One_By_Two_Pi);
+    /*  Compute the length of the point (x, z) in the plane.                  */
+    const double norm = tmpl_Double_Hypot(x, z);
 
-    /*  The bounds of the integral are sqrt(pi/2)(a-x)/F and                  *
-     *  sqrt(pi/2)(b-x)/F, and the output is computed in terms of this.       */
-    arg1 = tmpl_Sqrt_Pi_By_Two*(a-x)/F;
-    arg2 = tmpl_Sqrt_Pi_By_Two*(b-x)/F;
+    /*  If norm is zero, the result is undefined. Return NaN in this case.    */
+    if (norm == 0.0)
+        return TMPL_NAN;
 
-    /*  Compute the Fresnel integrals of the two arguments.                   */
-    z1 = tmpl_CDouble_Fresnel_Integral_Real(arg1);
-    z2 = tmpl_CDouble_Fresnel_Integral_Real(arg2);
+    /*  Using the fact that sin(theta) = x/r, where r is the hypotenus,       *
+     *  we can write sin_theta as follows:                                    */
+    sin_theta = x / norm;
 
-    /*  The output is the difference of z2 and z1 scaled by the factor        *
-     *  sqrt(1/2 pi) * (1 - i), so compute this.                              */
-    out = tmpl_CDouble_Subtract(z2, z1);
-    out = tmpl_CDouble_Multiply(out, scale);
+    /*  Scale the input parameters a and b by the reciprocal of the           *
+     *  wavelength lambda.                                                    */
+    scaled_a = a/lambda;
+    scaled_d = d/lambda;
 
-    return out;
+    /*  The various factors are in terms of the squares sinc function and     *
+     *  the ordinary sine function. Since sinc and sine are more              *
+     *  expensive than multiplication (computationally) it is better to       *
+     *  compute sinc/sine once, and then square this.                         */
+    var_1 = tmpl_Double_Sinc(scaled_a*sin_theta);
+    var_2 = tmpl_Double_SinPi(2.0*scaled_d*sin_theta);
+    var_3 = 2.0*tmpl_Double_SinPi(scaled_d*sin_theta);
+    out = var_1*var_2/var_3;
+    return out * out;
 }
