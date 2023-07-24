@@ -20,6 +20,7 @@
 
 TEST1(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
+      NATIVE_COMPLEX_LDOUBLE,
       tmpl_CLDouble_Abs,
-      cabsl)
+      cabsl, 
+      COMPLEX_LDOUBLE_CTOR)

@@ -28,7 +28,7 @@ ahh(const tmpl_ComplexDouble *z0, const tmpl_ComplexDouble *z1)
     return sum;
 }
 
-TEST2(double, tmpl_ComplexDouble, complex double, ahh, +)
+TEST2(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, ahh, +, COMPLEX_DOUBLE_CTOR)
 #else
-TEST3(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Add, +)
+TEST3(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Add, +, COMPLEX_DOUBLE_CTOR)
 #endif
