@@ -9,6 +9,21 @@
 extern "C" {
 #endif
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Bessel_I0                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel I0 function.                                       *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for I0(x).                            *
+ *  Output:                                                                   *
+ *      double I0_x:                                                          *
+ *          The Bessel I0 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+
 /*  TODO:
  *      I0 is pretty-well optimized for |x| > 8. The Chebyshev and asymptotic
  *      expansions give better performance than other libraries tested against.
@@ -23,32 +38,106 @@ extern float tmpl_Float_Bessel_I0(float x);
 extern double tmpl_Double_Bessel_I0(double x);
 extern long double tmpl_LDouble_Bessel_I0(long double x);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Bessel_I0_Asymptotic                                      *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel I0 function for large inputs using the asymptotic  *
+ *      expansion.                                                            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for I0(x).                            *
+ *  Output:                                                                   *
+ *      double I0_x:                                                          *
+ *          The Bessel I0 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *      Accurate to double precision for x > 64.                              *
+ ******************************************************************************/
+
+/*  Short function, can be inlined.                                           */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/specfunc/tmpl_bessel_i0_asymptotic_double.h>
-#include <libtmpl/include/specfunc/tmpl_bessel_i0_asymptotic_float.h>
+
+/*  Inline versions found in include/specfunc_real.                           */
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_asymptotic_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_asymptotic_float.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the versions found in src/special_functions_real.           */
 extern float tmpl_Float_Bessel_I0_Asymptotic(float x);
 extern double tmpl_Double_Bessel_I0_Asymptotic(double x);
 extern long double tmpl_LDouble_Bessel_I0_Asymptotic(long double x);
-#endif
 
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Bessel_I0_Chebyshev                                       *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel I0 function using a Chebyshev expansion.           *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for I0(x).                            *
+ *  Output:                                                                   *
+ *      double I0_x:                                                          *
+ *          The Bessel I0 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *      Accurate to double precision for x > 8.                               *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/specfunc/tmpl_bessel_i0_chebyshev_double.h>
-#include <libtmpl/include/specfunc/tmpl_bessel_i0_chebyshev_float.h>
+
+/*  Inline versions found in include/specfunc_real.                           */
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_chebyshev_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_chebyshev_float.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
 extern float tmpl_Float_Bessel_I0_Chebyshev(float x);
 extern double tmpl_Double_Bessel_I0_Chebyshev(double x);
 extern long double tmpl_LDouble_Bessel_I0_Chebyshev(long double x);
-#endif
 
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Bessel_I0_Maclaurin                                       *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel I0 function using a Maclaurin series.              *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for I0(x).                            *
+ *  Output:                                                                   *
+ *      double I0_x:                                                          *
+ *          The Bessel I0 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *      Accurate for small inputs.                                            *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/specfunc/tmpl_bessel_i0_maclaurin_double.h>
-#include <libtmpl/include/specfunc/tmpl_bessel_i0_maclaurin_float.h>
+
+/*  Inline versions found in include/specfunc_real.                           */
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_maclaurin_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_maclaurin_float.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
 extern float tmpl_Float_Bessel_I0_Maclaurin(float x);
 extern double tmpl_Double_Bessel_I0_Maclaurin(double x);
 extern long double tmpl_LDouble_Bessel_I0_Maclaurin(long double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 extern float tmpl_Float_Bessel_J0(float x);
 extern double tmpl_Double_Bessel_J0(double x);
