@@ -26,14 +26,5 @@
  *  Date:       June 1, 2023                                                  *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  Only used if inline support is not available.                             */
-#if TMPL_USE_INLINE != 1
-
 /*  Implemented in include/math/tmpl_arcsin_rat_remez_ldouble.h. Include this.*/
 #include "../../include/math/tmpl_arcsin_rat_remez_ldouble.h"
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
