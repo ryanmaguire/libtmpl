@@ -55,8 +55,16 @@ def select_points(func, x_vals, y_vals, xarr, yarr, deg):
     plt.ion()
     plt.plot(xarr, yarr)
 
-    for _ in range(deg + 2 - len(x_vals)):
-        x_vals.append(tmpld.mpmath.mpf(float(input("Select Point: "))))
-        y_vals.append(func(x_vals[-1]))
+    number = deg + 2 - len(x_vals)
+
+    if number > 0:
+        for _ in range(number):
+            x_vals.append(tmpld.mpmath.mpf(float(input("Select Point: "))))
+            y_vals.append(func(x_vals[-1]))
+    else:
+        for _ in range(-number):
+            pop = int(input("Remove Which Index? "))
+            x_vals.pop(pop)
+            y_vals.pop(pop)
 
     plt.close()

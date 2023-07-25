@@ -114,8 +114,8 @@ def rat_remez(func, num_deg, den_deg, start, end):
 
         # If there were not enough samples in x_vals, add some.
         if len(x_vals) != num_deg + den_deg + 2:
-            for value in x_vals:
-                tmpld.mpmath.nprint(value)
+            for ind in range(len(x_vals)):
+                print(str(ind) +": " + tmpld.mpmath.nstr(x_vals[ind]))
 
             print(
                 "Please Add %d Missing Points. Captured Points Printed Above."
