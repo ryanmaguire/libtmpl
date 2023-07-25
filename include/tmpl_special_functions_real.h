@@ -148,6 +148,7 @@ extern long double tmpl_LDouble_Bessel_I0_Maclaurin(long double x);
 
 /*  Inline versions found in include/specfunc_real.                           */
 #include <libtmpl/include/specfunc_real/tmpl_bessel_i0_remez_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_remez_float.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -158,17 +159,6 @@ extern long double tmpl_LDouble_Bessel_I0_Remez(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-
-
-
-
-
-
-
-
-
-
 
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_maclaurin_double.h>

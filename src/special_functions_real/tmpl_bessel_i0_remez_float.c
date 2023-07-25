@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_bessel_i0_maclaurin_double                       *
+ *                         tmpl_bessel_i0_remez_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a Maclaurin series of I0(x) at double precision.             *
- *      See include/specfunc_real/tmpl_bessel_i0_maclaurin_double.h.          *
+ *      Computes the Remez minimax polynomial of I0(x) at single precision.   *
+ *      See include/specfunc_real/tmpl_bessel_i0_remez_float.h.               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       January 10, 2022                                              *
+ *  Date:       July 25, 2023                                                 *
  ******************************************************************************/
 
-/*  Implemented in include/specfunc_real/tmpl_bessel_i0_maclaurin_double.h.   */
-#include "../../include/specfunc_real/tmpl_bessel_i0_maclaurin_double.h"
+/*  Implemented in include/specfunc_real/tmpl_bessel_i0_remez_float.h.        */
+#include "../../include/specfunc_real/tmpl_bessel_i0_remez_float.h"

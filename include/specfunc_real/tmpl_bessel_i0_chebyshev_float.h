@@ -101,7 +101,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing exp and sqrt functions.                    *
  *  3.) tmpl_special_functions_real.h:                                        *
@@ -115,11 +115,8 @@
 #ifndef TMPL_BESSEL_I0_CHEBYSHEV_FLOAT_H
 #define TMPL_BESSEL_I0_CHEBYSHEV_FLOAT_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support not requested.                            */
-#if TMPL_USE_INLINE == 1
 
 /*  Exp kernel found here, as is the square root function.                    */
 #include <libtmpl/include/tmpl_math.h>
@@ -135,8 +132,7 @@
 #define A04 (+1.6391348715752509934620842727450528126917919506391E-06F)
 
 /*  Helper macro for computing the polynomial via Horner's method.            */
-#define TMPL_POLY_EVAL(z) \
-A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
+#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 
 /*  Function for computing I0(x) using a Chebyshev expansion for x >= 8.      */
 TMPL_INLINE_DECL
@@ -164,9 +160,6 @@ float tmpl_Float_Bessel_I0_Chebyshev(float x)
 #undef A02
 #undef A03
 #undef A04
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

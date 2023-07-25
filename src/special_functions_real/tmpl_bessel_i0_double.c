@@ -95,8 +95,19 @@ double tmpl_Double_Bessel_I0(double x)
     /*  Set the double part of the union to the input.                        */
     w.r = x;
 
+    /*  For very small arguments, use a Maclaurin series.                     */
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 1U)
+    {
+        /*  Avoid underflow. I0(x) = 1 + O(x^2). Return 1.                    */
+        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 27U)
+            return 1.0;
+
+        /*  Otherwise the Maclaurin series is sufficient and fast.            */
+        return tmpl_Double_Bessel_I0_Maclaurin(x);
+    }
+
     /*  For small arguments use a Remez polynomial to approximate I0(x).      */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 3U)
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 3U)
         return tmpl_Double_Bessel_I0_Remez(w.r);
 
     /*  I0 is even so compute the absolute value of x and use that.           */
