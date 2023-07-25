@@ -61,7 +61,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing exp and sqrt functions.                    *
  *  3.) tmpl_special_functions_real.h:                                        *
@@ -69,17 +69,20 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 10, 2022                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/25: Ryan Maguire                                                  *
+ *      Changed src/special_functions_real/tmpl_bessel_i0_asymptotic_double.c *
+ *      to include this file.                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BESSEL_I0_ASYMPTOTIC_DOUBLE_H
 #define TMPL_BESSEL_I0_ASYMPTOTIC_DOUBLE_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support was requested.                            */
-#if TMPL_USE_INLINE == 1
 
 /*  Exp kernel found here, as is the square root function.                    */
 #include <libtmpl/include/tmpl_math.h>
@@ -122,6 +125,9 @@ A00 + z*(\
     )\
 )
 
+/*  The value 1 / (2 pi), well beyond double precision.                       */
+#define RCPR_TWO_PI (+1.591549430918953357688837633725143620345E-01)
+
 /*  Function for computing the asymptotic expansion of the Bessel I0 function.*/
 TMPL_INLINE_DECL
 double tmpl_Double_Bessel_I0_Asymptotic(double x)
@@ -131,7 +137,7 @@ double tmpl_Double_Bessel_I0_Asymptotic(double x)
 
     /*  The polynomial is scaled by exp(x) / sqrt(2 pi x). Compute these.     */
     const double exp_x = tmpl_Double_Exp_Pos_Kernel(x);
-    const double inv_sqrt_two_pi_x = 1.0 / tmpl_Double_Sqrt(tmpl_Two_Pi * x);
+    const double inv_sqrt_two_pi_x = tmpl_Double_Sqrt(RCPR_TWO_PI * rcpr_x);
 
     /*  Lastly, evaluate the polynomial using Horner's method.                */
     const double poly = TMPL_ASYMPTOTIC_EXPANSION(rcpr_x);
@@ -154,9 +160,7 @@ double tmpl_Double_Bessel_I0_Asymptotic(double x)
 #undef A08
 #undef A09
 #undef A10
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#undef RCPR_TWO_PI
 
 #endif
 /*  End of include guard.                                                     */

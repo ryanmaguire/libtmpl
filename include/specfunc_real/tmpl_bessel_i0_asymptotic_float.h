@@ -61,7 +61,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing exp and sqrt functions.                    *
  *  3.) tmpl_special_functions_real.h:                                        *
@@ -69,17 +69,20 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 10, 2022                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/25: Ryan Maguire                                                  *
+ *      Changed src/special_functions_real/tmpl_bessel_i0_asymptotic_float.c  *
+ *      to include this file.                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BESSEL_I0_ASYMPTOTIC_FLOAT_H
 #define TMPL_BESSEL_I0_ASYMPTOTIC_FLOAT_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support was requested.                            */
-#if TMPL_USE_INLINE == 1
 
 /*  Exp kernel found here, as is the square root function.                    */
 #include <libtmpl/include/tmpl_math.h>
@@ -97,6 +100,9 @@
 /*  Helper macro for evaluating the polynomial part using Horner's method.    */
 #define TMPL_ASYMPTOTIC_EXPANSION(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 
+/*  The value 1 / (2 pi), well beyond single precision.                       */
+#define RCPR_TWO_PI (+1.591549430918953357688837633725143620345E-01F)
+
 /*  Function for computing the asymptotic expansion of the Bessel I0 function.*/
 TMPL_INLINE_DECL
 float tmpl_Float_Bessel_I0_Asymptotic(float x)
@@ -106,7 +112,7 @@ float tmpl_Float_Bessel_I0_Asymptotic(float x)
 
     /*  The polynomial is scaled by exp(x) / sqrt(2 pi x). Compute these.     */
     const float exp_x = tmpl_Float_Exp_Pos_Kernel(x);
-    const float inv_sqrt_two_pi_x = 1.0F / tmpl_Float_Sqrt(tmpl_Two_Pi_F * x);
+    const float inv_sqrt_two_pi_x = tmpl_Float_Sqrt(RCPR_TWO_PI * rcpr_x);
 
     /*  Lastly, evaluate the polynomial using Horner's method.                */
     const float poly = TMPL_ASYMPTOTIC_EXPANSION(rcpr_x);
@@ -123,9 +129,6 @@ float tmpl_Float_Bessel_I0_Asymptotic(float x)
 #undef A02
 #undef A03
 #undef A04
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

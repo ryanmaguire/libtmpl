@@ -1,6 +1,9 @@
+
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_SPECIAL_FUNCTIONS_REAL_H
 #define TMPL_SPECIAL_FUNCTIONS_REAL_H
 
+/*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  If using with C++ (and not C), wrap the entire header file in an extern   *
@@ -23,17 +26,6 @@ extern "C" {
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-
-/*  TODO:
- *      I0 is pretty-well optimized for |x| > 8. The Chebyshev and asymptotic
- *      expansions give better performance than other libraries tested against.
- *      Need to optimize better for |x| <= 8. Try the rational approximation in:
- *          Rational Approximations for the Modified Bessel Function of
- *          the First Kind - I0(x) for Computations with Double Precision.
- *      and:
- *          Stable rational minimax approximations to the modified
- *          Bessel functions I0 and I1.
- */
 extern float tmpl_Float_Bessel_I0(float x);
 extern double tmpl_Double_Bessel_I0(double x);
 extern long double tmpl_LDouble_Bessel_I0(long double x);
@@ -51,7 +43,6 @@ extern long double tmpl_LDouble_Bessel_I0(long double x);
  *      double I0_x:                                                          *
  *          The Bessel I0 function evaluated at x.                            *
  *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
  *      Accurate to double precision for x > 64.                              *
  ******************************************************************************/
 
@@ -85,7 +76,6 @@ extern long double tmpl_LDouble_Bessel_I0_Asymptotic(long double x);
  *      double I0_x:                                                          *
  *          The Bessel I0 function evaluated at x.                            *
  *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
  *      Accurate to double precision for x > 8.                               *
  ******************************************************************************/
 
@@ -118,7 +108,6 @@ extern long double tmpl_LDouble_Bessel_I0_Chebyshev(long double x);
  *      double I0_x:                                                          *
  *          The Bessel I0 function evaluated at x.                            *
  *  Notes:                                                                    *
- *      Float and long double equivalents are provided as well.               *
  *      Accurate for small inputs.                                            *
  ******************************************************************************/
 
@@ -138,6 +127,48 @@ extern long double tmpl_LDouble_Bessel_I0_Maclaurin(long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Bessel_I0_Remez                                           *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel I0 function using a Remez minimax polynomial.      *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for I0(x).                            *
+ *  Output:                                                                   *
+ *      double I0_x:                                                          *
+ *          The Bessel I0 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Accurate to double precision for |x| < 8.                             *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found in include/specfunc_real.                           */
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_remez_double.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+extern float tmpl_Float_Bessel_I0_Remez(float x);
+extern double tmpl_Double_Bessel_I0_Remez(double x);
+extern long double tmpl_LDouble_Bessel_I0_Remez(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+
+
+
+
+
+
+
+
+
+
 
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_maclaurin_double.h>

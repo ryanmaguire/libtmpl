@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_bessel_i0_asymptotic_double                      *
+ *                        tmpl_bessel_i0_remez_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the asymptotic expansion of I0(x) at double precision.       *
- *      See include/specfunc_real/tmpl_bessel_i0_asymptotic_double.h.         *
+ *      Computes the Remez minimax polynomial of I0(x) at double precision.   *
+ *      See include/specfunc_real/tmpl_bessel_i0_remez_double.h.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       January 10, 2022                                              *
+ *  Date:       July 25, 2023                                                 *
  ******************************************************************************/
 
-/*  Implemented in include/specfunc_real/tmpl_bessel_i0_asymptotic_double.h.  */
-#include "../../include/specfunc_real/tmpl_bessel_i0_asymptotic_double.h"
+/*  Implemented in include/specfunc_real/tmpl_bessel_i0_remez_double.h.       */
+#include "../../include/specfunc_real/tmpl_bessel_i0_remez_double.h"
