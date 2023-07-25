@@ -139,6 +139,30 @@ extern long double tmpl_LDouble_Bessel_I0_Maclaurin(long double x);
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_maclaurin_double.h>
+#else
+extern float tmpl_Float_Bessel_J0_Maclaurin(float x);
+extern double tmpl_Double_Bessel_J0_Maclaurin(double x);
+extern long double tmpl_LDouble_Bessel_J0_Maclaurin(long double x);
+#endif
+
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_remez_double.h>
+#else
+extern float tmpl_Float_Bessel_J0_Remez(float x);
+extern double tmpl_Double_Bessel_J0_Remez(double x);
+extern long double tmpl_LDouble_Bessel_J0_Remez(long double x);
+#endif
+
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_two_to_eight_double.h>
+#else
+extern float tmpl_Float_Bessel_J0_Two_To_Eight(float x);
+extern double tmpl_Double_Bessel_J0_Two_To_Eight(double x);
+extern long double tmpl_LDouble_Bessel_J0_Two_To_Eight(long double x);
+#endif
+
 extern float tmpl_Float_Bessel_J0(float x);
 extern double tmpl_Double_Bessel_J0(double x);
 extern long double tmpl_LDouble_Bessel_J0(long double x);
