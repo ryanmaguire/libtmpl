@@ -177,11 +177,11 @@ extern long double tmpl_LDouble_Bessel_J0_Remez(long double x);
 #endif
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_two_to_eight_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_first_zero_double.h>
 #else
-extern float tmpl_Float_Bessel_J0_Two_To_Eight(float x);
-extern double tmpl_Double_Bessel_J0_Two_To_Eight(double x);
-extern long double tmpl_LDouble_Bessel_J0_Two_To_Eight(long double x);
+extern float tmpl_Float_Bessel_J0_First_Zero(float x);
+extern double tmpl_Double_Bessel_J0_First_Zero(double x);
+extern long double tmpl_LDouble_Bessel_J0_First_Zero(long double x);
 #endif
 
 extern float tmpl_Float_Bessel_J0(float x);
