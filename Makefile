@@ -506,6 +506,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/fft/
 	mkdir -p $(BUILD_DIR)/src/graph_theory/
 	mkdir -p $(BUILD_DIR)/src/integer/
+	mkdir -p $(BUILD_DIR)/src/integration/
 	mkdir -p $(BUILD_DIR)/src/interpolate/
 	mkdir -p $(BUILD_DIR)/src/knots/
 	mkdir -p $(BUILD_DIR)/src/math/
