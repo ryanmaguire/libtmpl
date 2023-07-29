@@ -18,11 +18,11 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 #define ONE_PI (3.141592653589793238462643383279502884197L)
-static inline complex long double func(long double t)
+static inline NATIVE_COMPLEX_LDOUBLE func(long double t)
 {
-    return cosl(ONE_PI*t) + (complex long double)_Complex_I * sinl(ONE_PI*t);
+    return COMPLEX_LDOUBLE_CTOR(cosl(ONE_PI*t), sinl(ONE_PI*t));
 }
 TEST9(long double,
       tmpl_ComplexLongDouble,
-      complex long double,
+      NATIVE_COMPLEX_LDOUBLE,
       tmpl_CLDouble_ExpiPi, func)

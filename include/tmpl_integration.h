@@ -34,6 +34,8 @@
 #ifndef TMPL_INTEGRATION_H
 #define TMPL_INTEGRATION_H
 
+#include "tmpl_exports.h"
+
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
@@ -55,13 +57,13 @@
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Left_Riemann_Sum(const float *arr, float dx, size_t len);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Left_Riemann_Sum(const double *arr, double dx, size_t len);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Left_Riemann_Sum(const long double *arr,
                               long double dx, size_t len);
 
@@ -83,13 +85,13 @@ tmpl_LDouble_Left_Riemann_Sum(const long double *arr,
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Right_Riemann_Sum(const float *arr, float dx, size_t len);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Right_Riemann_Sum(const double *arr, double dx, size_t len);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Right_Riemann_Sum(const long double *arr,
                                long double dx, size_t len);
 
@@ -111,13 +113,13 @@ tmpl_LDouble_Right_Riemann_Sum(const long double *arr,
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Trapezoid_Sum(const float *arr, float dx, size_t len);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Trapezoid_Sum(const double *arr, double dx, size_t len);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Trapezoid_Sum(const long double *arr, long double dx, size_t len);
 
 #endif

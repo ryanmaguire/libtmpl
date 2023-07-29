@@ -17,8 +17,8 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-static inline complex float func(float t)
+static inline NATIVE_COMPLEX_FLOAT func(float t)
 {
-    return cosf(t) + _Complex_I * sinf(t);
+    return COMPLEX_FLOAT_CTOR(cosf(t), sinf(t));
 }
-TEST9(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_Expi, func)
+TEST9(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_Expi, func)

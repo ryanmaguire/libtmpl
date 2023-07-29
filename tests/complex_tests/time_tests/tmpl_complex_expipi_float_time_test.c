@@ -18,8 +18,8 @@
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
 #define ONE_PI (3.141592653589793238462643383279502884197F)
-static inline complex float func(float t)
+static inline NATIVE_COMPLEX_FLOAT func(float t)
 {
-    return cosf(ONE_PI * t) + _Complex_I * sinf(ONE_PI * t);
+    return COMPLEX_FLOAT_CTOR(cosf(ONE_PI*t), sinf(ONE_PI*t));
 }
-TEST9(float, tmpl_ComplexFloat, complex float, tmpl_CFloat_ExpiPi, func)
+TEST9(float, tmpl_ComplexFloat, NATIVE_COMPLEX_FLOAT, tmpl_CFloat_ExpiPi, func)
