@@ -2,6 +2,7 @@ include(FindBoost)
 
 add_subdirectory("bytes_tests")
 add_subdirectory("complex_tests")
+add_subdirectory("fft_tests")
 add_subdirectory("integer_tests")
 add_subdirectory("math_tests")
 add_subdirectory("rational_tests")
