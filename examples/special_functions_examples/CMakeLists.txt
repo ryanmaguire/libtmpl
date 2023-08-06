@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH "${TMPL_PARENT_DIR}/cmake")
 
+include(FindGSL)
+
 project(special_function_examples)
 
 file(GLOB sources CONFIGURE_DEPENDS *.c)
@@ -10,8 +12,8 @@ foreach(source ${sources})
     list(APPEND test_apps ${app})
     add_executable(${app} ${source})
     set_target_properties(${app} PROPERTIES INTERPROCEDURAL_OPTIMIZATION ${IPO_SUPPORTED})
-    target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}")
-    target_link_libraries(${app} PRIVATE tmpl::tmpl)
+    target_include_directories(${app} PUBLIC "${TMPL_PARENT_DIR}" PRIVATE "${GSL_INCLUDE_DIRS}")
+    target_link_libraries(${app} PRIVATE tmpl::tmpl CONAN_LIB::GSL_gsl)
     if(UNIX)
         target_link_libraries(${app} PRIVATE m)
     endif()
