@@ -51,29 +51,6 @@ INPLACE=0
 # Enable this with -inline.
 USEINLINE=0
 
-# Macro for long long support.
-USELONGLONG=0
-
-# Whether or not to use libtmpl's implementation of libm.
-USEMATH=1
-
-# Use of the IEEE-754 floating point format.
-USEIEEE=1
-
-# Whether or not to attempt to find fixed-width integers.
-USEINT=1
-
-# Whether or not to use memcpy when possible.
-USEMEMCPY=0
-
-# Compile the entire library by #include'ing all files into one translation
-# unit. The compiler get's to the see the entire library at once and make many
-# optimizations.
-MAKEMONSTER=0
-
-# Files to be excluded (added later based on USEINLINE and USEMATH.
-Exclude=""
-
 # You can pass extra arguments. Just add -MyArgument.
 ExtraArgs=""
 
@@ -104,67 +81,9 @@ for arg in "$@"; do
     elif [ "$arg" == "-inline" ]; then
         USEINLINE=1
 
-    elif [ "$arg" == "-nomath" ]; then
-        USEMATH=0
-
-    elif [ "$arg" == "-noieee" ]; then
-        USEIEEE=0
-
-    elif [ "$arg" == "-noint" ]; then
-        USEINT=0
-
-    elif [ "$arg" == "-monster" ]; then
-        MAKEMONSTER=1
-
-    elif [ "$arg" == "-longlong" ]; then
-        USELONGLONG=1
-
-    elif [ "$arg" == "-memcpy" ]; then
-        USEMEMCPY=1
-
-    elif [ "$arg" == "-remove" ]; then
-        SONAME="libtmpl.so"
-        SODIR="/usr/local/lib"
-        INCLUDE_TARGET=/usr/local/include/libtmpl/
-        CONFIG_HEADER=include/tmpl_config.h
-        INTEGER_HEADER=include/tmpl_inttype.h
-        LIMITS_HEADER=include/tmpl_limits.h
-
-        echo "Removing libtmpl:"
-        echo "    Clearing older files..."
-        rm -f *.so *.o *.obj *.lib
-
-        echo "    Removing config header file if it exists..."
-        if [ -e "$CONFIG_HEADER" ]; then
-            rm -f "$CONFIG_HEADER";
-        fi
-
-        echo "    Removing integer header file if it exists..."
-        if [ -e "$INTEGER_HEADER" ]; then
-            rm -f "$INTEGER_HEADER";
-        fi
-
-        echo "    Removing limits header file if it exists..."
-        if [ -e "$LIMITS_HEADER" ]; then
-            rm -f "$LIMITS_HEADER";
-        fi
-
-        echo -e "    Removing include directory if it exists..."
-        if [ -d "$INCLUDE_TARGET" ]; then
-            rm -rf "$INCLUDE_TARGET";
-        fi
-
-        echo "    Removing shared object file if it exists..."
-        if [ -e "$SODIR/$SONAME" ]; then
-            rm -f "$SODIR/$SONAME";
-        fi
-
-        echo "libtmpl removed."
-        exit 1
-
     # Check for any extra arguments.
     else
-        ExtraArgs="$ExtraArgs ${arg#*}"
+        ExtraArgs="$ExtraArgs ${arg#*=}"
     fi
 done
 
@@ -201,6 +120,7 @@ fi
 # TMPL_SET_INLINE_TRUE with -DTMPL_SET_INLINE_TRUE to enable this macro.
 if [ $USEINLINE == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_INLINE_TRUE"
+    Exclude="tmpl_abs_double.c tmpl_abs_float.c tmpl_abs_ldouble.c"
     Exclude="$Exclude tmpl_abs_char.c"
     Exclude="$Exclude tmpl_abs_int.c"
     Exclude="$Exclude tmpl_abs_short.c"
@@ -477,25 +397,33 @@ else
 fi
 
 # Location where the .h files will be stored.
-INCLUDE_TARGET=/usr/local/include/libtmpl/
+INCLUDE_TARGET=/usr/local/include/libtmpl/include/
 
-# Header file that needs to be created prior to building libtmpl.
-CONFIG_HEADER=include/tmpl_config.h
+# Header files that need to be created prior to building libtmpl.
+END_HEADER=include/tmpl_endianness.h
+INLINE_HEADER=include/tmpl_inline.h
 
-# C file for creating this header.
-CONFIG_FILE=config.c
+# C files for creating these headers.
+DET_END_FILE=det_end.c
+DET_INLINE_FILE=det_inline.c
 
-# Name of the executable to create this header.
-CONFIG_EXEC=config.out
+# Name of the executables to create these headers.
+DET_END_EXEC=det_end.out
+DET_INLINE_EXEC=det_inline.out
 
 # There may be left-over .so and .o files from a previous build. Remove those
 # to avoid a faulty build.
 echo "Clearing older files"
 rm -f *.so *.o *.obj *.lib
 
-# If the config header already exists, remove it.
-if [ -e "$CONFIG_HEADER" ]; then
-    rm -f "$CONFIG_HEADER";
+# If the endianness header already exists, remove it.
+if [ -e "$END_HEADER" ]; then
+    rm -f "$END_HEADER";
+fi
+
+# If the inline header already exists, remove it.
+if [ -e "$INLINE_HEADER" ]; then
+    rm -f "$INLINE_HEADER";
 fi
 
 # If we're not building libtmpl into libtmpl/, clear older files.
@@ -504,21 +432,27 @@ if [ $INPLACE == 0 ]; then
     # Clear older header files.
     if [ -d "$INCLUDE_TARGET" ]; then
         echo "Clearing $INCLUDE_TARGET"
-        rm -rf "$INCLUDE_TARGET";
+        sudo rm -rf "$INCLUDE_TARGET";
     fi
 
     # Clear older library files.
     if [ -e "$SODIR/$SONAME" ]; then
         echo "Erasing $SODIR/$SONAME"
-        rm -f "$SODIR/$SONAME";
+        sudo rm -f "$SODIR/$SONAME";
     fi
 fi
 
-# Create the config header.
-echo "Creating $CONFIG_HEADER"
-$CC $STDVER $ExtraArgs $CONFIG_FILE -o $CONFIG_EXEC
-./$CONFIG_EXEC
-rm -f $CONFIG_EXEC
+# Create the endianness header.
+echo "Creating $END_HEADER"
+$CC $STDVER $ExtraArgs $DET_END_FILE -o $DET_END_EXEC
+./$DET_END_EXEC
+rm -f $DET_END_EXEC
+
+# Create the inline header.
+echo "Creating $INLINE_HEADER"
+$CC $STDVER $ExtraArgs $DET_INLINE_FILE -o $DET_INLINE_EXEC
+./$DET_INLINE_EXEC
+rm -f $DET_INLINE_EXEC
 
 echo ""
 echo "Compiling libtmpl"
@@ -535,76 +469,27 @@ echo "        $CArgs5"
 echo "    Extra Compiler Arguments:"
 echo "        $ExtraArgs"
 
-if [ $MAKEMONSTER == 1 ]; then
-
-    if [ -e "monster.c" ]; then
-        rm -f monster.c;
-    fi
-
-    touch monster.c
-
-    for file in include/*.h; do
-        echo "#include \"$file\"" >> monster.c;
-    done
-
-    for dir in src/*/; do
-
-        # assembly and buitlins only has assembly code. Skip this.
-        if [[ $dir == *"assembly"* ]]; then
-            continue;
-        fi
-
-        for filename in $dir*.c; do
-            filename_without_path=$(basename -- $filename)
-            if [[ $Exclude == *"$filename_without_path"* ]]; then
-                continue;
-            fi
-            echo "#include \"$filename\"" >> monster.c;
-        done
-    done
-
-    echo "Compiling libtmpl..."
-    if !($CC $CompilerArgs monster.c); then
-        exit 1
-    fi
-
-    echo "Building libtmpl Shared Object (.so file)"
-    if !($CC ./*.o $LinkerArgs); then
-        exit 1
-    fi
-
-    rm -f *.o
-    rm -f monster.c
-else
-
-    # Loop over all directories in src/ and compile all .c files.
-    for dir in src/*; do
-
-        # assembly and buitlins only has assembly code. Skip this.
-        if [[ $dir == *"assembly"* ]]; then
-            continue;
-        fi
-
-        echo ""
-        echo "    Compiling $dir"
-        for filename in $dir/*.c; do
-            filename_without_path=$(basename -- $filename)
-            if [[ $Exclude == *"$filename_without_path"* ]]; then
-                continue;
-            fi
-
-            echo "        Compiling: $filename"
-            if !($CC $CompilerArgs $filename); then
-                exit 1
-            fi
-        done
-    done
-
+# Loop over all directories in src/ and compile all .c files.
+for dir in src/*; do
     echo ""
-    echo "Building libtmpl Shared Object (.so file)"
-    if !($CC ./*.o $LinkerArgs); then
-        exit 1
-    fi
+    echo "    Compiling $dir"
+    for filename in $dir/*.c; do
+        filename_without_path=$(basename -- $filename)
+        if [[ $Exclude == *"$filename_without_path"* ]]; then
+            continue;
+        fi
+
+        echo "        Compiling: $filename"
+        if !($CC $CompilerArgs $filename); then
+            exit 1
+        fi
+    done
+done
+
+echo ""
+echo "Building libtmpl Shared Object (.so file)"
+if !($CC ./*.o $LinkerArgs); then
+    exit 1
 fi
 
 # If inplace is set, we can't use sudo.
@@ -612,13 +497,15 @@ if [ $INPLACE == 0 ]; then
 
     # Copy the header files to the appropriate directory.
     echo "Copying include/ directory to $INCLUDE_TARGET"
+    sudo mkdir -p "$INCLUDE_TARGET"
+    sudo cp ./include/*.h "$INCLUDE_TARGET"
     mkdir -p /usr/local/lib/
     mkdir -p "$INCLUDE_TARGET"
     cp -r ./include "$INCLUDE_TARGET"
 
     # Move the shared object file to the appropriate directory.
     echo "Moving $SONAME to $SODIR"
-    mv $SONAME $SODIR
+    sudo mv $SONAME $SODIR
 fi
 
 echo "Cleaning up"

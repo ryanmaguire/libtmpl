@@ -18,16 +18,17 @@ static void spaces1(char* s)
     } while ((*s++ = *d++));
 }
 
-static void spaces2(char *s)
+static void spaces2(char *s, unsigned int length)
 {
     const char* d = s;
+    const char* init = s;
 
     if (!s)
         return;
 
-    while (*d)
+    while ((d - init) <= length)
     {
-        while (*d == ' ')
+        while (((d - init) <= length)  && *d == ' ' )
         {
             ++d;
         }
@@ -35,12 +36,16 @@ static void spaces2(char *s)
         ++s;
         ++d;
     }
-    *s = *d;
+
+    if ((d - init) <= length) {
+        *s = *d;
+    }
 }
 
 int main(void)
 {
     unsigned int length;
+    unsigned int* lengths;
     char **strings0, **strings1;
     int random;
     unsigned int n, m;
@@ -49,10 +54,12 @@ int main(void)
 
     strings0 = malloc(sizeof(*strings0)*N);
     strings1 = malloc(sizeof(*strings1)*N);
+    lengths = (unsigned int*)malloc(sizeof(*lengths) * N);
 
     for (n = 0U; n < N; ++n)
     {
         length = (rand() % 20);
+        lengths[n] = length;
         strings0[n] = malloc(length + 1U);
         strings1[n] = malloc(length + 1U);
 
@@ -75,7 +82,7 @@ int main(void)
 
     t1 = clock();
     for (n = 0; n < N; ++n)
-        spaces2(strings1[n]);
+        spaces2(strings1[n], lengths[n]);
     t2 = clock();
     printf("Test 2: %f\n", (double)(t2 - t1)/CLOCKS_PER_SEC);
 
@@ -101,6 +108,7 @@ int main(void)
 
     free(strings0);
     free(strings1);
+    free(lengths);
     return 0;
 }
 
