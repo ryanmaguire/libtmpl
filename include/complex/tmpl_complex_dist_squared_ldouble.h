@@ -26,13 +26,13 @@
  *  Function Name:                                                            *
  *      tmpl_CLDouble_Dist_Squared                                            *
  *  Purpose:                                                                  *
- *      Computes the distance between two complex numbers:                    *
+ *      Computes the square of the distance between two complex numbers:      *
  *                                                                            *
- *          dist(z, w) = dist(a + ib, c + id)^2                               *
- *                     = (c - a)^2 + (d - b)^2                                *
+ *          dist(z, w)^2 = dist(a + ib, c + id)^2                             *
+ *                       = (c - a)^2 + (d - b)^2                              *
  *                                                                            *
  *      This is provided so that users can avoid redundant and expensive      *
- *      calls to the square root function made with tmpl_CLDouble_Dist.       *
+ *      calls to the hypot function made with tmpl_CLDouble_Dist.             *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexLongDouble):                                           *
  *          A complex number.                                                 *
@@ -41,13 +41,17 @@
  *  Output:                                                                   *
  *      dist (long double):                                                   *
  *          The distance between z and w.                                     *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Treat the points as elements of the Euclidean plane and use           *
  *      the Pythagorean formula.                                              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_complex.h:                                                       *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
+ *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -56,18 +60,17 @@
  *                              Revision History                              *
  ******************************************************************************
  *  2021/02/16: Ryan Maguire                                                  *
- *      Created file                                       .                  *
+ *      Created file.                                                         *
+ *  2023/07/13: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_dist_squared_ldouble.c to use this.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_DIST_SQUARED_LDOUBLE_H
 #define TMPL_COMPLEX_DIST_SQUARED_LDOUBLE_H
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Complex routines and data types defined here.                             */
 #include <libtmpl/include/tmpl_complex.h>
@@ -83,9 +86,6 @@ tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1)
     return dx*dx + dy*dy;
 }
 /*  End of tmpl_CLDouble_Dist_Squared.                                        */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

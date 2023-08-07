@@ -33,10 +33,69 @@ IF EXIST *.so (del *.so)
 :: See if the user specified which compiler to use.
 IF %1.==. GOTO MakeCL
 IF %1 == cl GOTO MakeCL
-IF %1 == clang-cl GOTO MakeClang
+IF %1 == clang-cl GOTO MakeClangCL
 IF %1 == clang GOTO MakeClang
+IF %1 == gcc GOTO MakeGCC
 
 :MakeClang
+
+    :: Arguments for the compiler.
+    SET CMACR=-DTMPL_SET_USE_MATH_TRUE
+    SET CWARN=-Weverything
+    SET CNOWARN=-Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+    SET CARGS=-O2 -I..\ -c
+
+    :: Create include\tmpl_endianness.h
+    clang %CMACR% config.c -o config.exe
+    config.exe
+    del *.exe *.obj
+
+    :: Compile the library.
+    FOR /D %%d in (src\*) DO (
+        IF "%%d" == "src\assembly" (
+            ECHO Skipping src\assembly\
+        ) ELSE (
+            ECHO Compiling %%d:
+            FOR %%i in (%%d\*.c) DO (
+                ECHO     Compiling %%i
+                clang %CWARN% %CNOWARN% %CARGS% %%i
+            )
+        )
+    )
+
+    :: Go to the Linking stage.
+    GOTO LinkOLib
+
+:MakeGCC
+
+    :: Arguments for the compiler.
+    SET CMACR=-DTMPL_SET_USE_MATH_TRUE
+    SET CWARN=-Wall -Wextra -Wpedantic
+    SET CNOWARN=-Wno-padded -Wno-float-equal -Wno-reserved-id-macro
+    SET CARGS=-O2 -I..\ -c
+
+    :: Create include\tmpl_endianness.h
+    gcc %CMACR% config.c -o config.exe
+    config.exe
+    del *.exe *.obj
+
+    :: Compile the library.
+    FOR /D %%d in (src\*) DO (
+        IF "%%d" == "src\assembly" (
+            ECHO Skipping src\assembly\
+        ) ELSE (
+            ECHO Compiling %%d:
+            FOR %%i in (%%d\*.c) DO (
+                ECHO     Compiling %%i
+                gcc %CWARN% %CNOWARN% %CARGS% %%i
+            )
+        )
+    )
+
+    :: Go to the Linking stage.
+    GOTO LinkOLib
+
+:MakeClangCL
 
     :: Arguments for the compiler.
     SET CMACR=-DTMPL_SET_USE_MATH_TRUE
@@ -49,16 +108,20 @@ IF %1 == clang GOTO MakeClang
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do (
-        if "%%d" == ".\src\assembly" (
-            echo Skipping src\assembly\
-        ) else (
-            clang-cl %CWARN% %CARGS% %%d\*.c
+    FOR /D %%d in (src\*) DO (
+        IF "%%d" == "src\assembly" (
+            ECHO Skipping src\assembly\
+        ) ELSE (
+            ECHO Compiling %%d:
+            FOR %%i in (%%d\*.c) DO (
+                ECHO     Compiling %%i
+                clang-cl %CWARN% %CARGS% %%i
+            )
         )
     )
 
     :: Go to the Linking stage.
-    GOTO LinkLib
+    GOTO LinkObjLib
 
 :MakeCL
 
@@ -73,22 +136,30 @@ IF %1 == clang GOTO MakeClang
     del *.exe *.obj
 
     :: Compile the library.
-    for /D %%d in (.\src\*) do (
-        if "%%d" == ".\src\assembly" (
-            echo Skipping src\assembly\
-        ) else (
+    FOR /D %%d in (.\src\*) DO (
+        IF "%%d" == ".\src\assembly" (
+            ECHO Skipping src\assembly\
+        ) ELSE (
             cl %CWARN% %CARGS% %%d\*.c
         )
     )
 
     :: Go to the Linking stage.
-    GOTO LinkLib
+    GOTO LinkObjLib
 
-:LinkLib
+:LinkOLib
+
+    :: Link everything into a .lib file.
+    lib /out:libtmpl.lib *.o
+
+    :: Clean up.
+    del *.exe *.obj *.o
+    GOTO :EOF
+
+:LinkObjLib
 
     :: Link everything into a .lib file.
     lib /out:libtmpl.lib *.obj
 
     :: Clean up.
-    del *.exe *.obj
-
+    del *.exe *.obj *.o

@@ -39,17 +39,20 @@
  *      abs_z (float):                                                        *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Float_Hypot (tmpl_math.h):                                       *
- *          Function for computing the magnitude of the vector (x, y).        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Float_Hypot:                                                 *
+ *              Function for computing the magnitude of the vector (x, y).    *
  *  Error:                                                                    *
  *      Based on 268,435,456 random samples:                                  *
  *          Max Relative Error: 1.192092e-07                                  *
  *          RMS Relative Error: 3.451446e-08                                  *
+ *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
+ *      less than 1 ULP (~1 x 10^-7).                                         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          TMPL_USE_INLINE macro found here.                                 *
+ *          TMPL_INLINE_DECL macro found here.                                *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
  *  3.) tmpl_complex.h:                                                       *
@@ -63,17 +66,16 @@
  *  2022/12/30: Ryan Maguire                                                  *
  *      Moved main algorithm to tmpl_hypot_float.c Function now passes the    *
  *      the real and imaginary parts to tmpl_Float_Hypot.                     *
+ *  2023/07/06: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_abs_float.c to include this file.    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ABS_FLOAT_H
 #define TMPL_COMPLEX_ABS_FLOAT_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  The TMPL_INLINE_DECL macro is found here.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -88,9 +90,6 @@ float tmpl_CFloat_Abs(tmpl_ComplexFloat z)
     return tmpl_Float_Hypot(z.dat[0], z.dat[1]);
 }
 /*  End of tmpl_CFloat_Abs.                                                   */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

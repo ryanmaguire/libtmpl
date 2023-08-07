@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_dist_float_inline                           *
+ *                              tmpl_dist_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the distance from x to y on the number line.                 *
@@ -41,19 +41,18 @@
  *      Method:                                                               *
  *          Computes x - y and then sets the sign bit to zero.                *
  *      Error:                                                                *
- *          Based on 3,372,245,196 samples with -10^2 < x, y < 10^2.          *
+ *          Based on 3,372,245,197 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
  *              rms absolute error: 0.0                                       *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Abs (tmpl_math.h):                                     *
- *              Computes the absolute value of a real number.                 *
+ *          None.                                                             *
  *      Method:                                                               *
- *          Compute x - y and pass the result to tmpl_Float_Abs.              *
+ *          Compute y - x if x < y and x - y otherwise.                       *
  *      Error:                                                                *
- *          Based on 3,372,245,196 samples with -10^2 < x, y < 10^2.          *
+ *          Based on 3,372,245,197 samples with -100 < x, y < 100.            *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -62,7 +61,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -73,6 +72,8 @@
  ******************************************************************************
  *  2022/10/24: Ryan Maguire                                                  *
  *      Added license.                                                        *
+ *  2023/06/13: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_dist_float.c to include this file.              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -81,9 +82,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -124,16 +122,17 @@ float tmpl_Float_Dist(float x, float y)
 TMPL_INLINE_DECL
 float tmpl_Float_Dist(float x, float y)
 {
-    /*  Pass the difference to the absolute value function and return.        */
-    return tmpl_Float_Abs(x - y);
+    /*  If x < y we have |x - y| = y - x. Compute this.                       */
+    if (x < y)
+        return y - x;
+
+    /*  Otherwise |x - y| = x - y. Compute this and return.                   */
+    return x - y;
 }
 /*  End of tmpl_Float_Dist.                                                   */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

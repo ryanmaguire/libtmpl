@@ -19,112 +19,20 @@
  *                              tmpl_dist_double                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the distance from x to y on the number line.                 *
- ******************************************************************************
- *                             DEFINED FUNCTIONS                              *
- ******************************************************************************
- *  Function Name:                                                            *
- *      tmpl_Double_Dist                                                      *
- *  Purpose:                                                                  *
- *      Computes the Euclidean distance d(x, y) = |x - y|.                    *
- *  Arguments:                                                                *
- *      x (double):                                                           *
- *          A real number.                                                    *
- *      y (double):                                                           *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      dist (double):                                                        *
- *          The distance |x - y|.                                             *
- *  IEEE-754 Version:                                                         *
- *      Called Functions:                                                     *
- *          None.                                                             *
- *      Method:                                                               *
- *          Computes x - y and then sets the sign bit to zero.                *
- *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -10^2 < x, y < 10^2.          *
- *              max relative error: 0.0                                       *
- *              rms relative error: 0.0                                       *
- *              max absolute error: 0.0                                       *
- *              rms absolute error: 0.0                                       *
- *  Portable Version:                                                         *
- *      Called Functions:                                                     *
- *          tmpl_Double_Abs (tmpl_math.h):                                    *
- *              Computes the absolute value of a real number.                 *
- *      Method:                                                               *
- *          Compute x - y and pass the result to tmpl_Double_Abs.             *
- *      Error:                                                                *
- *          Based on 1,686,122,598 samples with -10^2 < x, y < 10^2.          *
- *              max relative error: 0.0                                       *
- *              rms relative error: 0.0                                       *
- *              max absolute error: 0.0                                       *
- *              rms absolute error: 0.0                                       *
- ******************************************************************************
- *                                DEPENDENCIES                                *
- ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *      Computes |x - y|. See include/math/tmpl_dist_double.h for details.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 24, 2022                                              *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2022/10/24: Ryan Maguire                                                  *
- *      Added license.                                                        *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Check for IEEE-754 support.                                               */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
-
-/******************************************************************************
- *                              IEEE-754 Version                              *
- ******************************************************************************/
-
-/*  Double precision 1-D distance function.                                   */
-double tmpl_Double_Dist(double x, double y)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_IEEE754_Double w;
-
-    /*  Set the double part of the word to the signed distance x - y.         */
-    w.r = x - y;
-
-    /*  Set the sign bit to zero to compute the absolute value.               */
-    w.bits.sign = 0x00U;
-
-    /*  Return the double part of the union.                                  */
-    return w.r;
-}
-/*  End of tmpl_Double_Dist.                                                  */
-
-#else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
-
-/******************************************************************************
- *                              Portable Version                              *
- ******************************************************************************/
-
-/*  Lacking IEEE-754 support, an if-then statement works and is portable.     */
-double tmpl_Double_Dist(double x, double y)
-{
-    /*  Pass the difference to the absolute value function and return.        */
-    return tmpl_Double_Abs(x - y);
-}
-/*  End of tmpl_Double_Dist.                                                  */
-
-#endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  Implemented in include/math/tmpl_dist_double.h.                           */
+#include "../../include/math/tmpl_dist_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

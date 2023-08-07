@@ -30,6 +30,9 @@ import numpy
 
 import matplotlib.pyplot as plt
 
+# mpmath imported here.
+import tmpld
+
 # Polynomial evaluation.
 from tmpld.poly.poly_eval import poly_eval
 
@@ -41,6 +44,9 @@ from tmpld.remez.reset_samples import reset_samples
 
 # Remez exchange function.
 from tmpld.remez.perform_remez_exchange import perform_remez_exchange
+
+# Function for updating points.
+from tmpld.remez.select_points import select_points
 
 # Computes the degree "deg" Remez MiniMax polynomial of "f" on [start, end]
 def remez(func, deg, start, end):
@@ -95,3 +101,15 @@ def remez(func, deg, start, end):
 
         # Reset the samples to the peaks and compute the function there.
         x_vals, y_vals = reset_samples(func, xarr, yarr)
+
+        # If there were not enough samples in x_vals, add some.
+        if len(x_vals) != deg + 2:
+            for value in x_vals:
+                tmpld.mpmath.nprint(value)
+
+            print(
+                "Please Add %d Missing Points. Captured Points Printed Above."
+                % ((deg + 2) - len(x_vals))
+            )
+
+            select_points(func, x_vals, y_vals, xarr, yarr, deg)

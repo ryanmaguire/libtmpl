@@ -71,6 +71,8 @@
  *  Date:       December 30, 2022                                             *
  ******************************************************************************/
 
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  The TMPL_USE_INLINE macro is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
@@ -96,10 +98,7 @@ double tmpl_Double_Hypot(double x, double y)
 
     /*  Compute the maximum of |x| and |y| and store it in the double         *
      *  part of the tmpl_IEEE754_Double union w.                              */
-    if (abs_x < abs_y)
-        w.r = abs_y;
-    else
-        w.r = abs_x;
+    w.r = TMPL_MAX(abs_x, abs_y);
 
     /*  We want to check if the exponent is less than 512, which is 0x200 in  *
      *  hexadecimal. The exponent of a double is offset by a bias. To check   *
@@ -172,10 +171,8 @@ double tmpl_Double_Hypot(double x, double y)
     double abs_x = tmpl_Double_Abs(x);
     double abs_y = tmpl_Double_Abs(y);
 
-    /*  Compute the maximum of |x| and |y|. This syntax from the C language   *
-     *  is a bit strange. a = (b < c ? c : b) says if b is less than c, set a *
-     *  to c, otherwise set a to b.                                           */
-    const double t = (abs_x < abs_y ? abs_y : abs_x);
+    /*  Compute the maximum of |x| and |y|.                                   */
+    const double t = TMPL_MAX(abs_x, abs_y);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
      *  |z| is zero, |z| = 0. Return this.                                    */

@@ -104,6 +104,8 @@
 /*  Square root function found here.                                          */
 #include <libtmpl/include/tmpl_math.h>
 
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  We can get a significant speed boost if IEEE-754 support is available.    */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -123,11 +125,8 @@ double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
     double z = tmpl_Double_Abs(P->dat[2]);
 
     /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
-     *  part of the tmpl_IEEE754_Double union w. This syntax from the C       *
-     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
-     *  c, set a to c, otherwise set a to b. Below we do this twice, setting  *
-     *  w.r to the maximum of |x|, |y|, and |z|.                              */
-    w.r = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+     *  part of the tmpl_IEEE754_Double union w.                              */
+    w.r = TMPL_MAX3(x, y, z);
 
     /*  We want to check if the exponent is less than 512, which is 0x200 in  *
      *  hexidecimal. The exponent of a double is offset by a biased. To check *
@@ -194,11 +193,8 @@ double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P)
     double y = tmpl_Double_Abs(P->dat[1]);
     double z = tmpl_Double_Abs(P->dat[2]);
 
-    /*  Compute the maximum of |x|, |y|, and |z|. This syntax from the C      *
-     *  language is a bit strange. a = (b < c ? c : b) says if b is less than *
-     *  c, set a to c, otherwise set a to b. Below we do this twice, setting  *
-     *  t to the maximum of |x|, |y|, and |z|.                                */
-    const double t = (x < y ? (y < z ? z : y) : (x < z ? z : x));
+    /*  Compute the maximum of |x|, |y|, and |z|.                             */
+    const double t = TMPL_MAX3(x, y, z);
 
     /*  Division by zero is generally viewed as bad. If the max of |x|, |y|,  *
      *  and |z| is zero, ||P|| = 0. Return this.                              */

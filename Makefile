@@ -35,8 +35,6 @@ CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
 LFLAGS := -O3 -flto -shared -lm
 endif
 
-CWARN := -Wall -Wextra -Wpedantic
-
 ifdef NO_INLINE
 INLINE_FLAG :=
 INLINE_EXCLUDE :=
@@ -45,7 +43,198 @@ INLINE_FLAG := -DTMPL_SET_INLINE_TRUE
 INLINE_EXCLUDE := \
 	-not -name "tmpl_abs_double.c" -and \
 	-not -name "tmpl_abs_float.c" -and \
-	-not -name "tmpl_abs_ldouble.c" -and
+	-not -name "tmpl_abs_ldouble.c" -and \
+	-not -name "tmpl_arccos_maclaurin_double.c" -and \
+	-not -name "tmpl_arccos_maclaurin_float.c" -and \
+	-not -name "tmpl_arccos_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_arccos_pade_double.c" -and \
+	-not -name "tmpl_arccos_pade_float.c" -and \
+	-not -name "tmpl_arccos_pade_ldouble.c" -and \
+	-not -name "tmpl_arccos_rat_remez_double.c" -and \
+	-not -name "tmpl_arccos_rat_remez_float.c" -and \
+	-not -name "tmpl_arccos_rat_remez_ldouble.c" -and \
+	-not -name "tmpl_arccos_tail_end_double.c" -and \
+	-not -name "tmpl_arccos_tail_end_float.c" -and \
+	-not -name "tmpl_arccos_tail_end_ldouble.c" -and \
+	-not -name "tmpl_arcsin_maclaurin_double.c" -and \
+	-not -name "tmpl_arcsin_maclaurin_float.c" -and \
+	-not -name "tmpl_arcsin_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_arcsin_pade_double.c" -and \
+	-not -name "tmpl_arcsin_pade_float.c" -and \
+	-not -name "tmpl_arcsin_pade_ldouble.c" -and \
+	-not -name "tmpl_arcsin_rat_remez_double.c" -and \
+	-not -name "tmpl_arcsin_rat_remez_float.c" -and \
+	-not -name "tmpl_arcsin_rat_remez_ldouble.c" -and \
+	-not -name "tmpl_arcsin_tail_end_double.c" -and \
+	-not -name "tmpl_arcsin_tail_end_float.c" -and \
+	-not -name "tmpl_arcsin_tail_end_ldouble.c" -and \
+	-not -name "tmpl_arctan_asymptotic_double.c" -and \
+	-not -name "tmpl_arctan_asymptotic_float.c" -and \
+	-not -name "tmpl_arctan_asymptotic_ldouble.c" -and \
+	-not -name "tmpl_arctan_maclaurin_double.c" -and \
+	-not -name "tmpl_arctan_maclaurin_float.c" -and \
+	-not -name "tmpl_arctan_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_arctan_pade_double.c" -and \
+	-not -name "tmpl_arctan_pade_float.c" -and \
+	-not -name "tmpl_arctan_pade_ldouble.c" -and \
+	-not -name "tmpl_arctan_very_small_double.c" -and \
+	-not -name "tmpl_arctan_very_small_float.c" -and \
+	-not -name "tmpl_arctan_very_small_ldouble.c" -and \
+	-not -name "tmpl_bessel_i0_asymptotic_double.c" -and \
+	-not -name "tmpl_bessel_i0_asymptotic_float.c" -and \
+	-not -name "tmpl_bessel_i0_chebyshev_double.c" -and \
+	-not -name "tmpl_bessel_i0_chebyshev_float.c" -and \
+	-not -name "tmpl_bessel_i0_maclaurin_double.c" -and \
+	-not -name "tmpl_bessel_i0_maclaurin_float.c" -and \
+	-not -name "tmpl_cbrt_pade_double.c" -and \
+	-not -name "tmpl_cbrt_pade_float.c" -and \
+	-not -name "tmpl_cbrt_pade_ldouble.c" -and \
+	-not -name "tmpl_cbrt_taylor_double.c" -and \
+	-not -name "tmpl_cbrt_taylor_float.c" -and \
+	-not -name "tmpl_cbrt_taylor_ldouble.c" -and \
+	-not -name "tmpl_complex_abs_double.c" -and \
+	-not -name "tmpl_complex_abs_float.c" -and \
+	-not -name "tmpl_complex_abs_ldouble.c" -and \
+	-not -name "tmpl_complex_abs_squared_double.c" -and \
+	-not -name "tmpl_complex_abs_squared_float.c" -and \
+	-not -name "tmpl_complex_abs_squared_ldouble.c" -and \
+	-not -name "tmpl_complex_add_double.c" -and \
+	-not -name "tmpl_complex_add_float.c" -and \
+	-not -name "tmpl_complex_add_ldouble.c" -and \
+	-not -name "tmpl_complex_add_imag_double.c" -and \
+	-not -name "tmpl_complex_add_imag_float.c" -and \
+	-not -name "tmpl_complex_add_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_add_real_double.c" -and \
+	-not -name "tmpl_complex_add_real_float.c" -and \
+	-not -name "tmpl_complex_add_real_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_double.c" -and \
+	-not -name "tmpl_complex_addto_float.c" -and \
+	-not -name "tmpl_complex_addto_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_imag_double.c" -and \
+	-not -name "tmpl_complex_addto_imag_float.c" -and \
+	-not -name "tmpl_complex_addto_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_addto_real_double.c" -and \
+	-not -name "tmpl_complex_addto_real_float.c" -and \
+	-not -name "tmpl_complex_addto_real_ldouble.c" -and \
+	-not -name "tmpl_complex_argument_double.c" -and \
+	-not -name "tmpl_complex_argument_float.c" -and \
+	-not -name "tmpl_complex_argument_ldouble.c" -and \
+	-not -name "tmpl_complex_conjugate_double.c" -and \
+	-not -name "tmpl_complex_conjugate_float.c" -and \
+	-not -name "tmpl_complex_conjugate_ldouble.c" -and \
+	-not -name "tmpl_complex_conjugateself_double.c" -and \
+	-not -name "tmpl_complex_conjugateself_float.c" -and \
+	-not -name "tmpl_complex_conjugateself_ldouble.c" -and \
+	-not -name "tmpl_complex_dist_double.c" -and \
+	-not -name "tmpl_complex_dist_float.c" -and \
+	-not -name "tmpl_complex_dist_ldouble.c" -and \
+	-not -name "tmpl_complex_dist_squared_double.c" -and \
+	-not -name "tmpl_complex_dist_squared_float.c" -and \
+	-not -name "tmpl_complex_dist_squared_ldouble.c" -and \
+	-not -name "tmpl_complex_expi_double.c" -and \
+	-not -name "tmpl_complex_expi_float.c" -and \
+	-not -name "tmpl_complex_expi_ldouble.c" -and \
+	-not -name "tmpl_complex_expid_double.c" -and \
+	-not -name "tmpl_complex_expid_float.c" -and \
+	-not -name "tmpl_complex_expid_ldouble.c" -and \
+	-not -name "tmpl_complex_expipi_double.c" -and \
+	-not -name "tmpl_complex_expipi_float.c" -and \
+	-not -name "tmpl_complex_expipi_ldouble.c" -and \
+	-not -name "tmpl_complex_multiply_double.c" -and \
+	-not -name "tmpl_complex_multiply_float.c" -and \
+	-not -name "tmpl_complex_multiply_ldouble.c" -and \
+	-not -name "tmpl_complex_multiply_imag_double.c" -and \
+	-not -name "tmpl_complex_multiply_imag_float.c" -and \
+	-not -name "tmpl_complex_multiply_imag_ldouble.c" -and \
+	-not -name "tmpl_complex_multiply_real_double.c" -and \
+	-not -name "tmpl_complex_multiply_real_float.c" -and \
+	-not -name "tmpl_complex_multiply_real_ldouble.c" -and \
+	-not -name "tmpl_complex_polard_double.c" -and \
+	-not -name "tmpl_complex_polard_float.c" -and \
+	-not -name "tmpl_complex_polard_ldouble.c" -and \
+	-not -name "tmpl_complex_polar_double.c" -and \
+	-not -name "tmpl_complex_polar_float.c" -and \
+	-not -name "tmpl_complex_polar_ldouble.c" -and \
+	-not -name "tmpl_complex_quick_abs_double.c" -and \
+	-not -name "tmpl_complex_quick_abs_float.c" -and \
+	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
+	-not -name "tmpl_complex_quick_dist_double.c" -and \
+	-not -name "tmpl_complex_quick_dist_float.c" -and \
+	-not -name "tmpl_complex_quick_dist_ldouble.c" -and \
+	-not -name "tmpl_copysign_float.c" -and \
+	-not -name "tmpl_copysign_double.c" -and \
+	-not -name "tmpl_copysign_ldouble.c" -and \
+	-not -name "tmpl_cosd_maclaurin_double.c" -and \
+	-not -name "tmpl_cosd_maclaurin_float.c" -and \
+	-not -name "tmpl_cosd_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_cosh_maclaurin_double.c" -and \
+	-not -name "tmpl_cosh_maclaurin_float.c" -and \
+	-not -name "tmpl_cosh_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_cosh_pade_double.c" -and \
+	-not -name "tmpl_cosh_pade_float.c" -and \
+	-not -name "tmpl_cosh_pade_ldouble.c" -and \
+	-not -name "tmpl_exp_maclaurin_double.c" -and \
+	-not -name "tmpl_exp_maclaurin_float.c" -and \
+	-not -name "tmpl_exp_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_exp_pade_double.c" -and \
+	-not -name "tmpl_exp_pade_float.c" -and \
+	-not -name "tmpl_exp_pade_ldouble.c" -and \
+	-not -name "tmpl_cospi_maclaurin_double.c" -and \
+	-not -name "tmpl_cospi_maclaurin_float.c" -and \
+	-not -name "tmpl_cospi_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_exp_remez_double.c" -and \
+	-not -name "tmpl_exp_remez_float.c" -and \
+	-not -name "tmpl_exp_remez_ldouble.c" -and \
+	-not -name "tmpl_dist_float.c" -and \
+	-not -name "tmpl_dist_double.c" -and \
+	-not -name "tmpl_dist_ldouble.c" -and \
+	-not -name "tmpl_erf_asymptotic_double.c" -and \
+	-not -name "tmpl_erf_chebyshev_double.c" -and \
+	-not -name "tmpl_erf_maclaurin_double.c" -and \
+	-not -name "tmpl_erf_pade_double.c" -and \
+	-not -name "tmpl_exp_neg_kernel_double.c" -and \
+	-not -name "tmpl_exp_neg_kernel_float.c" -and \
+	-not -name "tmpl_exp_neg_kernel_ldouble.c" -and \
+	-not -name "tmpl_exp_pos_kernel_double.c" -and \
+	-not -name "tmpl_exp_pos_kernel_float.c" -and \
+	-not -name "tmpl_exp_pos_kernel_ldouble.c" -and \
+	-not -name "tmpl_is_inf_float.c" -and \
+	-not -name "tmpl_is_inf_double.c" -and \
+	-not -name "tmpl_is_inf_ldouble.c" -and \
+	-not -name "tmpl_is_nan_float.c" -and \
+	-not -name "tmpl_is_nan_double.c" -and \
+	-not -name "tmpl_is_nan_ldouble.c" -and \
+	-not -name "tmpl_positive_difference_double.c" -and \
+	-not -name "tmpl_positive_difference_float.c" -and \
+	-not -name "tmpl_positive_difference_ldouble.c" -and \
+	-not -name "tmpl_sin_pade_double.c" -and \
+	-not -name "tmpl_sin_pade_float.c" -and \
+	-not -name "tmpl_sin_pade_ldouble.c" -and \
+	-not -name "tmpl_sin_pade_pi_double.c" -and \
+	-not -name "tmpl_sin_pade_pi_float.c" -and \
+	-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
+	-not -name "tmpl_sind_maclaurin_double.c" -and \
+	-not -name "tmpl_sind_maclaurin_float.c" -and \
+	-not -name "tmpl_sind_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_double.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_float.c" -and \
+	-not -name "tmpl_sinpi_maclaurin_ldouble.c" -and \
+	-not -name "tmpl_sin_very_small_double.c" -and \
+	-not -name "tmpl_two_vector_l2_norm_double.c" -and \
+	-not -name "tmpl_two_vector_l2_norm_float.c" -and \
+	-not -name "tmpl_two_vector_l2_norm_ldouble.c" -and \
+	-not -name "tmpl_frequency_to_wavelength_double.c" -and \
+	-not -name "tmpl_frequency_to_wavelength_float.c" -and \
+	-not -name "tmpl_frequency_to_wavelength_ldouble.c" -and \
+	-not -name "tmpl_frequency_to_wavenumber_double.c" -and \
+	-not -name "tmpl_frequency_to_wavenumber_float.c" -and \
+	-not -name "tmpl_frequency_to_wavenumber_ldouble.c" -and \
+	-not -name "tmpl_wavelength_to_wavenumber_double.c" -and \
+	-not -name "tmpl_wavelength_to_wavenumber_float.c" -and \
+	-not -name "tmpl_wavelength_to_wavenumber_ldouble.c" -and \
+	-not -name "tmpl_optical_transmittance_double.c" -and \
+	-not -name "tmpl_optical_transmittance_float.c" -and \
+	-not -name "tmpl_optical_transmittance_ldouble.c" -and
 endif
 
 uname_m := $(shell uname -m)
@@ -131,12 +320,19 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/euclidean_spatial_geometry/
 	mkdir -p $(BUILD_DIR)/src/fft/
 	mkdir -p $(BUILD_DIR)/src/graph_theory/
+  mkdir -p $(BUILD_DIR)/src/cyl_fresnel_optics/
+	mkdir -p $(BUILD_DIR)/src/fft/
+	mkdir -p $(BUILD_DIR)/src/graph_theory/
+	mkdir -p $(BUILD_DIR)/src/integer/
+	mkdir -p $(BUILD_DIR)/src/integration/
 	mkdir -p $(BUILD_DIR)/src/interpolate/
 	mkdir -p $(BUILD_DIR)/src/knots/
 	mkdir -p $(BUILD_DIR)/src/math/
 	mkdir -p $(BUILD_DIR)/src/number_theory/
 	mkdir -p $(BUILD_DIR)/src/numerical/
 	mkdir -p $(BUILD_DIR)/src/optics/
+	mkdir -p $(BUILD_DIR)/src/fraunhofer_diffraction/
+	mkdir -p $(BUILD_DIR)/src/fresnel_diffraction/
 	mkdir -p $(BUILD_DIR)/src/polynomial/
 	mkdir -p $(BUILD_DIR)/src/ppm/
 	mkdir -p $(BUILD_DIR)/src/rational/
@@ -145,6 +341,11 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/src/string/
 	mkdir -p $(BUILD_DIR)/src/svg/
 	mkdir -p $(BUILD_DIR)/src/vector/
+	mkdir -p $(BUILD_DIR)/src/utility/
+	mkdir -p $(BUILD_DIR)/src/vec2/
+	mkdir -p $(BUILD_DIR)/src/vec3/
+	mkdir -p $(BUILD_DIR)/src/vector_integer/
+	mkdir -p $(BUILD_DIR)/src/vector_real/
 	mkdir -p $(BUILD_DIR)/src/void_pointer/
 	mkdir -p $(BUILD_DIR)/src/window_functions/
 
@@ -156,6 +357,9 @@ clean:
 install:
 	mkdir -p /usr/local/include/libtmpl/include/
 	cp ./include/*.h /usr/local/include/libtmpl/include/
+	mkdir -p /usr/local/lib/
+	mkdir -p /usr/local/include/libtmpl/
+	cp -r ./include /usr/local/include/libtmpl/
 	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
 
 uninstall:

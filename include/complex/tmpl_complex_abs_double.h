@@ -39,17 +39,20 @@
  *      abs_z (double):                                                       *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Double_Hypot (tmpl_math.h):                                      *
- *          Function for computing the magnitude of the vector (x, y).        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Hypot:                                                *
+ *              Function for computing the magnitude of the vector (x, y).    *
  *  Error:                                                                    *
  *      Based on 134,217,728 random samples:                                  *
  *          Max Relative Error: 2.220446e-16                                  *
  *          RMS Relative Error: 3.751642e-17                                  *
+ *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
+ *      less than 1 ULP (~2 x 10^-16).                                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          TMPL_USE_INLINE macro found here.                                 *
+ *          TMPL_INLINE_DECL macro found here.                                *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
  *  3.) tmpl_complex.h:                                                       *
@@ -87,17 +90,16 @@
  *  2022/12/30: Ryan Maguire                                                  *
  *      Moved main algorithm to tmpl_hypot_double.c Function now passes the   *
  *      the real and imaginary parts to tmpl_Double_Hypot.                    *
+ *  2023/07/06: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_abs_double.c to include this file.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ABS_DOUBLE_H
 #define TMPL_COMPLEX_ABS_DOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
@@ -112,9 +114,6 @@ double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
     return tmpl_Double_Hypot(z.dat[0], z.dat[1]);
 }
 /*  End of tmpl_CDouble_Abs.                                                  */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

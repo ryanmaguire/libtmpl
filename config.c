@@ -1040,7 +1040,7 @@ static int make_config_h(void)
     fprintf(fp, "#define TMPL_INLINE_DECL static inline\n");
 #else
     fprintf(fp, "\n#define TMPL_USE_INLINE 0\n");
-    fprintf(fp, "#define TMPL_INLINE_DECL static\n");
+    fprintf(fp, "#define TMPL_INLINE_DECL\n");
 #endif
 
 #ifdef TMPL_SET_USE_MATH_TRUE

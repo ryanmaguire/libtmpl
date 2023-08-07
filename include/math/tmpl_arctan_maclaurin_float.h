@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_arctan_maclaurin_float_inline                      *
+ *                        tmpl_arctan_maclaurin_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of atan(x) at single precision.         *
@@ -55,7 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -69,9 +69,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -102,9 +99,6 @@ float tmpl_Float_Arctan_Maclaurin(float x)
 #undef A2
 #undef A3
 #undef A4
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

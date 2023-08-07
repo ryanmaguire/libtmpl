@@ -95,15 +95,26 @@ double tmpl_Double_Bessel_I0(double x)
     /*  Set the double part of the union to the input.                        */
     w.r = x;
 
+    /*  For very small arguments, use a Maclaurin series.                     */
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 1U)
+    {
+        /*  Avoid underflow. I0(x) = 1 + O(x^2). Return 1.                    */
+        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 27U)
+            return 1.0;
+
+        /*  Otherwise the Maclaurin series is sufficient and fast.            */
+        return tmpl_Double_Bessel_I0_Maclaurin(x);
+    }
+
+    /*  For small arguments use a Remez polynomial to approximate I0(x).      */
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 3U)
+        return tmpl_Double_Bessel_I0_Remez(w.r);
+
     /*  I0 is even so compute the absolute value of x and use that.           */
     w.bits.sign = 0x00U;
 
-    /*  For small arguments use a Taylor series to approximate I0(x).         */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 3U)
-        return tmpl_Double_Bessel_I0_Maclaurin(w.r);
-
     /*  For intermediate values use a Chebyshev expansion.                    */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 7U)
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 7U)
         return tmpl_Double_Bessel_I0_Chebyshev(w.r);
 
     /*  For larger values use the asymptotic expansion.                       */
@@ -111,8 +122,7 @@ double tmpl_Double_Bessel_I0(double x)
         return tmpl_Double_Bessel_I0_Asymptotic(w.r);
 
     /*  For very large inputs, return infinity.                               */
-    else
-        return TMPL_INFINITY;
+    return TMPL_INFINITY;
 }
 /*  End of tmpl_Double_Bessel_I0.                                             */
 
@@ -129,9 +139,9 @@ double tmpl_Double_Bessel_I0(double x)
     /*  I0 is even so compute the absolute value of x and use that.           */
     const double abs_x = tmpl_Double_Abs(x);
 
-    /*  For small arguments use a Taylor series to approximate I0(x).         */
+    /*  For small arguments use a Remez polynomial to approximate I0(x).      */
     if (abs_x < 8.0)
-        return tmpl_Double_Bessel_I0_Maclaurin(abs_x);
+        return tmpl_Double_Bessel_I0_Remez(abs_x);
 
     /*  For intermediate values use a Chebyshev expansion.                    */
     else if (abs_x < 64.0)
@@ -142,8 +152,7 @@ double tmpl_Double_Bessel_I0(double x)
         return tmpl_Double_Bessel_I0_Asymptotic(abs_x);
 
     /*  For very large inputs, return infinity.                               */
-    else
-        return TMPL_INFINITY;
+    return TMPL_INFINITY;
 }
 /*  End of tmpl_Double_Bessel_I0.                                             */
 

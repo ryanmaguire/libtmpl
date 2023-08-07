@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_abs_ldouble_inline                          *
+ *                              tmpl_abs_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x) = |x| at long double precision, inline version.         *
+ *      Computes f(x) = |x| at long double precision.                         *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -69,7 +69,7 @@
  *          sign. This can be computed via the exclusive or, or XOR. The sign *
  *          of abs_lo is the exclusive or of the signs of x_hi and x_lo.      *
  *      Error:                                                                *
- *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
+ *          Based on 10,000,000 samples with -10^6 < x < 10^6.                *
  *              max relative error: 0.0                                       *
  *              rms relative error: 0.0                                       *
  *              max absolute error: 0.0                                       *
@@ -99,12 +99,31 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 5, 2022                                             *
+ *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/10/18: Ryan Maguire                                                  *
- *      Moved to own file.                                                    *
+ *  2020/11/01: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2020/12/08: Ryan Maguire                                                  *
+ *      Frozen for v1.3 of librssringoccs.                                    *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied file from rss_ringoccs.                                        *
+ *  2021/02/24: Ryan Maguire                                                  *
+ *      Added IEEE 754 code for computing the absolute value function.        *
+ *  2021/09/10: Ryan Maguire                                                  *
+ *      Moved float and long double to their own files.                       *
+ *  2022/03/01: Ryan Maguire                                                  *
+ *      Added check for TMPL_USE_MATH_ALGORITHMS macro. This function will    *
+ *      use fabs from math.h if TMPL_USE_MATH_ALGORITHMS is not 1.            *
+ *  2022/09/12: Ryan Maguire                                                  *
+ *      Added inline support.                                                 *
+ *  2022/09/13: Ryan Maguire                                                  *
+ *      Removed math.h version (fabsl alias). This version is now a macro for *
+ *      the fabsl function in tmpl_math.h (only if TMPL_USE_MATH_ALGORITHMS   *
+ *      is set to zero).                                                      *
+ *  2023/04/18: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_abs_ldouble.c to just include this file.        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -113,9 +132,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -176,8 +192,8 @@ long double tmpl_LDouble_Abs(long double x)
      *  The sign of abs_xlo depends on the signs of xhi and xlo. That is,     *
      *  whether or not they are the same. Indeed, the sign of abs_xlo is the  *
      *  exlusive or, also called XOR, of the signs of xhi and xlo. Use this.  */
-    w.bits.signb = w.bits.signa ^ w.bits.signb;
-    w.bits.signa = 0x0U;
+    w.bits.signl = w.bits.sign ^ w.bits.signl;
+    w.bits.sign = 0x0U;
 
     /*  Return the long double part of the union.                             */
     return w.r;
@@ -210,9 +226,6 @@ long double tmpl_LDouble_Abs(long double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

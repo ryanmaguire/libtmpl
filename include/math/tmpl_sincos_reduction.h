@@ -1,7 +1,6 @@
 #ifndef TMPL_SINCOS_REDUCTION_H
 #define TMPL_SINCOS_REDUCTION_H
 
-#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 
 #define hp1 (6.123233995736766035868820147292E-17)
@@ -12,7 +11,7 @@
 #define hpinv (6.366197723675813824328884038550e-01)
 #define toint (6.755399441055744000000000000000e+15)
 
-TMPL_INLINE_DECL
+static
 unsigned int tmpl_Double_SinCos_Reduction(double x, double *a, double *da)
 {
     tmpl_IEEE754_Double w;

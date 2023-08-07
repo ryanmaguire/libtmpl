@@ -35,18 +35,23 @@
  *          The arc-cosine of x.                                              *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Arccos_Pade (tmpl_math.h):                             *
- *              Computes acos(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Float_Arccos_Tail_End (tmpl_math.h):                         *
- *              Computes acos(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Arccos_Maclaurin:                                  *
+ *                  Computes acos via a Maclaurin series for |x| < 0.25.      *
+ *              tmpl_Float_Arccos_Rat_Remez:                                  *
+ *                  Computes acos via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arccos_Tail_End:                                   *
+ *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For small x, |x| < 0.5, use a Pade approximant. For 0.5 <= x < 1  *
- *          use the reflection formula:                                       *
+ *          For very small x, |x| < 2^-26, return pi / 2. For slightly larger *
+ *          x, |x| < 0.25, use a Maclaurin series. For 0.25 <= |x| < 0.5      *
+ *          use a minimax approximation. For 0.5 <= x < 1 use the             *
+ *          reflection formula:                                               *
  *                                                                            *
  *              acos(x) = 2*asin(sqrt((1-x)/2))                               *
  *                                                                            *
- *          Compute this using a Pade approximant. For values -1 < x <= -0.5  *
- *          use the negation formula:                                         *
+ *          Compute this using a minimax approximation. For values            *
+ *          -1 < x <= -0.5 use the negation formula:                          *
  *                                                                            *
  *              acos(x) = pi - acos(-x)                                       *
  *                                                                            *
@@ -63,12 +68,15 @@
  *          less than 1 ULP (~1 x 10^-7).                                     *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Abs (tmpl_math.h):                                     *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_Float_Arccos_Pade (tmpl_math.h):                             *
- *              Computes acos(x) via a Pade approximant for |x| < 0.5.        *
- *          tmpl_Float_Arccos_Tail_End (tmpl_math.h):                         *
- *              Computes acos(x) for 0.5 <= x < 1.0.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Float_Arccos_Maclaurin:                                  *
+ *                  Computes acos via a Maclaurin series for |x| < 0.25.      *
+ *              tmpl_Float_Arccos_Rat_Remez:                                  *
+ *                  Computes acos via a minimax approximation for |x| < 0.5.  *
+ *              tmpl_Float_Arccos_Tail_End:                                   *
+ *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
@@ -108,6 +116,8 @@
  ******************************************************************************
  *  2023/01/13: Ryan Maguire                                                  *
  *      Added comments, algorithm description, and fixed error values.        *
+ *  2023/05/31: Ryan Maguire                                                  *
+ *      Added optimizations for small x, |x| < 0.25, and denormal values.     *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -139,9 +149,20 @@ float tmpl_Float_Arccos(float x)
     /*  Set the float part of the word to the input.                          */
     w.r = x;
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (w.bits.expo < TMPL_FLOAT_UBIAS - 1U)
-        return tmpl_Float_Arccos_Pade(x);
+    {
+        /*  For |x| < 2^-26, acos(x) = pi / 2 to single precision.            */
+        if (w.bits.expo < TMPL_FLOAT_UBIAS - 26U)
+            return tmpl_Pi_By_Two_F;
+
+        /*  For small x, |x| < 2^-2, the Maclaurin series is sufficient.      */
+        else if (w.bits.expo < TMPL_FLOAT_UBIAS - 2U)
+            return tmpl_Float_Arccos_Maclaurin(x);
+
+        /*  For 0.25 <= |x| < 0.5 use the minimax approximation.              */
+        return tmpl_Float_Arccos_Rat_Remez(x);
+    }
 
     /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (w.bits.expo < TMPL_FLOAT_UBIAS)
@@ -151,26 +172,20 @@ float tmpl_Float_Arccos(float x)
             return tmpl_One_Pi_F - tmpl_Float_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_Float_Arccos_Tail_End(x);
+        return tmpl_Float_Arccos_Tail_End(x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN.                                   */
-    else
-    {
-        /*  acos(-1) = pi and acos(1) = 0. Use this.                          */
-        if (x == -1.0F)
-            return tmpl_One_Pi_F;
-        else if (x == 1.0F)
-            return 0.0F;
+    /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
+    if (x == -1.0F)
+        return tmpl_One_Pi_F;
+    else if (x == 1.0F)
+        return 0.0F;
 
-        /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN.  *
-         *  Note, this catches NaN and infinity since we are checking the     *
-         *  exponent of the input, not the input. For x = NaN or Inf, the     *
-         *  exponent is greater than TMPL_FLOAT_UBIAS, hence NaN will return. */
-        else
-            return TMPL_NANF;
-    }
+    /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN. Note *
+     *  this catches NaN and infinity since we are checking the exponent of   *
+     *  the input, not the input. For x = NaN or Inf, the exponent is greater *
+     *  than TMPL_FLOAT_UBIAS, hence NaN will return.                         */
+    return TMPL_NANF;
 }
 /*  End of tmpl_Float_Arccos.                                                 */
 
@@ -187,11 +202,22 @@ float tmpl_Float_Arccos(float x)
     /*  Declare necessary variables. C89 requires this at the top.            */
     const float abs_x = tmpl_Float_Abs(x);
 
-    /*  For |x| < 0.5 use the Pade approximant.                               */
+    /*  Small inputs, |x| < 0.5.                                              */
     if (abs_x < 0.5F)
-        return tmpl_Float_Arccos_Pade(x);
+    {
+        /*  For very small inputs return pi / 2.                              */
+        if (abs_x < 1.4901161193847656E-08F)
+            return tmpl_Pi_By_Two_F;
 
-    /*  Otherwise use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).      */
+        /*  Small inputs, |x| < 0.25, use the Maclaurin series.               */
+        else if (abs_x < 0.25F)
+            return tmpl_Float_Arccos_Maclaurin(x);
+
+        /*  Otherwise use the Remez rational minimax function.                */
+        return tmpl_Float_Arccos_Rat_Remez(x);
+    }
+
+    /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
     else if (abs_x < 1.0F)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
@@ -199,24 +225,17 @@ float tmpl_Float_Arccos(float x)
             return tmpl_One_Pi_F - tmpl_Float_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
-        else
-            return tmpl_Float_Arccos_Tail_End(abs_x);
+        return tmpl_Float_Arccos_Tail_End(abs_x);
     }
 
-    /*  Special cases, |x| >= 1 or x = NaN. Note, since comparison with       *
-     *  NaN always returns false, an input of NaN will end up on this branch. */
-    else
-    {
-        /*  acos(-1) = pi and acos(1) = 0. Use this.                          */
-        if (x == -1.0F)
-            return tmpl_One_Pi_F;
-        else if (x == 1.0F)
-            return 0.0F;
+    /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
+    if (x == -1.0F)
+        return tmpl_One_Pi_F;
+    else if (x == 1.0F)
+        return 0.0F;
 
-        /*  For |x| > 1 the function is undefined. Return NaN.                */
-        else
-            return TMPL_NANF;
-    }
+    /*  For |x| > 1 the function is undefined. Return NaN.                    */
+    return TMPL_NANF;
 }
 /*  End of tmpl_Float_Arccos.                                                 */
 

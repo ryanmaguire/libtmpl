@@ -34,54 +34,41 @@
  *      acos_x (double):                                                      *
  *          The inverse cosine of x.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
- *          Computes the square root of a number.                             *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a number.                         *
  *  Method:                                                                   *
  *      Use the following trig identity:                                      *
  *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
- *      Compute this using a Pade approximant.                                *
+ *      Compute this using a Remez rational minimax approximation.            *
  *  Notes:                                                                    *
  *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/04/18: Ryan Maguire                                                  *
+ *      Changed src/math/tmpl_arccos_tail_end_double.c to include this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_ARCCOS_TAIL_END_DOUBLE_H
 #define TMPL_ARCCOS_TAIL_END_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  The square root function needs to be visible. Give the prototype pending  *
- *  whether libtmpl algorithms are requested.                                 */
-#if TMPL_USE_MATH_ALGORITHMS == 1
-
-extern double tmpl_Double_Sqrt(double x);
-#define TMPL_SQUARE_ROOT tmpl_Double_Sqrt
-
-/*  Otherwise use the default libm square root function.                      */
-#else
-
-extern double sqrt(double x);
-#define TMPL_SQUARE_ROOT sqrt
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01)
@@ -108,9 +95,14 @@ double tmpl_Double_Arccos_Tail_End(double x)
     /*  Use Horner's method to evaluate the two polynomials.                  */
     const double p = P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*P5))));
     const double q = Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*Q4)));
+
+    /*  p(z) / q(z) is the rational minimax approximant for                   *
+     *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
     const double r = z*p/q;
-    const double s = TMPL_SQUARE_ROOT(z);
+    const double s = tmpl_Double_Sqrt(z);
     const double t = r*s;
+
+    /*  We now have asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).         */
     return 2.0*(s + t);
 }
 /*  End of tmpl_Double_Arccos_Tail_End.                                       */
@@ -127,10 +119,6 @@ double tmpl_Double_Arccos_Tail_End(double x)
 #undef Q2
 #undef Q1
 #undef Q0
-#undef TMPL_SQUARE_ROOT
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

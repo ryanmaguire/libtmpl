@@ -93,13 +93,13 @@ float tmpl_Float_Floor(float x)
         return x;
 
     i = ((word32.i >> 23U) & TMPL_FLOAT_NANINF_EXP) - TMPL_FLOAT_BIAS;
-    j = 0x007FFFFF >> i;
+    j = (tmpl_UInt32)(0x007FFFFF) >> i;
 
     if ((word32.i & j) == 0)
         return x;
 
     if (word32.w.bits.sign)
-        word32.i += 0x00800000 >> i;
+        word32.i += (tmpl_UInt32)(0x00800000) >> i;
 
     word32.i &= ~j;
     return word32.w.r;

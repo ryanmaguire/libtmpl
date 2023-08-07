@@ -1,7 +1,6 @@
 #ifndef TMPL_SINCOS_SIN_PRECISE_EVAL_H
 #define TMPL_SINCOS_SIN_PRECISE_EVAL_H
 
-#include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/math/tmpl_sincos_data_double.h>
 #include <libtmpl/include/math/tmpl_sincos_sin_precise_small.h>
@@ -16,8 +15,7 @@
 
 #define TMPL_BIG_NUMBER (5.2776558133248E13)
 
-TMPL_INLINE_DECL
-double tmpl_Double_Sin_Precise_Eval(double x, double dx)
+static double tmpl_Double_Sin_Precise_Eval(double x, double dx)
 {
     double xold = x;
     double x2, s, sn, ssn, c, cs, ccs, cor;

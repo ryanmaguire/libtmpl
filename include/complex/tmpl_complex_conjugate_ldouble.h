@@ -36,13 +36,15 @@
  *  Output:                                                                   *
  *      conj_z (tmpl_ComplexLongDouble):                                      *
  *          The complex conjugate of z.                                       *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Negate the imaginary part of z and return.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_USE_INLINE is found.                       *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex.h:                                                       *
  *          Header where complex types and function prototypes are defined.   *
  ******************************************************************************
@@ -60,22 +62,21 @@
  *      Soft freeze for alpha release of libtmpl.                             *
  *  2023/02/06: Ryan Maguire                                                  *
  *      Moved float and long double to their own file. Added inline support.  *
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_conjugate_ldouble.c to use this file.*
  ******************************************************************************/
 
 /*  Include guard to preven including this file twice.                        */
 #ifndef TMPL_COMPLEX_CONJUGATE_LDOUBLE_H
 #define TMPL_COMPLEX_CONJUGATE_LDOUBLE_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Long double precision complex conjugate function (conj equivalent).       */
+/*  Long double precision complex conjugate function (conjl equivalent).      */
 TMPL_INLINE_DECL
 tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z)
 {
@@ -84,9 +85,6 @@ tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z)
     return z;
 }
 /*  End of tmpl_CLDouble_Conjugate.                                           */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

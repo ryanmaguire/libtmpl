@@ -17,4 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-TEST4(double, -1.0E6, 1.0E6, tmpl_Double_SinCos, __sincos)
+static void func(double t, double *s, double *c)
+{
+    *s = sin(t);
+    *c = cos(t);
+}
+TEST4(double, -1.0E6, 1.0E6, tmpl_Double_SinCos, func)
