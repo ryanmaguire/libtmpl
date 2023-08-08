@@ -15,68 +15,55 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ *                          tmpl_destroy_svg_canvas                           *
  ******************************************************************************
- *                             tmpl_string_length                             *
+ *                         tmpl_string_make_upper_case                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the strlen function.                     *
+ *      Convert a string to all upper case.                                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_String_Length                                                    *
+ *      tmpl_String_Make_Upper_Case                                           *
  *  Purpose:                                                                  *
- *      Counts the number of characters in a string. Equivalent to strlen.    *
+ *      Convert a string to it's upper-case equivalent.                       *
  *  Arguments:                                                                *
- *      str (const char *):                                                   *
- *          The string whose size is to be determined.                        *
+ *      str (char *):                                                         *
+ *          A string.                                                         *
  *  Output:                                                                   *
- *      string_length (size_t):                                               *
- *          The length of the string str.                                     *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_Upper_Case:                                                  *
+ *              Converts a single character char c to upper case.             *
  *  Method:                                                                   *
- *      Loop through the string until we find the NULL terminator.            *
- *  Notes:                                                                    *
- *      If the input string is NULL, the value zero is returned.              *
- *                                                                            *
- *      This is the K&R algorithm. glibc offers a routine that reads 4 or 8   *
- *      bytes at a time, giving quite a speed boost. It should be noted that  *
- *      for very large strings, say 10^8 characters, this function takes a    *
- *      fraction of a second on modern computers. So the speed boost may not  *
- *      be all that important for most applications.                          *
+ *      Loop over the characters of the string and call tmpl_Upper_Case.      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stddef.h:                                                             *
- *          Standard library header file where size_t is defined.             *
- *  2.) tmpl_string.h:                                                        *
- *          Header where tmpl_String_Length is declared.                      *
+ *  1.) tmpl_string.h:                                                        *
+ *          Header file where the function prototype is defined.              *
  ******************************************************************************
- *  Author: Ryan Maguire                                                      *
- *  Date:   August 7, 2023                                                    *
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       August 8, 2023                                                *
  ******************************************************************************/
 
-/*  size_t data type is found here.                                           */
-#include <stddef.h>
-
-/*  Function prototype given here.                                            */
+/*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Counts the number of characters in a string.                              */
-size_t tmpl_String_Length(const char *str)
+/*  Function for converting a string to it's upper-case equivalent.           */
+void tmpl_String_Make_Upper_Case(char *str)
 {
-    /*  Initialize the count to zero.                                         */
-    size_t string_length = (size_t)0;
-
-    /*  Avoid dereferencing a NULL pointer. Return zero in this case.         */
+    /*  Trying to access a NULL pointer could cause a segfault. Check this.   */
     if (!str)
-        return string_length;
+        return;
 
-    /*  Loop through the characters in str and find the null terminator.      */
-    while (str[string_length])
-        string_length++;
-
-    return string_length;
+    /*  Loop over the elements of the string and convert them to upper case.  */
+    while (*str)
+    {
+        *str = tmpl_Upper_Case(*str);
+        ++str;
+    }
 }
-/*  End of tmpl_String_Length.                                                */
+/*  End of tmpl_String_Make_Upper_Case.                                       */

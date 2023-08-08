@@ -97,7 +97,7 @@ extern char tmpl_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Duplicate_String                                                 *
+ *      tmpl_String_Duplicate                                                 *
  *  Purpose:                                                                  *
  *      Copies a string, verbatim, into a pointer to a char array. This is    *
  *      equivalent to the strdup function, defined in the POSIX standard, but *
@@ -116,16 +116,78 @@ extern char tmpl_Upper_Case(char c);
  *      memory for the pointer, and returns NULL. You should also check that  *
  *      the output pointer is not NULL before using it.                       *
  *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_duplicate_string.c                            *
+ *      libtmpl/src/string/tmpl_string_duplicate.c                            *
  ******************************************************************************/
-extern char *tmpl_Duplicate_String(const char *str);
+extern char *tmpl_String_Duplicate(const char *str);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_Length                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the number of characters in a string.                        *
+ *  Arguments:                                                                *
+ *      str (const char *):                                                   *
+ *          The string whose length is to be computed.                        *
+ *  Output:                                                                   *
+ *      string_length (size_t):                                               *
+ *          The number of characters in str.                                  *
+ *  Notes:                                                                    *
+ *      This uses the K&R algorithm. The algorithm in glibc is indeed faster. *
+ *      However, for most reasonable strings (say, less than 10^8 characters) *
+ *      the K&R algorithm finishes in a fraction of a second.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_length.c                               *
+ *  TODO:                                                                     *
+ *      Explore implementing the glibc algorithm.                             *
+ ******************************************************************************/
 size_t tmpl_String_Length(const char *str);
 
-extern void tmpl_Make_Lower(char *str);
-extern void tmpl_Remove_Spaces(char * str);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_Make_Lower_Case                                           *
+ *  Purpose:                                                                  *
+ *      Converts a string to all lower-case characters.                       *
+ *  Arguments:                                                                *
+ *      str (char *):                                                         *
+ *          The string to be modified.                                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_make_lower_case.c                      *
+ ******************************************************************************/
+extern void tmpl_String_Make_Lower_Case(char *str);
 
-#define tmpl_strdup tmpl_Duplicate_String
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_Make_Upper_Case                                           *
+ *  Purpose:                                                                  *
+ *      Converts a string to all upper-case characters.                       *
+ *  Arguments:                                                                *
+ *      str (char *):                                                         *
+ *          The string to be modified.                                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_make_upper_case.c                      *
+ ******************************************************************************/
+extern void tmpl_String_Make_Upper_Case(char *str);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_Remove_Whitespace                                         *
+ *  Purpose:                                                                  *
+ *      Removes all whitespace from a string.                                 *
+ *  Arguments:                                                                *
+ *      str (char *):                                                         *
+ *          The string to be modified.                                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_remove_whitespace.c                    *
+ ******************************************************************************/
+extern void tmpl_String_Remove_Whitespace(char * str);
+
+#define tmpl_strdup tmpl_String_Duplicate
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

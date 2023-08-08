@@ -16,67 +16,66 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_string_length                             *
+ *                       tmpl_string_remove_whitespace                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the strlen function.                     *
+ *      Function for removing whitespace from a string.                       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_String_Length                                                    *
+ *      tmpl_String_Remove_Whitespace                                         *
  *  Purpose:                                                                  *
- *      Counts the number of characters in a string. Equivalent to strlen.    *
+ *      Removes all spaces from a string.                                     *
  *  Arguments:                                                                *
- *      str (const char *):                                                   *
- *          The string whose size is to be determined.                        *
+ *      str (char *):                                                         *
+ *          A string.                                                         *
  *  Output:                                                                   *
- *      string_length (size_t):                                               *
- *          The length of the string str.                                     *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Loop through the string until we find the NULL terminator.            *
+ *      Loop through the string and remove all whitespace characters.         *
  *  Notes:                                                                    *
- *      If the input string is NULL, the value zero is returned.              *
- *                                                                            *
- *      This is the K&R algorithm. glibc offers a routine that reads 4 or 8   *
- *      bytes at a time, giving quite a speed boost. It should be noted that  *
- *      for very large strings, say 10^8 characters, this function takes a    *
- *      fraction of a second on modern computers. So the speed boost may not  *
- *      be all that important for most applications.                          *
+ *      If the input string is NULL, nothing is done.                         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stddef.h:                                                             *
- *          Standard library header file where size_t is defined.             *
- *  2.) tmpl_string.h:                                                        *
- *          Header where tmpl_String_Length is declared.                      *
+ *  1.) tmpl_string.h:                                                        *
+ *          Header where tmpl_String_Remove_Whitespace is declared.           *
  ******************************************************************************
  *  Author: Ryan Maguire                                                      *
- *  Date:   August 7, 2023                                                    *
+ *  Date:   April 8, 2021                                                     *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/08/08: Ryan Maguire                                                  *
+ *      Added comments, simplified code.                                      *
  ******************************************************************************/
 
-/*  size_t data type is found here.                                           */
-#include <stddef.h>
-
-/*  Function prototype given here.                                            */
+/*  Function prototype is given here.                                         */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Counts the number of characters in a string.                              */
-size_t tmpl_String_Length(const char *str)
+/*  Function for removing all whitespace from a string.                       */
+void tmpl_String_Remove_Whitespace(char *str)
 {
-    /*  Initialize the count to zero.                                         */
-    size_t string_length = (size_t)0;
+    const char *ptr = str;
 
-    /*  Avoid dereferencing a NULL pointer. Return zero in this case.         */
+    /*  If the input is NULL, the following will cause a segfault. Check.     */
     if (!str)
-        return string_length;
+        return;
 
-    /*  Loop through the characters in str and find the null terminator.      */
-    while (str[string_length])
-        string_length++;
+    do {
+        /*  Keep incremementing the pointer until we find a non-space.        */
+        while (*ptr == ' ')
+            ptr++;
 
-    return string_length;
+        /*  Set the value of the string to the non-space character in ptr.    */
+        *str = *ptr;
+
+        /*  Increment both pointers and start all over again.                 */
+        str++;
+        ptr++;
+    } while (*str);
 }
-/*  End of tmpl_String_Length.                                                */
+/*  End of tmpl_String_Remove_Whitespace.                                     */

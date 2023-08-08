@@ -17,7 +17,7 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  *                          tmpl_destroy_svg_canvas                           *
  ******************************************************************************
- *                              tmpl_make_lower                               *
+ *                         tmpl_string_make_lower_case                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Convert a string to all lower case.                                   *
@@ -25,7 +25,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Make_Lower                                                       *
+ *      tmpl_String_Make_Lower_Case                                           *
  *  Purpose:                                                                  *
  *      Convert a string to it's lower-case equivalent.                       *
  *  Arguments:                                                                *
@@ -46,14 +46,14 @@
  *          Header file where the function prototype is defined.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       June 19 2021                                                  *
+ *  Date:       June 19, 2021                                                 *
  ******************************************************************************/
 
 /*  Function prototype here.                                                  */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Function for converting a string to it's lower-case equivalent.           */
-void tmpl_Make_Lower(char *str)
+void tmpl_String_Make_Lower_Case(char *str)
 {
     /*  Trying to access a NULL pointer could cause a segfault. Check this.   */
     if (!str)
@@ -66,4 +66,4 @@ void tmpl_Make_Lower(char *str)
         ++str;
     }
 }
-/*  End of tmpl_Make_Lower.                                                   */
+/*  End of tmpl_String_Make_Lower_Case.                                       */
