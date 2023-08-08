@@ -85,6 +85,40 @@
 /*  Needed for FILE data type and fprintf.                                    */
 #include <stdio.h>
 
+/*  Used for testing if the compiling uses ascii for characters.              */
+static const char ASCII_ARRAY[94] = {
+    '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.',
+    '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<',
+    '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+    'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f',
+    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+    'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'
+};
+
+/*  Determines if the compiler uses the ASCII character set.                  */
+static int tmpl_has_ascii(void)
+{
+#ifdef TMPL_NO_ASCII
+    return 0;
+#else
+    int n;
+    const int start = 0x21;
+    const int end = 0x7E;
+
+    for (n = start; n <= end; ++n)
+    {
+        const char c = (char)n;
+
+        if (ASCII_ARRAY[n - start] != c)
+            return 0;
+    }
+
+    return 1;
+#endif
+}
+/*  End of tmpl_has_ascii.                                                    */
+
 /*  Number of bits in char. char is not allowed to have padding, so all bits  *
  *  are used. This fact can be used to determine this value.                  */
 static unsigned int TMPL_CHAR_BIT;
@@ -1050,10 +1084,15 @@ static int make_config_h(void)
 #endif
 
 #ifdef TMPL_SET_USE_MEMCPY_TRUE
-    fprintf(fp, "#define TMPL_USE_MEMCPY 1\n");
+    fprintf(fp, "#define TMPL_USE_MEMCPY 1\n\n");
 #else
-    fprintf(fp, "#define TMPL_USE_MEMCPY 0\n");
+    fprintf(fp, "#define TMPL_USE_MEMCPY 0\n\n");
 #endif
+
+    if (tmpl_has_ascii())
+        fprintf(fp, "#define TMPL_HAS_ASCII 1\n");
+    else
+        fprintf(fp, "#define TMPL_HAS_ASCII 0\n");
 
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");

@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -36,39 +36,71 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use a switch to check the argument, returning the upper case version  *
- *      if applicable, and returning the input otherwise.                     *
+ *      ASCII Version:                                                        *
+ *          Use the ISO 8859-1 standard to convert a lower case character to  *
+ *          an upper case one. See the code for an explanation.               *
+ *      Portable Version:                                                     *
+ *          Use a switch to check the argument, returning the upper case      *
+ *          version, if applicable, and returning the input otherwise.        *
  *  Notes:                                                                    *
- *      This is the more portable version of tmpl_ASCII_Upper_Case, but it    *
- *      is a bit slower. The computational time is negligible for most        *
- *      applications for both functions.                                      *
+ *      The ASCII version is much faster, but the portable version works      *
+ *      without the ISO 8859-1 assumption. ISO 8859-1 is standard, however.   *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_string.h:                                                        *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file where TMPL_HAS_ASCII is defined.                      *
+ *  2.) tmpl_string.h:                                                        *
  *          Header file containing the function prototype.                    *
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 26, 2022                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/08/07: Ryan Maguire                                                  *
+ *      Added check for ASCII support. Combined portable and ascii versions.  *
  ******************************************************************************/
+
+/*  TMPL_HAS_ASCII macro found here.                                          */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  Function prototype is here.                                               */
 #include <libtmpl/include/tmpl_string.h>
+
+/*  The ASCII version is much more efficient.                                 */
+#if TMPL_HAS_ASCII == 1
+
+/*  Function for converting an ASCII character to upper case.                 */
+char tmpl_Upper_Case(char c)
+{
+    /*  In the ISO 8859-1 standard, the ASCII table has the following         *
+     *  property (written in binary):                                         *
+     *      1000001 = A                                                       *
+     *      1000010 = B                                                       *
+     *      1000011 = C                                                       *
+     *          ...                                                           *
+     *      1100001 = a                                                       *
+     *      1100010 = b                                                       *
+     *      1100011 = c                                                       *
+     *          ...                                                           *
+     *  So if we flip the 6th bit, i.e. the 2^5 factor, from 1 to 0 we go     *
+     *  from lower case to upper case. Do this with bit-wise AND using 0x5F.  */
+    if ((c >= 'a') && (c <= 'z'))
+        return c & 0x5F;
+
+    /*  Every other value is either already upper-case, or upper-case doesn't *
+     *  make sense (i.e. ! or 5), so return the input.                        */
+    return c;
+}
+/*  End of tmpl_Upper_Case.                                                   */
+
+#else
+/*  Else for #if TMPL_HAS_ASCII == 1.                                         */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
 
 /*  Function for converting lower case character to upper case.               */
 char tmpl_Upper_Case(char c)
@@ -136,3 +168,5 @@ char tmpl_Upper_Case(char c)
 }
 /*  End of tmpl_Upper_Case.                                                   */
 
+#endif
+/*  End of #if TMPL_HAS_ASCII == 1.                                           */

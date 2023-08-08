@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -28,30 +28,17 @@
  *      rssringoccs titles have been replaced with tmpl. rss_ringoccs is also *
  *      released under GPL3.                                                  *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_bool.h:                                                          *
+ *  1.) stddef.h:                                                             *
+ *          Standard library header file where size_t is defined.             *
+ *  2.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
- ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 8, 2021                                                 *
  ******************************************************************************
- *                             Revision History                               *
+ *                              Revision History                              *
  ******************************************************************************
  *  2022/01/21: Ryan Maguire                                                  *
  *      Added docstring style comments for function declarations.             *
@@ -70,103 +57,47 @@
 extern "C" {
 #endif
 
+/*  size_t data type found here.                                              */
+#include <stddef.h>
+
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_ASCII_Lower_Case                                                 *
+ *      tmpl_Lower_Case                                                       *
  *  Purpose:                                                                  *
- *      Takes in a char which represents an ASCII character and returns the   *
- *      lower-case of the character if it is a capital letter, and returns    *
- *      the input otherwise.                                                  *
+ *      Converts a character to lower case, if applicable.                    *
  *  Arguments:                                                                *
  *      upper (char):                                                         *
  *          The input character.                                              *
  *  Output:                                                                   *
  *      lower (char):                                                         *
  *          The lower case version of the input character.                    *
- *  Note:                                                                     *
- *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
- *      This has been the case on all devices I've tested. If you're unsure,  *
- *      use tmpl_Lower_Case. That function is slower, but the computational   *
- *      time is essentially negligible for both functions.                    *
  *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_ascii_lower_case.c                            *
- *  Examples:                                                                 *
- *      libtmpl/examples/string_examples/tmpl_ascii_lower_case_example.c      *
- *  Tests:                                                                    *
- *      libtmpl/tests/string_tests/unit_tests/                                *
- *          tmpl_ascii_lower_case_unit_test_001.c                             *
- *          tmpl_ascii_lower_case_unit_test_002.c                             *
- *      libtmpl/tests/string_tests/time_tests/                                *
- *          tmpl_lower_case_functions_time_test.c                             *
+ *      libtmpl/src/string/tmpl_lower_case.c                                  *
  ******************************************************************************/
-extern char tmpl_ASCII_Lower_Case(char c);
+extern char tmpl_Lower_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_ASCII_Upper_Case                                                 *
+ *      tmpl_Upper_Case                                                       *
  *  Purpose:                                                                  *
- *      Takes in a char which represents an ASCII character and returns the   *
- *      upper-case of the character if it is a lower-case letter, and returns *
- *      the input otherwise.                                                  *
+ *      Converts a character to upper case, if applicable.                    *
  *  Arguments:                                                                *
  *      lower (char):                                                         *
  *          The input character.                                              *
  *  Output:                                                                   *
  *      upper (char):                                                         *
  *          The upper case version of the input character.                    *
- *  Note:                                                                     *
- *      The function assumes the ASCII ISO 8859-1 standard is implemented.    *
- *      This has been the case on all devices I've tested. If you're unsure,  *
- *      use tmpl_Upper_Case. That function is slower, but the computational   *
- *      time is essentially negligible for both functions.                    *
  *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_ascii_upper_case.c                            *
- *  Examples:                                                                 *
- *      libtmpl/examples/string_examples/tmpl_ascii_upper_case_example.c      *
- *  Tests:                                                                    *
- *      libtmpl/tests/string_tests/unit_tests/                                *
- *          tmpl_ascii_upper_case_unit_test_001.c                             *
- *          tmpl_ascii_upper_case_unit_test_002.c                             *
- *      libtmpl/tests/string_tests/time_tests/                                *
- *          tmpl_upper_case_functions_time_test.c                             *
+ *      libtmpl/src/string/tmpl_upper_case.c                                  *
  ******************************************************************************/
-extern char tmpl_ASCII_Upper_Case(char c);
+extern char tmpl_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Lower_Case                                                       *
- *  Purpose:                                                                  *
- *      Takes in a char which represents an ASCII character and returns the   *
- *      lower-case of the character if it is a capital letter, and returns    *
- *      the input otherwise.                                                  *
- *  Arguments:                                                                *
- *      upper (char):                                                         *
- *          The input character.                                              *
- *  Output:                                                                   *
- *      lower (char):                                                         *
- *          The lower case version of the input character.                    *
- *  Note:                                                                     *
- *      This function is the more portable version of tmpl_ASCII_Lower_Case,  *
- *      but is slightly slower. It uses a simple switch to check the input.   *
- *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_lower_case.c                                  *
- *  Examples:                                                                 *
- *      libtmpl/examples/string_examples/tmpl_ascii_lower_case_example.c      *
- *  Tests:                                                                    *
- *      libtmpl/tests/string_tests/unit_tests/                                *
- *          tmpl_lower_case_unit_test_001.c                                   *
- *          tmpl_lower_case_unit_test_002.c                                   *
- *      libtmpl/tests/string_tests/time_tests/                                *
- *          tmpl_lower_case_functions_time_test.c                             *
- ******************************************************************************/
-extern char tmpl_Lower_Case(char c);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_strdup                                                           *
+ *      tmpl_Duplicate_String                                                 *
  *  Purpose:                                                                  *
  *      Copies a string, verbatim, into a pointer to a char array. This is    *
  *      equivalent to the strdup function, defined in the POSIX standard, but *
@@ -178,23 +109,23 @@ extern char tmpl_Lower_Case(char c);
  *      dup (char *):                                                         *
  *          A pointer to a char array whose entries correspond to the input   *
  *          string str.                                                       *
- *  NOTE:                                                                     *
+ *  Notes:                                                                    *
  *      A call to malloc is made to allocate memory for the string. You must  *
  *      free the pointer after you are done with it to avoid memory leaks.    *
  *      There is also the (unlikely) chance that malloc failed to allocate    *
  *      memory for the pointer, and returns NULL. You should also check that  *
  *      the output pointer is not NULL before using it.                       *
  *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_strdup.c                                      *
- *  Examples:                                                                 *
- *      libtmpl/examples/string/tmpl_strdup_example.c                         *
+ *      libtmpl/src/string/tmpl_duplicate_string.c                            *
  ******************************************************************************/
-extern char *tmpl_strdup(const char *str);
+extern char *tmpl_Duplicate_String(const char *str);
 
-extern char tmpl_Upper_Case(char c);
+size_t tmpl_String_Length(const char *str);
 
 extern void tmpl_Make_Lower(char *str);
 extern void tmpl_Remove_Spaces(char * str);
+
+#define tmpl_strdup tmpl_Duplicate_String
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus

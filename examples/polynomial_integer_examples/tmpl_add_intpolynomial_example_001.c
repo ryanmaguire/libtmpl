@@ -1,4 +1,8 @@
+
+/*  Polynomial typedef's and functions.                                       */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
+
+/*  printf function found here.                                               */
 #include <stdio.h>
 
 int main(void)
@@ -12,11 +16,11 @@ int main(void)
     tmpl_IntPolynomial_Add(&P, &Q, &sum);
 
     printf("  ");
-    tmpl_IntPolynomial_Print_String(stdout, &P);
+    tmpl_IntPolynomial_Print(stdout, &P);
     printf("  \n+ ");
-    tmpl_IntPolynomial_Print_String(stdout, &Q);
+    tmpl_IntPolynomial_Print(stdout, &Q);
     printf("\n= ");
-    tmpl_IntPolynomial_Print_String(stdout, &sum);
+    tmpl_IntPolynomial_Print(stdout, &sum);
     printf("\n");
 
     tmpl_IntPolynomial_Destroy(&P);

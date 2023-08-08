@@ -1,8 +1,8 @@
 #include <libtmpl/include/tmpl_string.h>
 
-void tmpl_Remove_Spaces(char* s)
+void tmpl_Remove_Spaces(char *s)
 {
-    const char* d = s;
+    const char *d = s;
 
     /*  If the input is NULL, the following will cause a segfault. Check.     */
     if (!s)
@@ -14,4 +14,3 @@ void tmpl_Remove_Spaces(char* s)
         }
     } while ((*s++ = *d++));
 }
-

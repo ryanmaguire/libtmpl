@@ -658,13 +658,13 @@ tmpl_IntPolynomial_Multiply_Naive_Kernel(const tmpl_IntPolynomial *P,
  *      checking if the output is NULL before using it. If the output is not  *
  *      NULL, it needs to be free'd when done with.                           *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_get_string.c                 *
+ *      libtmpl/src/polynomial/tmpl_intpolynomial_as_string.c                 *
  ******************************************************************************/
-extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
+extern char *tmpl_IntPolynomial_As_String(const tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_IntPolynomial_Print_String                                       *
+ *      tmpl_IntPolynomial_Print                                              *
  *  Purpose:                                                                  *
  *      Prints the contents of a polynomial to a file.                        *
  *  Arguments:                                                                *
@@ -678,10 +678,9 @@ extern char *tmpl_IntPolynomial_As_String(tmpl_IntPolynomial *poly);
  *      If poly->error_occurred is true, or if poly->coeffs = NULL, or if     *
  *      poly = NULL, nothing is printed.                                      *
  *  Source Code:                                                              *
- *      libtmpl/src/polynomial/tmpl_polynomial_z_print_string.c               *
+ *      libtmpl/src/polynomial/tmpl_print_intpolynomial.c                     *
  ******************************************************************************/
-extern void
-tmpl_IntPolynomial_Print_String(FILE *fp, const tmpl_IntPolynomial *poly);
+extern void tmpl_IntPolynomial_Print(FILE *fp, const tmpl_IntPolynomial *poly);
 
 /******************************************************************************
  *  Function:                                                                 *

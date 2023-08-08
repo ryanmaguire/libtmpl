@@ -55,21 +55,6 @@
  *  2.) tmpl_string.h:                                                        *
  *          Header where tmpl_strdup is declared.                             *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
  *  Author: Ryan Maguire                                                      *
  *  Date:   April 8, 2021                                                     *
  ******************************************************************************
@@ -86,41 +71,37 @@
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Function for duplicating a string into a char pointer.                    */
-char *tmpl_strdup(const char *str)
+char *tmpl_Duplicate_String(const char *str)
 {
     /*  Declare necessary variables.                                          */
     char *out;
-    unsigned long int n, string_length;
+    size_t n, string_length;
+    const size_t zero = (size_t)0;
+    const size_t one = (size_t)1;
 
     /*  Check if the input string is a NULL pointer. A segfault may occur if  *
      *  we try to dereference a NULL pointer.                                 */
-    if (str == NULL)
+    if (!str)
         return NULL;
 
     /*  Otherwise, compute the length of the input string.                    */
-    string_length = 0UL;
-
-    /*  Increment until we hit the NULL terminator of the string.             */
-    while(str[string_length])
-    {
-        ++string_length;
-    }
+    string_length = tmpl_String_Length(str);
 
     /*  Allocate memory for the output string. The +1 is for the NULL         *
      *  terminator at the end of the string.                                  */
-    out = malloc(sizeof(*out) * (string_length + 1UL));
+    out = malloc(sizeof(*out) * (string_length + one));
 
     /*  Check if malloc failed.                                               */
-    if (out == NULL)
+    if (!out)
         return NULL;
 
     /*  If not, copy the input string into out.                               */
-    for (n = 0UL; n < string_length; ++n)
+    for (n = zero; n < string_length; ++n)
         out[n] = str[n];
 
     /*  Lastly, set the NULL terminator and return.                           */
     out[string_length] = str[string_length];
     return out;
 }
-/*  End of tmpl_strdup.                                                       */
+/*  End of tmpl_Duplicate_String.                                             */
 
