@@ -24,9 +24,9 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Bessel_I0_Asymptotic                                      *
+ *      tmpl_Double_Bessel_I0_Chebyshev                                       *
  *  Purpose:                                                                  *
- *      Computes the asymptotic expansion of I0(x) for large positive x.      *
+ *      Computes the Chebyshev expansion of I0(x) for positive x >= 8.        *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -34,10 +34,11 @@
  *      I0_x (double):                                                        *
  *          The asymptotic expansion of x.                                    *
  *  Called Functions:                                                         *
- *      tmpl_Double_Exp_Pos_Kernel (tmpl_math.h):                             *
- *          Computes exp(x) for x > 1.                                        *
- *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
- *          Computes the square root of a real number.                        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Exp_Pos_Kernel:                                       *
+ *              Computes exp(x) for x > 1.                                    *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a real number.                    *
  *  Method:                                                                   *
  *      Compute using a Chebyshev approximation on the interval [8, infty].   *
  *      The function:                                                         *

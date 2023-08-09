@@ -53,8 +53,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing exp and sqrt functions.                    *
  *  3.) tmpl_special_functions_real.h:                                        *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -68,9 +66,6 @@
 
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Exp kernel found here, as is the square root function.                    */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_special_functions_real.h>

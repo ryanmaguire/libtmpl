@@ -34,10 +34,11 @@
  *      I0_x (double):                                                        *
  *          The asymptotic expansion of x.                                    *
  *  Called Functions:                                                         *
- *      tmpl_Double_Exp_Pos_Kernel (tmpl_math.h):                             *
- *          Computes exp(x) for x > 1.                                        *
- *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
- *          Computes the square root of a real number.                        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Exp_Pos_Kernel:                                       *
+ *              Computes exp(x) for x > 1.                                    *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a real number.                    *
  *  Method:                                                                   *
  *      Compute the reciprocal of x and use Horner's method to efficiently    *
  *      evaluate the polynomial.                                              *

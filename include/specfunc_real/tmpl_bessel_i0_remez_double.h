@@ -1,3 +1,58 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                        tmpl_bessel_i0_remez_double                         *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the Remez minimax polynomial of I0(x) at double precision.   *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Double_Bessel_I0_Remez                                           *
+ *  Purpose:                                                                  *
+ *      Computes the Remez minimax polynomial of I0(x) for |x| <= 8.          *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      I0_x (double):                                                        *
+ *          The modified Bessel function I0 at x.                             *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Use the Remez exchange algorithm to pre-compute the coefficients of   *
+ *      the minimax polynomial. Use Horner's method to evaluate.              *
+ *  Notes:                                                                    *
+ *      For |x| < 8.0 this is accurate to double precision.                   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  3.) tmpl_special_functions_real.h:                                        *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       July 25, 2023                                                 *
+ ******************************************************************************/
+
+/*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BESSEL_I0_REMEZ_DOUBLE_H
 #define TMPL_BESSEL_I0_REMEZ_DOUBLE_H
 
@@ -60,13 +115,19 @@ A00 + z*(\
     )\
 )
 
+/*  Compute the modified Bessel function using a minimax polynomial.          */
 TMPL_INLINE_DECL
 double tmpl_Double_Bessel_I0_Remez(double x)
 {
+    /*  The polynomial is even, compute the square of x.                      */
     const double x2 = x*x;
+
+    /*  Use Horner's method to evaluate the polynomial.                       */
     return TMPL_POLY_EVAL(x2);
 }
+/*  End of tmpl_Double_Bessel_I0_Remez.                                       */
 
+/*  Undefine everything in case someone wants to #include this file.          */
 #undef A00
 #undef A01
 #undef A02
@@ -86,3 +147,4 @@ double tmpl_Double_Bessel_I0_Remez(double x)
 #undef TMPL_POLY_EVAL
 
 #endif
+/*  End of include guard.                                                     */
