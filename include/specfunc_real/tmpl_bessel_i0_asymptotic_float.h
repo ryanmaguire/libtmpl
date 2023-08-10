@@ -34,10 +34,11 @@
  *      I0_x (float):                                                         *
  *          The asymptotic expansion of x.                                    *
  *  Called Functions:                                                         *
- *      tmpl_Float_Exp_Pos_Kernel (tmpl_math.h):                              *
- *          Computes exp(x) for x > 1.                                        *
- *      tmpl_Float_Sqrt (tmpl_math.h):                                        *
- *          Computes the square root of a real number.                        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Float_Exp_Pos_Kernel:                                        *
+ *              Computes exp(x) for x > 1.                                    *
+ *          tmpl_Float_Sqrt (tmpl_math.h):                                    *
+ *              Computes the square root of a real number.                    *
  *  Method:                                                                   *
  *      Compute the reciprocal of x and use Horner's method to efficiently    *
  *      evaluate the polynomial.                                              *
@@ -129,6 +130,7 @@ float tmpl_Float_Bessel_I0_Asymptotic(float x)
 #undef A02
 #undef A03
 #undef A04
+#undef RCPR_TWO_PI
 
 #endif
 /*  End of include guard.                                                     */
