@@ -107,6 +107,9 @@
  *  also found here.                                                          */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Fixed-width integer data types found here, if available.                  */
+#include <libtmpl/include/tmpl_inttype.h>
+
 /*  This macro should be defined. If not, abort compiling.                    */
 #if !defined(TMPL_USE_INLINE)
 #error "tmpl_math.h: TMPL_USE_INLINE is undefined."
@@ -1157,8 +1160,20 @@ extern const double tmpl_double_cospi_table[128];
 extern const float tmpl_float_cospi_table[128];
 extern const long double tmpl_ldouble_cospi_table[128];
 
-/*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
+/*  If type-punning is available, use a table of 64-bit ints representing     *
+ *  various values of exp(x). This speeds up the computation considerably.    */
+#if TMPL_HAS_64_BIT_INT == 1 && TMPL_HAS_IEEE754_DOUBLE == 1
+extern const tmpl_UInt64 tmpl_double_exp_table[256];
+
+/*  Lacking this, fall back to the original algorithm. Provide a table of the *
+ *  values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.               */
+#else
 extern const double tmpl_double_exp_table[179];
+
+#endif
+/*  End of #if TMPL_HAS_64_BIT_INT == 1 && TMPL_HAS_IEEE754_DOUBLE.           */
+
+/*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
 extern const float tmpl_float_exp_table[179];
 extern const long double tmpl_ldouble_exp_table[179];
 
