@@ -192,7 +192,7 @@ double tmpl_Double_Bessel_J0(double x)
 
     /*  For small arguments, use the Taylor series of J_0.                    */
     if (arg < 4.0)
-        return tmpl_Double_Bessel_J0_Remez(x);
+        return tmpl_Double_Bessel_J0_Rat_Remez(x);
     else if (arg < 16.0)
         return tmpl_Double_Bessel_J0_First_Zero(x);
 

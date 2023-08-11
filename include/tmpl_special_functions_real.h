@@ -169,11 +169,11 @@ extern long double tmpl_LDouble_Bessel_J0_Maclaurin(long double x);
 #endif
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_remez_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_remez_double.h>
 #else
-extern float tmpl_Float_Bessel_J0_Remez(float x);
-extern double tmpl_Double_Bessel_J0_Remez(double x);
-extern long double tmpl_LDouble_Bessel_J0_Remez(long double x);
+extern float tmpl_Float_Bessel_J0_Rat_Remez(float x);
+extern double tmpl_Double_Bessel_J0_Rat_Remez(double x);
+extern long double tmpl_LDouble_Bessel_J0_Rat_Remez(long double x);
 #endif
 
 #if TMPL_USE_INLINE == 1
@@ -238,7 +238,7 @@ extern long double tmpl_LDouble_LambertW(long double x);
  *      Rewrite this.
  *      The expansions used are slight modifications of the rational
  *      approximations found in the boost library. I'd rather implement
- *      something more concrete with a simpler way of reproducing the.
+ *      something more concrete with a simpler way of reproducing the
  *      approximation. Shifted Pade approximants or rational
  *      Remez approximations.
  */
