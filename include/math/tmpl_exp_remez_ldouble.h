@@ -2,11 +2,8 @@
 #ifndef TMPL_EXP_REMEZ_LDOUBLE_H
 #define TMPL_EXP_REMEZ_LDOUBLE_H
 
-/*  TMPL_USE_INLINE found here                                                */
+/*  TMPL_INLINE_DECL found here                                               */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -247,9 +244,6 @@ long double tmpl_LDouble_Exp_Remez(long double x)
 #undef A17
 #undef A18
 #undef TMPL_POLY_EVAL
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

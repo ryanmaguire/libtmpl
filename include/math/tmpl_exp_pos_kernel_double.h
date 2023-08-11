@@ -76,17 +76,17 @@
  ******************************************************************************
  *  2023/01/30: Ryan Maguire                                                  *
  *      Changed Maclaurin series to Remez Minimax polynomial. Fixed comments. *
+ *  2023/08/10: Ryan Maguire                                                  *
+ *      Added modified version of glibc's algorithm. It assumes 64-bit        *
+ *      unsigned integers are available. Decent performance boost.            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_EXP_POS_KERNEL_DOUBLE_H
 #define TMPL_EXP_POS_KERNEL_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -102,6 +102,64 @@
 
 /*  Check for IEEE-754 support. Significantly faster.                         */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
+
+/*  TMPL_HAS_64_BIT_INT macro found here.                                     */
+#include <libtmpl/include/tmpl_inttype.h>
+
+/*  With fixed-width 64-bit integers and 64-bit double we can speed this up.  */
+#if TMPL_HAS_64_BIT_INT == 1
+
+/******************************************************************************
+ *                    IEEE-754 Version with 64-Bit Integers                   *
+ ******************************************************************************/
+
+/*  Function for converting from int to float.                                */
+#include <libtmpl/include/floatint/tmpl_uint64_to_double.h>
+
+/*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
+TMPL_INLINE_DECL
+double tmpl_Double_Exp_Pos_Kernel(double x)
+{
+    /*  The constant 128 / ln(2), to double precision.                        */
+    const double rcpr_ln2_times_128 = 1.846649652337873135365953203291e+02;
+
+    /*  -ln(2) / 128 to greater than 64 bits using two doubles.               */
+    const double minus_ln2_by_128_hi = -5.415212348111708706710487604141e-03;
+    const double minus_ln2_by_128_lo = -1.286402311163834553810886276993e-14;
+
+    /*  exp(x) = e^(ln(2) x / ln(2)) = 2^(x / ln(2)). Compute using this.     */
+    const double z = rcpr_ln2_times_128 * x;
+
+    /*  Round the input to an integer.                                        */
+    const tmpl_UInt64 ki = (tmpl_UInt64)z;
+
+    /*  Cast this integer as a double. exp(k + r) = exp(k) * exp(r). We'll    *
+     *  be using this in a few lines.                                         */
+    const double kd = (double)(ki);
+
+    /*  Compute x - floor(x)/ln(2).                                           */
+    const double r = (x + kd*minus_ln2_by_128_hi) + kd*minus_ln2_by_128_lo;
+
+    /*  Index for the lookup table of pre-computed exponential values.        */
+    const tmpl_UInt64 ind = (ki & 0x7F) << 1;
+
+    /*  The exponent of the output can be computed using the integer part.    */
+    const tmpl_UInt64 top = ki << 45;
+
+    /*  The lookup tables has the values of x stored by their 64-bit integer  *
+     *  representations. Convert these to actual doubles.                     */
+    const double tail = tmpl_UInt64_To_Double(tmpl_double_exp_table[ind]);
+
+    /*  Compute exp(k + r) = exp(k) * exp(r) using a Remez polynomial.        */
+    const tmpl_UInt64 sbits = tmpl_double_exp_table[ind + 1] + top;
+    const double scale = tmpl_UInt64_To_Double(sbits);
+    const double poly = tail + A0 + r*(A1 + r*(A2 + r*(A3 + r*(A4 + r*A5))));
+    return scale * poly;
+}
+/*  End of tmpl_Double_Exp_Pos_Kernel.                                        */
+
+/*  Lacking 64-bit integers, but having 64-bit double (strange), use this.    */
+#else
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
@@ -152,6 +210,9 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
     return exp_w.r;
 }
 /*  End of tmpl_Double_Exp_Pos_Kernel.                                        */
+
+#endif
+/*  End of #if TMPL_HAS_64_BIT_INT == 1.                                      */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
@@ -214,9 +275,6 @@ double tmpl_Double_Exp_Pos_Kernel(double x)
 #undef A4
 #undef A5
 #undef TMPL_ONE_BY_128
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

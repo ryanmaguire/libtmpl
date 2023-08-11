@@ -1,38 +1,30 @@
-/*  TMPL_USE_INLINE found here                                                */
-#include <libtmpl/include/tmpl_config.h>
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                            tmpl_exp_remez_float                            *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes exp(x) using a minimax polynomial. Algorithm is implemented  *
+ *      in include/math/tmpl_exp_remez_float.h. See for details.              *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       January 30, 2023                                              *
+ ******************************************************************************/
 
-/*  Only use this if inline support is not requested.                         */
-#if TMPL_USE_INLINE != 1
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Coefficients for the numerator of the Remez polynomial.                   */
-#define A00 (+1.0000000106059821205497615923438225449617767337990E+00F)
-#define A01 (+1.0000000088356670961167470006641503065999626762706E+00F)
-#define A02 (+4.9999694504661831549639911146973242697185774891778E-01F)
-#define A03 (+1.6666576713343118791091266331836085957467162462315E-01F)
-#define A04 (+4.1796999994613185901060317501374654341068142737613E-02F)
-#define A05 (+8.3578093664050040349255591933857725029991815492887E-03F)
-
-/*  Helper macro for evaluating the polynomial via Horner's method.           */
-#define TMPL_POLY_EVAL(z) A00 + x*(A01 + x*(A02 + x*(A03 + x*(A04 + x*A05))))
-
-/*  Function for computing exp(x) for -1/4 < x < 1/4 using minimax polynomial.*/
-float tmpl_Float_Exp_Remez(float x)
-{
-    return TMPL_POLY_EVAL(x);
-}
-/*  End of tmpl_Float_Exp_Remez.                                              */
-
-/*  Undefine everything in case someone wants to #include this file.          */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef TMPL_POLY_EVAL
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  Implemented in include/math/tmpl_exp_remez_float.h. Include this.         */
+#include "../../include/math/tmpl_exp_remez_float.h"

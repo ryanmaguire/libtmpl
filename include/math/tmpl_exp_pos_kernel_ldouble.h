@@ -82,11 +82,8 @@
 #ifndef TMPL_EXP_POS_KERNEL_LDOUBLE_H
 #define TMPL_EXP_POS_KERNEL_LDOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -324,9 +321,6 @@ long double tmpl_LDouble_Exp_Pos_Kernel(long double x)
 #undef TMPL_ONE_BY_128
 #undef TMPL_LN2_HI
 #undef TMPL_LN2_LO
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

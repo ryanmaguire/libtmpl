@@ -2,11 +2,8 @@
 #ifndef TMPL_EXP_REMEZ_FLOAT_H
 #define TMPL_EXP_REMEZ_FLOAT_H
 
-/*  TMPL_USE_INLINE found here                                                */
+/*  TMPL_INLINE_DECL found here                                               */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -38,9 +35,6 @@ float tmpl_Float_Exp_Remez(float x)
 #undef A04
 #undef A05
 #undef TMPL_POLY_EVAL
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

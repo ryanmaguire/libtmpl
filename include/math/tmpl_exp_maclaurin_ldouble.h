@@ -60,7 +60,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -72,46 +72,11 @@
 #ifndef TMPL_EXP_MACLAURIN_LDOUBLE_H
 #define TMPL_EXP_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  64-bit long double. Uses the same number of terms as 64-bit double.       */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
-
-/******************************************************************************
- *                               64-bit double                                *
- ******************************************************************************/
-
-/*  Coefficients for the polynomial. They are 1 / n!.                         */
-#define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define A01 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define A02 (+5.0000000000000000000000000000000000000000000000000E-01L)
-#define A03 (+1.6666666666666666666666666666666666666666666666667E-01L)
-#define A04 (+4.1666666666666666666666666666666666666666666666667E-02L)
-#define A05 (+8.3333333333333333333333333333333333333333333333333E-03L)
-#define A06 (+1.3888888888888888888888888888888888888888888888889E-03L)
-#define A07 (+1.9841269841269841269841269841269841269841269841270E-04L)
-#define A08 (+2.4801587301587301587301587301587301587301587301587E-05L)
-
-/*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
-A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
-
-/*  128-bit double-double. More terms to get ~5 x 10^-32 peak error.          */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
-
-/******************************************************************************
- *                           128-bit double-double                            *
- ******************************************************************************/
 
 /*  Coefficients for the polynomial. They are 1 / n!.                         */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -130,6 +95,28 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 #define A13 (+1.6059043836821614599392377170154947932725710503488E-10L)
 #define A14 (+1.1470745597729724713851697978682105666232650359634E-11L)
 #define A15 (+7.6471637318198164759011319857880704441551002397563E-13L)
+#define A16 (+4.7794773323873852974382074911175440275969376498477E-14L)
+
+/*  64-bit long double. Uses the same number of terms as 64-bit double.       */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+
+/******************************************************************************
+ *                               64-bit double                                *
+ ******************************************************************************/
+
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) \
+A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+
+/*  128-bit double-double. More terms to get ~5 x 10^-32 peak error.          */
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                           128-bit double-double                            *
+ ******************************************************************************/
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
@@ -170,25 +157,6 @@ A00 + z*(\
 /******************************************************************************
  *                             128-bit quadruple                              *
  ******************************************************************************/
-
-/*  Coefficients for the polynomial. They are 1 / n!.                         */
-#define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define A01 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define A02 (+5.0000000000000000000000000000000000000000000000000E-01L)
-#define A03 (+1.6666666666666666666666666666666666666666666666667E-01L)
-#define A04 (+4.1666666666666666666666666666666666666666666666667E-02L)
-#define A05 (+8.3333333333333333333333333333333333333333333333333E-03L)
-#define A06 (+1.3888888888888888888888888888888888888888888888889E-03L)
-#define A07 (+1.9841269841269841269841269841269841269841269841270E-04L)
-#define A08 (+2.4801587301587301587301587301587301587301587301587E-05L)
-#define A09 (+2.7557319223985890652557319223985890652557319223986E-06L)
-#define A10 (+2.7557319223985890652557319223985890652557319223986E-07L)
-#define A11 (+2.5052108385441718775052108385441718775052108385442E-08L)
-#define A12 (+2.0876756987868098979210090321201432312543423654535E-09L)
-#define A13 (+1.6059043836821614599392377170154947932725710503488E-10L)
-#define A14 (+1.1470745597729724713851697978682105666232650359634E-11L)
-#define A15 (+7.6471637318198164759011319857880704441551002397563E-13L)
-#define A16 (+4.7794773323873852974382074911175440275969376498477E-14L)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
@@ -231,19 +199,6 @@ A00 + z*(\
  *                         80-bit extended / portable                         *
  ******************************************************************************/
 
-/*  Coefficients for the polynomial. They are 1 / n!.                         */
-#define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define A01 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define A02 (+5.0000000000000000000000000000000000000000000000000E-01L)
-#define A03 (+1.6666666666666666666666666666666666666666666666667E-01L)
-#define A04 (+4.1666666666666666666666666666666666666666666666667E-02L)
-#define A05 (+8.3333333333333333333333333333333333333333333333333E-03L)
-#define A06 (+1.3888888888888888888888888888888888888888888888889E-03L)
-#define A07 (+1.9841269841269841269841269841269841269841269841270E-04L)
-#define A08 (+2.4801587301587301587301587301587301587301587301587E-05L)
-#define A09 (+2.7557319223985890652557319223985890652557319223986E-06L)
-#define A10 (+2.7557319223985890652557319223985890652557319223986E-07L)
-
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) A00+\
 z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
@@ -279,9 +234,6 @@ long double tmpl_LDouble_Exp_Maclaurin(long double x)
 #undef A15
 #undef A16
 #undef TMPL_POLY_EVAL
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

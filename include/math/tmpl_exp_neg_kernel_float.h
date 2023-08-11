@@ -67,7 +67,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_USE_INLINE macro.                 *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -79,11 +79,8 @@
 #ifndef TMPL_EXP_NEG_KERNEL_FLOAT_H
 #define TMPL_EXP_NEG_KERNEL_FLOAT_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
@@ -205,9 +202,6 @@ float tmpl_Float_Exp_Neg_Kernel(float x)
 #undef A1
 #undef A2
 #undef TMPL_ONE_BY_128
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

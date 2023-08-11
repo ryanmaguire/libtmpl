@@ -60,7 +60,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -72,11 +72,8 @@
 #ifndef TMPL_EXP_PADE_DOUBLE_H
 #define TMPL_EXP_PADE_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -131,9 +128,6 @@ double tmpl_Double_Exp_Pade(double x)
 #undef Q5
 #undef Q6
 #undef Q7
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
