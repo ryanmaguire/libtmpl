@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -16,37 +16,18 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                tmpl_bytes                                  *
+ *                                 tmpl_bytes                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide tools for swapping bytes of char pointers and for determining *
  *      the endianness of your platform. This is useful for reading binary    *
  *      files, but also learning about how computers work and store numbers.  *
- *                                                                            *
- *  Notes:                                                                    *
- *      This file is a fork of the bytes library I wrote for rss_ringoccs.    *
- *      rss_ringoccs is also released under the GPL 3.                        *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  None.                                                                     *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *                                EXAMPLES                                    *
+ *                                  EXAMPLES                                  *
  ******************************************************************************
  *  Examples of all of the functions can be found in:                         *
  *      libtmpl/examples/bytes_examples/                                      *
