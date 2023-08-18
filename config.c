@@ -132,6 +132,8 @@ static unsigned int TMPL_LONG_BIT;
 static unsigned int TMPL_LLONG_BIT;
 #endif
 static int TMPL_BITS_HAVE_BEEN_SET = 0;
+static int TMPL_HAS_64_BIT_INT;
+static int TMPL_HAS_32_BIT_INT;
 
 /*  Function for determining the number of bits in char, and others.          */
 static void tmpl_det_widths(void)
@@ -193,6 +195,36 @@ static void tmpl_det_widths(void)
 #endif
 
     TMPL_BITS_HAVE_BEEN_SET = 1;
+
+    if (TMPL_CHAR_BIT == 32)
+        TMPL_HAS_32_BIT_INT = 1;
+    else if (TMPL_SHORT_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 32)
+        TMPL_HAS_32_BIT_INT = 1;
+    else if (TMPL_INT_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 32)
+        TMPL_HAS_32_BIT_INT = 1;
+    else if (TMPL_LONG_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned long int)) == 32)
+        TMPL_HAS_32_BIT_INT = 1;
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+    else if (TMPL_LLONG_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned long long int)) == 32)
+        TMPL_HAS_32_BIT_INT = 1;
+#endif
+    else
+        TMPL_HAS_32_BIT_INT = 0;
+
+    if (TMPL_CHAR_BIT == 64)
+        TMPL_HAS_64_BIT_INT = 1;
+    else if (TMPL_SHORT_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 64)
+        TMPL_HAS_64_BIT_INT = 1;
+    else if (TMPL_INT_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 64)
+        TMPL_HAS_64_BIT_INT = 1;
+    else if (TMPL_LONG_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned long int)) == 64)
+        TMPL_HAS_64_BIT_INT = 1;
+#ifdef TMPL_LONG_LONG_IS_AVAILABLE
+    else if (TMPL_LLONG_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned long long int)) == 64)
+        TMPL_HAS_64_BIT_INT = 1;
+#endif
+    else
+        TMPL_HAS_64_BIT_INT = 0;
 }
 /*  End of tmpl_det_widths.                                                   */
 
@@ -1090,9 +1122,48 @@ static int make_config_h(void)
 #endif
 
     if (tmpl_has_ascii())
-        fprintf(fp, "#define TMPL_HAS_ASCII 1\n");
+        fprintf(fp, "#define TMPL_HAS_ASCII 1\n\n");
     else
-        fprintf(fp, "#define TMPL_HAS_ASCII 0\n");
+        fprintf(fp, "#define TMPL_HAS_ASCII 0\n\n");
+
+#if TMPL_SET_NO_INT == 1
+    fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
+    fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
+
+#else
+    if (TMPL_HAS_32_BIT_INT)
+    {
+        /*  Unheard of by me, but not impossible by the standards. We need    *
+         *  floats and ints to have the same endianness in order to use type  *
+         *  punning with fixed-width integers. Check for this.                */
+        if (int_type == tmpl_integer_little_endian &&
+            float_type == tmpl_float_little_endian)
+            fprintf(fp, "#define TMPL_HAS_FLOATINT32 1\n");
+        else if (int_type == tmpl_integer_big_endian &&
+            float_type == tmpl_float_big_endian)
+            fprintf(fp, "#define TMPL_HAS_FLOATINT32 1\n");
+        else
+            fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
+    }
+    else
+        fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
+
+    if (TMPL_HAS_64_BIT_INT)
+    {
+        /*  Same check for double.                                            */
+        if (int_type == tmpl_integer_little_endian &&
+            double_type == tmpl_double_little_endian)
+            fprintf(fp, "#define TMPL_HAS_FLOATINT64 1\n");
+        else if (int_type == tmpl_integer_big_endian &&
+            double_type == tmpl_double_big_endian)
+            fprintf(fp, "#define TMPL_HAS_FLOATINT64 1\n");
+        else
+            fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
+    }
+    else
+        fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
+#endif
+    /*  End of #if TMPL_SET_NO_INT == 1.                                      */
 
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");
