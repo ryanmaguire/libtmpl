@@ -163,8 +163,7 @@ double tmpl_Double_Exp(double x)
             return 0.0;
 
         /*  And the limit as x tends to +infinity is +infinity.               */
-        else
-            return x;
+        return x;
     }
 
     /*  For |x| < 1/4 use one of two polynomial approximations.               */
@@ -175,8 +174,7 @@ double tmpl_Double_Exp(double x)
             return tmpl_Double_Exp_Maclaurin(x);
 
         /*  Otherwise, for |x| < 1/4 the minimax polynomial is accurate.      */
-        else
-            return tmpl_Double_Exp_Remez(x);
+        return tmpl_Double_Exp_Remez(x);
     }
 
     /*  For |x| < 1, the Pade approximant is sufficient and much faster than  *
@@ -195,8 +193,8 @@ double tmpl_Double_Exp(double x)
     /*  Non-special case, the argument is not too big and not too small.      */
     if (w.bits.sign)
         return tmpl_Double_Exp_Neg_Kernel(x);
-    else
-        return tmpl_Double_Exp_Pos_Kernel(x);
+
+    return tmpl_Double_Exp_Pos_Kernel(x);
 }
 /*  End of tmpl_Double_Exp.                                                   */
 

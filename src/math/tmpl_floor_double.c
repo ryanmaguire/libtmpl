@@ -78,45 +78,45 @@
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  Check for 64-bit integer support.                                         */
-#if TMPL_HAS_64_BIT_INT == 1
+#if TMPL_HAS_FLOATINT64 == 1
+
+/*  tmpl_IEEE754_FloatInt64 data type provided here.                          */
+#include <libtmpl/include/tmpl_floatint.h>
 
 /*  Function for computing the floor of a double (floor equivalent).          */
 double tmpl_Double_Floor(double x)
 {
-    union {
-        tmpl_IEEE754_Double w;
-        tmpl_UInt64 i;
-    } word64;
+    tmpl_IEEE754_FloatInt64 word64;
     tmpl_UInt64 i, j;
     
-    word64.w.r = x;
+    word64.f = x;
 
     if (word64.w.bits.expo < TMPL_DOUBLE_BIAS)
     {
         if (word64.w.bits.sign)
             return -1.0;
-        else
-            return 0.0;
+
+        return 0.0;
     }
 
     if (word64.w.bits.expo > TMPL_DOUBLE_BIAS + 51U)
         return x;
 
-    i = ((word64.i >> 52U) & 0x7FFU) - 0x3FFU;
-    j = (tmpl_UInt64)(0x000FFFFFFFFFFFFF) >> i;
-    if ((word64.i & j) == 0)
+    i = ((word64.n >> 52U) & 0x7FFU) - 0x3FFU;
+    j = 0x000FFFFFFFFFFFFF >> i;
+    if ((word64.n & j) == 0)
         return x;
 
     if (word64.w.bits.sign)
-        word64.i += (tmpl_UInt64)(0x0010000000000000) >> i;
+        word64.n += 0x0010000000000000 >> i;
 
-    word64.i &= ~j;
-    return word64.w.r;
+    word64.n &= ~j;
+    return word64.f;
 }
 /*  End of tmpl_Double_Floor.                                                 */
 
 #else
-/*  Else for #if TMPL_HAS_64_BIT_INT == 1.                                    */
+/*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
 
 /*  This method does not require 64 bit integer types be available. It does   *
  *  require that IEEE-754 support for double is available. It is a little     *
@@ -193,7 +193,7 @@ TMPL_DOUBLE_FLOOR_FINISH:
 #undef A2
 
 #endif
-/*  End of #if TMPL_HAS_64_BIT_INT == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
