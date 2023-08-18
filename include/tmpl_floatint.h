@@ -23,9 +23,11 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_inttype.h:                                                       *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of TMPL_HAS_FLOATINT32 and TMPL_HAS_FLOATINT64.          *
+ *  2.) tmpl_inttype.h:                                                       *
  *          Header file containing fixed-width integer data types.            *
- *  2.) tmpl_math.h:                                                          *
+ *  3.) tmpl_math.h:                                                          *
  *          Header file with macros for IEEE-754 support.                     *
  ******************************************************************************
  *  Author: Ryan Maguire                                                      *
@@ -36,7 +38,10 @@
 #ifndef TMPL_FLOATINT_H
 #define TMPL_FLOATINT_H
 
-/*  TMPL_HAS_32_BIT_INT and TMPL_HAS_64_BIT_INT macros found here.            */
+/*  Location of the TMPL_HAS_FLOATINT32 and TMPL_HAS_FLOATINT64 macros.       */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Fixed-width integer data types found here.                                */
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  IEEE-754 support macros found here.                                       */
@@ -44,7 +49,7 @@
 
 /*  If float is represented using the 32-bit IEEE-754 format, and if 32-bit   *
  *  unsigned integers are available, provide a union for type-punning.        */
-#if TMPL_HAS_IEEE754_FLOAT == 1 && TMPL_HAS_32_BIT_INT
+#if TMPL_HAS_FLOATINT32 == 1
 
 /*  Union for type-punning a 32-bit float with a 32-bit int.                  */
 typedef union tmpl_IEEE754_FloatInt32_Def {
@@ -60,11 +65,11 @@ typedef union tmpl_IEEE754_FloatInt32_Def {
 } tmpl_IEEE754_FloatInt32;
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1 && TMPL_HAS_32_BIT_INT.            */
+/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
 
 /*  If double is represented using the 64-bit IEEE-754 format, and if 64-bit  *
  *  unsigned integers are available, provide a union for type-punning.        */
-#if TMPL_HAS_IEEE754_DOUBLE == 1 && TMPL_HAS_64_BIT_INT
+#if TMPL_HAS_FLOATINT64 == 1
 
 /*  Union for type-punning a 64-bit double with a 64-bit int.                 */
 typedef union tmpl_IEEE754_FloatInt64_Def {
@@ -80,7 +85,7 @@ typedef union tmpl_IEEE754_FloatInt64_Def {
 } tmpl_IEEE754_FloatInt64;
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1 && TMPL_HAS_64_BIT_INT.           */
+/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
 
 #endif
 /*  End of include guard.                                                     */

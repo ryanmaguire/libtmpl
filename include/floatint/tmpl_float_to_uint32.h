@@ -16,37 +16,37 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_double_to_uint64                            *
+ *                            tmpl_float_to_uint32                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Converts a double to an unsigned 64-bit integer via type-punning.     *
+ *      Converts a float to an unsigned 32-bit integer via type-punning.      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_To_UInt64                                                 *
+ *      tmpl_Float_To_UInt32                                                  *
  *  Purpose:                                                                  *
- *      Converts a 64-bit double into a 64-bit integer by type-punning.       *
+ *      Converts a 32-bit float into a 32-bit integer by type-punning.        *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      n (tmpl_UInt64):                                                      *
+ *      n (tmpl_UInt32):                                                      *
  *          The integer representing the bits of x.                           *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use a union to type-pun a double as a 64-bit integer and return.      *
+ *      Use a union to type-pun a float as a 32-bit integer and return.       *
  *  Notes:                                                                    *
- *      This function assumes 64-bit double is implemented using IEEE-754,    *
- *      and that 64-bit unsigned integers are available as well as            *
+ *      This function assumes 32-bit float is implemented using IEEE-754,     *
+ *      and that 32-bit unsigned integers are available as well as            *
  *      type-punning. The config.c file should determine this for you when    *
  *      building libtmpl.                                                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file with TMPL_HAS_FLOATINT64 macro.                       *
+ *          Header file with TMPL_HAS_FLOATINT32 macro.                       *
  *  2.) tmpl_inttype.h:                                                       *
  *          Header file containing fixed-width integer data types.            *
  *  3.) tmpl_floatint:                                                        *
@@ -57,19 +57,19 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DOUBLE_TO_UINT64_H
-#define TMPL_DOUBLE_TO_UINT64_H
+#ifndef TMPL_FLOAT_TO_UINT32_H
+#define TMPL_FLOAT_TO_UINT32_H
 
-/*  Location of the TMPL_HAS_FLOATINT64 macro.                                */
+/*  Location of the TMPL_HAS_FLOATINT32 macro.                                */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This function only works if we have 64-bit double and 64-bit integers.    */
-#if TMPL_HAS_FLOATINT64 == 1
+/*  This function only works if we have 32-bit float and 32-bit integers.     */
+#if TMPL_HAS_FLOATINT32 == 1
 
 /*  Fixed-width integers found here.                                          */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  tmpl_IEEE754_FloatInt64 union is typedef'd here.                          */
+/*  tmpl_IEEE754_FloatInt32 union is typedef'd here.                          */
 #include <libtmpl/include/tmpl_floatint.h>
 
 /*  The TMPL_INLINE_DECL macro isn't quite what we want. Define the following.*/
@@ -79,26 +79,26 @@
 #define TMPL_INLINE_FUNCTION static
 #endif
 
-/*  Function for type-punning a double as a 64-bit unsigned integer.          */
+/*  Function for type-punning a float as a 32-bit unsigned integer.           */
 TMPL_INLINE_FUNCTION
-tmpl_UInt64 tmpl_Double_To_UInt64(double x)
+tmpl_UInt32 tmpl_Float_To_UInt32(float x)
 {
-    /*  Union for type-punning a double with an integer.                      */
-    tmpl_IEEE754_FloatInt64 u;
+    /*  Union for type-punning a float with an integer.                       */
+    tmpl_IEEE754_FloatInt32 u;
 
-    /*  Set the double part of the union to the input.                        */
+    /*  Set the float part of the union to the input.                         */
     u.f = x;
 
-    /*  Return the 64-bit unsigned integer part.                              */
+    /*  Return the 32-bit unsigned integer part.                              */
     return u.n;
 }
-/*  End of tmpl_Double_To_UInt64.                                             */
+/*  End of tmpl_Float_To_UInt32.                                              */
 
 /*  Undefine the macro in case someone wants to #include this file.           */
 #undef TMPL_INLINE_FUNCTION
 
 #endif
-/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
 
 #endif
 /*  End of include guard.                                                     */

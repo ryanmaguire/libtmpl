@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_double_to_uint64                            *
+ *                           tmpl_uint64_to_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Converts a double to an unsigned 64-bit integer via type-punning.     *
+ *      Converts an unsigned 64-bit integer to a double via type-punning.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_To_UInt64                                                 *
+ *      tmpl_UInt64_To_Double                                                 *
  *  Purpose:                                                                  *
- *      Converts a 64-bit double into a 64-bit integer by type-punning.       *
+ *      Converts a 64-bit integer into a 64-bit double by type-punning.       *
  *  Arguments:                                                                *
- *      x (double):                                                           *
- *          A real number.                                                    *
- *  Output:                                                                   *
  *      n (tmpl_UInt64):                                                      *
  *          The integer representing the bits of x.                           *
+ *  Output:                                                                   *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -57,8 +57,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DOUBLE_TO_UINT64_H
-#define TMPL_DOUBLE_TO_UINT64_H
+#ifndef TMPL_UINT64_TO_DOUBLE_H
+#define TMPL_UINT64_TO_DOUBLE_H
 
 /*  Location of the TMPL_HAS_FLOATINT64 macro.                                */
 #include <libtmpl/include/tmpl_config.h>
@@ -79,20 +79,20 @@
 #define TMPL_INLINE_FUNCTION static
 #endif
 
-/*  Function for type-punning a double as a 64-bit unsigned integer.          */
+/*  Function for type-punning a 64-bit unsigned integer as a double.          */
 TMPL_INLINE_FUNCTION
-tmpl_UInt64 tmpl_Double_To_UInt64(double x)
+double tmpl_UInt64_To_Double(tmpl_UInt64 n)
 {
     /*  Union for type-punning a double with an integer.                      */
     tmpl_IEEE754_FloatInt64 u;
 
-    /*  Set the double part of the union to the input.                        */
-    u.f = x;
+    /*  Set the integer part of the union to the input.                       */
+    u.n = n;
 
-    /*  Return the 64-bit unsigned integer part.                              */
-    return u.n;
+    /*  Return the double part of the union.                                  */
+    return u.f;
 }
-/*  End of tmpl_Double_To_UInt64.                                             */
+/*  End of tmpl_UInt64_To_Double.                                             */
 
 /*  Undefine the macro in case someone wants to #include this file.           */
 #undef TMPL_INLINE_FUNCTION
