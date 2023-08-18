@@ -407,9 +407,21 @@ fi
 
 if [ $USELONGLONG == 0 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_LONGLONG_FALSE"
-    Exclude="$Exclude tmpl_abs_llong.c"
+    Exclude="$Exclude tmpl_integer_abs_llong_time_test.c"
+    Exclude="$Exclude tmpl_integer_leading_zeros_ullong_test.c"
+    Exclude="$Exclude tmpl_max_ullong.c"
+    Exclude="$Exclude tmpl_array_minmax_ullong.c"
     Exclude="$Exclude tmpl_factorial_ullong.c"
+    Exclude="$Exclude tmpl_array_max_llong.c"
+    Exclude="$Exclude tmpl_array_max_ullong.c"
+    Exclude="$Exclude tmpl_min_ullong.c"
+    Exclude="$Exclude tmpl_min_llong.c"
     Exclude="$Exclude tmpl_leading_zeros_ullong.c"
+    Exclude="$Exclude tmpl_max_llong.c"
+    Exclude="$Exclude tmpl_array_min_llong.c"
+    Exclude="$Exclude tmpl_abs_llong.c"
+    Exclude="$Exclude tmpl_array_minmax_llong.c"
+    Exclude="$Exclude tmpl_array_min_ullong.c"
 fi
 
 if [ $USEMATH == 1 ]; then
