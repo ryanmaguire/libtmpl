@@ -1162,7 +1162,7 @@ extern const long double tmpl_ldouble_cospi_table[128];
 
 /*  If type-punning is available, use a table of 64-bit ints representing     *
  *  various values of exp(x). This speeds up the computation considerably.    */
-#if TMPL_HAS_64_BIT_INT == 1 && TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_FLOATINT64 == 1
 extern const tmpl_UInt64 tmpl_double_exp_table[256];
 
 /*  Lacking this, fall back to the original algorithm. Provide a table of the *
@@ -1171,7 +1171,7 @@ extern const tmpl_UInt64 tmpl_double_exp_table[256];
 extern const double tmpl_double_exp_table[179];
 
 #endif
-/*  End of #if TMPL_HAS_64_BIT_INT == 1 && TMPL_HAS_IEEE754_DOUBLE.           */
+/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
 
 /*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
 extern const float tmpl_float_exp_table[179];
