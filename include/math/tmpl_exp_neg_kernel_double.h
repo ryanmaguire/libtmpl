@@ -100,15 +100,15 @@
 /*  Check for IEEE-754 support. Significantly faster.                         */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  TMPL_HAS_64_BIT_INT macro found here.                                     */
-#include <libtmpl/include/tmpl_inttype.h>
-
 /*  With fixed-width 64-bit integers and 64-bit double we can speed this up.  */
-#if TMPL_HAS_64_BIT_INT == 1
+#if TMPL_HAS_FLOATINT64 == 1
 
 /******************************************************************************
  *                    IEEE-754 Version with 64-Bit Integers                   *
  ******************************************************************************/
+
+/*  Fixed-width integers found here.                                          */
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  Function for converting from int to float.                                */
 #include <libtmpl/include/floatint/tmpl_uint64_to_double.h>
@@ -215,7 +215,7 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
 /*  End of tmpl_Double_Exp_Neg_Kernel.                                        */
 
 #endif
-/*  End of #if TMPL_HAS_64_BIT_INT == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
