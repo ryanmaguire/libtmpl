@@ -37,7 +37,7 @@ jobs:
         -   uses: stevenwdv/setup-fasm@v1
             if: ${{ matrix.os == 'ubuntu-latest' }}
         
-        -   name: Install cross-compiling tooling
+        -   name: Install FFTW
             if: ${{ matrix.os == 'ubuntu-latest' }}
             run: |
                 sudo apt-get update
