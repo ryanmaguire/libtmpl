@@ -57,7 +57,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -69,7 +69,7 @@
 #ifndef TMPL_ARCSIN_MACLAURIN_LDOUBLE_H
 #define TMPL_ARCSIN_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Header file where the prototype for the function is defined.              */
@@ -195,7 +195,7 @@ A00 + z*(\
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Computes the Maclaurin polynomial for asin(x).                            */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arcsin_Maclaurin(long double x)
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */

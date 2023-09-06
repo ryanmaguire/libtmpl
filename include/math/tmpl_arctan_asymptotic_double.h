@@ -58,9 +58,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 20, 2022                                            *
@@ -78,9 +76,6 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
 #define A0 (+1.00000000000000000000000000000E+00)
@@ -90,8 +85,11 @@
 #define A4 (+1.11111111111111111111111111111E-01)
 #define A5 (-9.09090909090909090909090909090E-02)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
+
 /*  Asymptotic expansion for the inverse tangent function.                    */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arctan_Asymptotic(double x)
 {
     /*  Declare necessary variables.                                          */
@@ -99,7 +97,7 @@ double tmpl_Double_Arctan_Asymptotic(double x)
     const double z2 = z*z;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return tmpl_Pi_By_Two -
+    return TMPL_PI_BY_TWO -
            z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*A5)))));
 }
 /*  End of tmpl_Double_Arctan_Asymptotic.                                     */
@@ -111,6 +109,7 @@ double tmpl_Double_Arctan_Asymptotic(double x)
 #undef A3
 #undef A4
 #undef A5
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

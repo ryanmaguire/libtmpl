@@ -55,9 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2022                                            *
@@ -67,22 +65,19 @@
 #ifndef TMPL_ARCTAN_MACLAURIN_FLOAT_H
 #define TMPL_ARCTAN_MACLAURIN_FLOAT_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the Maclaurin series, 1/(2n+1). The expansion is a
  *  polynomial of degree 9 in terms of x^{2n+1}.                              */
-#define A0 (1.00000000000000000000000000000E+00F)
+#define A0 (+1.00000000000000000000000000000E+00F)
 #define A1 (-3.33333333333333333333333333333E-01F)
-#define A2 (2.00000000000000000000000000000E-01F)
+#define A2 (+2.00000000000000000000000000000E-01F)
 #define A3 (-1.42857142857142857142857142857E-01F)
-#define A4 (1.11111111111111111111111111111E-01F)
+#define A4 (+1.11111111111111111111111111111E-01F)
 
 /*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 float tmpl_Float_Arctan_Maclaurin(float x)
 {
     /*  Declare necessary variables.                                          */

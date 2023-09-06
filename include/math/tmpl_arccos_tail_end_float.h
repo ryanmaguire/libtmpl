@@ -47,7 +47,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -64,7 +64,7 @@
 #ifndef TMPL_ARCCOS_TAIL_END_FLOAT_H
 #define TMPL_ARCCOS_TAIL_END_FLOAT_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Header file where the prototype for the function is defined.              */
@@ -80,7 +80,7 @@
 #define Q1 (-7.0662963390E-01F)
 
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 float tmpl_Float_Arccos_Tail_End(float x)
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */

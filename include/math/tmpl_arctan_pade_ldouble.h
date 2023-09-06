@@ -70,7 +70,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -82,14 +82,8 @@
 #ifndef TMPL_ARCTAN_PADE_LDOUBLE_H
 #define TMPL_ARCTAN_PADE_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the Pade approximant of (atan(x) - x)/x.*/
 #define P4 (-6.786553005040399998383191660502584872333E-03L)
@@ -107,7 +101,7 @@
 #define Q0 (1.000000000000000000000000000000000000000E+00L)
 
 /*  Function for computing the (11, 11) Pade approximant of atan(x).          */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arctan_Pade(long double x)
 {
     /*  The numerator is in terms of x^{2n+1} and the denominator is in terms *
@@ -136,9 +130,6 @@ long double tmpl_LDouble_Arctan_Pade(long double x)
 #undef Q2
 #undef Q1
 #undef Q0
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

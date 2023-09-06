@@ -55,9 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2022                                            *
@@ -67,11 +65,8 @@
 #ifndef TMPL_ARCTAN_MACLAURIN_DOUBLE_H
 #define TMPL_ARCTAN_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the Maclaurin series at double precision.                */
 #define A0 (+1.00000000000000000000000000000E+00)
@@ -85,7 +80,7 @@
 #define A8 (+5.88235294117647058823529411765E-02)
 
 /*  Maclaurin series for arctan, double precision, to 9 terms.                */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arctan_Maclaurin(double x)
 {
     /*  Declare necessary variables.                                          */

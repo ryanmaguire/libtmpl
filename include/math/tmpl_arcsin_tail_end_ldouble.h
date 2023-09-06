@@ -53,7 +53,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -65,7 +65,7 @@
 #ifndef TMPL_ARCSIN_TAIL_END_LDOUBLE_H
 #define TMPL_ARCSIN_TAIL_END_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Header file where the prototype for the function is defined.              */
@@ -178,7 +178,7 @@ Q0+z*(Q1+z*(Q2+z*(Q3+z*(Q4+z*(Q5+z*(Q6+z*(Q7+z*(Q8+z*Q9))))))))
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Function for computing asin(x) for 0.5 <= x < 1.0.                        */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arcsin_Tail_End(long double x)
 {
     /*  Rational function is computed in terms of (1 - x)/2.                  */

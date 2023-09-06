@@ -62,9 +62,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 20, 2022                                            *
@@ -79,11 +77,11 @@
 #ifndef TMPL_ARCTAN_ASYMPTOTIC_LDOUBLE_H
 #define TMPL_ARCTAN_ASYMPTOTIC_LDOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -95,34 +93,15 @@
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (1.00000000000000000000000000000E+00L)
+#define A0 (+1.00000000000000000000000000000E+00L)
 #define A1 (-3.33333333333333333333333333333E-01L)
-#define A2 (2.00000000000000000000000000000E-01L)
+#define A2 (+2.00000000000000000000000000000E-01L)
 #define A3 (-1.42857142857142857142857142857E-01L)
-#define A4 (1.11111111111111111111111111111E-01L)
+#define A4 (+1.11111111111111111111111111111E-01L)
 #define A5 (-9.09090909090909090909090909090E-02L)
 
-/*  Long double precision asymptotic expansion for the arctangent function.   */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Arctan_Asymptotic(long double x)
-{
-    /*  Declare necessary variables.                                          */
-    const long double z = 1.0L / x;
-    const long double z2 = z*z;
-
-    /*  Use Horner's method to compute the polynomial.                        */
-    return tmpl_Pi_By_Two_L -
-           z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*A5)))));
-}
-/*  End of tmpl_LDouble_Arctan_Asymptotic.                                    */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
-#undef A5
+/*  Helper macro for evaluating a polynomial using Horner's method.           */
+#define TMPL_POLY_EVAL(t) A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))))
 
 #else
 /*  Else for 64-bit long double version.                                      */
@@ -133,28 +112,35 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 6 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (1.0000000000000000000000000000000000000E+00L)
-#define A1 (-3.333333333333333333333333333333333333E-01L)
-#define A2 (2.0000000000000000000000000000000000000E-01L)
-#define A3 (-1.428571428571428571428571428571428571E-01L)
-#define A4 (1.1111111111111111111111111111111111111E-01L)
-#define A5 (-9.090909090909090909090909090909090909E-02L)
-#define A6 (7.6923076923076923076923076923076923076E-02L)
+#define A0 (+1.0000000000000000000000000000000000000E+00L)
+#define A1 (-3.3333333333333333333333333333333333333E-01L)
+#define A2 (+2.0000000000000000000000000000000000000E-01L)
+#define A3 (-1.4285714285714285714285714285714285714E-01L)
+#define A4 (+1.1111111111111111111111111111111111111E-01L)
+#define A5 (-9.0909090909090909090909090909090909090E-02L)
+#define A6 (+7.6923076923076923076923076923076923076E-02L)
 
-/*  Asymptotic expansion for atan(x). This works well for large values.       */
-TMPL_INLINE_DECL
+/*  Helper macro for evaluating a polynomial using Horner's method.           */
+#define TMPL_POLY_EVAL(t) A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*(A5 + t*A6)))))
+
+#endif
+/*  End of non-64-bit long double version.                                    */
+
+/*  Long double precision asymptotic expansion for the arctan function.       */
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 {
+    /*  Declare necessary variables.                                          */
     const long double z = 1.0L / x;
     const long double z2 = z*z;
+    const long double poly = TMPL_POLY_EVAL(z2);
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return tmpl_Pi_By_Two_L -
-           z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*(A5 + z2*A6))))));
+    return TMPL_PI_BY_TWO - z*poly;
 }
 /*  End of tmpl_LDouble_Arctan_Asymptotic.                                    */
 
-/*  Undefine all macros in case someone wants to #include this file.          */
+/*  Undefine everything in case someone wants to #include this file.          */
 #undef A0
 #undef A1
 #undef A2
@@ -162,9 +148,8 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 #undef A4
 #undef A5
 #undef A6
-
-#endif
-/*  End of non-64-bit long double version.                                    */
+#undef TMPL_POLY_EVAL
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

@@ -55,9 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2022                                            *
@@ -67,26 +65,20 @@
 #ifndef TMPL_ARCTAN_VERY_SMALL_DOUBLE_H
 #define TMPL_ARCTAN_VERY_SMALL_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the computation of the polynomial approximation. The     *
  *  coefficients for the Taylor series are 1 / (1 + 2n).                      */
-#define A0 (1.00000000000000000000000000000E+00)
+#define A0 (+1.00000000000000000000000000000E+00)
 #define A1 (-3.33333333333333333333333333333E-01)
-#define A2 (2.00000000000000000000000000000E-01)
+#define A2 (+2.00000000000000000000000000000E-01)
 #define A3 (-1.42857142857142857142857142857E-01)
-#define A4 (1.11111111111111111111111111111E-01)
+#define A4 (+1.11111111111111111111111111111E-01)
 #define A5 (-9.09090909090909090909090909090E-02)
 
 /*  Maclaurin expansion for atan at double precision for small values.        */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arctan_Very_Small(double x)
 {
     /*  The series is in terms of x^{2n+1} = x*{x^2}^{n}. Compute x^2.        */
@@ -104,9 +96,6 @@ double tmpl_Double_Arctan_Very_Small(double x)
 #undef A3
 #undef A4
 #undef A5
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

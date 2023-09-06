@@ -57,9 +57,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2023                                                  *
@@ -69,11 +67,11 @@
 #ifndef TMPL_ARCCOS_MACLAURIN_LDOUBLE_H
 #define TMPL_ARCCOS_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -195,7 +193,7 @@ A00 + z*(\
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Computes the Maclaurin polynomial for acos(x).                            */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arccos_Maclaurin(long double x)
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
@@ -205,7 +203,7 @@ long double tmpl_LDouble_Arccos_Maclaurin(long double x)
     const long double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return tmpl_Pi_By_Two_L - x*poly;
+    return TMPL_PI_BY_TWO - x*poly;
 }
 /*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
 
@@ -225,6 +223,7 @@ long double tmpl_LDouble_Arccos_Maclaurin(long double x)
 #undef A12
 #undef A13
 #undef TMPL_POLY_EVAL
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

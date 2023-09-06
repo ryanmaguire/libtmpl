@@ -63,9 +63,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2022                                            *
@@ -75,14 +73,8 @@
 #ifndef TMPL_ARCTAN_VERY_SMALL_LDOUBLE_H
 #define TMPL_ARCTAN_VERY_SMALL_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -93,15 +85,15 @@
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (1.00000000000000000000000000000E+00L)
+#define A0 (+1.00000000000000000000000000000E+00L)
 #define A1 (-3.33333333333333333333333333333E-01L)
-#define A2 (2.00000000000000000000000000000E-01L)
+#define A2 (+2.00000000000000000000000000000E-01L)
 #define A3 (-1.42857142857142857142857142857E-01L)
-#define A4 (1.11111111111111111111111111111E-01L)
+#define A4 (+1.11111111111111111111111111111E-01L)
 #define A5 (-9.09090909090909090909090909090E-02L)
 
 /*  Maclaurin series for arctan, double precision, to 6 terms.                */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arctan_Very_Small(long double x)
 {
     /*  Declare necessary variables.                                          */
@@ -128,17 +120,17 @@ long double tmpl_LDouble_Arctan_Very_Small(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.00000000000000000000000000000000000E+00L)
+#define A0 (+1.00000000000000000000000000000000000E+00L)
 #define A1 (-3.33333333333333333333333333333333333E-01L)
-#define A2 (2.00000000000000000000000000000000000E-01L)
+#define A2 (+2.00000000000000000000000000000000000E-01L)
 #define A3 (-1.42857142857142857142857142857142857E-01L)
-#define A4 (1.11111111111111111111111111111111111E-01L)
+#define A4 (+1.11111111111111111111111111111111111E-01L)
 #define A5 (-9.09090909090909090909090909090909091E-02L)
-#define A6 (7.69230769230769230769230769230769231E-02L)
+#define A6 (+7.69230769230769230769230769230769231E-02L)
 #define A7 (-6.66666666666666666666666666666666667E-02L)
 
 /*  Taylor series centered at x0 = 0 for atan(x).                             */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arctan_Very_Small(long double x)
 {
     /*  The Taylor series for atan(x) is in terms of x^{2n+1}. Compute the    *
@@ -162,9 +154,6 @@ long double tmpl_LDouble_Arctan_Very_Small(long double x)
 
 #endif
 /*  End difference between 64-bit long double and higher precisions.          */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

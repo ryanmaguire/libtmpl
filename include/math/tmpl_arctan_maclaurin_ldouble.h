@@ -63,9 +63,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 22, 2022                                            *
@@ -75,11 +73,8 @@
 #ifndef TMPL_ARCTAN_MACLAURIN_LDOUBLE_H
 #define TMPL_ARCTAN_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -90,38 +85,33 @@
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (1.00000000000000000000000000000E+00L)
+#define A0 (+1.00000000000000000000000000000E+00L)
 #define A1 (-3.33333333333333333333333333333E-01L)
-#define A2 (2.00000000000000000000000000000E-01L)
+#define A2 (+2.00000000000000000000000000000E-01L)
 #define A3 (-1.42857142857142857142857142857E-01L)
-#define A4 (1.11111111111111111111111111111E-01L)
+#define A4 (+1.11111111111111111111111111111E-01L)
 #define A5 (-9.09090909090909090909090909090E-02L)
-#define A6 (7.69230769230769230769230769231E-02L)
+#define A6 (+7.69230769230769230769230769231E-02L)
 #define A7 (-6.66666666666666666666666666667E-02L)
-#define A8 (5.88235294117647058823529411765E-02L)
+#define A8 (+5.88235294117647058823529411765E-02L)
 
-/*  Maclaurin series for arctan, double precision, to 9 terms.                */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_Arctan_Maclaurin(long double x)
-{
-    /*  Declare necessary variables.                                          */
-    const long double x2 = x*x;
-
-    /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0+x2*(A1+x2*(A2+x2*(A3+x2*(A4+x2*(A5+x2*(A6+x2*(A7+x2*A8))))))));
-}
-/*  End of tmpl_LDouble_Arctan_Maclaurin.                                     */
-
-/*  Undefine the coefficients in case someone wants to #include this file.    */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
-#undef A5
-#undef A6
-#undef A7
-#undef A8
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) \
+A00 + z*(\
+    A01 + z*(\
+        A02 + z*(\
+            A03 + z*(\
+                A04 + z*(\
+                    A05 + z*(\
+                        A06 + z*(\
+                            A07 + z*A08\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
 
 #else
 /*  Else for 64-bit long double version.                                      */
@@ -131,21 +121,48 @@ long double tmpl_LDouble_Arctan_Maclaurin(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A00 (1.00000000000000000000000000000000000E+00L)
+#define A00 (+1.00000000000000000000000000000000000E+00L)
 #define A01 (-3.33333333333333333333333333333333333E-01L)
-#define A02 (2.00000000000000000000000000000000000E-01L)
+#define A02 (+2.00000000000000000000000000000000000E-01L)
 #define A03 (-1.42857142857142857142857142857142857E-01L)
-#define A04 (1.11111111111111111111111111111111111E-01L)
+#define A04 (+1.11111111111111111111111111111111111E-01L)
 #define A05 (-9.09090909090909090909090909090909091E-02L)
-#define A06 (7.69230769230769230769230769230769231E-02L)
+#define A06 (+7.69230769230769230769230769230769231E-02L)
 #define A07 (-6.66666666666666666666666666666666667E-02L)
-#define A08 (5.88235294117647058823529411764705882E-02L)
+#define A08 (+5.88235294117647058823529411764705882E-02L)
 #define A09 (-5.26315789473684210526315789473684211E-02L)
-#define A10 (4.7619047619047619047619047619047619E-02L)
+#define A10 (+4.76190476190476190476190476190476190E-02L)
 #define A11 (-4.34782608695652173913043478260869565E-02L)
 
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) \
+A00 + z*(\
+    A01 + z*(\
+        A02 + z*(\
+            A03 + z*(\
+                A04 + z*(\
+                    A05 + z*(\
+                        A06 + z*(\
+                            A07 + z*(\
+                                A08 + z*(\
+                                    A09 + z*(\
+                                        A10 + z*A11\
+                                    )\
+                                )\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+#endif
+/*  End difference between 64-bit long double and higher precisions.          */
+
 /*  Taylor series centered at x0 = 0 for atan(x).                             */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arctan_Maclaurin(long double x)
 {
     /*  The Taylor series for atan(x) is in terms of x^{2n+1}. Compute the    *
@@ -153,29 +170,8 @@ long double tmpl_LDouble_Arctan_Maclaurin(long double x)
     const long double x2 = x*x;
 
     /*  Use Horner's method to efficiently evaluate the polynomial.           */
-    return x*(
-        A00 + x2*(
-            A01 + x2*(
-                A02 + x2*(
-                    A03 + x2*(
-                        A04 + x2*(
-                            A05 + x2*(
-                                A06 + x2*(
-                                    A07 + x2*(
-                                        A08 + x2*(
-                                            A09 + x2*(
-                                                A10 + x2*A11
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    );
+    const long double poly = TMPL_POLY_EVAL(x2);
+    return x*poly;
 }
 /*  End of tmpl_LDouble_Arctan_Maclaurin.                                     */
 
@@ -192,9 +188,7 @@ long double tmpl_LDouble_Arctan_Maclaurin(long double x)
 #undef A09
 #undef A10
 #undef A11
-
-#endif
-/*  End difference between 64-bit long double and higher precisions.          */
+#undef TMPL_POLY_EVAL
 
 #endif
 /*  End of include guard.                                                     */

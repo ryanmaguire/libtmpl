@@ -53,9 +53,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -73,11 +71,8 @@
 #ifndef TMPL_ARCCOS_PADE_FLOAT_H
 #define TMPL_ARCCOS_PADE_FLOAT_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define P0 (+1.6666666666666666666666666666666666666666666666667E-01F)
@@ -89,8 +84,11 @@
 #define Q1 (-1.1257223396758280479210711768851303735024665257223E+00F)
 #define Q2 (+2.6498022864301934069375929841046120115887557748023E-01F)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
+
 /*  Function for computing the (4, 4) Pade approximant of acos(x).            */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 float tmpl_Float_Arccos_Pade(float x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
@@ -102,7 +100,7 @@ float tmpl_Float_Arccos_Pade(float x)
     const float r = x2*p/q;
 
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return tmpl_Pi_By_Two_F - (x + x*r);
+    return TMPL_PI_BY_TWO - (x + x*r);
 }
 /*  End of tmpl_Float_Arccos_Pade.                                            */
 
@@ -113,6 +111,7 @@ float tmpl_Float_Arccos_Pade(float x)
 #undef Q2
 #undef Q1
 #undef Q0
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

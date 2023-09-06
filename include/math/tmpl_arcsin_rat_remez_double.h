@@ -55,7 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -78,7 +78,7 @@
 #ifndef TMPL_ARCSIN_RAT_REMEZ_DOUBLE_H
 #define TMPL_ARCSIN_RAT_REMEZ_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Header file where the prototype for the function is defined.              */
@@ -100,7 +100,7 @@
 #define Q4 (+7.70381505559019352791e-02)
 
 /*  Function for computing the (10, 8) minimax approximation for asin(x).     */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arcsin_Rat_Remez(double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/

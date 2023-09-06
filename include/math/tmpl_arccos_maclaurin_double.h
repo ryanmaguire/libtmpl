@@ -45,9 +45,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 13, 2023                                                  *
@@ -57,11 +55,8 @@
 #ifndef TMPL_ARCCOS_MACLAURIN_DOUBLE_H
 #define TMPL_ARCCOS_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Only the odd non-constant terms have non-zero coefficients.               */
 #define A0 (1.0000000000000000000000000000000000000000000000000E+00)
@@ -73,12 +68,15 @@
 #define A6 (1.7352764423076923076923076923076923076923076923077E-02)
 #define A7 (1.3964843750000000000000000000000000000000000000000E-02)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
+
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
 A0 + z*(A1 + z*(A2 + z*(A3 + z*(A4 + z*(A5 + z*(A6 + z*A7))))))
 
 /*  Computes the degree 15 Maclaurin polynomial for acos(x).                  */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arccos_Maclaurin(double x)
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
@@ -88,7 +86,7 @@ double tmpl_Double_Arccos_Maclaurin(double x)
     const double poly = TMPL_POLY_EVAL(x2);
 
     /*  acos(x) = pi/2 - asin(x). Compute using this.                         */
-    return tmpl_Pi_By_Two - x*poly;
+    return TMPL_PI_BY_TWO - x*poly;
 }
 /*  End of tmpl_Double_Arccos_Maclaurin.                                      */
 
@@ -102,6 +100,7 @@ double tmpl_Double_Arccos_Maclaurin(double x)
 #undef A6
 #undef A7
 #undef TMPL_POLY_EVAL
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

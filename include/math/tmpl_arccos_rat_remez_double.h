@@ -55,9 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -80,11 +78,8 @@
 #ifndef TMPL_ARCCOS_RAT_REMEZ_DOUBLE_H
 #define TMPL_ARCCOS_RAT_REMEZ_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.66666666666666657415E-01)
@@ -101,8 +96,11 @@
 #define Q3 (-6.88283971605453293030E-01)
 #define Q4 (+7.70381505559019352791e-02)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
+
 /*  Function for computing the (10, 8) minimax approximation for acos(x).     */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arccos_Rat_Remez(double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
@@ -114,7 +112,7 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
     const double r = x2*p/q;
 
     /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. */
-    return tmpl_Pi_By_Two - (x + x*r);
+    return TMPL_PI_BY_TWO - (x + x*r);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
 
@@ -130,6 +128,7 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
 #undef Q2
 #undef Q1
 #undef Q0
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

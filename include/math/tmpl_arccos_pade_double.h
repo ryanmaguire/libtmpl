@@ -53,9 +53,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -73,11 +71,8 @@
 #ifndef TMPL_ARCCOS_PADE_DOUBLE_H
 #define TMPL_ARCCOS_PADE_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define P0 (+1.6666666666666666666666666666666666666666666666667E-01)
@@ -97,12 +92,15 @@
 #define Q5 (-9.1189047491786682631147583983250333633502470655541E-02)
 #define Q6 (+3.9268447888541310343247866236378900929051188393826E-03)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
+
 /*  Helper macros for evaluating a polynomial via Horner's method.            */
 #define TMPL_NUM_EVAL(z) P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*(P5 + z*P6)))))
 #define TMPL_DEN_EVAL(z) Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*(Q4 + z*(Q5 + z*Q6)))))
 
 /*  Function for computing the (12, 12) Pade approximant of acos(x).          */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arccos_Pade(double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
@@ -114,7 +112,7 @@ double tmpl_Double_Arccos_Pade(double x)
     const double r = x2*p/q;
 
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return tmpl_Pi_By_Two - (x + x*r);
+    return TMPL_PI_BY_TWO - (x + x*r);
 }
 /*  End of tmpl_Double_Arccos_Pade.                                           */
 
@@ -135,6 +133,7 @@ double tmpl_Double_Arccos_Pade(double x)
 #undef Q0
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

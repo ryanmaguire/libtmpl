@@ -63,7 +63,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -81,7 +81,7 @@
 #ifndef TMPL_ARCSIN_PADE_LDOUBLE_H
 #define TMPL_ARCSIN_PADE_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Header file where the prototype for the function is defined.              */
@@ -241,7 +241,7 @@ Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*(Q05 + z*(Q06 + z*Q07))))))
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Function for computing a Pade approximant for asin(x).                    */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arcsin_Pade(long double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/

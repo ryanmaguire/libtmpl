@@ -63,9 +63,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -83,11 +81,11 @@
 #ifndef TMPL_ARCCOS_PADE_LDOUBLE_H
 #define TMPL_ARCCOS_PADE_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -243,7 +241,7 @@ Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*(Q05 + z*(Q06 + z*Q07))))))
 /*  End of 80-bit extended / portable version.                                */
 
 /*  Function for computing a Pade approximant for acos(x).                    */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arccos_Pade(long double x)
 {
     /*  The polynomials for the numerator and denominator are in terms of x^2.*/
@@ -255,7 +253,7 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
     const long double r = x2*p/q;
 
     /*  p/q is the Pade approximant for (acos(x) - pi/2 + x) / x^3.           */
-    return tmpl_Pi_By_Two_L - (x + x*r);
+    return TMPL_PI_BY_TWO - (x + x*r);
 }
 /*  End of tmpl_LDouble_Arccos_Pade.                                          */
 
@@ -284,6 +282,7 @@ long double tmpl_LDouble_Arccos_Pade(long double x)
 #undef Q00
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of include guard.                                                     */

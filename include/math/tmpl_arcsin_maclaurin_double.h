@@ -45,7 +45,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -57,7 +57,7 @@
 #ifndef TMPL_ARCSIN_MACLAURIN_DOUBLE_H
 #define TMPL_ARCSIN_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Header file where the prototype for the function is defined.              */
@@ -78,7 +78,7 @@
 A0 + z*(A1 + z*(A2 + z*(A3 + z*(A4 + z*(A5 + z*(A6 + z*A7))))))
 
 /*  Computes the degree 15 Maclaurin polynomial for asin(x).                  */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Arcsin_Maclaurin(double x)
 {
     /*  The non-constant terms are odd, powers are x^{2n+1}.                  */
