@@ -1104,9 +1104,11 @@ static int make_config_h(void)
 #ifdef TMPL_SET_INLINE_TRUE
     fprintf(fp, "\n#define TMPL_USE_INLINE 1\n");
     fprintf(fp, "#define TMPL_INLINE_DECL static inline\n");
+    fprintf(fp, "#define TMPL_STATIC_INLINE static inline\n");
 #else
     fprintf(fp, "\n#define TMPL_USE_INLINE 0\n");
     fprintf(fp, "#define TMPL_INLINE_DECL\n");
+    fprintf(fp, "#define TMPL_STATIC_INLINE static\n");
 #endif
 
 #ifdef TMPL_SET_USE_MATH_TRUE
@@ -1126,7 +1128,7 @@ static int make_config_h(void)
     else
         fprintf(fp, "#define TMPL_HAS_ASCII 0\n\n");
 
-#if TMPL_SET_NO_INT == 1
+#ifdef TMPL_SET_NO_INT
     fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
     fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
 
