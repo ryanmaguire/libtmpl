@@ -17,4 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <libtmpl/include/math/tmpl_arcsin_tail_end_float.h>
 TEST1(float, 0.5F, 1.0F, tmpl_Float_Arcsin_Tail_End, asinf)

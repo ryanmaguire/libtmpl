@@ -17,4 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <libtmpl/include/math/tmpl_arccos_tail_end_ldouble.h>
 TEST1(long double, 0.5L, 1.0L, tmpl_LDouble_Arccos_Tail_End, acosl)

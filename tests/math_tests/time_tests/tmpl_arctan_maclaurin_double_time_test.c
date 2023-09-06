@@ -17,4 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_double.h>
 TEST1(double, 0.0, 0.15, tmpl_Double_Arctan_Maclaurin, atan)

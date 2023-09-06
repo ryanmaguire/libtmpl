@@ -17,4 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <libtmpl/include/math/tmpl_arccos_pade_float.h>
 TEST1(float, -0.5F, 0.5F, tmpl_Float_Arccos_Pade, acosf)

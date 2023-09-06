@@ -17,4 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <libtmpl/include/math/tmpl_arccos_rat_remez_double.h>
 TEST1(double, -0.5, 0.5, tmpl_Double_Arccos_Rat_Remez, acos)

@@ -17,4 +17,5 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#include <libtmpl/include/math/tmpl_arcsin_pade_ldouble.h>
 TEST1(long double, -0.5L, 0.5L, tmpl_LDouble_Arcsin_Pade, asinl)
