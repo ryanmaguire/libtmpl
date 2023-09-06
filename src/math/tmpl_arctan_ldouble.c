@@ -186,6 +186,34 @@
 /*  Function prototypes found here.                                           */
 #include <libtmpl/include/tmpl_math.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Quadruple precision and double-double use Pade approximants.              */
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/*  Pade approximant provided here.                                           */
+#include <libtmpl/include/math/tmpl_arctan_pade_ldouble.h>
+
+#else
+/*  Double precision, extended precision, and portable includes.              */
+
+/*  Maclaurin expansion provided here.                                        */
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_ldouble.h>
+
+/*  Smaller Maclaurin expansion that avoids underflow.                        */
+#include <libtmpl/include/math/tmpl_arctan_very_small_ldouble.h>
+
+/*  Asymptotic expansion for arctan. Good for large positive inputs.          */
+#include <libtmpl/include/math/tmpl_arctan_asymptotic_ldouble.h>
+
+#endif
+/*  End of double-double / quadruple vs. double / extended / portable.        */
+
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
@@ -222,8 +250,8 @@ long double tmpl_LDouble_Arctan(long double x)
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
             return -tmpl_Pi_By_Two_L;
-        else
-            return tmpl_Pi_By_Two_L;
+
+        return tmpl_Pi_By_Two_L;
     }
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
@@ -233,8 +261,8 @@ long double tmpl_LDouble_Arctan(long double x)
          *  of the Maclaurin series, which is just the input.                 */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 52U)
             return x;
-        else
-            return tmpl_LDouble_Arctan_Very_Small(x);
+
+        return tmpl_LDouble_Arctan_Very_Small(x);
     }
 
     /*  The arctan function is odd. Compute |x| and work with that.           */
@@ -248,8 +276,8 @@ long double tmpl_LDouble_Arctan(long double x)
         /*  Use the fact that atan is odd to complete the computation.        */
         if (x < 0.0L)
             return -out;
-        else
-            return out;
+
+        return out;
     }
 
     /*  The exponent tells us the index for the tables tmpl_atan_ldouble_v and*
@@ -268,8 +296,8 @@ long double tmpl_LDouble_Arctan(long double x)
     /*  Use the fact that atan is an odd function to complete the computation.*/
     if (x < 0.0L)
         return -out;
-    else
-        return out;
+
+    return out;
 }
 /*  End of tmpl_LDouble_Arctan.                                               */
 
@@ -304,8 +332,8 @@ long double tmpl_LDouble_Arctan(long double x)
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
             return -tmpl_Pi_By_Two_L;
-        else
-            return tmpl_Pi_By_Two_L;
+
+        return tmpl_Pi_By_Two_L;
     }
 
     /*  Avoid underflow. If |x| < 2^-56, atan(x) = x to quadruple precision.  */
@@ -318,6 +346,7 @@ long double tmpl_LDouble_Arctan(long double x)
     /*  For |x| > 16, use the asymptotic expansion.                           */
     if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_UBIAS + 3U)
         out = tmpl_Pi_By_Two_L - tmpl_LDouble_Arctan_Pade(1.0L/w.r);
+
     else
     {
         n = (unsigned int)(8.0L*w.r + 0.25L);
@@ -329,8 +358,8 @@ long double tmpl_LDouble_Arctan(long double x)
     /*  Use the fact that atan is odd to complete the computation.            */
     if (x < 0.0L)
         return -out;
-    else
-        return out;
+
+    return out;
 }
 /*  End of tmpl_LDouble_Arctan.                                               */
 
@@ -354,13 +383,14 @@ long double tmpl_LDouble_Arctan(long double x)
     /*  Special cases, NaN and INF.                                           */
     if (tmpl_LDouble_Is_NaN(x))
         return x;
+
     else if (tmpl_LDouble_Is_Inf(x))
     {
         /*  The limit as x -> inf is pi/2 and -pi/2 as x -> -inf.             */
         if (x < 0.0L)
             return -tmpl_Pi_By_Two_L;
-        else
-            return tmpl_Pi_By_Two_L;
+
+        return tmpl_Pi_By_Two_L;
     }
 
     /*  The inverse tangent function is odd. Reduce x to non-negative.        */
@@ -396,8 +426,8 @@ long double tmpl_LDouble_Arctan(long double x)
         /*  Use the fact the atan is odd to finish the computation.           */
         if (x < 0.0L)
             return -out;
-        else
-            return out;
+
+        return out;
     }
 
     /*  Get the nearby values from the lookup tables.                         */
@@ -411,8 +441,8 @@ long double tmpl_LDouble_Arctan(long double x)
     /*  Use the fact that atan is an odd function to complete the computation.*/
     if (x < 0.0L)
         return -out;
-    else
-        return out;
+
+    return out;
 }
 /*  End of tmpl_LDouble_Arctan.                                               */
 

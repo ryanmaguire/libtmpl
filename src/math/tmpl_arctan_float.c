@@ -155,6 +155,19 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Maclaurin expansion provided here.                                        */
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_float.h>
+
+/*  Smaller Maclaurin expansion that avoids underflow.                        */
+#include <libtmpl/include/math/tmpl_arctan_very_small_float.h>
+
+/*  Asymptotic expansion for arctan. Good for large positive inputs.          */
+#include <libtmpl/include/math/tmpl_arctan_asymptotic_float.h>
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -166,7 +179,7 @@
 float tmpl_Float_Arctan(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Float w;
+    tmpl_IEEE754_Float w, tmp;
     float arg, out, v, atan_v;
     unsigned int ind;
 
@@ -183,15 +196,23 @@ float tmpl_Float_Arctan(float x)
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (w.bits.sign)
             return -tmpl_Pi_By_Two_F;
-        else
-            return tmpl_Pi_By_Two_F;
+
+        return tmpl_Pi_By_Two_F;
     }
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
     else if (w.bits.expo < TMPL_FLOAT_UBIAS - 4U)
+    {
+        /*  For very very small, avoid underflow. Return the first term of    *
+         *  the Maclaurin series.                                             */
+        if (w.bits.expo < TMPL_FLOAT_UBIAS - 12U)
+            return x;
+
         return tmpl_Float_Arctan_Very_Small(x);
+    }
 
     /*  The arctan function is odd. Compute |x| by setting sign to positive.  */
+    tmp.bits.sign = w.bits.sign;
     w.bits.sign = 0x00U;
 
     /*  For |x| > 16, use the asymptotic expansion.                           */
@@ -200,10 +221,10 @@ float tmpl_Float_Arctan(float x)
         out = tmpl_Float_Arctan_Asymptotic(w.r);
 
         /*  Use the fact that atan is odd to complete the computation.        */
-        if (x < 0.0F)
+        if (tmp.bits.sign)
             return -out;
-        else
-            return out;
+
+        return out;
     }
 
     /*  The exponent tells us the index for the tables tmpl_atan_float_v and  *
@@ -220,10 +241,10 @@ float tmpl_Float_Arctan(float x)
     out = atan_v + tmpl_Float_Arctan_Maclaurin(arg);
 
     /*  Use the fact that atan is an odd function to complete the computation.*/
-    if (x < 0.0F)
+    if (tmp.bits.sign)
         return -out;
-    else
-        return out;
+
+    return out;
 }
 /*  End of tmpl_Float_Arctan.                                                 */
 
@@ -244,13 +265,14 @@ float tmpl_Float_Arctan(float x)
     /*  Special cases, NaN and INF.                                           */
     if (tmpl_Float_Is_NaN(x))
         return x;
+
     else if (tmpl_Float_Is_Inf(x))
     {
         /*  The limit as x -> inf is pi/2 and -pi/2 as x -> -inf.             */
         if (x < 0.0F)
             return -tmpl_Pi_By_Two_F;
-        else
-            return tmpl_Pi_By_Two_F;
+
+        return tmpl_Pi_By_Two_F;
     }
 
     /*  The inverse tangent function is odd. Reduce x to non-negative.        */
@@ -286,8 +308,8 @@ float tmpl_Float_Arctan(float x)
         /*  Use the fact the atan is odd to finish the computation.           */
         if (x < 0.0F)
             return -out;
-        else
-            return out;
+
+        return out;
     }
 
     /*  Get the nearby values from the lookup tables.                         */
@@ -301,8 +323,8 @@ float tmpl_Float_Arctan(float x)
     /*  Use the fact that atan is an odd function to complete the computation.*/
     if (x < 0.0F)
         return -out;
-    else
-        return out;
+
+    return out;
 }
 /*  End of tmpl_Float_Arctan.                                                 */
 

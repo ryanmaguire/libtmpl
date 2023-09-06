@@ -165,6 +165,19 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Maclaurin expansion provided here.                                        */
+#include <libtmpl/include/math/tmpl_arctan_maclaurin_float.h>
+
+/*  Smaller Maclaurin expansion that avoids underflow.                        */
+#include <libtmpl/include/math/tmpl_arctan_very_small_float.h>
+
+/*  Asymptotic expansion for arctan. Good for large positive inputs.          */
+#include <libtmpl/include/math/tmpl_arctan_asymptotic_float.h>
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 

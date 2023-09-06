@@ -122,6 +122,19 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Maclaurin expansion provided here.                                        */
+#include <libtmpl/include/math/tmpl_arcsin_maclaurin_double.h>
+
+/*  Rational remez minimax approximation for arcsin.                          */
+#include <libtmpl/include/math/tmpl_arcsin_rat_remez_double.h>
+
+/*  Tail-end arcsin function that uses the reflection formula with arccos.    */
+#include <libtmpl/include/math/tmpl_arcsin_tail_end_double.h>
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
