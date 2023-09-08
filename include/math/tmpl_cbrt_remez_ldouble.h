@@ -16,50 +16,50 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_cbrt_taylor_ldouble                           *
+ *                          tmpl_cbrt_remez_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) at long double precision.       *
+ *      Computes the Remez polynomial of cbrt(x) at long double precision.    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Cbrt_Taylor                                              *
+ *      tmpl_LDouble_Cbrt_Remez                                               *
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) for values near 1.              *
+ *      Computes the Remez minimax polynomial of degree 2 for cbrt(x) on the  *
+ *      interval 1 <= x <= 1 + 1/128.                                         *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      cbrt_x (long double):                                                 *
- *          The Taylor series of cbrt(x).                                     *
+ *          The evaluation of the Remez minimax polynomial for cbrt(x).       *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
- *      Use the first 4 terms (0 <= n <= 3) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for values near 1.                                      *
+ *      Only accurate for values near 1. Peak relative error on the interval  *
+ *      [1, 1 + 1/28] is 10^-9 for 64-bit and 10^-12 for all others. Much     *
+ *      less than the respective precisions, but long double precision is     *
+ *      attained in the cbrt function by calling this routine and then        *
+ *      applying one iteration of either Newton's method or Halley's method.  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 21, 2022                                              *
+ *  Date:       September 8, 2023                                             *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_CBRT_REMEZ_LDOUBLE_H
+#define TMPL_CBRT_REMEZ_LDOUBLE_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -69,28 +69,13 @@
  *                           64-Bit Double Version                            *
  ******************************************************************************/
 
-/*  Coefficients for the Taylor series at x = 1.                              */
-#define A0 (1.0000000000000000000000000000000000000000E+00L)
-#define A1 (3.3333333333333333333333333333333333333333E-01L)
-#define A2 (-1.111111111111111111111111111111111111111E-01L)
-#define A3 (6.1728395061728395061728395061728395061728E-02L)
+/*  Coefficients for the Remez polynomial.                                    */
+#define A0 (+1.00000000090941443242060478073980568322005875164904015776471E+00L)
+#define A1 (+3.33331233712890189943879124271000459100797541938160614930922E-01L)
+#define A2 (-1.10392493085468935087723379189564640328689673130626030290441E-01L)
 
-/*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
-long double tmpl_LDouble_Cbrt_Taylor(long double x)
-{
-    /*  The series is computed at x = 1. Shift the input.                     */
-    const long double xs = x - 1.0L;
-
-    /*  Use Horner's method to evaluate the polynomial.                       */
-    return A0 + xs*(A1 + xs*(A2 + xs*A3));
-}
-/*  End of tmpl_LDouble_Cbrt_Taylor.                                          */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) A0 + z*(A1 + z*A2)
 
 #else
 /*  Else for 64-bit long double version.                                      */
@@ -99,23 +84,29 @@ long double tmpl_LDouble_Cbrt_Taylor(long double x)
  *   80-Bit Extended / 128-bit Quadruple / 128-bit Double-Double / Portable   *
  ******************************************************************************/
 
-/*  Coefficients for the Taylor series at x = 1.                              */
-#define A0 (1.0000000000000000000000000000000000000000E+00L)
-#define A1 (3.3333333333333333333333333333333333333333E-01L)
-#define A2 (-1.111111111111111111111111111111111111111E-01L)
-#define A3 (6.1728395061728395061728395061728395061728E-02L)
-#define A4 (-4.1152263374485596707818930041152263374485E-02L)
+/*  Coefficients for the Remez polynomial.                                    */
+#define A0 (+1.0000000000011795307880879883275072337425102702700E+00L)
+#define A1 (+3.3333332849386032670837686119708645716879630029872E-01L)
+#define A2 (-1.1110800775844027717477044513822885341963584021506E-01L)
+#define A3 (+6.1090804395549197641318028047164069006763699341363E-02L)
 
-/*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
-long double tmpl_LDouble_Cbrt_Taylor(long double x)
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) A0 + z*(A1 + z*(A2 + z*A3))
+
+#endif
+/*  End difference between 64-bit long double and higher precisions.          */
+
+/*  Function for computing the Remez polynomial of cbrt on [1, 1 + 1/128].    */
+TMPL_STATIC_INLINE
+long double tmpl_LDouble_Cbrt_Remez(long double x)
 {
     /*  The series is computed at x = 1. Shift the input.                     */
     const long double xs = x - 1.0L;
 
     /*  Use Horner's method to evaluate the polynomial.                       */
-    return A0 + xs*(A1 + xs*(A2 + xs*(A3 + xs*A4)));
+    return TMPL_POLY_EVAL(xs);
 }
-/*  End of tmpl_LDouble_Cbrt_Taylor.                                          */
+/*  End of tmpl_LDouble_Cbrt_Remez.                                           */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef A0
@@ -123,9 +114,7 @@ long double tmpl_LDouble_Cbrt_Taylor(long double x)
 #undef A2
 #undef A3
 #undef A4
+#undef TMPL_POLY_EVAL
 
 #endif
-/*  End difference between 64-bit long double and higher precisions.          */
-
-#endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

@@ -2521,50 +2521,6 @@ extern long double tmpl_LDouble_Abs(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Cbrt_Pade                                                 *
- *  Purpose:                                                                  *
- *      Compute the (7, 7) Pade approximant of cbrt(x) at x = 1.              *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cbrt_x:                                                        *
- *          The cube root of x, x^{1/3}.                                      *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_cbrt_pade_double.h>
-#include <libtmpl/include/math/tmpl_cbrt_pade_float.h>
-#include <libtmpl/include/math/tmpl_cbrt_pade_ldouble.h>
-#else
-extern float tmpl_Float_Cbrt_Pade(float x);
-extern double tmpl_Double_Cbrt_Pade(double x);
-extern long double tmpl_LDouble_Cbrt_Pade(long double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Cbrt_Taylor                                               *
- *  Purpose:                                                                  *
- *      Compute the Taylor series of cbrt(x) at x = 1.                        *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cbrt_x:                                                        *
- *          The cube root of x, x^{1/3}.                                      *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_cbrt_taylor_double.h>
-#include <libtmpl/include/math/tmpl_cbrt_taylor_float.h>
-#include <libtmpl/include/math/tmpl_cbrt_taylor_ldouble.h>
-#else
-extern float tmpl_Float_Cbrt_Taylor(float x);
-extern double tmpl_Double_Cbrt_Taylor(double x);
-extern long double tmpl_LDouble_Cbrt_Taylor(long double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_Double_Copysign                                                  *
  *  Purpose:                                                                  *
  *      Given two numbers x and y, returns a value that has the magnitude of  *

@@ -16,73 +16,73 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_cbrt_taylor_double                           *
+ *                           tmpl_cbrt_remez_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) at double precision at x = 1.   *
+ *      Computes the Remez minimax polynomial for cbrt(x) about x = 1.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cbrt_Taylor                                               *
+ *      tmpl_Float_Cbrt_Remez                                                 *
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) for values near 1.              *
+ *      Computes the Remez minimax polynomial of degree 2 for cbrt(x) on the  *
+ *      interval 1 <= x <= 1 + 1/128.                                         *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cbrt_x (double):                                                      *
- *          The Taylor series of cbrt(x).                                     *
+ *      cbrt_x (float):                                                       *
+ *          The evaluation of the Remez minimax polynomial for cbrt(x).       *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
- *      Use the first 4 terms (0 <= n <= 3) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for values near 1.                                      *
+ *      Only accurate for values near 1. Peak relative error on the interval  *
+ *      [1, 1 + 1/28] is 10^-9.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 21, 2022                                              *
+ *  Date:       September 8, 2023                                             *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_CBRT_REMEZ_FLOAT_H
+#define TMPL_CBRT_REMEZ_FLOAT_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  Coefficients for the Remez minimax polynomial at x = 1.                   */
+#define A0 (+1.00000000090941443242060478073980568322005875164904015776471E+00F)
+#define A1 (+3.33331233712890189943879124271000459100797541938160614930922E-01F)
+#define A2 (-1.10392493085468935087723379189564640328689673130626030290441E-01F)
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) A0 + z*(A1 + z*A2)
 
-/*  Coefficients for the Taylor series at x = 1.                              */
-#define A0 (1.0000000000000000000000000000E+00)
-#define A1 (3.3333333333333333333333333333E-01)
-#define A2 (-1.1111111111111111111111111111E-01)
-#define A3 (6.1728395061728395061728395061E-02)
-
-/*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
-double tmpl_Double_Cbrt_Taylor(double x)
+/*  Function for computing the Remez polynomial of cbrt on [1, 1 + 1/128].    */
+TMPL_STATIC_INLINE
+float tmpl_Float_Cbrt_Remez(float x)
 {
     /*  The series is computed at x = 1. Shift the input.                     */
-    const double xs = x - 1.0;
+    const float xs = x - 1.0F;
 
     /*  Use Horner's method to evaluate the polynomial.                       */
-    return A0 + xs*(A1 + xs*(A2 + xs*A3));
+    return TMPL_POLY_EVAL(xs);
 }
-/*  End of tmpl_Double_Cbrt_Taylor.                                           */
+/*  End of tmpl_Float_Cbrt_Remez.                                             */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef A0
 #undef A1
 #undef A2
-#undef A3
+#undef TMPL_POLY_EVAL
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

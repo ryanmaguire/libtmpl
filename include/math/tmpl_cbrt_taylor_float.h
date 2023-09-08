@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_cbrt_taylor_float_inline                         *
+ *                       tmpl_cbrt_taylor_float_inline                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Taylor series of cbrt(x) at single precision at x = 1.   *
@@ -26,13 +26,13 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Cbrt_Taylor                                                *
  *  Purpose:                                                                  *
- *      Computes the Taylor series of cbrt(x) for small values x.             *
+ *      Computes the Taylor series of cbrt(x) for values near x = 1.          *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      cbrt_x (float):                                                       *
- *          The Taylor series of atan(x).                                     *
+ *          The Taylor series of cbrt(x).                                     *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -44,9 +44,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2022                                              *
@@ -56,30 +54,27 @@
 #ifndef TMPL_CBRT_TAYLOR_FLOAT_H
 #define TMPL_CBRT_TAYLOR_FLOAT_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Coefficients for the Taylor series at x = 1.                              */
-#define A0 (1.0000000000000000000000000000E+00F)
-#define A1 (3.3333333333333333333333333333E-01F)
-#define A2 (-1.111111111111111111111111111E-01F)
-#define A3 (6.1728395061728395061728395061E-02F)
+#define A0 (+1.0000000000000000000000000000E+00F)
+#define A1 (+3.3333333333333333333333333333E-01F)
+#define A2 (-1.1111111111111111111111111111E-01F)
+#define A3 (+6.1728395061728395061728395061E-02F)
 
-/*  Function for computing the Taylor series of cbrt(x) at x = 1 to 5 terms.  */
-TMPL_INLINE_DECL
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) A0 + z*(A1 + z*(A2 + z*A3))
+
+/*  Function for computing the Taylor series of cbrt(x) at x = 1 to 4 terms.  */
+TMPL_STATIC_INLINE
 float tmpl_Float_Cbrt_Taylor(float x)
 {
     /*  The series is computed at x = 1. Shift the input.                     */
     const float xs = x - 1.0F;
 
     /*  Use Horner's method to evaluate the polynomial.                       */
-    return A0 + xs*(A1 + xs*(A2 + xs*A3));
+    return TMPL_POLY_EVAL(xs);
 }
 /*  End of tmpl_Float_Cbrt_Taylor.                                            */
 
@@ -88,9 +83,7 @@ float tmpl_Float_Cbrt_Taylor(float x)
 #undef A1
 #undef A2
 #undef A3
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#undef TMPL_POLY_EVAL
 
 #endif
 /*  End of include guard.                                                     */

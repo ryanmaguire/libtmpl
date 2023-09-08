@@ -88,13 +88,22 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-#define CBRT_2    (1.2599210498948731647672106072782F)
-#define CBRT_2_SQ (1.5874010519681994747517056392722F)
-
-static const float tmpl_float_cbrt_data[3] = {1.0F, CBRT_2, CBRT_2_SQ};
+/*  The values 2^{0/3}, 2^{1/3}, and 2^{2/3}.                                 */
+static const float tmpl_float_cbrt_data[3] = {
+    1.0000000000000000000000000000000F,
+    1.2599210498948731647672106072782F,
+    1.5874010519681994747517056392722F
+};
 
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_FLOAT == 1
+
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
+/*  Remez approximation provided here.                                        */
+#include <libtmpl/include/math/tmpl_cbrt_remez_float.h>
 
 /*  Function for computing square roots at single precision.                  */
 float tmpl_Float_Cbrt(float x)
@@ -115,7 +124,7 @@ float tmpl_Float_Cbrt(float x)
     w.r = x;
 
     /*  Save the sign of x by copying w into tmp.                             */
-    tmp = w;
+    tmp.bits.sign = w.bits.sign;
 
     /*  cbrt is an odd function. If x is negative, compute -cbrt(-x).         */
     w.bits.sign = 0x00U;
@@ -129,7 +138,7 @@ float tmpl_Float_Cbrt(float x)
 
         /*  Non-zero subnormal number. Normalize by multiplying by 2^23,      *
          *  which is 8.388608 x 10^6.                                         */
-        w.r *= 8.388608E6F;
+        w.r *= TMPL_FLOAT_NORMALIZE;
 
         /*  The parity is computed by expo mod 3. We have added 23 to the     *
          *  exponent to normalize the input, but 23 mod 2 is 3, not 0. Add 1  *
@@ -149,16 +158,44 @@ float tmpl_Float_Cbrt(float x)
     else if (w.bits.expo == TMPL_FLOAT_NANINF_EXP)
         return x;
 
-    /*  Normal number. Compute the exponent. This is the bits of the exponent *
-     *  part of the union minus the bias.                                     */
-    else if (w.bits.expo < TMPL_FLOAT_UBIAS)
-        exponent = TMPL_FLOAT_UBIAS - (TMPL_FLOAT_UBIAS-w.bits.expo+2U)/3U;
+    /*  Normal number. Compute the exponent. This is the exponent of the      *
+     *  original number divided by 3 since we are taking the cubic root. A    *
+     *  little care is needed to account for the bias. The exponent is        *
+     *                                                                        *
+     *      e = E - B                                                         *
+     *                                                                        *
+     *  where B is the bias and E is the number stored in w.bits.expo. We     *
+     *  want to solve for the exponent of the new number. We want:            *
+     *                                                                        *
+     *      e / 3 = E' - B = (E - B) / 3                                      *
+     *                                                                        *
+     *  where E' is the resulting number stored in the expo bits of the       *
+     *  output. We compute:                                                   *
+     *                                                                        *
+     *      E' = (E + 2B) / 3                                                 *
+     *                                                                        *
+     *  The bias for 32-bit double is 127, and 2*127 = 254 is not divisible   *
+     *  by 3. However, 255 is. So we write:                                   *
+     *                                                                        *
+     *      E' = (E + 2B) / 3                                                 *
+     *         = ((E - 1) + (2B + 1)) / 3                                     *
+     *         = ((E - 1) + 255) / 3                                          *
+     *         = (E - 1) / 3 + 85                                             *
+     *                                                                        *
+     *  Note that we've already checked that E != 0, so E - 1 will not        *
+     *  wrap around. That is, E - 1 >= 0. The number 85 is 0x55 in hex.       */
     else
-        exponent = TMPL_FLOAT_UBIAS + (w.bits.expo-TMPL_FLOAT_UBIAS)/3U;
+        exponent = 0x55U + (w.bits.expo - 1U)/3U;
+
+    /*  Compute the parity of the exponent. This tells us if we need to       *
+     *  multiply the end result by 1, 2^{1/3}, or 2^{2/3}. It can be computed *
+     *  by calculating expo mod 3, but we must consider the bias. The bias is *
+     *  127, and 127 mod 3 is 1. If we add two to the exponent, the result    *
+     *  mod 3 is the parity.                                                  */
+    parity = (w.bits.expo + 2U) % 3U;
 
     /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
      *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
-    parity = (w.bits.expo+2U) % 3U;
     w.bits.expo = TMPL_FLOAT_UBIAS;
 
     /*  We compute cbrt(x) via:                                               *
@@ -189,15 +226,14 @@ float tmpl_Float_Cbrt(float x)
      *  If we treat the abcdefg as an integer in binary, this is the number k *
      *  such that t = 1 + k/128. So we simply need to read off this value     *
      *  from the mantissa. The value 1 / (1 + k/128) is stored in the rcpr    *
-     *  array. man0 is 4 bits wide, so we need this and the first 3 bits of   *
-     *  man1, the next part of the mantissa.                                  */
+     *  array. man0 for float has all of the bits we need.                    */
     ind = w.bits.man0;
 
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
     w.r = w.r*tmpl_float_rcpr_table[ind];
 
-    /*  Compute the Taylor series to the first few terms.                     */
-    w.r = tmpl_Float_Cbrt_Taylor(w.r);
+    /*  Compute the Remez minimax approximation for cbrt. Peak error 10^-9.   */
+    w.r = tmpl_Float_Cbrt_Remez(w.r);
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0xFFU;
@@ -205,6 +241,9 @@ float tmpl_Float_Cbrt(float x)
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
+
+    /*  The Remez error is within single precision, and we can skip the       *
+     *  Newton iteration found in the double and long double implementations. */
     return w.r;
 }
 /*  End of tmpl_Float_Cbrt.                                                   */
@@ -212,6 +251,14 @@ float tmpl_Float_Cbrt(float x)
 #else
 /*  Else for TMPL_HAS_IEEE754_FLOAT.                                          */
 
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Pade approximant provided here.                                           */
+#include <libtmpl/include/math/tmpl_cbrt_pade_float.h>
+
+/*  Newton's method has a divide-by-three in the expression.                  */
 #define ONE_THIRD (3.333333333333333333333333E-01F)
 
 float tmpl_Float_Cbrt(float x)
@@ -251,14 +298,11 @@ float tmpl_Float_Cbrt(float x)
 }
 /*  End of tmpl_Float_Cbrt.                                                   */
 
+/*  Undefine all macros in case someone wants to #include this file.          */
 #undef ONE_THIRD
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef CBRT_2
-#undef CBRT_2_SQ
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

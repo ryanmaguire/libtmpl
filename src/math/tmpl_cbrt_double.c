@@ -119,11 +119,15 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-#define CBRT_2    (1.2599210498948731647672106072782E+00)
-#define CBRT_2_SQ (1.5874010519681994747517056392722E+00)
+/*  Newton's method has a divide-by-three in the expression.                  */
 #define ONE_THIRD (3.3333333333333333333333333333333E-01)
 
-static const double tmpl_double_cbrt_data[3] = {1.0, CBRT_2, CBRT_2_SQ};
+/*  The values 2^{0/3}, 2^{1/3}, and 2^{2/3}.                                 */
+static const double tmpl_double_cbrt_data[3] = {
+    1.0000000000000000000000000000000E+00,
+    1.2599210498948731647672106072782E+00,
+    1.5874010519681994747517056392722E+00
+};
 
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -132,16 +136,19 @@ static const double tmpl_double_cbrt_data[3] = {1.0, CBRT_2, CBRT_2_SQ};
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+/*  Remez approximation provided here.                                        */
+#include <libtmpl/include/math/tmpl_cbrt_remez_double.h>
+
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Cbrt(double x)
 {
     /*  Union of a double and the bits representing a double.                 */
     tmpl_IEEE754_Double w, tmp;
 
-    /*  Integer for indexing the arrays defined above.                        */
+    /*  Integer for indexing the array defined above.                         */
     unsigned int ind;
 
-    /*  The exponent part of the input x.                                     */
+    /*  The exponent part of the output.                                      */
     unsigned int exponent;
 
     /*  Variable for storing the exponent mod 3.                              */
@@ -151,7 +158,7 @@ double tmpl_Double_Cbrt(double x)
     w.r = x;
 
     /*  Save the sign of x by copying w into tmp.                             */
-    tmp = w;
+    tmp.bits.sign = w.bits.sign;
 
     /*  cbrt is an odd function. If x is negative, compute -cbrt(-x).         */
     w.bits.sign = 0x00U;
@@ -176,9 +183,9 @@ double tmpl_Double_Cbrt(double x)
          *  need to subtract this from the value. We also added 2 to expo, so *
          *  subtract 2 more. To compute the correctly rounded exponent after  *
          *  division by 3, subtract 2 more before dividing. The total is      *
-         *  subtracting 4 plus the power of two. This power of two is         *
-         *  the macro TMPL_DOUBLE_MANTISSA_ULENGTH, but evaluates to 52, so   *
-         *  in total we need to add 56. Finally, shift by the bias.           */
+         *  subtracting 4 and the power of two. This power of two is          *
+         *  the macro TMPL_DOUBLE_MANTISSA_ULENGTH, which evaluates to 52, so *
+         *  in total we need to subtract 56. Finally, shift by the bias.      */
         exponent = TMPL_DOUBLE_UBIAS - ((TMPL_DOUBLE_UBIAS-w.bits.expo)+56U)/3U;
     }
 
@@ -186,12 +193,26 @@ double tmpl_Double_Cbrt(double x)
     else if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
         return x;
 
-    /*  Normal number. Compute the exponent. This is the bits of the exponent *
-     *  part of the union minus the bias.                                     */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-        exponent = TMPL_DOUBLE_UBIAS - (TMPL_DOUBLE_UBIAS-w.bits.expo+2U)/3U;
+    /*  Normal number. Compute the exponent. This is the exponent of the      *
+     *  original number divided by 3 since we are taking the cubic root. A    *
+     *  little care is needed to account for the bias. The exponent is        *
+     *                                                                        *
+     *      e = E - B                                                         *
+     *                                                                        *
+     *  where B is the bias and E is the number stored in w.bits.expo. We     *
+     *  want to solve for the exponent of the new number. We want:            *
+     *                                                                        *
+     *      e / 3 = E' - B = (E - B) / 3                                      *
+     *                                                                        *
+     *  where E' is the resulting number stored in the expo bits of the       *
+     *  output. We compute:                                                   *
+     *                                                                        *
+     *      E' = (E + 2B) / 3                                                 *
+     *                                                                        *
+     *  The bias for 64-bit double is 1023, so 2*1023 / 3 = 682. This is      *
+     *  0x2AA in hexidecimal. We compute the exponent using this.             */
     else
-        exponent = TMPL_DOUBLE_UBIAS + (w.bits.expo-TMPL_DOUBLE_UBIAS)/3U;
+        exponent = 0x2AAU + w.bits.expo / 3U;
 
     /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
      *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
@@ -237,8 +258,8 @@ double tmpl_Double_Cbrt(double x)
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
     w.r = w.r*tmpl_double_rcpr_table[ind];
 
-    /*  Compute the Taylor series to the first few terms.                     */
-    w.r = tmpl_Double_Cbrt_Taylor(w.r);
+    /*  Compute the Remez minimax approximation for cbrt. Peak error 10^-9.   */
+    w.r = tmpl_Double_Cbrt_Remez(w.r);
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFU;
@@ -258,6 +279,9 @@ double tmpl_Double_Cbrt(double x)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
+
+/*  Pade approximant provided here.                                           */
+#include <libtmpl/include/math/tmpl_cbrt_pade_double.h>
 
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Cbrt(double x)
@@ -314,8 +338,6 @@ double tmpl_Double_Cbrt(double x)
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef CBRT_2
-#undef CBRT_2_SQ
 #undef ONE_THIRD
 
 #endif

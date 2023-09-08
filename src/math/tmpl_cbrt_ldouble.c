@@ -171,6 +171,9 @@
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
+/*  Remez approximation provided here.                                        */
+#include <libtmpl/include/math/tmpl_cbrt_remez_ldouble.h>
+
 /*  64-bit long double uses the same idea as 64-bit double.                   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
@@ -290,8 +293,8 @@ long double tmpl_LDouble_Cbrt(long double x)
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
     w.r = w.r*tmpl_ldouble_rcpr_table[ind];
 
-    /*  Compute the Taylor series to the first few terms.                     */
-    w.r = tmpl_LDouble_Cbrt_Taylor(w.r);
+    /*  Compute the Remez minimax approximation for cbrt.                     */
+    w.r = tmpl_LDouble_Cbrt_Remez(w.r);
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFU;
@@ -423,8 +426,8 @@ long double tmpl_LDouble_Cbrt(long double x)
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
     w.r = w.r*tmpl_ldouble_rcpr_table[ind];
 
-    /*  Compute the Taylor series to the first few terms.                     */
-    w.r = tmpl_LDouble_Cbrt_Taylor(w.r);
+    /*  Compute the Remez minimax approximation for cbrt.                     */
+    w.r = tmpl_LDouble_Cbrt_Remez(w.r);
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFFU;
@@ -561,8 +564,8 @@ long double tmpl_LDouble_Cbrt(long double x)
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
     w.r = w.r*tmpl_ldouble_rcpr_table[ind];
 
-    /*  Compute the Taylor series to the first few terms.                     */
-    w.r = tmpl_LDouble_Cbrt_Taylor(w.r);
+    /*  Compute the Remez minimax approximation for cbrt.                     */
+    w.r = tmpl_LDouble_Cbrt_Remez(w.r);
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFFU;
