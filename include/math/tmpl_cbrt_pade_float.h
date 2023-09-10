@@ -61,9 +61,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2022                                              *
@@ -73,14 +71,8 @@
 #ifndef TMPL_CBRT_PADE_FLOAT_H
 #define TMPL_CBRT_PADE_FLOAT_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (1.000000000000000000000000000000000000000E+00F)
@@ -103,7 +95,7 @@
 #define Q7 (1.107294202858903361875469785849301167088E-04F)
 
 /*  Function for computing the (7, 7) Pade approximate of cbrt(x) at x = 1.   */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 float tmpl_Float_Cbrt_Pade(float x)
 {
     /*  The approximant is computed at x = 1. Shift the input.                */
@@ -135,9 +127,6 @@ float tmpl_Float_Cbrt_Pade(float x)
 #undef Q5
 #undef Q6
 #undef Q7
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

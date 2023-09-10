@@ -35,10 +35,11 @@
  *          The cubic root of x at double precision.                          *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Cbrt_Taylor (tmpl_math.h):                            *
- *              Computes the Taylor series of cbrt(x) about x = 1.            *
+ *          tmpl_cbrt_remez_double.h                                          *
+ *              tmpl_Double_Cbrt_Remez:                                       *
+ *                  Computes a Remez minimax approximation of cbrt near x = 1.*
  *      Method:                                                               *
- *          Use a combination of cubic root rules, Taylor series, and Newton's*
+ *          Use a combination of cube root rules, polynomials, and Newton's   *
  *          method. That is, cbrt(x) is computed as follows:                  *
  *                                                                            *
  *              If x = +/- NaN, +/- Inf, or +/- 0, return x.                  *
@@ -59,6 +60,11 @@
  *              y = cbrt(u/t)                                                 *
  *              = cbrt(1 + s)             with s = u/t - 1.                   *
  *              ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                           *
+ *                                                                            *
+ *          We can chop off the cubic term if we use a Remez approximation,   *
+ *          instead of the Taylor expansion, and still attain the same        *
+ *          precision. The Remez coefficients differ slightly from the Taylor *
+ *          coefficients.                                                     *
  *                                                                            *
  *          y is now accurate to at least 8 decimals. We can double this to   *
  *          16 decimals using 1 iteration of Newton's method. We have:        *
@@ -87,27 +93,35 @@
  *              rms rel error: 1.5775644974028550e-16                         *
  *              max abs error: 1.4210854715202004e-14                         *
  *              rms abs error: 2.6790772954468324e-15                         *
+ *          Error values assume 100% accuracy in glibc. Actual accuracy is    *
+ *          around 1-2 ULP.                                                   *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Is_NaN_Or_Inf (tmpl_math.h):                          *
- *              Determines if a double is NaN or infinity.                    *
- *          tmpl_Double_Base2_Mant_and_Exp (tmpl_math.h):                     *
- *              Gets the input into scientific form, |x| = m * 2^e with       *
- *              1 <= m < 2 and e an integer.                                  *
- *          tmpl_Double_Cbrt_Pade (tmpl_math.h):                              *
- *              Computes the Pade approximant of cbrt(x) about x = 1.         *
- *          tmpl_Double_Pow2 (tmpl_math.h):                                   *
- *              Quickly computes an integer power of 2 as a double.           *
+ *          tmpl_cbrt_pade_double.h:                                          *
+ *              tmpl_Double_Cbrt_Pade:                                        *
+ *                  Computes a Pade approximant of cbrt near x = 1.           *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Is_NaN_Or_Inf:                                    *
+ *                  Determines if a double is NaN or infinity.                *
+ *              tmpl_Double_Base2_Mant_and_Exp:                               *
+ *                  Gets the input into scientific form, |x| = m * 2^b with   *
+ *                  1 <= m < 2 and b an integer.                              *
+ *              tmpl_Double_Pow2:                                             *
+ *                  Quickly computes an integer power of 2 as a double.       *
  *      Method:                                                               *
  *          Reduce to x >= 0 since cbrt is an odd function. Convert x to      *
  *          scientific notation x = m * 2^b with 1 <= m < 2 and b an integer. *
  *          Use the Pade approximant on m and multiply by 2^{b/3}. Finish by  *
  *          performing one iteration of Newton's method.                      *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
+ *  2.) tmpl_cbrt_remez_double.h:                                             *
+ *          Used in the IEEE-754 version. Remez approximation for cbrt.       *
+ *  3.) tmpl_cbrt_pade_double.h:                                              *
+ *          Used in the portable version. Pade approximant for cbrt.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
@@ -142,13 +156,13 @@ static const double tmpl_double_cbrt_data[3] = {
 /*  Table of pre-computed values for the cbrt function.                       */
 #include <libtmpl/include/math/tmpl_cbrt_table_double.h>
 
-/*  Function for computing square roots at double precision.                  */
+/*  Function for computing cube roots at double precision.                    */
 double tmpl_Double_Cbrt(double x)
 {
     /*  Union of a double and the bits representing a double.                 */
     tmpl_IEEE754_Double w, tmp;
 
-    /*  Integer for indexing the array defined above.                         */
+    /*  Integer for indexing the pre-computed cube root array.                */
     unsigned int ind;
 
     /*  The exponent part of the output.                                      */
@@ -200,12 +214,12 @@ double tmpl_Double_Cbrt(double x)
      *  original number divided by 3 since we are taking the cubic root. A    *
      *  little care is needed to account for the bias. The exponent is        *
      *                                                                        *
-     *      e = E - B                                                         *
+     *      b = E - B                                                         *
      *                                                                        *
      *  where B is the bias and E is the number stored in w.bits.expo. We     *
      *  want to solve for the exponent of the new number. We want:            *
      *                                                                        *
-     *      e / 3 = E' - B = (E - B) / 3                                      *
+     *      b / 3 = E' - B = (E - B) / 3                                      *
      *                                                                        *
      *  where E' is the resulting number stored in the expo bits of the       *
      *  output. We compute:                                                   *
@@ -237,7 +251,7 @@ double tmpl_Double_Cbrt(double x)
      *              = cbrt(u/t) * cbrt(t) * 2^(b/3)                           *
      *                                                                        *
      *  The value u/t is between 1 and 1 + 1/128. We compute cbrt(u/t) via a  *
-     *  power series in the variable 1 + (u/t - 1).                           *
+     *  polynomial in the variable 1 + (u/t - 1).                             *
      *                                                                        *
      *  We compute the value t = 1 + k/128 by computing k. The value k can be *
      *  obtained from the mantissa of the input. We have:                     *
@@ -266,6 +280,8 @@ double tmpl_Double_Cbrt(double x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0x7FFU;
+
+    /*  Compute 2^{b/3} * cbrt(t) using the two tables.                       */
     w.r *= tmpl_double_cbrt_data[parity]*tmpl_double_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
@@ -286,7 +302,7 @@ double tmpl_Double_Cbrt(double x)
 /*  Pade approximant provided here.                                           */
 #include <libtmpl/include/math/tmpl_cbrt_pade_double.h>
 
-/*  Function for computing square roots at double precision.                  */
+/*  Function for computing cube roots at double precision.                    */
 double tmpl_Double_Cbrt(double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -300,7 +316,7 @@ double tmpl_Double_Cbrt(double x)
     /*  Get x into scientific form, |x| = mant * 2^expo.                      */
     tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
 
-    /*  Negative exponent, computation the parity which must be positive.     */
+    /*  Negative exponent, compute the parity which must be positive.         */
     if (expo < 0)
     {
         parity = expo % 3;
@@ -318,15 +334,14 @@ double tmpl_Double_Cbrt(double x)
     else
     {
         parity = expo % 3;
-        expo = expo/3;
+        expo = expo / 3;
     }
 
-    /*  Since 1 <= mant < 2, the Pade approximant to accurately compute cbrt. */
+    /*  Since 1 <= mant < 2, the Pade approximant can accurately compute cbrt.*/
     out = tmpl_Double_Cbrt_Pade(mant);
 
     /*  Since cbrt(m * 2^b) = cbrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
-    out = out*tmpl_Double_Pow2(expo);
-    out = out*tmpl_double_cbrt_data[parity];
+    out = out*tmpl_Double_Pow2(expo)*tmpl_double_cbrt_data[parity];
 
     /*  cbrt is an odd function. If the input was negative, negate the output.*/
     if (x < 0.0)

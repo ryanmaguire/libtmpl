@@ -761,6 +761,8 @@ long double tmpl_LDouble_Cbrt(long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
+#include <libtmpl/include/math/tmpl_cbrt_pade_ldouble.h>
+
 #define CBRT_2    (1.259921049894873164767210607278228350570E+00L)
 #define CBRT_2_SQ (1.587401051968199474751705639272308260391E+00L)
 #define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)

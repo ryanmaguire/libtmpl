@@ -1133,6 +1133,7 @@ static int make_config_h(void)
     fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
 
 #else
+#ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
     if (TMPL_HAS_32_BIT_INT)
     {
         /*  Unheard of by me, but not impossible by the standards. We need    *
@@ -1142,7 +1143,7 @@ static int make_config_h(void)
             float_type == tmpl_float_little_endian)
             fprintf(fp, "#define TMPL_HAS_FLOATINT32 1\n");
         else if (int_type == tmpl_integer_big_endian &&
-            float_type == tmpl_float_big_endian)
+                 float_type == tmpl_float_big_endian)
             fprintf(fp, "#define TMPL_HAS_FLOATINT32 1\n");
         else
             fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
@@ -1157,13 +1158,17 @@ static int make_config_h(void)
             double_type == tmpl_double_little_endian)
             fprintf(fp, "#define TMPL_HAS_FLOATINT64 1\n");
         else if (int_type == tmpl_integer_big_endian &&
-            double_type == tmpl_double_big_endian)
+                 double_type == tmpl_double_big_endian)
             fprintf(fp, "#define TMPL_HAS_FLOATINT64 1\n");
         else
             fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
     }
     else
         fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
+#else
+    fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
+    fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
+#endif
 #endif
     /*  End of #if TMPL_SET_NO_INT == 1.                                      */
 

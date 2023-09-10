@@ -321,6 +321,12 @@ double tmpl_Double_Sqrt(double x)
 #else
 /*  Else for TMPL_HAS_IEEE754_DOUBLE.                                         */
 
+#include <math.h>
+double tmpl_Double_Sqrt(double x)
+{
+    return sqrt(x);
+}
+
 #endif
 /*  End of TMPL_USE_MATH_ALGORITHMS.                                          */
 
