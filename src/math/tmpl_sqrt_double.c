@@ -172,15 +172,15 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
+static const double tmpl_double_sqrt_data[2] = {
+    1.0, 1.4142135623730950488016887242097
+};
+
 /*  Check for IEEE-754 support. This is significantly faster.                 */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 #include <libtmpl/include/math/tmpl_sqrt_table_double.h>
 #include <libtmpl/include/math/tmpl_sqrt_remez_double.h>
-
-static const double tmpl_double_sqrt_data[2] = {
-    1.0, 1.4142135623730950488016887242097
-};
 
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Sqrt(double x)
@@ -321,11 +321,61 @@ double tmpl_Double_Sqrt(double x)
 #else
 /*  Else for TMPL_HAS_IEEE754_DOUBLE.                                         */
 
-#include <math.h>
+#include <libtmpl/include/math/tmpl_sqrt_pade_double.h>
+
+/*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Sqrt(double x)
 {
-    return sqrt(x);
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    signed int expo, parity;
+    double mant, out;
+
+    /*  For negatives the output is complex. Return NaN.                      */
+    if (x < 0.0)
+        return TMPL_NAN;
+
+    /*  Special case, NaN or inf, simply return the input.                    */
+    else if (tmpl_Double_Is_NaN_Or_Inf(x))
+        return x;
+
+    /*  Get x into scientific form, x = mant * 2^expo.                        */
+    tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
+
+    /*  Negative exponent, compute the parity which must be positive.         */
+    if (expo < 0)
+    {
+        parity = expo % 2;
+
+        /*  It's possible for parity to be -1. The correct parity is then 2   *
+         *  plus this value.                                                  */
+        if (parity < 0)
+            parity += 2;
+
+        /*  Get the correctly rounded down value of expo / 2.                 */
+        expo = (expo - 1) / 2;
+    }
+
+    /*  Exponent positive, parity and division by 2 can be performed normally.*/
+    else
+    {
+        parity = expo % 2;
+        expo = expo / 2;
+    }
+
+    /*  Since 1 <= mant < 2, the Pade approximant can accurately compute sqrt.*/
+    out = tmpl_Double_Sqrt_Pade(mant);
+
+    /*  Since sqrt(m * 2^b) = sqrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
+    out = out*tmpl_Double_Pow2(expo)*tmpl_double_sqrt_data[parity];
+
+    /*  sqrt is an odd function. If the input was negative, negate the output.*/
+    if (x < 0.0)
+        out = -out;
+
+    /*  Apply 1 iteration of Newton's method and return.                      */
+    return 0.5*(out + x/out);
 }
+/*  End of tmpl_Double_Sqrt.                                                  */
 
 #endif
 /*  End of TMPL_USE_MATH_ALGORITHMS.                                          */
