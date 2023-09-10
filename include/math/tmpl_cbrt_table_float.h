@@ -17,11 +17,12 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Declaration given here.                                                   */
-#include <libtmpl/include/tmpl_math.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_CBRT_TABLE_FLOAT_H
+#define TMPL_CBRT_TABLE_FLOAT_H
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-const float tmpl_float_cbrt_table[128] = {
+static const float tmpl_float_cbrt_table[128] = {
     1.0000000000000000000000000000000F, 1.0025974142646002445641810219251F,
     1.0051814396472644940216361286079F, 1.0077522473643225547531221593643F,
     1.0103100051555475677004975186586F, 1.0128548773804866675475088668966F,
@@ -87,3 +88,6 @@ const float tmpl_float_cbrt_table[128] = {
     1.2533244837411461578909044387303F, 1.2549801322759665670777461332602F,
     1.2566314238283697952843517179059F, 1.2582783869501411671842892252039F
 };
+
+#endif
+/*  End of include guard.                                                     */

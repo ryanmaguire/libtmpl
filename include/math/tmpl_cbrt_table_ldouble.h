@@ -17,8 +17,9 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
-/*  Declaration given here.                                                   */
-#include <libtmpl/include/tmpl_math.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_CBRT_TABLE_LDOUBLE_H
+#define TMPL_CBRT_TABLE_LDOUBLE_H
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
 const long double tmpl_ldouble_cbrt_table[128] = {
@@ -151,3 +152,6 @@ const long double tmpl_ldouble_cbrt_table[128] = {
     1.256631423828369795284351717905935643387L,
     1.258278386950141167184289225203945088188L
 };
+
+#endif
+/*  End of include guard.                                                     */

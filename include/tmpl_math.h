@@ -1145,11 +1145,6 @@ extern const long double tmpl_ldouble_atan_n_by_8[129];
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
-/*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-extern const double tmpl_double_cbrt_table[128];
-extern const float tmpl_float_cbrt_table[128];
-extern const long double tmpl_ldouble_cbrt_table[128];
-
 /*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
 extern const double tmpl_double_cosd_table[180];
 extern const float tmpl_float_cosd_table[180];

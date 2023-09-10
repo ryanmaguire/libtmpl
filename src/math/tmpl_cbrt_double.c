@@ -139,6 +139,9 @@ static const double tmpl_double_cbrt_data[3] = {
 /*  Remez approximation provided here.                                        */
 #include <libtmpl/include/math/tmpl_cbrt_remez_double.h>
 
+/*  Table of pre-computed values for the cbrt function.                       */
+#include <libtmpl/include/math/tmpl_cbrt_table_double.h>
+
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Cbrt(double x)
 {

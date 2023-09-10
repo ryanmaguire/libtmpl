@@ -174,6 +174,9 @@
 /*  Remez approximation provided here.                                        */
 #include <libtmpl/include/math/tmpl_cbrt_remez_ldouble.h>
 
+/*  Table of pre-computed values for the cbrt function.                       */
+#include <libtmpl/include/math/tmpl_cbrt_table_ldouble.h>
+
 /*  64-bit long double uses the same idea as 64-bit double.                   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
