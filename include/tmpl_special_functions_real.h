@@ -98,6 +98,39 @@ extern long double tmpl_LDouble_Bessel_I0_Chebyshev(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Bessel_I0_Holoborodko                                     *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel I0 function using Pavel Holoborodko's expansion.   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for I0(x).                            *
+ *  Output:                                                                   *
+ *      double I0_x:                                                          *
+ *          The Bessel I0 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Accurate to double precision for x > 8.                               *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found in include/specfunc_real.                           */
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_holoborodko_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_holoborodko_float.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_holoborodko_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+extern float tmpl_Float_Bessel_I0_Holoborodko(float x);
+extern double tmpl_Double_Bessel_I0_Holoborodko(double x);
+extern long double tmpl_LDouble_Bessel_I0_Holoborodko(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Bessel_I0_Maclaurin                                       *
  *  Purpose:                                                                  *
  *      Compute the Bessel I0 function using a Maclaurin series.              *
