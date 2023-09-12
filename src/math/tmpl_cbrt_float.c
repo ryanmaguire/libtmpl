@@ -60,7 +60,9 @@
  *            = cbrt(1 + s)             with s = u/t - 1.                     *
  *            ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                             *
  *                                                                            *
- *      y is now accurate to at least 8 decimals.                             *
+ *      y is now accurate to at least 8 decimals. Note, a Remez minimax       *
+ *      approximation is implemented, instead of a Taylor series. The         *
+ *      coefficients are slightly different.                                  *
  *                                                                            *
  *      Lastly, since 2^{b/3} is not an integer for some values of b write    *
  *      b = 3k + r, with r = 0, 1, 2. Then 2^{b/3} is 2^{k}2^{r/3}. If r = 0  *
@@ -68,12 +70,14 @@
  *      2^{2/3}. Precompute these two values and multiply if needed.          *
  *  Error:                                                                    *
  *      Based on 1,051,958,476 samples with -10^6 < x < 10^6.                 *
- *          max rel error: 7.0469763017409916e-16                             *
- *          rms rel error: 1.5775644974028550e-16                             *
- *          max abs error: 1.4210854715202004e-14                             *
- *          rms abs error: 2.6790772954468324e-15                             *
+ *          max rel error: 7.6293943607197434e-08                             *
+ *          rms rel error: 7.6293943607172487e-08                             *
+ *          max abs error: 7.6293945312500000e-06                             *
+ *          rms abs error: 7.6293945312500000e-06                             *
+ *      Error values assume 100% accuracy in glibc. Actual error is around    *
+ *      1 ULP (~10^-7 relative error).                                        *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
@@ -108,16 +112,16 @@ static const float tmpl_float_cbrt_data[3] = {
 /*  Table of pre-computed values for the cbrt function.                       */
 #include <libtmpl/include/math/tmpl_cbrt_table_float.h>
 
-/*  Function for computing square roots at single precision.                  */
+/*  Function for computing cube roots at single precision.                    */
 float tmpl_Float_Cbrt(float x)
 {
     /*  Union of a float and the bits representing a float.                   */
     tmpl_IEEE754_Float w, tmp;
 
-    /*  Integer for indexing the arrays defined above.                        */
+    /*  Integer for indexing the pre-computed cube root array.                */
     unsigned int ind;
 
-    /*  The exponent part of the input x.                                     */
+    /*  The exponent part of the output.                                      */
     unsigned int exponent;
 
     /*  Variable for storing the exponent mod 3.                              */
@@ -144,16 +148,16 @@ float tmpl_Float_Cbrt(float x)
         w.r *= TMPL_FLOAT_NORMALIZE;
 
         /*  The parity is computed by expo mod 3. We have added 23 to the     *
-         *  exponent to normalize the input, but 23 mod 2 is 3, not 0. Add 1  *
+         *  exponent to normalize the input, but 23 mod 3 is 2, not 0. Add 1  *
          *  to expo, and subtract 1 from exponent (in a few lines) to ensure  *
          *  the parity variable is correctly computed.                        */
         w.bits.expo += 1U;
 
         /*  Compute the exponent. Since we multiplied by 2^23, subtract 23    *
          *  from the value. We also added 1 to expo, so subtract 1 more. To   *
-         *  compute the correctly rounded exponent after division by 3, add 2 *
-         *  more to the value before dividing. The total is adding 26 to the  *
-         *  input. Shift by the bias to get the correct exponent for the word.*/
+         *  compute the correctly rounded exponent after division by 3,       *
+         *  subtract 2 more from the value. The total is subtracting 26.      *
+         *  Shift by the bias to get the correct exponent for the word.       */
         exponent = TMPL_FLOAT_UBIAS - ((TMPL_FLOAT_UBIAS-w.bits.expo)+26U)/3U;
     }
 
@@ -165,12 +169,12 @@ float tmpl_Float_Cbrt(float x)
      *  original number divided by 3 since we are taking the cubic root. A    *
      *  little care is needed to account for the bias. The exponent is        *
      *                                                                        *
-     *      e = E - B                                                         *
+     *      b = E - B                                                         *
      *                                                                        *
      *  where B is the bias and E is the number stored in w.bits.expo. We     *
      *  want to solve for the exponent of the new number. We want:            *
      *                                                                        *
-     *      e / 3 = E' - B = (E - B) / 3                                      *
+     *      b / 3 = E' - B = (E - B) / 3                                      *
      *                                                                        *
      *  where E' is the resulting number stored in the expo bits of the       *
      *  output. We compute:                                                   *
@@ -193,9 +197,10 @@ float tmpl_Float_Cbrt(float x)
     /*  Compute the parity of the exponent. This tells us if we need to       *
      *  multiply the end result by 1, 2^{1/3}, or 2^{2/3}. It can be computed *
      *  by calculating expo mod 3, but we must consider the bias. The bias is *
-     *  127, and 127 mod 3 is 1. If we add two to the exponent, the result    *
-     *  mod 3 is the parity.                                                  */
-    parity = (w.bits.expo + 2U) % 3U;
+     *  127, and 127 mod 3 is 1. If we subtract one from the exponent, the    *
+     *  result mod 3 is the parity. Note that we've ensured w.bits.expo > 0   *
+     *  so we may safely subtract 1 without fear of wrapping around.          */
+    parity = (w.bits.expo - 1U) % 3U;
 
     /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
      *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
@@ -216,7 +221,7 @@ float tmpl_Float_Cbrt(float x)
      *              = cbrt(u/t) * cbrt(t) * 2^(b/3)                           *
      *                                                                        *
      *  The value u/t is between 1 and 1 + 1/128. We compute cbrt(u/t) via a  *
-     *  power series in the variable 1 + (u/t - 1).                           *
+     *  polynomial in the variable 1 + (u/t - 1).                             *
      *                                                                        *
      *  We compute the value t = 1 + k/128 by computing k. The value k can be *
      *  obtained from the mantissa of the input. We have:                     *
@@ -240,6 +245,8 @@ float tmpl_Float_Cbrt(float x)
 
     /*  Get the correctly rounded down integer exponent/3.                    */
     w.bits.expo = exponent & 0xFFU;
+
+    /*  Compute 2^{b/3} * cbrt(t) using the two tables.                       */
     w.r *= tmpl_float_cbrt_data[parity]*tmpl_float_cbrt_table[ind];
 
     /*  tmp still has the original sign of x. Copy this to the output.        */
@@ -264,35 +271,48 @@ float tmpl_Float_Cbrt(float x)
 /*  Newton's method has a divide-by-three in the expression.                  */
 #define ONE_THIRD (3.333333333333333333333333E-01F)
 
+/*  Function for computing cube roots at single precision.                    */
 float tmpl_Float_Cbrt(float x)
 {
+    /*  Declare necessary variables. C89 requires this at the top.            */
     signed int expo, parity;
     float mant, out;
 
+    /*  Special case, NaN or inf, simply return the input.                    */
     if (tmpl_Float_Is_NaN_Or_Inf(x))
         return x;
 
+    /*  Get x into scientific form, |x| = mant * 2^expo.                      */
     tmpl_Float_Base2_Mant_and_Exp(x, &mant, &expo);
 
+    /*  Negative exponent, compute the parity which must be positive.         */
     if (expo < 0)
     {
         parity = expo % 3;
 
+        /*  It's possible for parity to be -1 or -2. The correct parity is    *
+         *  then 3 plus this value.                                           */
         if (parity < 0)
             parity += 3;
 
-        expo = (expo + 2)/3;
+        /*  Get the correctly rounded down value of expo/3.                   */
+        expo = (expo - 2) / 3;
     }
+
+    /*  Exponent positive, parity and division by 3 can be performed normally.*/
     else
     {
         parity = expo % 3;
-        expo = expo/3;
+        expo = expo / 3;
     }
 
+    /*  Since 1 <= mant < 2, the Pade approximant can accurately compute cbrt.*/
     out = tmpl_Float_Cbrt_Pade(mant);
-    out = out*tmpl_Float_Pow2(expo);
-    out = out*tmpl_float_cbrt_data[parity];
 
+    /*  Since cbrt(m * 2^b) = cbrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
+    out *= tmpl_Float_Pow2(expo)*tmpl_float_cbrt_data[parity];
+
+    /*  cbrt is an odd function. If the input was negative, negate the output.*/
     if (x < 0.0F)
         out = -out;
 
