@@ -42,7 +42,7 @@
  *          realloc:                                                          *
  *              Resizes an array.                                             *
  *      tmpl_string.h:                                                        *
- *          tmpl_strdup:                                                      *
+ *          tmpl_String_Duplicate:                                            *
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *      string.h:                                                             *
  *          memcpy:                                                           *
@@ -86,7 +86,7 @@
  *  3.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
  *  4.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  5.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  *  6.) string.h (optional):                                                  *
@@ -110,7 +110,7 @@
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup function provided here.                                       */
+/*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
@@ -140,6 +140,10 @@ tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
     size_t n, len;
     const tmpl_IntPolynomial *first, *second;
 
+    /*  Useful constants cast to type "size_t".                               */
+    const size_t zero = (size_t)0;
+    const size_t one = (size_t)1;
+
     /*  Get the polynomial with the larger degree and set to "first".         */
     if (P->degree < Q->degree)
     {
@@ -153,7 +157,7 @@ tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
     }
 
     /*  The length of the array of coefficients for the sum.                  */
-    len = first->degree + (size_t)1;
+    len = first->degree + one;
 
     /*  Check if sum needs to be resized.                                     */
     if (sum->degree != first->degree)
@@ -165,7 +169,7 @@ tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
         if (!tmp)
         {
             sum->error_occurred = tmpl_True;
-            sum->error_message = tmpl_strdup(
+            sum->error_message = tmpl_String_Duplicate(
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Add_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
@@ -186,18 +190,18 @@ tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
     memcpy(sum->coeffs, first->coeffs, len*sizeof(*sum->coeffs));
 
     /*  Now add the coefficients from the smaller polynomial to conclude.     */
-    for (n = (size_t)0; n <= second->degree; ++n)
+    for (n = zero; n <= second->degree; ++n)
         sum->coeffs[n] += second->coeffs[n];
 
 #else
 /*  Else for #if TMPL_USE_MEMCPY == 1.                                        */
 
     /*  Compute the sum term by term.                                         */
-    for (n = (size_t)0; n <= second->degree; ++n)
+    for (n = zero; n <= second->degree; ++n)
         sum->coeffs[n] = first->coeffs[n] + second->coeffs[n];
 
     /*  Add the coefficients of the larger polynomial.                        */
-    for (n = second->degree + (size_t)1; n < len; ++n)
+    for (n = second->degree + one; n < len; ++n)
         sum->coeffs[n] = first->coeffs[n];
 
 #endif
