@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_IntPolynomial_Multiply_Naive                                     *
+ *      tmpl_IntPolynomial_AddTo_Product_Naive                                *
  *  Purpose:                                                                  *
  *      Computes P += A*B where A*B is performed the naive way. This is used  *
  *      as a utility function for the more efficient Karatsuba algorithm.     *
@@ -39,17 +39,17 @@
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      tmpl_polynomial_integer.h:                                            *
- *          tmpl_IntPolynomial_Multiply_Naive_Kernel:                         *
- *              Multiply two polynomials without error checking or shrinking. *
+ *          tmpl_IntPolynomial_AddTo_Product_Naive_Kernel:                    *
+ *              Performs P += A*B without error checking or shrinking.        *
  *          tmpl_IntPolynomial_Shrink:                                        *
  *              Shrinks a polynomial by removing all terms past the largest   *
  *              non-zero coefficient.                                         *
  *      tmpl_string.h:                                                        *
- *          tmpl_strdup:                                                      *
+ *          tmpl_String_Duplicate:                                            *
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
- *      Naive polynomial multiply is performed by using the distributive law. *
- *      The complexity is thus O(deg(P) * deg(Q)). That is, if we have:       *
+ *      Naive polynomial multiplication is performed using the distributive   *
+ *      law. The complexity is thus O(deg(P) * deg(Q)). That is, if we have:  *
  *                                                                            *
  *                   N                       M                                *
  *                 -----                   -----                              *
@@ -82,10 +82,10 @@
  *      these values to the contents of P and return.                         *
  *  Notes:                                                                    *
  *      There are several possible ways for an error to occur.                *
- *          1.) The "prod" variable is NULL, or has error_occurred = true.    *
- *          2.) An input polynomial (P or Q) has error_occurred = true.       *
+ *          1.) The "P" variable is NULL, or has error_occurred = true.       *
+ *          2.) An input polynomial (A or B) has error_occurred = true.       *
  *          3.) realloc fails to resize the coefficient array.                *
- *      One can safely handle all cases by inspecting "prod" after using this *
+ *      One can safely handle all cases by inspecting "P" after using this    *
  *      function. First check if it is NULL, then if error_occurred = true.   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
@@ -93,7 +93,7 @@
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
  *  2.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  3.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
@@ -104,13 +104,13 @@
 /*  Boolean given here.                                                       */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup function provided here.                                       */
+/*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  Function for multiplying two polynomials.                                 */
+/*  Function for computing P += A*B for integer polynomials.                  */
 void
 tmpl_IntPolynomial_AddTo_Product_Naive(tmpl_IntPolynomial *P,
                                        const tmpl_IntPolynomial *A,
@@ -128,11 +128,11 @@ tmpl_IntPolynomial_AddTo_Product_Naive(tmpl_IntPolynomial *P,
     if (!A || !B)
         return;
 
-    /*  Similarly if either P or Q have an error.                             */
+    /*  Abort if either P or Q have an error.                                 */
     if (A->error_occurred || B->error_occurred)
     {
         P->error_occurred = tmpl_True;
-        P->error_message = tmpl_strdup(
+        P->error_message = tmpl_String_Duplicate(
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_AddTo_Product_Naive\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"
@@ -146,7 +146,7 @@ tmpl_IntPolynomial_AddTo_Product_Naive(tmpl_IntPolynomial *P,
         return;
 
     /*  Multiply the polynomials using the classical algorithm.               */
-    tmpl_IntPolynomial_Multiply_Naive_Kernel(A, B, P);
+    tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(P, A, B);
 
     /*  Shrink the result by removing redundant terms.                        */
     tmpl_IntPolynomial_Shrink(P);

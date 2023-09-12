@@ -45,7 +45,7 @@
  *              Shrinks a polynomial by removing all terms past the largest   *
  *              non-zero coefficient.                                         *
  *      tmpl_string.h:                                                        *
- *          tmpl_strdup:                                                      *
+ *          tmpl_String_Duplicate:                                            *
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Naive polynomial multiply is performed by using the distributive law. *
@@ -93,7 +93,7 @@
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
  *  2.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  3.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
@@ -107,7 +107,7 @@
 /*  Boolean given here.                                                       */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup function provided here.                                       */
+/*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
@@ -115,8 +115,7 @@
 
 /*  Two algorithms, both O(n*m) where n and m are the degrees of P and Q,     *
  *  respectively, are provided. One is the "rectangular" method, and the      *
- *  other uses the diagonal Cauchy product method. The Cauchy product has     *
- *  the benefit of requiring fewer initializations and additions.             *
+ *  other uses the diagonal Cauchy product method.                            *
  *      1 = Rectangle.                                                        *
  *      2 = Diagonal (Cauchy Product)                                         */
 #ifndef TMPL_INTPOLY_MUL_ALG
@@ -126,7 +125,7 @@
 /*  Rectangular method.                                                       */
 #if TMPL_INTPOLY_MUL_ALG == 1
 
-/*  Function for multiplying two polynomials.                                 */
+/*  Function for computing P += A*B for integer polynomials.                  */
 void
 tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
                                               const tmpl_IntPolynomial *A,
@@ -138,20 +137,24 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
     /*  The degree of the product is the sum of the two degrees.              */
     const size_t deg = A->degree + B->degree;
 
-    /*  Check if prod needs to be resized.                                    */
-    if (P->degree != deg)
+    /*  Useful constants cast to type "size_t".                               */
+    const size_t zero = (size_t)0;
+    const size_t one = (size_t)1;
+
+    /*  Check if the output needs to be resized.                              */
+    if (P->degree < deg)
     {
         /*  The number of elements is 1 plus degree (const terms included).   */
-        const size_t len = deg + (size_t)1;
+        const size_t len = deg + one;
 
-        /*  Try to allocate memory for the product.                           */
+        /*  Try to allocate memory for the output.                            */
         void *tmp = realloc(P->coeffs, sizeof(*P->coeffs)*len);
 
         /*  Check if realloc failed. Abort the computation if it did.         */
         if (!tmp)
         {
             P->error_occurred = tmpl_True;
-            P->error_message = tmpl_strdup(
+            P->error_message = tmpl_String_Duplicate(
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_AddTo_Product_Naive_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
@@ -164,7 +167,7 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
         P->coeffs = tmp;
 
         /*  Initialize the new coefficients to zero so we can loop over them. */
-        for (n = P->degree + (size_t)1; n <= deg; ++n)
+        for (n = P->degree + one; n < len; ++n)
             P->coeffs[n] = 0;
 
         /*  Reset the degree to reflect the size of the new array.            */
@@ -172,8 +175,8 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
     }
 
     /*  Perform the rectangular sum of the product.                           */
-    for (m = (size_t)0; m <= A->degree; ++m)
-        for (n = (size_t)0; n <= B->degree; ++n)
+    for (m = zero; m <= A->degree; ++m)
+        for (n = zero; n <= B->degree; ++n)
             P->coeffs[m + n] += A->coeffs[m] * B->coeffs[n];
 }
 /*  End of tmpl_IntPolynomial_Multiply_Naive.                                 */
@@ -194,11 +197,15 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
     /*  The degree of the product is the sum of the two degrees.              */
     const size_t deg = A->degree + B->degree;
 
-    /*  Check if prod needs to be resized.                                    */
-    if (P->degree != deg)
+    /*  Usefule constants cast to type "size_t".                              */
+    const size_t zero = (size_t)0;
+    const size_t one = (size_t)1;
+
+    /*  Check if P needs to be resized.                                       */
+    if (P->degree < deg)
     {
         /*  The number of elements is 1 plus degree (const terms included).   */
-        const size_t len = deg + (size_t)1;
+        const size_t len = deg + one;
 
         /*  Try to allocate memory for the product.                           */
         void *tmp = realloc(P->coeffs, sizeof(*P->coeffs)*len);
@@ -207,7 +214,7 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
         if (!tmp)
         {
             P->error_occurred = tmpl_True;
-            P->error_message = tmpl_strdup(
+            P->error_message = tmpl_String_Duplicate(
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_AddTo_Product_Naive_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
@@ -220,7 +227,7 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
         P->coeffs = tmp;
 
         /*  Initialize the new coefficients to zero so we can loop over them. */
-        for (n = P->degree + (size_t)1; n <= deg; ++n)
+        for (n = P->degree + one; n < len; ++n)
             P->coeffs[n] = 0;
 
         /*  Reset the degree to reflect the size of the new array.            */
@@ -250,13 +257,9 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
      *      |-----------------------|                                         *
      *        0   1   2   3   4   5                                           *
      *                                                                        */
-    for (n = (size_t)0; n < first->degree; ++n)
-    {
-        P->coeffs[n] += first->coeffs[n] * second->coeffs[0];
-
-        for (m = (size_t)1; m <= n; ++m)
+    for (n = zero; n < first->degree; ++n)
+        for (m = zero; m <= n; ++m)
             P->coeffs[n] += first->coeffs[n - m] * second->coeffs[m];
-    }
 
     /*  Second part of the Cauchy product.                                    *
      *                                                                        *
@@ -270,13 +273,8 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
      *        0   1   2   3   4   5                                           *
      *                                                                        */
     for (n = first->degree; n < second->degree; ++n)
-    {
-        m = n - first->degree;
-        P->coeffs[n] += first->coeffs[n - m] * second->coeffs[m];
-
-        for (m = m + (size_t)1; m <= n; ++m)
-            P->coeffs[n] += first->coeffs[n-m] * second->coeffs[m];
-    }
+        for (m = n - first->degree; m <= n; ++m)
+            P->coeffs[n] += first->coeffs[n - m] * second->coeffs[m];
 
     /*  Third part of the Cauchy product.                                     *
      *                                                                        *
@@ -290,13 +288,8 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
      *        0   1   2   3   4   5                                           *
      *                                                                        */
     for (n = second->degree; n <= P->degree; ++n)
-    {
-        m = n - first->degree;
-        P->coeffs[n] += first->coeffs[n - m] * second->coeffs[m];
-
-        for (m = m + (size_t)1; m <= second->degree; ++m)
-            P->coeffs[n] += first->coeffs[n-m] * second->coeffs[m];
-    }
+        for (m = n - first->degree; m <= second->degree; ++m)
+            P->coeffs[n] += first->coeffs[n - m] * second->coeffs[m];
 }
 /*  End of tmpl_IntPolynomial_Multiply_Naive.                                 */
 

@@ -325,6 +325,36 @@ tmpl_IntPolynomial_AddTo_Product_Naive_Kernel(tmpl_IntPolynomial *P,
                                               const tmpl_IntPolynomial *A,
                                               const tmpl_IntPolynomial *B);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Sum_Product_Naive                            *
+ *  Purpose:                                                                  *
+ *      Computes P += (A0+A1)*B. Redundant zeros are removed from the result. *
+ *  Arguments:                                                                *
+ *      P (tmpl_IntPolynomial *):                                             *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      A0 (const tmpl_IntPolynomial *):                                      *
+ *          A pointer to a polynomial.                                        *
+ *      A1 (const tmpl_IntPolynomial *):                                      *
+ *          A pointer to a polynomial. Same degree as A0.                     *
+ *      B (const tmpl_IntPolynomial *):                                       *
+ *          Another pointer to a polynomial.                                  *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      Mostly used as a utility function for Karatsuba multiplication, but a *
+ *      user may find it useful as a standalone. The product A*B is performed *
+ *      the naive way which runs in O(deg(A)*deg(B)) time. The Karatsuba      *
+ *      algorithm (roughly O(max(deg(A), deg(B))^log_2(3))) uses this         *
+ *      function to perform multiplication after the recursive steps have     *
+ *      reduced the degree to small enough value.                             *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Sum_Product_Naive(tmpl_IntPolynomial *P,
+                                           const tmpl_IntPolynomial *A0,
+                                           const tmpl_IntPolynomial *A1,
+                                           const tmpl_IntPolynomial *B);
+
 extern void
 tmpl_IntPolynomial_AddTo_Sum_Product(tmpl_IntPolynomial *P,
                                      const tmpl_IntPolynomial *A0,

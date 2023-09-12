@@ -125,14 +125,11 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
     const size_t zero = (size_t)0;
     const size_t one = (size_t)1;
 
-    /*  The degree of the sum.                                                */
-    const size_t degree = TMPL_MAX(P->degree, Q->degree);
-
     /*  Check if the sum needs to be resized.                                 */
-    if (P->degree != degree)
+    if (P->degree < Q->degree)
     {
         /*  The number of elements in the final array.                        */
-        const size_t len = degree + one;
+        const size_t len = Q->degree + one;
 
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
         void *tmp = realloc(P->coeffs, sizeof(*P->coeffs) * len);
@@ -150,13 +147,15 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
             return;
         }
 
-        /*  Otherwise reset the degree and the coefficients pointer.          */
+        /*  Otherwise reset the coefficient pointer.                          */
         P->coeffs = tmp;
-        P->degree = degree;
 
         /*  Initialize the new entries to zero.                               */
         for (n = P->degree + one; n < len; ++n)
             P->coeffs[n] = 0;
+
+        /*  Reset the degree to reflect the size of the new array.            */
+        P->degree = Q->degree;
     }
 
     /*  Compute the sum term by term.                                         */
