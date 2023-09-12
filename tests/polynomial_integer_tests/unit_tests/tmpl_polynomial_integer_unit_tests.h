@@ -287,3 +287,50 @@ CLEANUP:                                                                       \
     destroy(&Q);                                                               \
     return 0;                                                                  \
 }
+
+#define TEST9(func, pdat, adat, bdat, rdat, type, ptype, pcreate, destroy)     \
+int main(void)                                                                 \
+{                                                                              \
+    const type P_data[] = pdat;                                                \
+    const type A_data[] = adat;                                                \
+    const type B_data[] = bdat;                                                \
+    const type result[] = rdat;                                                \
+    const size_t P_len = sizeof(P_data) / sizeof(P_data[0]);                   \
+    const size_t A_len = sizeof(A_data) / sizeof(A_data[0]);                   \
+    const size_t B_len = sizeof(B_data) / sizeof(B_data[0]);                   \
+    const size_t result_len = sizeof(result) / sizeof(result[0]);              \
+    ptype P = pcreate(P_data, P_len);                                          \
+    ptype A = pcreate(A_data, A_len);                                          \
+    ptype B = pcreate(B_data, B_len);                                          \
+    size_t n;                                                                  \
+    func(&P, &A, &B);                                                          \
+                                                                               \
+    if (!P.coeffs)                                                             \
+    {                                                                          \
+        puts("FAIL: P.coeffs is NULL.");                                       \
+        goto CLEANUP;                                                          \
+    }                                                                          \
+                                                                               \
+    if (P.error_occurred)                                                      \
+    {                                                                          \
+        puts("FAIL: Function set P.error_occurred = true.");                   \
+        goto CLEANUP;                                                          \
+    }                                                                          \
+                                                                               \
+    for (n = (size_t)0; n < result_len; ++n)                                   \
+    {                                                                          \
+        if (P.coeffs[n] != result[n])                                          \
+        {                                                                      \
+            puts("FAIL: P.coeffs != result");                                  \
+            goto CLEANUP;                                                      \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    puts("PASS");                                                              \
+                                                                               \
+CLEANUP:                                                                       \
+    destroy(&P);                                                               \
+    destroy(&A);                                                               \
+    destroy(&B);                                                               \
+    return 0;                                                                  \
+}
