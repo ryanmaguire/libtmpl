@@ -42,7 +42,7 @@
  *          realloc:                                                          *
  *              Resizes an array.                                             *
  *      tmpl_string.h:                                                        *
- *          tmpl_strdup:                                                      *
+ *          tmpl_String_Duplicate:                                            *
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
@@ -76,7 +76,7 @@
  *  2.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
  *  3.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  4.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
@@ -90,7 +90,7 @@
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup function provided here.                                       */
+/*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
@@ -118,7 +118,7 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
         if (!tmp)
         {
             sum->error_occurred = tmpl_True;
-            sum->error_message = tmpl_strdup(
+            sum->error_message = tmpl_String_Duplicate(
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Add_Same_Degree_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
