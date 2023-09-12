@@ -344,7 +344,7 @@ long double tmpl_LDouble_Log(long double x)
     xhi.bits.expo = TMPL_LDOUBLE_BIAS;
 
     ind = w.bits.man0;
-    ind = (ind << 3U) + (w.bits.man1a >> 13U);
+    ind = (ind << 3U) + (w.bits.man1 >> 13U);
 
     s = xhi.r*tmpl_ldouble_rcpr_table[ind];
     A = (s - 1.0L) / (s + 1.0L);
