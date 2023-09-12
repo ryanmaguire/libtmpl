@@ -273,7 +273,7 @@ double tmpl_Double_Cbrt(double x)
     ind = (ind << 3U) + (w.bits.man1 >> 13U);
 
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
-    w.r = w.r*tmpl_double_rcpr_table[ind];
+    w.r *= tmpl_double_rcpr_table[ind];
 
     /*  Compute the Remez minimax approximation for cbrt. Peak error 10^-9.   */
     w.r = tmpl_Double_Cbrt_Remez(w.r);
@@ -327,7 +327,7 @@ double tmpl_Double_Cbrt(double x)
             parity += 3;
 
         /*  Get the correctly rounded down value of expo/3.                   */
-        expo = (expo - 2)/3;
+        expo = (expo - 2) / 3;
     }
 
     /*  Exponent positive, parity and division by 3 can be performed normally.*/
@@ -341,7 +341,7 @@ double tmpl_Double_Cbrt(double x)
     out = tmpl_Double_Cbrt_Pade(mant);
 
     /*  Since cbrt(m * 2^b) = cbrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
-    out = out*tmpl_Double_Pow2(expo)*tmpl_double_cbrt_data[parity];
+    out *= tmpl_Double_Pow2(expo)*tmpl_double_cbrt_data[parity];
 
     /*  cbrt is an odd function. If the input was negative, negate the output.*/
     if (x < 0.0)
