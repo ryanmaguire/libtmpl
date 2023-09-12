@@ -40,7 +40,7 @@
  *          realloc:                                                          *
  *              Resizes an array.                                             *
  *      tmpl_string.h:                                                        *
- *          tmpl_strdup:                                                      *
+ *          tmpl_String_Duplicate:                                            *
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
@@ -80,7 +80,7 @@
  *  3.) tmpl_minmax.h:                                                        *
  *          Provides the TMPL_MAX macro.                                      *
  *  4.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  5.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  *  6.) string.h (optional):                                                  *
@@ -107,7 +107,7 @@
 /*  TMPL_MAX macro provided here.                                             */
 #include <libtmpl/include/tmpl_minmax.h>
 
-/*  tmpl_strdup function provided here.                                       */
+/*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
@@ -121,15 +121,19 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
 
+    /*  Useful constants cast to type "size_t".                               */
+    const size_t zero = (size_t)0;
+    const size_t one = (size_t)1;
+
     /*  The degree of the sum.                                                */
     const size_t degree = TMPL_MAX(P->degree, Q->degree);
-
-    /*  The number of elements in the final array.                            */
-    const size_t len = degree + (size_t)1;
 
     /*  Check if the sum needs to be resized.                                 */
     if (P->degree != degree)
     {
+        /*  The number of elements in the final array.                        */
+        const size_t len = degree + one;
+
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
         void *tmp = realloc(P->coeffs, sizeof(*P->coeffs) * len);
 
@@ -137,7 +141,7 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
         if (!tmp)
         {
             P->error_occurred = tmpl_True;
-            P->error_message = tmpl_strdup(
+            P->error_message = tmpl_String_Duplicate(
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_AddTo_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
@@ -151,12 +155,12 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial *P,
         P->degree = degree;
 
         /*  Initialize the new entries to zero.                               */
-        for (n = P->degree + (size_t)1; n < len; ++n)
+        for (n = P->degree + one; n < len; ++n)
             P->coeffs[n] = 0;
     }
 
     /*  Compute the sum term by term.                                         */
-    for (n = (size_t)0; n < len; ++n)
+    for (n = zero; n <= Q->degree; ++n)
         P->coeffs[n] += Q->coeffs[n];
 }
 /*  End of tmpl_IntPolynomial_AddTo_Kernel.                                   */
