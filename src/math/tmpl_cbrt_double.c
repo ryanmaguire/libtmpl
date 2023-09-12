@@ -191,7 +191,7 @@ double tmpl_Double_Cbrt(double x)
         w.r *= TMPL_DOUBLE_NORMALIZE;
 
         /*  The parity is computed by expo mod 3. We have added 52 to the     *
-         *  exponent to normalize the input, but 52 mod 2 is 1, not 0. Add 2  *
+         *  exponent to normalize the input, but 52 mod 3 is 1, not 0. Add 2  *
          *  to expo, and subtract 2 from exponent (in a few lines) to ensure  *
          *  the parity variable is correctly computed.                        */
         w.bits.expo += 2U;
