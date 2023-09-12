@@ -35,12 +35,15 @@
  *  Outputs:                                                                  *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      realloc (stdlib.h):                                                   *
- *          Resizes an array.                                                 *
- *      tmpl_strdup (tmpl_string.h):                                          *
- *          Duplicates a string. Equivalent to the POSIX function strdup.     *
- *      memcpy (optional) (string.h):                                         *
- *          Copies data from one pointer to another.                          *
+ *      stdlib.h:                                                             *
+ *          realloc:                                                          *
+ *              Resizes an array.                                             *
+ *      tmpl_string.h:                                                        *
+ *          tmpl_String_Duplicate:                                            *
+ *              Duplicates a string. Equivalent to the POSIX function strdup. *
+ *      string.h (optional):                                                  *
+ *          memcpy:                                                           *
+ *              Copies data from one pointer to another.                      *
  *  Method:                                                                   *
  *      Two methods are provided. The simpler one uses a for-loop to copy the *
  *      coefficients from one polynomial to a another. The second method uses *
@@ -56,7 +59,7 @@
  *  3.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
  *  4.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  5.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  *  6.) string.h (optional):                                                  *
@@ -75,7 +78,7 @@
 /*  Booleans provided here.                                                   */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup function found here.                                          */
+/*  tmpl_String_Duplicate function found here.                                */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototypes given here.                   */
@@ -105,28 +108,23 @@ tmpl_IntPolynomial_Copy_Kernel(tmpl_IntPolynomial *dest,
     if (dest->degree != src->degree)
     {
         /*  Use realloc to resize the memory for the coefficients array.      */
-        void *tmp;
-        tmp = realloc(dest->coeffs, len);
+        void *tmp = realloc(dest->coeffs, len);
 
-        /*  If realloc succeeded, set the dest coefficients to the new memory.*
-         *  Also reset the degree variable to the new size.                   */
-        if (tmp)
-        {
-            dest->coeffs = tmp;
-            dest->degree = src->degree;
-        }
-
-        /*  Otherwise abort with an error message.                            */
-        else
+        /*  Check if realloc failed.                                          */
+        if (!tmp)
         {
             dest->error_occurred = tmpl_False;
-            dest->error_message = tmpl_strdup(
+            dest->error_message = tmpl_String_Duplicate(
                 "\nError Encountered: libtmpl\n"
                 "    tmpl_IntPolynomial_Copy_Kernel\n\n"
                 "Realloc failed to resize dest->coeffs. Aborting.\n\n"
             );
             return;
         }
+
+        /*  Otherwise reset the coefficient array and degree.                 */
+        dest->coeffs = tmp;
+        dest->degree = src->degree;
     }
 
     /*  If the user requested memcpy, use this to copy the data.              */
