@@ -36,51 +36,85 @@
  *  Called Functions:                                                         *
  *      None if IEEE-754 support is available and libtmpl algorithms have     *
  *      been requested. cbrt from math.h otherwise.                           *
- *  Method:                                                                   *
- *      Use a combination of cubic root rules, Taylor series, and Newton's    *
- *      method. That is, cbrt(x) is computed as follows:                      *
+ *  IEEE-754 Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_cbrt_remez_float.h                                           *
+ *              tmpl_Float_Cbrt_Remez:                                        *
+ *                  Computes a Remez minimax approximation of cbrt near x = 1.*
+ *      Method:                                                               *
+ *          Use a combination of cube root rules and polynomials.             *
  *                                                                            *
- *          If x = +/- NaN, +/- Inf, or +/- 0, return x.                      *
- *          If x is subnormal (denormal), normalize by 2^52.                  *
- *          If x < 0, return -cbrt(-x) since cbrt is an odd function.         *
+ *              If x = +/- NaN, +/- Inf, or +/- 0, return x.                  *
+ *              If x is subnormal (denormal), normalize by 2^23.              *
+ *              If x < 0, return -cbrt(-x) since cbrt is an odd function.     *
  *                                                                            *
- *          cbrt(x) = cbrt(1.m * 2^b)                                         *
- *                  = cbrt(1.m) * cbrt(2^b)                                   *
- *                  = cbrt(1.m) * 2^{b/3}                                     *
- *                  = cbrt(u) * 2^{b/3}     with u = 1.m                      *
- *                  = cbrt(ut/t) * 2^{b/3}  with t = 1 + k/128 for some k.    *
- *                  = cbrt(u/t) * cbrt(t) * 2^{b/3}                           *
+ *              cbrt(x) = cbrt(1.m * 2^b)                                     *
+ *                      = cbrt(1.m) * cbrt(2^b)                               *
+ *                      = cbrt(1.m) * 2^{b/3}                                 *
+ *                      = cbrt(u) * 2^{b/3}    with u = 1.m                   *
+ *                      = cbrt(ut/t) * 2^{b/3} with t = 1 + k/128 for some k. *
+ *                      = cbrt(u/t) * cbrt(t) * 2^{b/3}                       *
  *                                                                            *
- *      Choose t = 1 + k/128 by choosing k to be the largest integer such     *
- *      that 1 + k/128 <= u. Precompute cbrt(t) and 1/t in a table. The       *
- *      value u/t is now between 1 and 1 + 1/128. Compute cbrt(u/t) by:       *
+ *          Choose t = 1 + k/128 by choosing k to be the largest integer such *
+ *          that 1 + k/128 <= u. Precompute cbrt(t) and 1/t in a table. The   *
+ *          value u/t is now between 1 and 1 + 1/128. Compute cbrt(u/t) by:   *
  *                                                                            *
+ *              y = cbrt(u/t)                                                 *
+ *              = cbrt(1 + s)             with s = u/t - 1.                   *
+ *              ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                           *
  *                                                                            *
- *          y = cbrt(u/t)                                                     *
- *            = cbrt(1 + s)             with s = u/t - 1.                     *
- *            ~ 1 + (1/3)s - (1/9)s^2 + (5/81)s^3                             *
+ *          y is now accurate to at least 8 decimals. Note, a Remez minimax   *
+ *          approximation is used instead of a Taylor series. The             *
+ *          coefficients are slightly different.                              *
  *                                                                            *
- *      y is now accurate to at least 8 decimals. Note, a Remez minimax       *
- *      approximation is implemented, instead of a Taylor series. The         *
- *      coefficients are slightly different.                                  *
- *                                                                            *
- *      Lastly, since 2^{b/3} is not an integer for some values of b write    *
- *      b = 3k + r, with r = 0, 1, 2. Then 2^{b/3} is 2^{k}2^{r/3}. If r = 0  *
- *      we are done. If r = 1, multiply by cbrt(2). If r = 2, multiply by     *
- *      2^{2/3}. Precompute these two values and multiply if needed.          *
- *  Error:                                                                    *
- *      Based on 1,051,958,476 samples with -10^6 < x < 10^6.                 *
- *          max rel error: 7.6293943607197434e-08                             *
- *          rms rel error: 7.6293943607172487e-08                             *
- *          max abs error: 7.6293945312500000e-06                             *
- *          rms abs error: 7.6293945312500000e-06                             *
- *      Error values assume 100% accuracy in glibc. Actual error is around    *
- *      1 ULP (~10^-7 relative error).                                        *
+ *          Lastly, since 2^{b/3} is not an integer for some values of b      *
+ *          write b = 3k + r, with r = 0, 1, 2. Then 2^{b/3} is 2^{k}2^{r/3}. *
+ *          If r = 0 we are done. If r = 1, multiply by cbrt(2). If r = 2,    *
+ *          multiply by 2^{2/3}. Precompute these two values and multiply if  *
+ *          needed.                                                           *
+ *      Error:                                                                *
+ *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *              max rel error: 7.6293943607197434e-08                         *
+ *              rms rel error: 7.6293943607172487e-08                         *
+ *              max abs error: 7.6293945312500000e-06                         *
+ *              rms abs error: 7.6293945312500000e-06                         *
+ *          Error values assume 100% accuracy in glibc. Actual error is       *
+ *          around 1 ULP (~10^-7 relative error).                             *
+ *  Portable Version:                                                         *
+ *      Called Functions:                                                     *
+ *          tmpl_cbrt_pade_float.h:                                           *
+ *              tmpl_Float_Cbrt_Pade:                                         *
+ *                  Computes a Pade approximant of cbrt near x = 1.           *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Is_NaN_Or_Inf:                                     *
+ *                  Determines if a float is NaN or infinity.                 *
+ *              tmpl_Float_Base2_Mant_and_Exp:                                *
+ *                  Gets the input into scientific form, |x| = m * 2^b with   *
+ *                  1 <= m < 2 and b an integer.                              *
+ *              tmpl_Float_Pow2:                                              *
+ *                  Quickly computes an integer power of 2 as a float.        *
+ *      Method:                                                               *
+ *          Reduce to x >= 0 since cbrt is an odd function. Convert x to      *
+ *          scientific notation x = m * 2^b with 1 <= m < 2 and b an integer. *
+ *          Use the Pade approximant on m and multiply by 2^{b/3}. Finish by  *
+ *          performing one iteration of Newton's method.                      *
+ *      Error:                                                                *
+ *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
+ *              max rel error: 2.3733362297662097e-07                         *
+ *              rms rel error: 5.7575034070871672e-08                         *
+ *              max abs error: 1.5258789062500000e-05                         *
+ *              rms abs error: 4.4232975581690239e-06                         *
+ *          Error values assume 100% accuracy in glibc. Actual error is       *
+ *          around 1 ULP (~10^-7 relative error).                             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
+ *  2.) tmpl_cbrt_remez_float.h:                                              *
+ *          Used in the IEEE-754 version. Remez approximation for cbrt.       *
+ *  3.) tmpl_cbrt_pade_float.h:                                               *
+ *          Used in the portable version. Pade approximant for cbrt.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 22, 2022                                             *
@@ -181,7 +215,7 @@ float tmpl_Float_Cbrt(float x)
      *                                                                        *
      *      E' = (E + 2B) / 3                                                 *
      *                                                                        *
-     *  The bias for 32-bit double is 127, and 2*127 = 254 is not divisible   *
+     *  The bias for 32-bit float is 127, and 2*127 = 254 is not divisible    *
      *  by 3. However, 255 is. So we write:                                   *
      *                                                                        *
      *      E' = (E + 2B) / 3                                                 *
