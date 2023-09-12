@@ -43,7 +43,7 @@
  *              Shrinks a polynomial by removing all terms past the largest   *
  *              non-zero coefficient.                                         *
  *      tmpl_string.h:                                                        *
- *          tmpl_strdup:                                                      *
+ *          tmpl_String_Duplicate:                                            *
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
@@ -71,7 +71,7 @@
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
  *  2.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
+ *          Header file where tmpl_String_Duplicate is declared.              *
  *  3.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
@@ -82,7 +82,7 @@
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup function provided here.                                       */
+/*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
@@ -93,6 +93,10 @@ void
 tmpl_IntPolynomial_AddTo_Same_Degree(tmpl_IntPolynomial *P,
                                      const tmpl_IntPolynomial *Q)
 {
+    /*  If P is NULL there is nothing to do.                                  */
+    if (!P)
+        return;
+
     /*  If P had an error occur previously abort.                             */
     if (P->error_occurred)
         return;
@@ -101,7 +105,7 @@ tmpl_IntPolynomial_AddTo_Same_Degree(tmpl_IntPolynomial *P,
     if (Q->error_occurred)
     {
         P->error_occurred = tmpl_True;
-        P->error_message = tmpl_strdup(
+        P->error_message = tmpl_String_Duplicate(
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_AddTo_Same_Degree\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"
