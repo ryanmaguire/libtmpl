@@ -17,4 +17,10 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
+#if defined(__APPLE__) || defined(_MSC_VER)
+int isinfl(long double value) {
+	return isinf(value);
+}
+#endif
+
 TEST10(long double, -1.0E6L, 1.0E6L, tmpl_LDouble_Is_Inf, isinfl)

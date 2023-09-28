@@ -54,7 +54,7 @@ int main(void)
     P->coeffs[8] = 1L;
 
     /*  Create an empty polynomial to store the derivative in.                */
-    Pprime = tmpl_Create_Empty_PolynomialZ();
+    Pprime = tmpl_PolynomialZ_Create_Empty();
 
     /*  Compute the derivative of P and store it in Pprime.                   */
     tmpl_PolynomialZ_Deriv(P, Pprime);
@@ -70,8 +70,8 @@ int main(void)
     /*  Free everything.                                                      */
     free(Pprimestr);
     free(Pstr);
-    tmpl_Destroy_PolynomialZ(&P);
-    tmpl_Destroy_PolynomialZ(&Pprime);
+    tmpl_PolynomialZ_Destroy(&P);
+    tmpl_PolynomialZ_Destroy(&Pprime);
     return 0;
 }
 /*  End of main.                                                              */

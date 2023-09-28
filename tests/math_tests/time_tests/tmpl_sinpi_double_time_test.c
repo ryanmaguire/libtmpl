@@ -16,6 +16,9 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#endif
 #include "tmpl_math_time_tests.h"
 static inline double sinpi(double x){return sin(M_PI*x);}
 TEST1(double, -0.25, 0.25, tmpl_Double_SinPi, sinpi)

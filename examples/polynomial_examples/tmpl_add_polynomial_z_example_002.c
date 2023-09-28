@@ -64,8 +64,8 @@ int main(void)
                 "likely that malloc failed. Aborting computation.\n");
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
         return -1;
     }
 
@@ -78,8 +78,8 @@ int main(void)
                 "failed. Aborting computation.\n");
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
         return -1;
     }
 
@@ -92,19 +92,19 @@ int main(void)
     Q->coeffs[1] = 1L;
 
     /*  Create an empty polynomial to store the sum in.                       */
-    sum = tmpl_Create_Empty_PolynomialZ();
+    sum = tmpl_PolynomialZ_Create_Empty();
 
-    /*  tmpl_Create_Empty_PolynomialZ returns NULL if malloc fails. Check for *
+    /*  tmpl_PolynomialZ_Create_Empty returns NULL if malloc fails. Check for *
      *  this to avoid segmentation faults.                                    */
     if (sum == NULL)
     {
         fprintf(stderr,
-                "tmpl_Create_Empty_PolynomialZ returned a NULL pointer.\n"
+                "tmpl_PolynomialZ_Create_Empty returned a NULL pointer.\n"
                 "It is likely that malloc failed. Aborting computation.\n");
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
         return -1;
     }
 
@@ -120,9 +120,9 @@ int main(void)
                 "Aborting computation.\n");
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
-        tmpl_Destroy_PolynomialZ(&sum);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
+        tmpl_PolynomialZ_Destroy(&sum);
         return -1;
     }
 
@@ -137,9 +137,9 @@ int main(void)
                 "malloc or realloc failed. Aborting.\n");
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
-        tmpl_Destroy_PolynomialZ(&sum);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
+        tmpl_PolynomialZ_Destroy(&sum);
     }
 
     Qstr = tmpl_PolynomialZ_Get_String(Q);
@@ -156,9 +156,9 @@ int main(void)
         free(Pstr);
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
-        tmpl_Destroy_PolynomialZ(&sum);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
+        tmpl_PolynomialZ_Destroy(&sum);
     }
 
     sumstr = tmpl_PolynomialZ_Get_String(sum);
@@ -176,9 +176,9 @@ int main(void)
         free(Qstr);
 
         /*  Free all of the memory allocated to the polynomials.              */
-        tmpl_Destroy_PolynomialZ(&P);
-        tmpl_Destroy_PolynomialZ(&Q);
-        tmpl_Destroy_PolynomialZ(&sum);
+        tmpl_PolynomialZ_Destroy(&P);
+        tmpl_PolynomialZ_Destroy(&Q);
+        tmpl_PolynomialZ_Destroy(&sum);
     }
 
     /*  Print the result.                                                     */
@@ -206,9 +206,9 @@ int main(void)
     fprintf(stderr, "\n");
 
     /*  Free all of the memory in the polynomial pointers.                    */
-    tmpl_Destroy_PolynomialZ(&P);
-    tmpl_Destroy_PolynomialZ(&Q);
-    tmpl_Destroy_PolynomialZ(&sum);
+    tmpl_PolynomialZ_Destroy(&P);
+    tmpl_PolynomialZ_Destroy(&Q);
+    tmpl_PolynomialZ_Destroy(&sum);
     return 0;
 }
 /*  End of main.                                                              */

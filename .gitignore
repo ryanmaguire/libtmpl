@@ -92,3 +92,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 build/
+.idea/
+.vscode/

@@ -1,0 +1,21 @@
+include_guard()
+set(_headers @headers@)
+
+foreach(_header IN LISTS _headers)
+    string(FIND ${_header} "${CMAKE_CURRENT_SOURCE_DIR}" index)
+    if(index GREATER_EQUAL 0)
+        cmake_path(RELATIVE_PATH _header)
+        list(APPEND relative_headers ${_header})
+        if(LIBTMPL_ENABLE_VERBOSE)
+            message(STATUS "Added header: ${_header}")
+        endif()
+    endif()
+endforeach()
+
+target_sources(
+    tmpl
+    PUBLIC
+        FILE_SET HEADERS
+        FILES
+            ${relative_headers}
+)

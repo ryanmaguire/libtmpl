@@ -68,19 +68,19 @@ typedef struct tmpl_PPM_Color_Def {
 } tmpl_PPM_Color;
 
 /*  Commonly used colors.                                                     */
-extern const tmpl_PPM_Color tmpl_PPM_Black;
-extern const tmpl_PPM_Color tmpl_PPM_White;
-extern const tmpl_PPM_Color tmpl_PPM_Red;
-extern const tmpl_PPM_Color tmpl_PPM_Green;
-extern const tmpl_PPM_Color tmpl_PPM_Blue;
-extern const tmpl_PPM_Color tmpl_PPM_Cyan;
-extern const tmpl_PPM_Color tmpl_PPM_Magenta;
-extern const tmpl_PPM_Color tmpl_PPM_Yellow;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Black;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_White;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Red;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Green;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Blue;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Cyan;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Magenta;
+TMPL_EXPORT extern const tmpl_PPM_Color tmpl_PPM_Yellow;
 
 /*  Useful values for grayscale images.                                       */
-extern const unsigned char tmpl_PGM_Black;
-extern const unsigned char tmpl_PGM_Gray;
-extern const unsigned char tmpl_PGM_White;
+TMPL_EXPORT extern const unsigned char tmpl_PGM_Black;
+TMPL_EXPORT extern const unsigned char tmpl_PGM_Gray;
+TMPL_EXPORT extern const unsigned char tmpl_PGM_White;
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -116,7 +116,7 @@ extern const unsigned char tmpl_PGM_White;
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Binary_PGM_From_Data(const char *filename,
                           unsigned char *data,
                           unsigned int width,
@@ -156,7 +156,7 @@ tmpl_Binary_PGM_From_Data(const char *filename,
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Binary_PPM_From_Data(const char *filename,
                           tmpl_PPM_Color *data,
                           unsigned int width,
@@ -183,7 +183,7 @@ tmpl_Binary_PPM_From_Data(const char *filename,
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Color_Addition(tmpl_PPM_Color C0, tmpl_PPM_Color C1);
 
 /******************************************************************************
@@ -207,7 +207,7 @@ tmpl_PPM_Color_Addition(tmpl_PPM_Color C0, tmpl_PPM_Color C1);
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Color_Average(tmpl_PPM_Color C0, tmpl_PPM_Color C1);
 
 /******************************************************************************
@@ -231,7 +231,7 @@ tmpl_PPM_Color_Average(tmpl_PPM_Color C0, tmpl_PPM_Color C1);
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Color_Blend(tmpl_PPM_Color C0, tmpl_PPM_Color C1, double t);
 
 /******************************************************************************
@@ -264,7 +264,7 @@ tmpl_PPM_Color_Blend(tmpl_PPM_Color C0, tmpl_PPM_Color C1, double t);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/complex_plots/                          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PPM_Complex_Plot(const char *func_name,
                       tmpl_ComplexDouble(*f)(tmpl_ComplexDouble),
                       unsigned int x_size,
@@ -295,7 +295,7 @@ tmpl_PPM_Complex_Plot(const char *func_name,
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Create_Color(unsigned char r, unsigned char g, unsigned char b);
 
 /******************************************************************************
@@ -322,7 +322,7 @@ tmpl_PPM_Create_Color(unsigned char r, unsigned char g, unsigned char b);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Linear_Color_Wheel(double val, double min, double max);
 
 /******************************************************************************
@@ -351,7 +351,7 @@ tmpl_PPM_Linear_Color_Wheel(double val, double min, double max);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Normalized_Linear_Gradient(double val, double min, double max);
 
 /******************************************************************************
@@ -379,7 +379,7 @@ tmpl_PPM_Normalized_Linear_Gradient(double val, double min, double max);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Linear_Gradient(double val, double min, double max);
 
 /******************************************************************************
@@ -407,7 +407,7 @@ tmpl_PPM_Linear_Gradient(double val, double min, double max);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/complex_plots/                          *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PPM_Plot(const char *func_name,
               double (*f)(double),
               unsigned int x_size,
@@ -439,7 +439,7 @@ tmpl_PPM_Plot(const char *func_name,
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
  ******************************************************************************/
-extern void tmpl_PPM_Print_Color(FILE *fp, tmpl_PPM_Color color);
+TMPL_EXPORT extern void tmpl_PPM_Print_Color(FILE *fp, tmpl_PPM_Color color);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -470,7 +470,7 @@ extern void tmpl_PPM_Print_Color(FILE *fp, tmpl_PPM_Color color);
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PPM_Print_Color_From_Values(FILE *fp,
                                  unsigned char red,
                                  unsigned char green,
@@ -497,7 +497,7 @@ tmpl_PPM_Print_Color_From_Values(FILE *fp,
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_scale_color_example.c          *
  ******************************************************************************/
-extern tmpl_PPM_Color tmpl_PPM_Scale_Color(tmpl_PPM_Color color, double t);
+TMPL_EXPORT extern tmpl_PPM_Color tmpl_PPM_Scale_Color(tmpl_PPM_Color color, double t);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -520,7 +520,7 @@ extern tmpl_PPM_Color tmpl_PPM_Scale_Color(tmpl_PPM_Color color, double t);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Scaled_Color_Wheel(double val);
 
 /******************************************************************************
@@ -544,7 +544,7 @@ tmpl_PPM_Scaled_Color_Wheel(double val);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_print_color_example.c          *
  ******************************************************************************/
-extern tmpl_PPM_Color
+TMPL_EXPORT extern tmpl_PPM_Color
 tmpl_PPM_Scaled_Gradient(double val);
 
 /******************************************************************************
@@ -571,7 +571,7 @@ tmpl_PPM_Scaled_Gradient(double val);
  *  Examples:                                                                 *
  *      libtmpl/examples/ppm_examples/tmpl_ppm_write_color_example.c          *
  ******************************************************************************/
-extern void tmpl_PPM_Write_Color(FILE *fp, tmpl_PPM_Color color);
+TMPL_EXPORT extern void tmpl_PPM_Write_Color(FILE *fp, tmpl_PPM_Color color);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -602,7 +602,7 @@ extern void tmpl_PPM_Write_Color(FILE *fp, tmpl_PPM_Color color);
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_write_color_from_values_example.c                        *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_PPM_Write_Color_From_Values(FILE *fp,
                                  unsigned char red,
                                  unsigned char green,
@@ -642,7 +642,7 @@ tmpl_PPM_Write_Color_From_Values(FILE *fp,
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Text_PGM_From_Data(const char *filename,
                         unsigned char *data,
                         unsigned int width,
@@ -682,7 +682,7 @@ tmpl_Text_PGM_From_Data(const char *filename,
  *      libtmpl/examples/ppm_examples/                                        *
  *          tmpl_ppm_print_color_from_values_example.c                        *
  ******************************************************************************/
-extern void
+TMPL_EXPORT extern void
 tmpl_Text_PPM_From_Data(const char *filename,
                         tmpl_PPM_Color *data,
                         unsigned int width,

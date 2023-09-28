@@ -85,6 +85,8 @@
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
+#include "tmpl_exports.h"
+
 /*  This code is only used if inline support is requested.                    */
 #if TMPL_USE_INLINE == 1
 
@@ -263,7 +265,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
 
 /*  This function is declared after this file is included in tmpl_math.h. Give*
  *  the prototype here for safety.                                            */
-extern long double tmpl_LDouble_Pow2(signed int expo);
+TMPL_EXPORT extern long double tmpl_LDouble_Pow2(signed int expo);
 
 /*  Function for computing exp(x) for 1 < -x < log(LDBL_MAX).                 */
 TMPL_INLINE_DECL

@@ -17,8 +17,8 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_complex_time_tests.h"
-static inline complex double func(double t)
+static inline NATIVE_COMPLEX_DOUBLE func(double t)
 {
-    return cos(t) + (complex double)_Complex_I * sin(t);
+    return COMPLEX_DOUBLE_CTOR(cos(t), sin(t));
 }
-TEST9(double, tmpl_ComplexDouble, complex double, tmpl_CDouble_Expi, func)
+TEST9(double, tmpl_ComplexDouble, NATIVE_COMPLEX_DOUBLE, tmpl_CDouble_Expi, func)

@@ -40,6 +40,8 @@
 #ifndef TMPL_CYL_FRESNEL_OPTICS_H
 #define TMPL_CYL_FRESNEL_OPTICS_H
 
+#include "tmpl_exports.h"
+
 /*  TODO:
  *      Fixed the stationary Psi function. Add float and long double support.
  */
@@ -76,14 +78,14 @@
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
                                     double phi0, double B, double D);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(float k, float r, float r0, float phi,
                                    float phi0, float B, float D);
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
                                      long double r0, long double phi,
                                      long double phi0, long double B,
@@ -121,15 +123,15 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_dPsi_dPhi(double k, double r, double r0, double phi,
                                   double phi0, double B, double D);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_dPsi_dPhi(float k, float r, float r0, float phi,
                                  float phi0, float B, float D);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(long double k, long double r, long double r0,
                                    long double phi, long double phi0,
                                    long double B, long double D);
@@ -183,7 +185,7 @@ tmpl_Float_Cyl_Fresnel_dPsi_dPhi_D(float k, float r, float r0,
                                    float phi, float phi0, float B,
                                    float rx, float ry, float rz);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D(long double k, long double r,
                                      long double r0, long double phi,
                                      long double phi0, long double B,
@@ -212,15 +214,15 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D(long double k, long double r,
  *  Notes:                                                                    *
  *    Angles are in radians, and lengths must be in the same units.           *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Observer_Distance(double r, double phi,
                                           double rx, double ry, double rz);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Observer_Distance(float r, float phi,
                                          float rx, float ry, float rz);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Observer_Distance(long double r, long double phi,
                                            long double rx, long double ry,
                                            long double rz);
@@ -247,15 +249,15 @@ tmpl_LDouble_Cyl_Fresnel_Observer_Distance(long double r, long double phi,
  *  Notes:                                                                    *
  *    Angles are in degrees, and lengths must be in the same units.           *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Observer_Distance_Deg(double r, double phi,
                                               double rx, double ry, double rz);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Observer_Distance_Deg(float r, float phi,
                                              float rx, float ry, float rz);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Observer_Distance_Deg(long double r, long double phi,
                                                long double rx, long double ry,
                                                long double rz);
@@ -295,15 +297,15 @@ tmpl_LDouble_Cyl_Fresnel_Observer_Distance_Deg(long double r, long double phi,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Psi_Alt(double kD, double r, double r0, double phi,
                                 double phi0, double B, double D);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Psi_Alt(float kD, float r, float r0, float phi,
                                float phi0, float B, float D);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Psi_Alt(long double kD, long double r, long double r0,
                                  long double phi, long double phi0,
                                  long double B, long double D);
@@ -343,15 +345,15 @@ tmpl_LDouble_Cyl_Fresnel_Psi_Alt(long double kD, long double r, long double r0,
  *    All angles are assumed to be in degrees.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Psi_Alt_Deg(double kD, double r, double r0, double phi,
                                     double phi0, double B, double D);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Psi_Alt_Deg(float kD, float r, float r0, float phi,
                                    float phi0, float B, float D);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Psi_Alt_Deg(long double kD, long double r,
                                      long double r0, long double phi,
                                      long double phi0, long double B,
@@ -388,15 +390,15 @@ tmpl_LDouble_Cyl_Fresnel_Psi_Alt_Deg(long double kD, long double r,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Psi(float k, float r, float r0, float phi,
                            float phi0, float B, float D);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Psi(double k, double r, double r0, double phi,
                             double phi0, double B, double D);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Psi(long double k, long double r, long double r0,
                              long double phi, long double phi0,
                              long double B, long double D);
@@ -432,15 +434,15 @@ tmpl_LDouble_Cyl_Fresnel_Psi(long double k, long double r, long double r0,
  *    All angles are assumed to be in degrees.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Psi_Deg(float k, float r, float r0, float phi,
                                float phi0, float B, float D);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Psi_Deg(double k, double r, double r0, double phi,
                                 double phi0, double B, double D);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Psi_Deg(long double k, long double r, long double r0,
                                  long double phi, long double phi0,
                                  long double B, long double D);
@@ -470,13 +472,13 @@ tmpl_LDouble_Cyl_Fresnel_Psi_Deg(long double k, long double r, long double r0,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Scale(double lambda, double D, double phi, double B);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Scale(float lambda, float D, float phi, float B);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Scale(long double lambda, long double D,
                                long double phi, long double B);
 
@@ -505,14 +507,14 @@ tmpl_LDouble_Cyl_Fresnel_Scale(long double lambda, long double D,
  *    All angles are assumed to be in degrees.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Cyl_Fresnel_Scale_Deg(double lambda, double D,
                                   double phi, double B);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Cyl_Fresnel_Scale_Deg(float lambda, float D, float phi, float B);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Cyl_Fresnel_Scale_Deg(long double lambda, long double D,
                                    long double phi, long double B);
 
@@ -562,19 +564,19 @@ tmpl_LDouble_Cyl_Fresnel_Scale_Deg(long double lambda, long double D,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton(double k, double r, double r0,
                                               double phi, double phi0, double B,
                                               double D, double eps,
                                               unsigned int toler);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Stationary_Cyl_Fresnel_Psi_Newton(float k, float r,
                                              float r0, float phi,
                                              float phi0, float B, float D,
                                              float eps, unsigned int toler);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k, long double r,
                                                long double r0, long double phi,
                                                long double phi0, long double B,
@@ -617,16 +619,16 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k, long double r,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Elliptical_Fresnel_dPsi_dPhi(double k, double r, double r0,
                                          double phi, double phi0, double B,
                                          double D, double ecc, double peri);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Elliptical_Fresnel_dPsi_dPhi(float k, float r, float r0,
                                         float phi, float phi0, float B,
                                         float D, float ecc, float peri);
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi(long double k, long double r,
                                           long double r0, long double phi,
                                           long double phi0, long double B,
@@ -683,7 +685,7 @@ tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi(long double k, long double r,
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k, double r,
                                                 double r0, double phi,
                                                 double phi0, double B,
@@ -691,7 +693,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k, double r,
                                                 double rz, double eps,
                                                 unsigned int toler);
 
-extern float
+TMPL_EXPORT extern float
 tmpl_Float_Stationary_Cyl_Fresnel_Psi_D_Newton(float k, float r,
                                                float r0, float phi,
                                                float phi0, float B,
@@ -699,7 +701,7 @@ tmpl_Float_Stationary_Cyl_Fresnel_Psi_D_Newton(float k, float r,
                                                float rz, float eps,
                                                unsigned int toler);
 
-extern long double
+TMPL_EXPORT extern long double
 tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_D_Newton(long double k,
                                                  long double r,
                                                  long double r0,
@@ -713,7 +715,7 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_D_Newton(long double k,
                                                  unsigned int toler);
 
 /******************************************************************************/
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
                                                       double r0, double phi,
                                                       double phi0, double B,
@@ -721,7 +723,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
                                                       double rz, double eps,
                                                       unsigned int toler);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Old(double kD, double r,
                                                     double r0, double phi,
                                                     double phi0, double B,
@@ -729,7 +731,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Old(double kD, double r,
                                                     double rz, double eps,
                                                     unsigned int toler);
 
-extern double
+TMPL_EXPORT extern double
 tmpl_Double_Stationary_Elliptical_Fresnel_Psi_Newton(double k, double r,
                                                      double r0, double phi,
                                                      double phi0, double B,
