@@ -88,6 +88,10 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_first_zero_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_second_zero_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_remez_double.h>
+
 static double tmpl_Double_Bessel_J0_Taylor[31] = {
      1.0,
     -0.25,
@@ -195,6 +199,8 @@ double tmpl_Double_Bessel_J0(double x)
         return tmpl_Double_Bessel_J0_Rat_Remez(x);
     else if (arg < 16.0)
         return tmpl_Double_Bessel_J0_First_Zero(x);
+    else if (arg < 64.0)
+        return tmpl_Double_Bessel_J0_Second_Zero(x);
 
     else if (arg < 25.0)
         J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 18U, arg);

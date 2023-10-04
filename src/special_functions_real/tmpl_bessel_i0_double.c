@@ -79,6 +79,11 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_maclaurin_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_small_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_medium_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_large_double.h>
+
 /*  Slight performance boost with IEEE-754 support.                           */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -108,18 +113,18 @@ double tmpl_Double_Bessel_I0(double x)
 
     /*  For small arguments use a Remez polynomial to approximate I0(x).      */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 3U)
-        return tmpl_Double_Bessel_I0_Remez(w.r);
+        return tmpl_Double_Bessel_I0_Small(w.r);
 
     /*  I0 is even so compute the absolute value of x and use that.           */
     w.bits.sign = 0x00U;
 
     /*  For intermediate values use a Chebyshev expansion.                    */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS + 7U)
-        return tmpl_Double_Bessel_I0_Chebyshev(w.r);
+        return tmpl_Double_Bessel_I0_Medium(w.r);
 
     /*  For larger values use the asymptotic expansion.                       */
     else if (w.r < tmpl_Max_Double_Base_E)
-        return tmpl_Double_Bessel_I0_Asymptotic(w.r);
+        return tmpl_Double_Bessel_I0_Large(w.r);
 
     /*  For very large inputs, return infinity.                               */
     return TMPL_INFINITY;
