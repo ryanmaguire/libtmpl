@@ -29,7 +29,8 @@
 from tmpld.string.get_c_macro import get_c_macro
 
 # Print the coefficients for the Remez rational approximation.
-def print_rat_coeffs(num_coeffs, den_coeffs, ctype = "double"):
+def print_rat_coeffs(num_coeffs, den_coeffs, ctype = "double",
+                     num_label = "P", den_label = "Q"):
     """
         Function:
             print_coeffs
@@ -59,7 +60,7 @@ def print_rat_coeffs(num_coeffs, den_coeffs, ctype = "double"):
     for coeff in num_coeffs:
 
         # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype))
+        print(get_c_macro(coeff, ind, ctype = ctype, label = num_label))
 
         ind += 1
 
@@ -74,6 +75,6 @@ def print_rat_coeffs(num_coeffs, den_coeffs, ctype = "double"):
     for coeff in den_coeffs:
 
         # Convert and print the current value.
-        print(get_c_macro(coeff, ind, ctype = ctype))
+        print(get_c_macro(coeff, ind, ctype = ctype, label = den_label))
 
         ind += 1

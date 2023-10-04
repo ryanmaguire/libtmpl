@@ -1,5 +1,5 @@
-#ifndef TMPL_BESSEL_J0_TWO_TO_EIGHT_DOUBLE_H
-#define TMPL_BESSEL_J0_TWO_TO_EIGHT_DOUBLE_H
+#ifndef TMPL_BESSEL_J0_FIRST_ZERO_DOUBLE_H
+#define TMPL_BESSEL_J0_FIRST_ZERO_DOUBLE_H
 
 #include <libtmpl/include/tmpl_config.h>
 #include <libtmpl/include/tmpl_special_functions_real.h>
@@ -41,6 +41,7 @@ double tmpl_Double_Bessel_J0_First_Zero(double x)
     return z * p / q;
 }
 
+#undef P00
 #undef P01
 #undef P02
 #undef P03
@@ -51,6 +52,7 @@ double tmpl_Double_Bessel_J0_First_Zero(double x)
 #undef P08
 #undef P09
 #undef P10
+#undef P11
 
 #undef Q00
 #undef Q01
@@ -61,10 +63,11 @@ double tmpl_Double_Bessel_J0_First_Zero(double x)
 #undef Q06
 #undef Q07
 #undef Q08
-#undef Q09
-#undef Q10
 
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
+
+#undef J0_ZERO_HI
+#undef J0_ZERO_LO
 
 #endif
