@@ -90,41 +90,10 @@
 
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_first_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_second_zero_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_third_zero_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fourth_zero_double.h>
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fifth_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_remez_double.h>
-
-static double tmpl_Double_Bessel_J0_Taylor[31] = {
-     1.0,
-    -0.25,
-     1.56250e-2,
-    -4.34027777777777777777777777778e-4,
-     6.78168402777777777777777777778e-6,
-    -6.78168402777777777777777777778e-8,
-     4.70950279706790123456790123457e-10,
-    -2.40280754952443940539178634417e-12,
-     9.38596699032984142731166540690e-15,
-    -2.89690339207711155163940290337e-17,
-     7.24225848019277887909850725841e-20,
-    -1.49633439673404522295423703686e-22,
-     2.59780277210771740096221707789e-25,
-    -3.84290350903508491266600159451e-28,
-     4.90166263907536340901275713585e-31,
-    -5.44629182119484823223639681761e-34,
-     5.31864435663559397679335626720e-37,
-    -4.60090342269515049895619054256e-40,
-     3.55007980146230748376249270259e-43,
-    -2.45850401763317692781336059736e-46,
-     1.53656501102073557988335037335e-49,
-    -8.71068600351890918301219032512e-53,
-     4.49932128280935391684513963074e-56,
-    -2.12633330945621640682662553438e-59,
-     9.22887721118149482129611777074e-63,
-    -3.69155088447259792851844710830e-66,
-     1.36521852236412645285445529153e-69,
-    -4.68181934967121554476836519729e-73,
-     1.49292708854311720177562665730e-76,
-    -4.43795210625183472584906854132e-80,
-     1.23276447395884297940251903925e-83
-};
 
 static double tmpl_Double_Bessel_J0_Asym[9] = {
      1.0,
@@ -188,75 +157,63 @@ static long double tmpl_LDouble_Bessel_J0_Asym[9] = {
 double tmpl_Double_Bessel_J0(double x)
 {
     /*  Declare necessary variables. C89 requires declaring these at the top. */
-    double J0_x, arg;
-    double sinarg, cosarg;
+    tmpl_IEEE754_Double w;
 
-    /*  Bessel J0 is even and in terms of the square of x, so compute this.   */
-    arg = x*x;
+    w.r = x;
+    w.bits.sign = 0x00U;
 
     /*  For small arguments, use the Taylor series of J_0.                    */
-    if (arg < 4.0)
-        return tmpl_Double_Bessel_J0_Rat_Remez(x);
-    else if (arg < 16.0)
-        return tmpl_Double_Bessel_J0_First_Zero(x);
-    else if (arg < 64.0)
-        return tmpl_Double_Bessel_J0_Second_Zero(x);
-
-    else if (arg < 25.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 18U, arg);
-    else if (arg < 36.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 19U, arg);
-    else if (arg < 49.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 21U, arg);
-    else if (arg < 64.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 23U, arg);
-    else if (arg < 81.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 24U, arg);
-    else if (arg < 100.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 26U, arg);
-    else if (arg < 121.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 27U, arg);
-    else if (arg < 144.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 29U, arg);
-    else if (arg < 196.0)
-        J0_x = tmpl_Double_Poly_Eval(tmpl_Double_Bessel_J0_Taylor, 30U, arg);
-
-    /*  For large arguments use the asymptotic expansion.                     */
-    else if (arg < 1.0e32)
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 2U)
     {
-        /*  J_0 is an even function so use the absolute value of x.           */
-        x = tmpl_Double_Abs(x);
+        if (w.bits.expo < TMPL_DOUBLE_UBIAS + 1U)
+            return tmpl_Double_Bessel_J0_Rat_Remez(x);
 
-        /*  The argument for the asymptotic expansion is 1/x^2.               */
-        arg = 1.0/arg;
-
-        /*  Use Horner's method to compute the polynomial part.               */
-        sinarg = arg * tmpl_Double_Bessel_J0_Asym[7] +
-                       tmpl_Double_Bessel_J0_Asym[5];
-        sinarg = arg * sinarg + tmpl_Double_Bessel_J0_Asym[3];
-        sinarg = arg * sinarg + tmpl_Double_Bessel_J0_Asym[1];
-
-        /*  Multiply the output by the coefficient factor.                    */
-        sinarg *= tmpl_Double_Sin(x - tmpl_Pi_By_Four)/x;
-
-        /*  Do the same as above for the Cosine portion.                      */
-        cosarg  = arg * tmpl_Double_Bessel_J0_Asym[8] +
-                        tmpl_Double_Bessel_J0_Asym[6];
-        cosarg  = arg * cosarg + tmpl_Double_Bessel_J0_Asym[4];
-        cosarg  = arg * cosarg + tmpl_Double_Bessel_J0_Asym[2];
-        cosarg  = arg * cosarg + tmpl_Double_Bessel_J0_Asym[0];
-        cosarg *= tmpl_Double_Cos(x - tmpl_Pi_By_Four);
-
-        /*  Multiply the result by the coefficient and return.                */
-        J0_x = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi;
-        J0_x = J0_x / tmpl_Double_Sqrt(x);
+        return tmpl_Double_Bessel_J0_First_Zero(x);
     }
 
-    /*  For very large arguments, use the limit (which is zero).              */
-    else
-        J0_x = 0.0;
+    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 4U)
+    {
+        if (w.r < 7.0)
+            return tmpl_Double_Bessel_J0_Second_Zero(x);
+        else if (w.r < 10.0)
+            return tmpl_Double_Bessel_J0_Third_Zero(x);
+        else if (w.r < 13.0)
+            return tmpl_Double_Bessel_J0_Fourth_Zero(x);
 
-    return J0_x;
+        return tmpl_Double_Bessel_J0_Fifth_Zero(x);
+    }
+
+    /*  For large arguments use the asymptotic expansion.                     */
+    else
+    {
+        double sin_x, cos_x;
+        const double arg = 1.0 / w.r;
+        const double arg_sq = arg*arg;
+        const double scale = tmpl_Sqrt_One_By_Pi * tmpl_Double_Sqrt(arg);
+
+        const double sin_poly = arg * (
+            tmpl_Double_Bessel_J0_Asym[1] + arg_sq * (
+                tmpl_Double_Bessel_J0_Asym[3] + arg_sq * (
+                    tmpl_Double_Bessel_J0_Asym[5] + arg_sq *
+                        tmpl_Double_Bessel_J0_Asym[7]
+                )
+            )
+        );
+
+        const double cos_poly =
+            tmpl_Double_Bessel_J0_Asym[0] + arg_sq * (
+                tmpl_Double_Bessel_J0_Asym[2] + arg_sq * (
+                    tmpl_Double_Bessel_J0_Asym[4] + arg_sq * (
+                        tmpl_Double_Bessel_J0_Asym[6] + arg_sq *
+                            tmpl_Double_Bessel_J0_Asym[8]
+                    )
+                )
+            );
+
+        tmpl_Double_SinCos(w.r, &sin_x, &cos_x);
+
+        return scale*(cos_poly*(cos_x + sin_x) + sin_poly*(sin_x - cos_x));
+    }
 }
 
 /*  Compute the Bessel I_0 function for a long double precision number x.     */
