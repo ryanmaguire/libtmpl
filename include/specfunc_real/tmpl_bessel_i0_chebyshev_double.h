@@ -191,7 +191,7 @@ A00 + z*(\
 )
 
 /*  Function for computing I0(x) using a Chebyshev expansion for x >= 8.      */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_I0_Chebyshev(double x)
 {
     /*  y = 16/x - 1 transforms [8, infty] to [-1, 1], the domain of the      *

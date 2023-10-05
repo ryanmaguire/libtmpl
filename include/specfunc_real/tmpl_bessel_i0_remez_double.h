@@ -116,7 +116,7 @@ A00 + z*(\
 )
 
 /*  Compute the modified Bessel function using a minimax polynomial.          */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_I0_Remez(double x)
 {
     /*  The polynomial is even, compute the square of x.                      */

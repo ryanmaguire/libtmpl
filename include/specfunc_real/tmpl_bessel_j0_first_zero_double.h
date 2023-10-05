@@ -32,7 +32,7 @@ Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*(Q05 + z*Q06)))))
 #define J0_ZERO_HI (+2.4048255576957728862907970324158668518066E+00)
 #define J0_ZERO_LO (-1.1766916515308940362785587811429253257372E-16)
 
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_J0_First_Zero(double x)
 {
     const double z = (x - J0_ZERO_HI) - J0_ZERO_LO;

@@ -57,7 +57,7 @@ Q00 + z*(\
 #define J0_ZERO_HI (+1.179153443901428133244735363405E+01)
 #define J0_ZERO_LO (+2.812956912778735049200856560176E-16)
 
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_J0_Fourth_Zero(double x)
 {
     const double z = (x - J0_ZERO_HI) - J0_ZERO_LO;

@@ -86,7 +86,7 @@
 A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 
 /*  Compute the modified Bessel function I0 with a Maclaurin series.          */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_I0_Maclaurin(double x)
 {
     /*  The function is even and the series is in terms of x^2.               */

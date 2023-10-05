@@ -123,7 +123,7 @@ A00 + z*(\
 )
 
 /*  Compute the modified Bessel function I0 with a Maclaurin series.          */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 float tmpl_Float_Bessel_I0_Maclaurin(float x)
 {
     /*  The function is even and the series is in terms of x^2.               */

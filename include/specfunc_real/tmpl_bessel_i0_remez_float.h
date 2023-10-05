@@ -42,7 +42,7 @@ A00 + z*(\
     )\
 )
 
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 float tmpl_Float_Bessel_I0_Remez(float x)
 {
     const float x2 = x*x;

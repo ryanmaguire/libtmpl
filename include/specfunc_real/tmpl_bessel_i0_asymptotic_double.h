@@ -130,7 +130,7 @@ A00 + z*(\
 #define RCPR_TWO_PI (+1.591549430918953357688837633725143620345E-01)
 
 /*  Function for computing the asymptotic expansion of the Bessel I0 function.*/
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_I0_Asymptotic(double x)
 {
     /*  The asymptotic expansion is in terms of 1 / x. Compute this.          */
