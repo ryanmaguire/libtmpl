@@ -94,18 +94,7 @@
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fourth_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fifth_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_remez_double.h>
-
-static double tmpl_Double_Bessel_J0_Asym[9] = {
-     1.0,
-     0.1250,
-    -0.07031250,
-    -0.07324218750,
-     0.1121520996093750,
-     0.2271080017089843750,
-    -0.57250142097473144531250,
-    -1.72772750258445739746093750,
-    6.074042001273483037948608398
-};
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_chebyshev_double.h>
 
 static long double tmpl_LDouble_Bessel_J0_Taylor[31] = {
      1.0L,
@@ -184,36 +173,7 @@ double tmpl_Double_Bessel_J0(double x)
     }
 
     /*  For large arguments use the asymptotic expansion.                     */
-    else
-    {
-        double sin_x, cos_x;
-        const double arg = 1.0 / w.r;
-        const double arg_sq = arg*arg;
-        const double scale = tmpl_Sqrt_One_By_Pi * tmpl_Double_Sqrt(arg);
-
-        const double sin_poly = arg * (
-            tmpl_Double_Bessel_J0_Asym[1] + arg_sq * (
-                tmpl_Double_Bessel_J0_Asym[3] + arg_sq * (
-                    tmpl_Double_Bessel_J0_Asym[5] + arg_sq *
-                        tmpl_Double_Bessel_J0_Asym[7]
-                )
-            )
-        );
-
-        const double cos_poly =
-            tmpl_Double_Bessel_J0_Asym[0] + arg_sq * (
-                tmpl_Double_Bessel_J0_Asym[2] + arg_sq * (
-                    tmpl_Double_Bessel_J0_Asym[4] + arg_sq * (
-                        tmpl_Double_Bessel_J0_Asym[6] + arg_sq *
-                            tmpl_Double_Bessel_J0_Asym[8]
-                    )
-                )
-            );
-
-        tmpl_Double_SinCos(w.r, &sin_x, &cos_x);
-
-        return scale*(cos_poly*(cos_x + sin_x) + sin_poly*(sin_x - cos_x));
-    }
+    return tmpl_Double_Bessel_J0_Chebyshev(w.r);
 }
 
 /*  Compute the Bessel I_0 function for a long double precision number x.     */
