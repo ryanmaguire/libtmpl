@@ -17,4 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_special_functions_real_time_tests.h"
-TEST1(double, 0.0, 2.0, tmpl_Double_Bessel_J0, j0)
+TEST1(double, 0.0, 1.0E2, tmpl_Double_Bessel_J0, j0)
