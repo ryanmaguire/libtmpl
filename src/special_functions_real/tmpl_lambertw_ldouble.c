@@ -1,6 +1,11 @@
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
+#include <libtmpl/include/specfunc_real/tmpl_lambertw_maclaurin_ldouble.h>
+#include <libtmpl/include/specfunc_real/tmpl_lambertw_near_branch_ldouble.h>
+#include <libtmpl/include/specfunc_real/tmpl_lambertw_pade_ldouble.h>
+#include <libtmpl/include/specfunc_real/tmpl_lambertw_halley_ldouble.h>
+
 /*  TODO:
  *      Add comments and "doc-string".
  *      Speed this up.

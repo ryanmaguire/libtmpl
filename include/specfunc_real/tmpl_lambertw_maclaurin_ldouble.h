@@ -1,10 +1,9 @@
-#include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_LAMBERTW_MACLAURIN_LDOUBLE_H
+#define TMPL_LAMBERTW_MACLAURIN_LDOUBLE_H
 
-/*  TODO:
- *      Inline this function.
- *      Add comments and doc-string.
- */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -22,23 +21,7 @@
 #define A09 (+1.1862522321428571428571428571428571428571428571429E+02L)
 
 #define TMPL_POLY_EVAL(z) \
-z*(\
-  A01 + z*(\
-    A02 + z*(\
-      A03 + z*(\
-        A04 + z*(\
-          A05 + z*(\
-            A06 + z*(\
-              A07 + z*(\
-                A08 + z*A09\
-              )\
-            )\
-          )\
-        )\
-      )\
-    )\
-  )\
-)
+z * (A1 + z*(A2 + z*(A3 + z*(A4 + z*(A5 + z*(A6 + z*(A7 + z*(A8 + z*A9))))))))
 
 /*  128-bit double-double, a few more terms.                                  */
 #elif \
@@ -207,14 +190,18 @@ z*(\
     )\
   )\
 )
+
 #endif
 
-
+/*  Computes the LambertW function via a Maclaurin series for small inputs.   */
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_LambertW_Maclaurin(long double x)
 {
     return TMPL_POLY_EVAL(x);
 }
+/*  End of tmpl_LDouble_LambertW_Maclaurin.                                   */
 
+/*  Undefine everything in case someone wants to #include this file.          */
 #undef A00
 #undef A01
 #undef A02
@@ -237,3 +224,6 @@ long double tmpl_LDouble_LambertW_Maclaurin(long double x)
 #undef A19
 #undef A20
 #undef TMPL_POLY_EVAL
+
+#endif
+/*  End of include guard.                                                     */

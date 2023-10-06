@@ -1,10 +1,9 @@
-#include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_LAMBERTW_PADE_LDOUBLE_H
+#define TMPL_LAMBERTW_PADE_LDOUBLE_H
 
-/*  TODO:
- *      Add comments and doc-string.
- *      Inline this function.
- */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -35,42 +34,10 @@
 
 /*  Helper macros for evaluating the polynomials via Horner's method.         */
 #define TMPL_NUM_EVAL(z) \
-z*(\
-  P01 + z*(\
-    P02 + z*(\
-      P03 + z*(\
-        P04 + z*(\
-          P05 + z*(\
-            P06 + z*(\
-              P07 + z*(\
-                P08 + z*(\
-                  P09 + z*P10\
-                )\
-              )\
-            )\
-          )\
-        )\
-      )\
-    )\
-  )\
-)
+z*(P01+z*(P02+z*(P03+z*(P04+z*(P05+z*(P06+z*(P07+z*(P08+z*(P09+z*P10)))))))))
 
 #define TMPL_DEN_EVAL(z) \
-Q00 + z*(\
-  Q01 + z*(\
-    Q02 + z*(\
-      Q03 + z*(\
-        Q04 + z*(\
-          Q05 + z*(\
-            Q06 + z*(\
-              Q07 + z*Q08\
-            )\
-          )\
-        )\
-      )\
-    )\
-  )\
-)
+Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*(Q05+z*(Q06+z*(Q07+z*Q08)))))))
 
 /*  128-bit double-double, a few more terms.                                  */
 #elif \
@@ -401,6 +368,7 @@ Q00 + z*(\
 /*  End of double vs extended vs double-double vs quadruple coefficients.     */
 
 /*  Function for computing the Lambert W function via a Pade approximant.     */
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_LambertW_Pade(long double x)
 {
     /*  Use the helper functions to evaluate the numerator and denominator.   */
@@ -455,3 +423,6 @@ long double tmpl_LDouble_LambertW_Pade(long double x)
 #undef Q20
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
+
+#endif
+/*  End of include guard.                                                     */

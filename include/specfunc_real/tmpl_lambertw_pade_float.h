@@ -1,9 +1,9 @@
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_LAMBERTW_PADE_FLOAT_H
+#define TMPL_LAMBERTW_PADE_FLOAT_H
 
-/*  TODO:
- *      Add comments and doc-string.
- *      Inline this function.
- */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define P1 (+1.0000000000000000000000000000000000000000000000000E+00F)
@@ -25,6 +25,7 @@
 #define TMPL_DEN_EVAL(z) Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*Q4)))
 
 /*  Function for computing the Lambert W function via a Pade approximant.     */
+TMPL_STATIC_INLINE
 float tmpl_Float_LambertW_Pade(float x)
 {
     /*  Use the helper functions to evaluate the numerator and denominator.   */
@@ -48,3 +49,6 @@ float tmpl_Float_LambertW_Pade(float x)
 #undef Q4
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
+
+#endif
+/*  End of include guard.                                                     */

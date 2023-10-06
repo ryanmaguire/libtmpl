@@ -11,6 +11,15 @@
  *      are smaller.
  */
 
+/*  TODO:
+ *      Rewrite this.
+ *      The expansions used are slight modifications of the rational
+ *      approximations found in the boost library. I'd rather implement
+ *      something more concrete with a simpler way of reproducing the
+ *      approximation. Shifted Pade approximants or rational
+ *      Remez approximations.
+ */
+
 #define PA0 (-8.63399505615014331E-02)
 #define PA1 (-1.64303871814816464E+00)
 #define PA2 (-7.71247913918273738E+00)
@@ -109,6 +118,7 @@ QD0+x*(QD1+x*(QD2+x*(QD3+x*(QD4+x*(QD5+x*(QD6+x*(QD7+x*QD8)))))))
 double tmpl_Double_LambertW_Negative(double x)
 {
     double p, q, z;
+
     if (x > -0.1)
     {
         p = TMPL_PA_POLY_EVAL(x);

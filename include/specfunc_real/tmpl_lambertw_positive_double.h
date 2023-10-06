@@ -1,5 +1,9 @@
-#include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_LAMBERTW_POSITIVE_DOUBLE_H
+#define TMPL_LAMBERTW_POSITIVE_DOUBLE_H
+
+/*  TMPL_STATIC_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  TODO:
  *      Add float and long double versions.
@@ -9,6 +13,18 @@
  *      Add comments and explain everything.
  *      Inline this function, or split it into several inlined functions that
  *      are smaller.
+ */
+
+/*  TODO:
+ *      Rewrite this.
+ *      Similar to the negative function, rewrite this in a way that is both
+ *      fast, accurate, but also easy to understand where the approximation
+ *      comes from. Note for large arguments one can try:
+ *          W(x) - log(x) = W(e^y) - y
+ *      And this latter expression can be approximated by Remez Minimax
+ *      polynomial, or Chebyshev expansions. A dozen or so terms gets this to
+ *      double precision for 2 < y < 10. This only costs one log computation
+ *      and is faster than the standard Halley method.
  */
 
 #define PA00 (+1.80340766906685177E-01)
@@ -267,7 +283,10 @@ QH00 + x*(\
     )\
 )
 
+extern double tmpl_Double_Log(double x);
+
 /*  Function for computing LambertW(x) for real x > 0.                        */
+TMPL_STATIC_INLINE
 double tmpl_Double_LambertW_Positive(double x)
 {
     double p, q, log_x;
@@ -499,3 +518,5 @@ double tmpl_Double_LambertW_Positive(double x)
 #undef TMPL_QG_POLY_EVAL
 #undef TMPL_PH_POLY_EVAL
 #undef TMPL_QH_POLY_EVAL
+
+#endif

@@ -1,9 +1,11 @@
-#include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_LAMBERTW_NEAR_BRANCH_DOUBLE_H
+#define TMPL_LAMBERTW_NEAR_BRANCH_DOUBLE_H
+
+/*  TMPL_STATIC_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  TODO:
- *      Inline this function.
- *      Add comments and doc-string.
  *      Add references and papers.
  *      Explain the mu and alpha functions that give the coefficients for this
  *      polynomial. Explain the branch cut.
@@ -47,12 +49,19 @@ A00 + z*(\
     )\
 )
 
+/*  The expansion is in terms of the square root of the input.                */
+extern double tmpl_Double_Sqrt(double x);
+
+/*  Given x = y - 1/e, with y near the branch point, computes LambertW(y).    */
+TMPL_STATIC_INLINE
 double tmpl_Double_LambertW_Near_Branch(double x)
 {
     const double q = tmpl_Double_Sqrt(x);
     return TMPL_POLY_EVAL(q);
 }
+/*  End of tmpl_Double_LambertW_Near_Branch.                                  */
 
+/*  Undefine everything in case someone wants to #include this file.          */
 #undef A00
 #undef A01
 #undef A02
@@ -66,3 +75,6 @@ double tmpl_Double_LambertW_Near_Branch(double x)
 #undef A10
 #undef A11
 #undef TMPL_POLY_EVAL
+
+#endif
+/*  End of include guard.                                                     */

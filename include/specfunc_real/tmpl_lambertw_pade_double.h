@@ -1,9 +1,9 @@
-#include <libtmpl/include/tmpl_special_functions_real.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_LAMBERTW_PADE_DOUBLE_H
+#define TMPL_LAMBERTW_PADE_DOUBLE_H
 
-/*  TODO:
- *      Add comments and doc-string.
- *      Inline this function.
- */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define P01 (+1.0000000000000000000000000000000000000000000000000E+00)
@@ -30,44 +30,13 @@
 
 /*  Helper macros for evaluating the polynomials via Horner's method.         */
 #define TMPL_NUM_EVAL(z) \
-z*(\
-  P01 + z*(\
-    P02 + z*(\
-      P03 + z*(\
-        P04 + z*(\
-          P05 + z*(\
-            P06 + z*(\
-              P07 + z*(\
-                P08 + z*(\
-                  P09 + z*P10\
-                )\
-              )\
-            )\
-          )\
-        )\
-      )\
-    )\
-  )\
-)
+z*(P01+z*(P02+z*(P03+z*(P04+z*(P05+z*(P06+z*(P07+z*(P08+z*(P09+z*P10)))))))))
 
 #define TMPL_DEN_EVAL(z) \
-Q00 + z*(\
-  Q01 + z*(\
-    Q02 + z*(\
-      Q03 + z*(\
-        Q04 + z*(\
-          Q05 + z*(\
-            Q06 + z*(\
-              Q07 + z*Q08\
-            )\
-          )\
-        )\
-      )\
-    )\
-  )\
-)
+Q00+z*(Q01+z*(Q02+z*(Q03+z*(Q04+z*(Q05+z*(Q06+z*(Q07+z*Q08)))))))
 
 /*  Function for computing the Lambert W function via a Pade approximant.     */
+TMPL_STATIC_INLINE
 double tmpl_Double_LambertW_Pade(double x)
 {
     /*  Use the helper functions to evaluate the numerator and denominator.   */
@@ -100,3 +69,6 @@ double tmpl_Double_LambertW_Pade(double x)
 #undef Q08
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
+
+#endif
+/*  End of include guard.                                                     */
