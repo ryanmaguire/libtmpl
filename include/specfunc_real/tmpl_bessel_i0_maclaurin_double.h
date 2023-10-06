@@ -52,9 +52,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  3.) tmpl_special_functions_real.h:                                        *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 10, 2022                                              *
@@ -64,11 +62,8 @@
 #ifndef TMPL_BESSEL_I0_MACLAURIN_DOUBLE_H
 #define TMPL_BESSEL_I0_MACLAURIN_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00)

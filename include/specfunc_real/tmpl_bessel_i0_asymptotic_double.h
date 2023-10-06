@@ -32,7 +32,7 @@
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      I0_x (double):                                                        *
- *          The asymptotic expansion of x.                                    *
+ *          The asymptotic expansion of I0 at x.                              *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_Exp_Pos_Kernel:                                       *
@@ -58,15 +58,17 @@
  *                                                                            *
  *      This function can be used for large negative values via:              *
  *          I0(x) ~= tmpl_Double_Bessel_I0_Asymptotic(-x).                    *
+ *                                                                            *
+ *      This function has been replaced by tmpl_Double_Bessel_I0_Large, which *
+ *      uses a Remez polynomial in terms of 1 / x. This allows identical      *
+ *      precision while uses fewer terms in the polynomial.                   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing exp and sqrt functions.                    *
- *  3.) tmpl_special_functions_real.h:                                        *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 10, 2022                                              *
@@ -76,20 +78,20 @@
  *  2023/07/25: Ryan Maguire                                                  *
  *      Changed src/special_functions_real/tmpl_bessel_i0_asymptotic_double.c *
  *      to include this file.                                                 *
+ *  2023/10/05: Ryan Maguire                                                  *
+ *      Replaced this function with a Remez approximation in the main I0      *
+ *      routine.                                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BESSEL_I0_ASYMPTOTIC_DOUBLE_H
 #define TMPL_BESSEL_I0_ASYMPTOTIC_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Exp kernel found here, as is the square root function.                    */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Coefficients for the asymptotic expansion.                                */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00)

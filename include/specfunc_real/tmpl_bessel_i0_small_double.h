@@ -44,7 +44,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 25, 2023                                                 *
@@ -56,6 +56,9 @@
 
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
+
+/*  Theoretical maximum absolute error bounded by 10^-17. Actual relative     *
+ *  error for 64-bit double bounded by 3.019E-16, slightly more than 1 ULP.   */
 
 /*  Coefficients for the Remez polynomial.                                    */
 #define A00 (+9.9999999999999996867520649760101826440062421943658E-01)
@@ -107,14 +110,19 @@ A00 + z*(\
     )\
 )
 
-
+/*  Compute the modified Bessel function using a minimax polynomial.          */
 TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_I0_Small(double x)
 {
+    /*  The polynomial is even, compute the square of x.                      */
     const double x2 = x*x;
+
+    /*  Use Horner's method to evaluate the polynomial.                       */
     return TMPL_POLY_EVAL(x2);
 }
+/*  End of tmpl_Double_Bessel_I0_Small.                                       */
 
+/*  Undefine everything in case someone wants to #include this file.          */
 #undef A00
 #undef A01
 #undef A02

@@ -32,7 +32,7 @@
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      I0_x (double):                                                        *
- *          The asymptotic expansion of x.                                    *
+ *          The Chebyshev expansion of I0 at x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_Exp_Pos_Kernel:                                       *
@@ -98,32 +98,36 @@
  *      For large x (x > 64) this function is accurate to double precision,   *
  *      but slower than the asymptotic expansion. It is better to use that    *
  *      function if you know your input is big.                               *
+ *                                                                            *
+ *      This function has been replaced by tmpl_Double_Bessel_I0_Medium which *
+ *      uses a rational minimax approximation and requires fewer terms.       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file containing exp and sqrt functions.                    *
- *  3.) tmpl_special_functions_real.h:                                        *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 10, 2022                                              *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/10/05: Ryan Maguire                                                  *
+ *      Replaced this function with a Remez approximation in the main I0      *
+ *      routine.                                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_BESSEL_I0_CHEBYSHEV_DOUBLE_H
 #define TMPL_BESSEL_I0_CHEBYSHEV_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Exp kernel found here, as is the square root function.                    */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+4.0217650944500812912412062682554015864758708641122E-01)
