@@ -1,55 +1,68 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
- *  This file is part of rss_ringoccs.                                        *
+ *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  rss_ringoccs is free software: you can redistribute it and/or modify it   *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
  *                                                                            *
- *  rss_ringoccs is distributed in the hope that it will be useful,           *
+ *  libtmpl is distributed in the hope that it will be useful,                *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
  *  GNU General Public License for more details.                              *
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
- *  along with rss_ringoccs.  If not, see <https://www.gnu.org/licenses/>.    *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                Bessel J0                                   *
+ *                           tmpl_bessel_j0_double                            *
  ******************************************************************************
- *  This file contains functions for computing the Bessel J0 function.        *
- ******************************************************************************
- * We define J_0(x) as the power series solution to the ODE:                  *
- *                                                                            *
- *           d^2 y(x)      dy(x)                                              *
- *      x^2 ---------  + x ----- + x^2 y(x) = 0                               *
- *             dx^2         dx                                                *
- *                                                                            *
- *  Where J_0 is the Bessel function of the First kind with alpha = 0.        *
+ *  Code for computing the Bessel J0 function at double precision.            *
  ******************************************************************************
  *                              DEFINED FUNCTIONS                             *
  ******************************************************************************
- *  BesselJ0                                                                  *
+ *  Function:                                                                 *
+ *      tmpl_Double_Bessel_J0                                                 *
  *  Purpose:                                                                  *
- *      Compute the J_0 bessel function for a real argument.                  *
+ *      Computes the J0 Bessel function for a real argument.                  *
  *  Arguments:                                                                *
- *      x (float, double, or long double):                                    *
- *          A real number, the argument for J_0(x).                           *
+ *      x (double):                                                           *
+ *          A real number, the argument for J0(x).                            *
  *  Output:                                                                   *
  *      J0_x:                                                                 *
- *          The Bessel function J_0(x).                                       *
+ *          The Bessel function J0(x).                                        *
+ *  Called Functions:                                                         *
+ *      tmpl_special_functions_real.h                                         *
+ *          tmpl_Double_Bessel_J0_Rat_Remez:                                  *
+ *              Computes J0(x) via a rational Remez approximation for |x| < 2.*
+ *          tmpl_Double_Bessel_J0_First_Zero:                                 *
+ *              Computes J0(x) for 2 <= x < 4 with a Remez approximation.     *
+ *          tmpl_Double_Bessel_J0_Second_Zero:                                *
+ *              Computes J0(x) for 4 <= x < 7 with a Remez approximation.     *
+ *          tmpl_Double_Bessel_J0_Third_Zero:                                 *
+ *              Computes J0(x) for 7 <= x < 10 with a Remez approximation.    *
+ *          tmpl_Double_Bessel_J0_Fourth_Zero:                                *
+ *              Computes J0(x) for 10 <= x < 13 with a Remez approximation.   *
+ *          tmpl_Double_Bessel_J0_Fifth_Zero:                                 *
+ *              Computes J0(x) for 13 <= x < 16 with a Remez approximation.   *
+ *          tmpl_Double_Bessel_J0_Rational_Asymptotic:                        *
+ *              Computes J(x) for x >= 16 using a rational approximation.     *
  *  Method:                                                                   *
- *      For small values, the Taylor expansion is used. The J_0(x) function   *
- *      can be defined by the following series:                               *
+ *      The Bessel function J0(x) is defined as the power series solution to: *
  *                                                                            *
- *                      ___                                                   *
- *                      \       (-1)^n x^2n                                   *
- *         J_0(x)  =    /__     ------------                                  *
- *                     n = 0    (n)!^2 * 4^n                                  *
+ *               d^2 y(x)      dy(x)                                          *
+ *          x^2 ---------  + x ----- + x^2 y(x) = 0                           *
+ *                 dx^2         dx                                            *
  *                                                                            *
- *      For large arguments the asymptotic expansion is used. This is defined *
- *      by the following series:                                              *
+ *      This yields the Taylor series:                                        *
+ *                                                                            *
+ *                    ____                                                    *
+ *                   \       (-1)^n x^2n                                      *
+ *          J_0(x) = /____   ------------                                     *
+ *                   n = 0   (n)!^2 * 4^n                                     *
+ *                                                                            *
+ *      For large arguments one obtains the asymptotic formula:               *
  *                                                                            *
  *                      ___          _                                  _     *
  *                      \           |  cos(z) a_{2n}    sin(z) a_{2n+1}  |    *
@@ -61,189 +74,159 @@
  *          a_n = (-1)^n ------------                                         *
  *                        32^n (n!)^3                                         *
  *                                                                            *
- *          z   = x - pi/4                                                    *
+ *          z = x - pi/4                                                      *
  *                                                                            *
- *      Note that this expansion diverges for all real numbers. To make use   *
- *      of this series we must stop the sum at a particular N. We compute     *
- *      between 8 and 10 terms of this expansion, depending on the precision  *
- *      desired (float, double, long double).                                 *
+ *      Note that this expansion diverges for all real numbers.               *
+ *                                                                            *
+ *      Many libraries make use of these two formulas, but both can lead to   *
+ *      horrible relative error near the zeros of the J0 function. To fix     *
+ *      this we compute rational Remez approximations that are expanded about *
+ *      the zeros j_{0, k} for k = 1, 2, ..., 5. For large arguments are      *
+ *      rational approximation similar to the asymptotic series above is used.*
  *  Error:                                                                    *
- *      In the region in which the Taylor series is used, relative error is   *
- *      10^-16. In the hand-off region with the asymptotic expansion, the     *
- *      error is 10^-9 but quickly drops back to 10^-16.                      *
- *      The regions where the Taylor series is used are listed below:         *
- *          float:           (-7.07,  7.07)                                   *
- *          double:         (-12.24, 12.24)                                   *
- *          long double:    (-12.24, 12.24)                                   *
- *      The alternating series test gives the error of the partial sums of    *
- *      the Taylor expansion. This, combined with trial and error, produced   *
- *      these selected ranges.                                                *
+ *      The Python library mpmath was used to calculate the relative error    *
+ *      since most mathematical libraries do not accurately compute J0 near   *
+ *      its zeros. Octuple 224-bit precision was used in the calculations.    *
+ *      The peak relative error for |x| <= 16 is about 2 ULP, 4 x 10^-16.     *
+ *      For |x| > 16 the asymptotic approximation has a peak absolute error   *
+ *      of 2 x 10^-16, but a peak relative error of 2 x 10^-12.               *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       October 5, 2023                                               *
  ******************************************************************************/
 
-/*  The C standard library header math.h is included here, as are aliases for *
- *  various functions, the macros INFINITY and NAN, as well as the max legal  *
- *  values for the exponential function which don't return INFINITY.          */
+/*  IEEE-754 data types found here.                                           */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Prototypes for these functions declared here.                             */
+/*  Prototype for the function given here.                                    */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Rational Remez approximations about j_{0, 1}, j_{0, 2}, ..., j_{0, 5}.    */
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_first_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_second_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_third_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fourth_zero_double.h>
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fifth_zero_double.h>
+
+/*  A rational Remez approximation centered about the origin.                 */
 #include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_remez_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_chebyshev_double.h>
 
-static long double tmpl_LDouble_Bessel_J0_Taylor[31] = {
-     1.0L,
-    -0.25L,
-     1.56250e-2L,
-    -4.34027777777777777777777777778e-4L,
-     6.78168402777777777777777777778e-6L,
-    -6.78168402777777777777777777778e-8L,
-     4.70950279706790123456790123457e-10L,
-    -2.40280754952443940539178634417e-12L,
-     9.38596699032984142731166540690e-15L,
-    -2.89690339207711155163940290337e-17L,
-     7.24225848019277887909850725841e-20L,
-    -1.49633439673404522295423703686e-22L,
-     2.59780277210771740096221707789e-25L,
-    -3.84290350903508491266600159451e-28L,
-     4.90166263907536340901275713585e-31L,
-    -5.44629182119484823223639681761e-34L,
-     5.31864435663559397679335626720e-37L,
-    -4.60090342269515049895619054256e-40L,
-     3.55007980146230748376249270259e-43L,
-    -2.45850401763317692781336059736e-46L,
-     1.53656501102073557988335037335e-49L,
-    -8.71068600351890918301219032512e-53L,
-     4.49932128280935391684513963074e-56L,
-    -2.12633330945621640682662553438e-59L,
-     9.22887721118149482129611777074e-63L,
-    -3.69155088447259792851844710830e-66L,
-     1.36521852236412645285445529153e-69L,
-    -4.68181934967121554476836519729e-73L,
-     1.49292708854311720177562665730e-76L,
-    -4.43795210625183472584906854132e-80L,
-     1.23276447395884297940251903925e-83L
-};
+/*  Rational approximation using the "Hankel expansion" for J0.               */
+#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_asymptotic_double.h>
 
-static long double tmpl_LDouble_Bessel_J0_Asym[9] = {
-     1.0L,
-     0.1250L,
-    -0.07031250L,
-    -0.07324218750L,
-    0.1121520996093750L,
-     0.2271080017089843750L,
-    -0.57250142097473144531250L,
-    -1.72772750258445739746093750L,
-     6.07404200127348303794860839844L
-};
+/*  Check for IEEE-754 support.                                               */
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  Compute the Bessel J_0 function for a double precision number x.          */
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
+/*  Compute the Bessel J0 function for a double precision number x.           */
 double tmpl_Double_Bessel_J0(double x)
 {
     /*  Declare necessary variables. C89 requires declaring these at the top. */
     tmpl_IEEE754_Double w;
 
+    /*  Set the double part of the union to the input.                        */
     w.r = x;
+
+    /*  J0 is an even function. Compute the absolute value of x.              */
     w.bits.sign = 0x00U;
 
-    /*  For small arguments, use the Taylor series of J_0.                    */
+    /*  Small arguments, |x| < 4. Use one of two rational approximations.     */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS + 2U)
     {
+        /*  For small values away from j_{0, 1}, use a rational Remez         *
+         *  approximation centered about the origin. Peak theoretical error   *
+         *  is around 10^-17. Actually floating-point error is about 10^-16.  */
         if (w.bits.expo < TMPL_DOUBLE_UBIAS + 1U)
-            return tmpl_Double_Bessel_J0_Rat_Remez(x);
+            return tmpl_Double_Bessel_J0_Rat_Remez(w.r);
 
-        return tmpl_Double_Bessel_J0_First_Zero(x);
+        /*  For values near j_{0, 1} use a rational approximation expanded    *
+         *  about j_{0, 1}. This yields good relative error, about 1 ULP.     */
+        return tmpl_Double_Bessel_J0_First_Zero(w.r);
     }
 
+    /*  There are four more zeros between 4 and 16. Handle them carefully.    */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 4U)
     {
+        /*  The zeros are roughly pi apart, meaning the midpoints of the      *
+         *  zeros are also roughly pi apart. The rational approximations are  *
+         *  computed on intervals of width 3, which is roughly equal to pi.   *
+         *  Use the appropriate approximation for each zero, j_{0, k}.        */
         if (w.r < 7.0)
-            return tmpl_Double_Bessel_J0_Second_Zero(x);
+            return tmpl_Double_Bessel_J0_Second_Zero(w.r);
         else if (w.r < 10.0)
-            return tmpl_Double_Bessel_J0_Third_Zero(x);
+            return tmpl_Double_Bessel_J0_Third_Zero(w.r);
         else if (w.r < 13.0)
-            return tmpl_Double_Bessel_J0_Fourth_Zero(x);
+            return tmpl_Double_Bessel_J0_Fourth_Zero(w.r);
 
-        return tmpl_Double_Bessel_J0_Fifth_Zero(x);
+        /*  The last window ends at x = 16.0. There is a zero near x = 15.    */
+        return tmpl_Double_Bessel_J0_Fifth_Zero(w.r);
     }
 
-    /*  For large arguments use the asymptotic expansion.                     */
-    return tmpl_Double_Bessel_J0_Chebyshev(w.r);
+    /*  For large arguments use the asymptotic expansion. This does not       *
+     *  produce nearly as good relative error about the higher zeros of J0,   *
+     *  but the absolute error is excellent.                                  */
+    return tmpl_Double_Bessel_J0_Rational_Asymptotic(w.r);
 }
+/*  End of tmpl_Double_Bessel_J0.                                             */
 
-/*  Compute the Bessel I_0 function for a long double precision number x.     */
-long double tmpl_LDouble_Bessel_J0(long double x)
+#else
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/*  Compute the Bessel J0 function for a double precision number x.           */
+double tmpl_Double_Bessel_J0(double x)
 {
-    /*  Declare necessary variables. C89 requires declaring these at the top. */
-    long double J0_x, arg;
-    long double sinarg, cosarg;
+    /*  J0 is an even function. Compute the absolute value of x.              */
+    const double abs_x = tmpl_Double_Abs(x);
 
-    /*  Bessel J0 is even and in terms of the square of x, so compute this.   */
-    arg = x*x;
-
-    /*  For small arguments, use the Taylor series of J_0.                    */
-    if (arg < 4.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 12U, arg);
-    else if (arg < 16.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 16U, arg);
-    else if (arg < 25.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 18U, arg);
-    else if (arg < 36.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 19U, arg);
-    else if (arg < 49.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 21U, arg);
-    else if (arg < 64.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 23U, arg);
-    else if (arg < 81.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 24U, arg);
-    else if (arg < 100.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 26U, arg);
-    else if (arg < 121.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 27U, arg);
-    else if (arg < 144.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 29U, arg);
-    else if (arg < 196.0L)
-        J0_x = tmpl_LDouble_Poly_Eval(tmpl_LDouble_Bessel_J0_Taylor, 30U, arg);
-
-    /*  For large arguments use the asymptotic expansion.                     */
-    else if (arg < 1.0e32L)
+    /*  Small arguments, |x| < 4. Use one of two rational approximations.     */
+    if (abs_x < 4.0)
     {
-        /*  J_0 is an even function so use the absolute value of x.           */
-        x = tmpl_LDouble_Abs(x);
+        /*  For small values away from j_{0, 1}, use a rational Remez         *
+         *  approximation centered about the origin. Peak theoretical error   *
+         *  is around 10^-17. Actually floating-point error is about 10^-16.  */
+        if (abs_x < 2.0)
+            return tmpl_Double_Bessel_J0_Rat_Remez(abs_x);
 
-        /*  The argument for the asymptotic expansion is 1/x^2.               */
-        arg = 1.0L/arg;
-
-        /*  Use Horner's method to compute the polynomial part.               */
-        sinarg  = arg * tmpl_LDouble_Bessel_J0_Asym[7] +
-                        tmpl_LDouble_Bessel_J0_Asym[5];
-        sinarg  = arg * sinarg + tmpl_LDouble_Bessel_J0_Asym[3];
-        sinarg  = arg * sinarg + tmpl_LDouble_Bessel_J0_Asym[1];
-
-        /*  Multiply the output by the coefficient factor.                    */
-        sinarg *= tmpl_LDouble_Sin(x - tmpl_Pi_By_Four_L)/x;
-
-        /*  Do the same as above for the Cosine portion.                      */
-        cosarg  = arg * tmpl_LDouble_Bessel_J0_Asym[8] +
-                        tmpl_LDouble_Bessel_J0_Asym[6];
-        cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[4];
-        cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[2];
-        cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[0];
-        cosarg *= tmpl_LDouble_Cos(x - tmpl_Pi_By_Four_L);
-
-        /*  For very large arguments, use the limit (which is zero).          */
-        J0_x = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi_L;
-        J0_x = J0_x / tmpl_LDouble_Sqrt(x);
+        /*  For values near j_{0, 1} use a rational approximation expanded    *
+         *  about j_{0, 1}. This yields good relative error, about 1 ULP.     */
+        return tmpl_Double_Bessel_J0_First_Zero(abs_x);
     }
 
-    /*  For very large arguments, use the limit (which is zero).              */
-    else
-        J0_x = 0.0L;
+    /*  There are four more zeros between 4 and 16. Handle them carefully.    */
+    else if (abs_x < 16.0)
+    {
+        /*  The zeros are roughly pi apart, meaning the midpoints of the      *
+         *  zeros are also roughly pi apart. The rational approximations are  *
+         *  computed on intervals of width 3, which is roughly equal to pi.   *
+         *  Use the appropriate approximation for each zero, j_{0, k}.        */
+        if (abs_x < 7.0)
+            return tmpl_Double_Bessel_J0_Second_Zero(abs_x);
+        else if (abs_x < 10.0)
+            return tmpl_Double_Bessel_J0_Third_Zero(abs_x);
+        else if (abs_x < 13.0)
+            return tmpl_Double_Bessel_J0_Fourth_Zero(abs_x);
 
-    return J0_x;
+        /*  The last window ends at x = 16.0. There is a zero near x = 15.    */
+        return tmpl_Double_Bessel_J0_Fifth_Zero(abs_x);
+    }
+
+    /*  For large arguments use the asymptotic expansion. This does not       *
+     *  produce nearly as good relative error about the higher zeros of J0,   *
+     *  but the absolute error is excellent.                                  */
+    return tmpl_Double_Bessel_J0_Rational_Asymptotic(abs_x);
 }
+/*  End of tmpl_Double_Bessel_J0.                                             */
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

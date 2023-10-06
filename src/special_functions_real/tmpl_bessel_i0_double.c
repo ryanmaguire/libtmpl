@@ -144,17 +144,28 @@ double tmpl_Double_Bessel_I0(double x)
     /*  I0 is even so compute the absolute value of x and use that.           */
     const double abs_x = tmpl_Double_Abs(x);
 
+    /*  For very small arguments, use a Maclaurin series.                     */
+    if (abs_x < 0.5)
+    {
+        /*  Avoid underflow. I0(x) = 1 + O(x^2). Return 1.                    */
+        if (abs_x < 7.450580596923828e-09)
+            return 1.0;
+
+        /*  Otherwise the Maclaurin series is sufficient and fast.            */
+        return tmpl_Double_Bessel_I0_Maclaurin(abs_x);
+    }
+
     /*  For small arguments use a Remez polynomial to approximate I0(x).      */
-    if (abs_x < 8.0)
-        return tmpl_Double_Bessel_I0_Remez(abs_x);
+    else if (abs_x < 8.0)
+        return tmpl_Double_Bessel_I0_Small(abs_x);
 
     /*  For intermediate values use a Chebyshev expansion.                    */
-    else if (abs_x < 64.0)
-        return tmpl_Double_Bessel_I0_Chebyshev(abs_x);
+    else if (abs_x < 128.0)
+        return tmpl_Double_Bessel_I0_Medium(abs_x);
 
     /*  For larger values use the asymptotic expansion.                       */
     else if (abs_x < tmpl_Max_Double_Base_E)
-        return tmpl_Double_Bessel_I0_Asymptotic(abs_x);
+        return tmpl_Double_Bessel_I0_Large(abs_x);
 
     /*  For very large inputs, return infinity.                               */
     return TMPL_INFINITY;
