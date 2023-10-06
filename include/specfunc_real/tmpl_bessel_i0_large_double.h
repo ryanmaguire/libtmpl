@@ -4,7 +4,6 @@
 
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_double.h>
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the Remez polynomial.                                    */
