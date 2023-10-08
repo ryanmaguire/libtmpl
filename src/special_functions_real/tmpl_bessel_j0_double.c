@@ -106,17 +106,17 @@
  ******************************************************************************/
 
 /*  Rational Remez approximations about j_{0, 1}, j_{0, 2}, ..., j_{0, 5}.    */
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_first_zero_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_second_zero_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_third_zero_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fourth_zero_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_fifth_zero_double.h>
+#include "auxiliary/tmpl_bessel_j0_first_zero_double.h"
+#include "auxiliary/tmpl_bessel_j0_second_zero_double.h"
+#include "auxiliary/tmpl_bessel_j0_third_zero_double.h"
+#include "auxiliary/tmpl_bessel_j0_fourth_zero_double.h"
+#include "auxiliary/tmpl_bessel_j0_fifth_zero_double.h"
 
 /*  A rational Remez approximation centered about the origin.                 */
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_remez_double.h>
+#include "auxiliary/tmpl_bessel_j0_rat_remez_double.h"
 
 /*  Rational approximation using the "Hankel expansion" for J0.               */
-#include <libtmpl/include/specfunc_real/tmpl_bessel_j0_rat_asymptotic_double.h>
+#include "auxiliary/tmpl_bessel_j0_rat_asymptotic_double.h"
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

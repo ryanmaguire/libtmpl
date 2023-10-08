@@ -79,9 +79,9 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_maclaurin_float.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_chebyshev_float.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_asymptotic_float.h>
+#include "auxiliary/tmpl_bessel_i0_maclaurin_float.h"
+#include "auxiliary/tmpl_bessel_i0_chebyshev_float.h"
+#include "auxiliary/tmpl_bessel_i0_asymptotic_float.h"
 
 /*  Slight performance boost with IEEE-754 support.                           */
 #if TMPL_HAS_IEEE754_FLOAT == 1

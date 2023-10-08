@@ -13,14 +13,14 @@
 
 #if 1
 
-
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_maclaurin_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_near_branch_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_negative_small_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_negative_medium_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_halley_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_pade_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_positive_double.h>
+#include "auxiliary/tmpl_lambertw_maclaurin_double.h"
+#include "auxiliary/tmpl_lambertw_near_branch_double.h"
+#include "auxiliary/tmpl_lambertw_negative_small_double.h"
+#include "auxiliary/tmpl_lambertw_negative_medium_small_double.h"
+#include "auxiliary/tmpl_lambertw_negative_medium_large_double.h"
+#include "auxiliary/tmpl_lambertw_negative_large_double.h"
+#include "auxiliary/tmpl_lambertw_pade_double.h"
+#include "auxiliary/tmpl_lambertw_positive_double.h"
 
 double tmpl_Double_LambertW(double x)
 {
@@ -38,17 +38,19 @@ double tmpl_Double_LambertW(double x)
          *  and LambertW(inf) = inf.                                          */
         if (w.bits.sign)
             return TMPL_NAN;
-        else
-            return x;
-    }
 
-    /*  Avoid underflow. LambertW(x) ~= x for small values.                   */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 52U)
         return x;
+    }
 
     /*  Small inputs, use the Maclaurin series.                               */
     else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 7U)
+    {
+        /*  Avoid underflow. LambertW(x) ~= x for small values.               */
+        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 52U)
+            return x;
+
         return tmpl_Double_LambertW_Maclaurin(x);
+    }
 
     /*  Handle negative values carefully.                                     */
     else if (w.bits.sign)
@@ -56,16 +58,13 @@ double tmpl_Double_LambertW(double x)
         /*  For values close the zero, the Pade approximant works. It doesn't *
          *  work as well as it does for positive values, so we need to        *
          *  restrict to a smaller range.                                      */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+        if (w.r > -0.2)
         {
-            if (w.bits.expo < TMPL_DOUBLE_UBIAS - 4U)
-                return tmpl_Double_LambertW_Pade(x);
+            if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+                return tmpl_Double_LambertW_Negative_Small(x);
 
-            return tmpl_Double_LambertW_Negative_Small(x);
+            return tmpl_Double_LambertW_Negative_Medium_Small(x);
         }
-
-        else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 2U)
-            return tmpl_Double_LambertW_Negative_Medium(x);
 
         /*  The function is undefined for x < -1/e. Compute x + 1/e.          */
         w.r = x + tmpl_Rcpr_Euler_E;
@@ -74,16 +73,21 @@ double tmpl_Double_LambertW(double x)
         if (w.bits.sign)
             return TMPL_NAN;
 
+        else if (w.r > 0.01)
+        {
+            if (w.r > 0.05)
+                return tmpl_Double_LambertW_Negative_Medium_Large(w.r);
+
+            return tmpl_Double_LambertW_Negative_Large(w.r);
+        }
+
         /*  Handle the case x == -1/e precisely. Return -1. This solves       *
          *  Lambert(x) exp(LambertW(x)) = -1/e.                               */
         else if (w.r == 0.0)
             return -1.0;
 
         /*  For values close to the branch cut, use a series expansion.       */
-        else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 10U)
-            return tmpl_Double_LambertW_Near_Branch(w.r);
-
-        return tmpl_Double_LambertW_Halley(x, x, 1.0E-12);
+        return tmpl_Double_LambertW_Near_Branch(w.r);
     }
 
     /*  For slightly larger inputs we can use a Pade approximant, which is    *

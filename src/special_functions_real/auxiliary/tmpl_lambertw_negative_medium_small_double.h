@@ -1,0 +1,88 @@
+#ifndef TMPL_LAMBERTW_NEGATIVE_MEDIUM_SMALL_DOUBLE_H
+#define TMPL_LAMBERTW_NEGATIVE_MEDIUM_SMALL_DOUBLE_H
+
+#include <libtmpl/include/tmpl_config.h>
+
+#if 0
+
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define P00 (+9.9999999288775355352940295517800462477296394246576E-01)
+#define P01 (+6.0883902301298053247994231337705827789214978287980E+00)
+#define P02 (+1.2259921104208888644277560303435683331683790118511E+01)
+#define P03 (+8.6905064803630890817198602712815736374522495053974E+00)
+#define P04 (+1.0331788347911753652711911837800969286432167923778E+00)
+#define P05 (-1.5083489242304021299413987686554487528091022679220E-01)
+
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define Q00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define Q01 (+7.0883906146835086739037112791882451469488827375340E+00)
+#define Q02 (+1.7848320748580732593018405657453559702921817275056E+01)
+#define Q03 (+1.8573027662503814775438338562577187127536313884348E+01)
+#define Q04 (+6.5287371739757328308852204237941235199859122156599E+00)
+
+#define TMPL_NUM_EVAL(z) P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*P05))))
+#define TMPL_DEN_EVAL(z) Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*Q04)))
+
+TMPL_STATIC_INLINE
+double tmpl_Double_LambertW_Negative_Medium_Small(double x)
+{
+    const double p = TMPL_NUM_EVAL(x);
+    const double q = TMPL_DEN_EVAL(x);
+    return x * p / q;
+}
+
+#else
+
+#define P00 (-2.03596115108465635E-01)
+#define P01 (-2.95029082937201859E+00)
+#define P02 (-1.54287922188671648E+01)
+#define P03 (-3.81185809571116965E+01)
+#define P04 (-4.66384358235575985E+01)
+#define P05 (-2.59282069989642468E+01)
+#define P06 (-4.70140451266553279E+00)
+
+#define Q00 (+1.00000000000000000E+00)
+#define Q01 (+9.57921436074599929E+00)
+#define Q02 (+3.60988119290234377E+01)
+#define Q03 (+6.73977699505546007E+01)
+#define Q04 (+6.41104992068148823E+01)
+#define Q05 (+2.82060127225153607E+01)
+#define Q06 (+4.10677610657724330E+00)
+
+#define TMPL_OFFSET (+1.20359611511230469E+00)
+
+#define TMPL_NUM_EVAL(z) \
+P00 + z*(P01 + z*(P02 + z*(P03 + z*(P04 + z*(P05 + z*P06)))))
+
+#define TMPL_DEN_EVAL(z) \
+Q00 + z*(Q01 + z*(Q02 + z*(Q03 + z*(Q04 + z*(Q05 + z*Q06)))))
+
+TMPL_STATIC_INLINE
+double tmpl_Double_LambertW_Negative_Medium_Small(double x)
+{
+    const double p = TMPL_NUM_EVAL(x);
+    const double q = TMPL_DEN_EVAL(x);
+    return x * (TMPL_OFFSET + p / q);
+}
+
+#endif
+
+#undef P00
+#undef P01
+#undef P02
+#undef P03
+#undef P04
+#undef P05
+#undef P06
+#undef Q00
+#undef Q01
+#undef Q02
+#undef Q03
+#undef Q04
+#undef Q05
+#undef Q06
+#undef TMPL_OFFSET
+#undef TMPL_NUM_EVAL
+#undef TMPL_DEN_EVAL
+
+#endif

@@ -79,10 +79,10 @@
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_maclaurin_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_small_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_medium_double.h>
-#include <libtmpl/include/specfunc_real/tmpl_bessel_i0_large_double.h>
+#include "auxiliary/tmpl_bessel_i0_maclaurin_double.h"
+#include "auxiliary/tmpl_bessel_i0_small_double.h"
+#include "auxiliary/tmpl_bessel_i0_medium_double.h"
+#include "auxiliary/tmpl_bessel_i0_large_double.h"
 
 /*  Slight performance boost with IEEE-754 support.                           */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

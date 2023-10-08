@@ -11,10 +11,10 @@
 
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_maclaurin_float.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_near_branch_float.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_pade_float.h>
-#include <libtmpl/include/specfunc_real/tmpl_lambertw_halley_float.h>
+#include "auxiliary/tmpl_lambertw_maclaurin_float.h"
+#include "auxiliary/tmpl_lambertw_near_branch_float.h"
+#include "auxiliary/tmpl_lambertw_pade_float.h"
+#include "auxiliary/tmpl_lambertw_halley_float.h"
 
 float tmpl_Float_LambertW(float x)
 {
