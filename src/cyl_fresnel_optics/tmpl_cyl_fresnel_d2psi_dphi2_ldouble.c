@@ -52,12 +52,13 @@
  *          The second partial derivative of the cylindrical Fresnel kernel   *
  *          with respect to phi.                                              *
  *  Called Functions:                                                         *
- *      tmpl_LDouble_Cos (tmpl_math.h):                                       *
- *          Computes cosine, in radians.                                      *
- *      tmpl_LDouble_SinCos (tmpl_math.h):                                    *
- *          Computes sine and cosine, in radians.                             *
- *      tmpl_LDouble_Sqrt (tmpl_math.h):                                      *
- *          Computes the square root of a positive number.                    *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_LDouble_Cos:                                                 *
+ *              Computes cosine, in radians.                                  *
+ *          tmpl_LDouble_SinCos:                                              *
+ *              Computes sine and cosine, in radians.                         *
+ *          tmpl_LDouble_Sqrt:                                                *
+ *              Computes the square root of a positive number.                *
  *  Method:                                                                   *
  *      Use the product and chain rules a few times to compute. We have:      *
  *                                                                            *
@@ -111,6 +112,9 @@
  *  Notes:                                                                    *
  *      Angles must be in radians. Lengths can be in whatever units, but they *
  *      must be the same units.                                               *
+ *                                                                            *
+ *      It is assumed that B and D are independent of phi. This may not be    *
+ *      the case for "real" geometry from actual data sets.                   *
  *  References:                                                               *
  *      1.) Profiling Saturn's Rings, Marouf, Tyler, Rosen 1986, Icarus 68.   *
  *      2.) Introduction to Fourier Optics, Joseph Goodman, 2005.             *

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_cyl_fresnel_d2psi_dphi2_double                     *
+ *                  tmpl_cyl_fresnel_d2psi_dphi2_deg_double                   *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the Cylindrical Fresnel     *
@@ -25,11 +25,11 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2                                   *
+ *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg                               *
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the cylindrical Fresnel     *
  *      kernel with respect to phi at double precision with all angles in     *
- *      radians. The lengths may be in whatever units, but they must be in    *
+ *      degrees. The lengths may be in whatever units, but they must be in    *
  *      the same units.                                                       *
  *  Arguments:                                                                *
  *      k (double):                                                           *
@@ -53,10 +53,10 @@
  *          with respect to phi.                                              *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_Cos:                                                  *
- *              Computes cosine, in radians.                                  *
- *          tmpl_Double_SinCos:                                               *
- *              Computes sine and cosine, in radians.                         *
+ *          tmpl_Double_Cosd:                                                 *
+ *              Computes cosine, in degrees.                                  *
+ *          tmpl_Double_SinCosd:                                              *
+ *              Computes sine and cosine, in degrees.                         *
  *          tmpl_Double_Sqrt:                                                 *
  *              Computes the square root of a positive number.                *
  *  Method:                                                                   *
@@ -110,7 +110,7 @@
  *                                                                            *
  *      Piecing all of this together gives us the second partial derivative.  *
  *  Notes:                                                                    *
- *      Angles must be in radians. Lengths can be in whatever units, but they *
+ *      Angles must be in degrees. Lengths can be in whatever units, but they *
  *      must be the same units.                                               *
  *                                                                            *
  *      It is assumed that B and D are independent of phi. This may not be    *
@@ -143,8 +143,9 @@
 
 /*  Computes the second partial derivative of psi with respect to phi.        */
 double
-tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
-                                    double phi0, double B, double D)
+tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg(double k, double r,
+                                        double r0, double phi,
+                                        double phi0, double B, double D)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     double xi, eta, psi0, dxi, dxi2, deta, deta2, psi_d2, sin_phi, cos_phi;
@@ -157,7 +158,7 @@ tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
     const double rcpr_D_squared = rcpr_D * rcpr_D;
 
     /*  Precompute cosines and sines to save on computations.                 */
-    const double cos_B = tmpl_Double_Cos(B);
+    const double cos_B = tmpl_Double_Cosd(B);
 
     /*  This term appears in dxi and dxi2 and xi.                             */
     const double xi_factor = cos_B * rcpr_D;
@@ -165,9 +166,9 @@ tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
     /*  And this term appears in eta, deta, and deta2.                        */
     const double eta_factor = 2.0 * r * r0 * rcpr_D_squared;
 
-    /*  Compute sine and cosine simultaneously using SinCos.                  */
-    tmpl_Double_SinCos(phi, &sin_phi, &cos_phi);
-    tmpl_Double_SinCos(phi0, &sin_phi0, &cos_phi0);
+    /*  Compute sine and cosine simultaneously using SinCosd.                 */
+    tmpl_Double_SinCosd(phi, &sin_phi, &cos_phi);
+    tmpl_Double_SinCosd(phi0, &sin_phi0, &cos_phi0);
 
     /*  Since we've computed cos and sin of phi and phi0, cos and sin of      *
      *  phi-phi0 can be computed without the need to call cos and sin again.  */
@@ -194,4 +195,4 @@ tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
     psi_d2 *= k*D;
     return psi_d2;
 }
-/*  End of tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2.                               */
+/*  End of tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg.                           */

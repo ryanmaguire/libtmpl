@@ -16,48 +16,57 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_cyl_fresnel_d2psi_dphi2_double                     *
+ *                  tmpl_cyl_fresnel_dpsi_dphi_d_deg_ldouble                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the second partial derivative of the Cylindrical Fresnel     *
- *      kernel with respect to phi at double precision.                       *
+ *      Computes the first partial derivative of the Cylindrical Fresnel      *
+ *      kernel with respect to phi for long double. The distance D from       *
+ *      the point on the plane to the observer is not a constant, but         *
+ *      varies as a function of phi. The partial derivative of D with respect *
+ *      to phi is thus included in the computation.                           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2                                   *
+ *      tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D                                  *
  *  Purpose:                                                                  *
- *      Computes the second partial derivative of the cylindrical Fresnel     *
- *      kernel with respect to phi at double precision with all angles in     *
- *      radians. The lengths may be in whatever units, but they must be in    *
- *      the same units.                                                       *
+ *      Computes the first partial derivative of the cylindrical Fresnel      *
+ *      kernel with respect to phi at long double precision with all angles   *
+ *      in degrees. The lengths may be in whatever units, but they must be in *
+ *      the same units. For this function the distance D from the observer    *
+ *      to the point on the plane is not constant, but varies as a function   *
+ *      of phi. The partial derivative dD/dphi is used in the computation.    *
  *  Arguments:                                                                *
- *      k (double):                                                           *
+ *      k (long double):                                                      *
  *          The wavenumber, in the reciprocal of the units of r.              *
- *      r (double):                                                           *
+ *      r (long double):                                                      *
  *          The "dummy" radius, usually a variable that is integrated over.   *
- *      r0 (double):                                                          *
+ *      r0 (long double):                                                     *
  *          The radius of the point of interest.                              *
- *      phi (double):                                                         *
+ *      phi (long double):                                                    *
  *          The "dummy" azimuthal angle, often integrated over.               *
- *      phi0 (double):                                                        *
+ *      phi0 (long double):                                                   *
  *          The azimuthal angle of the point of interest.                     *
- *      B (double):                                                           *
+ *      B (long double):                                                      *
  *          The opening angle of the plane. For planetary ring systems this   *
  *          is the ring opening angle of the rings with respect to Earth.     *
- *      D (double):                                                           *
- *          The distance from the observer to the point in the plane.         *
+ *      rx (long double):                                                     *
+ *          The x coordinated of the observer with respect to the plane.      *
+ *      ry (long double):                                                     *
+ *          The y coordinated of the observer with respect to the plane.      *
+ *      rz (long double):                                                     *
+ *          The z coordinated of the observer with respect to the plane.      *
  *  Outputs:                                                                  *
- *      d2psi_dphi2 (double):                                                 *
- *          The second partial derivative of the cylindrical Fresnel kernel   *
+ *      dpsi_dphi (long double):                                              *
+ *          The first partial derivative of the cylindrical Fresnel kernel    *
  *          with respect to phi.                                              *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_Cos:                                                  *
- *              Computes cosine, in radians.                                  *
- *          tmpl_Double_SinCos:                                               *
- *              Computes sine and cosine, in radians.                         *
- *          tmpl_Double_Sqrt:                                                 *
+ *          tmpl_LDouble_Cosd:                                                *
+ *              Computes cosine, in degrees.                                  *
+ *          tmpl_LDouble_SinCosd:                                             *
+ *              Computes sine and cosine, in degrees.                         *
+ *          tmpl_LDouble_Sqrt:                                                *
  *              Computes the square root of a positive number.                *
  *  Method:                                                                   *
  *      Use the product and chain rules a few times to compute. We have:      *
@@ -69,52 +78,43 @@
  *      Note the sign of xi is flipped from the MTR86 definition.             *
  *                                                                            *
  *          psi' = (kD [sqrt(1 + eta - 2 xi) + xi - 1])'                      *
- *               = kD ([sqrt(1 + eta - 2 xi)]' + xi')                         *
- *               = kD ([eta' - 2 xi'] / (2 sqrt(1 + eta - 2 xi)) + xi')       *
+ *               = kD ([sqrt(1 + eta - 2 xi)]' + xi') +                       *
+ *                 kD' (kD [sqrt(1 + eta - 2 xi) + xi - 1])                   *
+ *               = kD ([eta' - 2 xi'] / (2 sqrt(1 + eta - 2 xi)) + xi') +     *
+ *                 kD' (kD [sqrt(1 + eta - 2 xi) + xi - 1])                   *
  *                                                                            *
  *      We need to compute xi' and eta'.                                      *
  *                                                                            *
  *          xi' = ([r cos(phi) - r0 cos(phi0)] cos(B) / D)'                   *
- *              = -r sin(phi) cos(B) / D                                      *
+ *              = -r sin(phi) cos(B) / D +                                    *
+ *                 [r cos(phi) - r0 cos(phi0)] cos(B) (1 / D)'                *
+ *              = -r sin(phi) cos(B) / D -                                    *
+ *                 [r cos(phi) - r0 cos(phi0)] (cos(B) / D^2) D'              *
  *                                                                            *
  *      For the eta factor we get:                                            *
  *                                                                            *
  *          eta' = ([r^2 + r0^2 - 2 r r0 cos(phi - phi0)] / D^2)'             *
- *               = 2 r r0 sin(phi - phi0) / D^2                               *
+ *               = 2 r r0 sin(phi - phi0) / D^2 +                             *
+ *                 [r^2 + r0^2 - 2 r r0 cos(phi - phi0)] (1 / D^2)'           *
+ *               = 2 r r0 sin(phi - phi0) / D^2 -                             *
+ *                 2 ([r^2 + r0^2 - 2 r r0 cos(phi - phi0)] / D^3) D'         *
  *                                                                            *
- *      The first partial derivative is:                                      *
+ *      From Pythagoras, we have:                                             *
  *                                                                            *
- *          kD ([eta' - 2 xi'] / [2 sqrt(1 + eta - 2 xi)) + xi']              *
+ *          dx = rx - r cos(phi)                                              *
+ *          dy = ry - r sin(phi)                                              *
+ *          dz = rz                                                           *
+ *          D = sqrt(dx^2 + dy^2 + dz^2)                                      *
  *                                                                            *
- *      The second partial derivative is then:                                *
+ *      The derivative is then:                                               *
  *                                                                            *
- *          psi'' = kD [                                                      *
- *              (eta'' - 2 xi'') / [2 sqrt(1 + eta - 2 xi)] +                 *
- *              (eta' - 2 xi') [1 / (2 sqrt(1 + eta - 2 xi))]' + xi''         *
- *          ]                                                                 *
+ *          D' = sqrt([rx - r cos(phi)]^2 + [ry - r sin(phi)]^2 + rz^2)'      *
+ *             = ([rx - r cos(phi)]^2 + [ry - r sin(phi)]^2 + rz^2)' / (2 D)  *
+ *             = r([rx - r cos(phi)]sin(phi) - [ry - r sin(phi)]cos(phi)) / D *
  *                                                                            *
- *      The square root part simplifies, and we get:                          *
- *                                                                            *
- *          psi'' = kD [                                                      *
- *              (eta'' - 2 xi'') / [2 sqrt(1 + eta - 2 xi)] -                 *
- *              (eta' - 2 xi')^2 / [4 (1 + eta - 2 xi)^3/2] + xi''            *
- *          ]                                                                 *
- *                                                                            *
- *      The second derivative of xi is:                                       *
- *                                                                            *
- *          xi'' = -r cos(phi) cos(B) / D                                     *
- *                                                                            *
- *      And the second derivative of eta is:                                  *
- *                                                                            *
- *          eta'' = 2 r r0 cos(phi - phi0) / D^2                              *
- *                                                                            *
- *      Piecing all of this together gives us the second partial derivative.  *
  *  Notes:                                                                    *
- *      Angles must be in radians. Lengths can be in whatever units, but they *
+ *      Angles must be in degrees. Lengths can be in whatever units, but they *
  *      must be the same units.                                               *
- *                                                                            *
- *      It is assumed that B and D are independent of phi. This may not be    *
- *      the case for "real" geometry from actual data sets.                   *
  *  References:                                                               *
  *      1.) Profiling Saturn's Rings, Marouf, Tyler, Rosen 1986, Icarus 68.   *
  *      2.) Introduction to Fourier Optics, Joseph Goodman, 2005.             *
@@ -131,7 +131,7 @@
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2023/03/20: Ryan Maguire                                                  *
+ *  2023/03/22: Ryan Maguire                                                  *
  *      Migrated from rss_ringoccs. Cleaned up code.                          *
  ******************************************************************************/
 
@@ -141,57 +141,59 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
-/*  Computes the second partial derivative of psi with respect to phi.        */
-double
-tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
-                                    double phi0, double B, double D)
+/*  Computes the partial derivative of psi with respect to phi with varying D.*/
+long double
+tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D_Deg(long double k, long double r,
+                                         long double r0, long double phi,
+                                         long double phi0, long double B,
+                                         long double rx, long double ry,
+                                         long double rz)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double xi, eta, psi0, dxi, dxi2, deta, deta2, psi_d2, sin_phi, cos_phi;
-    double cos_phi0, sin_phi0, cos_phi_phi0, sin_phi_phi0;
-    double num_factor, rcpr_psi0, rcpr_psi0_cubed;
-
-    /*  Compute 1/D and it's square to save the number of divisions we need   *
-     *  to compute. Multiplication is usually ~10 times faster.               */
-    const double rcpr_D = 1.0 / D;
-    const double rcpr_D_squared = rcpr_D * rcpr_D;
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    long double xi, eta, psi0, dxi, deta, rcpr_D, rcpr_D_squared;
+    long double cos_phi, sin_phi, cos_phi0, sin_phi0, cos_phi_phi0;
+    long double sin_phi_phi0, dpsi, dD, D, dx, dy, xi_factor, eta_factor;
 
     /*  Precompute cosines and sines to save on computations.                 */
-    const double cos_B = tmpl_Double_Cos(B);
-
-    /*  This term appears in dxi and dxi2 and xi.                             */
-    const double xi_factor = cos_B * rcpr_D;
-
-    /*  And this term appears in eta, deta, and deta2.                        */
-    const double eta_factor = 2.0 * r * r0 * rcpr_D_squared;
+    const long double cos_B = tmpl_LDouble_Cosd(B);
 
     /*  Compute sine and cosine simultaneously using SinCos.                  */
-    tmpl_Double_SinCos(phi, &sin_phi, &cos_phi);
-    tmpl_Double_SinCos(phi0, &sin_phi0, &cos_phi0);
+    tmpl_LDouble_SinCosd(phi, &sin_phi, &cos_phi);
+    tmpl_LDouble_SinCosd(phi0, &sin_phi0, &cos_phi0);
 
     /*  Since we've computed cos and sin of phi and phi0, cos and sin of      *
      *  phi-phi0 can be computed without the need to call cos and sin again.  */
     cos_phi_phi0 = cos_phi*cos_phi0 + sin_phi*sin_phi0;
     sin_phi_phi0 = sin_phi*cos_phi0 - cos_phi*sin_phi0;
 
+    /*  Compute the distance from the observer to the plane using Pythagoras. */
+    dx = rx - r*cos_phi;
+    dy = ry - r*sin_phi;
+    D = tmpl_LDouble_Sqrt(dx*dx + dy*dy + rz*rz);
+
+    /*  Compute 1/D and it's square to save the number of divisions we need   *
+     *  to compute. Multiplication is usually ~10 times faster.               */
+    rcpr_D = 1.0L / D;
+    rcpr_D_squared = rcpr_D * rcpr_D;
+
+    /*  Compute the derivative of D with respect to phi.                      */
+    dD = r*(dx*sin_phi - dy*cos_phi)*rcpr_D;
+
+    /*  These terms occur frequently.                                         */
+    xi_factor = cos_B * rcpr_D;
+    eta_factor = 2.0L * r * r0 * rcpr_D_squared;
+
     /*  Compute xi variable (MTR86 Equation 4b) and eta (Equation 4c).        */
     xi = xi_factor * (r * cos_phi - r0 * cos_phi0);
     eta = (r0*r0 + r*r)*rcpr_D_squared - eta_factor*cos_phi_phi0;
-    psi0 = tmpl_Double_Sqrt(1.0 + eta - 2.0*xi);
-    rcpr_psi0 = 1.0 / psi0;
-    rcpr_psi0_cubed = rcpr_psi0*rcpr_psi0*rcpr_psi0;
+    psi0 = tmpl_LDouble_Sqrt(1.0L + eta - 2.0L*xi);
 
-    /*  Compute derivatives.                                                  */
-    dxi = -xi_factor * (r * sin_phi);
-    dxi2 = -xi_factor * (r * cos_phi);
-    deta = eta_factor * sin_phi_phi0;
-    deta2 = eta_factor * cos_phi_phi0;
+    /*  Compute derivatives (Use calculus before hand).                       */
+    dxi = -xi_factor * (r * sin_phi) - xi*rcpr_D*dD;
+    deta = eta_factor * sin_phi_phi0 - 2.0L * eta * rcpr_D * dD;
+    dpsi = k * D * ((0.5L/psi0) * (deta - 2.0L*dxi) + dxi);
+    dpsi += k * dD * (psi0 + xi - 1.0L);
 
-    /*  Compute the second partial derivative.                                */
-    num_factor = deta - 2.0*dxi;
-    psi_d2 = -0.25 * rcpr_psi0_cubed * num_factor * num_factor;
-    psi_d2 += (0.5 * rcpr_psi0) * (deta2 - 2.0*dxi2) + dxi2;
-    psi_d2 *= k*D;
-    return psi_d2;
+    return dpsi;
 }
-/*  End of tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2.                               */
+/*  End of tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D_Deg.                          */

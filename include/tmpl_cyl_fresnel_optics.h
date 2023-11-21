@@ -75,6 +75,8 @@
  *                                                                            *
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
+ *                                                                            *
+ *    This function assumes B and D are independent of phi.                   *
  ******************************************************************************/
 extern double
 tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
@@ -88,6 +90,56 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
                                      long double r0, long double phi,
                                      long double phi0, long double B,
                                      long double D);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg                               *
+ *  Purpose:                                                                  *
+ *      Computes the second partial derivative of the cylindrical Fresnel     *
+ *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      Similar to tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2 but all angles are in   *
+ *      degrees instead of radians.                                           *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of r.              *
+ *      r (double):                                                           *
+ *          The "dummy" radius, usually a variable that is integrated over.   *
+ *      r0 (double):                                                          *
+ *          The radius of the point of interest.                              *
+ *      phi (double):                                                         *
+ *          The "dummy" azimuthal angle, often integrated over.               *
+ *      phi0 (double):                                                        *
+ *          The azimuthal angle of the point of interest. Same units as phi.  *
+ *      B (double):                                                           *
+ *          The opening angle of the plane. For planetary ring systems, this  *
+ *          is the ring opening angle of the rings with respect to Earth.     *
+ *      D (double):                                                           *
+ *          The distance from the observer to the plane.                      *
+ *  Outputs:                                                                  *
+ *      d2psi_dphi2 (double):                                                 *
+ *          The second partial derivative of Psi with respect to phi.         *
+ *  Notes:                                                                    *
+ *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
+ *    accurate for Uranus. Float and long double precisions are provided.     *
+ *                                                                            *
+ *    All angles are assumed to be in degrees.                                *
+ *    All lengths are assumed to be in the same units.                        *
+ *                                                                            *
+ *    This function assumes B and D are independent of phi.                   *
+ ******************************************************************************/
+extern double
+tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg(double k, double r,
+                                        double r0, double phi, double phi0,
+                                        double B, double D);
+
+extern float
+tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2_Deg(float k, float r, float r0, float phi,
+                                       float phi0, float B, float D);
+extern long double
+tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k, long double r,
+                                         long double r0, long double phi,
+                                         long double phi0, long double B,
+                                         long double D);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -120,6 +172,8 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
  *                                                                            *
  *    All angles are assumed to be in radians.                                *
  *    All lengths are assumed to be in the same units.                        *
+ *                                                                            *
+ *    This function assumes B and D are independent of phi.                   *
  ******************************************************************************/
 extern double
 tmpl_Double_Cyl_Fresnel_dPsi_dPhi(double k, double r, double r0, double phi,
@@ -136,12 +190,62 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(long double k, long double r, long double r0,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi_Deg                                 *
+ *  Purpose:                                                                  *
+ *      Computes the first partial derivative of the cylindrical Fresnel      *
+ *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      Similar to tmpl_Double_Cyl_Fresnel_dPsi_dPhi but all angles are in    *
+ *      degrees.                                                              *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of r.              *
+ *      r (double):                                                           *
+ *          The "dummy" radius, usually a variable that is integrated over.   *
+ *      r0 (double):                                                          *
+ *          The radius of the point of interest.                              *
+ *      phi (double):                                                         *
+ *          The "dummy" azimuthal angle, often integrated over.               *
+ *      phi0 (double):                                                        *
+ *          The azimuthal angle of the point of interest. Same units as phi.  *
+ *      B (double):                                                           *
+ *          The opening angle of the plane. For planetary ring systems, this  *
+ *          is the ring opening angle of the rings with respect to Earth.     *
+ *      D (double):                                                           *
+ *          The distance from the observer to the plane.                      *
+ *  Outputs:                                                                  *
+ *      dpsi_dphi (double):                                                   *
+ *          The first partial derivative of Psi with respect to phi.          *
+ *  Notes:                                                                    *
+ *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
+ *    accurate for Uranus. Float and long double precisions are provided.     *
+ *                                                                            *
+ *    All angles are assumed to be in degrees.                                *
+ *    All lengths are assumed to be in the same units.                        *
+ *                                                                            *
+ *    This function assumes B and D are independent of phi.                   *
+ ******************************************************************************/
+extern double
+tmpl_Double_Cyl_Fresnel_dPsi_dPhi_Deg(double k, double r, double r0, double phi,
+                                      double phi0, double B, double D);
+
+extern float
+tmpl_Float_Cyl_Fresnel_dPsi_dPhi_Deg(float k, float r, float r0, float phi,
+                                     float phi0, float B, float D);
+
+extern long double
+tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_Deg(long double k, long double r,
+                                       long double r0, long double phi,
+                                       long double phi0, long double B,
+                                       long double D);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi_D                                   *
  *  Purpose:                                                                  *
  *      Computes the first partial derivative of the cylindrical Fresnel      *
  *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
  *      This updates the D component as a function of phi unlike the function *
- *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi_D which assumes D to be constant.   *
+ *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi which assumes D to be constant.     *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -189,6 +293,64 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D(long double k, long double r,
                                      long double phi0, long double B,
                                      long double rx, long double ry,
                                      long double rz);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi_D_Deg                               *
+ *  Purpose:                                                                  *
+ *      Computes the first partial derivative of the cylindrical Fresnel      *
+ *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      This updates the D component as a function of phi unlike the function *
+ *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi_Deg which assumes D to be constant. *
+ *      Similar to tmpl_Double_Cyl_Fresnel_dPsi_dPhi_D, but angles are in     *
+ *      degrees.                                                              *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of r.              *
+ *      r (double):                                                           *
+ *          The "dummy" radius, usually a variable that is integrated over.   *
+ *      r0 (double):                                                          *
+ *          The radius of the point of interest.                              *
+ *      phi (double):                                                         *
+ *          The "dummy" azimuthal angle, often integrated over.               *
+ *      phi0 (double):                                                        *
+ *          The azimuthal angle of the point of interest.                     *
+ *      B (double):                                                           *
+ *          The opening angle of the plane. For planetary ring systems this   *
+ *          is the ring opening angle of the rings with respect to Earth.     *
+ *      rx (double):                                                          *
+ *          The x coordinated of the observer with respect to the plane.      *
+ *      ry (double):                                                          *
+ *          The y coordinated of the observer with respect to the plane.      *
+ *      rz (double):                                                          *
+ *          The z coordinated of the observer with respect to the plane.      *
+ *  Outputs:                                                                  *
+ *      dpsi_dphi (double):                                                   *
+ *          The first partial derivative of the cylindrical Fresnel kernel    *
+ *          with respect to phi.                                              *
+ *  Notes:                                                                    *
+ *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
+ *    accurate for Uranus. Float and long double precisions are provided.     *
+ *                                                                            *
+ *    All angles are assumed to be in degrees.                                *
+ *    All lengths are assumed to be in the same units.                        *
+ ******************************************************************************/
+double
+tmpl_Double_Cyl_Fresnel_dPsi_dPhi_D_Deg(double k, double r, double r0,
+                                        double phi, double phi0, double B,
+                                        double rx, double ry, double rz);
+
+float
+tmpl_Float_Cyl_Fresnel_dPsi_dPhi_D_Deg(float k, float r, float r0,
+                                       float phi, float phi0, float B,
+                                       float rx, float ry, float rz);
+
+extern long double
+tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_D_Deg(long double k, long double r,
+                                         long double r0, long double phi,
+                                         long double phi0, long double B,
+                                         long double rx, long double ry,
+                                         long double rz);
 
 /******************************************************************************
  *  Function:                                                                 *

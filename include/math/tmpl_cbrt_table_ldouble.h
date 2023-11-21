@@ -29,7 +29,7 @@
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-const double tmpl_ldouble_cbrt_table[128] = {
+static const double tmpl_ldouble_cbrt_table[128] = {
     1.000000000000000000000000000000000000000,
     1.002597414264600244564181021925149874873,
     1.005181439647264494021636128607872189952,
@@ -164,7 +164,7 @@ const double tmpl_ldouble_cbrt_table[128] = {
 /*  Extended, quadruple, 64-bit double, and portable use a long double table. */
 
 /*  The values cbrt(1 + k/128) for k = 0, 1, ..., 126, 127.                   */
-const long double tmpl_ldouble_cbrt_table[128] = {
+static const long double tmpl_ldouble_cbrt_table[128] = {
     1.000000000000000000000000000000000000000L,
     1.002597414264600244564181021925149874873L,
     1.005181439647264494021636128607872189952L,

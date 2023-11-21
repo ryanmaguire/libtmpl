@@ -61,12 +61,13 @@
  *          The first partial derivative of the cylindrical Fresnel kernel    *
  *          with respect to phi.                                              *
  *  Called Functions:                                                         *
- *      tmpl_Double_Cos (tmpl_math.h):                                        *
- *          Computes cosine, in radians.                                      *
- *      tmpl_Double_SinCos (tmpl_math.h):                                     *
- *          Computes sine and cosine, in radians.                             *
- *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
- *          Computes the square root of a positive number.                    *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Cos:                                                  *
+ *              Computes cosine, in radians.                                  *
+ *          tmpl_Double_SinCos:                                               *
+ *              Computes sine and cosine, in radians.                         *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a positive number.                *
  *  Method:                                                                   *
  *      Use the product and chain rules a few times to compute. We have:      *
  *                                                                            *
