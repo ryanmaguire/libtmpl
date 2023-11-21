@@ -161,13 +161,13 @@
  ******************************************************************************/
 
 /*  Maclaurin expansion provided here.                                        */
-#include <libtmpl/include/math/tmpl_arcsin_maclaurin_ldouble.h>
+#include "auxiliary/tmpl_arcsin_maclaurin_ldouble.h"
 
 /*  Rational remez minimax approximation for arcsin.                          */
-#include <libtmpl/include/math/tmpl_arcsin_rat_remez_ldouble.h>
+#include "auxiliary/tmpl_arcsin_rat_remez_ldouble.h"
 
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
-#include <libtmpl/include/math/tmpl_arcsin_tail_end_ldouble.h>
+#include "auxiliary/tmpl_arcsin_tail_end_ldouble.h"
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
