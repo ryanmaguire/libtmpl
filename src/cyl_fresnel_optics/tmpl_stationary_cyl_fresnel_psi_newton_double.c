@@ -60,12 +60,15 @@
  *      phi_s (double):                                                       *
  *          The stationary value of phi.                                      *
  *  Called Functions:                                                         *
- *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi (tmpl_cyl_fresnel_optics.h):        *
- *          Computes the first partial derivative of psi.                     *
- *      tmpl_Double_Cyl_Fresnel_d2Psi_d2Phi (tmpl_cyl_fresnel_optics.h):      *
- *          Computes the second partial derivative of psi.                    *
- *      tmpl_Double_Abs (tmpl_math.h):                                        *
- *          Computes the absolute value of a real number.                     *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Cosd:                                                 *
+ *              Computes cosine, in degrees.                                  *
+ *          tmpl_Double_SinCosd:                                              *
+ *              Computes sine and cosine, in degrees.                         *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a positive number.                *
+ *          tmpl_Double_Abs:                                                  *
+ *              Computes the absolute value of a real number.                 *
  *  Method:                                                                   *
  *      Use Newton's method. Given the initial guess phi, we compute:         *
  *          phi_s = phi - psi' / psi''                                        *
