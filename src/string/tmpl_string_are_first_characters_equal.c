@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_strings_are_equal                           *
+ *                    tmpl_string_are_first_character_equal                   *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Checks if two strings are equal up to their null terminators.         *
@@ -24,14 +24,16 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Strings_Are_Equal                                                *
+ *      tmpl_String_Are_First_Characters_Equal                                *
  *  Purpose:                                                                  *
- *      Compares equality for two strings character-by-character.             *
+ *      Compares equality for the first characters of two strings.            *
  *  Arguments:                                                                *
  *      str0 (const char *):                                                  *
  *          A string.                                                         *
  *      str1 (const char *):                                                  *
  *          Another string.                                                   *
+ *      len (size_t):                                                         *
+ *          The number of characters to compare.                              *
  *  Output:                                                                   *
  *      are_equal (tmpl_Bool):                                                *
  *          Boolean for if the two strings are equal.                         *
@@ -63,9 +65,15 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Function for checking if two strings are equal.                           */
-tmpl_Bool tmpl_Strings_Are_Equal(const char *str0, const char *str1)
+/*  Function for checking if two strings have the first starting characters.  */
+tmpl_Bool
+tmpl_String_Are_First_Characters_Equal(const char *str0,
+                                       const char *str1,
+                                       size_t len)
 {
+    /*  Counter to keeping track of the index of the strings.                 */
+    size_t index = (size_t)0;
+
     /*  First, check for NULL pointers before trying to access.               */
     if (!str0)
     {
@@ -84,10 +92,22 @@ tmpl_Bool tmpl_Strings_Are_Equal(const char *str0, const char *str1)
 
     /*  Loop through all of the elements of the string until we hit the       *
      *  null terminator.                                                      */
-    while (*str0)
+    while (index < len)
     {
+        /*  Check if the zeroth string is at its null terminator.             */
+        if (!(*str0))
+        {
+            /*  If the first string is also at the null terminator, we have   *
+             *  equality in the strings.                                      */
+            if (!(*str1))
+                return tmpl_True;
+
+            /*  Otherwise the strings differ. Return false.                   */
+            return tmpl_False;
+        }
+
         /*  If the current characters differ, the strings are not equal. Note *
-         *  that is *str0 is not the null terminator, if *str1 is a null      *
+         *  that since *str0 is not the null terminator, if *str1 is a null   *
          *  terminator this function will exit here. We don't risk accessing  *
          *  data beyond the end of str1's range.                              */
         if ((*str0) != (*str1))
@@ -96,16 +116,13 @@ tmpl_Bool tmpl_Strings_Are_Equal(const char *str0, const char *str1)
         /*  Move to the next entries in the strings.                          */
         str0++;
         str1++;
+
+        /*  And lastly, increment the counter.                                */
+        index++;
     }
 
-    /*  str0 is now at it's null terminator. If str1 is not at its null       *
-     *  terminator that means this string keeps going, so it is not identical *
-     *  to str0. Check for this.                                              */
-    if (*str1)
-        return tmpl_False;
-
-    /*  Otherwise, the first null terminators for str0 and str1 occur at the  *
-     *  same place and all characters up to this are the same. Return True.   */
+    /*  We've exited the while loop since index == len is now true. So the    *
+     *  first len characters of str0 and str1 match. Return true.             */
     return tmpl_True;
 }
-/*  End of tmpl_Strings_Are_Equal.                                            */
+/*  End of tmpl_String_Are_First_Characters_Equal.                            */
