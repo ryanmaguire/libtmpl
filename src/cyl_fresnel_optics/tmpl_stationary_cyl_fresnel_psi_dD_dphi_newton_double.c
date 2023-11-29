@@ -108,6 +108,8 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
         xi = xi_factor * (r * cos_phi - r0 * cos_phi0);
         eta = (r0*r0 + r*r)*rcpr_D_squared - eta_factor*cos_phi_phi0;
         psi0 = tmpl_Double_Sqrt(1.0 + eta - 2.0*xi);
+        rcpr_psi0 = 1.0 / psi0;
+        rcpr_psi0_cubed = rcpr_psi0 * rcpr_psi0 * rcpr_psi0;
 
         /*  Compute derivatives (Use calculus before hand).                   */
         dxi = -xi_factor * (r * sin_phi) - xi*rcpr_D*dD;
