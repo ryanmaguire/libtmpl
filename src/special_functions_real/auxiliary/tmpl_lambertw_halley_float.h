@@ -35,4 +35,6 @@ float tmpl_Float_LambertW_Halley(float x, float x0, float tol)
 }
 /*  End of tmpl_Float_LambertW_Halley.                                        */
 
+#undef TMPL_HALLEY_MAX_ITERS
+
 #endif

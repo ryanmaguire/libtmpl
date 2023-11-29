@@ -27,5 +27,13 @@ double tmpl_Double_Bessel_I0_Large(double x)
     return poly * exp_x * sqrt_rcpr_x;
 }
 
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
+#undef TMPL_POLY_EVAL
+
 #endif
 /*  End of include guard.                                                     */
