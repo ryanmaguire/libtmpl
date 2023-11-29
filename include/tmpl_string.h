@@ -97,6 +97,29 @@ extern char tmpl_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Strings_Are_Equal                                                *
+ *  Purpose:                                                                  *
+ *      Compares to strings and checks if they are the same.                  *
+ *  Arguments:                                                                *
+ *      str0 (const char *):                                                  *
+ *          A string.                                                         *
+ *      str1 (const char *):                                                  *
+ *          Another string.                                                   *
+ *  Output:                                                                   *
+ *      are_equal (tmpl_Boolean):                                             *
+ *          A Boolean specifying whether or not str0 and str1 are identical.  *
+ *  Notes:                                                                    *
+ *      If both str0 and str1 are NULL or a null terminator, this function    *
+ *      returns true. No characters after the first null terminator in the    *
+ *      two strings are looked at. If the two strings are identical up to     *
+ *      their first null terminator, this function returns true.              *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_strings_are_equal.c                           *
+ ******************************************************************************/
+extern tmpl_Bool tmpl_Strings_Are_Equal(const char *str0, const char *str1);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_String_Duplicate                                                 *
  *  Purpose:                                                                  *
  *      Copies a string, verbatim, into a pointer to a char array. This is    *
