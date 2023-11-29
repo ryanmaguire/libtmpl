@@ -63,6 +63,9 @@ extern "C" {
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
+extern tmpl_Bool tmpl_Is_Digit(char c);
+extern unsigned char tmpl_Character_To_UChar(char c);
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Lower_Case                                                       *
@@ -81,25 +84,9 @@ extern char tmpl_Lower_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Upper_Case                                                       *
+ *      tmpl_String_Are_Equal                                                 *
  *  Purpose:                                                                  *
- *      Converts a character to upper case, if applicable.                    *
- *  Arguments:                                                                *
- *      lower (char):                                                         *
- *          The input character.                                              *
- *  Output:                                                                   *
- *      upper (char):                                                         *
- *          The upper case version of the input character.                    *
- *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_upper_case.c                                  *
- ******************************************************************************/
-extern char tmpl_Upper_Case(char c);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Strings_Are_Equal                                                *
- *  Purpose:                                                                  *
- *      Compares to strings and checks if they are the same.                  *
+ *      Compares two strings and checks if they are the same.                 *
  *  Arguments:                                                                *
  *      str0 (const char *):                                                  *
  *          A string.                                                         *
@@ -114,9 +101,56 @@ extern char tmpl_Upper_Case(char c);
  *      two strings are looked at. If the two strings are identical up to     *
  *      their first null terminator, this function returns true.              *
  *  Source Code:                                                              *
- *      libtmpl/src/string/tmpl_strings_are_equal.c                           *
+ *      libtmpl/src/string/tmpl_string_are_equal.c                            *
  ******************************************************************************/
-extern tmpl_Bool tmpl_Strings_Are_Equal(const char *str0, const char *str1);
+extern tmpl_Bool tmpl_String_Are_Equal(const char *str0, const char *str1);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_Are_First_Characters_Equal                                *
+ *  Purpose:                                                                  *
+ *      Compares two strings and checks if their first characters are equal.  *
+ *  Arguments:                                                                *
+ *      str0 (const char *):                                                  *
+ *          A string.                                                         *
+ *      str1 (const char *):                                                  *
+ *          Another string.                                                   *
+ *      len (size_t):                                                         *
+ *          The number of characters to check.                                *
+ *  Output:                                                                   *
+ *      are_equal (tmpl_Boolean):                                             *
+ *          A Boolean specifying whether or not str0 and str1 are identical   *
+ *          for the first "len" characters.                                   *
+ *  Notes:                                                                    *
+ *      If both str0 and str1 are NULL or a null terminator, this function    *
+ *      returns true. No characters after the first null terminator in the    *
+ *      two strings are looked at. If the two strings are identical up to     *
+ *      their first null terminator, this function returns true.              *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_are_first_characters_equal.c           *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_String_Are_First_Characters_Equal(const char *str0,
+                                       const char *str1,
+                                       size_t len);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_Destroy                                                   *
+ *  Purpose:                                                                  *
+ *      Free's the memory in a string. Only used for dynamically allocated    *
+ *      strings (like the output of tmpl_String_Duplicate).                   *
+ *  Arguments:                                                                *
+ *      str_ptr (char **):                                                    *
+ *          A pointer to a dynamically allocated string.                      *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      The string is set to a NULL pointer after this function is called.    *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_destroy.c                              *
+ ******************************************************************************/
+extern void tmpl_String_Destroy(char **str_ptr);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -209,6 +243,25 @@ extern void tmpl_String_Make_Upper_Case(char *str);
  *      libtmpl/src/string/tmpl_string_remove_whitespace.c                    *
  ******************************************************************************/
 extern void tmpl_String_Remove_Whitespace(char * str);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Upper_Case                                                       *
+ *  Purpose:                                                                  *
+ *      Converts a character to upper case, if applicable.                    *
+ *  Arguments:                                                                *
+ *      lower (char):                                                         *
+ *          The input character.                                              *
+ *  Output:                                                                   *
+ *      upper (char):                                                         *
+ *          The upper case version of the input character.                    *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_upper_case.c                                  *
+ ******************************************************************************/
+extern char tmpl_Upper_Case(char c);
+
+extern unsigned char tmpl_String_To_UChar(const char *str);
+extern unsigned int tmpl_String_To_UInt(const char *str);
 
 #define tmpl_strdup tmpl_String_Duplicate
 
