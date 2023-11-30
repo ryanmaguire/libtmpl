@@ -131,6 +131,22 @@
 /*  Header file where the prototype of the function is given.                 */
 #include <libtmpl/include/tmpl_math.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Maclaurin expansion provided here.                                        */
+#include "auxiliary/tmpl_erf_maclaurin_double.h"
+
+/*  Remez minimax approximation for erf.                                      */
+#include "auxiliary/tmpl_erf_asymptotic_double.h"
+
+/*  Pade approximation for erf.                                               */
+#include "auxiliary/tmpl_erf_pade_double.h"
+
+/*  Chebyshev expansion for erf.                                              */
+#include "auxiliary/tmpl_erf_chebyshev_double.h"
+
 /*  With IEEE-754 support we get a slight speed checking the range.           */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 

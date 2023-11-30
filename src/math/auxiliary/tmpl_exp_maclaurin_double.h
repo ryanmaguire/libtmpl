@@ -16,93 +16,85 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_exp_pade_float                             *
+ *                         tmpl_exp_maclaurin_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (4, 4) Pade approximant of exp(x) at single precision.   *
+ *      Computes the Maclaurin series of exp(x).                              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Exp_Pade                                                   *
+ *      tmpl_Double_Exp_Maclaurin                                             *
  *  Purpose:                                                                  *
- *      Computes the Pade approximant of order (4, 4) for exp.                *
+ *      Computes the Maclaurin series of exp for small values of x.           *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      exp_x (float):                                                        *
- *          The Pade approximation of exp(x).                                 *
+ *      exp_x (double):                                                       *
+ *          The Maclaurin series of exp.                                      *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomials for the numerator     *
- *      and denominator.                                                      *
+ *      Use Horner's method to evaluate the polynomial.                       *
  *                                                                            *
- *                     a0 + a1*x^1 + a2*x^2 + a3*x^3 + a4*x^4                 *
- *          exp(x) ~= ---------------------------------------                 *
- *                     b0 + b1*x^1 + b2*x^2 + b3*x^3 + b4*x^4                 *
+ *                        infty                                               *
+ *                        -----                                               *
+ *                        \        1   n                                      *
+ *           exp(x)   =   /       --- x                                       *
+ *                        -----    n!                                         *
+ *                        n = 0                                               *
  *                                                                            *
+ *      Use the first 9 terms (0 <= n <= 8) and compute.                      *
+ *  Notes:                                                                    *
+ *      Only accurate for values near 0.                                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 9, 2022                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_EXP_PADE_FLOAT_H
-#define TMPL_EXP_PADE_FLOAT_H
+#ifndef TMPL_EXP_MACLAURIN_DOUBLE_H
+#define TMPL_EXP_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Coefficients for the polynomial. They are 1 / n!.                         */
+#define A0 (1.000000000000000000000000000000000000000E+00)
+#define A1 (1.000000000000000000000000000000000000000E+00)
+#define A2 (5.000000000000000000000000000000000000000E-01)
+#define A3 (1.666666666666666666666666666666666666667E-01)
+#define A4 (4.166666666666666666666666666666666666667E-02)
+#define A5 (8.333333333333333333333333333333333333333E-03)
+#define A6 (1.388888888888888888888888888888888888889E-03)
+#define A7 (1.984126984126984126984126984126984126984E-04)
+#define A8 (2.480158730158730158730158730158730158730E-05)
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
-#define P0 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define P1 (+5.0000000000000000000000000000000000000000000000000E-01F)
-#define P2 (+1.0714285714285714285714285714285714285714285714286E-01F)
-#define P3 (+1.1904761904761904761904761904761904761904761904762E-02F)
-#define P4 (+5.9523809523809523809523809523809523809523809523810E-04F)
-
-/*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define Q1 (-5.0000000000000000000000000000000000000000000000000E-01F)
-#define Q2 (+1.0714285714285714285714285714285714285714285714286E-01F)
-#define Q3 (-1.1904761904761904761904761904761904761904761904762E-02F)
-#define Q4 (+5.9523809523809523809523809523809523809523809523810E-04F)
-
-/*  Function for computing the (4, 4) Pade approximant of Exp.                */
-TMPL_INLINE_DECL
-float tmpl_Float_Exp_Pade(float x)
+/*  Maclaurin series of exp to 9 terms.                                       */
+TMPL_STATIC_INLINE
+double tmpl_Double_Exp_Maclaurin(double x)
 {
-    /*  Compute the numerator (p) and the denominator (q).                    */
-    const float p = P0 + x*(P1 + x*(P2 + x*(P3 + x*P4)));
-    const float q = Q0 + x*(Q1 + x*(Q2 + x*(Q3 + x*Q4)));
-
-    /*  Return the quotient.                                                  */
-    return p / q;
+    /*  Compute the polynomial via Horner's method and return.                */
+    return A0+x*(A1+x*(A2+x*(A3+x*(A4+x*(A5+x*(A6+x*(A7+x*A8)))))));
 }
-/*  End of tmpl_Float_Exp_Pade.                                               */
+/*  End of tmpl_Double_Exp_Maclaurin.                                         */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef P0
-#undef P1
-#undef P2
-#undef P3
-#undef P4
-#undef Q0
-#undef Q1
-#undef Q2
-#undef Q3
-#undef Q4
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
+#undef A6
+#undef A7
+#undef A8
 
 #endif
 /*  End of include guard.                                                     */

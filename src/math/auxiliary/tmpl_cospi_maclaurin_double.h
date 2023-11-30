@@ -16,41 +16,38 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_erf_maclaurin_double                         *
+ *                     tmpl_cospi_maclaurin_double_inline                     *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of erf(x) at double precision.          *
+ *      Computes the Maclaurin series of cos(pi x) at double precision.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Erf_Maclaurin                                             *
+ *      tmpl_Double_CosPi_Maclaurin                                           *
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of erf(x) for small values x.           *
+ *      Computes the Maclaurin series of cos(pi x) for small values x.        *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      erf_x (double):                                                       *
- *          The Maclaurin series of erf(x).                                   *
+ *      cos_pix (double):                                                     *
+ *          The Maclaurin series of cos(pi x).                                *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
  *                                                                            *
- *                             infty                                          *
- *                             -----                                          *
- *                      2      \        (-1)^n                                *
- *          erf(x) = --------  /      ----------- * x^{2n+1}                  *
- *                   sqrt(pi)  -----  (2n + 1) n!                             *
- *                             n = 0                                          *
+ *                        infty                                               *
+ *                        -----                                               *
+ *                        \        (-1)^n pi^{2n}                             *
+ *          cos(pi x) =   /        -------------- * x^{2n}                    *
+ *                        -----         (2n)!                                 *
+ *                        n = 0                                               *
  *                                                                            *
- *      Use the first 7 terms (0 <= n <= 6) and compute.                      *
+ *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
  *  Notes:                                                                    *
- *      Only accurate for small values. For |x| < 0.125 this function is      *
- *      accurate to double precision (10^-16 relative error). The larger      *
- *      the input is, the worse the error. By the alternating series theorem, *
- *      the absolute error is bounded by (1/75600)*|x|^15.                    *
+ *      Only accurate for values near 0.                                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -60,59 +57,41 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       January 19, 2023                                              *
+ *  Date:       October 24, 2022                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_MACLAURIN_DOUBLE_H
-#define TMPL_ERF_MACLAURIN_DOUBLE_H
+#ifndef TMPL_COSPI_MACLAURIN_DOUBLE_H
+#define TMPL_COSPI_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
+/*  Coefficients for the Maclaurin series at double precision.                */
+#define A0 (+1.0000000000000000000000000000000000000000E+00)
+#define A1 (-4.9348022005446793094172454999380755676568E+00)
+#define A2 (+4.0587121264167682181850138620293796354053E+00)
+#define A3 (-1.3352627688545894958753047828505831928711E+00)
+#define A4 (+2.3533063035889320454187935277546542154507E-01)
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Coefficients for the polynomial.                                          */
-#define A00 (+1.1283791670955125738961589031215451716881012586580E+00)
-#define A01 (-3.7612638903183752463205296770718172389603375288600E-01)
-#define A02 (+1.1283791670955125738961589031215451716881012586580E-01)
-#define A03 (-2.6866170645131251759432354836227265992573839491857E-02)
-#define A04 (+5.2239776254421878421118467737108572763338021234167E-03)
-#define A05 (-8.5483270234508528325466583569814028158189489292273E-04)
-#define A06 (+1.2055332981789664251027338708563516791539543361731E-04)
-
-/*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*A06)))))
-
-/*  Function for computing erf(x) via a Maclaurin series.                     */
-TMPL_INLINE_DECL
-double tmpl_Double_Erf_Maclaurin(double x)
+/*  Maclaurin series for cos(pi x), double precision, to 5 terms.             */
+TMPL_STATIC_INLINE
+double tmpl_Double_CosPi_Maclaurin(double x)
 {
-    /*  The polynomial is odd, in terms of x^{2n+1}. Compute x^2.             */
+    /*  Declare necessary variables.                                          */
     const double x2 = x*x;
 
-    /*  Evaluate the polynomial using Horner's method and return.             */
-    const double poly = TMPL_POLY_EVAL(x2);
-    return x*poly;
+    /*  Use Horner's method to compute the polynomial.                        */
+    return A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4)));
 }
-/*  End of tmpl_Double_Erf_Maclaurin.                                         */
+/*  End of tmpl_Double_CosPi_Maclaurin.                                       */
 
-/*  #undef everything in case someone wants to #include this file.            */
-#undef TMPL_POLY_EVAL
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  Undefine the coefficients in case someone wants to #include this file.    */
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
 
 #endif
 /*  End of include guard.                                                     */

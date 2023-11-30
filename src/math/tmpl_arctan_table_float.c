@@ -15,16 +15,38 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
- ******************************************************************************
- *                            tmpl_exp_pade_double                            *
- ******************************************************************************
- *  Purpose:                                                                  *
- *      Computes exp(x) with a Pade approximant. Implemented in               *
- *      include/math/tmpl_exp_pade_double.h. See for details.                 *
- ******************************************************************************
- *  Author:     Ryan Maguire                                                  *
- *  Date:       November 9, 2022                                              *
  ******************************************************************************/
 
-/*  Implemented in include/math/tmpl_exp_pade_double.h. Include this.         */
-#include "../../include/math/tmpl_exp_pade_double.h"
+/*  TMPL_USE_MATH_ALGORITHMS macro found here.                                */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  These tables are only needed if libtmpl math algorithms are used.         */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Declarations given here.                                                  */
+#include <libtmpl/include/tmpl_math.h>
+
+/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
+ *                                                                            *
+ *                                     u - v                                  *
+ *          atan(u) = atan(v) + atan( -------- )                              *
+ *                                     1 + uv                                 *
+ *                                                                            *
+ *  The values v and atan(v) are pre-computed below for the calculation.      */
+const float tmpl_atan_float_v[8] = {
+    0.05F, 0.18F, 0.35F, 0.72F, 1.35F, 2.5F, 4.0F, 8.0F
+};
+
+const float tmpl_atan_float_atan_of_v[8] = {
+    4.99583957219427614100063E-02F,
+    1.78092938231197549667920E-01F,
+    3.36674819386727181396699E-01F,
+    6.24023052976756847589791E-01F,
+    9.33247528656203869893663E-01F,
+    1.19028994968253173292773E+00F,
+    1.32581766366803246505924E+00F,
+    1.44644133224813518419997E+00F
+};
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

@@ -26,43 +26,6 @@
 /*  Declarations given here.                                                  */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
- *                                                                            *
- *                                     u - v                                  *
- *          atan(u) = atan(v) + atan( -------- )                              *
- *                                     1 + uv                                 *
- *                                                                            *
- *  The values v and atan(v) are pre-computed below for the calculation.      */
-const float tmpl_atan_float_v[8] = {
-    0.05F, 0.18F, 0.35F, 0.72F, 1.35F, 2.5F, 4.0F, 8.0F
-};
-
-const float tmpl_atan_float_atan_of_v[8] = {
-    4.99583957219427614100063E-02F,
-    1.78092938231197549667920E-01F,
-    3.36674819386727181396699E-01F,
-    6.24023052976756847589791E-01F,
-    9.33247528656203869893663E-01F,
-    1.19028994968253173292773E+00F,
-    1.32581766366803246505924E+00F,
-    1.44644133224813518419997E+00F
-};
-
-const double tmpl_atan_double_v[8] = {
-    0.05, 0.18, 0.35, 0.72, 1.35, 2.5, 4.0, 8.0
-};
-
-const double tmpl_atan_double_atan_of_v[8] = {
-    4.99583957219427614100063E-02,
-    1.78092938231197549667920E-01,
-    3.36674819386727181396699E-01,
-    6.24023052976756847589791E-01,
-    9.33247528656203869893663E-01,
-    1.19028994968253173292773E+00,
-    1.32581766366803246505924E+00,
-    1.44644133224813518419997E+00
-};
-
 /*  The long double version of these tables depends on how long double is     *
  *  implemented. 80-bit extended and 64-bit double implementations, as well   *
  *  as the "portable" version, use the same idea as double and float. 128-bit *
@@ -225,6 +188,7 @@ const long double tmpl_ldouble_atan_n_by_8[129] = {
     1.5078873207597713231536332351575422706711E+00L,
     1.5083775167989392707573425786542463284923E+00L
 };
+
 #endif
 /*  End of 64-bit / 80-bit extended / portables vs. 128-bit quadruple.        */
 

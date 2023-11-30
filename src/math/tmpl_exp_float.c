@@ -135,6 +135,19 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Maclaurin expansion provided here.                                        */
+#include "auxiliary/tmpl_exp_maclaurin_float.h"
+
+/*  Remez minimax polynomial found here.                                      */
+#include "auxiliary/tmpl_exp_remez_float.h"
+
+/*  Pade approximation for exp for |x| < 1.                                   */
+#include "auxiliary/tmpl_exp_pade_float.h"
+
 /*  With IEEE-754 support we can get a bit of a speed boost.                  */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 

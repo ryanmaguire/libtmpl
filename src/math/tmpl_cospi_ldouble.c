@@ -1,5 +1,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
+#include "auxiliary/tmpl_cospi_maclaurin_ldouble.h"
+#include "auxiliary/tmpl_sinpi_maclaurin_ldouble.h"
+
 long double tmpl_LDouble_CosPi(long double x)
 {
     long double arg, sgn_x, cx, cdx, sx, sdx, dx;

@@ -35,16 +35,17 @@
  *          The exponential of x.                                             *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Exp_Maclaurin (tmpl_math.h):                          *
- *              Computes exp(x) via a Maclaurin series for |x| < 1/16.        *
- *          tmpl_Double_Exp_Remez (tmpl_math.h):                              *
- *              Computes exp(x) via a Remez minimax polynomial for |x| < 1/4. *
- *          tmpl_Double_Exp_Pade (tmpl_math.h):                               *
- *              Computes exp(x) with a Pade approximant for |x| < 1.          *
- *          tmpl_Double_Exp_Neg_Kernel (tmpl_math.h):                         *
- *              Computes exp(x) for negative x with x <= -1.                  *
- *          tmpl_Double_Exp_Pos_Kernel (tmpl_math.h):                         *
- *              Computes exp(x) for positive x with x >= 1.                   *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Exp_Maclaurin:                                    *
+ *                  Computes exp(x) via a Maclaurin series for |x| < 1/16.    *
+ *              tmpl_Double_Exp_Remez:                                        *
+ *                  Computes exp(x) via a Remez polynomial for |x| < 1/4.     *
+ *              tmpl_Double_Exp_Pade:                                         *
+ *                  Computes exp(x) with a Pade approximant for |x| < 1.      *
+ *              tmpl_Double_Exp_Neg_Kernel:                                   *
+ *                  Computes exp(x) for negative x with x <= -1.              *
+ *              tmpl_Double_Exp_Pos_Kernel:                                   *
+ *                  Computes exp(x) for positive x with x >= 1.               *
  *      Method:                                                               *
  *          For very small x, |x| < 1/16, use a Maclaurin series.             *
  *                                                                            *
@@ -95,22 +96,23 @@
  *          around 1 ULP (~2 x 10^-16).                                       *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Is_NaN (tmpl_math.h):                                 *
- *              Determines if a real number is NaN.                           *
- *          tmpl_Double_Is_Inf (tmpl_math.h):                                 *
- *              Determines if a real number is infinity.                      *
- *          tmpl_Double_Abs (tmpl_math.h):                                    *
- *              Computes the absolute value of a real number.                 *
- *          tmpl_Double_Exp_Maclaurin (tmpl_math.h):                          *
- *              Computes exp(x) via a Maclaurin series for |x| < 1/16.        *
- *          tmpl_Double_Exp_Remez (tmpl_math.h):                              *
- *              Computes exp(x) via a Remez minimax polynomial for |x| < 1/4. *
- *          tmpl_Double_Exp_Pade (tmpl_math.h):                               *
- *              Computes exp(x) with a Pade approximant for |x| < 1.          *
- *          tmpl_Double_Exp_Neg_Kernel (tmpl_math.h):                         *
- *              Computes exp(x) for negative x with x <= -1.                  *
- *          tmpl_Double_Exp_Pos_Kernel (tmpl_math.h):                         *
- *              Computes exp(x) for positive x with x >= 1.                   *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Is_NaN:                                           *
+ *                  Determines if a real number is NaN.                       *
+ *              tmpl_Double_Is_Inf:                                           *
+ *                  Determines if a real number is infinity.                  *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a real number.             *
+ *              tmpl_Double_Exp_Maclaurin:                                    *
+ *                  Computes exp(x) via a Maclaurin series for |x| < 1/16.    *
+ *              tmpl_Double_Exp_Remez:                                        *
+ *                  Computes exp(x) via a Remez polynomial for |x| < 1/4.     *
+ *              tmpl_Double_Exp_Pade:                                         *
+ *                  Computes exp(x) with a Pade approximant for |x| < 1.      *
+ *              tmpl_Double_Exp_Neg_Kernel:                                   *
+ *                  Computes exp(x) for negative x with x <= -1.              *
+ *              tmpl_Double_Exp_Pos_Kernel:                                   *
+ *                  Computes exp(x) for positive x with x >= 1.               *
  *      Method:                                                               *
  *          Same as IEEE-754 method, but determine the range of x by          *
  *          computing |x| and comparing this value with 1/16, 1/4, etc.       *
@@ -134,6 +136,19 @@
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
+
+/******************************************************************************
+ *                         Static / Inlined Functions                         *
+ ******************************************************************************/
+
+/*  Maclaurin expansion provided here.                                        */
+#include "auxiliary/tmpl_exp_maclaurin_double.h"
+
+/*  Remez minimax polynomial found here.                                      */
+#include "auxiliary/tmpl_exp_remez_double.h"
+
+/*  Pade approximation for exp for |x| < 1.                                   */
+#include "auxiliary/tmpl_exp_pade_double.h"
 
 /*  With IEEE-754 support we can get a bit of a speed boost.                  */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

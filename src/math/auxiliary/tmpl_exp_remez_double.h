@@ -2,11 +2,8 @@
 #ifndef TMPL_EXP_REMEZ_DOUBLE_H
 #define TMPL_EXP_REMEZ_DOUBLE_H
 
-/*  TMPL_INLINE_DECL found here                                               */
+/*  TMPL_STATIC_INLINE found here                                             */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the Remez polynomial.                   */
 #define A00 (+9.9999999999999999988430264938382617864875775206464E-01)
@@ -44,7 +41,7 @@ A00 + x*(\
 )
 
 /*  Function for computing exp(x) for -1/4 < x < 1/4 using minimax polynomial.*/
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Exp_Remez(double x)
 {
     return TMPL_POLY_EVAL(x);

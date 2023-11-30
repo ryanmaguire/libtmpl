@@ -60,9 +60,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 9, 2022                                              *
@@ -72,11 +70,8 @@
 #ifndef TMPL_EXP_MACLAURIN_LDOUBLE_H
 #define TMPL_EXP_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the polynomial. They are 1 / n!.                         */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -207,7 +202,7 @@ z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
 /*  End of double vs. extended / portable vs. double-double vs. quadruple.    */
 
 /*  Maclaurin series of exp for long double.                                  */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Exp_Maclaurin(long double x)
 {
     /*  Compute the polynomial via Horner's method and return.                */

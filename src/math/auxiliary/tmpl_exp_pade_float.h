@@ -16,83 +16,88 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_sinpi_maclaurin_double                         *
+ *                            tmpl_exp_pade_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of sin(pi x) at double precision.       *
+ *      Computes the (4, 4) Pade approximant of exp(x) at single precision.   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_SinPi_Maclaurin                                           *
+ *      tmpl_Float_Exp_Pade                                                   *
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of sin(pi x) for small values x.        *
+ *      Computes the Pade approximant of order (4, 4) for exp.                *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      sin_pix (double):                                                     *
- *          The Maclaurin series of sin(pi x).                                *
+ *      exp_x (float):                                                        *
+ *          The Pade approximation of exp(x).                                 *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomial.                       *
+ *      Use Horner's method to evaluate the polynomials for the numerator     *
+ *      and denominator.                                                      *
  *                                                                            *
- *                        infty                                               *
- *                        -----                                               *
- *                        \        (-1)^n pi^{2n+1}                           *
- *          sin(pi x) =   /        ---------------- * x^{2n+1}                *
- *                        -----         (2n+1)!                               *
- *                        n = 0                                               *
+ *                     a0 + a1*x^1 + a2*x^2 + a3*x^3 + a4*x^4                 *
+ *          exp(x) ~= ---------------------------------------                 *
+ *                     b0 + b1*x^1 + b2*x^2 + b3*x^3 + b4*x^4                 *
  *                                                                            *
- *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
- *  Notes:                                                                    *
- *      Only accurate for values near 0.                                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 24, 2022                                              *
+ *  Date:       November 9, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_EXP_PADE_FLOAT_H
+#define TMPL_EXP_PADE_FLOAT_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
+/*  Coefficients for the numerator of the Pade approximant.                   */
+#define P0 (+1.0000000000000000000000000000000000000000000000000E+00F)
+#define P1 (+5.0000000000000000000000000000000000000000000000000E-01F)
+#define P2 (+1.0714285714285714285714285714285714285714285714286E-01F)
+#define P3 (+1.1904761904761904761904761904761904761904761904762E-02F)
+#define P4 (+5.9523809523809523809523809523809523809523809523810E-04F)
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Coefficients for the denominator of the Pade approximant.                 */
+#define Q0 (+1.0000000000000000000000000000000000000000000000000E+00F)
+#define Q1 (-5.0000000000000000000000000000000000000000000000000E-01F)
+#define Q2 (+1.0714285714285714285714285714285714285714285714286E-01F)
+#define Q3 (-1.1904761904761904761904761904761904761904761904762E-02F)
+#define Q4 (+5.9523809523809523809523809523809523809523809523810E-04F)
 
-/*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (3.1415926535897932384626433832795028841972E+00)
-#define A1 (-5.1677127800499700292460525111835658670375E+00)
-#define A2 (2.5501640398773454438561775836952967206692E+00)
-#define A3 (-5.9926452932079207688773938354604004601536E-01)
-#define A4 (8.2145886611128228798802365523698344807837E-02)
-
-/*  Maclaurin series for sin(pi x), double precision, to 5 terms.             */
-double tmpl_Double_SinPi_Maclaurin(double x)
+/*  Function for computing the (4, 4) Pade approximant of Exp.                */
+TMPL_STATIC_INLINE
+float tmpl_Float_Exp_Pade(float x)
 {
-    /*  Declare necessary variables.                                          */
-    const double x2 = x*x;
+    /*  Compute the numerator (p) and the denominator (q).                    */
+    const float p = P0 + x*(P1 + x*(P2 + x*(P3 + x*P4)));
+    const float q = Q0 + x*(Q1 + x*(Q2 + x*(Q3 + x*Q4)));
 
-    /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
+    /*  Return the quotient.                                                  */
+    return p / q;
 }
-/*  End of tmpl_Double_SinPi_Maclaurin.                                       */
+/*  End of tmpl_Float_Exp_Pade.                                               */
 
-/*  Undefine the coefficients in case someone wants to #include this file.    */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
+/*  Undefine all macros in case someone wants to #include this file.          */
+#undef P0
+#undef P1
+#undef P2
+#undef P3
+#undef P4
+#undef Q0
+#undef Q1
+#undef Q2
+#undef Q3
+#undef Q4
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

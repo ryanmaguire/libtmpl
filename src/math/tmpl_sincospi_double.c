@@ -1,5 +1,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
+#include "auxiliary/tmpl_cospi_maclaurin_double.h"
+#include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+
 void tmpl_Double_SinCosPi(double t, double *sinpi_t, double *cospi_t)
 {
     double arg, abs_t, sgn_sin, sgn_cos, cx, cdx, sx, sdx, dx;

@@ -55,7 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -67,11 +67,8 @@
 #ifndef TMPL_EXP_PADE_LDOUBLE_H
 #define TMPL_EXP_PADE_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double. Uses the same number of terms as 64-bit double.       */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -369,7 +366,7 @@ Q00 + z*(\
 /*  End of double vs. extended / portable vs. double-double vs. quadruple.    */
 
 /*  Function for computing a Pade approximant of Exp.                         */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Exp_Pade(long double x)
 {
     /*  Compute the numerator (p) and the denominator (q).                    */

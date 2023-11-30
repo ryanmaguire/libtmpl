@@ -45,9 +45,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 19, 2023                                              *
@@ -57,14 +55,8 @@
 #ifndef TMPL_ERF_PADE_DOUBLE_H
 #define TMPL_ERF_PADE_DOUBLE_H
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define P00 (+1.1283791670955125738961589031215451716881012586580E+00)
@@ -139,7 +131,7 @@ Q00 + z*(\
 )
 
 /*  Function for computing the (11, 10) Pade approximant of erf(x).           */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Erf_Pade(double x)
 {
     /*  Both polynomials are even. Computing x^2 and work with that.          */
@@ -180,9 +172,6 @@ double tmpl_Double_Erf_Pade(double x)
 #undef Q10
 #undef TMPL_NUM_EVAL
 #undef TMPL_DEN_EVAL
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of TMPL_ERF_PADE_DOUBLE_H.                                            */

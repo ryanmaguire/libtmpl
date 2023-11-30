@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_cospi_maclaurin_ldouble                       *
+ *                         tmpl_sinpi_maclaurin_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of normalized cosine, cos(pi x).        *
+ *      Computes the Maclaurin series of normalized sine.                     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_CosPi_Maclaurin                                          *
+ *      tmpl_LDouble_SinPi_Maclaurin                                          *
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of normalized cosine for small values x.*
+ *      Computes the Maclaurin series of normalized sine small values x.      *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cospi_x (long double):                                                *
- *          The Maclaurin series of normalized cosine, cos(pi x).             *
+ *      sinpi_x (long double):                                                *
+ *          The Maclaurin series of normalized sine.                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -40,9 +40,9 @@
  *                                                                            *
  *                        infty                                               *
  *                        -----                                               *
- *                        \        (-1)^n pi^{2n}                             *
- *          cos(pi x) =   /        -------------- * x^{2n}                    *
- *                        -----         (2n)!                                 *
+ *                        \         (-1)^n pi^{2n+1}                          *
+ *          sin(pi x) =   /        ------------------ * x^{2n+1}              *
+ *                        -----          (2n+1)!                              *
  *                        n = 0                                               *
  *                                                                            *
  *      Use the first few terms and compute.                                  *
@@ -57,21 +57,15 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 8, 2022                                              *
+ *  Date:       October 25, 2022                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COSPI_MACLAURIN_LDOUBLE_H
-#define TMPL_COSPI_MACLAURIN_LDOUBLE_H
+#ifndef TMPL_SINPI_MACLAURIN_LDOUBLE_H
+#define TMPL_SINPI_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double uses the same number of terms as double.               */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -82,30 +76,28 @@
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.000000000000000000000000000000000000000E+00L)
-#define A1 (-4.934802200544679309417245499938075567657E+00L)
-#define A2 (4.058712126416768218185013862029379635405E+00L)
-#define A3 (-1.335262768854589495875304782850583192871E+00L)
-#define A4 (2.353306303588932045418793527754654215451E-01L)
+#define A0 (+3.141592653589793238462643383279502884197E+00L)
+#define A1 (-5.167712780049970029246052511183565867038E+00L)
+#define A2 (+2.550164039877345443856177583695296720669E+00L)
+#define A3 (-5.992645293207920768877393835460400460154E-01L)
 
-/*  Maclaurin series for cosine in degrees.                                   */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_CosPi_Maclaurin(long double x)
+/*  Maclaurin series for sine in degrees.                                     */
+TMPL_STATIC_INLINE
+long double tmpl_LDouble_SinPi_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
     const long double x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4)));
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*A3)));
 }
-/*  End of tmpl_LDouble_CosPi_Maclaurin.                                      */
+/*  End of tmpl_LDouble_SinPi_Maclaurin.                                      */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
 #undef A1
 #undef A2
 #undef A3
-#undef A4
 
 /*  128-bit quadruple and double-double, a few more terms.                    */
 #elif \
@@ -121,26 +113,25 @@ long double tmpl_LDouble_CosPi_Maclaurin(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.000000000000000000000000000000000000000E+00L)
-#define A1 (-4.934802200544679309417245499938075567657E+00L)
-#define A2 (4.058712126416768218185013862029379635405E+00L)
-#define A3 (-1.335262768854589495875304782850583192871E+00L)
-#define A4 (2.353306303588932045418793527754654215451E-01L)
-#define A5 (-2.580689139001406001259829425289884965719E-02L)
-#define A6 (1.929574309403923047903345563685957640168E-03L)
-#define A7 (-1.046381049248457071180167283522393276103E-04L)
+#define A0 (+3.141592653589793238462643383279502884197E+00L)
+#define A1 (-5.167712780049970029246052511183565867038E+00L)
+#define A2 (+2.550164039877345443856177583695296720669E+00L)
+#define A3 (-5.992645293207920768877393835460400460154E-01L)
+#define A4 (+8.214588661112822879880236552369834480784E-02L)
+#define A5 (-7.370430945714350777259089957290781501212E-03L)
+#define A6 (+4.663028057676125644206289144702717438282E-04L)
 
-/*  Maclaurin series for cosine in degrees.                                   */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_CosPi_Maclaurin(long double x)
+/*  Maclaurin series for sine in degrees.                                     */
+TMPL_STATIC_INLINE
+long double tmpl_LDouble_SinPi_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
     const long double x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return A0+x2*(A1+x2*(A2+x2*(A3+x2*(A4+x2*(A5+x2*(A6+x2*A7))))));
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*(A4 + x2*(A5 + x2*A6))))));
 }
-/*  End of tmpl_LDouble_CosPi_Maclaurin.                                      */
+/*  End of tmpl_LDouble_SinPi_Maclaurin.                                      */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
@@ -150,7 +141,6 @@ long double tmpl_LDouble_CosPi_Maclaurin(long double x)
 #undef A4
 #undef A5
 #undef A6
-#undef A7
 
 #else
 /*  End of 128-quadruple / 128-bit double-double version.                     */
@@ -162,24 +152,23 @@ long double tmpl_LDouble_CosPi_Maclaurin(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.000000000000000000000000000000000000000E+00L)
-#define A1 (-4.934802200544679309417245499938075567657E+00L)
-#define A2 (4.058712126416768218185013862029379635405E+00L)
-#define A3 (-1.335262768854589495875304782850583192871E+00L)
-#define A4 (2.353306303588932045418793527754654215451E-01L)
-#define A5 (-2.580689139001406001259829425289884965719E-02L)
+#define A0 (+3.141592653589793238462643383279502884197E+00L)
+#define A1 (-5.167712780049970029246052511183565867038E+00L)
+#define A2 (+2.550164039877345443856177583695296720669E+00L)
+#define A3 (-5.992645293207920768877393835460400460154E-01L)
+#define A4 (+8.214588661112822879880236552369834480784E-02L)
 
-/*  Maclaurin series for cosine in degrees.                                   */
-TMPL_INLINE_DECL
-long double tmpl_LDouble_CosPi_Maclaurin(long double x)
+/*  Maclaurin series for sine in degrees.                                     */
+TMPL_STATIC_INLINE
+long double tmpl_LDouble_SinPi_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
     const long double x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*(A4 + x2*A5))));
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
 }
-/*  End of tmpl_LDouble_CosPi_Maclaurin.                                      */
+/*  End of tmpl_LDouble_SinPi_Maclaurin.                                      */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
@@ -187,13 +176,9 @@ long double tmpl_LDouble_CosPi_Maclaurin(long double x)
 #undef A2
 #undef A3
 #undef A4
-#undef A5
 
 #endif
 /*  End of portable version.                                                  */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

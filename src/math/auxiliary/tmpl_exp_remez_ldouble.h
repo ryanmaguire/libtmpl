@@ -2,11 +2,8 @@
 #ifndef TMPL_EXP_REMEZ_LDOUBLE_H
 #define TMPL_EXP_REMEZ_LDOUBLE_H
 
-/*  TMPL_INLINE_DECL found here                                               */
+/*  TMPL_STATIC_INLINE found here                                             */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Quadruple precision, degree 18 polynomial needed.                         */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN || \
@@ -216,7 +213,7 @@ A00 + z*(\
 /*  End of quadruple vs. double-double vs. double vs. extended / portable.    */
 
 /*  Function for computing exp(x) for -1/4 < x < 1/4 using minimax polynomial.*/
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Exp_Remez(long double x)
 {
     return TMPL_POLY_EVAL(x);

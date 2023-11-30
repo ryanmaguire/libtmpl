@@ -60,9 +60,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 9, 2022                                              *
@@ -72,11 +70,8 @@
 #ifndef TMPL_EXP_PADE_DOUBLE_H
 #define TMPL_EXP_PADE_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (+1.000000000000000000000000000000000000000E+00)
@@ -99,7 +94,7 @@
 #define Q7 (-5.781255781255781255781255781255781255781E-08)
 
 /*  Function for computing the (7, 7) Pade approximant of Exp.                */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Exp_Pade(double x)
 {
     /*  Compute the numerator (p) and the denominator (q).                    */

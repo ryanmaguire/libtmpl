@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_cospi_maclaurin_double_inline                     *
+ *                    tmpl_sinpi_maclaurin_double_inline                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of cos(pi x) at double precision.       *
+ *      Computes the Maclaurin series of sin(pi x) at double precision.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_CosPi_Maclaurin                                           *
+ *      tmpl_Double_SinPi_Maclaurin                                           *
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of cos(pi x) for small values x.        *
+ *      Computes the Maclaurin series of sin(pi x) for small values x.        *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cos_pix (double):                                                     *
- *          The Maclaurin series of cos(pi x).                                *
+ *      sin_pix (double):                                                     *
+ *          The Maclaurin series of sin(pi x).                                *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -40,9 +40,9 @@
  *                                                                            *
  *                        infty                                               *
  *                        -----                                               *
- *                        \        (-1)^n pi^{2n}                             *
- *          cos(pi x) =   /        -------------- * x^{2n}                    *
- *                        -----         (2n)!                                 *
+ *                        \        (-1)^n pi^{2n+1}                           *
+ *          sin(pi x) =   /        ---------------- * x^{2n+1}                *
+ *                        -----         (2n+1)!                               *
  *                        n = 0                                               *
  *                                                                            *
  *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
@@ -61,36 +61,30 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COSPI_MACLAURIN_DOUBLE_H
-#define TMPL_COSPI_MACLAURIN_DOUBLE_H
+#ifndef TMPL_SINPI_MACLAURIN_DOUBLE_H
+#define TMPL_SINPI_MACLAURIN_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (1.0000000000000000000000000000000000000000E+00)
-#define A1 (-4.9348022005446793094172454999380755676568E+00)
-#define A2 (4.0587121264167682181850138620293796354053E+00)
-#define A3 (-1.3352627688545894958753047828505831928711E+00)
-#define A4 (2.3533063035889320454187935277546542154507E-01)
+#define A0 (+3.1415926535897932384626433832795028841972E+00)
+#define A1 (-5.1677127800499700292460525111835658670375E+00)
+#define A2 (+2.5501640398773454438561775836952967206692E+00)
+#define A3 (-5.9926452932079207688773938354604004601536E-01)
+#define A4 (+8.2145886611128228798802365523698344807837E-02)
 
-/*  Maclaurin series for cos(pi x), double precision, to 5 terms.             */
-TMPL_INLINE_DECL
-double tmpl_Double_CosPi_Maclaurin(double x)
+/*  Maclaurin series for sin(pi x), double precision, to 5 terms.             */
+TMPL_STATIC_INLINE
+double tmpl_Double_SinPi_Maclaurin(double x)
 {
     /*  Declare necessary variables.                                          */
     const double x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4)));
+    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
 }
-/*  End of tmpl_Double_CosPi_Maclaurin.                                       */
+/*  End of tmpl_Double_SinPi_Maclaurin.                                       */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
@@ -98,9 +92,6 @@ double tmpl_Double_CosPi_Maclaurin(double x)
 #undef A2
 #undef A3
 #undef A4
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

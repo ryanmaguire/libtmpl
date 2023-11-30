@@ -103,7 +103,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -111,14 +111,12 @@
  *  Date:       January 19, 2023                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_ERF_ASYMPTOTIC_DOUBLE_H
+#define TMPL_ERF_ASYMPTOTIC_DOUBLE_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is not requested.                         */
-#if TMPL_USE_INLINE != 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /******************************************************************************
  *  Three implementations provided for larger inputs (2 <= x < infty).        *
@@ -272,6 +270,7 @@ D00 + z*(\
 )
 
 /*  Function for computing erf(x) for x >= 2.                                 */
+TMPL_STATIC_INLINE
 double tmpl_Double_Erf_Asymptotic(double x)
 {
     /*  For x >= 6 we have |1 - erf(x)| < 2^-52, double epsilon. Return 1.    */
@@ -476,6 +475,7 @@ B00 + z*(\
 )
 
 /*  Function for computing erf(x) for x >= 2.                                 */
+TMPL_STATIC_INLINE
 double tmpl_Double_Erf_Asymptotic(double x)
 {
     /*  For x >= 6 we have |1 - erf(x)| < 2^-52, double epsilon. Return 1.    */
@@ -640,6 +640,7 @@ A00 + z*(\
 )
 
 /*  Function for computing erf(x) for x >= 2.                                 */
+TMPL_STATIC_INLINE
 double tmpl_Double_Erf_Asymptotic(double x)
 {
     /*  For x >= 6 we have |1 - erf(x)| < 2^-52, double epsilon. Return 1.    */
@@ -694,4 +695,4 @@ double tmpl_Double_Erf_Asymptotic(double x)
 /*  End of #if TMPL_ERF_IMPLEMENTATION == 0.                                  */
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

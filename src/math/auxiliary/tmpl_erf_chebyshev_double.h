@@ -90,14 +90,12 @@
  *  Date:       January 19, 2023                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_ERF_CHEBYSHEV_DOUBLE_H
+#define TMPL_ERF_CHEBYSHEV_DOUBLE_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Only use this if inline support is not requested.                         */
-#if TMPL_USE_INLINE != 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.1283791670955124849729221417042495062358233113712E+00)
@@ -138,6 +136,7 @@ A00 + z*(\
 )
 
 /*  Function for computing erf(x) via a Chebyshev expansion.                  */
+TMPL_STATIC_INLINE
 double tmpl_Double_Erf_Chebyshev(double x)
 {
     /*  The expansion is odd, in terms of x^{2n+1}. Compute x^2.              */
@@ -165,4 +164,4 @@ double tmpl_Double_Erf_Chebyshev(double x)
 #undef A11
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */
