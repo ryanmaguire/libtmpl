@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_cosh_maclaurin_float                          *
+ *                     tmpl_cosh_maclaurin_float_inline                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of hyperbolic cosine.                   *
@@ -52,22 +52,18 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 25, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_COSH_MACLAURIN_FLOAT_H
+#define TMPL_COSH_MACLAURIN_FLOAT_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the polynonial. They are 1 / (2n)!.                      */
 #define A0 (1.00000000000000000000000000000E+00F)
@@ -75,6 +71,7 @@
 #define A2 (4.16666666666666666666666666666E-02F)
 
 /*  Maclaurin series of hyperbolic cosine to 3 terms.                         */
+TMPL_STATIC_INLINE
 float tmpl_Float_Cosh_Maclaurin(float x)
 {
     /*  The function is even and the series is in terms of x^2.               */
@@ -91,4 +88,4 @@ float tmpl_Float_Cosh_Maclaurin(float x)
 #undef A2
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

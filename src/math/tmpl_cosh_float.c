@@ -40,18 +40,20 @@
  *          The hyperbolic cosine of x.                                       *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Abs (tmpl_math.h):                                     *
- *              Computes the absolute value of a float.                       *
- *          tmpl_Float_Cosh_Maclaurin (tmpl_math.h):                          *
- *              Computes cosh via a Maclaurin series for small inputs.        *
- *          tmpl_Float_Cosh_Pade (tmpl_math.h):                               *
- *              Computes cosh via a Pade approximation.                       *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a float.                   *
+ *              tmpl_Float_Cosh_Maclaurin:                                    *
+ *                  Computes cosh via a Maclaurin series for small inputs.    *
+ *              tmpl_Float_Cosh_Pade:                                         *
+ *                  Computes cosh via a Pade approximation.                   *
  *      Method:                                                               *
  *      Error:                                                                *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Float_Exp (tmpl_math.h):                                     *
- *              Computes the exponential of a float.                          *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Float_Exp:                                               *
+ *                  Computes the exponential of a float.                      *
  *      Method:                                                               *
  *          Compute t = exp(x) and return (t + 1/t)/2.                        *
  *      Error:                                                                *
@@ -60,7 +62,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -75,6 +77,9 @@
  *      Migrated to libtmpl from rss_ringoccs. Updated with IEEE-754 method.  *
  ******************************************************************************/
 
+/*  TMPL_USE_MATH_ALGORITHMS macro provided here.                             */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -88,6 +93,12 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+/*  Pade approximation provided here.                                         */
+#include "auxiliary/tmpl_cosh_pade_float.h"
+
+/*  Maclaurin series to the first few terms given here.                       */
+#include "auxiliary/tmpl_cosh_maclaurin_float.h"
+
 /*  Single precision hyperbolic cosine (coshf equivalent).                    */
 float tmpl_Float_Cosh(float x)
 {
@@ -96,7 +107,11 @@ float tmpl_Float_Cosh(float x)
     float exp_x;
 
     /*  Set the float part of the union to the input.                         */
-    w.r = tmpl_Float_Abs(x);
+    w.r = x;
+
+    /*  Compute the absolute value by setting the sign bit to zero. cosh is   *
+     *  an even function, cosh(-x) = cosh(x). Compute for positive x.         */
+    w.bits.sign = 0x00U;
 
     /*  +/- NaN returns NaN, for +/- infinity the limit is + infinity.        */
     if (TMPL_FLOAT_IS_NAN_OR_INF(w))
@@ -122,8 +137,7 @@ float tmpl_Float_Cosh(float x)
         return 0.5F*exp_x;
 
     /*  Otherwise, compute cosh(x) via (exp(x) + exp(-x))/2.                  */
-    else
-        return 0.5F*(exp_x + 1.0F/exp_x);
+    return 0.5F*(exp_x + 1.0F/exp_x);
 }
 /*  End of tmpl_Float_Cosh.                                                   */
 
@@ -137,15 +151,12 @@ float tmpl_Float_Cosh(float x)
 /*  Single precision hyperbolic cosine (cosh equivalent).                     */
 float tmpl_Float_Cosh(float x)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float exp_x, exp_minus_x;
-
     /*  The definition of cosh(x) is [exp(x) + exp(-x)]/2, so return this. It *
      *  is computationally faster to compute exp(x) and then exp(-x) via the  *
      *  formula exp(-x) = 1/exp(x). This saves us from computing two          *
      *  exponentials at the cost of an extra division.                        */
-    exp_x = tmpl_Float_Exp(x);
-    exp_minus_x = 1.0F/exp_x;
+    const float exp_x = tmpl_Float_Exp(x);
+    const float exp_minus_x = 1.0F / exp_x;
 
     /*  Compute cosh from the two exponentials and return.                    */
     return 0.5F*(exp_x + exp_minus_x);

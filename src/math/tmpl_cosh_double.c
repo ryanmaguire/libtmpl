@@ -40,12 +40,13 @@
  *          The hyperbolic cosine of x.                                       *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_Double_Abs (tmpl_math.h):                                    *
- *              Computes the absolute value of a double.                      *
- *          tmpl_Double_Cosh_Maclaurin (tmpl_math.h):                         *
- *              Computes cosh via a Maclaurin series for small inputs.        *
- *          tmpl_Double_Cosh_Pade (tmpl_math.h):                              *
- *              Computes cosh via a Pade approximation.                       *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Abs:                                              *
+ *                  Computes the absolute value of a double.                  *
+ *              tmpl_Double_Cosh_Maclaurin:                                   *
+ *                  Computes cosh via a Maclaurin series for small inputs.    *
+ *              tmpl_Double_Cosh_Pade:                                        *
+ *                  Computes cosh via a Pade approximation.                   *
  *      Method:                                                               *
  *      Error:                                                                *
  *  Portable Version:                                                         *
@@ -60,7 +61,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -75,6 +76,9 @@
  *      Migrated to libtmpl from rss_ringoccs. Updated with IEEE-754 method.  *
  ******************************************************************************/
 
+/*  TMPL_USE_MATH_ALGORITHMS macro provided here.                             */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -88,6 +92,12 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+/*  Pade approximation provided here.                                         */
+#include "auxiliary/tmpl_cosh_pade_double.h"
+
+/*  Maclaurin series to the first few terms given here.                       */
+#include "auxiliary/tmpl_cosh_maclaurin_double.h"
+
 /*  Double precision hyperbolic cosine (cosh equivalent).                     */
 double tmpl_Double_Cosh(double x)
 {
@@ -96,7 +106,11 @@ double tmpl_Double_Cosh(double x)
     double exp_x;
 
     /*  Set the double part of the union to the input.                        */
-    w.r = tmpl_Double_Abs(x);
+    w.r = x;
+
+    /*  Compute the absolute value by setting the sign bit to zero. cosh is   *
+     *  an even function, cosh(-x) = cosh(x). Compute for positive x.         */
+    w.bits.sign = 0x00U;
 
     /*  +/- NaN returns NaN, for +/- infinity the limit is + infinity.        */
     if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
@@ -122,8 +136,7 @@ double tmpl_Double_Cosh(double x)
         return 0.5*exp_x;
 
     /*  Otherwise, compute cosh(x) via (exp(x) + exp(-x))/2.                  */
-    else
-        return 0.5*(exp_x + 1.0/exp_x);
+    return 0.5*(exp_x + 1.0/exp_x);
 }
 /*  End of tmpl_Double_Cosh.                                                  */
 
@@ -137,15 +150,12 @@ double tmpl_Double_Cosh(double x)
 /*  Double precision hyperbolic cosine (cosh equivalent).                     */
 double tmpl_Double_Cosh(double x)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    double exp_x, exp_minus_x;
-
     /*  The definition of cosh(x) is [exp(x) + exp(-x)]/2, so return this. It *
      *  is computationally faster to compute exp(x) and then exp(-x) via the  *
      *  formula exp(-x) = 1/exp(x). This saves us from computing two          *
      *  exponentials at the cost of an extra division.                        */
-    exp_x = tmpl_Double_Exp(x);
-    exp_minus_x = 1.0/exp_x;
+    const double exp_x = tmpl_Double_Exp(x);
+    const double exp_minus_x = 1.0 / exp_x;
 
     /*  Compute cosh from the two exponentials and return.                    */
     return 0.5*(exp_x + exp_minus_x);

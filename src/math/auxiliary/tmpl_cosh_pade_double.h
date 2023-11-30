@@ -57,9 +57,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2022                                              *
@@ -69,14 +67,8 @@
 #ifndef TMPL_COSH_PADE_DOUBLE_H
 #define TMPL_COSH_PADE_DOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (1.000000000000000000000000000000000000000E+00)
@@ -93,7 +85,7 @@
 #define Q8 (6.237544679486808556431083134258191256732E-9)
 
 /*  Function for computing the (8, 8) Pade approximant of Cosh.               */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 double tmpl_Double_Cosh_Pade(double x)
 {
     /*  All non-zero powers of the numerator and denominator are even.        */
@@ -119,9 +111,6 @@ double tmpl_Double_Cosh_Pade(double x)
 #undef Q4
 #undef Q6
 #undef Q8
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

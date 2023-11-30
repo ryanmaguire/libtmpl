@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_cosh_pade_float                             *
+ *                        tmpl_cosh_pade_float_inline                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the (8, 8) Pade approximant of cosh(x) at single precision.  *
@@ -56,21 +56,19 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 21, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_COSH_PADE_FLOAT_H
+#define TMPL_COSH_PADE_FLOAT_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  Coefficients for the numerator.                                           */
 #define P0 (1.000000000000000000000000000000000000000E+00F)
@@ -87,6 +85,7 @@
 #define Q8 (6.237544679486808556431083134258191256732E-9F)
 
 /*  Function for computing the (8, 8) Pade approximant of Cosh.               */
+TMPL_STATIC_INLINE
 float tmpl_Float_Cosh_Pade(float x)
 {
     /*  All non-zero powers of the numerator and denominator are even.        */
@@ -114,4 +113,4 @@ float tmpl_Float_Cosh_Pade(float x)
 #undef Q8
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

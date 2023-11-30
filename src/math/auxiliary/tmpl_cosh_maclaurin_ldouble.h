@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_cosh_maclaurin_float_inline                       *
+ *                    tmpl_cosh_maclaurin_ldouble_inline                      *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of hyperbolic cosine.                   *
@@ -24,14 +24,14 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Cosh_Maclaurin                                             *
+ *      tmpl_LDouble_Cosh_Maclaurin                                           *
  *  Purpose:                                                                  *
  *      Computes the Maclaurin series of cosh for small values x.             *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      cosh_x (float):                                                       *
+ *      cosh_x (long double):                                                 *
  *          The Maclaurin series of hyperbolic cosh.                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -45,58 +45,51 @@
  *                        -----    (2n)!                                      *
  *                        n = 0                                               *
  *                                                                            *
- *      Use the first 3 terms (0 <= n <= 2) and compute.                      *
+ *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
  *  Notes:                                                                    *
  *      Only accurate for values near 0.                                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 25, 2022                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COSH_MACLAURIN_FLOAT_H
-#define TMPL_COSH_MACLAURIN_FLOAT_H
+#ifndef TMPL_COSH_MACLAURIN_LDOUBLE_H
+#define TMPL_COSH_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Coefficients for the polynonial. They are 1 / (2n)!.                      */
-#define A0 (1.00000000000000000000000000000E+00F)
-#define A1 (0.50000000000000000000000000000E+00F)
-#define A2 (4.16666666666666666666666666666E-02F)
+#define A0 (1.00000000000000000000000000000E+00L)
+#define A1 (0.50000000000000000000000000000E+00L)
+#define A2 (4.16666666666666666666666666666E-02L)
+#define A3 (1.38888888888888888888888888888E-03L)
+#define A4 (2.48015873015873015873015873015E-05L)
 
 /*  Maclaurin series of hyperbolic cosine to 3 terms.                         */
-TMPL_INLINE_DECL
-float tmpl_Float_Cosh_Maclaurin(float x)
+TMPL_STATIC_INLINE
+long double tmpl_LDouble_Cosh_Maclaurin(long double x)
 {
     /*  The function is even and the series is in terms of x^2.               */
-    const float x2 = x*x;
+    const long double x2 = x*x;
 
     /*  Compute the polynomial via Horner's method and return.                */
-    return A0 + x2*(A1 + x2*A2);
+    return A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4)));
 }
-/*  End of tmpl_Float_Cosh_Maclaurin.                                         */
+/*  End of tmpl_LDouble_Cosh_Maclaurin.                                       */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
 #undef A0
 #undef A1
 #undef A2
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+#undef A3
+#undef A4
 
 #endif
 /*  End of include guard.                                                     */

@@ -44,8 +44,9 @@
  *      Error:                                                                *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_LDouble_Exp (tmpl_math.h):                                   *
- *              Computes the exponential of a long double.                    *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_LDouble_Exp:                                             *
+ *                  Computes the exponential of a long double.                *
  *      Method:                                                               *
  *          Compute t = exp(x) and return (t + 1/t)/2.                        *
  *      Error:                                                                *
@@ -54,7 +55,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
+ *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -69,6 +70,9 @@
  *      Migrated to libtmpl from rss_ringoccs. Updated with IEEE-754 method.  *
  ******************************************************************************/
 
+/*  TMPL_USE_MATH_ALGORITHMS macro provided here.                             */
+#include <libtmpl/include/tmpl_config.h>
+
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -82,15 +86,12 @@
 /*  Long double precision hyperbolic cosine (coshl equivalent).               */
 long double tmpl_LDouble_Cosh(long double x)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    long double exp_x, exp_minus_x;
-
     /*  The definition of cosh(x) is [exp(x) + exp(-x)]/2, so return this. It *
      *  is computationally faster to compute exp(x) and then exp(-x) via the  *
      *  formula exp(-x) = 1/exp(x). This saves us from computing two          *
      *  exponentials at the cost of an extra division.                        */
-    exp_x = tmpl_LDouble_Exp(x);
-    exp_minus_x = 1.0L/exp_x;
+    const long double exp_x = tmpl_LDouble_Exp(x);
+    const long double exp_minus_x = 1.0L / exp_x;
 
     /*  Compute cosh from the two exponentials and return.                    */
     return 0.5L*(exp_x + exp_minus_x);
