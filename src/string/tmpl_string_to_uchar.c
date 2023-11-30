@@ -28,7 +28,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
             return 0x00U;
 
         digit = *str & 0x0F;
-        out = ten*out + digit;
+        out = (unsigned char)(ten*out + digit);
 
         str++;
     }

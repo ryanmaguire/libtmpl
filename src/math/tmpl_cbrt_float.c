@@ -141,10 +141,10 @@ static const float tmpl_float_cbrt_data[3] = {
  ******************************************************************************/
 
 /*  Remez approximation provided here.                                        */
-#include <libtmpl/include/math/tmpl_cbrt_remez_float.h>
+#include "auxiliary/tmpl_cbrt_remez_float.h"
 
 /*  Table of pre-computed values for the cbrt function.                       */
-#include <libtmpl/include/math/tmpl_cbrt_table_float.h>
+#include "auxiliary/tmpl_cbrt_table_float.h"
 
 /*  Function for computing cube roots at single precision.                    */
 float tmpl_Float_Cbrt(float x)
@@ -300,7 +300,7 @@ float tmpl_Float_Cbrt(float x)
  ******************************************************************************/
 
 /*  Pade approximant provided here.                                           */
-#include <libtmpl/include/math/tmpl_cbrt_pade_float.h>
+#include "auxiliary/tmpl_cbrt_pade_float.h"
 
 /*  Newton's method has a divide-by-three in the expression.                  */
 #define ONE_THIRD (3.333333333333333333333333E-01F)

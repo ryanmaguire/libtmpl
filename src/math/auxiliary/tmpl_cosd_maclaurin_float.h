@@ -16,23 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_sind_maclaurin_float                          *
+ *                      tmpl_cosd_maclaurin_float_inline                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of sine in degrees.                     *
+ *      Computes the Maclaurin series of cosine in degrees.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Sind_Maclaurin                                             *
+ *      tmpl_Float_Cosd_Maclaurin                                             *
  *  Purpose:                                                                  *
- *      Computes the Maclaurin series of sine in degrees for small values x.  *
+ *      Computes the Maclaurin series of cosine in degrees for small values x.*
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      sind_x (float):                                                       *
- *          The Maclaurin series of sine in degrees.                          *
+ *      cosd_x (float):                                                       *
+ *          The Maclaurin series of cosine in degrees.                        *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -40,9 +40,9 @@
  *                                                                            *
  *                        infty                                               *
  *                        -----                                               *
- *                        \         (-1)^n pi^{2n+1}                          *
- *          sind(x)   =   /        ------------------ * x^{2n}                *
- *                        -----    (2n+1)! 180^{2n+1}                         *
+ *                        \        (-1)^n pi^{2n}                             *
+ *          cosd(x)   =   /        -------------- * x^{2n}                    *
+ *                        -----    (2n)! 180^{2n}                             *
  *                        n = 0                                               *
  *                                                                            *
  *      Use the first 3 terms (0 <= n <= 2) and compute.                      *
@@ -52,51 +52,40 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 25, 2022                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_SIND_MACLAURIN_FLOAT_H
-#define TMPL_SIND_MACLAURIN_FLOAT_H
+#ifndef TMPL_COSD_MACLAURIN_FLOAT_H
+#define TMPL_COSD_MACLAURIN_FLOAT_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This code is only used if inline code is requested. Check TMPL_USE_INLINE.*/
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Coefficients for the Maclaurin series at single precision.                */
-#define A0 (1.7453292519943295769236907684886127134429E-02F)
-#define A1 (-8.8609615570129801598869213154725066307228E-07F)
-#define A2 (1.3496016231632550105929914052816816969112E-11F)
+#define A0 (+1.0000000000000000000000000000000000000000E+00F)
+#define A1 (-1.5230870989335429967337177468944677677953E-04F)
+#define A2 (+3.8663238515629936539637763508129283220977E-09F)
 
-/*  Maclaurin series for sine in degrees, single precision, to 3 terms.       */
-TMPL_INLINE_DECL
-float tmpl_Float_Sind_Maclaurin(float x)
+/*  Maclaurin series for cosine in degrees, single precision, to 3 terms.     */
+TMPL_STATIC_INLINE
+float tmpl_Float_Cosd_Maclaurin(float x)
 {
     /*  Declare necessary variables.                                          */
     const float x2 = x*x;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0 + x2*(A1 + x2*A2));
+    return A0 + x2*(A1 + x2*A2);
 }
-/*  End of tmpl_Float_Sind_Maclaurin.                                         */
+/*  End of tmpl_Float_Cosd_Maclaurin.                                         */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
 #undef A0
 #undef A1
 #undef A2
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

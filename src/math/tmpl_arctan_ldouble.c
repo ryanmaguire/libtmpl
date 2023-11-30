@@ -197,19 +197,19 @@
     TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
 
 /*  Pade approximant provided here.                                           */
-#include <libtmpl/include/math/tmpl_arctan_pade_ldouble.h>
+#include "auxiliary/tmpl_arctan_pade_ldouble.h"
 
 #else
 /*  Double precision, extended precision, and portable includes.              */
 
 /*  Maclaurin expansion provided here.                                        */
-#include <libtmpl/include/math/tmpl_arctan_maclaurin_ldouble.h>
+#include "auxiliary/tmpl_arctan_maclaurin_ldouble.h"
 
 /*  Smaller Maclaurin expansion that avoids underflow.                        */
-#include <libtmpl/include/math/tmpl_arctan_very_small_ldouble.h>
+#include "auxiliary/tmpl_arctan_very_small_ldouble.h"
 
 /*  Asymptotic expansion for arctan. Good for large positive inputs.          */
-#include <libtmpl/include/math/tmpl_arctan_asymptotic_ldouble.h>
+#include "auxiliary/tmpl_arctan_asymptotic_ldouble.h"
 
 #endif
 /*  End of double-double / quadruple vs. double / extended / portable.        */

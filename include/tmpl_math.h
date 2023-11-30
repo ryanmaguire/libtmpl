@@ -2270,36 +2270,6 @@ extern long double tmpl_LDouble_Sind(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Sind_Maclaurin                                            *
- *  Purpose:                                                                  *
- *      Computes the Maclaurin series of sine in degrees.                     *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sind_x:                                                        *
- *          The sine of x in degrees.                                         *
- ******************************************************************************/
-
-/*  These functions are small enough to inline.                               */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sind_maclaurin_double.h>
-#include <libtmpl/include/math/tmpl_sind_maclaurin_float.h>
-#include <libtmpl/include/math/tmpl_sind_maclaurin_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support, use external functions in src/math.                    */
-extern float tmpl_Float_Sind_Maclaurin(float x);
-extern double tmpl_Double_Sind_Maclaurin(double x);
-extern long double tmpl_LDouble_Sind_Maclaurin(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_Double_Sinh                                                      *
  *  Purpose:                                                                  *
  *      Computes the hyperbolic sine function sinh(x).                        *
@@ -2554,36 +2524,6 @@ extern long double tmpl_LDouble_Copysign(long double x, long double y);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Cosd_Maclaurin                                            *
- *  Purpose:                                                                  *
- *      Computes the Maclaurin series of cosine in degrees.                   *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double cosd_x:                                                        *
- *          The cosine of x in degrees.                                       *
- ******************************************************************************/
-
-/*  These functions are small enough to inline.                               */
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_cosd_maclaurin_double.h>
-#include <libtmpl/include/math/tmpl_cosd_maclaurin_float.h>
-#include <libtmpl/include/math/tmpl_cosd_maclaurin_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  No inline support, use external functions in src/math.                    */
-extern float tmpl_Float_Cosd_Maclaurin(float x);
-extern double tmpl_Double_Cosd_Maclaurin(double x);
-extern long double tmpl_LDouble_Cosd_Maclaurin(long double x);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

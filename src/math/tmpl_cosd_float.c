@@ -1,5 +1,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
+#include "auxiliary/tmpl_cosd_maclaurin_float.h"
+#include "auxiliary/tmpl_sind_maclaurin_float.h"
+
 float tmpl_Float_Cosd(float x)
 {
     float arg, sgn_x, cx, cdx, sx, sdx, dx;

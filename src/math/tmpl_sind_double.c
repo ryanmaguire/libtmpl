@@ -1,5 +1,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
+#include "auxiliary/tmpl_cosd_maclaurin_double.h"
+#include "auxiliary/tmpl_sind_maclaurin_double.h"
+
 double tmpl_Double_Sind(double x)
 {
     double abs_x, arg, sgn_x, cx, cdx, sx, sdx, dx;

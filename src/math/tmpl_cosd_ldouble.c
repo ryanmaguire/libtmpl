@@ -1,5 +1,8 @@
 #include <libtmpl/include/tmpl_math.h>
 
+#include "auxiliary/tmpl_cosd_maclaurin_ldouble.h"
+#include "auxiliary/tmpl_sind_maclaurin_ldouble.h"
+
 long double tmpl_LDouble_Cosd(long double x)
 {
     long double arg, sgn_x, cx, cdx, sx, sdx, dx;

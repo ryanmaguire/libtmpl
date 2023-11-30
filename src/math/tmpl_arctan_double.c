@@ -160,13 +160,13 @@
  ******************************************************************************/
 
 /*  Maclaurin expansion provided here.                                        */
-#include <libtmpl/include/math/tmpl_arctan_maclaurin_double.h>
+#include "auxiliary/tmpl_arctan_maclaurin_double.h"
 
 /*  Smaller Maclaurin expansion that avoids underflow.                        */
-#include <libtmpl/include/math/tmpl_arctan_very_small_double.h>
+#include "auxiliary/tmpl_arctan_very_small_double.h"
 
 /*  Asymptotic expansion for arctan. Good for large positive inputs.          */
-#include <libtmpl/include/math/tmpl_arctan_asymptotic_double.h>
+#include "auxiliary/tmpl_arctan_asymptotic_double.h"
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

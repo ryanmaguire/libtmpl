@@ -52,29 +52,26 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 25, 2022                                              *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_INLINE macro.                                    */
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_SIND_MACLAURIN_FLOAT_H
+#define TMPL_SIND_MACLAURIN_FLOAT_H
+
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
-#if TMPL_USE_INLINE != 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  Coefficients for the Maclaurin series at single precision.                */
-#define A0 (1.7453292519943295769236907684886127134429E-02F)
+#define A0 (+1.7453292519943295769236907684886127134429E-02F)
 #define A1 (-8.8609615570129801598869213154725066307228E-07F)
-#define A2 (1.3496016231632550105929914052816816969112E-11F)
+#define A2 (+1.3496016231632550105929914052816816969112E-11F)
 
 /*  Maclaurin series for sine in degrees, single precision, to 3 terms.       */
+TMPL_STATIC_INLINE
 float tmpl_Float_Sind_Maclaurin(float x)
 {
     /*  Declare necessary variables.                                          */
@@ -91,4 +88,4 @@ float tmpl_Float_Sind_Maclaurin(float x)
 #undef A2
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
+/*  End of include guard.                                                     */

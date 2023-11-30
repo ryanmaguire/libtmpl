@@ -202,10 +202,10 @@ static const long double tmpl_ldouble_cbrt_data[3] = {
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /*  Remez approximation provided here.                                        */
-#include <libtmpl/include/math/tmpl_cbrt_remez_ldouble.h>
+#include "auxiliary/tmpl_cbrt_remez_ldouble.h"
 
 /*  Table of pre-computed values for the cbrt function.                       */
-#include <libtmpl/include/math/tmpl_cbrt_table_ldouble.h>
+#include "auxiliary/tmpl_cbrt_table_ldouble.h"
 
 /*  64-bit long double uses the same idea as 64-bit double.                   */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -821,7 +821,7 @@ long double tmpl_LDouble_Cbrt(long double x)
 #define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)
 
 /*  Pade approximant provided here.                                           */
-#include <libtmpl/include/math/tmpl_cbrt_pade_ldouble.h>
+#include "auxiliary/tmpl_cbrt_pade_ldouble.h"
 
 /*  Function for computing cube roots at long double precision.               */
 long double tmpl_LDouble_Cbrt(long double x)

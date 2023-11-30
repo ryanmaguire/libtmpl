@@ -482,6 +482,8 @@ $(BUILD_DIR)/%.fasm.o: %.fasm include/tmpl_config.h
 	fasm $< $@
 
 $(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)/src/array_integer/
+	mkdir -p $(BUILD_DIR)/src/array_real/
 	mkdir -p $(BUILD_DIR)/src/bytes/
 	mkdir -p $(BUILD_DIR)/src/complex/
 	mkdir -p $(BUILD_DIR)/src/cyl_fresnel_optics/

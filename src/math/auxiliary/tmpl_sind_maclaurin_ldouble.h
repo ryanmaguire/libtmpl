@@ -52,9 +52,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing TMPL_USE_INLINE macro.                     *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 25, 2022                                              *
@@ -64,14 +62,8 @@
 #ifndef TMPL_SIND_MACLAURIN_LDOUBLE_H
 #define TMPL_SIND_MACLAURIN_LDOUBLE_H
 
-/*  Location of the TMPL_INLINE_DECL macro.                                   */
+/*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  This code is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
 
 /*  64-bit long double uses the same number of terms as double.               */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
@@ -82,13 +74,13 @@
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.7453292519943295769236907684886127134429E-02L)
+#define A0 (+1.7453292519943295769236907684886127134429E-02L)
 #define A1 (-8.8609615570129801598869213154725066307228E-07L)
-#define A2 (1.3496016231632550105929914052816816969112E-11L)
+#define A2 (+1.3496016231632550105929914052816816969112E-11L)
 #define A3 (-9.7883848616177276095359680022041494717926E-17L)
 
 /*  Maclaurin series for sine in degrees.                                     */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Sind_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
@@ -119,16 +111,16 @@ long double tmpl_LDouble_Sind_Maclaurin(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.7453292519943295769236907684886127134429E-02L)
+#define A0 (+1.7453292519943295769236907684886127134429E-02L)
 #define A1 (-8.8609615570129801598869213154725066307228E-07L)
-#define A2 (1.3496016231632550105929914052816816969112E-11L)
+#define A2 (+1.3496016231632550105929914052816816969112E-11L)
 #define A3 (-9.78838486161772760953596800220414947179257E-17L)
-#define A4 (4.14126741725732068529449587689393809274778E-22L)
+#define A4 (+4.14126741725732068529449587689393809274778E-22L)
 #define A5 (-1.14682017753790161396412139175844787354022E-27L)
-#define A6 (2.23936797077519653778917540987515319909871E-33L)
+#define A6 (+2.23936797077519653778917540987515319909871E-33L)
 
 /*  Maclaurin series for sine in degrees.                                     */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Sind_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
@@ -158,14 +150,14 @@ long double tmpl_LDouble_Sind_Maclaurin(long double x)
  ******************************************************************************/
 
 /*  Coefficients for the Maclaurin series at long double precision.           */
-#define A0 (1.7453292519943295769236907684886127134429E-02L)
+#define A0 (+1.7453292519943295769236907684886127134429E-02L)
 #define A1 (-8.8609615570129801598869213154725066307228E-07L)
-#define A2 (1.3496016231632550105929914052816816969112E-11L)
+#define A2 (+1.3496016231632550105929914052816816969112E-11L)
 #define A3 (-9.7883848616177276095359680022041494717926E-17L)
-#define A4 (4.14126741725732068529449587689393809274778E-22L)
+#define A4 (+4.1412674172573206852944958768939380927477E-22L)
 
 /*  Maclaurin series for sine in degrees.                                     */
-TMPL_INLINE_DECL
+TMPL_STATIC_INLINE
 long double tmpl_LDouble_Sind_Maclaurin(long double x)
 {
     /*  Declare necessary variables.                                          */
@@ -185,9 +177,6 @@ long double tmpl_LDouble_Sind_Maclaurin(long double x)
 
 #endif
 /*  End of portable version.                                                  */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

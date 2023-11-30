@@ -23,10 +23,6 @@
  *      are included in the POSIX standard of the C programming language, but *
  *      are not required by the actual standard. They are provided here for   *
  *      the sake of portability.                                              *
- *  Notes:                                                                    *
- *      This code is identical to the code I wrote for rss_ringoccs, only the *
- *      rssringoccs titles have been replaced with tmpl. rss_ringoccs is also *
- *      released under GPL3.                                                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -63,8 +59,39 @@ extern "C" {
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-extern tmpl_Bool tmpl_Is_Digit(char c);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Character_To_UChar                                               *
+ *  Purpose:                                                                  *
+ *      Converts a character (like '4') to a number (like 4).                 *
+ *  Arguments:                                                                *
+ *      c (char):                                                             *
+ *          The input character.                                              *
+ *  Output:                                                                   *
+ *      num (unsigned char):                                                  *
+ *          The numerical value of the input character.                       *
+ *  Notes:                                                                    *
+ *      If the input is not a number (like 'a') the value zero is returned.   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_character_to_uchar.c                          *
+ ******************************************************************************/
 extern unsigned char tmpl_Character_To_UChar(char c);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Is_Digit                                                         *
+ *  Purpose:                                                                  *
+ *      Determines if a character represents a number.                        *
+ *  Arguments:                                                                *
+ *      c (char):                                                             *
+ *          The input character.                                              *
+ *  Output:                                                                   *
+ *      is_digit (tmpl_Bool):                                                 *
+ *          Boolean determining if the input is a numerical character.        *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_is_digit.c                                    *
+ ******************************************************************************/
+extern tmpl_Bool tmpl_Is_Digit(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -99,7 +126,12 @@ extern char tmpl_Lower_Case(char c);
  *      If both str0 and str1 are NULL or a null terminator, this function    *
  *      returns true. No characters after the first null terminator in the    *
  *      two strings are looked at. If the two strings are identical up to     *
- *      their first null terminator, this function returns true.              *
+ *      their first null terminator, this function returns true. If the null  *
+ *      terminators occur at different places, i.e. "hello\0" vs. "hello \0", *
+ *      this function returns false.                                          *
+ *                                                                            *
+ *      It is assumed that the input strings end with a null terminator, or   *
+ *      are NULL pointers.                                                    *
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_string_are_equal.c                            *
  ******************************************************************************/
@@ -125,7 +157,14 @@ extern tmpl_Bool tmpl_String_Are_Equal(const char *str0, const char *str1);
  *      If both str0 and str1 are NULL or a null terminator, this function    *
  *      returns true. No characters after the first null terminator in the    *
  *      two strings are looked at. If the two strings are identical up to     *
- *      their first null terminator, this function returns true.              *
+ *      their first null terminator, this function returns true. If the null  *
+ *      terminators occur at different places, i.e. "hello\0" vs. "hello \0", *
+ *      this function returns false. If len is greater than the string length *
+ *      of either of the input strings this has the same functionality as     *
+ *      tmpl_String_Are_Equal.                                                *
+ *                                                                            *
+ *      It is assumed that the input strings end with a null terminator, or   *
+ *      are NULL pointers.                                                    *
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_string_are_first_characters_equal.c           *
  ******************************************************************************/
@@ -260,8 +299,74 @@ extern void tmpl_String_Remove_Whitespace(char * str);
  ******************************************************************************/
 extern char tmpl_Upper_Case(char c);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_To_UChar                                                  *
+ *  Purpose:                                                                  *
+ *      Converts a string to a number.                                        *
+ *  Arguments:                                                                *
+ *      str (const char *):                                                   *
+ *          The input string.                                                 *
+ *  Output:                                                                   *
+ *      num (unsigned char):                                                  *
+ *          The string as a number in base 10.                                *
+ *  Notes:                                                                    *
+ *      The input is in base 10. So "123" represents one hundred twenty three.*
+ *      If the input string has a non-numerical character zero is returned.   *
+ *      It is assumed the string ends with a null terminator.                 *
+ *      If the input is larger than the width of unsigned char, the answer    *
+ *      mod 2^w is returned where w is the width of unsigned char (almost     *
+ *      always 8 bits).                                                       *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_to_uchar.c                             *
+ ******************************************************************************/
 extern unsigned char tmpl_String_To_UChar(const char *str);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_To_UInt                                                   *
+ *  Purpose:                                                                  *
+ *      Converts a string to a number.                                        *
+ *  Arguments:                                                                *
+ *      str (const char *):                                                   *
+ *          The input string.                                                 *
+ *  Output:                                                                   *
+ *      num (unsigned int):                                                   *
+ *          The string as a number in base 10.                                *
+ *  Notes:                                                                    *
+ *      The input is in base 10. So "123" represents one hundred twenty three.*
+ *      If the input string has a non-numerical character zero is returned.   *
+ *      It is assumed the string ends with a null terminator.                 *
+ *      If the input is larger than the width of unsigned int, the answer     *
+ *      mod 2^w is returned where w is the width of unsigned int (almost      *
+ *      always 32 bits on modern computers).                                  *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_to_uint.c                              *
+ ******************************************************************************/
 extern unsigned int tmpl_String_To_UInt(const char *str);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_String_To_UShort                                                 *
+ *  Purpose:                                                                  *
+ *      Converts a string to a number.                                        *
+ *  Arguments:                                                                *
+ *      str (const char *):                                                   *
+ *          The input string.                                                 *
+ *  Output:                                                                   *
+ *      num (unsigned short int):                                             *
+ *          The string as a number in base 10.                                *
+ *  Notes:                                                                    *
+ *      The input is in base 10. So "123" represents one hundred twenty three.*
+ *      If the input string has a non-numerical character zero is returned.   *
+ *      It is assumed the string ends with a null terminator.                 *
+ *      If the input is larger than the width of unsigned short int, the      *
+ *      answer mod 2^w is returned where w is the width of unsigned short int *
+ *      (almost always 32 bits on modern computers).                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/string/tmpl_string_to_ushort.c                            *
+ ******************************************************************************/
+extern unsigned short int tmpl_String_To_UShort(const char *str);
 
 #define tmpl_strdup tmpl_String_Duplicate
 
