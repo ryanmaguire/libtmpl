@@ -1,14 +1,12 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <math.h>
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+/*  TODO:
+ *  Implement actual algorithm for 64-bit, 80-bit, and 128-bit long double.
+ */
+
 long double tmpl_LDouble_Cos(long double x)
 {
-    return cosl(x);
+    const double x_double = (double)x;
+    const double cos_x_double = tmpl_Double_Cos(x_double);
+    return (long double)cos_x_double;
 }
-#else
-long double tmpl_LDouble_Cos(long double x)
-{
-    return (long double)cos((double)x);
-}
-#endif

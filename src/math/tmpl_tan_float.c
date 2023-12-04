@@ -1,13 +1,12 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <math.h>
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+
+/*  TODO:
+ *  Implement actual algorithm.
+ */
+
 float tmpl_Float_Tan(float x)
 {
-    return tanf(x);
+    float cos_x, sin_x;
+    tmpl_Float_SinCos(x, &sin_x, &cos_x);
+    return sin_x / cos_x;
 }
-#else
-float tmpl_Float_Tan(float x)
-{
-    return (float)tan((double)x);
-}
-#endif

@@ -1,14 +1,12 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <math.h>
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-long double tmpl_LDouble_Tan(long double x)
-{
-    return tanl(x);
-}
 
-#else
+/*  TODO:
+ *  Implement actual algorithm.
+ */
+
 long double tmpl_LDouble_Tan(long double x)
 {
-    return (long double)tan((double)x);
+    long double cos_x, sin_x;
+    tmpl_LDouble_SinCos(x, &sin_x, &cos_x);
+    return sin_x / cos_x;
 }
-#endif

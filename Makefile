@@ -74,403 +74,346 @@
 #               make NO_INT=1 [other-options]
 
 # Name of the library.
-TARGET_LIB=libtmpl.so
+TARGET_LIB := libtmpl.so
 
 # Directory all of the .o files will be placed in.
-BUILD_DIR=./build
+BUILD_DIR := ./build
 
 # Location of all .c and .S files.
-SRC_DIRS=./src
+SRC_DIRS := ./src
 
 # Compiler to be used. Override this to whatever you choose.
-CC=cc
+CC ?= cc
+
+CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
+LFLAGS := -O3 -flto -shared
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
-OMP_FLAGS=-fopenmp
-else
-OMP_FLAGS=
+CFLAGS += -fopenmp
+LFLAGS += -fopenmp
 endif
 
 # Some old functions still call math.h. This will be replaced soon.
 ifdef NO_MATH
-MATH_FLAGS=-lm
-else
-MATH_FLAGS=-lm
+LFLAGS += -lm
 endif
 
-CFLAGS=$(OMP_FLAGS) -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS=$(OMP_FLAGS) -O3 -flto -shared $(MATH_FLAGS) $(EXTRA_LFLAGS)
-CWARN=-Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
+CWARN := -Wall -Wextra -Wpedantic
+
+ifdef EXTRA_FLAGS
+CWARN += $(EXTRA_FLAGS)
+endif
+
+CONFIG_FLAGS :=
+EXCLUDE :=
 
 # libtmpl will check if long long is available in config.c. If you do not want
 # long long functions compiled (for example, you're on a GNU/Linux machine where
 # long and long long are the same thing), set this option.
 ifdef NO_LONGLONG
-LL_FLAG=-DTMPL_SET_LONGLONG_FALSE
-LL_EXCLUDE=\
-	-not -name "tmpl_abs_llong.c" -and
-else
-LL_FLAG=
-LL_EXCLUDE=
+CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
+EXCLUDE += -not -name "tmpl_abs_llong.c" -and
 endif
 
 # libtmpl provides its own implementation of libm. If you wish to use the
 # default libm implementation (if it exists) for your system enable this option.
 ifdef NO_MATH
-MATH_FLAG=
-MATH_EXCLUDE=\
-	-not -name "tmpl_abs_double.c" -and \
-	-not -name "tmpl_abs_float.c" -and \
-	-not -name "tmpl_abs_ldouble.c" -and \
-	-not -name "tmpl_arccos_double.c" -and \
-	-not -name "tmpl_arccos_float.c" -and \
-	-not -name "tmpl_arccos_ldouble.c" -and \
-	-not -name "tmpl_arcsin_double.c" -and \
-	-not -name "tmpl_arcsin_float.c" -and \
-	-not -name "tmpl_arcsin_ldouble.c" -and \
-	-not -name "tmpl_arctan2_double.c" -and \
-	-not -name "tmpl_arctan2_float.c" -and \
-	-not -name "tmpl_arctan2_ldouble.c" -and \
-	-not -name "tmpl_arctan_double.c" -and \
-	-not -name "tmpl_arctan_float.c" -and \
-	-not -name "tmpl_arctan_ldouble.c" -and \
-	-not -name "tmpl_cos_double.c" -and \
-	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_sin_double.c" -and
+EXCLUDE +=\
+-not -name "tmpl_abs_double.c" -and \
+-not -name "tmpl_abs_float.c" -and \
+-not -name "tmpl_abs_ldouble.c" -and \
+-not -name "tmpl_arccos_double.c" -and \
+-not -name "tmpl_arccos_float.c" -and \
+-not -name "tmpl_arccos_ldouble.c" -and \
+-not -name "tmpl_arcsin_double.c" -and \
+-not -name "tmpl_arcsin_float.c" -and \
+-not -name "tmpl_arcsin_ldouble.c" -and \
+-not -name "tmpl_arctan2_double.c" -and \
+-not -name "tmpl_arctan2_float.c" -and \
+-not -name "tmpl_arctan2_ldouble.c" -and \
+-not -name "tmpl_arctan_double.c" -and \
+-not -name "tmpl_arctan_float.c" -and \
+-not -name "tmpl_arctan_ldouble.c" -and \
+-not -name "tmpl_cos_double.c" -and \
+-not -name "tmpl_floor_double.c" -and \
+-not -name "tmpl_floor_float.c" -and \
+-not -name "tmpl_sin_double.c" -and
 else
-MATH_FLAG=-DTMPL_SET_USE_MATH_TRUE
-MATH_EXCLUDE=
+CONFIG_FLAGS += -DTMPL_SET_USE_MATH_TRUE
 endif
 
 # libtmpl will check if inline support is available in config.c. If you do not
 # want to inline functions, set this option.
-ifdef NO_INLINE
-INLINE_FLAG=
-INLINE_EXCLUDE=
-else
-INLINE_FLAG=-DTMPL_SET_INLINE_TRUE
-INLINE_EXCLUDE=\
-	-not -name "tmpl_abs_char.c" -and \
-	-not -name "tmpl_abs_short.c" -and \
-	-not -name "tmpl_abs_int.c" -and \
-	-not -name "tmpl_abs_long.c" -and \
-	-not -name "tmpl_abs_llong.c" -and \
-	-not -name "tmpl_abs_double.c" -and \
-	-not -name "tmpl_abs_float.c" -and \
-	-not -name "tmpl_abs_ldouble.c" -and \
-	-not -name "tmpl_bessel_i0_asymptotic_double.c" -and \
-	-not -name "tmpl_bessel_i0_asymptotic_float.c" -and \
-	-not -name "tmpl_bessel_i0_chebyshev_double.c" -and \
-	-not -name "tmpl_bessel_i0_chebyshev_float.c" -and \
-	-not -name "tmpl_bessel_i0_maclaurin_double.c" -and \
-	-not -name "tmpl_bessel_i0_maclaurin_float.c" -and \
-	-not -name "tmpl_cbrt_pade_double.c" -and \
-	-not -name "tmpl_cbrt_pade_float.c" -and \
-	-not -name "tmpl_cbrt_pade_ldouble.c" -and \
-	-not -name "tmpl_cbrt_taylor_double.c" -and \
-	-not -name "tmpl_cbrt_taylor_float.c" -and \
-	-not -name "tmpl_cbrt_taylor_ldouble.c" -and \
-	-not -name "tmpl_complex_abs_double.c" -and \
-	-not -name "tmpl_complex_abs_float.c" -and \
-	-not -name "tmpl_complex_abs_ldouble.c" -and \
-	-not -name "tmpl_complex_abs_squared_double.c" -and \
-	-not -name "tmpl_complex_abs_squared_float.c" -and \
-	-not -name "tmpl_complex_abs_squared_ldouble.c" -and \
-	-not -name "tmpl_complex_add_double.c" -and \
-	-not -name "tmpl_complex_add_float.c" -and \
-	-not -name "tmpl_complex_add_ldouble.c" -and \
-	-not -name "tmpl_complex_add_imag_double.c" -and \
-	-not -name "tmpl_complex_add_imag_float.c" -and \
-	-not -name "tmpl_complex_add_imag_ldouble.c" -and \
-	-not -name "tmpl_complex_add_real_double.c" -and \
-	-not -name "tmpl_complex_add_real_float.c" -and \
-	-not -name "tmpl_complex_add_real_ldouble.c" -and \
-	-not -name "tmpl_complex_addto_double.c" -and \
-	-not -name "tmpl_complex_addto_float.c" -and \
-	-not -name "tmpl_complex_addto_ldouble.c" -and \
-	-not -name "tmpl_complex_addto_imag_double.c" -and \
-	-not -name "tmpl_complex_addto_imag_float.c" -and \
-	-not -name "tmpl_complex_addto_imag_ldouble.c" -and \
-	-not -name "tmpl_complex_addto_real_double.c" -and \
-	-not -name "tmpl_complex_addto_real_float.c" -and \
-	-not -name "tmpl_complex_addto_real_ldouble.c" -and \
-	-not -name "tmpl_complex_argument_double.c" -and \
-	-not -name "tmpl_complex_argument_float.c" -and \
-	-not -name "tmpl_complex_argument_ldouble.c" -and \
-	-not -name "tmpl_complex_conjugate_double.c" -and \
-	-not -name "tmpl_complex_conjugate_float.c" -and \
-	-not -name "tmpl_complex_conjugate_ldouble.c" -and \
-	-not -name "tmpl_complex_conjugateself_double.c" -and \
-	-not -name "tmpl_complex_conjugateself_float.c" -and \
-	-not -name "tmpl_complex_conjugateself_ldouble.c" -and \
-	-not -name "tmpl_complex_dist_double.c" -and \
-	-not -name "tmpl_complex_dist_float.c" -and \
-	-not -name "tmpl_complex_dist_ldouble.c" -and \
-	-not -name "tmpl_complex_dist_squared_double.c" -and \
-	-not -name "tmpl_complex_dist_squared_float.c" -and \
-	-not -name "tmpl_complex_dist_squared_ldouble.c" -and \
-	-not -name "tmpl_complex_expi_double.c" -and \
-	-not -name "tmpl_complex_expi_float.c" -and \
-	-not -name "tmpl_complex_expi_ldouble.c" -and \
-	-not -name "tmpl_complex_expid_double.c" -and \
-	-not -name "tmpl_complex_expid_float.c" -and \
-	-not -name "tmpl_complex_expid_ldouble.c" -and \
-	-not -name "tmpl_complex_expipi_double.c" -and \
-	-not -name "tmpl_complex_expipi_float.c" -and \
-	-not -name "tmpl_complex_expipi_ldouble.c" -and \
-	-not -name "tmpl_complex_multiply_double.c" -and \
-	-not -name "tmpl_complex_multiply_float.c" -and \
-	-not -name "tmpl_complex_multiply_ldouble.c" -and \
-	-not -name "tmpl_complex_multiply_imag_double.c" -and \
-	-not -name "tmpl_complex_multiply_imag_float.c" -and \
-	-not -name "tmpl_complex_multiply_imag_ldouble.c" -and \
-	-not -name "tmpl_complex_multiply_real_double.c" -and \
-	-not -name "tmpl_complex_multiply_real_float.c" -and \
-	-not -name "tmpl_complex_multiply_real_ldouble.c" -and \
-	-not -name "tmpl_complex_polard_double.c" -and \
-	-not -name "tmpl_complex_polard_float.c" -and \
-	-not -name "tmpl_complex_polard_ldouble.c" -and \
-	-not -name "tmpl_complex_polar_double.c" -and \
-	-not -name "tmpl_complex_polar_float.c" -and \
-	-not -name "tmpl_complex_polar_ldouble.c" -and \
-	-not -name "tmpl_complex_quick_abs_double.c" -and \
-	-not -name "tmpl_complex_quick_abs_float.c" -and \
-	-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
-	-not -name "tmpl_complex_quick_dist_double.c" -and \
-	-not -name "tmpl_complex_quick_dist_float.c" -and \
-	-not -name "tmpl_complex_quick_dist_ldouble.c" -and \
-	-not -name "tmpl_copysign_float.c" -and \
-	-not -name "tmpl_copysign_double.c" -and \
-	-not -name "tmpl_copysign_ldouble.c" -and \
-	-not -name "tmpl_cosd_maclaurin_double.c" -and \
-	-not -name "tmpl_cosd_maclaurin_float.c" -and \
-	-not -name "tmpl_cosd_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_cosh_maclaurin_double.c" -and \
-	-not -name "tmpl_cosh_maclaurin_float.c" -and \
-	-not -name "tmpl_cosh_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_cosh_pade_double.c" -and \
-	-not -name "tmpl_cosh_pade_float.c" -and \
-	-not -name "tmpl_cosh_pade_ldouble.c" -and \
-	-not -name "tmpl_exp_maclaurin_double.c" -and \
-	-not -name "tmpl_exp_maclaurin_float.c" -and \
-	-not -name "tmpl_exp_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_exp_pade_double.c" -and \
-	-not -name "tmpl_exp_pade_float.c" -and \
-	-not -name "tmpl_exp_pade_ldouble.c" -and \
-	-not -name "tmpl_cospi_maclaurin_double.c" -and \
-	-not -name "tmpl_cospi_maclaurin_float.c" -and \
-	-not -name "tmpl_cospi_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_exp_remez_double.c" -and \
-	-not -name "tmpl_exp_remez_float.c" -and \
-	-not -name "tmpl_exp_remez_ldouble.c" -and \
-	-not -name "tmpl_dist_float.c" -and \
-	-not -name "tmpl_dist_double.c" -and \
-	-not -name "tmpl_dist_ldouble.c" -and \
-	-not -name "tmpl_erf_asymptotic_double.c" -and \
-	-not -name "tmpl_erf_chebyshev_double.c" -and \
-	-not -name "tmpl_erf_maclaurin_double.c" -and \
-	-not -name "tmpl_erf_pade_double.c" -and \
-	-not -name "tmpl_exp_neg_kernel_double.c" -and \
-	-not -name "tmpl_exp_neg_kernel_float.c" -and \
-	-not -name "tmpl_exp_neg_kernel_ldouble.c" -and \
-	-not -name "tmpl_exp_pos_kernel_double.c" -and \
-	-not -name "tmpl_exp_pos_kernel_float.c" -and \
-	-not -name "tmpl_exp_pos_kernel_ldouble.c" -and \
-	-not -name "tmpl_is_inf_float.c" -and \
-	-not -name "tmpl_is_inf_double.c" -and \
-	-not -name "tmpl_is_inf_ldouble.c" -and \
-	-not -name "tmpl_is_nan_float.c" -and \
-	-not -name "tmpl_is_nan_double.c" -and \
-	-not -name "tmpl_is_nan_ldouble.c" -and \
-	-not -name "tmpl_positive_difference_double.c" -and \
-	-not -name "tmpl_positive_difference_float.c" -and \
-	-not -name "tmpl_positive_difference_ldouble.c" -and \
-	-not -name "tmpl_sin_pade_double.c" -and \
-	-not -name "tmpl_sin_pade_float.c" -and \
-	-not -name "tmpl_sin_pade_ldouble.c" -and \
-	-not -name "tmpl_sin_pade_pi_double.c" -and \
-	-not -name "tmpl_sin_pade_pi_float.c" -and \
-	-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
-	-not -name "tmpl_sind_maclaurin_double.c" -and \
-	-not -name "tmpl_sind_maclaurin_float.c" -and \
-	-not -name "tmpl_sind_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_sinpi_maclaurin_double.c" -and \
-	-not -name "tmpl_sinpi_maclaurin_float.c" -and \
-	-not -name "tmpl_sinpi_maclaurin_ldouble.c" -and \
-	-not -name "tmpl_sin_very_small_double.c" -and \
-	-not -name "tmpl_two_vector_l2_norm_double.c" -and \
-	-not -name "tmpl_two_vector_l2_norm_float.c" -and \
-	-not -name "tmpl_two_vector_l2_norm_ldouble.c" -and \
-	-not -name "tmpl_frequency_to_wavelength_double.c" -and \
-	-not -name "tmpl_frequency_to_wavelength_float.c" -and \
-	-not -name "tmpl_frequency_to_wavelength_ldouble.c" -and \
-	-not -name "tmpl_frequency_to_wavenumber_double.c" -and \
-	-not -name "tmpl_frequency_to_wavenumber_float.c" -and \
-	-not -name "tmpl_frequency_to_wavenumber_ldouble.c" -and \
-	-not -name "tmpl_wavelength_to_wavenumber_double.c" -and \
-	-not -name "tmpl_wavelength_to_wavenumber_float.c" -and \
-	-not -name "tmpl_wavelength_to_wavenumber_ldouble.c" -and \
-	-not -name "tmpl_optical_transmittance_double.c" -and \
-	-not -name "tmpl_optical_transmittance_float.c" -and \
-	-not -name "tmpl_optical_transmittance_ldouble.c" -and
+ifndef NO_INLINE
+CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
+EXCLUDE +=\
+-not -name "tmpl_abs_char.c" -and \
+-not -name "tmpl_abs_short.c" -and \
+-not -name "tmpl_abs_int.c" -and \
+-not -name "tmpl_abs_long.c" -and \
+-not -name "tmpl_abs_llong.c" -and \
+-not -name "tmpl_abs_double.c" -and \
+-not -name "tmpl_abs_float.c" -and \
+-not -name "tmpl_abs_ldouble.c" -and \
+-not -name "tmpl_bessel_i0_asymptotic_double.c" -and \
+-not -name "tmpl_bessel_i0_asymptotic_float.c" -and \
+-not -name "tmpl_bessel_i0_chebyshev_double.c" -and \
+-not -name "tmpl_bessel_i0_chebyshev_float.c" -and \
+-not -name "tmpl_bessel_i0_maclaurin_double.c" -and \
+-not -name "tmpl_bessel_i0_maclaurin_float.c" -and \
+-not -name "tmpl_complex_abs_double.c" -and \
+-not -name "tmpl_complex_abs_float.c" -and \
+-not -name "tmpl_complex_abs_ldouble.c" -and \
+-not -name "tmpl_complex_abs_squared_double.c" -and \
+-not -name "tmpl_complex_abs_squared_float.c" -and \
+-not -name "tmpl_complex_abs_squared_ldouble.c" -and \
+-not -name "tmpl_complex_add_double.c" -and \
+-not -name "tmpl_complex_add_float.c" -and \
+-not -name "tmpl_complex_add_ldouble.c" -and \
+-not -name "tmpl_complex_add_imag_double.c" -and \
+-not -name "tmpl_complex_add_imag_float.c" -and \
+-not -name "tmpl_complex_add_imag_ldouble.c" -and \
+-not -name "tmpl_complex_add_real_double.c" -and \
+-not -name "tmpl_complex_add_real_float.c" -and \
+-not -name "tmpl_complex_add_real_ldouble.c" -and \
+-not -name "tmpl_complex_addto_double.c" -and \
+-not -name "tmpl_complex_addto_float.c" -and \
+-not -name "tmpl_complex_addto_ldouble.c" -and \
+-not -name "tmpl_complex_addto_imag_double.c" -and \
+-not -name "tmpl_complex_addto_imag_float.c" -and \
+-not -name "tmpl_complex_addto_imag_ldouble.c" -and \
+-not -name "tmpl_complex_addto_real_double.c" -and \
+-not -name "tmpl_complex_addto_real_float.c" -and \
+-not -name "tmpl_complex_addto_real_ldouble.c" -and \
+-not -name "tmpl_complex_argument_double.c" -and \
+-not -name "tmpl_complex_argument_float.c" -and \
+-not -name "tmpl_complex_argument_ldouble.c" -and \
+-not -name "tmpl_complex_conjugate_double.c" -and \
+-not -name "tmpl_complex_conjugate_float.c" -and \
+-not -name "tmpl_complex_conjugate_ldouble.c" -and \
+-not -name "tmpl_complex_conjugateself_double.c" -and \
+-not -name "tmpl_complex_conjugateself_float.c" -and \
+-not -name "tmpl_complex_conjugateself_ldouble.c" -and \
+-not -name "tmpl_complex_dist_double.c" -and \
+-not -name "tmpl_complex_dist_float.c" -and \
+-not -name "tmpl_complex_dist_ldouble.c" -and \
+-not -name "tmpl_complex_dist_squared_double.c" -and \
+-not -name "tmpl_complex_dist_squared_float.c" -and \
+-not -name "tmpl_complex_dist_squared_ldouble.c" -and \
+-not -name "tmpl_complex_expi_double.c" -and \
+-not -name "tmpl_complex_expi_float.c" -and \
+-not -name "tmpl_complex_expi_ldouble.c" -and \
+-not -name "tmpl_complex_expid_double.c" -and \
+-not -name "tmpl_complex_expid_float.c" -and \
+-not -name "tmpl_complex_expid_ldouble.c" -and \
+-not -name "tmpl_complex_expipi_double.c" -and \
+-not -name "tmpl_complex_expipi_float.c" -and \
+-not -name "tmpl_complex_expipi_ldouble.c" -and \
+-not -name "tmpl_complex_multiply_double.c" -and \
+-not -name "tmpl_complex_multiply_float.c" -and \
+-not -name "tmpl_complex_multiply_ldouble.c" -and \
+-not -name "tmpl_complex_multiply_imag_double.c" -and \
+-not -name "tmpl_complex_multiply_imag_float.c" -and \
+-not -name "tmpl_complex_multiply_imag_ldouble.c" -and \
+-not -name "tmpl_complex_multiply_real_double.c" -and \
+-not -name "tmpl_complex_multiply_real_float.c" -and \
+-not -name "tmpl_complex_multiply_real_ldouble.c" -and \
+-not -name "tmpl_complex_polard_double.c" -and \
+-not -name "tmpl_complex_polard_float.c" -and \
+-not -name "tmpl_complex_polard_ldouble.c" -and \
+-not -name "tmpl_complex_polar_double.c" -and \
+-not -name "tmpl_complex_polar_float.c" -and \
+-not -name "tmpl_complex_polar_ldouble.c" -and \
+-not -name "tmpl_complex_quick_abs_double.c" -and \
+-not -name "tmpl_complex_quick_abs_float.c" -and \
+-not -name "tmpl_complex_quick_abs_ldouble.c" -and \
+-not -name "tmpl_complex_quick_dist_double.c" -and \
+-not -name "tmpl_complex_quick_dist_float.c" -and \
+-not -name "tmpl_complex_quick_dist_ldouble.c" -and \
+-not -name "tmpl_copysign_float.c" -and \
+-not -name "tmpl_copysign_double.c" -and \
+-not -name "tmpl_copysign_ldouble.c" -and \
+-not -name "tmpl_dist_float.c" -and \
+-not -name "tmpl_dist_double.c" -and \
+-not -name "tmpl_dist_ldouble.c" -and \
+-not -name "tmpl_exp_neg_kernel_double.c" -and \
+-not -name "tmpl_exp_neg_kernel_float.c" -and \
+-not -name "tmpl_exp_neg_kernel_ldouble.c" -and \
+-not -name "tmpl_exp_pos_kernel_double.c" -and \
+-not -name "tmpl_exp_pos_kernel_float.c" -and \
+-not -name "tmpl_exp_pos_kernel_ldouble.c" -and \
+-not -name "tmpl_is_inf_float.c" -and \
+-not -name "tmpl_is_inf_double.c" -and \
+-not -name "tmpl_is_inf_ldouble.c" -and \
+-not -name "tmpl_is_nan_float.c" -and \
+-not -name "tmpl_is_nan_double.c" -and \
+-not -name "tmpl_is_nan_ldouble.c" -and \
+-not -name "tmpl_positive_difference_double.c" -and \
+-not -name "tmpl_positive_difference_float.c" -and \
+-not -name "tmpl_positive_difference_ldouble.c" -and \
+-not -name "tmpl_sin_pade_double.c" -and \
+-not -name "tmpl_sin_pade_float.c" -and \
+-not -name "tmpl_sin_pade_ldouble.c" -and \
+-not -name "tmpl_sin_pade_pi_double.c" -and \
+-not -name "tmpl_sin_pade_pi_float.c" -and \
+-not -name "tmpl_sin_pade_pi_ldouble.c" -and \
+-not -name "tmpl_sin_very_small_double.c" -and \
+-not -name "tmpl_two_vector_l2_norm_double.c" -and \
+-not -name "tmpl_two_vector_l2_norm_float.c" -and \
+-not -name "tmpl_two_vector_l2_norm_ldouble.c" -and \
+-not -name "tmpl_frequency_to_wavelength_double.c" -and \
+-not -name "tmpl_frequency_to_wavelength_float.c" -and \
+-not -name "tmpl_frequency_to_wavelength_ldouble.c" -and \
+-not -name "tmpl_frequency_to_wavenumber_double.c" -and \
+-not -name "tmpl_frequency_to_wavenumber_float.c" -and \
+-not -name "tmpl_frequency_to_wavenumber_ldouble.c" -and \
+-not -name "tmpl_wavelength_to_wavenumber_double.c" -and \
+-not -name "tmpl_wavelength_to_wavenumber_float.c" -and \
+-not -name "tmpl_wavelength_to_wavenumber_ldouble.c" -and \
+-not -name "tmpl_optical_transmittance_double.c" -and \
+-not -name "tmpl_optical_transmittance_float.c" -and \
+-not -name "tmpl_optical_transmittance_ldouble.c" -and
 endif
 
 # Whether or not to use the strictly portable code, of IEEE-754 compliant code.
 ifdef NO_IEEE
-IEEE_FLAG=-DTMPL_SET_TMPL_USE_IEEE_FALSE
-else
-IEEE_FLAG=
+CONFIG_FLAGS += -DTMPL_SET_TMPL_USE_IEEE_FALSE
 endif
 
 ifdef USE_MEMCPY
-MEMCPY_FLAG=-DTMPL_SET_USE_MEMCPY_TRUE
-else
-MEMCPY_FLAG=
+CONFIG_FLAGS += -DTMPL_SET_USE_MEMCPY_TRUE
 endif
 
 # Whether or not to try and find fixed-width integer data types.
 ifdef NO_INT
-INT_FLAG=-DTMPL_SET_NO_INT
-else
-INT_FLAG=
+CONFIG_FLAGS += -DTMPL_SET_NO_INT
 endif
 
-# The architecture libtmpl is being built on.
-ifndef ARCH
-uname_m=$(shell uname -m)
-else
-uname_m=$(ARCH)
-endif
+ASM_INCLUDE :=
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
 # and armv7l (armhf) this is only advised if your C compiler cannot compile
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
-ifdef NO_ASM
-ASM_INCLUDE=
-ASM_EXCLUDE=
+ifndef NO_ASM
+
+# The architecture libtmpl is being built on.
+ifndef ARCH
+uname_m := $(shell uname -m)
+else
+uname_m := $(ARCH)
+endif
 
 # Else for ifdef NO_ASM
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
-else ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
+ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
-ASM_INCLUDE=-wholename "./src/assembly/fasm/*.fasm" -or
-ASM_EXCLUDE=\
-	-not -name "tmpl_trailing_zeros_char.c" -and \
-	-not -name "tmpl_trailing_zeros_int.c" -and \
-	-not -name "tmpl_trailing_zeros_long.c" -and \
-	-not -name "tmpl_trailing_zeros_short.c" -and \
-	-not -name "tmpl_trailing_zeros_uint.c" -and \
-	-not -name "tmpl_trailing_zeros_uchar.c" -and \
-	-not -name "tmpl_trailing_zeros_ulong.c" -and \
-	-not -name "tmpl_trailing_zeros_ushort.c" -and \
-	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and \
-	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and
+ASM_INCLUDE += -wholename "./src/assembly/fasm/*.fasm" -or
+EXCLUDE +=\
+-not -name "tmpl_trailing_zeros_char.c" -and \
+-not -name "tmpl_trailing_zeros_int.c" -and \
+-not -name "tmpl_trailing_zeros_long.c" -and \
+-not -name "tmpl_trailing_zeros_short.c" -and \
+-not -name "tmpl_trailing_zeros_uint.c" -and \
+-not -name "tmpl_trailing_zeros_uchar.c" -and \
+-not -name "tmpl_trailing_zeros_ulong.c" -and \
+-not -name "tmpl_trailing_zeros_ushort.c" -and \
+-not -name "tmpl_sqrt_double.c" -and \
+-not -name "tmpl_sqrt_float.c" -and \
+-not -name "tmpl_sqrt_ldouble.c" -and \
+-not -name "tmpl_floor_double.c" -and \
+-not -name "tmpl_floor_float.c" -and \
+-not -name "tmpl_floor_ldouble.c" -and
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to compile this, tested on
 # Debian GNU/Linux 11.
 else
 
-ASM_INCLUDE=-wholename "./src/assembly/x86_64/*.S" -or
-ASM_EXCLUDE=\
-	-not -name "tmpl_trailing_zeros_char.c" -and \
-	-not -name "tmpl_trailing_zeros_int.c" -and \
-	-not -name "tmpl_trailing_zeros_long.c" -and \
-	-not -name "tmpl_trailing_zeros_short.c" -and \
-	-not -name "tmpl_trailing_zeros_uint.c" -and \
-	-not -name "tmpl_trailing_zeros_uchar.c" -and \
-	-not -name "tmpl_trailing_zeros_ulong.c" -and \
-	-not -name "tmpl_trailing_zeros_ushort.c" -and \
-	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and \
-	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and
+ASM_INCLUDE += -wholename "./src/assembly/x86_64/*.S" -or
+EXCLUDE +=\
+-not -name "tmpl_trailing_zeros_char.c" -and \
+-not -name "tmpl_trailing_zeros_int.c" -and \
+-not -name "tmpl_trailing_zeros_long.c" -and \
+-not -name "tmpl_trailing_zeros_short.c" -and \
+-not -name "tmpl_trailing_zeros_uint.c" -and \
+-not -name "tmpl_trailing_zeros_uchar.c" -and \
+-not -name "tmpl_trailing_zeros_ulong.c" -and \
+-not -name "tmpl_trailing_zeros_ushort.c" -and \
+-not -name "tmpl_sqrt_double.c" -and \
+-not -name "tmpl_sqrt_float.c" -and \
+-not -name "tmpl_sqrt_ldouble.c" -and \
+-not -name "tmpl_floor_double.c" -and \
+-not -name "tmpl_floor_float.c" -and \
+-not -name "tmpl_floor_ldouble.c" -and
 endif
 # End of ifdef FASM.
 
 else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
 
-ASM_INCLUDE=-wholename "./src/assembly/i386/*.S" -or
-ASM_EXCLUDE=\
-	-not -name "tmpl_trailing_zeros_char.c" -and \
-	-not -name "tmpl_trailing_zeros_int.c" -and \
-	-not -name "tmpl_trailing_zeros_long.c" -and \
-	-not -name "tmpl_trailing_zeros_short.c" -and \
-	-not -name "tmpl_trailing_zeros_uint.c" -and \
-	-not -name "tmpl_trailing_zeros_uchar.c" -and \
-	-not -name "tmpl_trailing_zeros_ulong.c" -and \
-	-not -name "tmpl_trailing_zeros_ushort.c" -and \
-	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and \
-	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_floor_ldouble.c" -and
+ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
+EXCLUDE +=\
+-not -name "tmpl_trailing_zeros_char.c" -and \
+-not -name "tmpl_trailing_zeros_int.c" -and \
+-not -name "tmpl_trailing_zeros_long.c" -and \
+-not -name "tmpl_trailing_zeros_short.c" -and \
+-not -name "tmpl_trailing_zeros_uint.c" -and \
+-not -name "tmpl_trailing_zeros_uchar.c" -and \
+-not -name "tmpl_trailing_zeros_ulong.c" -and \
+-not -name "tmpl_trailing_zeros_ushort.c" -and \
+-not -name "tmpl_sqrt_double.c" -and \
+-not -name "tmpl_sqrt_float.c" -and \
+-not -name "tmpl_sqrt_ldouble.c" -and \
+-not -name "tmpl_floor_double.c" -and \
+-not -name "tmpl_floor_float.c" -and \
+-not -name "tmpl_floor_ldouble.c" -and
 
-# Else for ifdef NO_ASM
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
-ASM_INCLUDE=-wholename "./src/assembly/aarch64/*.S" -or
-ASM_EXCLUDE=\
-	-not -name "tmpl_floor_double.c" -and \
-	-not -name "tmpl_floor_float.c" -and \
-	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
+ASM_INCLUDE += -wholename "./src/assembly/aarch64/*.S" -or
+EXCLUDE +=\
+-not -name "tmpl_floor_double.c" -and \
+-not -name "tmpl_floor_float.c" -and \
+-not -name "tmpl_sqrt_double.c" -and \
+-not -name "tmpl_sqrt_float.c" -and \
 
-# Else for ifdef NO_ASM
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
-ASM_INCLUDE=-wholename "./src/assembly/armv7l/*.S" -or
-ASM_EXCLUDE=\
-	-not -name "tmpl_sqrt_double.c" -and \
-	-not -name "tmpl_sqrt_float.c" -and \
-	-not -name "tmpl_sqrt_ldouble.c" -and
+ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
+EXCLUDE +=\
+-not -name "tmpl_sqrt_double.c" -and \
+-not -name "tmpl_sqrt_float.c" -and \
+-not -name "tmpl_sqrt_ldouble.c" -and
 
-# Else for ifeq ($(uname_m),x86_64). Only amd64/x86_64 and aarch64/arm7l have
-# assembly code support. This may change in the future. The rest of the C
-# code has been tested on ppc64, mips, and many other architectures using
-# emulation and worked as expected.
-else
-
-# For all other architectures, use only C code. No assembly.
-ASM_INCLUDE=
-ASM_EXCLUDE=
-
-# End of ifdef NO_ASM.
 endif
+# End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
-ALLCFLAGS=$(INT_FLAG) $(INLINE_FLAG) $(MATH_FLAG) $(IEEE_FLAG) $(LL_FLAG) $(MEMCPY_FLAG)
-INCLUDE=\( $(ASM_INCLUDE) -name "*.c" \)
-EXCLUDE=$(ASM_EXCLUDE) $(INLINE_EXCLUDE) $(MATH_EXCLUDE) $(LL_EXCLUDE)
-SRCS=$(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
-OBJS=$(SRCS:%=$(BUILD_DIR)/%.o)
+endif
+# End of ifndef NO_ASM.
+
+INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
+SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 .PHONY: clean install uninstall all
 
 all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
 
 include/tmpl_config.h: ./config.c $(BUILD_DIR)
-	$(CC) $(ALLCFLAGS) config.c -o config.out
+	$(CC) $(CONFIG_FLAGS) config.c -o config.out
 	./config.out
 	rm -f config.out
 
 $(TARGET_LIB): $(OBJS) include/tmpl_config.h
-	$(CC) $(OBJS) $(LFLAGS) -o $@
+	@echo "Building libtmpl.so ..."
+	@-$(CC) $(OBJS) $(LFLAGS) -o $@
 
 $(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
