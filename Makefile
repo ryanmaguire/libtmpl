@@ -404,9 +404,9 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 .PHONY: clean install uninstall all
 
-all: $(BUILD_DIR) include/tmpl_config.h $(TARGET_LIB)
+all: $(TARGET_LIB)
 
-include/tmpl_config.h: ./config.c $(BUILD_DIR)
+include/tmpl_config.h: ./config.c
 	$(CC) $(CONFIG_FLAGS) config.c -o config.out
 	./config.out
 	rm -f config.out
@@ -416,54 +416,16 @@ $(TARGET_LIB): $(OBJS) include/tmpl_config.h
 	@-$(CC) $(OBJS) $(LFLAGS) -o $@
 
 $(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
+	@mkdir -p $(@D)
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.S.o: %.S include/tmpl_config.h
+	@mkdir -p $(@D)
 	$(CC) $(CWARN) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.fasm.o: %.fasm include/tmpl_config.h
+	@mkdir -p $(@D)
 	fasm $< $@
-
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)/src/array_integer/
-	mkdir -p $(BUILD_DIR)/src/array_real/
-	mkdir -p $(BUILD_DIR)/src/bytes/
-	mkdir -p $(BUILD_DIR)/src/complex/
-	mkdir -p $(BUILD_DIR)/src/cyl_fresnel_optics/
-	mkdir -p $(BUILD_DIR)/src/fft/
-	mkdir -p $(BUILD_DIR)/src/graph_theory/
-	mkdir -p $(BUILD_DIR)/src/integer/
-	mkdir -p $(BUILD_DIR)/src/integration/
-	mkdir -p $(BUILD_DIR)/src/interpolate/
-	mkdir -p $(BUILD_DIR)/src/knots/
-	mkdir -p $(BUILD_DIR)/src/math/
-	mkdir -p $(BUILD_DIR)/src/numerical/
-	mkdir -p $(BUILD_DIR)/src/optics/
-	mkdir -p $(BUILD_DIR)/src/fraunhofer_diffraction/
-	mkdir -p $(BUILD_DIR)/src/fresnel_diffraction/
-	mkdir -p $(BUILD_DIR)/src/polynomial/
-	mkdir -p $(BUILD_DIR)/src/polynomial_integer/
-	mkdir -p $(BUILD_DIR)/src/ppm/
-	mkdir -p $(BUILD_DIR)/src/rational/
-	mkdir -p $(BUILD_DIR)/src/special_functions_complex/
-	mkdir -p $(BUILD_DIR)/src/special_functions_real/
-	mkdir -p $(BUILD_DIR)/src/spherical_geometry/
-	mkdir -p $(BUILD_DIR)/src/sort/
-	mkdir -p $(BUILD_DIR)/src/string/
-	mkdir -p $(BUILD_DIR)/src/svg/
-	mkdir -p $(BUILD_DIR)/src/utility/
-	mkdir -p $(BUILD_DIR)/src/vec2/
-	mkdir -p $(BUILD_DIR)/src/vec3/
-	mkdir -p $(BUILD_DIR)/src/vector_integer/
-	mkdir -p $(BUILD_DIR)/src/vector_real/
-	mkdir -p $(BUILD_DIR)/src/void_pointer/
-	mkdir -p $(BUILD_DIR)/src/where/
-	mkdir -p $(BUILD_DIR)/src/window_functions/
-	mkdir -p $(BUILD_DIR)/src/assembly/fasm/
-	mkdir -p $(BUILD_DIR)/src/assembly/i386/
-	mkdir -p $(BUILD_DIR)/src/assembly/x86_64/
-	mkdir -p $(BUILD_DIR)/src/assembly/aarch64/
-	mkdir -p $(BUILD_DIR)/src/assembly/armv7l/
 
 clean:
 	rm -f *.o
