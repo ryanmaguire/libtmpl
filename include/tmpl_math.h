@@ -2456,6 +2456,60 @@ extern long double tmpl_LDouble_Abs(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Clamp                                                     *
+ *  Purpose:                                                                  *
+ *      Clamps a real number to fall with a given range [min, max].           *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *      min (double):                                                         *
+ *          The minimum allowed value for x.                                  *
+ *      max (double):                                                         *
+ *          The maximum allowed value for x.                                  *
+ *  Output:                                                                   *
+ *      clamped_x (double):                                                   *
+ *          The clamped value of x. If x is less than min, min is returned.   *
+ *          If x is greater than max, max is returned. Otherwise, return x.   *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+
+#if TMPL_USE_INLINE == 1
+
+#include <libtmpl/include/math/tmpl_clamp_float.h>
+#include <libtmpl/include/math/tmpl_clamp_double.h>
+#include <libtmpl/include/math/tmpl_clamp_ldouble.h>
+
+#else
+
+extern double tmpl_Double_Clamp(double x, double min, double max);
+extern float tmpl_Float_Clamp(float x, float min, float max);
+
+extern long double
+tmpl_LDouble_Clamp(long double x, long double min, long double max);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Unit_Clamp                                                *
+ *  Purpose:                                                                  *
+ *      Clamps a real number to fall within the range [0, 1].                 *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      clamped_x (double):                                                   *
+ *          The clamped value of x. The output falls in the unit interval.    *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern double tmpl_Double_Unit_Clamp(double x);
+extern float tmpl_Float_Unit_Clamp(float x);
+extern long double tmpl_LDouble_Unit_Clamp(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Copysign                                                  *
  *  Purpose:                                                                  *
  *      Given two numbers x and y, returns a value that has the magnitude of  *
