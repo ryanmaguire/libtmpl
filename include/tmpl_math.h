@@ -2668,9 +2668,9 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 /*  Alias functions to isnan from math.h if libtmpl algorithms not requested. */
 #if TMPL_USE_MATH_ALGORITHMS != 1
 
-#define tmpl_Float_Is_NaN isnanf
+#define tmpl_Float_Is_NaN isnan
 #define tmpl_Double_Is_NaN isnan
-#define tmpl_LDouble_Is_NaN isnanl
+#define tmpl_LDouble_Is_NaN isnan
 
 /*  These functions are small enough that they should be inlined.             */
 #elif TMPL_USE_INLINE == 1
