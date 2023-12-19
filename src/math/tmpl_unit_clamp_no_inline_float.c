@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_unit_clamp_double                           *
+ *                            tmpl_unit_clamp_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Clamps a real number. See include/math/tmpl_unit_clamp_double.h.      *
+ *      Clamps a real number. See include/math/tmpl_unit_clamp_float.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 19, 2023                                             *
@@ -34,8 +34,8 @@
 /*  Header file where the prototype for the function is defined.              */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Implemented in include/math/tmpl_unit_clamp_double.h.                     */
-#include "../../include/math/tmpl_unit_clamp_double.h"
+/*  Implemented in include/math/tmpl_unit_clamp_float.h.                      */
+#include "../../include/math/tmpl_unit_clamp_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
