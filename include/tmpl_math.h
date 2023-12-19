@@ -2504,9 +2504,20 @@ tmpl_LDouble_Clamp(long double x, long double min, long double max);
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  ******************************************************************************/
+
+#if TMPL_USE_INLINE == 1
+
+#include <libtmpl/include/math/tmpl_unit_clamp_float.h>
+#include <libtmpl/include/math/tmpl_unit_clamp_double.h>
+#include <libtmpl/include/math/tmpl_unit_clamp_ldouble.h>
+
+#else
+
 extern double tmpl_Double_Unit_Clamp(double x);
 extern float tmpl_Float_Unit_Clamp(float x);
 extern long double tmpl_LDouble_Unit_Clamp(long double x);
+
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
