@@ -419,5 +419,53 @@ extern tmpl_RGBA30 tmpl_RGBA30_Blend(tmpl_RGBA30 back, tmpl_RGBA30 fore);
 extern tmpl_RGBA48 tmpl_RGBA48_Blend(tmpl_RGBA48 back, tmpl_RGBA48 fore);
 extern tmpl_RGBA tmpl_RGBA_Blend(const tmpl_RGBA *c0, const tmpl_RGBA *c1);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RGB24_Quick_Add                                                  *
+ *  Purpose:                                                                  *
+ *      Adds two colors by summing over the individual channels.              *
+ *  Arguments:                                                                *
+ *      c0 (tmpl_RGB24):                                                      *
+ *          The first color.                                                  *
+ *      c1 (tmpl_RGB24):                                                      *
+ *          The second color.                                                 *
+ *  Outputs:                                                                  *
+ *      sum (tmpl_RGB24):                                                     *
+ *          The sum of the two input colors.                                  *
+ *  Notes:                                                                    *
+ *      30-bit and 48-bit equivalents are provided as well.                   *
+ *      If the sum overflows beyond the the maximum possible value in a       *
+ *      given channel, the sum is set to the maximum possible value.          *
+ ******************************************************************************/
+extern tmpl_RGB24 tmpl_RGB24_Quick_Add(tmpl_RGB24 c0, const tmpl_RGB24 c1);
+extern tmpl_RGB30 tmpl_RGB30_Quick_Add(tmpl_RGB30 c0, const tmpl_RGB30 c1);
+extern tmpl_RGB48 tmpl_RGB48_Quick_Add(tmpl_RGB48 c0, const tmpl_RGB48 c1);
+extern tmpl_RGB tmpl_RGB_Quick_Add(const tmpl_RGB *c0, const tmpl_RGB *c1);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RGBA24_Quick_Add                                                 *
+ *  Purpose:                                                                  *
+ *      Adds two colors by summing over the individual channels. This is done *
+ *      without checking for possible overflows in the individual channels.   *
+ *  Arguments:                                                                *
+ *      c0 (tmpl_RGBA24):                                                     *
+ *          The first color.                                                  *
+ *      c1 (tmpl_RGBA24):                                                     *
+ *          The second color.                                                 *
+ *  Outputs:                                                                  *
+ *      sum (tmpl_RGBA24):                                                    *
+ *          The sum of the two input colors.                                  *
+ *  Notes:                                                                    *
+ *      30-bit and 48-bit equivalents are provided as well.                   *
+ *      If the sum overflows beyond the the maximum possible value in a       *
+ *      given channel, an undesirable color may occur. This routine is        *
+ *      faster than tmpl_RGBA24_Add, but not as safe.                         *
+ ******************************************************************************/
+extern tmpl_RGBA24 tmpl_RGBA24_Quick_Add(tmpl_RGBA24 c0, const tmpl_RGBA24 c1);
+extern tmpl_RGBA30 tmpl_RGBA30_Quick_Add(tmpl_RGBA30 c0, const tmpl_RGBA30 c1);
+extern tmpl_RGBA48 tmpl_RGBA48_Quick_Add(tmpl_RGBA48 c0, const tmpl_RGBA48 c1);
+extern tmpl_RGBA tmpl_RGBA_Quick_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1);
+
 #endif
 /*  End of include guard.                                                     */
