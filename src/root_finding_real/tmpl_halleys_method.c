@@ -1,5 +1,5 @@
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_numerical.h>
+#include <libtmpl/include/tmpl_root_finding_real.h>
 
 float tmpl_Halleys_Method_Float(float x, float (*f)(float),
                                 float (*f_prime)(float),

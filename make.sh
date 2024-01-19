@@ -129,6 +129,7 @@ for arg in "$@"; do
         CONFIG_HEADER=include/tmpl_config.h
         INTEGER_HEADER=include/tmpl_inttype.h
         LIMITS_HEADER=include/tmpl_limits.h
+        FLOAT_HEADER=include/tmpl_float.h
 
         echo "Removing libtmpl:"
         echo "    Clearing older files..."
@@ -147,6 +148,11 @@ for arg in "$@"; do
         echo "    Removing limits header file if it exists..."
         if [ -e "$LIMITS_HEADER" ]; then
             rm -f "$LIMITS_HEADER";
+        fi
+
+        echo "    Removing float header file if it exists..."
+        if [ -e "$FLOAT_HEADER" ]; then
+            rm -f "$FLOAT_HEADER";
         fi
 
         echo -e "    Removing include directory if it exists..."

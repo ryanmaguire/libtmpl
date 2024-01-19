@@ -288,6 +288,7 @@ clean:
 	rm -f include/tmpl_config.h
 	rm -f include/tmpl_inttype.h
 	rm -f include/tmpl_limits.h
+	rm -f include/tmpl_float.h
 	rm -f $(TARGET_LIB)
 
 install:
@@ -302,6 +303,7 @@ uninstall:
 	rm -f include/tmpl_config.h
 	rm -f include/tmpl_inttype.h
 	rm -f include/tmpl_limits.h
+	rm -f include/tmpl_float.h
 	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)

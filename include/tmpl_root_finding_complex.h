@@ -1,5 +1,5 @@
 /******************************************************************************
- *                                 LICENSE                                    *
+ *                                  LICENSE                                   *
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
@@ -18,8 +18,8 @@
  ******************************************************************************/
 
 /*  Include guard for this file to prevent including this twice.              */
-#ifndef TMPL_NUMERICAL_H
-#define TMPL_NUMERICAL_H
+#ifndef TMPL_ROOT_FINDING_COMPLEX_H
+#define TMPL_ROOT_FINDING_COMPLEX_H
 
 #include <libtmpl/include/tmpl_complex.h>
 
@@ -41,47 +41,4 @@ tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z,
                                       double *coeffs, unsigned int degree,
                                       unsigned int max_iters, double eps);
 
-extern float
-tmpl_Newton_Raphson_Float(float x, float (*f)(float), float (*f_prime)(float),
-                          unsigned int max_iters, float eps);
-
-extern double
-tmpl_Newton_Raphson_Double(double x, double (*f)(double),
-                           double (*f_prime)(double),
-                           unsigned int max_iters, double eps);
-
-extern long double
-tmpl_Newton_Raphson_LDouble(long double x, long double (*f)(long double),
-                            long double (*f_prime)(long double),
-                            unsigned int max_iters, long double eps);
-
-extern float
-tmpl_Halleys_Method_Float(float x, float (*f)(float),
-                          float (*f_prime)(float),
-                          float (*f_2prime)(float),
-                          unsigned int max_iters, float eps);
-
-extern double
-tmpl_Halleys_Method_Double(double x, double (*f)(double),
-                           double (*f_prime)(double),
-                           double (*f_2prime)(double),
-                           unsigned int max_iters, double eps);
-
-extern long double
-tmpl_Halleys_Method_LDouble(long double x, long double (*f)(long double),
-                            long double (*f_prime)(long double),
-                            long double (*f_2prime)(long double),
-                            unsigned int max_iters, long double eps);
-
-extern float
-tmpl_Float_Five_Point_Derivative(float (*f)(float), float x, float h);
-
-extern double
-tmpl_Double_Five_Point_Derivative(double (*f)(double), double x, double h);
-
-extern long double
-tmpl_LDouble_Five_Point_Derivative(long double (*f)(long double),
-                                   long double x, long double h);
-
 #endif
-/*  End of include guard: #ifndef __TMPL_NUMERICAL_H__                        */

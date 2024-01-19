@@ -1,6 +1,6 @@
 
 #include <libtmpl/include/tmpl_math.h>
-#include <libtmpl/include/tmpl_numerical.h>
+#include <libtmpl/include/tmpl_root_finding_complex.h>
 
 tmpl_ComplexDouble
 tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,

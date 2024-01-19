@@ -96,6 +96,146 @@ static const char ASCII_ARRAY[94] = {
     'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'
 };
 
+static long double do_sqrt(long double x)
+{
+    long double y = 1.0L;
+    unsigned int n;
+    const unsigned int toler = 100U;
+
+    for (n = 0U; n < toler; ++n)
+        y = 0.5L * (y + x / y);
+
+    return y;
+}
+
+static long double flt_eps(void)
+{
+    const float x = 1.0F;
+    float dx = 0.5F;
+    float y = x + dx;
+    const unsigned int toler = 100U;
+    unsigned int n;
+
+    for (n = 0U; n < toler; ++n)
+    {
+        if (x == y)
+            return (long double)(2.0F * dx);
+
+        dx = 0.5F * dx;
+        y = x + dx;
+    }
+
+    /*  Could not find epsilon after 100 iterations. Return 32-bit epsilon.   */
+    return 1.1920928955078125E-07F;
+}
+
+static long double dbl_eps(void)
+{
+    const double x = 1.0;
+    double dx = 0.5;
+    double y = x + dx;
+    const unsigned int toler = 100U;
+    unsigned int n;
+
+    for (n = 0U; n < toler; ++n)
+    {
+        if (x == y)
+            return (long double)(2.0 * dx);
+
+        dx = 0.5 * dx;
+        y = x + dx;
+    }
+
+    /*  Could not find epsilon after 100 iterations. Return 64-bit epsilon.   */
+    return 2.220446049250313080847263336181640625E-16L;
+}
+
+static long double ldbl_eps(void)
+{
+    const long double x = 1.0L;
+    long double dx = 0.5L;
+    long double y = x + dx;
+    const unsigned int toler = 100U;
+    unsigned int n;
+
+    for (n = 0U; n < toler; ++n)
+    {
+        if (x == y)
+            return 2.0L * dx;
+
+        dx = 0.5L * dx;
+        y = x + dx;
+    }
+
+    /*  Could not find epsilon after 100 iterations. Return 64-bit epsilon.   */
+    return 2.220446049250313080847263336181640625E-16L;
+}
+
+static int make_float_h(void)
+{
+    const long double feps = flt_eps();
+    const long double deps = dbl_eps();
+    const long double leps = ldbl_eps();
+
+    const long double sqrt_feps = do_sqrt(feps);
+    const long double sqrt_deps = do_sqrt(deps);
+    const long double sqrt_leps = do_sqrt(leps);
+
+    const long double qurt_feps = do_sqrt(sqrt_feps);
+    const long double qurt_deps = do_sqrt(sqrt_deps);
+    const long double qurt_leps = do_sqrt(sqrt_leps);
+
+    FILE *fp = fopen("include/tmpl_float.h", "w");
+
+    if (!fp)
+        return -1;
+
+    /*  Create the file include/tmpl_config.h and return.                     */
+    fprintf(fp, "/******************************************************************************\n");
+    fprintf(fp, " *                                  LICENSE                                   *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  This file is part of libtmpl.                                             *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is free software: you can redistribute it and/or modify           *\n");
+    fprintf(fp, " *  it under the terms of the GNU General Public License as published by      *\n");
+    fprintf(fp, " *  the Free Software Foundation, either version 3 of the License, or         *\n");
+    fprintf(fp, " *  (at your option) any later version.                                       *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  libtmpl is distributed in the hope that it will be useful,                *\n");
+    fprintf(fp, " *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *\n");
+    fprintf(fp, " *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *\n");
+    fprintf(fp, " *  GNU General Public License for more details.                              *\n");
+    fprintf(fp, " *                                                                            *\n");
+    fprintf(fp, " *  You should have received a copy of the GNU General Public License         *\n");
+    fprintf(fp, " *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *                                 tmpl_float                                 *\n");
+    fprintf(fp, " ******************************************************************************\n");
+    fprintf(fp, " *  Purpose:                                                                  *\n");
+    fprintf(fp, " *      This file is created by the config.c file. It provides macros         *\n");
+    fprintf(fp, " *      for floating-point types like float, double, and long double.         *\n");
+    fprintf(fp, " ******************************************************************************/\n\n");
+
+    fprintf(fp, "#ifndef TMPL_FLOAT_H\n");
+    fprintf(fp, "#define TMPL_FLOAT_H\n\n");
+
+    fprintf(fp, "#define TMPL_DBL_EPS (%.24LE)\n", deps);
+    fprintf(fp, "#define TMPL_FLT_EPS (%.24LEF)\n", feps);
+    fprintf(fp, "#define TMPL_LDBL_EPS (%.24LEL)\n\n", leps);
+
+    fprintf(fp, "#define TMPL_SQRT_DBL_EPS (%.24LE)\n", sqrt_deps);
+    fprintf(fp, "#define TMPL_SQRT_FLT_EPS (%.24LEF)\n", sqrt_feps);
+    fprintf(fp, "#define TMPL_SQRT_LDBL_EPS (%.24LEL)\n\n", sqrt_leps);
+
+    fprintf(fp, "#define TMPL_QURT_DBL_EPS (%.24LE)\n", qurt_deps);
+    fprintf(fp, "#define TMPL_QURT_FLT_EPS (%.24LEF)\n", qurt_feps);
+    fprintf(fp, "#define TMPL_QURT_LDBL_EPS (%.24LEL)\n\n", qurt_leps);
+    fprintf(fp, "#endif\n");
+
+    fclose(fp);
+    return 0;
+}
+
 /*  Determines if the compiler uses the ASCII character set.                  */
 static int tmpl_has_ascii(void)
 {
@@ -1461,6 +1601,8 @@ int main(void)
     if (make_integer_h() < 0)
         return -1;
     if (make_limits_h() < 0)
+        return -1;
+    if (make_float_h() < 0)
         return -1;
     return 0;
 }
