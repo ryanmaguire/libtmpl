@@ -1142,6 +1142,9 @@ extern const long double tmpl_atan_ldouble_atan_of_v[8];
 extern const long double tmpl_ldouble_atan_n_by_8[129];
 #endif
 
+extern const double tmpl_Double_SinCos_Table[440];
+extern const float tmpl_Float_SinCos_Table[440];
+
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
@@ -2126,65 +2129,6 @@ extern long double tmpl_LDouble_Sin(long double x);
 #define tmpl_Float_Sin sinf
 #define tmpl_Double_Sin sin
 #define tmpl_LDouble_Sin sinl
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin_Very_Small                                            *
- *  Purpose:                                                                  *
- *      Computes the sine function sin(x) using the Maclaurin series for      *
- *      very small inputs.                                                    *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sin_very_small.h>
-#else
-extern double tmpl_Double_Sin_Very_Small(double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin_Pade                                                  *
- *  Purpose:                                                                  *
- *      Computes the Pade approximant of the sine function sin(x).            *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sin_pade.h>
-#else
-extern float tmpl_Float_Sin_Pade(float x);
-extern double tmpl_Double_Sin_Pade(double x);
-extern long double tmpl_LDouble_Sin_Pade(long double x);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Double_Sin_Pade_Pi                                               *
- *  Purpose:                                                                  *
- *      Computes the Pade approximant of the sine centered at pi.             *
- *  Arguments:                                                                *
- *      double x:                                                             *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      double sin_x:                                                         *
- *          The sine of x.                                                    *
- ******************************************************************************/
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_sin_pade_pi.h>
-#else
-extern float tmpl_Float_Sin_Pade_Pi(float x);
-extern double tmpl_Double_Sin_Pade_Pi(double x);
-extern long double tmpl_LDouble_Sin_Pade_Pi(long double x);
 #endif
 
 /******************************************************************************
