@@ -17,4 +17,10 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-TEST1(double, 0.0, 6.28, tmpl_Double_Sin_Pade_Pi, sin)
+
+static inline float fmod360f(float x)
+{
+    return fmodf(x, 360.0F);
+}
+
+TEST1(float, -1.0E2, 1.0E2, tmpl_Float_Mod_360, fmod360f)
