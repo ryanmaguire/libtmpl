@@ -1,3 +1,21 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************/
 #include <libtmpl/include/tmpl_config.h>
 
 #if TMPL_USE_MATH_ALGORITHMS == 1
@@ -6,15 +24,14 @@
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-#include <libtmpl/include/math/tmpl_sincos_sin_precise_eval.h>
-#include <libtmpl/include/math/tmpl_sincos_cos_precise_eval.h>
-#include <libtmpl/include/math/tmpl_sincos_reduction.h>
-#include <libtmpl/include/math/tmpl_sincos_reduction_very_large.h>
-#include <libtmpl/include/math/tmpl_sincos_data_double.h>
+#include "auxiliary/tmpl_cos_precise_eval_double.h"
+#include "auxiliary/tmpl_sin_precise_eval_double.h"
+#include "auxiliary/tmpl_sincos_reduction.h"
+#include "auxiliary/tmpl_sincos_reduction_very_large.h"
 
 #define TMPL_PI_BY_TWO_LOW_HALF (6.123233995736766035868820147292E-17)
 
-double tmpl_Double_Sin (double x)
+double tmpl_Double_Sin(double x)
 {
     double a, da, out;
     tmpl_IEEE754_Double w;

@@ -1,3 +1,21 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************/
 #include <libtmpl/include/tmpl_config.h>
 
 #if TMPL_USE_MATH_ALGORITHMS == 1
@@ -6,55 +24,48 @@
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-#include <libtmpl/include/math/tmpl_sincos_sin_precise_eval.h>
-#include <libtmpl/include/math/tmpl_sincos_cos_precise_eval.h>
-#include <libtmpl/include/math/tmpl_sincos_reduction.h>
-#include <libtmpl/include/math/tmpl_sincos_reduction_very_large.h>
-#include <libtmpl/include/math/tmpl_sincos_data_double.h>
-
-#define TMPL_PI_BY_TWO_LOW_HALF (6.123233995736766035868820147292E-17)
+#include "auxiliary/tmpl_cos_precise_eval_double.h"
+#include "auxiliary/tmpl_cos_small_eval_double.h"
+#include "auxiliary/tmpl_sin_precise_eval_double.h"
+#include "auxiliary/tmpl_sincos_reduction.h"
 
 double tmpl_Double_Cos(double x)
 {
     double a, da, out;
     tmpl_IEEE754_Double w;
     unsigned int n;
+    const double pi_by_two_low_half = 6.123233995736766035868820147292E-17;
 
     w.r = x;
+
+    if (w.bits.expo == TMPL_DOUBLE_NANINF_EXP)
+        return TMPL_NAN;
+
     w.bits.sign = 0x00U;
 
     if (w.bits.expo < TMPL_DOUBLE_BIAS - 27U)
         return 1.0;
 
-    else if (w.r < 8.5546875E-01)
-        return tmpl_Double_Cos_Precise_Eval(x, 0.0);
+    if (w.r < 8.5546875E-01)
+        return tmpl_Double_Cos_Small_Eval(x);
 
-    else if (w.r < 2.426265)
+    if (w.r < 2.426265)
     {
         w.r = tmpl_Pi_By_Two - w.r;
-        a = w.r + TMPL_PI_BY_TWO_LOW_HALF;
-        da = (w.r - a) + TMPL_PI_BY_TWO_LOW_HALF;
+        a = w.r + pi_by_two_low_half;
+        da = (w.r - a) + pi_by_two_low_half;
         return tmpl_Double_Sin_Precise_Eval(a, da);
     }
-    else if (w.bits.expo < TMPL_DOUBLE_NANINF_EXP)
-    {
-        if (w.r < 1.05414336E+08)
-            n = tmpl_Double_SinCos_Reduction(x, &a, &da) + 1;
-        else
-            n = tmpl_Double_SinCos_Reduction_Very_Large(x, &a, &da) + 1;
 
-        if (n & 1)
-            out = tmpl_Double_Cos_Precise_Eval(a, da);
-        else
-            out = tmpl_Double_Sin_Precise_Eval(a, da);
+    n = tmpl_Double_SinCos_Reduction(x, &a, &da) + 1;
 
-        return (n & 2 ? -out : out);
-    }
+    if (n & 1)
+        out = tmpl_Double_Cos_Precise_Eval(a, da);
     else
-        return TMPL_NAN;
-}
+        out = tmpl_Double_Sin_Precise_Eval(a, da);
 
-#undef TMPL_PI_BY_TWO_LOW_HALF
+    return (n & 2 ? -out : out);
+}
 
 #else
 
