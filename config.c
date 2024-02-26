@@ -126,7 +126,7 @@ static long double flt_eps(void)
     }
 
     /*  Could not find epsilon after 100 iterations. Return 32-bit epsilon.   */
-    return 1.1920928955078125E-07F;
+    return 1.1920928955078125E-07L;
 }
 
 static long double dbl_eps(void)
