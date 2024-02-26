@@ -94,6 +94,12 @@ double tmpl_Double_Sin_Precise_Eval(double x, double dx)
 #undef C0
 #undef C1
 #undef C2
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
 #undef TMPL_BIG_NUMBER
 
 #endif
