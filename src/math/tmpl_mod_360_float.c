@@ -139,13 +139,13 @@ float tmpl_Float_Mod_360(float x)
 
     /*  Special case, Infinity and NaN.                                       */
     if (tmpl_Float_Is_NaN_Or_Inf(x))
-        return TMPL_NAN;
+        return TMPL_NANF;
 
     /*  Compute |x|. x mod 360 is odd, we'll restore the sign at the end.     */
     abs_x = tmpl_Float_Abs(x);
 
     /*  For inputs with magnitude less than 360, no modulo is computed.       */
-    if (abs_x < 360.0)
+    if (abs_x < 360.0F)
         return x;
 
     /*  The value 360 as a float.                                             */
@@ -170,7 +170,7 @@ float tmpl_Float_Mod_360(float x)
     pow2_360 *= pow2;
 
     /*  Similarly, compute 2^-shift / 360.                                    */
-    invpow2 = 1.0 / pow2;
+    invpow2 = 1.0F / pow2;
     invpow2_360 *= invpow2;
 
     /*  Loop through the bits of the number 16 at a time and compute          *

@@ -15,6 +15,9 @@ float tmpl_Float_Sin(float x)
 
 #else
 
+#include "auxiliary/tmpl_cospi_maclaurin_float.h"
+#include "auxiliary/tmpl_sinpi_maclaurin_float.h"
+
 float tmpl_Float_Sin(float x)
 {
     float arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;

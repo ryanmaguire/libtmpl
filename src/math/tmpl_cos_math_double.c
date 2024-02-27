@@ -69,6 +69,9 @@ double tmpl_Double_Cos(double x)
 
 #else
 
+#include "auxiliary/tmpl_cospi_maclaurin_double.h"
+#include "auxiliary/tmpl_sinpi_maclaurin_double.h"
+
 double tmpl_Double_Cos(double x)
 {
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
