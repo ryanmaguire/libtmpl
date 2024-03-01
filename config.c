@@ -1174,6 +1174,10 @@ static int make_config_h(void)
     fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN 8\n");
     fprintf(fp, "#define TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN 9\n");
     fprintf(fp, "#define TMPL_LDOUBLE_UNKNOWN 10\n\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_64_BIT 0\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_80_BIT 1\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_128_BIT 2\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_DOUBLEDOUBLE 3\n\n");
 
     /*  Print the integer endianness to the header file.                      */
     if (int_type == tmpl_integer_little_endian)
@@ -1214,27 +1218,60 @@ static int make_config_h(void)
 
     /*  Lastly, long double.                                                  */
     if (ldouble_type == tmpl_ldouble_64_bit_little_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_64_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_64_bit_big_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_64_BIT_BIG_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_64_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_96_bit_extended_little_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_80_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_96_bit_extended_big_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_80_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_128_bit_extended_little_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_80_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_128_bit_extended_big_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_80_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_little_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_128_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_big_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_128_BIT\n");
+    }
     else if (ldouble_type == tmpl_ldouble_128_bit_doubledouble_little_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_DOUBLEDOUBLE\n");
+    }
     else if (ldouble_type == tmpl_ldouble_128_bit_doubledouble_big_endian)
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_DOUBLEDOUBLE\n");
+    }
     else
+    {
         fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
+        fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_UNKNOWN\n");
+    }
 #else
     fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
     fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
