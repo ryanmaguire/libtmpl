@@ -114,12 +114,17 @@ def rat_remez(func, num_deg, den_deg, start, end):
 
         # If there were not enough samples in x_vals, add some.
         if len(x_vals) != num_deg + den_deg + 2:
-            for ind in range(len(x_vals)):
-                print(str(ind) +": " + tmpld.mpmath.nstr(x_vals[ind]))
 
-            print(
-                "Please Add %d Missing Points. Captured Points Printed Above."
-                % ((num_deg + den_deg + 2) - len(x_vals))
-            )
+            if len(x_vals) == num_deg + den_deg + 3:
+                x_vals = x_vals[0:-1]
+                y_vals = y_vals[0:-1]
+            else:
+                for ind in range(len(x_vals)):
+                    print(str(ind) +": " + tmpld.mpmath.nstr(x_vals[ind]))
 
-            select_points(func, x_vals, y_vals, xarr, yarr, num_deg + den_deg)
+                print(
+                    "Add %d Missing Points. Captured Points Printed Above."
+                    % ((num_deg + den_deg + 2) - len(x_vals))
+                )
+
+                select_points(func, x_vals, y_vals, xarr, yarr, num_deg+den_deg)
