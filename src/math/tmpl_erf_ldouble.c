@@ -122,74 +122,67 @@
  ******************************************************************************/
 
 /*  Maclaurin expansion provided here.                                        */
-#include "auxiliary/tmpl_erf_maclaurin_double.h"
+#include "auxiliary/tmpl_erf_maclaurin_ldouble.h"
 
 /*  Error function for large positive values.                                 */
-#include "auxiliary/tmpl_erf_asymptotic_double.h"
+#include "auxiliary/tmpl_erf_asymptotic_ldouble.h"
 
 /*  Rational Remez approximations for erf.                                    */
-#include "auxiliary/tmpl_erf_rat_remez_small_double.h"
-#include "auxiliary/tmpl_erf_rat_remez_double.h"
+#include "auxiliary/tmpl_erf_rat_remez_small_ldouble.h"
+#include "auxiliary/tmpl_erf_rat_remez_ldouble.h"
 
 /*  With IEEE-754 support we get a slight speed boost checking the range.     */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Function for computing the error function at double precision.            */
-double tmpl_Double_Erf(double x)
+/*  Function for computing the error function at long double precision.       */
+long double tmpl_LDouble_Erf(long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Double w, tmp;
+    tmpl_IEEE754_LDouble w;
 
-    /*  Set the double part of the union to the input.                        */
+    /*  Set the long double part of the union to the input.                   */
     w.r = x;
 
     /*  Special cases, NaN or Infinity.                                       */
-    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
+    if (TMPL_LDOUBLE_IS_NAN_OR_INF(w))
     {
         /*  If the input is NaN, return NaN.                                  */
-        if (TMPL_DOUBLE_IS_NAN(w))
+        if (TMPL_LDOUBLE_IS_NAN(w))
             return x;
 
         /*  Otherwise use the limit. erf(x) -> +/- 1 as x -> +/- infty.       */
-        if (w.bits.sign)
-            return -1.0;
+        if (TMPL_LDOUBLE_IS_NEGATIVE(w))
+            return -1.0L;
 
         /*  Positive infinity, the limit is +1.                               */
-        return 1.0;
+        return 1.0L;
     }
 
     /*  For small values use various polynomial and rational approximations.  */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 1U)
+    else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS + 1U)
     {
         /*  For very small, |x| < 0.125, use a Maclaurin series.              */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
-            return tmpl_Double_Erf_Maclaurin(x);
+        if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 3U)
+            return tmpl_LDouble_Erf_Maclaurin(x);
 
         /*  For |x| < 1 use a rational Remez approximation with a few terms.  */
-        else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-            return tmpl_Double_Erf_Rat_Remez_Small(x);
+        else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
+            return tmpl_LDouble_Erf_Rat_Remez_Small(x);
 
         /*  For |x| < 2 use a larger rational Remez approximation.            */
-        return tmpl_Double_Erf_Rat_Remez(x);
+        return tmpl_LDouble_Erf_Rat_Remez(x);
     }
 
-    /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
-     *  Use the asymptotic values with -erf(-x). First, save the sign of x.   */
-    tmp.bits.sign = w.bits.sign;
+    /*  For large negative values use erf(x) = -erf(-x).                      */
+    if (TMPL_LDOUBLE_IS_NEGATIVE(w))
+        return -tmpl_LDouble_Erf_Asymptotic(-x);
 
-    /*  Compute |x| by setting the sign bit to zero.                          */
-    w.bits.sign = 0x00U;
-
-    /*  Compute Erf(|x|) for |x| >= 2.                                        */
-    w.r = tmpl_Double_Erf_Asymptotic(w.r);
-
-    /*  tmp has the original sign of the input. Restore this to the output.   */
-    w.bits.sign = tmp.bits.sign;
-    return w.r;
+    /*  Error function for large positive values.                             */
+    return tmpl_LDouble_Erf_Asymptotic(x);
 }
 /*  End of tmpl_Double_Erf.                                                   */
 
@@ -200,48 +193,48 @@ double tmpl_Double_Erf(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Function for computing the error function at double precision.            */
-double tmpl_Double_Erf(double x)
+/*  Function for computing the error function at long double precision.       */
+long double tmpl_LDouble_Erf(long double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    const double abs_x = tmpl_Double_Abs(x);
+    const long double abs_x = tmpl_LDouble_Abs(x);
 
     /*  Special cases, NaN or Infinity.                                       */
-    if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_LDouble_Is_NaN_Or_Inf(x))
     {
         /*  If the input is NaN, return NaN.                                  */
-        if (tmpl_Double_Is_NaN(x))
+        if (tmpl_LDouble_Is_NaN(x))
             return x;
 
         /*  Otherwise use the limit. erf(x) -> +/- 1 as x -> +/- infty.       */
-        if (x > 0.0)
-            return 1.0;
+        if (x > 0.0L)
+            return 1.0L;
 
         /*  Negative infinity, the limit is -1.                               */
-        return -1.0;
+        return -1.0L;
     }
 
     /*  For small values use a Maclaurin series.                              */
-    else if (abs_x < 0.125)
-        return tmpl_Double_Erf_Maclaurin(x);
+    else if (abs_x < 0.125L)
+        return tmpl_LDouble_Erf_Maclaurin(x);
 
     /*  For |x| < 1 use a rational Remez approximation with a few terms.      */
-    else if (abs_x < 1.0)
-        return tmpl_Double_Erf_Rat_Remez_Small(x);
+    else if (abs_x < 1.0L)
+        return tmpl_LDouble_Erf_Rat_Remez_Small(x);
 
     /*  For |x| < 2 use a larger rational Remez approximation.                */
-    else if (abs_x < 2.0)
-        return tmpl_Double_Erf_Rat_Remez(x);
+    else if (abs_x < 2.0L)
+        return tmpl_LDouble_Erf_Rat_Remez(x);
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
      *  Use the asymptotic values with -erf(-x).                              */
-    else if (x < 0.0)
-        return -tmpl_Double_Erf_Asymptotic(abs_x);
+    else if (x < 0.0L)
+        return -tmpl_LDouble_Erf_Asymptotic(abs_x);
 
     /*  For large positive, use the asymptotics.                              */
-    return tmpl_Double_Erf_Asymptotic(x);
+    return tmpl_LDouble_Erf_Asymptotic(x);
 }
-/*  End of tmpl_Double_Erf.                                                   */
+/*  End of tmpl_LDouble_Erf.                                                  */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */

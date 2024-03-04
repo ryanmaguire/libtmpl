@@ -1239,54 +1239,45 @@ static double erfcx_chebyshev_table(double y100)
 
 double tmpl_Double_Erfcx(double x)
 {
-    double out, x2, x4, numer, denom;
-    if (x >= 0)
+    if (x >= 0.0)
     {
         /*  For large values use the continued fraction expansion.            */
-        if (x > 50)
+        if (x > 50.0)
         {
             /*  For very large values use only the first term to avoid        *
              *  overflow.                                                     */
             if (x > 5e7)
-                out = tmpl_Sqrt_One_By_Pi / x;
+                return tmpl_Sqrt_One_By_Pi / x;
 
             /*  For smaller values use 5 terms of the continued fraction.     */
             else
             {
-                x2 = x*x;
-                x4 = x2*x2;
-                numer = x4 + 4.5*x2 + 2.0;
-                denom = x*(x4 + 5.0*x2 + 3.75);
-
-                out = tmpl_Sqrt_One_By_Pi * numer / denom;
+                const double x2 = x*x;
+                const double x4 = x2*x2;
+                const double numer = x4 + 4.5*x2 + 2.0;
+                const double denom = x*(x4 + 5.0*x2 + 3.75);
+                return tmpl_Sqrt_One_By_Pi * numer / denom;
             }
         }
 
         /*  And for even smaller values use the lookup table.                 */
-        else
-            out = erfcx_chebyshev_table(400/(4+x));
-    }
-    else
-    {
-        /*  For large negative values, return infinity. The macro             *
-         *  MAX_DOUBLE_BASE_E is the largest value where exp(x) will return   *
-         *  less than infinity. Since the function is asymptotic to exp(x^2)  *
-         *  we take the square root of this and compare x with that.          */
-        if (x < -tmpl_Double_Sqrt(tmpl_Max_Double_Base_E))
-            out = TMPL_INFINITY;
-
-        /*  For smaller values, but not too small, use the asymptotic         *
-         *  expansion 2 exp(x^2).                                             */
-        else if (x < -6.1)
-            out = 2.0*tmpl_Double_Exp(x*x);
-
-        /*  And lastly, for small values use the Chebyshev lookup table.      */
-        else
-            out = 2.0*tmpl_Double_Exp(x*x) -
-                erfcx_chebyshev_table(400.0/(4.0-x));
+        return erfcx_chebyshev_table(400/(4+x));
     }
 
-    return out;
+    /*  For large negative values, return infinity. The macro                 *
+     *  MAX_DOUBLE_BASE_E is the largest value where exp(x) will return       *
+     *  less than infinity. Since the function is asymptotic to exp(x^2)      *
+     *  we take the square root of this and compare x with that.              */
+    if (x < -tmpl_Double_Sqrt(tmpl_Max_Double_Base_E))
+        return TMPL_INFINITY;
+
+    /*  For smaller values, but not too small, use the asymptotic             *
+     *  expansion 2 exp(x^2).                                                 */
+    else if (x < -6.0)
+        return 2.0*tmpl_Double_Exp(x*x);
+
+    /*  And lastly, for small values use the Chebyshev lookup table.          */
+    return 2.0*tmpl_Double_Exp(x*x) - erfcx_chebyshev_table(400.0/(4.0-x));
 }
 
 float tmpl_Float_Erfcx(float x)

@@ -16,22 +16,22 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_erf_chebyshev_double                          *
+ *                         tmpl_erf_chebyshev_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes erf(x) using a Chebyshev expansion at double precision.      *
+ *      Computes erf(x) using a Chebyshev expansion at single precision.      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Erf_Chebyshev                                             *
+ *      tmpl_Float_Erf_Chebyshev                                              *
  *  Purpose:                                                                  *
  *      Computes the Error function erf(x) using a Chebyshev expansion.       *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      erf_x (double):                                                       *
+ *      erf_x (float):                                                        *
  *          The error function at x.                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -40,9 +40,9 @@
  *                                                                            *
  *          f(x) = erf(x)                                                     *
  *                                                                            *
- *      We can accurately compute f(x) using a degree 23 Chebyshev expansion: *
+ *      We can accurately compute f(x) using a degree 17 Chebyshev expansion: *
  *                                                                            *
- *                  23                                                        *
+ *                  17                                                        *
  *                 -----                                                      *
  *                 \                                                          *
  *          f(x) = /     c_n T_n(x)                                           *
@@ -54,7 +54,7 @@
  *      by expanding the Chebyshev polynomials.                               *
  *                                                                            *
  *                             --                   --                        *
- *                  23        |    n                  |                       *
+ *                  17        |    n                  |                       *
  *                 -----      |  -----                |                       *
  *                 \          |  \                    |                       *
  *          f(x) = /      c_n |  /      t_{k, n} x^k  |                       *
@@ -65,7 +65,7 @@
  *      where t_{k, n} is the kth coefficients of the nth Chebyshev           *
  *      polynomial. By collecting all of the terms together we get:           *
  *                                                                            *
- *                  23                                                        *
+ *                  17                                                        *
  *                 -----                                                      *
  *                 \                                                          *
  *          f(x) = /     a_n x^n                                              *
@@ -75,9 +75,9 @@
  *      where the a_n are computed from c_n and t_{k, n} via a Cauchy product.*
  *      This is evaluated by Horner's method, which is faster than Clenshaw's *
  *      algorithm for Chebyshev polynomials in their usual form. The even     *
- *      coefficients vanish, meaning we only need 12 non-zero coefficients.   *
+ *      coefficients vanish, meaning we only need 9 non-zero coefficients.    *
  *  Notes:                                                                    *
- *      Accurate for |x| <= 1 to double precision.                            *
+ *      Accurate for |x| <= 1 to single precision.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -89,25 +89,22 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_CHEBYSHEV_DOUBLE_H
-#define TMPL_ERF_CHEBYSHEV_DOUBLE_H
+#ifndef TMPL_ERF_CHEBYSHEV_FLOAT_H
+#define TMPL_ERF_CHEBYSHEV_FLOAT_H
 
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Coefficients for the polynomial.                                          */
-#define A00 (+1.1283791670955124849729221417042495062358233113712E+00)
-#define A01 (-3.7612638903182824648843587122717143708717045801919E-01)
-#define A02 (+1.1283791670926438759054471783181517556718393172443E-01)
-#define A03 (-2.6866170641014075567916794166599359503695991092998E-02)
-#define A04 (+5.2239775923171535274264124244005143458729940975559E-03)
-#define A05 (-8.5483253735567970597848575977068696543670423761656E-04)
-#define A06 (+1.2055279185329653458904604295658345862349757918905E-04)
-#define A07 (-1.4924467745308758735274997777339385676647640149219E-05)
-#define A08 (+1.6444419566296082937771157879511635103139152729031E-06)
-#define A09 (-1.6187414949452059587524584529136346487576728041821E-07)
-#define A10 (+1.3635860776918529656875941020687253644059118429705E-08)
-#define A11 (-7.6495705819715733731829201232902172942240572385993E-10)
+/*  Coefficients for the Chebyshev approximation.                             */
+#define A00 (+1.1283791670946951024809474862174668105183751824960E+00F)
+#define A01 (-3.7612638889869284098755643668473565725785600761236E-01F)
+#define A02 (+1.1283791313499398347721128221776189750630201743053E-01F)
+#define A03 (-2.6866133625492237775254611171823416553611963113548E-02F)
+#define A04 (+5.2237850070906597171947962407091732468823163882248E-03F)
+#define A05 (-8.5426705677322353647348336032581653227396925883265E-04F)
+#define A06 (+1.1956946823921660991625557778337204567795402349135E-04F)
+#define A07 (-1.3911701148502927370695656041773602640771486545003E-05F)
+#define A08 (+1.0595275841880362072933312414795383309830002963017E-06F)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) \
@@ -118,13 +115,7 @@ A00 + z*(\
                 A04 + z*(\
                     A05 + z*(\
                         A06 + z*(\
-                            A07 + z*(\
-                                A08 + z*(\
-                                    A09 + z*(\
-                                        A10 + z*A11\
-                                    )\
-                                )\
-                            )\
+                            A07 + z*A08\
                         )\
                     )\
                 )\
@@ -135,16 +126,16 @@ A00 + z*(\
 
 /*  Function for computing erf(x) via a Chebyshev expansion.                  */
 TMPL_STATIC_INLINE
-double tmpl_Double_Erf_Chebyshev(double x)
+float tmpl_Float_Erf_Chebyshev(float x)
 {
     /*  The expansion is odd, in terms of x^{2n+1}. Compute x^2.              */
-    const double x2 = x*x;
+    const float x2 = x*x;
 
     /*  Compute the polynomial using Horner's method and return.              */
-    const double poly = TMPL_POLY_EVAL(x2);
+    const float poly = TMPL_POLY_EVAL(x2);
     return x*poly;
 }
-/*  End of tmpl_Double_Erf_Chebyshev.                                         */
+/*  End of tmpl_Float_Erf_Chebyshev.                                          */
 
 /*  #undef everything in case someone wants to #include this file.            */
 #undef TMPL_POLY_EVAL
@@ -157,9 +148,6 @@ double tmpl_Double_Erf_Chebyshev(double x)
 #undef A06
 #undef A07
 #undef A08
-#undef A09
-#undef A10
-#undef A11
 
 #endif
 /*  End of include guard.                                                     */
