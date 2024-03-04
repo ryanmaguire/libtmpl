@@ -200,6 +200,11 @@ double tmpl_Double_LambertW(double x)
 
 #else
 
+#include "auxiliary/tmpl_lambertw_maclaurin_double.h"
+#include "auxiliary/tmpl_lambertw_near_branch_double.h"
+#include "auxiliary/tmpl_lambertw_halley_double.h"
+#include "auxiliary/tmpl_lambertw_pade_double.h"
+
 /*  DBL_EPSILON found here.                                                   */
 #include <float.h>
 
