@@ -15,20 +15,60 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                            tmpl_array_max_long                             *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the maximum of a signed long array.                          *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Long_Array_Max                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the maximum of a signed long array.                          *
+ *  Arguments:                                                                *
+ *      arr (const signed long int * const):                                  *
+ *          A long int array.                                                 *
+ *      len (size_t):                                                         *
+ *          The length of the array.                                          *
+ *  Output:                                                                   *
+ *      max (signed long int):                                                *
+ *          The maximum of the array.                                         *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Loop through the elements of the array and compare to find the max.   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
+ *  2.) tmpl_array_integer.h:                                                 *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 23, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/03/06: Ryan Maguire                                                  *
+ *      Added function description and updated comments.                      *
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the maximum of an long array.                        */
-long int tmpl_Long_Array_Max(long int *arr, size_t len)
+/*  Function for finding the maximum of a long array.                         */
+signed long int
+tmpl_Long_Array_Max(const signed long int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
-    long int max;
+    signed long int max;
 
     /*  If the array is NULL or empty, the result is undefined.               */
     if (!arr || !len)
@@ -40,7 +80,7 @@ long int tmpl_Long_Array_Max(long int *arr, size_t len)
     /*  Loop through the remaining elements and find the maximum.             */
     for (n = 1; n < len; ++n)
     {
-        /*  If the current array element is smaller, reset the max value.     */
+        /*  If the current array element is greater, reset the max value.     */
         if (arr[n] > max)
             max = arr[n];
     }

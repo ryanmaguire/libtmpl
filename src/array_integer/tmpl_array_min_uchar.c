@@ -15,16 +15,55 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                            tmpl_array_min_uchar                            *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the minimum of an unsigned char array.                       *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_UChar_Array_Min                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the minimum of an unsigned char array.                       *
+ *  Arguments:                                                                *
+ *      arr (const unsigned char * const):                                    *
+ *          An unsigned char array.                                           *
+ *      len (size_t):                                                         *
+ *          The length of the array.                                          *
+ *  Output:                                                                   *
+ *      min (unsigned char):                                                  *
+ *          The minimum of the array.                                         *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Loop through the elements of the array and compare to find the min.   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
+ *  2.) tmpl_array_integer.h:                                                 *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 23, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/03/06: Ryan Maguire                                                  *
+ *      Added function description and updated comments.                      *
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the minimum of an int array.                         */
-unsigned char tmpl_UChar_Array_Min(unsigned char *arr, size_t len)
+/*  Function for finding the minimum of an unsigned char array.               */
+unsigned char tmpl_UChar_Array_Min(const unsigned char * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

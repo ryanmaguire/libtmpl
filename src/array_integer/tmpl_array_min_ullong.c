@@ -15,23 +15,66 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                           tmpl_array_min_ullong                            *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the minimum of an unsigned long long array.                  *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_ULLong_Array_Min                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the minimum of an unsigned long long array.                  *
+ *  Arguments:                                                                *
+ *      arr (const unsigned long long int * const):                           *
+ *          An unsigned long long int array.                                  *
+ *      len (size_t):                                                         *
+ *          The length of the array.                                          *
+ *  Output:                                                                   *
+ *      min (unsigned long long int):                                         *
+ *          The minimum of the array.                                         *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Loop through the elements of the array and compare to find the min.   *
+ *  Notes:                                                                    *
+ *      This file is only compiled if long long support is available.         *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
+ *  2.) tmpl_inttype.h:                                                       *
+ *          Header file with the TMPL_HAS_LONGLONG macro.                     *
+ *  3.) tmpl_array_integer.h:                                                 *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 23, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/03/06: Ryan Maguire                                                  *
+ *      Added function description and updated comments.                      *
  ******************************************************************************/
 
 /*  The TMPL_HAS_LONGLONG macro is found here.                                */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  Only compile this is long long support is available / requested.          */
+/*  Only compile this if long long support is available / requested.          */
 #if TMPL_HAS_LONGLONG == 1
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the minimum of a long long int array.                */
+/*  Function for finding the minimum of an unsigned long long int array.      */
 unsigned long long int
-tmpl_ULLong_Array_Min(unsigned long long int *arr, size_t len)
+tmpl_ULLong_Array_Min(const unsigned long long int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;

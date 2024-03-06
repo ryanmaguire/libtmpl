@@ -15,18 +15,62 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                          tmpl_array_minmax_uchar                           *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the minimum and maximum of an unsigned char array.           *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_UChar_Array_MinMax                                               *
+ *  Purpose:                                                                  *
+ *      Computes the minimum and maximum of an unsigned char array.           *
+ *  Arguments:                                                                *
+ *      arr (const unsigned char * const):                                    *
+ *          An unsigned char array.                                           *
+ *      len (size_t):                                                         *
+ *          The length of the array.                                          *
+ *      min (unsigned char *):                                                *
+ *          A pointer to an unsigned char. The minimum is stored here.        *
+ *      max (unsigned char *):                                                *
+ *          A pointer to an unsigned char. The maximum is stored here.        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Loop through the elements of the array and compare.                   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
+ *  2.) tmpl_array_integer.h:                                                 *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 23, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/03/06: Ryan Maguire                                                  *
+ *      Added function description and updated comments.                      *
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_array_integer.h>
 
 /*  Function for finding the min and max of an unsigned char array.           */
 void
-tmpl_UChar_Array_MinMax(unsigned char *arr, size_t len,
-                        unsigned char *min, unsigned char *max)
+tmpl_UChar_Array_MinMax(const unsigned char * const arr,
+                        size_t len,
+                        unsigned char *min,
+                        unsigned char *max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -39,7 +83,7 @@ tmpl_UChar_Array_MinMax(unsigned char *arr, size_t len,
     *min = arr[0];
     *max = arr[0];
 
-    /*  Loop through the remaining elements and find the minimum.             */
+    /*  Loop through the remaining elements and find the min and max.         */
     for (n = 1; n < len; ++n)
     {
         /*  If the current array element is smaller, reset the min value.     */

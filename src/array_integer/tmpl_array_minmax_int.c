@@ -15,16 +15,62 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                           tmpl_array_minmax_int                            *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the minimum and maximum of a signed int array.               *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_Int_Array_MinMax                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the minimum and maximum of a signed int array.               *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          A signed int array.                                               *
+ *      len (size_t):                                                         *
+ *          The length of the array.                                          *
+ *      min (signed int *):                                                   *
+ *          A pointer to a signed int. The minimum is stored here.            *
+ *      max (signed int *):                                                   *
+ *          A pointer to a signed int. The maximum is stored here.            *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Loop through the elements of the array and compare.                   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
+ *  2.) tmpl_array_integer.h:                                                 *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 23, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/03/06: Ryan Maguire                                                  *
+ *      Added function description and updated comments.                      *
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_array_integer.h>
 
 /*  Function for finding the min and max of an int array.                     */
-void tmpl_Int_Array_MinMax(int *arr, size_t len, int *min, int *max)
+void
+tmpl_Int_Array_MinMax(const signed int * const arr,
+                      size_t len,
+                      signed int *min,
+                      signed int *max)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -37,7 +83,7 @@ void tmpl_Int_Array_MinMax(int *arr, size_t len, int *min, int *max)
     *min = arr[0];
     *max = arr[0];
 
-    /*  Loop through the remaining elements and find the minimum.             */
+    /*  Loop through the remaining elements and find the min and max.         */
     for (n = 1; n < len; ++n)
     {
         /*  If the current array element is smaller, reset the min value.     */

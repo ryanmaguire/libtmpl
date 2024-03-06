@@ -15,16 +15,56 @@
  *                                                                            *
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                           tmpl_array_min_ushort                            *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the minimum of an unsigned short array.                      *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_UShort_Array_Min                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the minimum of an unsigned short array.                      *
+ *  Arguments:                                                                *
+ *      arr (const unsigned short int * const):                               *
+ *          An unsigned short int array.                                      *
+ *      len (size_t):                                                         *
+ *          The length of the array.                                          *
+ *  Output:                                                                   *
+ *      min (unsigned short int):                                             *
+ *          The minimum of the array.                                         *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Loop through the elements of the array and compare to find the min.   *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
+ *  2.) tmpl_array_integer.h:                                                 *
+ *          Header file with the functions prototype.                         *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 23, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/03/06: Ryan Maguire                                                  *
+ *      Added function description and updated comments.                      *
  ******************************************************************************/
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_integer.h>
+#include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the minimum of an int array.                         */
-unsigned short int tmpl_UShort_Array_Min(unsigned short int *arr, size_t len)
+/*  Function for finding the minimum of an unsigned short array.              */
+unsigned short int
+tmpl_UShort_Array_Min(const unsigned short int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
