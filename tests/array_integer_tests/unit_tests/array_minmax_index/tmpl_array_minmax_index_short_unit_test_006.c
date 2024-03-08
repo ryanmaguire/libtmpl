@@ -18,4 +18,4 @@
  ******************************************************************************/
 #include "../tmpl_array_integer_unit_tests.h"
 #define inarr {0, -1, -2, -3, -4, -5}
-TEST2(short int, tmpl_Short_Array_MinMax, inarr, -5, 0)
+TEST4(short int, tmpl_Short_Array_MinMax_Index, inarr, 5, 0)

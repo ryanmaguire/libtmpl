@@ -18,4 +18,4 @@
  ******************************************************************************/
 #include "../tmpl_array_integer_unit_tests.h"
 #define inarr {0x05, 0x04, 0x03, 0x02, 0x01, 0x00}
-TEST2(signed char, tmpl_Char_Array_MinMax, inarr, 0x00, 0x05)
+TEST4(signed char, tmpl_Char_Array_MinMax_Index, inarr, 5, 0)
