@@ -36,4 +36,20 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
+#define TEST2(type, func, arr, ansa, ansb)                                     \
+int main(void)                                                                 \
+{                                                                              \
+    const type in[] = arr;                                                     \
+    const size_t len = sizeof(in) / sizeof(in[0]);                             \
+    type outa, outb;                                                           \
+    func(in, len, &outa, &outb);                                               \
+                                                                               \
+    if ((outa != ansa) && (outb != ansb))                                      \
+        puts("FAIL");                                                          \
+    else                                                                       \
+        puts("PASS");                                                          \
+                                                                               \
+    return 0;                                                                  \
+}
+
 #endif
