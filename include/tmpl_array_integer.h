@@ -428,6 +428,59 @@ tmpl_ULLong_Array_MinMax_Index(const unsigned long long int * const arr,
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Array_Total                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the sum of an array of ints.                                 *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          An array of ints.                                                 *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      sum (signed int):                                                     *
+ *          The sum of arr.                                                   *
+ *  Notes:                                                                    *
+ *      char, short, and long versions are provided as well. Long long is     *
+ *      provided if support is available and requested by the Makefile.       *
+ ******************************************************************************/
+extern signed char
+tmpl_Char_Array_Total(const signed char * const arr, size_t len);
+
+extern unsigned char
+tmpl_UChar_Array_Total(const unsigned char * const arr, size_t len);
+
+extern signed short
+tmpl_Short_Array_Total(const signed short int * const arr, size_t len);
+
+extern unsigned short int
+tmpl_UShort_Array_Total(const unsigned short * const arr, size_t len);
+
+extern signed int
+tmpl_Int_Array_Total(const signed int * const arr, size_t len);
+
+extern unsigned int
+tmpl_UInt_Array_Total(const unsigned int * const arr, size_t len);
+
+extern signed long int
+tmpl_Long_Array_Total(const signed long int * const arr, size_t len);
+
+extern unsigned long int
+tmpl_ULong_Array_Total(const unsigned long int * const arr, size_t len);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+
+extern signed long long int
+tmpl_LLong_Array_Total(const signed long long int * const arr, size_t len);
+
+extern unsigned long long int
+tmpl_ULLong_Array_Total(const unsigned long long int * const arr, size_t len);
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
 /*  TODO:
  *      Total
  *      Average
