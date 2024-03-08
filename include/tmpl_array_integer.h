@@ -103,6 +103,60 @@ tmpl_ULLong_Array_Max(const unsigned long long int * const arr, size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Int_Array_Max_Index                                              *
+ *  Purpose:                                                                  *
+ *      Compute the index of the maximum of an array of ints.                 *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          An array of ints.                                                 *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      ind (size_t):                                                         *
+ *          The index of the maximum element of arr.                          *
+ *  Notes:                                                                    *
+ *      char, short, and long versions are provided as well. Long long is     *
+ *      provided if support is available and requested by the Makefile.       *
+ ******************************************************************************/
+extern size_t
+tmpl_Char_Array_Max_Index(const signed char * const arr, size_t len);
+
+extern size_t
+tmpl_UChar_Array_Max_Index(const unsigned char * const arr, size_t len);
+
+extern size_t
+tmpl_Short_Array_Max_Index(const signed short int * const arr, size_t len);
+
+extern size_t
+tmpl_UShort_Array_Max_Index(const unsigned short * const arr, size_t len);
+
+extern size_t
+tmpl_Int_Array_Max_Index(const signed int * const arr, size_t len);
+
+extern size_t
+tmpl_UInt_Array_Max_Index(const unsigned int * const arr, size_t len);
+
+extern size_t
+tmpl_Long_Array_Max_Index(const signed long int * const arr, size_t len);
+
+extern size_t
+tmpl_ULong_Array_Max_Index(const unsigned long int * const arr, size_t len);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+
+extern size_t
+tmpl_LLong_Array_Max_Index(const signed long long int * const arr, size_t len);
+
+extern size_t
+tmpl_ULLong_Array_Max_Index(const unsigned long long int * const arr,
+                            size_t len);
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Int_Array_Min                                                    *
  *  Purpose:                                                                  *
  *      Compute the minimum of an array of ints.                              *
@@ -156,6 +210,60 @@ tmpl_ULLong_Array_Min(const unsigned long long int * const arr, size_t len);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Int_Array_Min_Index                                              *
+ *  Purpose:                                                                  *
+ *      Compute the index of the minimum of an array of ints.                 *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          An array of ints.                                                 *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      ind (size_t):                                                         *
+ *          The index of the minimum element of arr.                          *
+ *  Notes:                                                                    *
+ *      char, short, and long versions are provided as well. Long long is     *
+ *      provided if support is available and requested by the Makefile.       *
+ ******************************************************************************/
+extern size_t
+tmpl_Char_Array_Min_Index(const signed char * const arr, size_t len);
+
+extern size_t
+tmpl_UChar_Array_Min_Index(const unsigned char * const arr, size_t len);
+
+extern size_t
+tmpl_Short_Array_Min_Index(const signed short int * const arr, size_t len);
+
+extern size_t
+tmpl_UShort_Array_Min_Index(const unsigned short * const arr, size_t len);
+
+extern size_t
+tmpl_Int_Array_Min_Index(const signed int * const arr, size_t len);
+
+extern size_t
+tmpl_UInt_Array_Min_Index(const unsigned int * const arr, size_t len);
+
+extern size_t
+tmpl_Long_Array_Min_Index(const signed long int * const arr, size_t len);
+
+extern size_t
+tmpl_ULong_Array_Min_Index(const unsigned long int * const arr, size_t len);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+
+extern size_t
+tmpl_LLong_Array_Min_Index(const signed long long int * const arr, size_t len);
+
+extern size_t
+tmpl_ULLong_Array_Min_Index(const unsigned long long int * const arr,
+                            size_t len);
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Int_Array_MinMax                                                 *
  *  Purpose:                                                                  *
  *      Compute the min and max of an array of ints.                          *
@@ -172,36 +280,52 @@ tmpl_ULLong_Array_Min(const unsigned long long int * const arr, size_t len);
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_Char_Array_MinMax(const signed char * const arr, size_t len,
-                       signed char *min, signed char *max);
+tmpl_Char_Array_MinMax(const signed char * const arr,
+                       size_t len,
+                       signed char *min,
+                       signed char *max);
 
 extern void
-tmpl_UChar_Array_MinMax(const unsigned char * const arr, size_t len,
-                        unsigned char *min, unsigned char *max);
+tmpl_UChar_Array_MinMax(const unsigned char * const arr,
+                        size_t len,
+                        unsigned char *min,
+                        unsigned char *max);
 
 extern void
-tmpl_Short_Array_MinMax(const signed short int * const arr, size_t len,
-                        signed short int *min, signed short int *max);
+tmpl_Short_Array_MinMax(const signed short int * const arr,
+                        size_t len,
+                        signed short int *min,
+                        signed short int *max);
 
 extern void
-tmpl_UShort_Array_MinMax(const unsigned short int * const arr, size_t len,
-                         unsigned short int * min, unsigned short int *max);
+tmpl_UShort_Array_MinMax(const unsigned short int * const arr,
+                         size_t len,
+                         unsigned short int * min,
+                         unsigned short int *max);
 
 extern void
-tmpl_Int_Array_MinMax(const signed int * const arr, size_t len,
-                      signed int *min, signed int *max);
+tmpl_Int_Array_MinMax(const signed int * const arr,
+                      size_t len,
+                      signed int *min,
+                      signed int *max);
 
 extern void
-tmpl_UInt_Array_MinMax(const unsigned int * const arr, size_t len,
-                       unsigned int *min, unsigned int *max);
+tmpl_UInt_Array_MinMax(const unsigned int * const arr,
+                       size_t len,
+                       unsigned int *min,
+                       unsigned int *max);
 
 extern void
-tmpl_Long_Array_MinMax(const signed long int * const arr, size_t len,
-                       signed long int *min, signed long int *max);
+tmpl_Long_Array_MinMax(const signed long int * const arr,
+                       size_t len,
+                       signed long int *min,
+                       signed long int *max);
 
 extern void
-tmpl_ULong_Array_MinMax(const unsigned long int * const arr, size_t len,
-                        unsigned long int *min, unsigned long int *max);
+tmpl_ULong_Array_MinMax(const unsigned long int * const arr,
+                        size_t len,
+                        unsigned long int *min,
+                        unsigned long int *max);
 
 /*  Long long functions if support is available.                              */
 #if TMPL_HAS_LONGLONG == 1
@@ -221,6 +345,89 @@ tmpl_ULLong_Array_MinMax(const unsigned long long int * const arr,
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Int_Array_MinMax                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the min and max of an array of ints.                          *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          An array of ints.                                                 *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *      min (signed int *):                                                   *
+ *          A pointer to an int, the min is stored here.                      *
+ *      max (signed int *):                                                   *
+ *          A pointer to an int, the max is stored here.                      *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_Char_Array_MinMax_Index(const signed char * const arr,
+                             size_t len,
+                             size_t *minind,
+                             size_t *maxind);
+
+extern void
+tmpl_UChar_Array_MinMax_Index(const unsigned char * const arr,
+                              size_t len,
+                              size_t *minind,
+                              size_t *maxind);
+
+extern void
+tmpl_Short_Array_MinMax_Index(const signed short int * const arr,
+                              size_t len,
+                              size_t *minind,
+                              size_t *maxind);
+
+extern void
+tmpl_UShort_Array_MinMax_Index(const unsigned short int * const arr,
+                               size_t len,
+                               size_t *minind,
+                               size_t *maxind);
+
+extern void
+tmpl_Int_Array_MinMax_Index(const signed int * const arr,
+                            size_t len,
+                            size_t *minind,
+                            size_t *maxind);
+
+extern void
+tmpl_UInt_Array_MinMax_Index(const unsigned int * const arr,
+                             size_t len,
+                             size_t *minind,
+                             size_t *maxind);
+
+extern void
+tmpl_Long_Array_MinMax_Index(const signed long int * const arr,
+                             size_t len,
+                             size_t *minind,
+                             size_t *maxind);
+
+extern void
+tmpl_ULong_Array_MinMax_Index(const unsigned long int * const arr,
+                              size_t len,
+                              size_t *minind,
+                              size_t *maxind);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+
+extern void
+tmpl_LLong_Array_MinMax_Index(const signed long long int * const arr,
+                              size_t len,
+                              size_t *minind,
+                              size_t *maxind);
+
+extern void
+tmpl_ULLong_Array_MinMax_Index(const unsigned long long int * const arr,
+                               size_t len,
+                               size_t *minind,
+                               size_t *maxind);
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
 /*  TODO:
  *      Total
  *      Average
@@ -233,8 +440,6 @@ tmpl_ULLong_Array_MinMax(const unsigned long long int * const arr,
  *      Prepend
  *      Insert
  *      As Double
- *      Max Index
- *      Min Index
  *      Reverse
  */
 
