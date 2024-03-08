@@ -52,4 +52,19 @@ int main(void)                                                                 \
     return 0;                                                                  \
 }
 
+#define TEST3(type, func, arr, ans)                                            \
+int main(void)                                                                 \
+{                                                                              \
+    const type in[] = arr;                                                     \
+    const size_t len = sizeof(in) / sizeof(in[0]);                             \
+    const size_t out = func(in, len);                                          \
+                                                                               \
+    if (out != ans)                                                            \
+        puts("FAIL");                                                          \
+    else                                                                       \
+      puts("PASS");                                                            \
+                                                                               \
+    return 0;                                                                  \
+}
+
 #endif
