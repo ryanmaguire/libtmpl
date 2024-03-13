@@ -31,7 +31,7 @@ int main(void)                                                                 \
     if (out != ans)                                                            \
         puts("FAIL");                                                          \
     else                                                                       \
-      puts("PASS");                                                            \
+        puts("PASS");                                                          \
                                                                                \
     return 0;                                                                  \
 }
@@ -62,7 +62,7 @@ int main(void)                                                                 \
     if (out != ans)                                                            \
         puts("FAIL");                                                          \
     else                                                                       \
-      puts("PASS");                                                            \
+        puts("PASS");                                                          \
                                                                                \
     return 0;                                                                  \
 }
@@ -76,6 +76,21 @@ int main(void)                                                                 \
     func(in, len, &outa, &outb);                                               \
                                                                                \
     if ((outa != ansa) && (outb != ansb))                                      \
+        puts("FAIL");                                                          \
+    else                                                                       \
+        puts("PASS");                                                          \
+                                                                               \
+    return 0;                                                                  \
+}
+
+#define TEST5(type, ftype, func, arr, ans)                                     \
+int main(void)                                                                 \
+{                                                                              \
+    const type in[] = arr;                                                     \
+    const size_t len = sizeof(in) / sizeof(in[0]);                             \
+    const ftype out = func(in, len);                                           \
+                                                                               \
+    if (out != ans)                                                            \
         puts("FAIL");                                                          \
     else                                                                       \
         puts("PASS");                                                          \
