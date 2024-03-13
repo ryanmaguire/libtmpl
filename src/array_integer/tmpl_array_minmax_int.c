@@ -48,7 +48,7 @@
  *  1.) stddef.h:                                                             *
  *          Standard header file containing the size_t typedef.               *
  *  2.) tmpl_array_integer.h:                                                 *
- *          Header file with the functions prototype.                         *
+ *          Header file with the function prototype.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 23, 2023                                             *

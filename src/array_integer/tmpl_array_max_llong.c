@@ -49,7 +49,7 @@
  *  2.) tmpl_inttype.h:                                                       *
  *          Header file with the TMPL_HAS_LONGLONG macro.                     *
  *  3.) tmpl_array_integer.h:                                                 *
- *          Header file with the functions prototype.                         *
+ *          Header file with the function prototype.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 23, 2023                                             *
