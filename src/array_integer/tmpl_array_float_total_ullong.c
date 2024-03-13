@@ -78,7 +78,7 @@ tmpl_ULLong_Array_Float_Total(const unsigned long long int * const arr,
 
     /*  If the array is NULL or empty, the result is undefined.               */
     if (!arr || !len)
-        return 0;
+        return 0.0F;
 
     /*  Initialize the sum variable to the zeroth element.                    */
     sum = (float)arr[0];

@@ -67,7 +67,7 @@ tmpl_UShort_Array_Float_Total(const unsigned short int * const arr, size_t len)
 
     /*  If the array is NULL or empty, the result is undefined.               */
     if (!arr || !len)
-        return 0;
+        return 0.0F;
 
     /*  Initialize the sum variable to the zeroth element.                    */
     sum = (float)arr[0];

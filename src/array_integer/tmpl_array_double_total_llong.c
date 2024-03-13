@@ -78,7 +78,7 @@ tmpl_LLong_Array_Double_Total(const signed long long int * const arr,
 
     /*  If the array is NULL or empty, the result is undefined.               */
     if (!arr || !len)
-        return 0;
+        return 0.0;
 
     /*  Initialize the sum variable to the zeroth element.                    */
     sum = (double)arr[0];

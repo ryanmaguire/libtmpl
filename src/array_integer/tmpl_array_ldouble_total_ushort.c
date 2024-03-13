@@ -68,7 +68,7 @@ tmpl_UShort_Array_LDouble_Total(const unsigned short int * const arr,
 
     /*  If the array is NULL or empty, the result is undefined.               */
     if (!arr || !len)
-        return 0;
+        return 0.0L;
 
     /*  Initialize the sum variable to the zeroth element.                    */
     sum = (long double)arr[0];
