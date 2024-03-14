@@ -74,7 +74,7 @@ tmpl_ULong_Array_Min(const unsigned long int * const arr, size_t len)
     if (!arr || !len)
         return 0UL;
 
-    /*  Initialize the min variable to the first element.                     */
+    /*  Initialize the min variable to the zeroth element.                    */
     min = arr[0];
 
     /*  Loop through the remaining elements and find the minimum.             */
