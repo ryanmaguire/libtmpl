@@ -74,7 +74,7 @@ tmpl_UShort_Array_Max(const unsigned short int * const arr, size_t len)
     if (!arr || !len)
         return 0U;
 
-    /*  Initialize the max variable to the first element.                     */
+    /*  Initialize the max variable to the zeroth element.                    */
     max = arr[0];
 
     /*  Loop through the remaining elements and find the maximum.             */
