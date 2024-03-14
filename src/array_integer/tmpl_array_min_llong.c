@@ -16,24 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_array_min_long                             *
+ *                            tmpl_array_min_llong                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the minimum of a signed long array.                          *
+ *      Computes the minimum of a signed long long array.                     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Long_Array_Min                                                   *
+ *      tmpl_LLong_Array_Min                                                  *
  *  Purpose:                                                                  *
- *      Computes the minimum of a signed long array.                          *
+ *      Computes the minimum of a signed long long array.                     *
  *  Arguments:                                                                *
- *      arr (const signed long int * const):                                  *
- *          A long int array.                                                 *
+ *      arr (const signed long long int * const):                             *
+ *          A long long int array.                                            *
  *      len (size_t):                                                         *
  *          The length of the array.                                          *
  *  Output:                                                                   *
- *      min (signed long int):                                                *
+ *      min (signed long long int):                                           *
  *          The minimum of the array.                                         *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -44,7 +44,9 @@
  ******************************************************************************
  *  1.) stddef.h:                                                             *
  *          Standard header file containing the size_t typedef.               *
- *  2.) tmpl_array_integer.h:                                                 *
+ *  2.) tmpl_inttype.h:                                                       *
+ *          Header file with the TMPL_HAS_LONGLONG macro.                     *
+ *  3.) tmpl_array_integer.h:                                                 *
  *          Header file with the function prototype.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
