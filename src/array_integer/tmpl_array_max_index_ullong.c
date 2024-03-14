@@ -29,7 +29,7 @@
  *      Computes the index of the maximum of an unsigned long long array.     *
  *  Arguments:                                                                *
  *      arr (const unsigned long long int * const):                           *
- *          A long long array.                                                *
+ *          An unsigned long long array.                                      *
  *      len (size_t):                                                         *
  *          The length of the array.                                          *
  *  Output:                                                                   *

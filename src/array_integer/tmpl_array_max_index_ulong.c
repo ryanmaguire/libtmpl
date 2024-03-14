@@ -57,7 +57,7 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the index of the maximum of a long int array.        */
+/*  Function for finding the index of the max of an unsigned long int array.  */
 size_t
 tmpl_ULong_Array_Max_Index(const unsigned long int * const arr, size_t len)
 {
