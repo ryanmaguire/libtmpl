@@ -79,7 +79,7 @@ tmpl_UShort_Array_MinMax(const unsigned short int * const arr,
     if (!arr || !len || !min || !max)
         return;
 
-    /*  Initialize the min and max variables to the first element.            */
+    /*  Initialize the min and max variables to the zeroth element.           */
     *min = arr[0];
     *max = arr[0];
 
