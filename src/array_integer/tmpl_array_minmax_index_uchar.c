@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_UChar_Array_MinMax_Index                                         *
  *  Purpose:                                                                  *
- *      Computes the indices for the min and max of a signed char array.      *
+ *      Computes the indices for the min and max of an unsigned char array.   *
  *  Arguments:                                                                *
  *      arr (const unsigned char * const):                                    *
  *          An unsigned char array.                                           *

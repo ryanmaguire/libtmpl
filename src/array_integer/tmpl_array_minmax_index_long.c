@@ -60,7 +60,7 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the index of the min and max of an long array.       */
+/*  Function for finding the index of the min and max of a long array.        */
 void
 tmpl_Long_Array_MinMax_Index(const signed long int * const arr,
                              size_t len,
