@@ -86,7 +86,7 @@ tmpl_UShort_Array_MinMax_Index(const unsigned short int * const arr,
             *minind = n;
 
         /*  If the current array element is larger, reset the max index.      */
-        if (arr[n] > arr[*maxind])
+        else if (arr[n] > arr[*maxind])
             *maxind = n;
     }
 }
