@@ -28,8 +28,8 @@
  *  Purpose:                                                                  *
  *      Computes the minimum of an unsigned int array.                        *
  *  Arguments:                                                                *
- *      arr (const signed int * const):                                       *
- *          An int array.                                                     *
+ *      arr (const unsigned int * const):                                     *
+ *          An unsigned int array.                                            *
  *      len (size_t):                                                         *
  *          The length of the array.                                          *
  *  Output:                                                                   *
