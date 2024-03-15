@@ -101,7 +101,7 @@ tmpl_LLong_Array_MinMax(const signed long long int * const arr,
             *min = arr[n];
 
         /*  If the current array element is larger, reset the max value.      */
-        if (arr[n] > *max)
+        else if (arr[n] > *max)
             *max = arr[n];
     }
 }

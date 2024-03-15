@@ -91,7 +91,7 @@ tmpl_Char_Array_MinMax(const signed char * const arr,
             *min = arr[n];
 
         /*  If the current array element is larger, reset the max value.      */
-        if (arr[n] > *max)
+        else if (arr[n] > *max)
             *max = arr[n];
     }
 }
