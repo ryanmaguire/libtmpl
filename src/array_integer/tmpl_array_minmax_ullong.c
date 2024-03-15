@@ -34,7 +34,7 @@
  *          The length of the array.                                          *
  *      min (unsigned long long int *):                                       *
  *          A pointer to an unsigned long long int. The min is stored here.   *
- *      max (signed long long int *):                                         *
+ *      max (unsigned long long int *):                                       *
  *          A pointer to an unsigned long long int. The max is stored here.   *
  *  Output:                                                                   *
  *      None (void).                                                          *

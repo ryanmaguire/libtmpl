@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_UShort_Array_Total                                               *
  *  Purpose:                                                                  *
- *      Computes the sum of an unsigned int array.                            *
+ *      Computes the sum of an unsigned short array.                          *
  *  Arguments:                                                                *
  *      arr (const unsigned short int * const):                               *
  *          An unsigned short int array.                                      *
