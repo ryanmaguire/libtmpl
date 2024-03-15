@@ -75,7 +75,7 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_array_integer.h>
 
-/*  Function for finding the min and max of a long array.                     */
+/*  Function for finding the min and max of a long long array.                */
 void
 tmpl_LLong_Array_MinMax(const signed long long int * const arr,
                         size_t len,
