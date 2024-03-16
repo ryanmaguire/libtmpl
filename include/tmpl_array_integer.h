@@ -161,6 +161,62 @@ tmpl_ULLong_Array_Double_Total(const unsigned long long int * const arr,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Int_Array_Float_Average                                          *
+ *  Purpose:                                                                  *
+ *      Computes the average of an array of ints outputting a float.          *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          An array of ints.                                                 *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      avg (float):                                                          *
+ *          The average of arr.                                               *
+ *  Notes:                                                                    *
+ *      char, short, and long versions are provided as well. Long long is     *
+ *      provided if support is available and requested by the Makefile.       *
+ ******************************************************************************/
+extern float
+tmpl_Char_Array_Float_Average(const signed char * const arr, size_t len);
+
+extern float
+tmpl_UChar_Array_Float_Average(const unsigned char * const arr, size_t len);
+
+extern float
+tmpl_Short_Array_Float_Average(const signed short int * const arr, size_t len);
+
+extern float
+tmpl_UShort_Array_Float_Average(const unsigned short * const arr, size_t len);
+
+extern float
+tmpl_Int_Array_Float_Average(const signed int * const arr, size_t len);
+
+extern float
+tmpl_UInt_Array_Float_Average(const unsigned int * const arr, size_t len);
+
+extern float
+tmpl_Long_Array_Float_Average(const signed long int * const arr, size_t len);
+
+extern float
+tmpl_ULong_Array_Float_Average(const unsigned long int * const arr,
+                                size_t len);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+
+extern float
+tmpl_LLong_Array_Float_Average(const signed long long int * const arr,
+                                size_t len);
+
+extern float
+tmpl_ULLong_Array_Float_Average(const unsigned long long int * const arr,
+                                 size_t len);
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Int_Array_Float_Total                                            *
  *  Purpose:                                                                  *
  *      Computes the sum of an array of ints outputting a float.              *
