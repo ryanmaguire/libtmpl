@@ -50,6 +50,62 @@ extern "C" {
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Int_Array_Double_Average                                         *
+ *  Purpose:                                                                  *
+ *      Computes the average of an array of ints outputting a double.         *
+ *  Arguments:                                                                *
+ *      arr (const signed int * const):                                       *
+ *          An array of ints.                                                 *
+ *      len (size_t):                                                         *
+ *          The number of elements in the array.                              *
+ *  Output:                                                                   *
+ *      avg (double):                                                         *
+ *          The average of arr.                                               *
+ *  Notes:                                                                    *
+ *      char, short, and long versions are provided as well. Long long is     *
+ *      provided if support is available and requested by the Makefile.       *
+ ******************************************************************************/
+extern double
+tmpl_Char_Array_Double_Average(const signed char * const arr, size_t len);
+
+extern double
+tmpl_UChar_Array_Double_Average(const unsigned char * const arr, size_t len);
+
+extern double
+tmpl_Short_Array_Double_Average(const signed short int * const arr, size_t len);
+
+extern double
+tmpl_UShort_Array_Double_Average(const unsigned short * const arr, size_t len);
+
+extern double
+tmpl_Int_Array_Double_Average(const signed int * const arr, size_t len);
+
+extern double
+tmpl_UInt_Array_Double_Average(const unsigned int * const arr, size_t len);
+
+extern double
+tmpl_Long_Array_Double_Average(const signed long int * const arr, size_t len);
+
+extern double
+tmpl_ULong_Array_Double_Average(const unsigned long int * const arr,
+                                size_t len);
+
+/*  Long long functions if support is available.                              */
+#if TMPL_HAS_LONGLONG == 1
+
+extern double
+tmpl_LLong_Array_Double_Average(const signed long long int * const arr,
+                                size_t len);
+
+extern double
+tmpl_ULLong_Array_Double_Average(const unsigned long long int * const arr,
+                                 size_t len);
+
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Int_Array_Double_Total                                           *
  *  Purpose:                                                                  *
  *      Computes the sum of an array of ints outputting a double.             *
