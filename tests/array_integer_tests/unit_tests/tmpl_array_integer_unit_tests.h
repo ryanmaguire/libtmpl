@@ -20,6 +20,13 @@
 #define TMPL_ARRAY_INTEGER_UNIT_TESTS_H
 #include <stdio.h>
 #include <libtmpl/include/tmpl_array_integer.h>
+#include <libtmpl/include/tmpl_float.h>
+
+#define TMPL_EPS(x) _Generic((x), \
+    float: TMPL_FLT_EPS,          \
+    default: TMPL_DBL_EPS,        \
+    long double: TMPL_LDBL_EPS    \
+)
 
 #define TEST1(type, func, arr, ans)                                            \
 int main(void)                                                                 \
@@ -91,6 +98,39 @@ int main(void)                                                                 \
     const ftype out = func(in, len);                                           \
                                                                                \
     if (out != ans)                                                            \
+        puts("FAIL");                                                          \
+    else                                                                       \
+        puts("PASS");                                                          \
+                                                                               \
+    return 0;                                                                  \
+}
+
+#define TEST5(type, ftype, func, arr, ans)                                     \
+int main(void)                                                                 \
+{                                                                              \
+    const type in[] = arr;                                                     \
+    const size_t len = sizeof(in) / sizeof(in[0]);                             \
+    const ftype out = func(in, len);                                           \
+                                                                               \
+    if (out != ans)                                                            \
+        puts("FAIL");                                                          \
+    else                                                                       \
+        puts("PASS");                                                          \
+                                                                               \
+    return 0;                                                                  \
+}
+
+#define TEST6(type, ftype, func, arr, ans)                                     \
+int main(void)                                                                 \
+{                                                                              \
+    const type in[] = arr;                                                     \
+    const size_t len = sizeof(in) / sizeof(in[0]);                             \
+    const ftype out = func(in, len);                                           \
+    const ftype eps = ((ftype)4) * TMPL_EPS(out);                              \
+    const ftype tmp = (out - ans) / ans;                                       \
+    const ftype err = (tmp > 0 ? tmp : -tmp);                                  \
+                                                                               \
+    if (err > eps)                                                             \
         puts("FAIL");                                                          \
     else                                                                       \
         puts("PASS");                                                          \
