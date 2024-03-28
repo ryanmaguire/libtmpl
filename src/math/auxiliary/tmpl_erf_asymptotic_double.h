@@ -118,6 +118,428 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
+#include <libtmpl/include/tmpl_math.h>
+
+/*  With IEEE-754 support we can use a switch-trick to double the performance.*/
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+
+/*  Coefficients for the Remez polynomial for Erf on [2, 2.5].                */
+#define P000 (+9.9853728341331885122917049163048561164071612143256E-01)
+#define P001 (+7.1423190220182551212639592571545453534409310185057E-03)
+#define P002 (-1.6070217799544499375749681878385412130461324864096E-02)
+#define P003 (+2.1724553691848123484559446741931650749320609820280E-02)
+#define P004 (-1.9083383636029665626388678675899106786912669285060E-02)
+#define P005 (+1.0657679181541277097330847349642305238766047557653E-02)
+#define P006 (-2.9043571515295761913149210463157628004300500688630E-03)
+#define P007 (-6.7045684210182447361233109790249938460067974648627E-04)
+#define P008 (+9.9949708347555551712978749627502335336796459803359E-04)
+#define P009 (-3.6935727415108647200579303917701509950420786490064E-04)
+#define P010 (-1.1539736718627222791947754786629603849538237347908E-05)
+#define P011 (+6.4844129322404749029706341545510470582290000286178E-05)
+#define P012 (-2.1894411428366273657419057866807365805957172479599E-05)
+
+/*  Coefficients for the Remez polynomial for Erf on [2.5, 3].                */
+#define P100 (+9.9989937807788039773943230740580948402586993282533E-01)
+#define P101 (+5.8627724709288510487639134704333605218589654673250E-04)
+#define P102 (-1.6122624295482425426304601750093559507647212938844E-03)
+#define P103 (+2.7603887054235208922187015740027856748423601087818E-03)
+#define P104 (-3.2581136520601992659920616155360778326984288841911E-03)
+#define P105 (+2.7558083732457483020077876686722456228005898633149E-03)
+#define P106 (-1.6573279206213689173398469279229336075066504603200E-03)
+#define P107 (+6.4604298582199359342942355389533824474815088559908E-04)
+#define P108 (-8.8995738552911916607140022002464813003860492032919E-05)
+#define P109 (-7.1272678135500073303826809202164960992348502289215E-05)
+#define P110 (+5.4777156882263340978770021622040500192003276479264E-05)
+#define P111 (-1.5257484938233752477773286853489458461321735575630E-05)
+
+/*  Coefficients for the Remez polynomial for Erf on [3, 3.5].                */
+#define P200 (+9.9999569722053626957864703926955653072792111165044E-01)
+#define P201 (+2.9189025383770338707620156424961017118408025567378E-05)
+#define P202 (-9.4864332432900072999698943062667595423041150635053E-05)
+#define P203 (+1.9580971187473420429638691406381813188079734919573E-04)
+#define P204 (-2.8656934965381843365066550677883507768250335956211E-04)
+#define P205 (+3.1379723382979700033926833020726486185166480414035E-04)
+#define P206 (-2.6352769128894339114442472765483397006883506067932E-04)
+#define P207 (+1.6999100251263728824659988597178758000620848570200E-04)
+#define P208 (-8.1672723600307529679031004533150304918005203217527E-05)
+#define P209 (+2.5923868424212381256693135633307154628060970739941E-05)
+#define P210 (-1.9718785781558686676798501526036408892028792767577E-06)
+#define P211 (-2.9827176694095196134711117250213384965033235972170E-06)
+
+/*  Coefficients for the Remez polynomial for Erf on [3.5, 4].                */
+#define P300 (+9.9999988627274343253356551538774082813127489225062E-01)
+#define P301 (+8.8143219125234271870080846925274230542344460932361E-07)
+#define P302 (-3.3053707198253979852183694651385735847848482549661E-06)
+#define P303 (+7.9696160543435196502233058816783242848520522699009E-06)
+#define P304 (-1.3841239368803963902660192649649020716989763531639E-05)
+#define P305 (+1.8370975914818732032856067262807646176858974326086E-05)
+#define P306 (-1.9272756518979244337015225778661174725653000107335E-05)
+#define P307 (+1.6275257365804144889354146983604872664066753515367E-05)
+#define P308 (-1.1127131642251367709095658594427019516626727283995E-05)
+#define P309 (+6.1099830497210315365686437232690420729350622645852E-06)
+#define P310 (-2.6192389213319816747876472629098661358128134237123E-06)
+#define P311 (+7.6243896060223080058526708385726241059551019298625E-07)
+
+/*  Coefficients for the Remez polynomial for Erf on [4, 4.5].                */
+#define P400 (+9.9999999814942586593606361611445131768218026025321E-01)
+#define P401 (+1.6143995161114304743062572768179453264188622455552E-08)
+#define P402 (-6.8611976549508848991288015161583412291090846635137E-08)
+#define P403 (+1.8901879873542089635602398005957728736134968033244E-07)
+#define P404 (-3.7879474275583309329909055096105158877575975708691E-07)
+#define P405 (+5.8728744824523232944682260689708461419316158739311E-07)
+#define P406 (-7.3095191364207481457314542475848939638520417630463E-07)
+#define P407 (+7.4621894285100202841578132616109155463598772225848E-07)
+#define P408 (-6.3694616784748210497593872699946034632487684702494E-07)
+#define P409 (+4.8100430292123512706733557636000623587835436930718E-07)
+#define P410 (-2.8652969948032422896948003854371567993509710279951E-07)
+
+/*  Coefficients for the Remez polynomial for Erf on [4.5, 5].                */
+#define P500 (+9.9999999998151492923599855833197345269503530222873E-01)
+#define P501 (+1.7934371855502848735974345710054251774935331607893E-10)
+#define P502 (-8.5186356004089592622887530601694252323961998368097E-10)
+#define P503 (+2.6378047978654265486494933007797128532518319659139E-09)
+#define P504 (-5.9832688099679586312292522487056289582798553473565E-09)
+#define P505 (+1.0575533835256321140407182840892048536696801380740E-08)
+#define P506 (-1.5040140473477141962910120232547198488669786549004E-08)
+#define P507 (+1.7934642740598449624250135951332135318651467897185E-08)
+#define P508 (-2.0062670512208084629162182356873884123115858869315E-08)
+#define P509 (+1.7130931819877410358405197183616916743129781348922E-08)
+
+/*  Coefficients for the Remez polynomial for Erf on [5, 5.5].                */
+#define P600 (+9.9999999999988693380861989837696532177328737896535E-01)
+#define P601 (+1.2081133405529725316352314517408122004343280361457E-12)
+#define P602 (-6.3629344845528682696353532035754542281562253402972E-12)
+#define P603 (+2.1853072284687390840090703649707145333163449785406E-11)
+#define P604 (-5.3628357483333772603925260714769551826237400310448E-11)
+#define P605 (+1.0668983967979651399045356137204522355231743941992E-10)
+#define P606 (-2.1354533241912177833879484470727804205014376820730E-10)
+#define P607 (+2.8474369150597829596454084804722261286134811281892E-10)
+
+/*  Coefficients for the Remez polynomial for Erf on [5.5, 6].                */
+#define P700 (+9.9999999999999955387850795076520886363002512443239E-01)
+#define P701 (+3.9340427279773976530011305330744974291684882874340E-15)
+#define P702 (-2.3763600089489119124602536211619222230546842706339E-14)
+#define P703 (+1.6823275229079022610382212627661663901978300514574E-13)
+#define P704 (-4.5019575287861106347929033568853260439899192451307E-13)
+
+/*  Helper macro for evaluating the zeroth polynomial via Horner's method.    */
+#define TMPL_POLY0_EVAL(z) \
+P000 + z*(\
+    P001 + z*(\
+        P002 + z*(\
+            P003 + z*(\
+                P004 + z*(\
+                    P005 + z*(\
+                        P006 + z*(\
+                            P007 + z*(\
+                                P008 + z*(\
+                                    P009 + z*(\
+                                        P010 + z*(\
+                                            P011 + z*P012\
+                                        )\
+                                    )\
+                                )\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Helper macro for evaluating the first polynomial via Horner's method.     */
+#define TMPL_POLY1_EVAL(z) \
+P100 + z*(\
+    P101 + z*(\
+        P102 + z*(\
+            P103 + z*(\
+                P104 + z*(\
+                    P105 + z*(\
+                        P106 + z*(\
+                            P107 + z*(\
+                                P108 + z*(\
+                                    P109 + z*(\
+                                        P110 + z*P111\
+                                    )\
+                                )\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Helper macro for evaluating the second polynomial via Horner's method.    */
+#define TMPL_POLY2_EVAL(z) \
+P200 + z*(\
+    P201 + z*(\
+        P202 + z*(\
+            P203 + z*(\
+                P204 + z*(\
+                    P205 + z*(\
+                        P206 + z*(\
+                            P207 + z*(\
+                                P208 + z*(\
+                                    P209 + z*(\
+                                        P210 + z*P211\
+                                    )\
+                                )\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Helper macro for evaluating the third polynomial via Horner's method.     */
+#define TMPL_POLY3_EVAL(z) \
+P300 + z*(\
+    P301 + z*(\
+        P302 + z*(\
+            P303 + z*(\
+                P304 + z*(\
+                    P305 + z*(\
+                        P306 + z*(\
+                            P307 + z*(\
+                                P308 + z*(\
+                                    P309 + z*(\
+                                        P310 + z*P311\
+                                    )\
+                                )\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Helper macro for evaluating the fourth polynomial via Horner's method.    */
+#define TMPL_POLY4_EVAL(z) \
+P400 + z*(\
+    P401 + z*(\
+        P402 + z*(\
+            P403 + z*(\
+                P404 + z*(\
+                    P405 + z*(\
+                        P406 + z*(\
+                            P407 + z*(\
+                                P408 + z*(\
+                                    P409 + z*P410\
+                                )\
+                            )\
+                        )\
+                    )\
+                )\
+            )\
+        )\
+    )\
+)
+
+/*  Helper macro for evaluating the fifth polynomial via Horner's method.     */
+#define TMPL_POLY5_EVAL(z) P500 + \
+z*(P501+z*(P502+z*(P503+z*(P504+z*(P505+z*(P506+z*(P507+z*(P508+z*P509))))))))
+
+/*  Helper macro for evaluating the sixth polynomial via Horner's method.     */
+#define TMPL_POLY6_EVAL(z) \
+P600 + z*(P601 + z*(P602 + z*(P603 + z*(P604 + z*(P605 + z*(P606 + z*P607))))))
+
+/*  Helper macro for evaluating the seventh polynomial via Horner's method.   */
+#define TMPL_POLY7_EVAL(z) P700 + z*(P701 + z*(P702 + z*(P703 + z*P704)))
+
+/*  Function for computing Erf(x) for x >= 2 at double precision.             */
+TMPL_STATIC_INLINE
+double tmpl_Double_Erf_Asymptotic(double x)
+{
+    /*  64-bit word used for type punning.                                    */
+    tmpl_IEEE754_Double w;
+
+    /*  Integer used as a switch for the range of x.                          */
+    unsigned int n;
+
+    /*  Input variable for the polynomial approximations.                     */
+    double z;
+
+    /*  Set the word to the input double.                                     */
+    w.r = x;
+
+    /*  For x > 8 we have |erf(x) - 1| < 2^-96, way beyond double precision.  *
+     *  We can safely return 1 for this range.                                */
+    if (w.bits.expo > TMPL_DOUBLE_UBIAS + 2U)
+        return 1.0;
+
+    /*  The polynomials are in intervals of 0.5. That is, the first window is *
+     *  2 <= x < 2.5, the second is 2.5 <= x < 3, and so on up to x = 6. We   *
+     *  can determine the appropriate window by examining the largest bit     *
+     *  past the binary point and the integer part. To get this we shift by   *
+     *  549755813886, which is 2^39 - 2 = 2^(51 - 12) - 2. By adding this     *
+     *  number and then bit-shifting by twelve, the resulting integer can be  *
+     *  used as a switch for the correct window. Rounding in this sum may     *
+     *  cause values that are roughly 2^-12 away from the border of these     *
+     *  windows (i.e., 2.5, 3.0, etc.) to recieve a switch that is off by     *
+     *  1. To account for this the Remez polynomials are computed with ranges *
+     *  that overlap slightly, meaning we will still correctly compute the    *
+     *  error function for these values.                                      */
+    w.r += 549755813886.0;
+
+    /*  The integer and halves place are now the 13th and 14th bits. Shift by *
+     *  12 to obtain them.                                                    */
+    n = w.bits.man3 >> 12;
+
+    /*  We can now use this integer to select the correct window.             */
+    switch(n)
+    {
+        /*  Remez polynomial on the interval [2, 2.5].                        */
+        case 0:
+            z = x - 2.25;
+            return TMPL_POLY0_EVAL(z);
+
+        /*  Remez polynomial on the interval [2.5, 3].                        */
+        case 1:
+            z = x - 2.75;
+            return TMPL_POLY1_EVAL(z);
+
+        /*  Remez polynomial on the interval [3, 3.5].                        */
+        case 2:
+            z = x - 3.25;
+            return TMPL_POLY2_EVAL(z);
+
+        /*  Remez polynomial on the interval [3.5, 4].                        */
+        case 3:
+            z = x - 3.75;
+            return TMPL_POLY3_EVAL(z);
+
+        /*  Remez polynomial on the interval [4, 4.5].                        */
+        case 4:
+            z = x - 4.25;
+            return TMPL_POLY4_EVAL(z);
+
+        /*  Remez polynomial on the interval [4.5, 5].                        */
+        case 5:
+            z = x - 4.75;
+            return TMPL_POLY5_EVAL(z);
+
+        /*  Remez polynomial on the interval [5, 5.5].                        */
+        case 6:
+            z = x - 5.25;
+            return TMPL_POLY6_EVAL(z);
+
+        /*  Remez polynomial on the interval [5, 5.5].                        */
+        case 7:
+            z = x - 5.75;
+            return TMPL_POLY7_EVAL(z);
+
+        /*  For the remaining values, which fall between 6 and 8, we have     *
+         *  |erf(x) - 1| < 2^-52 and can safely return 1.                     */
+        default:
+            return 1.0;
+    }
+    /*  End of switch for "n".                                                */
+}
+/*  End of tmpl_Double_Erf_Asymptotic.                                        */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef P000
+#undef P001
+#undef P002
+#undef P003
+#undef P004
+#undef P005
+#undef P006
+#undef P007
+#undef P008
+#undef P009
+#undef P010
+#undef P011
+#undef P012
+#undef P100
+#undef P101
+#undef P102
+#undef P103
+#undef P104
+#undef P105
+#undef P106
+#undef P107
+#undef P108
+#undef P109
+#undef P110
+#undef P111
+#undef P200
+#undef P201
+#undef P202
+#undef P203
+#undef P204
+#undef P205
+#undef P206
+#undef P207
+#undef P208
+#undef P209
+#undef P210
+#undef P211
+#undef P300
+#undef P301
+#undef P302
+#undef P303
+#undef P304
+#undef P305
+#undef P306
+#undef P307
+#undef P308
+#undef P309
+#undef P310
+#undef P311
+#undef P400
+#undef P401
+#undef P402
+#undef P403
+#undef P404
+#undef P405
+#undef P406
+#undef P407
+#undef P408
+#undef P409
+#undef P410
+#undef P500
+#undef P501
+#undef P502
+#undef P503
+#undef P504
+#undef P505
+#undef P506
+#undef P507
+#undef P508
+#undef P509
+#undef P600
+#undef P601
+#undef P602
+#undef P603
+#undef P604
+#undef P605
+#undef P606
+#undef P607
+#undef P700
+#undef P701
+#undef P702
+#undef P703
+#undef P704
+#undef TMPL_POLY0_EVAL
+#undef TMPL_POLY1_EVAL
+#undef TMPL_POLY2_EVAL
+#undef TMPL_POLY3_EVAL
+#undef TMPL_POLY4_EVAL
+#undef TMPL_POLY5_EVAL
+#undef TMPL_POLY6_EVAL
+#undef TMPL_POLY7_EVAL
+
+#else
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+
 /******************************************************************************
  *  Three implementations provided for larger inputs (2 <= x < infty).        *
  *      Method 0                                                              *
@@ -693,6 +1115,9 @@ double tmpl_Double_Erf_Asymptotic(double x)
 
 #endif
 /*  End of #if TMPL_ERF_IMPLEMENTATION == 0.                                  */
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 #endif
 /*  End of include guard.                                                     */
