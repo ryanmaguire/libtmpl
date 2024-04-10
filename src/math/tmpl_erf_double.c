@@ -129,7 +129,7 @@
 
 /*  Rational Remez approximations for erf.                                    */
 #include "auxiliary/tmpl_erf_rat_remez_small_double.h"
-#include "auxiliary/tmpl_erf_rat_remez_double.h"
+#include "auxiliary/tmpl_erf_medium_double.h"
 
 /*  With IEEE-754 support we get a slight speed boost checking the range.     */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -174,7 +174,7 @@ double tmpl_Double_Erf(double x)
             return tmpl_Double_Erf_Rat_Remez_Small(x);
 
         /*  For |x| < 2 use a larger rational Remez approximation.            */
-        return tmpl_Double_Erf_Rat_Remez(x);
+        return tmpl_Double_Erf_Medium(x);
     }
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *

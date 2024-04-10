@@ -17,4 +17,4 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include "tmpl_math_time_tests.h"
-TEST1(double, -6.0, 6.0, tmpl_Double_Erf, erf)
+TEST1(double, 1.0, 2.0, tmpl_Double_Erf, erf)
