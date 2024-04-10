@@ -341,7 +341,7 @@
 #define N05 (+1.0618202375661432089970549477658563073305471013069E-30L)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYA_EVAL(z) \
 A00 + z*(\
   A01 + z*(\
     A02 + z*(\
@@ -393,7 +393,7 @@ A00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYB_EVAL(z) \
 B00 + z*(\
   B01 + z*(\
     B02 + z*(\
@@ -445,7 +445,7 @@ B00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYC_EVAL(z) \
 C00 + z*(\
   C01 + z*(\
     C02 + z*(\
@@ -495,7 +495,7 @@ C00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYD_EVAL(z) \
 D00 + z*(\
   D01 + z*(\
     D02 + z*(\
@@ -545,7 +545,7 @@ D00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYE_EVAL(z) \
 E00 + z*(\
   E01 + z*(\
     E02 + z*(\
@@ -593,7 +593,7 @@ E00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYF_EVAL(z) \
 F00 + z*(\
   F01 + z*(\
     F02 + z*(\
@@ -639,7 +639,7 @@ F00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYG_EVAL(z) \
 G00 + z*(\
   G01 + z*(\
     G02 + z*(\
@@ -685,7 +685,7 @@ G00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYH_EVAL(z) \
 H00 + z*(\
   H01 + z*(\
     H02 + z*(\
@@ -729,7 +729,7 @@ H00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYI_EVAL(z) \
 I00 + z*(\
   I01 + z*(\
     I02 + z*(\
@@ -771,7 +771,7 @@ I00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYJ_EVAL(z) \
 J00 + z*(\
   J01 + z*(\
     J02 + z*(\
@@ -809,7 +809,7 @@ J00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYK_EVAL(z) \
 K00 + z*(\
   K01 + z*(\
     K02 + z*(\
@@ -843,7 +843,7 @@ K00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYL_EVAL(z) \
 L00 + z*(\
   L01 + z*(\
     L02 + z*(\
@@ -871,7 +871,7 @@ L00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYM_EVAL(z) \
 M00 + z*(\
   M01 + z*(\
     M02 + z*(\
@@ -893,7 +893,7 @@ M00 + z*(\
 )
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) \
+#define TMPL_POLYN_EVAL(z) \
 N00 + z*(\
   N01 + z*(\
     N02 + z*(\
