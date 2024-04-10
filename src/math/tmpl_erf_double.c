@@ -173,7 +173,12 @@ double tmpl_Double_Erf(double x)
         else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
             return tmpl_Double_Erf_Rat_Remez_Small(x);
 
-        /*  For |x| < 2 use a larger rational Remez approximation.            */
+        /*  For |x| < 2 use a several Remez approximations. Since erf is odd  *
+         *  return -erf(-x) for negative inputs.                              */
+        if (w.bits.sign)
+            return -tmpl_Double_Erf_Medium(-x);
+
+        /*  Positive input, use the same Remez polynomials.                   */
         return tmpl_Double_Erf_Medium(x);
     }
 
