@@ -912,8 +912,8 @@ long double tmpl_LDouble_Erf_Asymptotic(long double x)
     unsigned int n;
     long double z;
 
-    w.r = x + 1267650600228229401496703205376.0;
-    n = shift.bits.man3 >> 12;
+    w.r = x + 633825300114114700748351602686.0L;
+    n = w.bits.man6 >> 12;
 
     switch(n)
     {
