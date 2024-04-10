@@ -82,19 +82,19 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the numerator of the Pade approximant of (atan(x) - x)/x.*/
-#define P4 (-6.786553005040399998383191660502584872333E-03F)
-#define P3 (-1.073552227908707342586157269925514065275E-01F)
-#define P2 (-4.461152882205513784461152882205513784461E-01F)
-#define P1 (-6.730158730158730158730158730158730158730E-01F)
-#define P0 (-3.333333333333333333333333333333333333333E-01F)
+#define A04 (-6.786553005040399998383191660502584872333E-03F)
+#define A03 (-1.073552227908707342586157269925514065275E-01F)
+#define A02 (-4.461152882205513784461152882205513784461E-01F)
+#define A01 (-6.730158730158730158730158730158730158730E-01F)
+#define A00 (-3.333333333333333333333333333333333333333E-01F)
 
 /*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q5 (7.859014050964515360800190521552750654918E-03F)
-#define Q4 (1.702786377708978328173374613003095975232E-01F)
-#define Q3 (1.021671826625386996904024767801857585139E+00F)
-#define Q2 (2.481203007518796992481203007518796992481E+00F)
-#define Q1 (2.619047619047619047619047619047619047619E+00F)
-#define Q0 (1.000000000000000000000000000000000000000E+00F)
+#define B05 (7.859014050964515360800190521552750654918E-03F)
+#define B04 (1.702786377708978328173374613003095975232E-01F)
+#define B03 (1.021671826625386996904024767801857585139E+00F)
+#define B02 (2.481203007518796992481203007518796992481E+00F)
+#define B01 (2.619047619047619047619047619047619047619E+00F)
+#define B00 (1.000000000000000000000000000000000000000E+00F)
 
 /*  Function for computing the (11, 11) Pade approximant of atan(x).          */
 TMPL_STATIC_INLINE
@@ -105,8 +105,8 @@ float tmpl_Float_Arctan_Pade(float x)
     const float x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = x2*(P0 + x2*(P1 + x2*(P2 + x2*(P3 + x2*P4))));
-    const float q = Q0 + x2*(Q1 + x2*(Q2 + x2*(Q3 + x2*(Q4 + x2*Q5))));
+    const float p = x2*(A00 + x2*(A01 + x2*(A02 + x2*(A03 + x2*A04))));
+    const float q = B00 + x2*(B01 + x2*(B02 + x2*(B03 + x2*(B04 + x2*B05))));
 
     /*  p/q is the Pade approximant for (atan(x) - x)/x. Compute atan(x) by   *
      *  adding 1 and multiplying by x.                                        */
@@ -115,17 +115,7 @@ float tmpl_Float_Arctan_Pade(float x)
 /*  End of tmpl_Float_Arctan_Pade.                                            */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef P4
-#undef P3
-#undef P2
-#undef P1
-#undef P0
-#undef Q5
-#undef Q4
-#undef Q3
-#undef Q2
-#undef Q1
-#undef Q0
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

@@ -48,8 +48,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 2, 2023                                               *
@@ -67,23 +65,27 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  The compiler needs to know about the sqrt function.                       */
+extern double tmpl_Double_Sqrt(double x);
 
 /*  Coefficients for the numerator.                                           */
-#define P0 (+1.66666666666666657415E-01)
-#define P1 (-3.25565818622400915405E-01)
-#define P2 (+2.01212532134862925881E-01)
-#define P3 (-4.00555345006794114027E-02)
-#define P4 (+7.91534994289814532176E-04)
-#define P5 (+3.47933107596021167570E-05)
+#define A00 (+1.66666666666666657415E-01)
+#define A01 (-3.25565818622400915405E-01)
+#define A02 (+2.01212532134862925881E-01)
+#define A03 (-4.00555345006794114027E-02)
+#define A04 (+7.91534994289814532176E-04)
+#define A05 (+3.47933107596021167570E-05)
 
 /*  Coefficients for the denominator.                                         */
-#define Q0 (+1.00000000000000000000E+00)
-#define Q1 (-2.40339491173441421878E+00)
-#define Q2 (+2.02094576023350569471E+00)
-#define Q3 (-6.88283971605453293030E-01)
-#define Q4 (+7.70381505559019352791e-02)
+#define B00 (+1.00000000000000000000E+00)
+#define B01 (-2.40339491173441421878E+00)
+#define B02 (+2.02094576023350569471E+00)
+#define B03 (-6.88283971605453293030E-01)
+#define B04 (+7.70381505559019352791e-02)
+
+/*  Helper macros for evaluating polynomials using Horner's method.           */
+#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_STATIC_INLINE
@@ -93,8 +95,8 @@ double tmpl_Double_Arccos_Tail_End(double x)
     const double z = 0.5*(1.0 - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const double p = P0 + z*(P1 + z*(P2 + z*(P3 + z*(P4 + z*P5))));
-    const double q = Q0 + z*(Q1 + z*(Q2 + z*(Q3 + z*Q4)));
+    const double p = TMPL_POLYA_EVAL(z);
+    const double q = TMPL_POLYB_EVAL(z);
 
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
@@ -108,17 +110,7 @@ double tmpl_Double_Arccos_Tail_End(double x)
 /*  End of tmpl_Double_Arccos_Tail_End.                                       */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef P5
-#undef P4
-#undef P3
-#undef P2
-#undef P1
-#undef P0
-#undef Q4
-#undef Q3
-#undef Q2
-#undef Q1
-#undef Q0
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

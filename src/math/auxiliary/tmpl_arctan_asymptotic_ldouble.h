@@ -84,8 +84,7 @@
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
  *                           64-Bit Double Version                            *
@@ -93,15 +92,15 @@
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (+1.00000000000000000000000000000E+00L)
-#define A1 (-3.33333333333333333333333333333E-01L)
-#define A2 (+2.00000000000000000000000000000E-01L)
-#define A3 (-1.42857142857142857142857142857E-01L)
-#define A4 (+1.11111111111111111111111111111E-01L)
-#define A5 (-9.09090909090909090909090909090E-02L)
+#define A00 (+1.00000000000000000000000000000E+00L)
+#define A01 (-3.33333333333333333333333333333E-01L)
+#define A02 (+2.00000000000000000000000000000E-01L)
+#define A03 (-1.42857142857142857142857142857E-01L)
+#define A04 (+1.11111111111111111111111111111E-01L)
+#define A05 (-9.09090909090909090909090909090E-02L)
 
 /*  Helper macro for evaluating a polynomial using Horner's method.           */
-#define TMPL_POLY_EVAL(t) A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*A5))))
+#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
 
 #else
 /*  Else for 64-bit long double version.                                      */
@@ -112,16 +111,16 @@
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 6 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (+1.0000000000000000000000000000000000000E+00L)
-#define A1 (-3.3333333333333333333333333333333333333E-01L)
-#define A2 (+2.0000000000000000000000000000000000000E-01L)
-#define A3 (-1.4285714285714285714285714285714285714E-01L)
-#define A4 (+1.1111111111111111111111111111111111111E-01L)
-#define A5 (-9.0909090909090909090909090909090909090E-02L)
-#define A6 (+7.6923076923076923076923076923076923076E-02L)
+#define A00 (+1.0000000000000000000000000000000000000E+00L)
+#define A01 (-3.3333333333333333333333333333333333333E-01L)
+#define A02 (+2.0000000000000000000000000000000000000E-01L)
+#define A03 (-1.4285714285714285714285714285714285714E-01L)
+#define A04 (+1.1111111111111111111111111111111111111E-01L)
+#define A05 (-9.0909090909090909090909090909090909090E-02L)
+#define A06 (+7.6923076923076923076923076923076923076E-02L)
 
 /*  Helper macro for evaluating a polynomial using Horner's method.           */
-#define TMPL_POLY_EVAL(t) A0 + t*(A1 + t*(A2 + t*(A3 + t*(A4 + t*(A5 + t*A6)))))
+#define TMPL_POLY_EVAL(z) A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*A06)))))
 
 #endif
 /*  End of non-64-bit long double version.                                    */
@@ -141,15 +140,7 @@ long double tmpl_LDouble_Arctan_Asymptotic(long double x)
 /*  End of tmpl_LDouble_Arctan_Asymptotic.                                    */
 
 /*  Undefine everything in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
-#undef A5
-#undef A6
-#undef TMPL_POLY_EVAL
-#undef TMPL_PI_BY_TWO
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

@@ -86,19 +86,19 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the numerator of the Pade approximant of (atan(x) - x)/x.*/
-#define P4 (-6.786553005040399998383191660502584872333E-03L)
-#define P3 (-1.073552227908707342586157269925514065275E-01L)
-#define P2 (-4.461152882205513784461152882205513784461E-01L)
-#define P1 (-6.730158730158730158730158730158730158730E-01L)
-#define P0 (-3.333333333333333333333333333333333333333E-01L)
+#define A04 (-6.786553005040399998383191660502584872333E-03L)
+#define A03 (-1.073552227908707342586157269925514065275E-01L)
+#define A02 (-4.461152882205513784461152882205513784461E-01L)
+#define A01 (-6.730158730158730158730158730158730158730E-01L)
+#define A00 (-3.333333333333333333333333333333333333333E-01L)
 
 /*  Coefficients for the denominator of the Pade approximant.                 */
-#define Q5 (7.859014050964515360800190521552750654918E-03L)
-#define Q4 (1.702786377708978328173374613003095975232E-01L)
-#define Q3 (1.021671826625386996904024767801857585139E+00L)
-#define Q2 (2.481203007518796992481203007518796992481E+00L)
-#define Q1 (2.619047619047619047619047619047619047619E+00L)
-#define Q0 (1.000000000000000000000000000000000000000E+00L)
+#define B05 (7.859014050964515360800190521552750654918E-03L)
+#define B04 (1.702786377708978328173374613003095975232E-01L)
+#define B03 (1.021671826625386996904024767801857585139E+00L)
+#define B02 (2.481203007518796992481203007518796992481E+00L)
+#define B01 (2.619047619047619047619047619047619047619E+00L)
+#define B00 (1.000000000000000000000000000000000000000E+00L)
 
 /*  Function for computing the (11, 11) Pade approximant of atan(x).          */
 TMPL_STATIC_INLINE
@@ -109,8 +109,8 @@ long double tmpl_LDouble_Arctan_Pade(long double x)
     const long double x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const long double p = x2*(P0 + x2*(P1 + x2*(P2 + x2*(P3 + x2*P4))));
-    const long double q = Q0 + x2*(Q1 + x2*(Q2 + x2*(Q3 + x2*(Q4 + x2*Q5))));
+    const long double p = x2*(A00+x2*(A01+x2*(A02+x2*(A03+x2*A04))));
+    const long double q = B00+x2*(B01+x2*(B02+x2*(B03+x2*(B04+x2*B05))));
 
     /*  p/q is the Pade approximant for (atan(x) - x)/x. Compute atan(x) by   *
      *  adding 1 and multiplying by x.                                        */
@@ -119,17 +119,7 @@ long double tmpl_LDouble_Arctan_Pade(long double x)
 /*  End of tmpl_LDouble_Arctan_Pade.                                          */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef P4
-#undef P3
-#undef P2
-#undef P1
-#undef P0
-#undef Q5
-#undef Q4
-#undef Q3
-#undef Q2
-#undef Q1
-#undef Q0
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

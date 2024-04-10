@@ -300,7 +300,7 @@ double tmpl_Double_Sqrt(double x)
  ******************************************************************************/
 
 /*  Pade approximant for sqrt(x) for x near 1.                                */
-#include <libtmpl/include/math/tmpl_sqrt_pade_double.h>
+#include "auxiliary/tmpl_sqrt_pade_double.h"
 
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Sqrt(double x)

@@ -78,12 +78,15 @@
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 5 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (+1.00000000000000000000000000000E+00)
-#define A1 (-3.33333333333333333333333333333E-01)
-#define A2 (+2.00000000000000000000000000000E-01)
-#define A3 (-1.42857142857142857142857142857E-01)
-#define A4 (+1.11111111111111111111111111111E-01)
-#define A5 (-9.09090909090909090909090909090E-02)
+#define A00 (+1.00000000000000000000000000000E+00)
+#define A01 (-3.33333333333333333333333333333E-01)
+#define A02 (+2.00000000000000000000000000000E-01)
+#define A03 (-1.42857142857142857142857142857E-01)
+#define A04 (+1.11111111111111111111111111111E-01)
+#define A05 (-9.09090909090909090909090909090E-02)
+
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
 
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
@@ -97,19 +100,13 @@ double tmpl_Double_Arctan_Asymptotic(double x)
     const double z2 = z*z;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return TMPL_PI_BY_TWO -
-           z*(A0 + z2*(A1 + z2*(A2 + z2*(A3 + z2*(A4 + z2*A5)))));
+    const double poly = TMPL_POLY_EVAL(z2);
+    return TMPL_PI_BY_TWO - z*poly;
 }
 /*  End of tmpl_Double_Arctan_Asymptotic.                                     */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
-#undef A5
-#undef TMPL_PI_BY_TWO
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

@@ -233,66 +233,7 @@ long double tmpl_LDouble_Erf_Asymptotic(long double x)
 /*  End of tmpl_LDouble_Erf_Asymptotic.                                       */
 
 /*  #undef everything in case someone wants to #include this file.            */
-#undef TMPL_POLYA_EVAL
-#undef TMPL_POLYB_EVAL
-#undef TMPL_POLYC_EVAL
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-#undef A07
-#undef A08
-#undef A09
-#undef A10
-#undef A11
-#undef A12
-#undef A13
-#undef A14
-#undef A15
-#undef A16
-#undef A17
-#undef A18
-#undef A19
-#undef A20
-#undef A21
-#undef B00
-#undef B01
-#undef B02
-#undef B03
-#undef B04
-#undef B05
-#undef B06
-#undef B07
-#undef B08
-#undef B09
-#undef B10
-#undef B11
-#undef B12
-#undef B13
-#undef B14
-#undef B15
-#undef B16
-#undef B17
-#undef B18
-#undef C00
-#undef C01
-#undef C02
-#undef C03
-#undef C04
-#undef C05
-#undef C06
-#undef C07
-#undef C08
-#undef C09
-#undef C10
-#undef C11
-#undef C12
-#undef C13
-#undef C14
-#undef C15
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of check for 80-bit extended long double.                             */

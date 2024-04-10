@@ -60,19 +60,13 @@
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
-
-#include ""
-
+#include "tmpl_erf_asymptotic_ldouble_64_bit_double.h"
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
-
+#include "tmpl_erf_asymptotic_ldouble_128_bit_quadruple.h"
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-
 #include "tmpl_erf_asymptotic_ldouble_128_bit_double_double.h"
-
 #else
-
 #include "tmpl_erf_asymptotic_ldouble_80_bit_extended.h"
-
 #endif
 
 #endif

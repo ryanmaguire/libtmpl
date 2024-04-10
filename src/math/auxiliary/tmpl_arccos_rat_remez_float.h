@@ -78,13 +78,13 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the numerator.                                           */
-#define P0 (+1.6666586697E-01F)
-#define P1 (-4.2743422091E-02F)
-#define P2 (-8.6563630030E-03F)
+#define A00 (+1.6666586697E-01F)
+#define A01 (-4.2743422091E-02F)
+#define A02 (-8.6563630030E-03F)
 
 /*  Coefficients for the denominator.                                         */
-#define Q0 (+1.0000000000E+00F)
-#define Q1 (-7.0662963390E-01F)
+#define B00 (+1.0000000000E+00F)
+#define B01 (-7.0662963390E-01F)
 
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
@@ -97,8 +97,8 @@ float tmpl_Float_Arccos_Rat_Remez(float x)
     const float x2 = x*x;
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = P0 + x2*(P1 + x2*P2);
-    const float q = Q0 + x2*Q1;
+    const float p = A00 + x2*(A01 + x2*A02);
+    const float q = B00 + x2*B01;
     const float r = x2*p/q;
 
     /*  p/q is the minimax approximation for (acos(x) - pi/2 + x) / x^3.      */
@@ -107,12 +107,7 @@ float tmpl_Float_Arccos_Rat_Remez(float x)
 /*  End of tmpl_Float_Arccos_Rat_Remez.                                       */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef P2
-#undef P1
-#undef P0
-#undef Q1
-#undef Q0
-#undef TMPL_PI_BY_TWO
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

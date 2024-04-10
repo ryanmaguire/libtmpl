@@ -58,8 +58,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 1, 2023                                                  *
@@ -72,12 +70,8 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  64-bit long double does not need any more precision than 64-bit double.   */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
  *                           64-Bit Double Version                            *
@@ -98,11 +92,8 @@
 A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
 
 /*  128-bit quadruple and double-double, a few more terms.                    */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
+      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
  *                 128-bit Quadruple / 128-bit Double-Double                  *
@@ -210,21 +201,7 @@ long double tmpl_LDouble_Arcsin_Maclaurin(long double x)
 /*  End of tmpl_LDouble_Arcsin_Maclaurin.                                     */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-#undef A07
-#undef A08
-#undef A09
-#undef A10
-#undef A11
-#undef A12
-#undef A13
-#undef TMPL_POLY_EVAL
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

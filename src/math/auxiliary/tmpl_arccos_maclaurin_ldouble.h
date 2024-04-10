@@ -204,22 +204,7 @@ long double tmpl_LDouble_Arccos_Maclaurin(long double x)
 /*  End of tmpl_LDouble_Arccos_Maclaurin.                                     */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-#undef A07
-#undef A08
-#undef A09
-#undef A10
-#undef A11
-#undef A12
-#undef A13
-#undef TMPL_POLY_EVAL
-#undef TMPL_PI_BY_TWO
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

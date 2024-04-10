@@ -48,8 +48,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 9, 2023                                                   *
@@ -62,17 +60,17 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  The compiler needs to know about the sqrt function.                       */
+extern float tmpl_Float_Sqrt(float x);
 
 /*  Coefficients for the numerator.                                           */
-#define P0 (+1.6666586697E-01F)
-#define P1 (-4.2743422091E-02F)
-#define P2 (-8.6563630030E-03F)
+#define A00 (+1.6666586697E-01F)
+#define A01 (-4.2743422091E-02F)
+#define A02 (-8.6563630030E-03F)
 
 /*  Coefficients for the denominator.                                         */
-#define Q0 (+1.0000000000E+00F)
-#define Q1 (-7.0662963390E-01F)
+#define B00 (+1.0000000000E+00F)
+#define B01 (-7.0662963390E-01F)
 
 /*  Function for computing asin(x) for 0.5 <= x < 1.0.                        */
 TMPL_STATIC_INLINE
@@ -82,8 +80,8 @@ float tmpl_Float_Arcsin_Tail_End(float x)
     const float z = 0.5F*(1.0F - x);
 
     /*  Use Horner's method to evaluate the two polynomials.                  */
-    const float p = P0 + z*(P1 + z*P2);
-    const float q = Q0 + z*Q1;
+    const float p = A00 + z*(A01 + z*A02);
+    const float q = B00 + z*B01;
 
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
@@ -97,11 +95,7 @@ float tmpl_Float_Arcsin_Tail_End(float x)
 /*  End of tmpl_Float_Arcsin_Tail_End.                                        */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef P2
-#undef P1
-#undef P0
-#undef Q1
-#undef Q0
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

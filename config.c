@@ -1276,6 +1276,7 @@ static int make_config_h(void)
     fprintf(fp, "#define TMPL_FLOAT_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
     fprintf(fp, "#define TMPL_DOUBLE_ENDIANNESS TMPL_UNKNOWN_ENDIAN\n");
     fprintf(fp, "#define TMPL_LDOUBLE_ENDIANNESS TMPL_LDOUBLE_UNKNOWN\n");
+    fprintf(fp, "#define TMPL_LDOUBLE_TYPE TMPL_LDOUBLE_UNKNOWN\n");
 #endif
 
 #ifdef TMPL_SET_INLINE_TRUE

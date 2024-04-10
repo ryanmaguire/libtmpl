@@ -73,10 +73,10 @@
 
 /*  Coefficients for the asymptotic expansion. The expansion is a polynomial  *
  *  of degree 3 in terms of 1/x^{2n+1}. The coefficients are (-1)^n / (2n+1). */
-#define A0 (+1.00000000000000000000000000000E+00F)
-#define A1 (-3.33333333333333333333333333333E-01F)
-#define A2 (+2.00000000000000000000000000000E-01F)
-#define A3 (-1.42857142857142857142857142857E-01F)
+#define A00 (+1.00000000000000000000000000000E+00F)
+#define A01 (-3.33333333333333333333333333333E-01F)
+#define A02 (+2.00000000000000000000000000000E-01F)
+#define A03 (-1.42857142857142857142857142857E-01F)
 
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
@@ -90,16 +90,12 @@ float tmpl_Float_Arctan_Asymptotic(float x)
     const float z2 = z*z;
 
     /*  Use Horner's method to compute the polynomial.                        */
-    return TMPL_PI_BY_TWO - z*(A0 + z2*(A1 + z2*(A2 + z2*A3)));
+    return TMPL_PI_BY_TWO - z*(A00 + z2*(A01 + z2*(A02 + z2*A03)));
 }
 /*  End of tmpl_Float_Arctan_Asymptotic.                                      */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef TMPL_PI_BY_TWO
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

@@ -69,15 +69,19 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (+1.00000000000000000000000000000E+00)
-#define A1 (-3.33333333333333333333333333333E-01)
-#define A2 (+2.00000000000000000000000000000E-01)
-#define A3 (-1.42857142857142857142857142857E-01)
-#define A4 (+1.11111111111111111111111111111E-01)
-#define A5 (-9.09090909090909090909090909090E-02)
-#define A6 (+7.69230769230769230769230769231E-02)
-#define A7 (-6.66666666666666666666666666667E-02)
-#define A8 (+5.88235294117647058823529411765E-02)
+#define A00 (+1.00000000000000000000000000000E+00)
+#define A01 (-3.33333333333333333333333333333E-01)
+#define A02 (+2.00000000000000000000000000000E-01)
+#define A03 (-1.42857142857142857142857142857E-01)
+#define A04 (+1.11111111111111111111111111111E-01)
+#define A05 (-9.09090909090909090909090909090E-02)
+#define A06 (+7.69230769230769230769230769231E-02)
+#define A07 (-6.66666666666666666666666666667E-02)
+#define A08 (+5.88235294117647058823529411765E-02)
+
+/*  Helper macro for evaluating a polynomial via Horner's method.             */
+#define TMPL_POLY_EVAL(z) \
+A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 
 /*  Maclaurin series for arctan, double precision, to 9 terms.                */
 TMPL_STATIC_INLINE
@@ -86,21 +90,14 @@ double tmpl_Double_Arctan_Maclaurin(double x)
     /*  Declare necessary variables.                                          */
     const double x2 = x*x;
 
-    /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0+x2*(A1+x2*(A2+x2*(A3+x2*(A4+x2*(A5+x2*(A6+x2*(A7+x2*A8))))))));
+    /*  Use Horner's method to evaluate the polynomial.                       */
+    const double poly = TMPL_POLY_EVAL(x2);
+    return x*poly;
 }
 /*  End of tmpl_Double_Arctan_Maclaurin.                                      */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
-#undef A5
-#undef A6
-#undef A7
-#undef A8
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

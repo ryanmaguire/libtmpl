@@ -77,8 +77,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
  *                           64-Bit Double Version                            *
@@ -162,19 +161,7 @@ long double tmpl_LDouble_Arctan_Maclaurin(long double x)
 /*  End of tmpl_LDouble_Arctan_Maclaurin.                                     */
 
 /*  Undefine the coefficients in case someone wants to #include this file.    */
-#undef A00
-#undef A01
-#undef A02
-#undef A03
-#undef A04
-#undef A05
-#undef A06
-#undef A07
-#undef A08
-#undef A09
-#undef A10
-#undef A11
-#undef TMPL_POLY_EVAL
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */

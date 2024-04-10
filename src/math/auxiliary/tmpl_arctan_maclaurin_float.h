@@ -70,11 +70,11 @@
 
 /*  Coefficients for the Maclaurin series, 1/(2n+1). The expansion is a
  *  polynomial of degree 9 in terms of x^{2n+1}.                              */
-#define A0 (+1.00000000000000000000000000000E+00F)
-#define A1 (-3.33333333333333333333333333333E-01F)
-#define A2 (+2.00000000000000000000000000000E-01F)
-#define A3 (-1.42857142857142857142857142857E-01F)
-#define A4 (+1.11111111111111111111111111111E-01F)
+#define A00 (+1.00000000000000000000000000000E+00F)
+#define A01 (-3.33333333333333333333333333333E-01F)
+#define A02 (+2.00000000000000000000000000000E-01F)
+#define A03 (-1.42857142857142857142857142857E-01F)
+#define A04 (+1.11111111111111111111111111111E-01F)
 
 /*  This function computes arctan(x) via a MacLaurin series for small |x|.    */
 TMPL_STATIC_INLINE
@@ -84,16 +84,12 @@ float tmpl_Float_Arctan_Maclaurin(float x)
     const float x2 = x*x;
 
     /*  Use Horner's method to evaluate the polynomial.                       */
-    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
+    return x*(A00 + x2*(A01 + x2*(A02 + x2*(A03 + x2*A04))));
 }
 /*  End of tmpl_Float_Arctan_Maclaurin.                                       */
 
 /*  Undefine these in case someone wants to #include this file.               */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */
