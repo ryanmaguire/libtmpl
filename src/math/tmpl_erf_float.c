@@ -115,14 +115,14 @@
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_erf_maclaurin_float.h"
 
+/*  Remez minimuax polynomial for the error function.                         */
+#include "auxiliary/tmpl_erf_small_float.h"
+
+/*  Computes erf for 1 <= x < 2.                                              */
+#include "auxiliary/tmpl_erf_medium_float.h"
+
 /*  Error function for large positive values.                                 */
-#include "auxiliary/tmpl_erf_asymptotic_float.h"
-
-/*  Rational Remez approximation for erf.                                     */
-#include "auxiliary/tmpl_erf_rat_remez_float.h"
-
-/*  Chebyshev expansion for the error function.                               */
-#include "auxiliary/tmpl_erf_chebyshev_float.h"
+#include "auxiliary/tmpl_erf_large_float.h"
 
 /*  With IEEE-754 support we get a slight speed checking the range.           */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -135,7 +135,7 @@
 float tmpl_Float_Erf(float x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Float w, tmp;
+    tmpl_IEEE754_Float w;
 
     /*  Set the float part of the union to the input.                         */
     w.r = x;
@@ -156,33 +156,33 @@ float tmpl_Float_Erf(float x)
     }
 
     /*  For small values use various polynomial and rational approximations.  */
-    else if (w.bits.expo < TMPL_FLOAT_UBIAS + 1U)
+    else if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS + 1U)
     {
         /*  For very small, |x| < 0.125, use a Maclaurin series.              */
-        if (w.bits.expo < TMPL_FLOAT_UBIAS - 3U)
+        if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS - 3U)
             return tmpl_Float_Erf_Maclaurin(x);
 
         /*  For |x| < 1 use a Chebyshev expansion.                            */
-        else if (w.bits.expo < TMPL_FLOAT_UBIAS)
-            return tmpl_Float_Erf_Chebyshev(x);
+        else if (TMPL_FLOAT_EXPO_BITS(w) < TMPL_FLOAT_UBIAS)
+            return tmpl_Float_Erf_Small(x);
 
         /*  For |x| < 2 use a rational Remez approximation.                   */
-        return tmpl_Float_Erf_Rat_Remez(x);
+        if (TMPL_FLOAT_IS_NEGATIVE(w))
+        {
+            w.bits.sign = 0x00U;
+            return -tmpl_Float_Erf_Medium(w);
+        }
+
+        return tmpl_Float_Erf_Medium(w);
     }
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
-     *  Use the asymptotic values with -erf(-x). First, save the sign of x.   */
-    tmp.bits.sign = w.bits.sign;
+     *  Use the asymptotic values with -erf(-x).                              */
+    if (TMPL_FLOAT_IS_NEGATIVE(w))
+        return -tmpl_Float_Erf_Large(-x);
 
-    /*  Compute |x| by setting the sign bit to zero.                          */
-    w.bits.sign = 0x00U;
-
-    /*  Compute Erf(|x|) for |x| >= 2.                                        */
-    w.r = tmpl_Float_Erf_Asymptotic(w.r);
-
-    /*  tmp has the original sign of the input. Restore this to the output.   */
-    w.bits.sign = tmp.bits.sign;
-    return w.r;
+    /*  Compute Erf(x) for x >= 2.                                            */
+    return tmpl_Float_Erf_Large(x);
 }
 /*  End of tmpl_Float_Erf.                                                    */
 
@@ -220,19 +220,19 @@ float tmpl_Float_Erf(float x)
 
     /*  For values |x| < 1 use a Chebyshev expansion.                         */
     else if (abs_x < 1.0F)
-        return tmpl_Float_Erf_Chebyshev(x);
+        return tmpl_Float_Erf_Small(x);
 
     /*  For |x| < 2 use a Remez approximation.                                */
     else if (abs_x < 2.0F)
-        return tmpl_Float_Erf_Rat_Remez(x);
+        return tmpl_Float_Erf_Medium(x);
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
      *  Use the asymptotic values with -erf(-x).                              */
     else if (x < 0.0F)
-        return -tmpl_Float_Erf_Asymptotic(abs_x);
+        return -tmpl_Float_Erf_Large(abs_x);
 
     /*  For large positive, use the asymptotics.                              */
-    return tmpl_Float_Erf_Asymptotic(x);
+    return tmpl_Float_Erf_Large(x);
 }
 /*  End of tmpl_Float_Erf.                                                    */
 

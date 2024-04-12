@@ -125,11 +125,11 @@
 #include "auxiliary/tmpl_erf_maclaurin_ldouble.h"
 
 /*  Error function for large positive values.                                 */
-#include "auxiliary/tmpl_erf_asymptotic_ldouble.h"
+#include "auxiliary/tmpl_erf_small_ldouble.h"
+#include "auxiliary/tmpl_erf_large_ldouble.h"
 
 /*  Rational Remez approximations for erf.                                    */
-#include "auxiliary/tmpl_erf_rat_remez_small_ldouble.h"
-#include "auxiliary/tmpl_erf_rat_remez_ldouble.h"
+#include "auxiliary/tmpl_erf_medium_ldouble.h"
 
 /*  With IEEE-754 support we get a slight speed boost checking the range.     */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
@@ -171,18 +171,24 @@ long double tmpl_LDouble_Erf(long double x)
 
         /*  For |x| < 1 use a rational Remez approximation with a few terms.  */
         else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS)
-            return tmpl_LDouble_Erf_Rat_Remez_Small(x);
+            return tmpl_LDouble_Erf_Small(x);
 
         /*  For |x| < 2 use a larger rational Remez approximation.            */
-        return tmpl_LDouble_Erf_Rat_Remez(x);
+        if (TMPL_LDOUBLE_IS_NEGATIVE(w))
+        {
+            w.bits.sign = 0x00U;
+            return -tmpl_LDouble_Erf_Medium(w);
+        }
+
+        return tmpl_LDouble_Erf_Medium(w);
     }
 
     /*  For large negative values use erf(x) = -erf(-x).                      */
     if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-        return -tmpl_LDouble_Erf_Asymptotic(-x);
+        return -tmpl_LDouble_Erf_Large(-x);
 
     /*  Error function for large positive values.                             */
-    return tmpl_LDouble_Erf_Asymptotic(x);
+    return tmpl_LDouble_Erf_Large(x);
 }
 /*  End of tmpl_Double_Erf.                                                   */
 
@@ -220,19 +226,19 @@ long double tmpl_LDouble_Erf(long double x)
 
     /*  For |x| < 1 use a rational Remez approximation with a few terms.      */
     else if (abs_x < 1.0L)
-        return tmpl_LDouble_Erf_Rat_Remez_Small(x);
+        return tmpl_LDouble_Erf_Small(x);
 
     /*  For |x| < 2 use a larger rational Remez approximation.                */
     else if (abs_x < 2.0L)
-        return tmpl_LDouble_Erf_Rat_Remez(x);
+        return tmpl_LDouble_Erf_Medium(x);
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
      *  Use the asymptotic values with -erf(-x).                              */
     else if (x < 0.0L)
-        return -tmpl_LDouble_Erf_Asymptotic(abs_x);
+        return -tmpl_LDouble_Erf_Large(abs_x);
 
     /*  For large positive, use the asymptotics.                              */
-    return tmpl_LDouble_Erf_Asymptotic(x);
+    return tmpl_LDouble_Erf_Large(x);
 }
 /*  End of tmpl_LDouble_Erf.                                                  */
 

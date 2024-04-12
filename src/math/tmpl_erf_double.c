@@ -124,12 +124,14 @@
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_erf_maclaurin_double.h"
 
-/*  Error function for large positive values.                                 */
-#include "auxiliary/tmpl_erf_asymptotic_double.h"
-
 /*  Rational Remez approximations for erf.                                    */
-#include "auxiliary/tmpl_erf_rat_remez_small_double.h"
+#include "auxiliary/tmpl_erf_small_double.h"
+
+/*  Computes erf(x) for 1 <= x < 2.                                           */
 #include "auxiliary/tmpl_erf_medium_double.h"
+
+/*  Error function for large positive values.                                 */
+#include "auxiliary/tmpl_erf_large_double.h"
 
 /*  With IEEE-754 support we get a slight speed boost checking the range.     */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -142,7 +144,7 @@
 double tmpl_Double_Erf(double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_IEEE754_Double w, tmp;
+    tmpl_IEEE754_Double w;
 
     /*  Set the double part of the union to the input.                        */
     w.r = x;
@@ -155,7 +157,7 @@ double tmpl_Double_Erf(double x)
             return x;
 
         /*  Otherwise use the limit. erf(x) -> +/- 1 as x -> +/- infty.       */
-        if (w.bits.sign)
+        if (TMPL_DOUBLE_IS_NEGATIVE(w))
             return -1.0;
 
         /*  Positive infinity, the limit is +1.                               */
@@ -163,38 +165,35 @@ double tmpl_Double_Erf(double x)
     }
 
     /*  For small values use various polynomial and rational approximations.  */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 1U)
+    else if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS + 1U)
     {
         /*  For very small, |x| < 0.125, use a Maclaurin series.              */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 3U)
             return tmpl_Double_Erf_Maclaurin(x);
 
         /*  For |x| < 1 use a rational Remez approximation with a few terms.  */
-        else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-            return tmpl_Double_Erf_Rat_Remez_Small(x);
+        else if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
+            return tmpl_Double_Erf_Small(x);
 
         /*  For |x| < 2 use a several Remez approximations. Since erf is odd  *
          *  return -erf(-x) for negative inputs.                              */
-        if (w.bits.sign)
-            return -tmpl_Double_Erf_Medium(-x);
+        if (TMPL_DOUBLE_IS_NEGATIVE(w))
+        {
+            w.bits.sign = 0x00U;
+            return -tmpl_Double_Erf_Medium(w);
+        }
 
         /*  Positive input, use the same Remez polynomials.                   */
-        return tmpl_Double_Erf_Medium(x);
+        return tmpl_Double_Erf_Medium(w);
     }
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
-     *  Use the asymptotic values with -erf(-x). First, save the sign of x.   */
-    tmp.bits.sign = w.bits.sign;
+     *  Use the asymptotic values with -erf(-x).                              */
+    if (TMPL_DOUBLE_IS_NEGATIVE(w))
+        return -tmpl_Double_Erf_Large(-x);
 
-    /*  Compute |x| by setting the sign bit to zero.                          */
-    w.bits.sign = 0x00U;
-
-    /*  Compute Erf(|x|) for |x| >= 2.                                        */
-    w.r = tmpl_Double_Erf_Asymptotic(w.r);
-
-    /*  tmp has the original sign of the input. Restore this to the output.   */
-    w.bits.sign = tmp.bits.sign;
-    return w.r;
+    /*  Compute Erf(x) for x >= 2.                                            */
+    return tmpl_Double_Erf_Large(x);
 }
 /*  End of tmpl_Double_Erf.                                                   */
 
@@ -232,19 +231,19 @@ double tmpl_Double_Erf(double x)
 
     /*  For |x| < 1 use a rational Remez approximation with a few terms.      */
     else if (abs_x < 1.0)
-        return tmpl_Double_Erf_Rat_Remez_Small(x);
+        return tmpl_Double_Erf_Small(x);
 
     /*  For |x| < 2 use a larger rational Remez approximation.                */
     else if (abs_x < 2.0)
-        return tmpl_Double_Erf_Rat_Remez(x);
+        return tmpl_Double_Erf_Medium(x);
 
     /*  Lastly, for large negative values use the fact that erf(x) is odd.    *
      *  Use the asymptotic values with -erf(-x).                              */
     else if (x < 0.0)
-        return -tmpl_Double_Erf_Asymptotic(abs_x);
+        return -tmpl_Double_Erf_Large(abs_x);
 
     /*  For large positive, use the asymptotics.                              */
-    return tmpl_Double_Erf_Asymptotic(x);
+    return tmpl_Double_Erf_Large(x);
 }
 /*  End of tmpl_Double_Erf.                                                   */
 

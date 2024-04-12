@@ -18,8 +18,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_ASYMPTOTIC_LDOUBLE_80_BIT_EXTENDED_H
-#define TMPL_ERF_ASYMPTOTIC_LDOUBLE_80_BIT_EXTENDED_H
+#ifndef TMPL_ERF_LARGE_LDOUBLE_80_BIT_EXTENDED_H
+#define TMPL_ERF_LARGE_LDOUBLE_80_BIT_EXTENDED_H
 
 /*  TMPL_LDOUBLE_ENDIANNESS and TMPL_STATIC_INLINE macros provided here.      */
 #include <libtmpl/include/tmpl_config.h>
@@ -203,7 +203,7 @@ C00 + z*(\
 
 /*  Function for computing erf(x) for x >= 2.                                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Erf_Asymptotic(long double x)
+long double tmpl_LDouble_Erf_Large(long double x)
 {
     /*  For large enough values use the limit, erf(infinity) = 1.             */
     if (x >= 6.5L)
@@ -230,7 +230,7 @@ long double tmpl_LDouble_Erf_Asymptotic(long double x)
         return TMPL_POLYC_EVAL(z);
     }
 }
-/*  End of tmpl_LDouble_Erf_Asymptotic.                                       */
+/*  End of tmpl_LDouble_Erf_Large.                                            */
 
 /*  #undef everything in case someone wants to #include this file.            */
 #include "tmpl_math_undef.h"

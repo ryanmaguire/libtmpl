@@ -18,8 +18,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_ASYMPTOTIC_LDOUBLE_128_BIT_DOUBLE_DOUBLE_H
-#define TMPL_ERF_ASYMPTOTIC_LDOUBLE_128_BIT_DOUBLE_DOUBLE_H
+#ifndef TMPL_ERF_LARGE_LDOUBLE_128_BIT_DOUBLE_DOUBLE_H
+#define TMPL_ERF_LARGE_LDOUBLE_128_BIT_DOUBLE_DOUBLE_H
 
 /*  TMPL_LDOUBLE_TYPE macro provided here.                                    */
 #include <libtmpl/include/tmpl_config.h>
@@ -28,7 +28,7 @@
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  tmpl_IEEE754_LDouble and tmpl_IEEE754_Double typedef's found here.        */
-#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_ieee754_ldouble.h>
 
 /*  Coefficients for the Remez polynomial on [1.99951171875, 2.50048828125].  */
 #define A00 (+9.9853728341331884830208920362701704859637514293612E-01L)
@@ -802,7 +802,7 @@ M00+z*(M01+z*(M02+z*(M03+z*(M04+z*(M05+z*(M06+z*M07))))))
 
 /*  Function for computing erf(x) for x >= 2.                                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Erf_Asymptotic(long double x)
+long double tmpl_LDouble_Erf_Large(long double x)
 {
     tmpl_IEEE754_LDouble w;
     tmpl_IEEE754_Double shift;
@@ -858,7 +858,7 @@ long double tmpl_LDouble_Erf_Asymptotic(long double x)
             return 1.0L;
     }
 }
-/*  End of tmpl_LDouble_Erf_Asymptotic.                                       */
+/*  End of tmpl_LDouble_Erf_Large.                                            */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "tmpl_math_undef.h"

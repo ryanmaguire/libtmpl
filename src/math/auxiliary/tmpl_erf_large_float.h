@@ -53,8 +53,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_ASYMPTOTIC_FLOAT_H
-#define TMPL_ERF_ASYMPTOTIC_FLOAT_H
+#ifndef TMPL_ERF_LARGE_FLOAT_H
+#define TMPL_ERF_LARGE_FLOAT_H
 
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
@@ -76,7 +76,7 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 
 /*  Function for computing erf(x) for large positive values.                  */
 TMPL_STATIC_INLINE
-float tmpl_Float_Erf_Asymptotic(float x)
+float tmpl_Float_Erf_Large(float x)
 {
     /*  For large enough x use the limit, erf(infinity) = 1.                  */
     if (x > 4.0F)
@@ -91,7 +91,7 @@ float tmpl_Float_Erf_Asymptotic(float x)
         return TMPL_POLY_EVAL(z);
     }
 }
-/*  End of tmpl_Float_Erf_Asymptotic.                                         */
+/*  End of tmpl_Float_Erf_Large.                                              */
 
 /*  #undef everything in case someone wants to #include this file.            */
 #include "tmpl_math_undef.h"

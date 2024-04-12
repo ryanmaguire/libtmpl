@@ -112,8 +112,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_ASYMPTOTIC_DOUBLE_H
-#define TMPL_ERF_ASYMPTOTIC_DOUBLE_H
+#ifndef TMPL_ERF_LARGE_DOUBLE_H
+#define TMPL_ERF_LARGE_DOUBLE_H
 
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
@@ -338,7 +338,7 @@ G00 + z*(G01 + z*(G02 + z*(G03 + z*(G04 + z*(G05 + z*(G06 + z*G07))))))
 
 /*  Function for computing Erf(x) for x >= 2 at double precision.             */
 TMPL_STATIC_INLINE
-double tmpl_Double_Erf_Asymptotic(double x)
+double tmpl_Double_Erf_Large(double x)
 {
     /*  64-bit word used for type punning.                                    */
     tmpl_IEEE754_Double w;
@@ -425,14 +425,14 @@ double tmpl_Double_Erf_Asymptotic(double x)
     }
     /*  End of switch for "n".                                                */
 }
-/*  End of tmpl_Double_Erf_Asymptotic.                                        */
+/*  End of tmpl_Double_Erf_Large.                                             */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /*  Function for computing Erf(x) for x >= 2 at double precision.             */
 TMPL_STATIC_INLINE
-double tmpl_Double_Erf_Asymptotic(double x)
+double tmpl_Double_Erf_Large(double x)
 {
     /*  Remez polynomial on the interval [2, 2.5].                            */
     if (x < 2.5)
@@ -493,7 +493,7 @@ double tmpl_Double_Erf_Asymptotic(double x)
     /*  For x > 1 we have |erf(x) - 1| < 2^-52. Return 1.                     */
     return 1.0;
 }
-/*  End of tmpl_Double_Erf_Asymptotic.                                        */
+/*  End of tmpl_Double_Erf_Large.                                             */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

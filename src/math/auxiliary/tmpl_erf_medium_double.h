@@ -16,9 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
+#ifndef TMPL_ERF_MEDIUM_DOUBLE_H
+#define TMPL_ERF_MEDIUM_DOUBLE_H
 
 #include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/tmpl_ieee754_double.h>
+
+#if TMPL_HAS_IEEE754_DOUBLE == 1
 
 static double tmpl_erfdm_coeffs[128] = {
     +8.5527181044291706341842573336570483782603345586101E-01,
@@ -151,32 +155,73 @@ static double tmpl_erfdm_coeffs[128] = {
     -3.7773703332047901259364963205798228384918311253423E-03
 };
 
+#define A00 (tmpl_erfdm_coeffs[n])
+#define A01 (tmpl_erfdm_coeffs[n+1])
+#define A02 (tmpl_erfdm_coeffs[n+2])
+#define A03 (tmpl_erfdm_coeffs[n+3])
+#define A04 (tmpl_erfdm_coeffs[n+4])
+#define A05 (tmpl_erfdm_coeffs[n+5])
+#define A06 (tmpl_erfdm_coeffs[n+6])
+#define A07 (tmpl_erfdm_coeffs[n+7])
+#define TMPL_POLY_EVAL(z)\
+A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*(A05 + z*(A06 + z*A07))))))
+
 TMPL_STATIC_INLINE
-double tmpl_Double_Erf_Medium(double x)
+double tmpl_Double_Erf_Medium(tmpl_IEEE754_Double w)
 {
-    tmpl_IEEE754_Double w, shift;
-    unsigned int n;
-    w.r = x;
+    tmpl_IEEE754_Double shift;
+    const unsigned int n = (w.bits.man0) << 3;
     shift = w;
     shift.bits.man1 = 0x8000U;
     shift.bits.man2 = 0x0000U;
     shift.bits.man3 = 0x0000U;
-    n = w.bits.man0;
-    n <<= 3;
     w.r -= shift.r;
 
-    return tmpl_erfdm_coeffs[n] + w.r*(
-        tmpl_erfdm_coeffs[n+1] + w.r*(
-            tmpl_erfdm_coeffs[n+2] + w.r*(
-                tmpl_erfdm_coeffs[n+3] + w.r*(
-                    tmpl_erfdm_coeffs[n+4] + w.r*(
-                        tmpl_erfdm_coeffs[n+5] + w.r*(
-                            tmpl_erfdm_coeffs[n+6] + w.r*tmpl_erfdm_coeffs[n+7]
-                        )
-                    )
-                )
-            )
-        )
-    );
+    return TMPL_POLY_EVAL(w.r);
 }
+
+#else
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+
+
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define A00 (+1.1283791670955126365607040611486440894548731064430E+00)
+#define A01 (+6.1856680806948109220677660264677907003149751444417E-02)
+#define A02 (+4.1145518213074999565262794018611561200627595655126E-02)
+#define A03 (-8.7707136933607770079319073352925173083333681109000E-04)
+#define A04 (+2.7125577380014977514418180966266226228905135708230E-04)
+#define A05 (-1.3239722107678831460532410663306244658302355190564E-05)
+#define A06 (+6.2564335958048129592868311685179924773329314231658E-07)
+#define A07 (-1.8239148907346264717934021446679328630982359872721E-08)
+#define A08 (+2.5839003238848066077920003511476230831774264021355E-10)
+
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define B01 (+3.8815238938359424075188631415877534713061633081189E-01)
+#define B02 (+6.5848395896534329559179312445593670161084460771079E-02)
+#define B03 (+6.1664659079696183164995589642551932095328093191702E-03)
+#define B04 (+3.2313713982428331981430572957719222195415860127493E-04)
+#define B05 (+7.7253055534510380898965062146051908309590150561640E-06)
+
+#define TMPL_NUM_EVAL(z)\
+A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
+
+#define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
+
+TMPL_STATIC_INLINE
+double tmpl_Double_Erf_Medium(double x)
+{
+    const double x2 = x*x;
+    const double p = TMPL_NUM_EVAL(x2);
+    const double q = TMPL_DEN_EVAL(x2);
+    return x * p / q;
+}
+
+#endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+
+#include "tmpl_math_undef.h"
+
+#endif
+/*  End of include guard.                                                     */
 

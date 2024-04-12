@@ -52,21 +52,21 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ERF_ASYMPTOTIC_LDOUBLE_H
-#define TMPL_ERF_ASYMPTOTIC_LDOUBLE_H
+#ifndef TMPL_ERF_LARGE_LDOUBLE_H
+#define TMPL_ERF_LARGE_LDOUBLE_H
 
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  64-bit long double does not need any more precision than 64-bit double.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
-#include "tmpl_erf_asymptotic_ldouble_64_bit_double.h"
+#include "tmpl_erf_large_ldouble_64_bit_double.h"
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
-#include "tmpl_erf_asymptotic_ldouble_128_bit_quadruple.h"
+#include "tmpl_erf_large_ldouble_128_bit_quadruple.h"
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-#include "tmpl_erf_asymptotic_ldouble_128_bit_double_double.h"
+#include "tmpl_erf_large_ldouble_128_bit_double_double.h"
 #else
-#include "tmpl_erf_asymptotic_ldouble_80_bit_extended.h"
+#include "tmpl_erf_large_ldouble_80_bit_extended.h"
 #endif
 
 #endif
