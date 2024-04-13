@@ -176,7 +176,7 @@ long double tmpl_LDouble_Erf(long double x)
         /*  For |x| < 2 use a larger rational Remez approximation.            */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
         {
-            w.bits.sign = 0x00U;
+            w.r = tmpl_LDouble_Abs(w.r);
             return -tmpl_LDouble_Erf_Medium(w);
         }
 

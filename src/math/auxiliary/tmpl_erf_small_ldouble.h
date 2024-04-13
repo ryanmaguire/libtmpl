@@ -25,7 +25,7 @@
 #define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
 /*  double-double, more terms are needed.                                     */
-#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (+1.1283791670955125738961589031215432827939072819249E+00L)
