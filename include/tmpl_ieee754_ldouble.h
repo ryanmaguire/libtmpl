@@ -37,7 +37,7 @@
 
 /*  64-bit double and 128-bit double-double have the same macros.             */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_DOUBLEDOUBLE
+    TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
  *                64-bit Double / 128-bit Double-Double Macros                *
