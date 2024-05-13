@@ -170,7 +170,7 @@ TMPL_STATIC_INLINE
 double tmpl_Double_Erf_Medium(tmpl_IEEE754_Double w)
 {
     tmpl_IEEE754_Double shift;
-    const unsigned int n = (w.bits.man0) << 3;
+    const unsigned int n = (unsigned int)(w.bits.man0) << 3U;
     shift = w;
     shift.bits.man1 = 0x8000U;
     shift.bits.man2 = 0x0000U;
