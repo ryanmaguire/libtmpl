@@ -43,7 +43,7 @@ long double tmpl_LDouble_Falling_Factorial(unsigned int x, unsigned int N)
     }
 
     if (N > x)
-        return 0.0;
+        return 0.0L;
 
     if (N == x)
         return tmpl_LDouble_Factorial(x);
