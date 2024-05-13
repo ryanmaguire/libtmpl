@@ -19,7 +19,7 @@
  *                            tmpl_color_add_rgb48                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by summing over the individual color channels.         *
+ *      Adds two colors by summing over the individual color channels.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -53,6 +53,7 @@
 /*  Color typedef's and function prototypes provided here.                    */
 #include <libtmpl/include/tmpl_color.h>
 
+/*  The maximum value for a 16-bit color channel is 65535.                    */
 #define PEAK (0xFFFFU)
 
 /*  Function for adding together two colors in 48-bit RGB format.             */
@@ -61,8 +62,8 @@ tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, tmpl_RGB48 c1)
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB48 sum;
 
-    /*  Avoid overflowing the sum by ensuring the sum of the color channels   *
-     *  does not exceed 65535.                                                */
+    /*  Avoid overflowing the sums by ensuring the sums of the color channels *
+     *  do not exceed 65535.                                                  */
     const unsigned short int r_diff = PEAK - c0.dat[0];
     const unsigned short int g_diff = PEAK - c0.dat[1];
     const unsigned short int b_diff = PEAK - c0.dat[2];

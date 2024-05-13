@@ -19,7 +19,7 @@
  *                            tmpl_color_add_rgb30                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by summing over the individual color channels.         *
+ *      Adds two colors by summing over the individual color channels.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -39,7 +39,7 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Carefully sum the individual channels by checking that the result     *
- *      will not overflow, storing the max value of 255 if it does.           *
+ *      will not overflow, storing the max value of 1023 if it does.          *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -53,16 +53,17 @@
 /*  Color typedef's and function prototypes provided here.                    */
 #include <libtmpl/include/tmpl_color.h>
 
+/*  The maximum value for a 10-bit color channel is 1023.                     */
 #define PEAK (0x3FFU)
 
-/*  Function for adding together two colors in 24-bit RGB format.             */
+/*  Function for adding together two colors in 30-bit RGB format.             */
 tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, tmpl_RGB30 c1)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB30 sum;
 
-    /*  Avoid overflowing the sum by ensuring the sum of the color channels   *
-     *  does not exceed 1023.                                                 */
+    /*  Avoid overflowing the sums by ensuring the sums of the color channels *
+     *  do not exceed 1023.                                                   */
     const unsigned short int r_diff = PEAK - c0.red;
     const unsigned short int g_diff = PEAK - c0.green;
     const unsigned short int b_diff = PEAK - c0.blue;

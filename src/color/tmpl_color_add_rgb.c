@@ -19,7 +19,7 @@
  *                             tmpl_color_add_rgb                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by summing over the individual color channels.         *
+ *      Adds two colors by summing over the individual color channels.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (const tmpl_RGB *):                                                *
+ *      c0 (const tmpl_RGB * const):                                          *
  *          A color.                                                          *
- *      c1 (const tmpl_RGB *):                                                *
+ *      c1 (const tmpl_RGB * const):                                          *
  *          Another color.                                                    *
  *  Output:                                                                   *
  *      sum (tmpl_RGB):                                                       *
@@ -63,7 +63,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function for adding together two RGB colors.                              */
-tmpl_RGB tmpl_RGB_Add(const tmpl_RGB *c0, const tmpl_RGB *c1)
+tmpl_RGB tmpl_RGB_Add(const tmpl_RGB * const c0, const tmpl_RGB * const c1)
 {
     /*  Struct for the output. C89 requires declarations at the top.          */
     tmpl_RGB sum;

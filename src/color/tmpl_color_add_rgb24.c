@@ -19,7 +19,7 @@
  *                            tmpl_color_add_rgb24                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by summing over the individual color channels.         *
+ *      Adds two colors by summing over the individual color channels.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -53,6 +53,7 @@
 /*  Color typedef's and function prototypes provided here.                    */
 #include <libtmpl/include/tmpl_color.h>
 
+/*  Maximum value for 8-bit color channels is 255.                            */
 #define PEAK (0xFFU)
 
 /*  Function for adding together two colors in 24-bit RGB format.             */
@@ -61,8 +62,8 @@ tmpl_RGB24 tmpl_RGB24_Add(tmpl_RGB24 c0, tmpl_RGB24 c1)
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_RGB24 sum;
 
-    /*  Avoid overflowing the sum by ensuring the sum of the color channels   *
-     *  does not exceed 255.                                                  */
+    /*  Avoid overflowing the sums by ensuring the sums of the color channels *
+     *  do not exceed 255.                                                    */
     const unsigned char r_diff = PEAK - c0.dat[0];
     const unsigned char g_diff = PEAK - c0.dat[1];
     const unsigned char b_diff = PEAK - c0.dat[2];
