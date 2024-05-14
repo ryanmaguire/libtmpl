@@ -70,6 +70,9 @@ extern "C" {
 /*  The macro TMPL_USE_INLINE is found here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  size_t typedef provided here.                                             */
+#include <stddef.h>
+
 /*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
  *  data structure containing a single array double dat[2];. If you are using *
  *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
@@ -546,7 +549,7 @@ extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_CDouble_Compare                                                  *
+ *      tmpl_CDouble_Are_Equal                                                *
  *  Purpose:                                                                  *
  *      Compare two complex numbers z0 and z1. This returns true if both the  *
  *      real and imaginary parts of z0 and z1 are identical, and false        *
@@ -555,19 +558,35 @@ extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble z0:                                                *
  *          A complex number.                                                 *
  *      tmpl_ComplexDouble z1:                                                *
- *          A complex number.                                                 *
+ *          Another complex number.                                           *
  *  Output:                                                                   *
  *      tmpl_Bool comp:                                                       *
  *          A Boolean indicating whether or not z0 and z1 are the same.       *
  ******************************************************************************/
+
+/*  These functions use quick comparisons and are small enough to inline.     */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/complex/tmpl_complex_are_equal_double.h>
+#include <libtmpl/include/complex/tmpl_complex_are_equal_float.h>
+#include <libtmpl/include/complex/tmpl_complex_are_equal_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the functions found in src/complex/.          */
 extern tmpl_Bool
-tmpl_CFloat_Compare(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+tmpl_CFloat_Are_Equal(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
 extern tmpl_Bool
-tmpl_CDouble_Compare(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+tmpl_CDouble_Are_Equal(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern tmpl_Bool
-tmpl_CLDouble_Compare(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+tmpl_CLDouble_Are_Equal(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1233,7 +1252,7 @@ tmpl_CLDouble_PolarPi(long double r, long double theta);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_CDouble_Poly_Complex_Coeffs                                      *
+ *      tmpl_CDouble_Poly_Eval                                                *
  *  Purpose:                                                                  *
  *      Given a set of "degree+1" number of complex coefficients and a complex*
  *      number z, computes the polynomial f(z) = a_0 + a_1 z + ... + a_N z^N  *
@@ -1263,20 +1282,38 @@ tmpl_CLDouble_PolarPi(long double r, long double theta);
  *          a_0 + a_1 z + ... a_N z^N                                         *
  ******************************************************************************/
 extern tmpl_ComplexFloat
-tmpl_CFloat_Poly_Complex_Coeffs(tmpl_ComplexFloat *coeffs,
-                                unsigned int degree, tmpl_ComplexFloat z);
+tmpl_CFloat_Poly_Eval(const tmpl_ComplexFloat * const coeffs,
+                      size_t degree, tmpl_ComplexFloat z);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Poly_Complex_Coeffs(tmpl_ComplexDouble *coeffs,
-                                 unsigned int degree, tmpl_ComplexDouble z);
+tmpl_CDouble_Poly_Eval(const tmpl_ComplexDouble * const coeffs,
+                       size_t degree, tmpl_ComplexDouble z);
+
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Poly_Complex_Coeffs(tmpl_ComplexLongDouble *coeffs,
-                                  unsigned int degree,
-                                  tmpl_ComplexLongDouble z);
+tmpl_CLDouble_Poly_Eval(const tmpl_ComplexLongDouble * const coeffs,
+                        size_t degree, tmpl_ComplexLongDouble z);
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Poly_Deriv_Eval(const tmpl_ComplexFloat * const coeffs,
+                            unsigned int degree,
+                            unsigned int deriv,
+                            tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Poly_Deriv_Eval(const tmpl_ComplexDouble * const coeffs,
+                             unsigned int degree,
+                             unsigned int deriv,
+                             tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Poly_Deriv_Eval(const tmpl_ComplexLongDouble * const coeffs,
+                              unsigned int degree,
+                              unsigned int deriv,
+                              tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_CDouble_Poly_Real_Coeffs                                         *
+ *      tmpl_CDouble_Poly_Eval_Real_Coeffs                                    *
  *  Purpose:                                                                  *
  *      Given a set of "degree+1" number of real coefficients and a complex   *
  *      number z, computes the polynomial f(z) = a_0 + a_1 z + ... + a_N z^N  *
@@ -1305,21 +1342,59 @@ tmpl_CLDouble_Poly_Complex_Coeffs(tmpl_ComplexLongDouble *coeffs,
  *          a_0 + a_1 z + ... a_N z^N                                         *
  ******************************************************************************/
 extern tmpl_ComplexFloat
-tmpl_CFloat_Poly_Real_Coeffs(float *coeffs, unsigned int degree,
-                             tmpl_ComplexFloat z);
+tmpl_CFloat_Poly_Eval_Real_Coeffs(const float * const coeffs,
+                                  size_t degree,
+                                  tmpl_ComplexFloat z);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Poly_Real_Coeffs(double *coeffs, unsigned int degree,
-                              tmpl_ComplexDouble z);
+tmpl_CDouble_Poly_Eval_Real_Coeffs(const double * const coeffs,
+                                   size_t degree,
+                                   tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Poly_Real_Coeffs(long double *coeffs, unsigned int degree,
-                               tmpl_ComplexLongDouble z);
+tmpl_CLDouble_Poly_Eval_Real_Coeffs(const long double * const coeffs,
+                                    size_t degree,
+                                    tmpl_ComplexLongDouble z);
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Poly_First_Deriv_Eval_Real_Coeffs(
+    const float * const coeffs,
+    size_t degree,
+    tmpl_ComplexFloat z
+);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Poly_First_Deriv_Eval_Real_Coeffs(
+    const double * const coeffs,
+    size_t degree,
+    tmpl_ComplexDouble z
+);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Poly_First_Deriv_Eval_Real_Coeffs(
+    const long double * const coeffs,
+    size_t degree,
+    tmpl_ComplexLongDouble z
+);
 
 /*  TODO: Finalize this.                                                      */
+extern tmpl_ComplexFloat
+tmpl_CFloat_Poly_Deriv_Eval_Real_Coeffs(const float * const coeffs,
+                                        unsigned int degree,
+                                        unsigned int deriv,
+                                        tmpl_ComplexFloat z);
+
 extern tmpl_ComplexDouble
-tmpl_CDouble_Poly_Deriv_Real_Coeffs(double *coeffs, unsigned int degree,
-                                    unsigned int deriv, tmpl_ComplexDouble z);
+tmpl_CDouble_Poly_Deriv_Eval_Real_Coeffs(const double * const coeffs,
+                                         unsigned int degree,
+                                         unsigned int deriv,
+                                         tmpl_ComplexDouble z);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Poly_Deriv_Eval_Real_Coeffs(const long double * const coeffs,
+                                          unsigned int degree,
+                                          unsigned int deriv,
+                                          tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *

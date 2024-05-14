@@ -22,23 +22,51 @@
 #define TMPL_ROOT_FINDING_COMPLEX_H
 
 #include <libtmpl/include/tmpl_complex.h>
+#include <stddef.h>
 
 extern tmpl_ComplexDouble
-tmpl_Halleys_Method_Complex(tmpl_ComplexDouble z,
-                            tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
-                            tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
-                            tmpl_ComplexDouble (*f_2prime)(tmpl_ComplexDouble),
-                            unsigned int max_iters, double eps);
+tmpl_CDouble_Halleys_Method_Explicit_With_Vars(
+    tmpl_ComplexDouble z,
+    tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
+    tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
+    tmpl_ComplexDouble (*f_2prime)(tmpl_ComplexDouble),
+    unsigned int max_iters, double eps
+);
 
 extern tmpl_ComplexDouble
-tmpl_Newton_Raphson_Complex(tmpl_ComplexDouble z,
-                            tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
-                            tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
-                            unsigned int max_iters, double eps);
+tmpl_CDouble_Halleys_Method_Explicit(
+    tmpl_ComplexDouble z,
+    tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
+    tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
+    tmpl_ComplexDouble (*f_2prime)(tmpl_ComplexDouble)
+);
 
 extern tmpl_ComplexDouble
-tmpl_Newton_Raphson_CDouble_Poly_Real(tmpl_ComplexDouble z,
-                                      double *coeffs, unsigned int degree,
-                                      unsigned int max_iters, double eps);
+tmpl_CDouble_Newtons_Method_Explicit_With_Vars(
+    tmpl_ComplexDouble z,
+    tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
+    tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble),
+    unsigned int max_iters, double eps
+);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Newtons_Method_Explicit(
+    tmpl_ComplexDouble z,
+    tmpl_ComplexDouble (*f)(tmpl_ComplexDouble),
+    tmpl_ComplexDouble (*f_prime)(tmpl_ComplexDouble)
+);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Newtons_Method_Polynomial_With_Vars(
+    tmpl_ComplexDouble z,
+    const double * const coeffs, size_t degree,
+    unsigned int max_iters, double eps
+);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Newtons_Method_Polynomial(
+    tmpl_ComplexDouble z,
+    const double * const coeffs, size_t degree
+);
 
 #endif

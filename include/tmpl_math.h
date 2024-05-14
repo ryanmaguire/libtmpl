@@ -594,6 +594,25 @@ extern const double tmpl_double_exp_table[179];
 extern const float tmpl_float_exp_table[179];
 extern const long double tmpl_ldouble_exp_table[179];
 
+/*  Factorial tables.                                                         */
+extern const float tmpl_float_factorial_table[34];
+
+#if TMPL_HAS_IEEE754_DOUBLE == 1
+extern const double tmpl_double_factorial_table[171];
+#else
+extern const double tmpl_double_factorial_table[34];
+#endif
+
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT || \
+    TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+extern const long double tmpl_ldouble_factorial_table[171];
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
+      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
+extern const long double tmpl_ldouble_factorial_table[1755];
+#else
+extern const long double tmpl_ldouble_factorial_table[34];
+#endif
+
 /*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
 extern const double tmpl_double_log_table[128];
 extern const float tmpl_float_log_table[128];
@@ -1232,8 +1251,14 @@ extern float tmpl_Float_Faddeeva_Im(float x);
 extern double tmpl_Double_Faddeeva_Im(double x);
 extern long double tmpl_LDouble_Faddeeva_Im(long double x);
 
-extern unsigned long
-tmpl_Falling_Factorial(unsigned int x, unsigned int N);
+extern float
+tmpl_Float_Falling_Factorial(unsigned int x, unsigned int N);
+
+extern double
+tmpl_Double_Falling_Factorial(unsigned int x, unsigned int N);
+
+extern long double
+tmpl_LDouble_Falling_Factorial(unsigned int x, unsigned int N);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1444,10 +1469,49 @@ extern long double tmpl_LDouble_NaN(void);
  *      double poly:                                                          *
  *          The polynomial evaluated at x.                                    *
  ******************************************************************************/
-extern float tmpl_Float_Poly_Eval(float *coeffs, size_t degree, float x);
-extern double tmpl_Double_Poly_Eval(double *coeffs, size_t degree, double x);
+extern float
+tmpl_Float_Poly_Eval(const float * const coeffs, size_t degree, float x);
+extern double
+
+tmpl_Double_Poly_Eval(const double * const coeffs, size_t degree, double x);
+
 extern long double
-tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
+tmpl_LDouble_Poly_Eval(const long double * const coeffs,
+                       size_t degree, long double x);
+
+/*
+ *  TODO:
+ *    "Safe" eval using double-double arithmetic to avoid precision loss.
+ */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Poly_First_Deriv_Eval                                     *
+ *  Purpose:                                                                  *
+ *      Given an array of coefficients and a real number, evaluates the       *
+ *      the polynomial with the given coefficient at that point.              *
+ *  Arguments:                                                                *
+ *      double *coeffs:                                                       *
+ *          The coefficients. There must be degree + 1 elements in the array. *
+ *      size_t degree:                                                        *
+ *          The degree of the polynomial.                                     *
+ *      double x:                                                             *
+ *          The point where the polynomial is being evaluated.                *
+ *  Output:                                                                   *
+ *      double poly:                                                          *
+ *          The polynomial evaluated at x.                                    *
+ ******************************************************************************/
+extern float
+tmpl_Float_Poly_First_Deriv_Eval(const float * const coeffs,
+                                 size_t degree, float x);
+extern double
+
+tmpl_Double_Poly_First_Deriv_Eval(const double * const coeffs,
+                                  size_t degree, double x);
+
+extern long double
+tmpl_LDouble_Poly_First_Deriv_Eval(const long double * const coeffs,
+                                   size_t degree, long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1469,15 +1533,18 @@ tmpl_LDouble_Poly_Eval(long double *coeffs, size_t degree, long double x);
  *          The nth derivative of the polynomial evaluated at x.              *
  ******************************************************************************/
 extern float
-tmpl_Float_Poly_Deriv_Eval(float *coeffs, unsigned int degree,
+tmpl_Float_Poly_Deriv_Eval(const float * const coeffs,
+                           unsigned int degree,
                            unsigned int deriv, float x);
 
 extern double
-tmpl_Double_Poly_Deriv_Eval(double *coeffs, unsigned int degree,
+tmpl_Double_Poly_Deriv_Eval(const double * const coeffs,
+                            unsigned int degree,
                             unsigned int deriv, double x);
 
 extern long double
-tmpl_LDouble_Poly_Deriv_Eval(long double *coeffs, unsigned int degree,
+tmpl_LDouble_Poly_Deriv_Eval(const long double *const coeffs,
+                             unsigned int degree,
                              unsigned int deriv, long double x);
 
 /******************************************************************************

@@ -205,9 +205,75 @@ extern const tmpl_RGBA tmpl_RGBA_Cyan;
 extern const tmpl_RGBA tmpl_RGBA_Magenta;
 extern const tmpl_RGBA tmpl_RGBA_Yellow;
 
+/*
+ *  nbh_color_write_to_file(const struct nbh_color *c, FILE *fp)
+ *  nbh_color_write_to_ppm(const struct nbh_color *c, struct nbh_ppm *PPM)
+ *  nbh_color_scale(const struct nbh_color *c, double t)
+ *  nbh_color_scaleby(struct nbh_color *c, double t)
+ *  nbh_color_addto(struct nbh_color *c0, const struct nbh_color *c1)
+ *  nbh_checker_board(const struct nbh_vec6 *u)
+ *  nbh_angle_gradient(const struct nbh_vec6 *u)
+ *  nbh_color_gradient_checker_board(const struct nbh_vec6 *u)
+ *  nf_color_normalize(const struct nf_color *c)
+ *  nf_color_normalizeself(struct nf_color *c)
+ *  nf_negate_channel(unsigned char *channel)
+ *  nf_color_negate(struct nf_color *c)
+ */
+
+
 /******************************************************************************
  *                                 Functions                                  *
  ******************************************************************************/
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RGB24_Add                                                        *
+ *  Purpose:                                                                  *
+ *      Adds two colors by summing over the individual channels.              *
+ *  Arguments:                                                                *
+ *      c0 (tmpl_RGB24):                                                      *
+ *          The first color.                                                  *
+ *      c1 (tmpl_RGB24):                                                      *
+ *          The second color.                                                 *
+ *  Outputs:                                                                  *
+ *      sum (tmpl_RGB24):                                                     *
+ *          The sum of the two input colors.                                  *
+ *  Notes:                                                                    *
+ *      30-bit and 48-bit equivalents are provided as well.                   *
+ *      Floating-point (RBG) type is provided as well. This version takes in  *
+ *      pointers, instead of the structs themselves.                          *
+ *      If the sum overflows beyond the the maximum possible value in a       *
+ *      given channel, the sum is set to the maximum possible value.          *
+ ******************************************************************************/
+extern tmpl_RGB24 tmpl_RGB24_Add(tmpl_RGB24 c0, const tmpl_RGB24 c1);
+extern tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, const tmpl_RGB30 c1);
+extern tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, const tmpl_RGB48 c1);
+
+extern tmpl_RGB
+tmpl_RGB_Add(const tmpl_RGB * const c0, const tmpl_RGB * const c1);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_RGBA24_Add                                                       *
+ *  Purpose:                                                                  *
+ *      Adds two colors by summing over the individual channels.              *
+ *  Arguments:                                                                *
+ *      c0 (tmpl_RGBA24):                                                     *
+ *          The first color.                                                  *
+ *      c1 (tmpl_RGBA24):                                                     *
+ *          The second color.                                                 *
+ *  Outputs:                                                                  *
+ *      sum (tmpl_RGBA24):                                                    *
+ *          The sum of the two input colors.                                  *
+ *  Notes:                                                                    *
+ *      30-bit and 48-bit equivalents are provided as well.                   *
+ *      If the sum overflows beyond the the maximum possible value in a       *
+ *      given channel, the sum is set to the maximum possible value.          *
+ ******************************************************************************/
+extern tmpl_RGBA24 tmpl_RGBA24_Add(tmpl_RGBA24 c0, const tmpl_RGBA24 c1);
+extern tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, const tmpl_RGBA30 c1);
+extern tmpl_RGBA48 tmpl_RGBA48_Add(tmpl_RGBA48 c0, const tmpl_RGBA48 c1);
+extern tmpl_RGBA tmpl_RGBA_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -286,52 +352,6 @@ tmpl_RGBA48_Create(unsigned short int red,
 
 extern tmpl_RGBA
 tmpl_RGBA_Create(double red, double green, double blue, double alpha);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_RGB24_Add                                                        *
- *  Purpose:                                                                  *
- *      Adds two colors by summing over the individual channels.              *
- *  Arguments:                                                                *
- *      c0 (tmpl_RGB24):                                                      *
- *          The first color.                                                  *
- *      c1 (tmpl_RGB24):                                                      *
- *          The second color.                                                 *
- *  Outputs:                                                                  *
- *      sum (tmpl_RGB24):                                                     *
- *          The sum of the two input colors.                                  *
- *  Notes:                                                                    *
- *      30-bit and 48-bit equivalents are provided as well.                   *
- *      If the sum overflows beyond the the maximum possible value in a       *
- *      given channel, the sum is set to the maximum possible value.          *
- ******************************************************************************/
-extern tmpl_RGB24 tmpl_RGB24_Add(tmpl_RGB24 c0, const tmpl_RGB24 c1);
-extern tmpl_RGB30 tmpl_RGB30_Add(tmpl_RGB30 c0, const tmpl_RGB30 c1);
-extern tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, const tmpl_RGB48 c1);
-extern tmpl_RGB tmpl_RGB_Add(const tmpl_RGB *c0, const tmpl_RGB *c1);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_RGBA24_Add                                                       *
- *  Purpose:                                                                  *
- *      Adds two colors by summing over the individual channels.              *
- *  Arguments:                                                                *
- *      c0 (tmpl_RGBA24):                                                     *
- *          The first color.                                                  *
- *      c1 (tmpl_RGBA24):                                                     *
- *          The second color.                                                 *
- *  Outputs:                                                                  *
- *      sum (tmpl_RGBA24):                                                    *
- *          The sum of the two input colors.                                  *
- *  Notes:                                                                    *
- *      30-bit and 48-bit equivalents are provided as well.                   *
- *      If the sum overflows beyond the the maximum possible value in a       *
- *      given channel, the sum is set to the maximum possible value.          *
- ******************************************************************************/
-extern tmpl_RGBA24 tmpl_RGBA24_Add(tmpl_RGBA24 c0, const tmpl_RGBA24 c1);
-extern tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, const tmpl_RGBA30 c1);
-extern tmpl_RGBA48 tmpl_RGBA48_Add(tmpl_RGBA48 c0, const tmpl_RGBA48 c1);
-extern tmpl_RGBA tmpl_RGBA_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1);
 
 /******************************************************************************
  *  Function:                                                                 *
