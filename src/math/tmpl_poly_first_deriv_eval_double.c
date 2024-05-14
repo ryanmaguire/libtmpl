@@ -16,36 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_poly_eval_float                            *
+ *                     tmpl_poly_first_deriv_eval_double                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Evaluates a polynomial at a given real number.                        *
+ *      Evaluates the derivative of a polynomial at a given real number.      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Poly_Eval                                                  *
+ *      tmpl_Double_Poly_First_Deriv_Eval                                     *
  *  Purpose:                                                                  *
- *      Evaluates a polynomial at a real number using Horner's method.        *
+ *      Evaluates the derivative of a polynomial at a real number.            *
  *  Arguments:                                                                *
- *      coeffs (const float * const):                                         *
+ *      coeffs (const double * const):                                        *
  *          The coefficients array for the polynomial.                        *
  *      degree (size_t):                                                      *
  *          The degree of the polynomial. There must be at least degree + 1   *
  *          elements in the coeffs array.                                     *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      p_x (float):                                                          *
- *          The polynomial evaluated at x.                                    *
+ *      dp_x (double):                                                        *
+ *          The derivative of the polynomial evaluated at x.                  *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Float_Factorial:                                             *
- *              Computes n! for non-negative integers.                        *
- *          tmpl_Float_Falling_Factorial:                                     *
- *              Computes n! / (n - k)! for non-negative integers.             *
+ *      None.                                                                 *
  *  Method:                                                                   *
- *      Use Horner's method to evaluate the polynomial at the given point.    *
+ *      Use Horner's method to evaluate the derivative at the given point.    *
  *  Notes:                                                                    *
  *      For very large polynomials with varying sizes for the coefficients,   *
  *      error may accumulate as one performs the sum.                         *
@@ -58,12 +54,7 @@
  *          Standard library header with the size_t typedef.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 14, 2022                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2024/05/13: Ryan Maguire                                                  *
- *      Added license and comments.                                           *
+ *  Date:       May 14, 2024                                                  *
  ******************************************************************************/
 
 /*  size_t typedef is here.                                                   */
@@ -72,34 +63,45 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Function for evaluating a polynomial via Horner's method.                 */
-float
-tmpl_Float_Poly_Eval(const float * const coeffs, size_t degree, float x)
+/*  Function for evaluating the derivative of a polynomial by Horner's method.*/
+double
+tmpl_Double_Poly_First_Deriv_Eval(const double * const coeffs,
+                                  size_t degree, double x)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
-    float poly;
+    double dpoly, factor;
     size_t n;
 
     /*  If the input coefficient pointer is NULL, trying to access it will    *
      *  result in a segmentation fault. Treat this as an empty, or zero,      *
      *  polynomial and return zero.                                           */
     if (!coeffs)
-        return 0.0F;
+        return 0.0;
 
     /*  Degree should be at least one, otherwise this is not a polynomial but *
-     *  a constant. Check this. If degree is zero, we'll just return the      *
-     *  zeroth coefficient (a constant polynomial).                           */
+     *  a constant. Check this. If degree is zero, the derivative is zero.    */
     if (degree == 0)
-        return coeffs[0];
+        return 0.0;
 
-    /*  Otherwise we have an actual polynomial to evaluate. Set poly to       *
-     *  a_{N}*z + a_{N-1} where N is the degree.                              */
-    poly = coeffs[degree]*x + coeffs[degree - 1];
+    /*  If the degree is one, the derivative is constant. Return this value.  */
+    if (degree == 1)
+        return coeffs[1];
 
-    /*  Use Horner's method of polynomial computation.                        */
-    for (n = 2; n <= degree; ++n)
-        poly = x*poly + coeffs[degree - n];
+    /*  Otherwise we have an actual polynomial to evaluate. Set dpoly to      *
+     *  Na_{N}*z + (N-1)a_{N-1} where N is the degree.                        */
+    factor = (double)degree;
+    dpoly = factor*(coeffs[degree]*x + coeffs[degree - 1]) - coeffs[degree - 1];
 
-    return poly;
+    /*  The Nth and (N-1)th degree terms are done, decrement the factor.      */
+    factor -= 2.0;
+
+    /*  Use Horner's method of polynomial evaluation.                         */
+    for (n = 2; n < degree; ++n)
+    {
+        dpoly = x*dpoly + factor*coeffs[degree - n];
+        factor -= 1.0;
+    }
+
+    return dpoly;
 }
-/*  End of tmpl_Float_Poly_Eval.                                              */
+/*  End of tmpl_Double_Poly_First_Deriv_Eval.                                 */
