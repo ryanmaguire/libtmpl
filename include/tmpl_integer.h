@@ -82,20 +82,29 @@ extern "C" {
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/integer/tmpl_integer_abs_inline.h>
+#include <libtmpl/include/integer/tmpl_abs_char.h>
+#include <libtmpl/include/integer/tmpl_abs_int.h>
+#include <libtmpl/include/integer/tmpl_abs_long.h>
+#include <libtmpl/include/integer/tmpl_abs_short.h>
+
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+#include <libtmpl/include/integer/tmpl_abs_llong.h>
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Otherwise use the functions in src/integer/.                              */
 extern signed char tmpl_Char_Abs(signed char n);
-extern short int tmpl_Short_Abs(short int n);
-extern int tmpl_Int_Abs(int n);
-extern long int tmpl_Long_Abs(long int n);
+extern signed short int tmpl_Short_Abs(signed short int n);
+extern signed int tmpl_Int_Abs(signed int n);
+extern signed long int tmpl_Long_Abs(signed long int n);
 
 /*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
-extern long long int tmpl_LLong_Abs(long long int);
+extern signed long long int tmpl_LLong_Abs(signed long long int);
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
@@ -352,6 +361,114 @@ tmpl_UInt_GCD(unsigned int m, unsigned int n);
 
 extern unsigned long int
 tmpl_ULong_GCD(unsigned long int m, unsigned long int n);
+
+/*  Signed Euclidean GCD algorithms.                                          */
+extern signed char
+tmpl_Char_GCD_Euclidean(signed char m, signed char n);
+
+extern signed int
+tmpl_Int_GCD_Euclidean(signed int m, signed int n);
+
+extern signed long int
+tmpl_Long_GCD_Euclidean(signed long int m, signed long int n);
+
+extern signed short int
+tmpl_Short_GCD_Euclidean(signed short int m, signed short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern signed long long int
+tmpl_LLong_GCD_Euclidean(signed long long int m, signed long long int n);
+#endif
+
+/*  Unsigned Euclidean GCD algorithms.                                        */
+extern unsigned char
+tmpl_UChar_GCD_Euclidean(unsigned char m, unsigned char n);
+
+extern unsigned int
+tmpl_UInt_GCD_Euclidean(unsigned int m, unsigned int n);
+
+extern unsigned long int
+tmpl_ULong_GCD_Euclidean(unsigned long int m, unsigned long int n);
+
+extern unsigned short int
+tmpl_UShort_GCD_Euclidean(unsigned short int m, unsigned short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern unsigned long long int
+tmpl_ULLong_GCD_Euclidean(unsigned long long int m, unsigned long long int n);
+#endif
+
+/*  Signed naive GCD algorithms.                                              */
+extern signed char
+tmpl_Char_GCD_Naive(signed char m, signed char n);
+
+extern signed int
+tmpl_Int_GCD_Naive(signed int m, signed int n);
+
+extern signed long int
+tmpl_Long_GCD_Naive(signed long int m, signed long int n);
+
+extern signed short int
+tmpl_Short_GCD_Naive(signed short int m, signed short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern signed long long int
+tmpl_LLong_GCD_Naive(signed long long int m, signed long long int n);
+#endif
+
+/*  Unsigned naive GCD algorithms.                                            */
+extern unsigned char
+tmpl_UChar_GCD_Naive(unsigned char m, unsigned char n);
+
+extern unsigned int
+tmpl_UInt_GCD_Naive(unsigned int m, unsigned int n);
+
+extern unsigned long int
+tmpl_ULong_GCD_Naive(unsigned long int m, unsigned long int n);
+
+extern unsigned short int
+tmpl_UShort_GCD_Naive(unsigned short int m, unsigned short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern unsigned long long int
+tmpl_ULLong_GCD_Naive(unsigned long long int m, unsigned long long int n);
+#endif
+
+/*  Signed mixed binary GCD algorithms.                                       */
+extern signed char
+tmpl_Char_GCD_Mixed_Binary(signed char m, signed char n);
+
+extern signed int
+tmpl_Int_GCD_Mixed_Binary(signed int m, signed int n);
+
+extern signed long int
+tmpl_Long_GCD_Mixed_Binary(signed long int m, signed long int n);
+
+extern signed short int
+tmpl_Short_GCD_Mixed_Binary(signed short int m, signed short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern signed long long int
+tmpl_LLong_GCD_Mixed_Binary(signed long long int m, signed long long int n);
+#endif
+
+/*  Unsigned mixed binary GCD algorithms.                                     */
+extern unsigned char
+tmpl_UChar_GCD_Mixed_Binary(unsigned char m, unsigned char n);
+
+extern unsigned int
+tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n);
+
+extern unsigned long int
+tmpl_ULong_GCD_Mixed_Binary(unsigned long int m, unsigned long int n);
+
+extern unsigned short int
+tmpl_UShort_GCD_Mixed_Binary(unsigned short int m, unsigned short int n);
+
+#if TMPL_HAS_LONGLONG == 1
+extern unsigned long long int
+tmpl_ULLong_GCD_Mixed_Binary(unsigned long long int m, unsigned long long int n);
+#endif
 
 /*  Macros for taking advantage of several builtin's different compilers      *
  *  may have. GCC and clang support __builtin_ctz and more.                   */
