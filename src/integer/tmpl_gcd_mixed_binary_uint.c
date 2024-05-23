@@ -1,6 +1,7 @@
 /*  Function prototype is found here.                                         */
 #include <libtmpl/include/tmpl_integer.h>
 
+/*  TMPL_MIN macro is provided here.                                          */
 #include <libtmpl/include/tmpl_minmax.h>
 
 /*  Function for computing the GCD of two unsigned integers.                  */
