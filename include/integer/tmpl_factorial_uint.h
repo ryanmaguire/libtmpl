@@ -51,7 +51,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config:                                                          *
+ *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is provided.                   *
  *  2.) tmpl_limits.h:                                                        *
  *          Header file containing TMPL_UINT_BIT.                             *
