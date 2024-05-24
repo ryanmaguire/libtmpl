@@ -86,7 +86,7 @@
 /*  The TMPL_ULLONG_BIT macro is found here.                                  */
 #include <libtmpl/include/tmpl_limits.h>
 
-/*  For n > 20, and for 64-bit unsigned long long, n! overflows. Pre-compute  *
+/*  For n > 20, and for 64-bit unsigned long long, n! overflows. Precompute   *
  *  the first 21 values (0 <= n <= 20) and use this as a lookup table.        */
 static const unsigned long long int tmpl_ullong_factorial_values[21] = {
     1ULL, 1ULL, 2ULL, 6ULL, 24ULL, 120ULL, 720ULL, 5040ULL, 40320ULL, 362880ULL,
