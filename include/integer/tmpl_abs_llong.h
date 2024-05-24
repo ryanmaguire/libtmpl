@@ -82,7 +82,7 @@ signed long long int tmpl_LLong_Abs(signed long long int n)
     /*  Otherwise, nothing to do. Return the input.                           */
     return n;
 }
-/*  End of tmpl_Char_Abs.                                                     */
+/*  End of tmpl_LLong_Abs.                                                    */
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
