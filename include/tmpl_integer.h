@@ -27,16 +27,6 @@
  *  1.) tmpl_bool.h:                                                          *
  *          Header file containing Booleans.                                  *
  ******************************************************************************
- *                                  EXAMPLES                                  *
- ******************************************************************************
- *  Examples of all of the functions can be found in:                         *
- *      libtmpl/examples/integer_examples/                                    *
- ******************************************************************************
- *                                   TESTS                                    *
- ******************************************************************************
- *  Tests for all of the functions can be found in:                           *
- *      libtmpl/tests/integer_tests/                                          *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 12, 2022                                                  *
  ******************************************************************************
@@ -126,6 +116,24 @@ extern signed long long int tmpl_LLong_Abs(signed long long int);
  *      Returns 0 on overflow. n! is never zero for positive integers, so     *
  *      this can be used for error checking.                                  *
  ******************************************************************************/
+
+/*  The factorial function gets very large very quickly and overflows even    *
+ *  for relatively small integers. Because of this we can use a small lookup  *
+ *  table for the values, and return zero for integers n such that n! will    *
+ *  overflow. Since the entire computation is a lookup table, we can inline.  */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/integer/tmpl_factorial_uchar.h>
+#include <libtmpl/include/integer/tmpl_factorial_uint.h>
+#include <libtmpl/include/integer/tmpl_factorial_ullong.h>
+#include <libtmpl/include/integer/tmpl_factorial_ulong.h>
+#include <libtmpl/include/integer/tmpl_factorial_ushort.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the functions in src/integer/.                              */
 extern unsigned char tmpl_UChar_Factorial(unsigned char n);
 extern unsigned short int tmpl_UShort_Factorial(unsigned short int n);
 extern unsigned int tmpl_UInt_Factorial(unsigned int n);
@@ -136,6 +144,9 @@ extern unsigned long int tmpl_ULong_Factorial(unsigned long int n);
 extern unsigned long long int tmpl_ULLong_Factorial(unsigned long long int);
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
