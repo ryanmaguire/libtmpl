@@ -54,7 +54,7 @@
  *  1.) tmpl_config:                                                          *
  *          Header file where TMPL_INLINE_DECL is provided.                   *
  *  2.) tmpl_limits.h:                                                        *
- *          Header file containing TMPL_UCHAR_BIT                             *
+ *          Header file containing TMPL_UINT_BIT.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 18, 2022                                              *
