@@ -184,7 +184,7 @@ static const unsigned char tmpl_uchar_factorial_values[21] = {
 
 /*  64-bit unsigned char factorial function.                                  */
 TMPL_INLINE_DECL
-unsigned char tmpl_UChat_Factorial(unsigned char n)
+unsigned char tmpl_UChar_Factorial(unsigned char n)
 {
     /*  For 64-bit unsigned char n! overflows for n > 20. Return 0 if this    *
      *  is the case. n! is never zero for non-negative integers, so this      *
@@ -211,7 +211,7 @@ static const unsigned char tmpl_uchar_factorial_values[6] = {
 
 /*  Portable factorial function for unsigned char.                            */
 TMPL_INLINE_DECL
-unsigned char tmpl_UChart_Factorial(unsigned char n)
+unsigned char tmpl_UChar_Factorial(unsigned char n)
 {
     /*  Declare necessary variable. C89 requires this at the top.             */
     unsigned char k, factorial;
