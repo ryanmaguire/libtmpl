@@ -38,13 +38,13 @@
  *          None.                                                             *
  *      Method:                                                               *
  *          Use a lookup table. Only a few values of n will not cause         *
- *          cause overflow. For larger values return 0. n! is never zero for  *
+ *          overflow. For larger values return 0. n! is never zero for        *
  *          non-negative integers, so this acts as an error for the caller.   *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Use the formala n! = n*(n-1)! and iteratively compute.            *
+ *          Use the formula n! = n*(n-1)! and iteratively compute.            *
  *  Notes:                                                                    *
  *      The portable method does not return 0 on overflow, and does not       *
  *      detect overflows at all for the caller.                               *
@@ -63,6 +63,8 @@
  ******************************************************************************
  *  2022/10/18: Ryan Maguire                                                  *
  *      Moved from math/ to integer/.                                         *
+ *  2024/05/24: Ryan Maguire                                                  *
+ *      Inlined the function, moved to include/integer/.                      *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -82,7 +84,7 @@
  *                               16-Bit Version                               *
  ******************************************************************************/
 
-/*  For n > 8, and for 16-bit unsigned int, n! overflows. Pre-compute the     *
+/*  For n > 8, and for 16-bit unsigned int, n! overflows. Precompute the      *
  *  first 9 values (0 <= n <= 8) and use this as a lookup table.              */
 static const unsigned int tmpl_uint_factorial_values[9] = {
     1U, 1U, 2U, 6U, 24U, 120U, 720U, 5040U, 40320U
@@ -99,8 +101,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
         return 0U;
 
     /*  Otherwise, return n! from the precomputed table above.                */
-    else
-        return tmpl_uint_factorial_values[n];
+    return tmpl_uint_factorial_values[n];
 }
 /*  End of tmpl_UInt_Factorial.                                               */
 
@@ -111,7 +112,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
  *                               32-Bit Version                               *
  ******************************************************************************/
 
-/*  For n > 12, and for 32-bit unsigned int, n! overflows. Pre-compute the    *
+/*  For n > 12, and for 32-bit unsigned int, n! overflows. Precompute the     *
  *  first 13 values (0 <= n <= 12) and use this as a lookup table.            */
 static const unsigned int tmpl_uint_factorial_values[13] = {
     1U, 1U, 2U, 6U, 24U, 120U, 720U, 5040U, 40320U, 362880U,
@@ -129,8 +130,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
         return 0U;
 
     /*  Otherwise, return n! from the precomputed table above.                */
-    else
-        return tmpl_uint_factorial_values[n];
+    return tmpl_uint_factorial_values[n];
 }
 /*  End of tmpl_UInt_Factorial.                                               */
 
@@ -141,7 +141,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
  *                               64-Bit Version                               *
  ******************************************************************************/
 
-/*  For n > 20, and for 64-bit unsigned int, n! overflows. Pre-compute the    *
+/*  For n > 20, and for 64-bit unsigned int, n! overflows. Precompute the     *
  *  first 21 values (0 <= n <= 20) and use this as a lookup table.            */
 static const unsigned int tmpl_uint_factorial_values[21] = {
     1U, 1U, 2U, 6U, 24U, 120U, 720U, 5040U, 40320U, 362880U,
@@ -161,8 +161,7 @@ unsigned int tmpl_UInt_Factorial(unsigned int n)
         return 0U;
 
     /*  Otherwise, return n! from the precomputed table above.                */
-    else
-        return tmpl_uint_factorial_values[n];
+    return tmpl_uint_factorial_values[n];
 }
 /*  End of tmpl_UInt_Factorial.                                               */
 
