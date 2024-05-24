@@ -59,8 +59,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_ABS_CHAR_H
-#define TMPL_ABS_CHAR_H
+#ifndef TMPL_ABS_LLONG_H
+#define TMPL_ABS_LLONG_H
 
 /*  Location of the TMPL_HAS_LONGLONG macro.                                  */
 #include <libtmpl/include/tmpl_inttype.h>
