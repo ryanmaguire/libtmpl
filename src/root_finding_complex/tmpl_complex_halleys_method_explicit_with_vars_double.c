@@ -85,17 +85,13 @@ tmpl_CDouble_Halleys_Method_Explicit_With_Vars(
         /*  The update guess is z - numer / denom. We can save several        *
          *  function calls by expanding this expression out directly. This    *
          *  is the real part of the expression.                               */
-        z.dat[0] = rcpr * (
-            z.dat[0] * norm_sq -
-                numer.dat[0] * denom.dat[0] -
-                    numer.dat[1] * denom.dat[1]
+        z.dat[0] -= rcpr * (
+            numer.dat[0] * denom.dat[0] + numer.dat[1] * denom.dat[1]
         );
 
         /*  Imaginary part of the expression.                                 */
-        z.dat[1] = rcpr * (
-            z.dat[1] * norm_sq +
-                numer.dat[0] * denom.dat[1] -
-                    numer.dat[1] * denom.dat[0]
+        z.dat[1] -= rcpr * (
+            numer.dat[1] * denom.dat[0] - numer.dat[0] * denom.dat[1]
         );
     }
     /*  End of for-loop for Halley's method.                                  */
