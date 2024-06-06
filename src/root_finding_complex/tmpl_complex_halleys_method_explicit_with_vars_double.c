@@ -65,7 +65,7 @@ tmpl_CDouble_Halleys_Method_Explicit_With_Vars(
 
         denom.dat[1] =
             2.0*w_prime.dat[0]*w_prime.dat[1] -
-                0.5*(w.dat[0]*w_2prime.dat[1] + w.dat[0]*w_2prime.dat[1]);
+                0.5*(w.dat[0]*w_2prime.dat[1] + w.dat[1]*w_2prime.dat[0]);
 
         /*  The modulus of the denominator appears in the final expression.   */
         norm_sq = denom.dat[0]*denom.dat[0] + denom.dat[1]*denom.dat[1];
