@@ -2,58 +2,33 @@
 #ifndef TMPL_VEC3_H
 #define TMPL_VEC3_H
 
-/*  3D Vectors with single precision components.                              */
-typedef struct tmpl_ThreeVectorFloat_Def {
-    float dat[3];
-} tmpl_ThreeVectorFloat;
+/*  TMPL_USE_INLINE macro is found here.                                      */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  3D Vectors with double precision components.                              */
-typedef struct tmpl_ThreeVectorDouble_Def {
-    double dat[3];
-} tmpl_ThreeVectorDouble;
-
-/*  3D Vectors with long double precision components.                         */
-typedef struct tmpl_ThreeVectorLongDouble_Def {
-    long double dat[3];
-} tmpl_ThreeVectorLongDouble;
-
-/*  Most users will be fine with double precision. To make code look cleaner, *
- *  tmpl_ThreeVector is typedef'd to tmpl_ThreeVectorDouble.                  */
-typedef tmpl_ThreeVectorDouble tmpl_ThreeVector;
-
-/*  Single precision 3x3 matrix for linear transformations in R^3.            */
-typedef struct tmpl_ThreeByThreeMatrixFloat_Def {
-    float dat[3][3];
-} tmpl_ThreeByThreeMatrixFloat;
-
-/*  Double precision 3x3 matrix for linear transformations in R^3.            */
-typedef struct tmpl_ThreeByThreeMatrixDouble_Def {
-    double dat[3][3];
-} tmpl_ThreeByThreeMatrixDouble;
-
-/*  Long double precision 3x3 matrix for linear transformations in R^3.       */
-typedef struct tmpl_ThreeByThreeMatrixLongDouble_Def {
-    long double dat[3][3];
-} tmpl_ThreeByThreeMatrixLongDouble;
-
-/*  Again, for clean code the double precision 3x3 matrix type is typedef'd   *
- *  as tmpl_ThreeByThreeMatrix.                                               */
-typedef tmpl_ThreeByThreeMatrixDouble tmpl_ThreeByThreeMatrix;
+/*  Typedefs for 3D vectors at various precisions.                            */
+#include <libtmpl/include/tmpl_vec3_double.h>
+#include <libtmpl/include/tmpl_vec3_float.h>
+#include <libtmpl/include/tmpl_vec3_ldouble.h>
 
 /*  Functionals f:R^3 -> R at single, double, and long double precision.      */
-typedef float (*tmpl_3DFloat_Functional)(tmpl_ThreeVectorFloat);
-typedef double (*tmpl_3DDouble_Functional)(tmpl_ThreeVectorDouble);
-typedef long double (*tmpl_3DLDouble_Functional)(tmpl_ThreeVectorLongDouble);
+typedef float
+(*tmpl_3DFloat_Functional)(const tmpl_ThreeVectorFloat * const);
+
+typedef double
+(*tmpl_3DDouble_Functional)(const tmpl_ThreeVectorDouble * const);
+
+typedef long double
+(*tmpl_3DLDouble_Functional)(const tmpl_ThreeVectorLongDouble * const);
 
 /*  Vector fields F:R^3 -> R^3 at single, double, and long double precision.  */
 typedef tmpl_ThreeVectorFloat
-(*tmpl_3DFloat_VectorField)(tmpl_ThreeVectorFloat);
+(*tmpl_3DFloat_VectorField)(const tmpl_ThreeVectorFloat * const);
 
 typedef tmpl_ThreeVectorDouble
-(*tmpl_3DDouble_VectorField)(tmpl_ThreeVectorDouble);
+(*tmpl_3DDouble_VectorField)(const tmpl_ThreeVectorDouble * const);
 
 typedef tmpl_ThreeVectorLongDouble
-(*tmpl_3DLDouble_VectorField)(tmpl_ThreeVectorLongDouble);
+(*tmpl_3DLDouble_VectorField)(const tmpl_ThreeVectorLongDouble * const);
 
 /*  Commonly used vectors in R^3.                                             */
 extern const tmpl_ThreeVectorFloat tmpl_3DFloat_Zero;
@@ -79,48 +54,50 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
  *      Computes the vector sum of two vectors in R^3 at single precision.    *
  *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorFloat):                                          *
  *          The sum of P and Q, P + Q.                                        *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_add_float.c                                     *
- *          tmpl_three_vector_add_double.c                                    *
- *          tmpl_three_vector_add_ldouble.c                                   *
- *  Examples:                                                                 *
- *      libtmpl/examples/euclidean_spatial_geometry/                          *
- *          tmpl_three_vector_add_double_example.c                            *
- *          tmpl_three_vector_add_float_example.c                             *
- *          tmpl_three_vector_add_ldouble_example.c                           *
- *  Tests:                                                                    *
- *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
- *          tmpl_three_vector_add_double_huge_time_test_vs_linasm.c           *
- *          tmpl_three_vector_add_double_small_time_test_vs_linasm.c          *
- *          tmpl_three_vector_add_float_huge_time_test_vs_linasm.c            *
- *          tmpl_three_vector_add_float_small_time_test_vs_linasm.c           *
- *          tmpl_three_vector_add_ldouble_huge_time_test.c                    *
- *          tmpl_three_vector_add_ldouble_small_time_test.c                   *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_add_no_inline_float.c                                   *
+ *          tmpl_vec3_add_no_inline_double.c                                  *
+ *          tmpl_vec3_add_no_inline_ldouble.c                                 *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_add_float.h                                             *
+ *          tmpl_vec3_add_double.h                                            *
+ *          tmpl_vec3_add_ldouble.h                                           *
  ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_add_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_add_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_add_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
-                 const tmpl_ThreeVectorFloat *Q);
+tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat * const P,
+                 const tmpl_ThreeVectorFloat * const Q);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble *P,
-                  const tmpl_ThreeVectorDouble *Q);
+tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble * const P,
+                  const tmpl_ThreeVectorDouble * const Q);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
-                   const tmpl_ThreeVectorLongDouble *Q);
+tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const P,
+                   const tmpl_ThreeVectorLongDouble * const Q);
 
-/*  Less verbose macros for vector addition.                                  */
-#define tmpl_3D_Addf tmpl_3DFloat_Add
-#define tmpl_3D_Add tmpl_3DDouble_Add
-#define tmpl_3D_Addl tmpl_3DLDouble_Add
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -136,40 +113,73 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_add_to_float.c                                  *
- *          tmpl_three_vector_add_to_double.c                                 *
- *          tmpl_three_vector_add_to_ldouble.c                                *
- *  Examples:                                                                 *
- *      libtmpl/examples/euclidean_spatial_geometry/                          *
- *          tmpl_three_vector_add_to_double_example.c                         *
- *          tmpl_three_vector_add_to_float_example.c                          *
- *          tmpl_three_vector_add_to_ldouble_example.c                        *
- *  Tests:                                                                    *
- *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
- *          tmpl_three_vector_add_to_double_huge_time_test_vs_linasm.c        *
- *          tmpl_three_vector_add_to_double_small_time_test_vs_linasm.c       *
- *          tmpl_three_vector_add_to_float_huge_time_test_vs_linasm.c         *
- *          tmpl_three_vector_add_to_float_small_time_test_vs_linasm.c        *
- *          tmpl_three_vector_add_to_ldouble_huge_time_test.c                 *
- *          tmpl_three_vector_add_to_ldouble_small_time_test.c                *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_add_to_no_inline_float.c                                *
+ *          tmpl_vec3_add_to_no_inline_double.c                               *
+ *          tmpl_vec3_add_to_no_inline_ldouble.c                              *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_add_to_float.h                                          *
+ *          tmpl_vec3_add_to_double.h                                         *
+ *          tmpl_vec3_add_to_ldouble.h                                        *
  ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_add_to_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_add_to_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_add_to_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
 extern void
-tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat *target,
-                   const tmpl_ThreeVectorFloat *source);
+tmpl_3DFloat_AddTo(tmpl_ThreeVectorFloat * const target,
+                   const tmpl_ThreeVectorFloat * const source);
 
 extern void
-tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble *target,
-                    const tmpl_ThreeVectorDouble *source);
+tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
+                    const tmpl_ThreeVectorDouble * const source);
 
 extern void
-tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
-                     const tmpl_ThreeVectorLongDouble *source);
+tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
+                     const tmpl_ThreeVectorLongDouble * const source);
 
-/*  Less verbose macros for vector addition.                                  */
-#define tmpl_3D_AddTof tmpl_3DFloat_AddTo
-#define tmpl_3D_AddTo tmpl_3DDouble_AddTo
-#define tmpl_3D_AddTol tmpl_3DLDouble_AddTo
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Angle                                                    *
+ *  Purpose:                                                                  *
+ *      Safely computes the angle between two vectors.                        *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to the first vector.                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a vector.                                      *
+ *  Output:                                                                   *
+ *      angle (double):                                                       *
+            The angle made between P and Q.                                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_add_to_no_inline_float.c                                *
+ *          tmpl_vec3_add_to_no_inline_double.c                               *
+ *          tmpl_vec3_add_to_no_inline_ldouble.c                              *
+ ******************************************************************************/
+extern float
+tmpl_3DFloat_Angle(const tmpl_ThreeVectorFloat * const P,
+                   const tmpl_ThreeVectorFloat * const Q);
+
+extern double
+tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const P,
+                    const tmpl_ThreeVectorDouble * const Q);
+
+extern long double
+tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const P,
+                     const tmpl_ThreeVectorLongDouble * const Q);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -178,9 +188,9 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
  *      Computes the cross product of two vectors in R^3 at single precision. *
  *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a  three dimensional vector.                   *
  *  Output:                                                                   *
  *      cross (tmpl_ThreeVectorFloat):                                        *
@@ -188,40 +198,42 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble *target,
  *  Notes:                                                                    *
  *      The cross product is anti-commutative. That is, PxQ = -QxP.           *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_cross_product_float.c                           *
- *          tmpl_three_vector_cross_product_double.c                          *
- *          tmpl_three_vector_cross_product_ldouble.c                         *
- *  Examples:                                                                 *
- *      libtmpl/examples/euclidean_spatial_geometry/                          *
- *          tmpl_three_vector_cross_product_double_example.c                  *
- *          tmpl_three_vector_cross_product_float_example.c                   *
- *          tmpl_three_vector_cross_product_ldouble_example.c                 *
- *  Tests:                                                                    *
- *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
- *          tmpl_three_vector_cross_product_double_huge_time_test_vs_linasm.c *
- *          tmpl_three_vector_cross_product_double_small_time_test_vs_linasm.c*
- *          tmpl_three_vector_cross_product_float_huge_time_test_vs_linasm.c  *
- *          tmpl_three_vector_cross_product_float_small_time_test_vs_linasm.c *
- *          tmpl_three_vector_cross_product_ldouble_huge_time_test.c          *
- *          tmpl_three_vector_cross_product_ldouble_small_time_test.c         *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_cross_product_no_inline_float.c                         *
+ *          tmpl_vec3_cross_product_no_inline_double.c                        *
+ *          tmpl_vec3_cross_product_no_inline_ldouble.c                       *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_cross_product_float.h                                   *
+ *          tmpl_vec3_cross_product_double.h                                  *
+ *          tmpl_vec3_cross_product_ldouble.h                                 *
  ******************************************************************************/
+
+/*  The cross product consists of a few lines of arithmetic. We can inline.   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_cross_product_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_cross_product_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_cross_product_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat *P,
-                           const tmpl_ThreeVectorFloat *Q);
+tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const P,
+                           const tmpl_ThreeVectorFloat * const Q);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble *P,
-                            const tmpl_ThreeVectorDouble *Q);
+tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble * const P,
+                            const tmpl_ThreeVectorDouble * const Q);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
-                             const tmpl_ThreeVectorLongDouble *Q);
+tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble * const P,
+                             const tmpl_ThreeVectorLongDouble * const Q);
 
-/*  Less verbose macros for the cross product.                                */
-#define tmpl_Cross_Productf tmpl_3DFloat_Cross_Product
-#define tmpl_Cross_Product tmpl_3DDouble_Cross_Product
-#define tmpl_Cross_Productl tmpl_3DLDouble_Cross_Product
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -230,50 +242,51 @@ tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble *P,
  *      Computes the cross product of two vectors in R^3 at single precision. *
  *      Similar functions are provided for double and long double precisions. *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat *):                                     *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
  *          A pointer to a three dimensional vector. The result of the cross  *
  *          product is stored in this variable.                               *
- *      source (const tmpl_ThreeVectorFloat *):                               *
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
  *          Another pointer to a  three dimensional vector.                   *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
  *      The cross product is anti-commutative. That is, PxQ = -QxP.           *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_cross_with_float.c                              *
- *          tmpl_three_vector_cross_with_double.c                             *
- *          tmpl_three_vector_cross_with_ldouble.c                            *
- *  Examples:                                                                 *
- *      libtmpl/examples/euclidean_spatial_geometry/                          *
- *          tmpl_three_vector_cross_with_double_example.c                     *
- *          tmpl_three_vector_cross_with_float_example.c                      *
- *          tmpl_three_vector_cross_with_ldouble_example.c                    *
- *  Tests:                                                                    *
- *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
- *          tmpl_three_vector_cross_with_double_huge_time_test_vs_linasm.c    *
- *          tmpl_three_vector_cross_with_double_small_time_test_vs_linasm.c   *
- *          tmpl_three_vector_cross_with_float_huge_time_test_vs_linasm.c     *
- *          tmpl_three_vector_cross_with_float_small_time_test_vs_linasm.c    *
- *          tmpl_three_vector_cross_with_ldouble_huge_time_test.c             *
- *          tmpl_three_vector_cross_with_ldouble_small_time_test.c            *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_cross_with_no_inline_float.c                            *
+ *          tmpl_vec3_cross_with_no_inline_double.c                           *
+ *          tmpl_vec3_cross_with_no_inline_ldouble.c                          *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_cross_with_float.h                                      *
+ *          tmpl_vec3_cross_with_double.h                                     *
+ *          tmpl_vec3_cross_with_ldouble.h                                    *
  ******************************************************************************/
-extern void
-tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat *target,
-                       const tmpl_ThreeVectorFloat *source);
+
+/*  This function is only a few lines. We can inline it.                      */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_cross_with_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_cross_with_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_cross_with_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 extern void
-tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble *target,
-                        const tmpl_ThreeVectorDouble *source);
+tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat * const target,
+                       const tmpl_ThreeVectorFloat * const source);
 
 extern void
-tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
-                         const tmpl_ThreeVectorLongDouble *source);
+tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble * const target,
+                        const tmpl_ThreeVectorDouble * const source);
 
-/*  Less verbose macros for the cross product.                                */
-#define tmpl_CrossWithf tmpl_3DFloat_CrossWith
-#define tmpl_CrossWith tmpl_3DDouble_CrossWith
-#define tmpl_CrossWithl tmpl_3DLDouble_CrossWith
+extern void
+tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble * const target,
+                         const tmpl_ThreeVectorLongDouble * const source);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -282,48 +295,48 @@ tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble *target,
  *      Computes the Euclidean dot product of two vector in R^3 at single     *
  *      precision. Similar functions are provided for double and long double. *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
  *      dot (float):                                                          *
  *          The dot product of P and Q, P . Q.                                *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_dot_product_float.c                             *
- *          tmpl_three_vector_dot_product_double.c                            *
- *          tmpl_three_vector_dot_product_ldouble.c                           *
- *  Examples:                                                                 *
- *      libtmpl/examples/euclidean_spatial_geometry/                          *
- *          tmpl_three_vector_dot_product_double_example.c                    *
- *          tmpl_three_vector_dot_product_float_example.c                     *
- *          tmpl_three_vector_dot_product_ldouble_example.c                   *
- *  Tests:                                                                    *
- *      libtmpl/tests/euclidean_spatial_geometry/time_tests/                  *
- *          tmpl_three_vector_dot_product_double_huge_time_test_vs_linasm.c   *
- *          tmpl_three_vector_dot_product_double_small_time_test_vs_linasm.c  *
- *          tmpl_three_vector_dot_product_float_huge_time_test_vs_linasm.c    *
- *          tmpl_three_vector_dot_product_float_small_time_test_vs_linasm.c   *
- *          tmpl_three_vector_dot_product_ldouble_huge_time_test.c            *
- *          tmpl_three_vector_dot_product_ldouble_small_time_test.c           *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_dot_product_no_inline_float.c                           *
+ *          tmpl_vec3_dot_product_no_inline_double.c                          *
+ *          tmpl_vec3_dot_product_no_inline_ldouble.c                         *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_dot_product_float.h                                     *
+ *          tmpl_vec3_dot_product_double.h                                    *
+ *          tmpl_vec3_dot_product_ldouble.h                                   *
  ******************************************************************************/
+
+/*  The dot product is a one-line. Definitely worth inlining.                 */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_dot_product_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_dot_product_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_dot_product_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 extern float
-tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat *P,
-                         const tmpl_ThreeVectorFloat *Q);
+tmpl_3DFloat_Dot_Product(const tmpl_ThreeVectorFloat * const P,
+                         const tmpl_ThreeVectorFloat * const Q);
 
 extern double
-tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble *P,
-                          const tmpl_ThreeVectorDouble *Q);
+tmpl_3DDouble_Dot_Product(const tmpl_ThreeVectorDouble * const P,
+                          const tmpl_ThreeVectorDouble * const Q);
 
 extern long double
-tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
-                           const tmpl_ThreeVectorLongDouble *Q);
+tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
+                           const tmpl_ThreeVectorLongDouble * const Q);
 
-/*  Less verbose macros for the Euclidean dot product.                        */
-#define tmpl_3D_Dot_Productf tmpl_3DFloat_Dot_Product
-#define tmpl_3D_Dot_Product tmpl_3DDouble_Dot_Product
-#define tmpl_3D_Dot_Productl tmpl_3DLDoubble_Dot_Product
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -523,10 +536,6 @@ extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble *P);
 extern float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat *P);
 extern double tmpl_3DDouble_Z(const tmpl_ThreeVectorDouble *P);
 extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble *P);
-
-extern double
-tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
-                                  unsigned int m, unsigned int n);
 
 #endif
 /*  End of include guard.                                                     */

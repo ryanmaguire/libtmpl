@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_double                        *
+ *                            tmpl_vec3_add_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for performing vector addition at double precision.     *
@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Computes the vector sum of two vectors at double precision.           *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorDouble *):                                   *
+ *      P (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorDouble *):                                   *
+ *      Q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      sum (tmpl_ThreeVectorDouble):                                         *
@@ -46,46 +46,21 @@
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_Add is an alias for this function.                  *
- *                                                                            *
  *      A 7% to 50% increase in performance was found (pending hardware and   *
  *      compiler used) by passing tmpl_ThreeVectorDouble's by reference       *
  *      instead of by value.                                                  *
  *                                                                            *
+ *      An %8 to %12 increase in performance was found (pending hardware and  *
+ *      compiler used) by inlining this function.                             *
+ *                                                                            *
  *      No checks for Null pointers are performed.                            *
- *                                                                            *
- *  Accuracy and Performance:                                                 *
- *                                                                            *
- *      A time and accuracy test against linasm's 3D library produced the     *
- *      following results:                                                    *
- *                                                                            *
- *          tmpl_3DDouble_Add vs. Vector3D_Add_flt64                          *
- *          samples: 400000000                                                *
- *          libtmpl: 3.819373 seconds                                         *
- *          linasm:  4.004308 seconds                                         *
- *          x max err: 0.000000e+00                                           *
- *          y max err: 0.000000e+00                                           *
- *          z max err: 0.000000e+00                                           *
- *          x rms err: 0.000000e+00                                           *
- *          y rms err: 0.000000e+00                                           *
- *          z rms err: 0.000000e+00                                           *
- *                                                                            *
- *      This test was performed with the following specs:                     *
- *                                                                            *
- *          2017 iMac                                                         *
- *          CPU:  Intel Core i5-7500                                          *
- *          MIN:  800.0000 MHz                                                *
- *          MAX:  3800.0000 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
- *          OS:   Ubuntu Budgie 20.04                                         *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec3_double.h:                                                   *
+ *          The tmpl_ThreeVectorDouble typedef is provided here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -96,15 +71,25 @@
  *      Removed function calls, added doc-string.                             *
  *  2022/03/17: Ryan Maguire                                                  *
  *      Changed function to pass by reference instead of by value.            *
+ *  2024/06/06: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_ADD_DOUBLE_H
+#define TMPL_VEC3_ADD_DOUBLE_H
+
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_double.h>
 
 /*  Function for adding 2 three-dimensional vectors.                          */
+TMPL_INLINE_DECL
 tmpl_ThreeVectorDouble
-tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble *P,
-                  const tmpl_ThreeVectorDouble *Q)
+tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble * const P,
+                  const tmpl_ThreeVectorDouble * const Q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_ThreeVectorDouble sum;
@@ -116,3 +101,6 @@ tmpl_3DDouble_Add(const tmpl_ThreeVectorDouble *P,
     return sum;
 }
 /*  End of tmpl_3DDouble_Add.                                                 */
+
+#endif
+/*  End of include guard.                                                     */

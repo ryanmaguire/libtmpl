@@ -16,24 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_float                         *
+ *                            tmpl_vec3_add_ldouble                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for performing vector addition at single precision.     *
+ *      Contains code for performing vector addition at long double precision.*
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_Add                                                      *
+ *      tmpl_3DLDouble_Add                                                    *
  *  Purpose:                                                                  *
- *      Computes the vector sum of two vectors at single precision.           *
+ *      Computes the vector sum of two vectors at long double precision.      *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat *):                                    *
+ *      P (const tmpl_ThreeVectorLongDouble * const):                         *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorFloat *):                                    *
+ *      Q (const tmpl_ThreeVectorLongDouble * const):                         *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
- *      sum (tmpl_ThreeVectorFloat):                                          *
+ *      sum (tmpl_ThreeVectorLongDouble):                                     *
  *          The vector sum P + Q.                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -46,46 +46,21 @@
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_Addf is an alias for this function.                 *
- *                                                                            *
  *      A 7% to 50% increase in performance was found (pending hardware and   *
- *      compiler used) by passing tmpl_ThreeVectorFloat's by reference        *
+ *      compiler used) by passing tmpl_ThreeVectorLongDouble's by reference   *
  *      instead of by value.                                                  *
  *                                                                            *
+ *      A %2 to %12 increase in performance was found (pending hardware and   *
+ *      compiler used) by inlining this function.                             *
+ *                                                                            *
  *      No checks for Null pointers are performed.                            *
- *                                                                            *
- *  Accuracy and Performance:                                                 *
- *                                                                            *
- *      A time and accuracy test against linasm's 3D library produced the     *
- *      following results:                                                    *
- *                                                                            *
- *          tmpl_3DFloat_Add vs. Vector3D_Add_flt32                           *
- *          samples: 400000000                                                *
- *          libtmpl: 2.146027 seconds                                         *
- *          linasm:  2.388277 seconds                                         *
- *          x max err: 0.000000e+00                                           *
- *          y max err: 0.000000e+00                                           *
- *          z max err: 0.000000e+00                                           *
- *          x rms err: 0.000000e+00                                           *
- *          y rms err: 0.000000e+00                                           *
- *          z rms err: 0.000000e+00                                           *
- *                                                                            *
- *      This test was performed with the following specs:                     *
- *                                                                            *
- *          2017 iMac                                                         *
- *          CPU:  Intel Core i5-7500                                          *
- *          MIN:  800.0000 MHz                                                *
- *          MAX:  3800.0000 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
- *          OS:   Ubuntu Budgie 20.04                                         *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec3_ldouble.h:                                                  *
+ *          The tmpl_ThreeVectorLongDouble typedef is provided here.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -96,18 +71,28 @@
  *      Removed function calls, added doc-string.                             *
  *  2022/03/17: Ryan Maguire                                                  *
  *      Changed function to pass by reference instead of by value.            *
+ *  2024/06/06: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_ADD_LDOUBLE_H
+#define TMPL_VEC3_ADD_LDOUBLE_H
+
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_ldouble.h>
 
 /*  Function for adding 2 three-dimensional vectors.                          */
-tmpl_ThreeVectorFloat
-tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
-                 const tmpl_ThreeVectorFloat *Q)
+TMPL_INLINE_DECL
+tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const P,
+                   const tmpl_ThreeVectorLongDouble * const Q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVectorFloat sum;
+    tmpl_ThreeVectorLongDouble sum;
 
     /*  The sum of two vectors simply adds their components together.         */
     sum.dat[0] = P->dat[0] + Q->dat[0];
@@ -115,4 +100,7 @@ tmpl_3DFloat_Add(const tmpl_ThreeVectorFloat *P,
     sum.dat[2] = P->dat[2] + Q->dat[2];
     return sum;
 }
-/*  End of tmpl_3DFloat_Add.                                                  */
+/*  End of tmpl_3DLDouble_Add.                                                */
+
+#endif
+/*  End of include guard.                                                     */

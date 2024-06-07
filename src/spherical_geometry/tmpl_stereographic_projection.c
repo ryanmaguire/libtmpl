@@ -50,7 +50,7 @@
 /*  Compute the stereographic projection of a point on a sphere. The radius   *
  *  of the sphere is given by the length of the input vector P.               */
 tmpl_TwoVector
-tmpl_Stereographic_Projection(tmpl_ThreeVector P)
+tmpl_Stereographic_Projection(tmpl_ThreeVectorDouble P)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     double Px, Py, Pz, x, y, factor, norm;

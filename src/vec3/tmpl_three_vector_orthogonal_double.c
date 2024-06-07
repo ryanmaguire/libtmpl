@@ -27,11 +27,11 @@
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Function for computing an orthogonal vector to the given input.           */
-tmpl_ThreeVector
-tmpl_3DDouble_Orthogonal(tmpl_ThreeVector P)
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Orthogonal(tmpl_ThreeVectorDouble P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVector out;
+    tmpl_ThreeVectorDouble out;
 
     /*  If the x component is zero, (1,0,0) will be orthogonal to P since the *
      *  dot product will be 1*0 + 0*Py + 0*Pz = 0. Return (1,0,0).            */

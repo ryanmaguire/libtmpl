@@ -16,25 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_add_ldouble                       *
+ *                           tmpl_vec3_add_to_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for performing vector addition at long double precision.*
+ *      Contains code for performing vector addition at double precision.     *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DLDouble_Add                                                    *
+ *      tmpl_3DDouble_AddTo                                                   *
  *  Purpose:                                                                  *
- *      Computes the vector sum of two vectors at long double precision.      *
+ *      Computes the vector sum of two vectors at double precision.           *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorLongDouble *):                               *
- *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorLongDouble *):                               *
+ *      target (tmpl_ThreeVectorDouble * const):                              *
+ *          A pointer to a vector in R^3. The sum will be stored here.        *
+ *      source (const tmpl_ThreeVectorDouble * const):                        *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
- *      sum (tmpl_ThreeVectorLongDouble):                                     *
- *          The vector sum P + Q.                                             *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -46,45 +45,54 @@
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_Addl is an alias for this function.                 *
+ *      If tmpl_3DDouble_Add is the equivalent of the "+" operator for the    *
+ *      tmpl_ThreeVectorDouble struct, this is the equivalent of "+=". It is  *
+ *      about 2-3x faster to do tmpl_3DDouble_AddTo(&P, &Q) instead of doing  *
+ *      P = tmpl_3DDouble_Add(&P, &Q).                                        *
  *                                                                            *
- *      A 7% to 50% increase in performance was found (pending hardware and   *
- *      compiler used) by passing tmpl_ThreeVectorLongDouble's by reference   *
- *      instead of by value.                                                  *
+ *      A %12 to %15 increase in performance was found (pending hardware and  *
+ *      compiler used) by inlining this function.                             *
  *                                                                            *
  *      No checks for Null pointers are performed.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec3_double.h:                                                   *
+ *          The tmpl_ThreeVectorDouble typedef is provided here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 21, 2020                                             *
+ *  Date:       March 15, 2022                                                *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/03/02: Ryan Maguire                                                  *
- *      Removed function calls, added doc-string.                             *
  *  2022/03/17: Ryan Maguire                                                  *
- *      Changed function to pass by reference instead of by value.            *
+ *      Added doc-string and comments.                                        *
+ *  2024/06/06: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_ADD_TO_DOUBLE_H
+#define TMPL_VEC3_ADD_TO_DOUBLE_H
 
-/*  Function for adding 2 three-dimensional vectors.                          */
-tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble *P,
-                   const tmpl_ThreeVectorLongDouble *Q)
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_double.h>
+
+/*  Function for performing vector addition in R^3.                           */
+TMPL_INLINE_DECL
+void tmpl_3DDouble_AddTo(tmpl_ThreeVectorDouble * const target,
+                         const tmpl_ThreeVectorDouble * const source)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVectorLongDouble sum;
-
-    /*  The sum of two vectors simply adds their components together.         */
-    sum.dat[0] = P->dat[0] + Q->dat[0];
-    sum.dat[1] = P->dat[1] + Q->dat[1];
-    sum.dat[2] = P->dat[2] + Q->dat[2];
-    return sum;
+    target->dat[0] += source->dat[0];
+    target->dat[1] += source->dat[1];
+    target->dat[2] += source->dat[2];
 }
-/*  End of tmpl_3DLDouble_Add.                                                */
+/*  End of tmpl_3DDouble_AddTo.                                               */
+
+#endif
+/*  End of include guard.                                                     */

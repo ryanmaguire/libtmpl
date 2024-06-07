@@ -6,15 +6,15 @@
 #include <libtmpl/include/tmpl_vec3.h>
 
 
-extern tmpl_ThreeVector
-tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u);
+extern tmpl_ThreeVectorDouble
+tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVectorDouble u);
 
-extern tmpl_ThreeVector
+extern tmpl_ThreeVectorDouble
 tmpl_Inverse_Orthographic_Projection_Torus(tmpl_TwoVector P,
                                            double r, double R);
 
 extern tmpl_TwoVector
-tmpl_Stereographic_Projection(tmpl_ThreeVector P);
+tmpl_Stereographic_Projection(tmpl_ThreeVectorDouble P);
 
 extern tmpl_TwoVector
 tmpl_Stereographic_Projection_Torus(double u, double v, double r, double R);

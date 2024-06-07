@@ -16,22 +16,22 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_three_vector_cross_with_double                    *
+ *                        tmpl_vec3_cross_with_ldouble                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing the Euclidean cross product of vectors    *
- *      in R^3 at double precision.                                           *
+ *      in R^3 at long double precision.                                      *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DDouble_CrossWith                                               *
+ *      tmpl_3DLDouble_CrossWith                                              *
  *  Purpose:                                                                  *
- *      Computes the cross product of two vectors at double precision.        *
+ *      Computes the cross product of two vectors at long double precision.   *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorDouble *):                                    *
+ *      target (tmpl_ThreeVectorLongDouble *):                                *
  *          A pointer to a vector in R^3. The product is stored here.         *
- *      source (const tmpl_ThreeVectorDouble *):                              *
+ *      source (const tmpl_ThreeVectorLongDouble *):                          *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -49,67 +49,51 @@
  *      The cross product is not commutative, but anti-commutative. That is,  *
  *      PxQ = -QxP. The order of P and Q matters for this function.           *
  *                                                                            *
- *      If tmpl_3DDouble_Cross_Product is the equivalent of the "x" operator  *
- *      for the tmpl_ThreeVectorDouble struct, this is the equivalent of "x=".*
- *      It is about 3x faster to do tmpl_3DDouble_CrossWith(&P, &Q) instead   *
- *      of doing P = tmpl_3DDouble_Cross_Product(&P, &Q).                     *
- *                                                                            *
- *      The macro tmpl_CrossWith is an alias for this function.               *
+ *      If tmpl_3DLDouble_Cross_Product is the equivalent of the "x"          *
+ *      operator for the tmpl_ThreeVectorLongDouble struct, this is the       *
+ *      equivalent of "x=". It is about 2-3x faster to do                     *
+ *      tmpl_3DLDouble_CrossWith(&P, &Q) instead of doing                     *
+ *      P = tmpl_3DLDouble_Cross_Product(&P, &Q).                             *
  *                                                                            *
  *      No checks for NULL pointers are performed.                            *
- *                                                                            *
- *  Accuracy and Performance:                                                 *
- *                                                                            *
- *      A time and accuracy test against linasm's 3D library produced the     *
- *      following results:                                                    *
- *                                                                            *
- *          tmpl_3DDouble_CrossWith vs. Vector3D_VectorProduct_flt64          *
- *          samples: 400000000                                                *
- *          libtmpl: 1.234255 seconds                                         *
- *          linasm:  1.221312 seconds                                         *
- *          x max err: 0.000000e+00                                           *
- *          y max err: 0.000000e+00                                           *
- *          z max err: 0.000000e+00                                           *
- *          x rms err: 0.000000e+00                                           *
- *          y rms err: 0.000000e+00                                           *
- *          z rms err: 0.000000e+00                                           *
- *                                                                            *
- *      These tests were performed with the following specs:                  *
- *                                                                            *
- *          2017 iMac                                                         *
- *          CPU:  Intel Core i5-7500                                          *
- *          MIN:  800.0000 MHz                                                *
- *          MAX:  3800.0000 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
- *          OS:   Ubuntu Budgie 20.04                                         *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec3_ldouble.h:                                                  *
+ *          The tmpl_ThreeVectorLongDouble typedef is provided here.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 18, 2022                                                *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_CROSS_WITH_LDOUBLE_H
+#define TMPL_VEC3_CROSS_WITH_LDOUBLE_H
 
-/*  Function for computing the cross product of vectors at double precision.  */
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_ldouble.h>
+
+/*  Computes the cross product of vectors at long double precision.           */
+TMPL_INLINE_DECL
 void
-tmpl_3DDouble_CrossWith(tmpl_ThreeVectorDouble *target,
-                        const tmpl_ThreeVectorDouble *source)
+tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble * const target,
+                         const tmpl_ThreeVectorLongDouble * const source)
 {
-    /*  Declare temporary variables for the x and y components of target.     */
-    const double x = target->dat[0];
-    const double y = target->dat[1];
+    /*  Avoid overwriting data. Save the x and y components of the target.    */
+    const long double x = target->dat[0];
+    const long double y = target->dat[1];
 
     /*  Compute the components of the cross product PxQ.                      */
     target->dat[0] = y*source->dat[2] - target->dat[2]*source->dat[1];
     target->dat[1] = target->dat[2]*source->dat[0] - x*source->dat[2];
     target->dat[2] = x*source->dat[1] - y*source->dat[0];
 }
-/*  End of tmpl_3DDouble_CrossWith.                                           */
+/*  End of tmpl_3DLDouble_CrossWith.                                          */
+
+#endif
+/*  End of include guard.                                                     */

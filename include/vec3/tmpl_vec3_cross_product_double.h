@@ -16,42 +16,54 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_three_vector_dot_product_ldouble                   *
+ *                       tmpl_vec3_cross_product_double                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for the Euclidean dot product at long double precision. *
+ *      Contains code for computing the Euclidean cross product of vectors    *
+ *      in R^3 at double precision.                                           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DLDouble_Dot_Product                                            *
+ *      tmpl_3DDouble_Cross_Product                                           *
  *  Purpose:                                                                  *
- *      Computes the dot product of two vectors at long double precision.     *
+ *      Computes the cross product of two vectors at double precision.        *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorLongDouble *):                               *
+ *      P (const tmpl_ThreeVectorDouble * const):                             *
  *          A pointer to a vector in R^3.                                     *
- *      Q (const tmpl_ThreeVectorLongDouble *):                               *
+ *      Q (const tmpl_ThreeVectorDouble * const):                             *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
- *      dot (long double):                                                    *
- *          The dot product P . Q.                                            *
+ *      cross (tmpl_ThreeVectorDouble):                                       *
+ *          The cross product PxQ.                                            *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of the dot product. If P = (Px, Py, Pz) and        *
- *      Q = (Qx, Qy, Qz), then the dot product is:                            *
- *          dot = PxQx + PyQy + PzQz                                          *
+ *      Use the definition of the cross product. If P = (Px, Py, Pz) and      *
+ *      Q = (Qx, Qy, Qz), then the cross product PxQ has coordinates:         *
+ *          x = PyQz - PzQy                                                   *
+ *          y = PzQx - PxQz                                                   *
+ *          z = PxQy - PyQx                                                   *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *                                                                            *
- *      The macro tmpl_3D_Dot_Productl is an alias for this function.         *
+ *      The cross product is not commutative, but anti-commutative. That is,  *
+ *      PxQ = -QxP. The order of P and Q matters for this function.           *
  *                                                                            *
- *      No checks for Null pointers are performed.                            *
+ *      A 73% to 100% increase in performance (pending hardware and compiler  *
+ *      used) was found when passing by reference instead of by value.        *
+ *                                                                            *
+ *      A 1% to 38% increase in performance (pending hardware and compiler    *
+ *      used) was found when inlining this function.                          *
+ *                                                                            *
+ *      No checks for NULL pointers are performed.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec3_double.h:                                                   *
+ *          The tmpl_ThreeVectorDouble typedef is provided here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
@@ -60,19 +72,38 @@
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
- *  2022/03/21: Ryan Maguire                                                  *
+ *  2022/03/18: Ryan Maguire                                                  *
  *      Changed function to pass by reference instead of by value.            *
+ *  2024/06/07: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_CROSS_PRODUCT_DOUBLE_H
+#define TMPL_VEC3_CROSS_PRODUCT_DOUBLE_H
 
-/*  Function for computing the dot product of 2 three-vectors.                */
-long double
-tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble *P,
-                           const tmpl_ThreeVectorLongDouble *Q)
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_double.h>
+
+/*  Function for computing the cross product of vectors at double precision.  */
+TMPL_INLINE_DECL
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Cross_Product(const tmpl_ThreeVectorDouble * const P,
+                            const tmpl_ThreeVectorDouble * const Q)
 {
-    /*  Use the Euclidean dot product formula and return.                     */
-    return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1] + P->dat[2]*Q->dat[2];
+    /*  Declare a variable for the output.                                    */
+    tmpl_ThreeVectorDouble cross;
+
+    /*  Compute the components of the cross product PxQ.                      */
+    cross.dat[0] = P->dat[1]*Q->dat[2] - P->dat[2]*Q->dat[1];
+    cross.dat[1] = P->dat[2]*Q->dat[0] - P->dat[0]*Q->dat[2];
+    cross.dat[2] = P->dat[0]*Q->dat[1] - P->dat[1]*Q->dat[0];
+    return cross;
 }
-/*  End of tmpl_3DLDouble_Dot_Product.                                        */
+/*  End of tmpl_3DDouble_Cross_Product.                                       */
+
+#endif
+/*  End of include guard.                                                     */

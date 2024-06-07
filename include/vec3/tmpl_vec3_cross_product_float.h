@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_three_vector_cross_with_float                     *
+ *                       tmpl_vec3_cross_product_float                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing the Euclidean cross product of vectors    *
@@ -25,16 +25,17 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_CrossWith                                                *
+ *      tmpl_3DFloat_Cross_Product                                            *
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors at single precision.        *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat *):                                     *
- *          A pointer to a vector in R^3. The product is stored here.         *
- *      source (const tmpl_ThreeVectorFloat *):                               *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to a vector in R^3.                                     *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
- *      None (void).                                                          *
+ *      cross (tmpl_ThreeVectorFloat):                                        *
+ *          The cross product PxQ.                                            *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -49,67 +50,60 @@
  *      The cross product is not commutative, but anti-commutative. That is,  *
  *      PxQ = -QxP. The order of P and Q matters for this function.           *
  *                                                                            *
- *      If tmpl_3DFloat_Cross_Product is the equivalent of the "x" operator   *
- *      for the tmpl_ThreeVectorFloat struct, this is the equivalent of "x=". *
- *      It is about 3x faster to do tmpl_3DFloat_CrossWith(&P, &Q) instead    *
- *      of doing P = tmpl_3DFloat_Cross_Product(&P, &Q).                      *
+ *      A 73% to 100% increase in performance (pending hardware and compiler  *
+ *      used) was found when passing by reference instead of by value.        *
  *                                                                            *
- *      The macro tmpl_CrossWith is an alias for this function.               *
+ *      A 1% to 38% increase in performance (pending hardware and compiler    *
+ *      used) was found when inlining this function.                          *
  *                                                                            *
  *      No checks for NULL pointers are performed.                            *
- *                                                                            *
- *  Accuracy and Performance:                                                 *
- *                                                                            *
- *      A time and accuracy test against linasm's 3D library produced the     *
- *      following results:                                                    *
- *                                                                            *
- *          tmpl_3DFloat_CrossWith vs. Vector3D_VectorProduct_flt32           *
- *          samples: 400000000                                                *
- *          libtmpl: 1.014458 seconds                                         *
- *          linasm:  0.977548 seconds                                         *
- *          x max err: 0.000000e+00                                           *
- *          y max err: 0.000000e+00                                           *
- *          z max err: 0.000000e+00                                           *
- *          x rms err: 0.000000e+00                                           *
- *          y rms err: 0.000000e+00                                           *
- *          z rms err: 0.000000e+00                                           *
- *                                                                            *
- *      These tests were performed with the following specs:                  *
- *                                                                            *
- *          2017 iMac                                                         *
- *          CPU:  Intel Core i5-7500                                          *
- *          MIN:  800.0000 MHz                                                *
- *          MAX:  3800.0000 MHz                                               *
- *          ARCH: x86_64                                                      *
- *          RAM:  OWC 64GB (4x16GB) PC19200 DDR4 2400MHz SO-DIMMs Memory      *
- *          OS:   Ubuntu Budgie 20.04                                         *
- *                                                                            *
- *      Performance will of course vary on different systems.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec3_float.h:                                                    *
+ *          The tmpl_ThreeVectorFloat typedef is provided here.               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 18, 2022                                                *
+ *  Date:       December 21, 2020                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2022/03/02: Ryan Maguire                                                  *
+ *      Removed function calls, added doc-string.                             *
+ *  2022/03/18: Ryan Maguire                                                  *
+ *      Changed function to pass by reference instead of by value.            *
+ *  2024/06/07: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_CROSS_PRODUCT_FLOAT_H
+#define TMPL_VEC3_CROSS_PRODUCT_FLOAT_H
+
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_float.h>
 
 /*  Function for computing the cross product of vectors at single precision.  */
-void
-tmpl_3DFloat_CrossWith(tmpl_ThreeVectorFloat *target,
-                       const tmpl_ThreeVectorFloat *source)
+TMPL_INLINE_DECL
+tmpl_ThreeVectorFloat
+tmpl_3DFloat_Cross_Product(const tmpl_ThreeVectorFloat * const P,
+                           const tmpl_ThreeVectorFloat * const Q)
 {
-    /*  Declare temporary variables for the x and y components of target.     */
-    const float x = target->dat[0];
-    const float y = target->dat[1];
+    /*  Declare a variable for the output.                                    */
+    tmpl_ThreeVectorFloat cross;
 
     /*  Compute the components of the cross product PxQ.                      */
-    target->dat[0] = y*source->dat[2] - target->dat[2]*source->dat[1];
-    target->dat[1] = target->dat[2]*source->dat[0] - x*source->dat[2];
-    target->dat[2] = x*source->dat[1] - y*source->dat[0];
+    cross.dat[0] = P->dat[1]*Q->dat[2] - P->dat[2]*Q->dat[1];
+    cross.dat[1] = P->dat[2]*Q->dat[0] - P->dat[0]*Q->dat[2];
+    cross.dat[2] = P->dat[0]*Q->dat[1] - P->dat[1]*Q->dat[0];
+    return cross;
 }
-/*  End of tmpl_3DFloat_CrossWith.                                            */
+/*  End of tmpl_3DFloat_Cross_Product.                                        */
+
+#endif
+/*  End of include guard.                                                     */

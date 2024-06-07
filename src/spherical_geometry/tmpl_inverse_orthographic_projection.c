@@ -3,12 +3,12 @@
 #include <libtmpl/include/tmpl_vec3.h>
 #include <libtmpl/include/tmpl_spherical_geometry.h>
 
-tmpl_ThreeVector
-tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
+tmpl_ThreeVectorDouble
+tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVectorDouble u)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     double x, y, z, radius;
-    tmpl_ThreeVector out, X, Y, u_hat;
+    tmpl_ThreeVectorDouble out, X, Y, u_hat;
 
     /*  Extract the X and Y components from the point P.                      */
     x = P.dat[0];
@@ -32,7 +32,7 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVector u)
 
     /*  Compute the cross product of X and u, giving as an orthonormal        *
      *  basis of three dimensional space: (X, Y, u_hat).                      */
-    Y = tmpl_Cross_Product(&X, &u_hat);
+    Y = tmpl_3DDouble_Cross_Product(&X, &u_hat);
 
     /*  The z component of our sphere is chosen so that x^2 + y^2 + z^2 = r^2 *
      *  and so that it is positive.                                           */
