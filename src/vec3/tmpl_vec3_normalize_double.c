@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_three_vector_normalize_double                     *
+ *                         tmpl_vec3_normalize_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for computing unit normal vectors.                      *
@@ -28,13 +28,15 @@
  *  Purpose:                                                                  *
  *      Computes the unit normal of the input non-zero vector.                *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorDouble):                                           *
+ *      P (const tmpl_ThreeVectorDouble * const):                             *
  *          A non-zero vector in R^3.                                         *
  *  Output:                                                                   *
  *      P_hat (tmpl_ThreeVectorDouble):                                       *
  *          The unit normal of P.                                             *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Sqrt:                                                 *
+ *              Computes the square root of a real number.                    *
  *  Method:                                                                   *
  *      Use the definition of unit normal. If P = (x, y, z), the norm is:     *
  *                                                                            *
@@ -44,21 +46,17 @@
  *                                                                            *
  *          P_hat = P / norm                                                  *
  *                                                                            *
- *      The function tmpl_3DDouble_Norm can overflow for very large values    *
- *      of x, y, and z. In particular, if x = y = z = DBL_MAX, the norm is    *
- *      sqrt(3)*DBL_MAX, which is greater than DBL_MAX, which may result in   *
- *      overflow or infinity. To avoid this, P is first scaled by 1/2. The    *
- *      largest possible result is then sqrt(3/4)*DBL_MAX, which is less than *
- *      DBL_MAX.                                                              *
+ *      To avoid overflow, or underflow, we first scale the input to have a   *
+ *      "reasonable" magnitude. The norm is then computed and this division   *
+ *      is carried out.                                                       *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
- *                                                                            *
  *      If the vector is zero, (NaN, NaN, NaN) is returned.                   *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_minmax.h:                                                        *
- *          Provides the TMPL_MAX macro.                                      *
+ *          Provides the TMPL_MAX3 macro.                                     *
  *  2.) tmpl_math.h:                                                          *
  *          Provides the square root function.                                *
  *  3.) tmpl_vec3.h:                                                          *
@@ -71,120 +69,125 @@
  ******************************************************************************
  *  2022/03/02: Ryan Maguire                                                  *
  *      Removed function calls, added doc-string.                             *
+ *  2024/06/10: Ryan Maguire                                                  *
+ *      Fixed bug for vectors with negative components.                       *
  ******************************************************************************/
 
-/*  TMPL_MAX3 macro provided here.                                            */
-#include <libtmpl/include/tmpl_minmax.h>
-
-/*  Square root function found here.                                          */
+/*  square root and absolute value functions provided here.                   */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype and three-vector typedef found here.                   */
 #include <libtmpl/include/tmpl_vec3.h>
 
-/*  We can get a significant speed boost if IEEE-754 support is available.    */
+/*  Safer and more efficient computation with IEEE-754 support.               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
+/*  The TMPL_MAX3 macro is found here.                                        */
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  The values 2^512 and 2^-512, to double precision, stored as macros.       */
-#define BIG_SCALE 1.340780792994259709957402E+154
-#define RCPR_BIG_SCALE 7.458340731200206743290965E-155
+#define TMPL_BIG_SCALE (1.340780792994259709957402E+154)
+#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965E-155)
 
-/*  Function for computing the length of three dimensional vectors.           */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
+/*  Function for computing the unit normal of a given vector.                 */
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    /*  Words for the components of the vector.                               */
+    tmpl_IEEE754_Double wx, wy, wz;
+
+    /*  Variable for storing the exponent of the largest component.           */
+    unsigned short int max_expo;
+
+    /*  Variables for the multiplicative factors used in normalizing.         */
+    double norm, rcpr_norm;
+
+    /*  And lastly, a variable for the output.                                */
     tmpl_ThreeVectorDouble normalized;
-    tmpl_IEEE754_Double w;
-    double rcpr_norm;
 
-    /*  Given P = (x, y, z), compute |x|, |y|, and |z|.                       */
-    double x = tmpl_Double_Abs(P->dat[0]);
-    double y = tmpl_Double_Abs(P->dat[1]);
-    double z = tmpl_Double_Abs(P->dat[2]);
+    /*  Copy the data from P to avoid overwriting it.                         */
+    wx.r = P->dat[0];
+    wy.r = P->dat[1];
+    wz.r = P->dat[2];
 
-    /*  Compute the maximum of |x|, |y|, and |z| and store it in the double   *
-     *  part of the tmpl_IEEE754_Double union w.                              */
-    w.r = TMPL_MAX3(x, y, z);
+    /*  Get the exponents of the largest component.                           */
+    max_expo = TMPL_MAX3(wx.bits.expo, wy.bits.expo, wz.bits.expo);
 
-    /*  If all values are large, scale them by 2^-512.                        */
-    if (w.bits.expo > TMPL_DOUBLE_BIAS + 0x1FFU)
+    /*  If this exponent is very large, scale the components down.            */
+    if (max_expo > TMPL_DOUBLE_UBIAS + 0x200U)
     {
-        x *= BIG_SCALE;
-        y *= BIG_SCALE;
-        z *= BIG_SCALE;
+        wx.r *= TMPL_RCPR_BIG_SCALE;
+        wy.r *= TMPL_RCPR_BIG_SCALE;
+        wz.r *= TMPL_RCPR_BIG_SCALE;
     }
 
-    /*  If all values are small, scale them by 2^512.                         */
-    else if (w.bits.expo < 0x20AU)
+    /*  If it is very small, scale the components up.                         */
+    else if (max_expo < TMPL_DOUBLE_UBIAS - 0x1E6U)
     {
-        x *= RCPR_BIG_SCALE;
-        y *= RCPR_BIG_SCALE;
-        z *= RCPR_BIG_SCALE;
+        /*  If the components are denormal, normalize them.                   */
+        if (max_expo == 0x00U)
+        {
+            wx.r *= TMPL_DOUBLE_NORMALIZE;
+            wx.r *= TMPL_DOUBLE_NORMALIZE;
+            wx.r *= TMPL_DOUBLE_NORMALIZE;
+        }
+
+        wx.r *= TMPL_BIG_SCALE;
+        wy.r *= TMPL_BIG_SCALE;
+        wz.r *= TMPL_BIG_SCALE;
     }
 
-    /*  Compute 1 / ||P||.                                                    */
-    rcpr_norm = 1.0 / tmpl_Double_Sqrt(x*x + y*y + z*z);
+    /*  The components are now safe to square. Compute the norm.              */
+    norm = tmpl_Double_Sqrt(wx.r*wx.r + wy.r*wy.r + wz.r*wz.r);
 
-    /*  Set P_hat to (x/||P||, y/||P||, z/||P||) and return.                  */
-    normalized.dat[0] = x*rcpr_norm;
-    normalized.dat[1] = y*rcpr_norm;
-    normalized.dat[2] = z*rcpr_norm;
+    /*  The reciprocal of the norm is used as the scale factor.               */
+    rcpr_norm = 1.0 / norm;
+
+    /*  Compute the unit normal and return.                                   */
+    normalized.dat[0] = wx.r * rcpr_norm;
+    normalized.dat[1] = wy.r * rcpr_norm;
+    normalized.dat[2] = wz.r * rcpr_norm;
     return normalized;
 }
-/*  End of tmpl_3DDouble_L2_Norm.                                             */
+/*  End of tmpl_3DDouble_Normalize.                                           */
 
-/*  Undefine these macros in case someone wants to #include this file.        */
-#undef BIG_SCALE
-#undef RCPR_BIG_SCALE
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_BIG_SCALE
+#undef TMPL_RCPR_BIG_SCALE
 
 #else
-/*  Same algorithm without IEEE754 support.                                   */
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
-/*  Function that normalizes non-zero three dimensional vectors.              */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P)
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
+/*  Lacking IEEE-754 support, we just used the standard definition. This may  *
+ *  not catch certain overflows. For example, is x = y = z = DBL_MAX, this    *
+ *  should normalize to (1/sqrt(3)) * (1, 1, 1). But the norm of (x, y, z) is *
+ *  sqrt(3) * DBL_MAX, which will overflow. Because of this the output will   *
+ *  be infinite. Aside from these extreme cases, this method is very portable.*/
+
+/*  Function for computing the unit normal of a given vector.                 */
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    double rcpr_norm, norm, t, rcpr_t;
-    tmpl_ThreeVectorDouble P_normalized;
+    /*  Scale factor for the normalization.                                   */
+    const double norm = tmpl_3DDouble_L2_Norm(P);
+    const double rcpr_norm = 1.0 / norm;
 
-    /*  Given P = (x, y, z), compute |x|, |y|, and |z|.                       */
-    double x = tmpl_Double_Abs(P->dat[0]);
-    double y = tmpl_Double_Abs(P->dat[1]);
-    double z = tmpl_Double_Abs(P->dat[2]);
+    /*  Variable for the output.                                              */
+    tmpl_ThreeVectorDouble normalized;
 
-    /*  Compute the maximum of |x|, |y|, and |z|.                             */
-    t = TMPL_MAX3(x, y, z);
-
-    /*  Get the norm of the input vector P.                                   */
-    rcpr_t = 1.0 / t;
-    x *= rcpr_t;
-    y *= rcpr_t;
-    z *= rcpr_t;
-    norm = t*tmpl_Double_Sqrt(x*x + y*y + z*z);
-
-    /*  If the norm is zero we cannot normalize. Return NaN in this case.     */
-    if (norm == 0.0)
-    {
-        const double nanval = TMPL_NAN;
-        P_normalized.dat[0] = nanval;
-        P_normalized.dat[1] = nanval;
-        P_normalized.dat[2] = nanval;
-        return P_normalized;
-    }
-    else
-    {
-        /*  Compute the reciprocal of the norm. Precomputing a division and   *
-         *  using multiplication later is faster than repeated division.      */
-        rcpr_norm = 1.0 / norm;
-
-        /*  Compute the components of the normalized vector.                  */
-        P_normalized.dat[0] = P->dat[0]*rcpr_norm;
-        P_normalized.dat[1] = P->dat[1]*rcpr_norm;
-        P_normalized.dat[2] = P->dat[2]*rcpr_norm;
-    }
-    /*  End of if (norm == 0.0).                                              */
-
-    return P_normalized;
+    /*  Normalize the input and return.                                       */
+    normalized.dat[0] = P->dat[0] * rcpr_norm;
+    normalized.dat[1] = P->dat[1] * rcpr_norm;
+    normalized.dat[2] = P->dat[2] * rcpr_norm;
+    return normalized;
 }
 /*  End of tmpl_3DDouble_Normalize.                                           */
 
