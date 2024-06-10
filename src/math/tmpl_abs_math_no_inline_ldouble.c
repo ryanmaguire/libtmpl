@@ -31,8 +31,17 @@
 /*  Only used if libtmpl algorithms are requested.                            */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
+/*  Only used if inline support is not requested.                             */
+#if TMPL_USE_INLINE != 1
+
+/*  Function prototype given here.                                            */
+#include <libtmpl/include/tmpl_math.h>
+
 /*  Implemented in include/math/tmpl_abs_ldouble.h.                           */
 #include "../../include/math/tmpl_abs_ldouble.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
