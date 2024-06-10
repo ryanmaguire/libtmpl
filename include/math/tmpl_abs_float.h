@@ -77,8 +77,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  2.) tmpl_ieee754_float.h:                                                 *
+ *          Header file containing the IEEE data type.                        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -113,8 +113,11 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Only used if libtmpl algorithms are requested.                            */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -164,6 +167,9 @@ float tmpl_Float_Abs(float x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
 /*  End of include guard.                                                     */

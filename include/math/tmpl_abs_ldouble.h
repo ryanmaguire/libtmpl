@@ -95,8 +95,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  2.) tmpl_ieee754_ldouble.h:                                               *
+ *          Header file containing the IEEE data type.                        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -133,8 +133,11 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Only used if libtmpl algorithms are requested.                            */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
+/*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
+#include <libtmpl/include/tmpl_ieee754_ldouble.h>
 
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
@@ -142,8 +145,7 @@
 /*  64-bit double, 80-bit extended, and 128-bit quadruple implementations     *
  *  of long double use the same idea: Set the sign bit to zero. The           *
  *  double-double implementation of long double needs to be more careful.     */
-#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN && \
-    TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
  *        64-Bit Double / 80-Bit Extended / 128-bit Quadruple Versions        *
@@ -226,6 +228,9 @@ long double tmpl_LDouble_Abs(long double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
 #endif
 /*  End of include guard.                                                     */
