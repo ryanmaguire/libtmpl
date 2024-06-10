@@ -2200,5 +2200,65 @@ tmpl_LDouble_Positive_Difference(long double x, long double y);
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Quick_Hypot                                               *
+ *  Purpose:                                                                  *
+ *      Computes the length of a vector in the plane.                         *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          The x component of the vector.                                    *
+ *      y (double):                                                           *
+ *          The y component of the vector.                                    *
+ *  Output:                                                                   *
+ *      mag (double):                                                         *
+ *          The magnitude of (x, y).                                          *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *      This function does not prevent overflow or underflow. If very large   *
+ *      or very small inputs, use tmpl_Double_Hypot.                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_quick_hypot_float.h>
+#include <libtmpl/include/math/tmpl_quick_hypot_double.h>
+#include <libtmpl/include/math/tmpl_quick_hypot_ldouble.h>
+#else
+extern double tmpl_Double_Quick_Hypot(double x, double y);
+extern float tmpl_Float_Quick_Hypot(float x, float y);
+extern long double tmpl_LDouble_Quick_Hypot(long double x, long double y);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Quick_Hypot3                                              *
+ *  Purpose:                                                                  *
+ *      Computes the length of a vector in space.                             *
+ *  Arguments:                                                                *
+ *      x (double):                                                           *
+ *          The x component of the vector.                                    *
+ *      y (double):                                                           *
+ *          The y component of the vector.                                    *
+ *      z (double):                                                           *
+ *          The z component of the vector.                                    *
+ *  Output:                                                                   *
+ *      mag (double):                                                         *
+ *          The magnitude of (x, y, z).                                       *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ *      This function does not prevent overflow or underflow. If very large   *
+ *      or very small inputs, use tmpl_Double_Hypot3.                         *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/math/tmpl_quick_hypot3_float.h>
+#include <libtmpl/include/math/tmpl_quick_hypot3_double.h>
+#include <libtmpl/include/math/tmpl_quick_hypot3_ldouble.h>
+#else
+extern double tmpl_Double_Quick_Hypot3(double x, double y, double z);
+extern float tmpl_Float_Quick_Hypot3(float x, float y, float z);
+
+extern long double
+tmpl_LDouble_Quick_Hypot3(long double x, long double y, long double z);
+#endif
+
 #endif
 /*  End of include guard.                                                     */
