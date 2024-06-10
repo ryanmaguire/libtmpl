@@ -24,25 +24,27 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Hypot:                                                     *
+ *      tmpl_Float_Hypot                                                      *
  *  Purpose:                                                                  *
  *      Computes the magnitude of the vector (x, y) in the plane:             *
+ *  Method:                                                                   *
+ *      Using the definition, we have:                                        *
  *                                                                            *
- *          ||P||_2 = ||(x, y)||_2 = sqrt(x^2 + y^2)                          *
+ *          ||P|| = ||(x, y)|| = sqrt(x^2 + y^2)                              *
  *                                                                            *
  *      Because x^2 and y^2 are computed as intermediate steps, this method   *
- *      will overflow for values greater than sqrt(DBL_MAX). The safe way to  *
+ *      will overflow for values greater than sqrt(FLT_MAX). The safe way to  *
  *      do this is via:                                                       *
  *                                                                            *
- *          |z| = |x| sqrt(1+(y/x)^2)                                         *
+ *          ||P|| = |x| sqrt(1+(y/x)^2)                                       *
  *                                                                            *
  *      if |x| > |y|, and:                                                    *
  *                                                                            *
- *          |z| = |y| sqrt(1 + (x/y)^2)                                       *
+ *          ||P|| = |y| sqrt(1 + (x/y)^2)                                     *
  *                                                                            *
  *      otherwise. This is about 1.3-1.5x slower. If IEEE-754 support is      *
  *      available, we need only check if max(|x|, |y|) is in the range        *
- *      (2^-512, 2^512), scaling by a constant if not. This is about as fast  *
+ *      (2^-64, 2^64), scaling by a constant if not. This is about as fast    *
  *      as the naive method.                                                  *
  *  Arguments:                                                                *
  *      x (float):                                                            *
@@ -53,10 +55,11 @@
  *      mag (float):                                                          *
  *          The magnitude of (x, y).                                          *
  *  Called Functions:                                                         *
- *      tmpl_Float_Abs     (tmpl_math.h)                                      *
- *          Computes the absolute value of a real number.                     *
- *      tmpl_Float_Sqrt    (tmpl_math.h)                                      *
- *          Computes the square root of a real number.                        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Float_Abs:                                                   *
+ *              Computes the absolute value of a real number.                 *
+ *          tmpl_Float_Sqrt:                                                  *
+ *              Computes the square root of a real number.                    *
  *  Error:                                                                    *
  *      Based on 134,217,728 random samples:                                  *
  *          Max Relative Error: 2.220446E-16                                  *
@@ -66,25 +69,34 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
+ *  2.) tmpl_minmax.h:                                                        *
+ *          Header file with helper macros for min and max.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 30, 2022                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2024/06/10: Ryan Maguire                                                  *
+ *      Cleaned up comments. Fixed underflow for values near 2^-64.           *
  ******************************************************************************/
-
-#include <libtmpl/include/tmpl_minmax.h>
-
-/*  The TMPL_USE_INLINE macro is found here.                                  */
-#include <libtmpl/include/tmpl_config.h>
 
 /*  Header file containing basic math functions.                              */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  TMPL_MAX helper macro found here.                                         */
+#include <libtmpl/include/tmpl_minmax.h>
+
 /*  We can get a significant speed boost if IEEE-754 support is available.    */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
+/******************************************************************************
+ *                              IEEE-754 Version                              *
+ ******************************************************************************/
+
 /*  The values 2^64 and 2^-64, to single precision, stored as macros.         */
-#define TMPL_BIG_SCALE 1.8446744073709552E+19F
-#define TMPL_RCPR_BIG_SCALE 5.4210108624275222E-20F
+#define TMPL_BIG_SCALE (1.8446744073709552E+19F)
+#define TMPL_RCPR_BIG_SCALE (5.4210108624275222E-20F)
 
 /*  Function for computing the magnitude of the vector (x, y) in the plane.   */
 float tmpl_Float_Hypot(float x, float y)
@@ -92,7 +104,7 @@ float tmpl_Float_Hypot(float x, float y)
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Float w;
 
-    /*  Given z = x + iy = (x, y), compute |x| and |y|.                       */
+    /*  Given P = (x, y), compute |x| and |y|.                                */
     float abs_x = tmpl_Float_Abs(x);
     float abs_y = tmpl_Float_Abs(y);
 
@@ -111,39 +123,40 @@ float tmpl_Float_Hypot(float x, float y)
          *  values x^2 or y^2 overflow or underflow. It is possible           *
          *  the maximum of |x| and |y| has exponent slightly greater than     *
          *  -64, but the other value has exponent slightly less. To ensure    *
-         *  accuracy to 16 decimals, check if the exponent is greater than    *
+         *  accuracy to 8 decimals, check if the exponent is greater than     *
          *  -52. If the difference in the exponents of |x| and |y| is         *
-         *  greater than 10, then to at least 16 decimals we have             *
-         *  |z| = max(|x|, |y|).                                              */
-        if (w.bits.expo > 0x4BU)
+         *  greater than 12, then to at least 8 decimals we have              *
+         *  ||P|| = max(|x|, |y|). 52 is 0x34 in hexidecimal.                 */
+        if (w.bits.expo > TMPL_FLOAT_BIAS - 0x34U)
             return tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
 
-        else if (w.bits.expo == 0x00U)
+        /*  Denormal values, need to normalize.                               */
+        if (w.bits.expo == 0x00U)
         {
-            /*  Very very small, denormal number. Scale values up.            */
-            abs_x *= TMPL_FLOAT_NORMALIZE;
-            abs_y *= TMPL_FLOAT_NORMALIZE;
+            /*  Normalize inputs, and also scale by 2^64.                    */
+            abs_x *= TMPL_BIG_SCALE*TMPL_FLOAT_NORMALIZE;
+            abs_y *= TMPL_BIG_SCALE*TMPL_FLOAT_NORMALIZE;
 
-            abs_x *= TMPL_BIG_SCALE;
-            abs_y *= TMPL_BIG_SCALE;
-            w.r = TMPL_RCPR_BIG_SCALE*tmpl_Float_Sqrt(abs_x*abs_x+abs_y*abs_y);
-            return w.r / TMPL_FLOAT_NORMALIZE;
+            /*  We compute via 2^64 * sqrt(x^2 + y^2), but we now need to     *
+             *  divide out by the normalization factor as well.               */
+            return (TMPL_RCPR_BIG_SCALE / TMPL_FLOAT_NORMALIZE) *
+                   tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
         }
 
-        /*  Both |x| and |y| are small. To avoid underflow scale by 2^512.    */
+        /*  Both |x| and |y| are small. To avoid underflow scale by 2^64.     */
         abs_x *= TMPL_BIG_SCALE;
         abs_y *= TMPL_BIG_SCALE;
 
-        /*  |z| can now be computed as 2^-512 * sqrt(x^2 + y^2)               *
+        /*  ||P|| can now be computed as 2^-64 * sqrt(x^2 + y^2)              *
          *  without the risk of underflow. Return this.                       */
         return TMPL_RCPR_BIG_SCALE*tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
     }
 
-    /*  Both |x| and |y| are large. To avoid overflow scale by 2^-512.        */
+    /*  Both |x| and |y| are large. To avoid overflow scale by 2^-64.         */
     abs_x *= TMPL_RCPR_BIG_SCALE;
     abs_y *= TMPL_RCPR_BIG_SCALE;
 
-    /*  |z| can now be computed as |z| = 2^512 * sqrt(x^2 + y^2) without      *
+    /*  ||P|| can now be computed via ||P|| = 2^64 * sqrt(x^2 + y^2) without  *
      *  the risk of overflow. Return this.                                    */
     return TMPL_BIG_SCALE * tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
 }
@@ -155,6 +168,10 @@ float tmpl_Float_Hypot(float x, float y)
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
 
 /*  Lacking IEEE-754 support, we can use the standard trick to avoid          *
  *  underflows and overflows that is used in the hypot (hypotenuse) functions.*
@@ -168,7 +185,7 @@ float tmpl_Float_Hypot(float x, float y)
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     float rcpr_t;
 
-    /*  Given z = x + iy = (x, y), compute |x| and |y|.                       */
+    /*  Given P = (x, y), compute |x| and |y|.                                */
     float abs_x = tmpl_Float_Abs(x);
     float abs_y = tmpl_Float_Abs(y);
 
@@ -176,7 +193,7 @@ float tmpl_Float_Hypot(float x, float y)
     const float t = TMPL_MAX(abs_x, abs_y);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
-     *  |z| is zero, |z| = 0. Return this.                                    */
+     *  |y| is zero, then ||P|| = 0. Return this.                             */
     if (t == 0.0F)
         return 0.0F;
 
@@ -187,7 +204,7 @@ float tmpl_Float_Hypot(float x, float y)
     abs_x *= rcpr_t;
     abs_y *= rcpr_t;
 
-    /*  |z| can safely be computed as |z| = t * sqrt((x/t)^2 + (y/t)^2)       *
+    /*  ||P|| can safely be computed as ||P|| = t * sqrt((x/t)^2 + (y/t)^2)   *
      *  without risk of underflow or overflow.                                */
     return t * tmpl_Float_Sqrt(abs_x*abs_x + abs_y*abs_y);
 }

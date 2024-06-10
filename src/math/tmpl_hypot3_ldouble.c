@@ -151,53 +151,45 @@
 #endif
 /*  End of double / double-double vs. extended vs. quadrule.                  */
 
-/*  Function for computing the magnitude of the vector (x, y) in the plane.   */
-long double tmpl_LDouble_Hypot(long double x, long double y)
+/*  Function for computing the magnitude of the vector (x, y, z).             */
+long double tmpl_LDouble_Hypot3(long double x, long double y, long double z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_LDouble w;
 
-    /*  Given P = (x, y), compute |x| and |y|.                                */
+    /*  Given P = (x, y, z), compute |x|, |y| and |z|.                        */
     long double abs_x = tmpl_LDouble_Abs(x);
     long double abs_y = tmpl_LDouble_Abs(y);
+    long double abs_z = tmpl_LDouble_Abs(z);
 
     /*  Compute the max of the absolute values and store it in the word.      */
-    w.r = TMPL_MAX(abs_x, abs_y);
+    w.r = TMPL_MAX3(abs_x, abs_y, abs_z);
 
     /*  Avoid overflow, check if the max is very big.                         */
     if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_EXPO_TOO_HIGH)
     {
         /*  Avoid underflow, check if the numbers are too small.              */
         if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_EXPO_TOO_LOW)
-            return tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
-
-        /*  Denormal values, need to normalize.                               */
-        if (TMPL_LDOUBLE_EXPO_BITS(w) == 0x00U)
-        {
-            /*  Normalize inputs, and also scale by 2^512.                    */
-            abs_x *= TMPL_BIG_SCALE*TMPL_LDOUBLE_NORMALIZE;
-            abs_y *= TMPL_BIG_SCALE*TMPL_LDOUBLE_NORMALIZE;
-
-            /*  We compute via 2^512 * sqrt(x^2 + y^2), but we now need to    *
-             *  divide out by the normalization factor as well.               */
-            return (TMPL_RCPR_BIG_SCALE / TMPL_LDOUBLE_NORMALIZE) *
-                   tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
-        }
+            return tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y + abs_z*abs_z);
 
         /*  Small inputs. Scale by 2^n.                                       */
         abs_x *= TMPL_BIG_SCALE;
         abs_y *= TMPL_BIG_SCALE;
+        abs_z *= TMPL_BIG_SCALE;
 
-        /*  We can compute ||P|| via ||P|| = 2^-n * sqrt(x^2 + y^2).          */
-        return TMPL_RCPR_BIG_SCALE*tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
+        /*  We can compute ||P|| via ||P|| = 2^-n * sqrt(x^2 + y^2 + z^2).    */
+        return TMPL_RCPR_BIG_SCALE *
+               tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y + abs_z*abs_z);
     }
 
     /*  Large inputs. Scale by 2^-n.                                          */
     abs_x *= TMPL_RCPR_BIG_SCALE;
     abs_y *= TMPL_RCPR_BIG_SCALE;
+    abs_z *= TMPL_RCPR_BIG_SCALE;
 
-    /*  We can compute ||P|| via ||P|| = 2^n * sqrt(x^2 + y^2).               */
-    return TMPL_BIG_SCALE * tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
+    /*  We can compute ||P|| via ||P|| = 2^n * sqrt(x^2 + y^2 + z^2).         */
+    return TMPL_BIG_SCALE *
+           tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y + abs_z*abs_z);
 }
 /*  End of tmpl_LDouble_Hypot.                                                */
 
@@ -221,7 +213,7 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
  *  algorithm requires divisions and multiplications by non-constants.        */
 
 /*  Function for computing the magnitude of the vector (x, y) in the plane.   */
-long double tmpl_LDouble_Hypot(long double x, long double y)
+long double tmpl_LDouble_Hypot3(long double x, long double y, long double z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     long double rcpr_t;
@@ -229,9 +221,10 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
     /*  Given P = (x, y), compute |x| and |y|.                                */
     long double abs_x = tmpl_LDouble_Abs(x);
     long double abs_y = tmpl_LDouble_Abs(y);
+    long double abs_z = tmpl_LDouble_Abs(z);
 
-    /*  Compute the maximum of |x| and |y|.                                   */
-    const long double t = TMPL_MAX(abs_x, abs_y);
+    /*  Compute the maximum of |x|, |y|, and |z|.                             */
+    const long double t = TMPL_MAX3(abs_x, abs_y, abs_z);
 
     /*  Division by zero is generally viewed as bad. If the max of |x| and    *
      *  |y| is zero, then ||P|| = 0. Return this.                             */
@@ -244,10 +237,11 @@ long double tmpl_LDouble_Hypot(long double x, long double y)
     /*  Scale x and y by 1/t.                                                 */
     abs_x *= rcpr_t;
     abs_y *= rcpr_t;
+    abs_z *= rcpr_t;
 
-    /*  ||P|| can safely be computed via ||P|| = t * sqrt((x/t)^2 + (y/t)^2)  *
+    /*  ||P|| can safely be computed via ||P|| = t * sqrt(x^2 + y^2 + z^2)    *
      *  without risk of underflow or overflow.                                */
-    return t * tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y);
+    return t * tmpl_LDouble_Sqrt(abs_x*abs_x + abs_y*abs_y + abs_z*abs_z);
 }
 /*  End of tmpl_LDouble_Hypot.                                                */
 
