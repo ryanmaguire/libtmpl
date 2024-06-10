@@ -384,9 +384,25 @@ extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
  *          tmpl_three_vector_norm_double.c                                   *
  *          tmpl_three_vector_norm_ldouble.c                                  *
  ******************************************************************************/
+
+/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/vec3.                     */
 extern float tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat *P);
 extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P);
 extern long double tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -419,7 +435,7 @@ extern long double tmpl_3DLDouble_LInf_Norm(tmpl_ThreeVectorLongDouble P);
  *      Computes the unit normal of a given non-zero vector at single         *
  *      precision. Similar functions are provided for double and long double. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A three dimensional non-zero vector.                              *
  *  Output:                                                                   *
  *      P_hat (tmpl_ThreeVectorFloat):                                        *
@@ -427,19 +443,19 @@ extern long double tmpl_3DLDouble_LInf_Norm(tmpl_ThreeVectorLongDouble P);
  *  Notes:                                                                    *
  *      If P is the zero vector, the vector (NaN, NaN, NaN) is returned.      *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_normalize_float.c                               *
- *          tmpl_three_vector_normalize_double.c                              *
- *          tmpl_three_vector_normalize_ldouble.c                             *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_normalize_float.c                                       *
+ *          tmpl_vec3_normalize_double.c                                      *
+ *          tmpl_vec3_normalize_ldouble.c                                     *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Normalize(tmpl_ThreeVectorFloat P);
+tmpl_3DFloat_Normalize(const tmpl_ThreeVectorFloat * const P);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble *P);
+tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Normalize(tmpl_ThreeVectorLongDouble P);
+tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
