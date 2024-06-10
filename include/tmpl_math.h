@@ -548,17 +548,12 @@ extern const double tmpl_atan_double_atan_of_v[8];
  *  as the "portable" version, use the same idea as double and float. 128-bit *
  *  quadruple and double-double use a much larger table to speed up           *
  *  computations while still achieving 10^-34 peak relative error.            */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE  || \
+    TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+extern const long double tmpl_ldouble_atan_n_by_8[129];
+#else
 extern const long double tmpl_atan_ldouble_v[8];
 extern const long double tmpl_atan_ldouble_atan_of_v[8];
-#else
-extern const long double tmpl_ldouble_atan_n_by_8[129];
 #endif
 
 extern const double tmpl_Double_SinCos_Table[440];
@@ -1330,7 +1325,7 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
  *  Function:                                                                 *
  *      tmpl_Double_Hypot                                                     *
  *  Purpose:                                                                  *
- *      Computes the length of the point (x, y).                              *
+ *      Computes the length of the vector (x, y).                             *
  *  Arguments:                                                                *
  *      double x:                                                             *
  *          A real number.                                                    *
@@ -1343,6 +1338,28 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
 extern float tmpl_Float_Hypot(float x, float y);
 extern double tmpl_Double_Hypot(double x, double y);
 extern long double tmpl_LDouble_Hypot(long double x, long double y);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Hypot3                                                    *
+ *  Purpose:                                                                  *
+ *      Computes the length of the vector (x, y, z).                          *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          The x component of the vector.                                    *
+ *      double y:                                                             *
+ *          The y component of the vector.                                    *
+ *      double z:                                                             *
+ *          The z component of the vector.                                    *
+ *  Output:                                                                   *
+ *      double mag:                                                           *
+ *          The magnitude of (x, y, z).                                       *
+ ******************************************************************************/
+extern float tmpl_Float_Hypot3(float x, float y, float z);
+extern double tmpl_Double_Hypot3(double x, double y, double z);
+
+extern long double
+tmpl_LDouble_Hypot3(long double x, long double y, long double z);
 
 /******************************************************************************
  *  Function:                                                                 *
