@@ -33,22 +33,33 @@
  *  Output:                                                                   *
  *      P_hat (tmpl_ThreeVectorDouble):                                       *
  *          The unit normal of P.                                             *
- *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Double_Sqrt:                                                 *
- *              Computes the square root of a real number.                    *
- *  Method:                                                                   *
- *      Use the definition of unit normal. If P = (x, y, z), the norm is:     *
+ *  IEEE-754 Version:                                                         *
+ *      Method:                                                               *
+ *          Use the definition of unit normal. If P = (x, y, z), the norm is: *
  *                                                                            *
- *          norm = sqrt(x^2 + y^2 + z^2).                                     *
+ *              norm = sqrt(x^2 + y^2 + z^2).                                 *
  *                                                                            *
- *      For a non-zero vector norm is positive. The unit normal is given by:  *
+ *          For a non-zero vector norm is positive. The unit normal is        *
+ *          given by:                                                         *
  *                                                                            *
- *          P_hat = P / norm                                                  *
+ *              P_hat = P / norm                                              *
  *                                                                            *
- *      To avoid overflow, or underflow, we first scale the input to have a   *
- *      "reasonable" magnitude. The norm is then computed and this division   *
- *      is carried out.                                                       *
+ *          To avoid overflow, or underflow, we first scale the input to      *
+ *          have a "reasonable" magnitude. The norm is then computed and this *
+ *          division is carried out.                                          *
+ *      Called Functions:                                                     *
+ *          tmpl_math.h:                                                      *
+ *              tmpl_Double_Sqrt:                                             *
+ *                  Computes the square root of a real number.                *
+ *  Portable Version:                                                         *
+ *      Method:                                                               *
+ *          Similar to the IEEE-754 method, but without checking if the       *
+ *          normalization will overflow or underflow in the intermediate      *
+ *          steps.                                                            *
+ *      Called Functions:                                                     *
+ *          tmpl_vec3.h:                                                      *
+ *              tmpl_3DDouble_L2_Norm:                                        *
+ *                  Computes the norm of a vector.                            *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *      If the vector is zero, (NaN, NaN, NaN) is returned.                   *
@@ -73,7 +84,7 @@
  *      Fixed bug for vectors with negative components.                       *
  ******************************************************************************/
 
-/*  square root and absolute value functions provided here.                   */
+/*  square root function provided here.                                       */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Function prototype and three-vector typedef found here.                   */
@@ -114,7 +125,7 @@ tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P)
     wy.r = P->dat[1];
     wz.r = P->dat[2];
 
-    /*  Get the exponents of the largest component.                           */
+    /*  Get the exponent of the largest component.                            */
     max_expo = TMPL_MAX3(wx.bits.expo, wy.bits.expo, wz.bits.expo);
 
     /*  If this exponent is very large, scale the components down.            */
@@ -132,8 +143,8 @@ tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P)
         if (max_expo == 0x00U)
         {
             wx.r *= TMPL_DOUBLE_NORMALIZE;
-            wx.r *= TMPL_DOUBLE_NORMALIZE;
-            wx.r *= TMPL_DOUBLE_NORMALIZE;
+            wy.r *= TMPL_DOUBLE_NORMALIZE;
+            wz.r *= TMPL_DOUBLE_NORMALIZE;
         }
 
         wx.r *= TMPL_BIG_SCALE;
@@ -163,7 +174,7 @@ tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P)
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /******************************************************************************
- *                              IEEE-754 Version                              *
+ *                              Portable Version                              *
  ******************************************************************************/
 
 /*  Lacking IEEE-754 support, we just used the standard definition. This may  *
