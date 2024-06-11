@@ -794,17 +794,128 @@ tmpl_3DLDouble_Scale(long double a, const tmpl_ThreeVectorLongDouble * const P);
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
-extern float tmpl_3DFloat_X(const tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_X(const tmpl_ThreeVectorDouble *P);
-extern long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble *P);
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_ScaleBy                                                  *
+ *  Purpose:                                                                  *
+ *      Multiply a 3D vector by a real number.                                *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
+ *          A 3D vector. The product is stored here.                          *
+ *      a (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_scale_by_no_inline_float.c                              *
+ *          tmpl_vec3_scale_by_no_inline_double.c                             *
+ *          tmpl_vec3_scale_by_no_inline_ldouble.c                            *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_scale_by_float.h                                        *
+ *          tmpl_vec3_scale_by_double.h                                       *
+ *          tmpl_vec3_scale_by_ldouble.h                                      *
+ ******************************************************************************/
 
-extern float tmpl_3DFloat_Y(const tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_Y(const tmpl_ThreeVectorDouble *P);
-extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble *P);
+/*  Arithmetic functions are small enough to inline.                          */
+#if TMPL_USE_INLINE == 1
 
-extern float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_Z(const tmpl_ThreeVectorDouble *P);
-extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble *P);
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_scale_by_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scale_by_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scale_by_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/vec3.                     */
+extern void
+tmpl_3DFloat_ScaleBy(tmpl_ThreeVectorFloat * const target, float a);
+
+extern void
+tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target, double a);
+
+extern void
+tmpl_3DLDouble_ScaleBy(tmpl_ThreeVectorLongDouble * const target,
+                       long double a);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_X                                                        *
+ *  Purpose:                                                                  *
+ *      Returns the x component of a vector.                                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *  Output:                                                                   *
+ *      x (float):                                                            *
+ *          The x compponent of P.                                            *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_x_no_inline_float.c                                     *
+ *          tmpl_vec3_x_no_inline_double.c                                    *
+ *          tmpl_vec3_x_no_inline_ldouble.c                                   *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_x_float.h                                               *
+ *          tmpl_vec3_x_double.h                                              *
+ *          tmpl_vec3_x_ldouble.h                                             *
+ ******************************************************************************/
+extern float tmpl_3DFloat_X(const tmpl_ThreeVectorFloat * const P);
+extern double tmpl_3DDouble_X(const tmpl_ThreeVectorDouble * const P);
+extern long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble * const P);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Y                                                        *
+ *  Purpose:                                                                  *
+ *      Returns the y component of a vector.                                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *  Output:                                                                   *
+ *      y (float):                                                            *
+ *          The y compponent of P.                                            *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_y_no_inline_float.c                                     *
+ *          tmpl_vec3_y_no_inline_double.c                                    *
+ *          tmpl_vec3_y_no_inline_ldouble.c                                   *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_y_float.h                                               *
+ *          tmpl_vec3_y_double.h                                              *
+ *          tmpl_vec3_y_ldouble.h                                             *
+ ******************************************************************************/
+extern float tmpl_3DFloat_Y(const tmpl_ThreeVectorFloat * const P);
+extern double tmpl_3DDouble_Y(const tmpl_ThreeVectorDouble * const P);
+extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble * const P);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Z                                                        *
+ *  Purpose:                                                                  *
+ *      Returns the z component of a vector.                                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *  Output:                                                                   *
+ *      z (float):                                                            *
+ *          The z compponent of P.                                            *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_z_no_inline_float.c                                     *
+ *          tmpl_vec3_z_no_inline_double.c                                    *
+ *          tmpl_vec3_z_no_inline_ldouble.c                                   *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_z_float.h                                               *
+ *          tmpl_vec3_z_double.h                                              *
+ *          tmpl_vec3_z_ldouble.h                                             *
+ ******************************************************************************/
+extern float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat * const P);
+extern double tmpl_3DDouble_Z(const tmpl_ThreeVectorDouble * const P);
+extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble * const P);
 
 #endif
 /*  End of include guard.                                                     */
