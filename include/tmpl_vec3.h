@@ -183,6 +183,38 @@ tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Angle                                              *
+ *  Purpose:                                                                  *
+ *      Quickly computes the angle between two vectors, but without checking  *
+ *      for overflow or underflow in the computation.                         *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to the first vector.                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a vector.                                      *
+ *  Output:                                                                   *
+ *      angle (double):                                                       *
+            The angle made between P and Q.                                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_angle_float.c                                     *
+ *          tmpl_vec3_quick_angle_double.c                                    *
+ *          tmpl_vec3_quick_angle_ldouble.c                                   *
+ ******************************************************************************/
+extern float
+tmpl_3DFloat_Quick_Angle(const tmpl_ThreeVectorFloat * const P,
+                         const tmpl_ThreeVectorFloat * const Q);
+
+extern double
+tmpl_3DDouble_Quick_Angle(const tmpl_ThreeVectorDouble * const P,
+                          const tmpl_ThreeVectorDouble * const Q);
+
+extern long double
+tmpl_3DLDouble_Quick_Angle(const tmpl_ThreeVectorLongDouble * const P,
+                           const tmpl_ThreeVectorLongDouble * const Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Cross_Product                                            *
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors in R^3 at single precision. *
@@ -371,18 +403,20 @@ extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
  *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
  *      Functions for single, double, and long double precision are provided. *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A three dimensional vector.                                       *
  *  Output:                                                                   *
  *      norm (float):                                                         *
  *          The Euclidean norm of P.                                          *
- *  Notes:                                                                    *
- *      If P is the zero vector, the vector (NaN, NaN, NaN) is returned.      *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_norm_float.c                                    *
- *          tmpl_three_vector_norm_double.c                                   *
- *          tmpl_three_vector_norm_ldouble.c                                  *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_l2_norm_no_inline_float.c                               *
+ *          tmpl_vec3_l2_norm_no_inline_double.c                              *
+ *          tmpl_vec3_l2_norm_no_inline_ldouble.c                             *
+ *      libtmpl/src/include/                                                  *
+ *          tmpl_vec3_l2_norm_float.h                                         *
+ *          tmpl_vec3_l2_norm_double.h                                        *
+ *          tmpl_vec3_l2_norm_ldouble.h                                       *
  ******************************************************************************/
 
 /*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
@@ -400,6 +434,52 @@ extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
 extern float tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat *P);
 extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P);
 extern long double tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_L2_Norm                                            *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean L2 norm of a vector in R^3. This is defined by *
+ *      the Pythagorean theorem as follows. If P = (x, y, z), we have:        *
+ *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
+ *      Functions for single, double, and long double precision are provided. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional vector.                                       *
+ *  Output:                                                                   *
+ *      norm (float):                                                         *
+ *          The Euclidean norm of P.                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_l2_norm_no_inline_float.c                         *
+ *          tmpl_vec3_quick_l2_norm_no_inline_double.c                        *
+ *          tmpl_vec3_quick_l2_norm_no_inline_ldouble.c                       *
+ *      libtmpl/src/include/                                                  *
+ *          tmpl_vec3_quick_l2_norm_float.h                                   *
+ *          tmpl_vec3_quick_l2_norm_double.h                                  *
+ *          tmpl_vec3_quick_l2_norm_ldouble.h                                 *
+ ******************************************************************************/
+
+/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/vec3.                     */
+extern float tmpl_3DFloat_Quick_L2_Norm(const tmpl_ThreeVectorFloat *P);
+extern double tmpl_3DDouble_Quick_L2_Norm(const tmpl_ThreeVectorDouble *P);
+
+extern long double
+tmpl_3DLDouble_Quick_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
