@@ -43,4 +43,4 @@ tmpl_3DLDouble_Scale(long double a, const tmpl_ThreeVectorLongDouble * const P)
     scaled.dat[2] = a*P->dat[2];
     return scaled;
 }
-/*  End of tmpl_3DDouble_Scale.                                               */
+/*  End of tmpl_3DLDouble_Scale.                                              */
