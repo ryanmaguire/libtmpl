@@ -863,9 +863,25 @@ tmpl_3DLDouble_ScaleBy(tmpl_ThreeVectorLongDouble * const target,
  *          tmpl_vec3_x_double.h                                              *
  *          tmpl_vec3_x_ldouble.h                                             *
  ******************************************************************************/
+
+/*  Very small function, can be inlined.                                      */
+#if TMPL_USE_INLINE == 1
+
+/*  Inlined versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_x_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_x_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_x_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the version in src/vec.                       */
 extern float tmpl_3DFloat_X(const tmpl_ThreeVectorFloat * const P);
 extern double tmpl_3DDouble_X(const tmpl_ThreeVectorDouble * const P);
 extern long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -888,9 +904,25 @@ extern long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble * const P);
  *          tmpl_vec3_y_double.h                                              *
  *          tmpl_vec3_y_ldouble.h                                             *
  ******************************************************************************/
+
+/*  Very small function, can be inlined.                                      */
+#if TMPL_USE_INLINE == 1
+
+/*  Inlined versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_y_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_y_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_y_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the version in src/vec.                       */
 extern float tmpl_3DFloat_Y(const tmpl_ThreeVectorFloat * const P);
 extern double tmpl_3DDouble_Y(const tmpl_ThreeVectorDouble * const P);
 extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -913,9 +945,25 @@ extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble * const P);
  *          tmpl_vec3_z_double.h                                              *
  *          tmpl_vec3_z_ldouble.h                                             *
  ******************************************************************************/
+
+/*  Very small function, can be inlined.                                      */
+#if TMPL_USE_INLINE == 1
+
+/*  Inlined versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_z_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_z_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_z_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the version in src/vec.                       */
 extern float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat * const P);
 extern double tmpl_3DDouble_Z(const tmpl_ThreeVectorDouble * const P);
 extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */

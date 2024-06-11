@@ -16,21 +16,26 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                             tmpl_vec3_x_double                             *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the x component of a three dimensional vector/spacial point.  *
- *      That is, given (x, y, z), return x.                                   *
+ *      x projection. See include/vec3/tmpl_vec3_x_double.h.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 21, 2020                                             *
+ *  Date:       June 11, 2024                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Only used if inline support is not requested.                             */
+#if TMPL_USE_INLINE != 1
+
+/*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_vec3.h>
 
-/*  Function for returning the x component of a three dimensional vector.     */
-double tmpl_3DDouble_X(const tmpl_ThreeVectorDouble *P)
-{
-    /*  The zeroth coordinate of the dat array is the x-component.            */
-    return P->dat[0];
-}
-/*  End of tmpl_3DDouble_X.                                                   */
+/*  Implemented in include/vec3/tmpl_vec3_x_double.h.                         */
+#include "../../include/vec3/tmpl_vec3_x_double.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

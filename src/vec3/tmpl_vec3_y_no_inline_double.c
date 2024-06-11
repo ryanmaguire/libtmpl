@@ -16,21 +16,26 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                             tmpl_vec3_y_double                             *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the z component of a three dimensional vector/spacial point.  *
- *      That is, given (x, y, z), return z.                                   *
+ *      y projection. See include/vec3/tmpl_vec3_y_double.h.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 21, 2020                                             *
+ *  Date:       June 11, 2024                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Only used if inline support is not requested.                             */
+#if TMPL_USE_INLINE != 1
+
+/*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_vec3.h>
 
-/*  Function for returning the z component of a three dimensional vector.     */
-float tmpl_3DFloat_Z(const tmpl_ThreeVectorFloat *P)
-{
-    /*  The second coordinate of the dat array is the z-component.            */
-    return P->dat[2];
-}
-/*  End of tmpl_3DFloat_Z.                                                    */
+/*  Implemented in include/vec3/tmpl_vec3_y_double.h.                         */
+#include "../../include/vec3/tmpl_vec3_y_double.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
