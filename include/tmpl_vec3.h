@@ -754,25 +754,45 @@ tmpl_3DLDouble_Rect(long double x, long double y, long double z);
  *  Arguments:                                                                *
  *      a (float):                                                            *
  *          A real number.                                                    *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A 3D vector.                                                      *
  *  Output:                                                                   *
  *      scaled (tmpl_ThreeVectorFloat):                                       *
  *          The product a*P = a*(x, y, z) = (ax, ay, az).                     *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_scale_float.c                                   *
- *          tmpl_three_vector_scale_double.c                                  *
- *          tmpl_three_vector_scale_ldouble.c                                 *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_scale_no_inline_float.c                                 *
+ *          tmpl_vec3_scale_no_inline_double.c                                *
+ *          tmpl_vec3_scale_no_inline_ldouble.c                               *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_scale_float.h                                           *
+ *          tmpl_vec3_scale_double.h                                          *
+ *          tmpl_vec3_scale_ldouble.h                                         *
  ******************************************************************************/
+
+/*  Arithmetic functions are small enough to inline.                          */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_scale_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scale_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scale_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/vec3.                     */
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Scale(float a, tmpl_ThreeVectorFloat P);
+tmpl_3DFloat_Scale(float a, const tmpl_ThreeVectorFloat * const P);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Scale(double a, tmpl_ThreeVectorDouble P);
+tmpl_3DDouble_Scale(double a, const tmpl_ThreeVectorDouble * const P);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Scale(long double a, tmpl_ThreeVectorLongDouble P);
+tmpl_3DLDouble_Scale(long double a, const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 extern float tmpl_3DFloat_X(const tmpl_ThreeVectorFloat *P);
 extern double tmpl_3DDouble_X(const tmpl_ThreeVectorDouble *P);

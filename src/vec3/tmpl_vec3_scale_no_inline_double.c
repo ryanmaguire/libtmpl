@@ -3,7 +3,7 @@
  ******************************************************************************
  *  This file is part of libtmpl.                                             *
  *                                                                            *
- *  libtmpl is free software: you can redistribute it and/or modify it        *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
  *  it under the terms of the GNU General Public License as published by      *
  *  the Free Software Foundation, either version 3 of the License, or         *
  *  (at your option) any later version.                                       *
@@ -16,26 +16,26 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                           tmpl_vec3_scale_double                           *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Function for multiplying a three vector by a real number.             *
+ *      Scalar multiplication. See include/vec3/tmpl_vec3_scale_double.h.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 17, 2022                                                *
+ *  Date:       June 11, 2024                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Only used if inline support is not requested.                             */
+#if TMPL_USE_INLINE != 1
+
+/*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_vec3.h>
 
-/*  Multiply a three vector by a real number.                                 */
-tmpl_ThreeVectorFloat tmpl_3DFloat_Scale(float a, tmpl_ThreeVectorFloat P)
-{
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVectorFloat scaled;
+/*  Implemented in include/vec3/tmpl_vec3_scale_double.h.                     */
+#include "../../include/vec3/tmpl_vec3_scale_double.h"
 
-    /*  Scalar multiplication is done component-wise, so compute this.        */
-    scaled.dat[0] = a*P.dat[0];
-    scaled.dat[1] = a*P.dat[1];
-    scaled.dat[2] = a*P.dat[2];
-    return scaled;
-}
-/*  End of tmpl_3DFloat_Scale.                                                */
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

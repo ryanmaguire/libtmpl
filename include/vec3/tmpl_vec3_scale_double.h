@@ -23,19 +23,24 @@
  *  Date:       December 21, 2020                                             *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  TMPL_INLINE_DECL macro found here.                                        */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_double.h>
 
 /*  Multiply a three vector by a real number.                                 */
-tmpl_ThreeVectorDouble tmpl_3DDouble_Scale(double a, tmpl_ThreeVectorDouble P)
+TMPL_INLINE_DECL
+tmpl_ThreeVectorDouble
+tmpl_3DDouble_Scale(double a, const tmpl_ThreeVectorDouble * const P)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_ThreeVectorDouble scaled;
 
     /*  Scalar multiplication is done component-wise, so compute this.        */
-    scaled.dat[0] = a*P.dat[0];
-    scaled.dat[1] = a*P.dat[1];
-    scaled.dat[2] = a*P.dat[2];
+    scaled.dat[0] = a*P->dat[0];
+    scaled.dat[1] = a*P->dat[1];
+    scaled.dat[2] = a*P->dat[2];
     return scaled;
 }
 /*  End of tmpl_3DDouble_Scale.                                               */
