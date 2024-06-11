@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_vec3_scale_double                           *
+ *                          tmpl_vec3_scale_by_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Performs scalar multiplication at double precision.                   *
@@ -24,17 +24,16 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DDouble_Scale                                                   *
+ *      tmpl_3DDouble_ScaleBy                                                 *
  *  Purpose:                                                                  *
  *      Computes scalar multiplication at double precision.                   *
  *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorDouble * const):                              *
+ *          A pointer to a vector in R^3. The product is stored here.         *
  *      a (double):                                                           *
  *          A real number, the scalar multiplier.                             *
- *      P (const tmpl_ThreeVectorDouble * const):                             *
- *          A pointer to a vector in R^3.                                     *
  *  Output:                                                                   *
- *      prod (tmpl_ThreeVectorDouble):                                        *
- *          The product a*P.                                                  *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -55,19 +54,12 @@
  *          The tmpl_ThreeVectorDouble typedef is provided here.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 21, 2020                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2022/03/17: Ryan Maguire                                                  *
- *      Added float and long double versions.                                 *
- *  2024/06/11: Ryan Maguire                                                  *
- *      Changed function to pass by reference instead of by value. Inlined.   *
+ *  Date:       June 11, 2024                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_SCALE_DOUBLE_H
-#define TMPL_VEC3_SCALE_DOUBLE_H
+#ifndef TMPL_VEC3_SCALE_BY_DOUBLE_H
+#define TMPL_VEC3_SCALE_BY_DOUBLE_H
 
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
@@ -77,19 +69,14 @@
 
 /*  Multiply a three vector by a real number.                                 */
 TMPL_INLINE_DECL
-tmpl_ThreeVectorDouble
-tmpl_3DDouble_Scale(double a, const tmpl_ThreeVectorDouble * const P)
+void tmpl_3DDouble_ScaleBy(tmpl_ThreeVectorDouble * const target, double a)
 {
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_ThreeVectorDouble scaled;
-
     /*  Scalar multiplication is done component-wise, so compute this.        */
-    scaled.dat[0] = a*P->dat[0];
-    scaled.dat[1] = a*P->dat[1];
-    scaled.dat[2] = a*P->dat[2];
-    return scaled;
+    target->dat[0] *= a;
+    target->dat[1] *= a;
+    target->dat[2] *= a;
 }
-/*  End of tmpl_3DDouble_Scale.                                               */
+/*  End of tmpl_3DDouble_ScaleBy.                                             */
 
 #endif
 /*  End of include guard.                                                     */
