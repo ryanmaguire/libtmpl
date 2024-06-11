@@ -539,6 +539,55 @@ tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Normalize                                          *
+ *  Purpose:                                                                  *
+ *      Computes the unit normal of a given non-zero vector at single         *
+ *      precision. Similar functions are provided for double and long double. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional non-zero vector.                              *
+ *  Output:                                                                   *
+ *      P_hat (tmpl_ThreeVectorFloat):                                        *
+ *          The unit-normal of P.                                             *
+ *  Notes:                                                                    *
+ *      If P is the zero vector, the vector (NaN, NaN, NaN) is returned.      *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_normalize_no_inline_float.c                       *
+ *          tmpl_vec3_quick_normalize_no_inline_double.c                      *
+ *          tmpl_vec3_quick_normalize_no_inline_ldouble.c                     *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_quick_normalize_float.h                                 *
+ *          tmpl_vec3_quick_normalize_double.h                                *
+ *          tmpl_vec3_quick_normalize_ldouble.h                               *
+ ******************************************************************************/
+
+/*  The quick versions of the normalize functions are small enough to inline. */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_quick_normalize_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_normalize_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_normalize_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/vec3.                     */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Quick_Normalize(const tmpl_ThreeVectorFloat * const P);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Quick_Normalize(const tmpl_ThreeVectorDouble * const P);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Quick_Normalize(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Orthogonal                                               *
  *  Purpose:                                                                  *
  *      Returns a non-zero vector orthogonal to the input.                    *
