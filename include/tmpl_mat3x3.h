@@ -8,8 +8,8 @@
 #include <libtmpl/include/tmpl_mat3x3_ldouble.h>
 
 extern double
-tmpl_ThreeByThreeMatrix_Component(tmpl_ThreeByThreeMatrix A,
-                                  unsigned int m, unsigned int n);
+tmpl_3x3Double_Component(const tmpl_ThreeByThreeMatrixDouble * const A,
+                         unsigned int m, unsigned int n);
 
 #endif
 /*  End of include guard.                                                     */

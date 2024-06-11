@@ -106,9 +106,9 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const P,
  *      Adds the source vector to the target vector, the result of which is   *
  *      stored in the target.                                                 *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat *):                                     *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
  *          A pointer to the first vector, the sum will be stored here.       *
- *      source (tmpl_ThreeVectorFloat *):                                     *
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
  *          A pointer to the vector to be added to target.                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -536,6 +536,110 @@ tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P);
+
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Subtract                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the vector difference of two vectors at single precision.    *
+ *      Similar functions are provided for double and long double precisions. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to a three dimensional vector.                          *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a three dimensional vector.                    *
+ *  Output:                                                                   *
+ *      diff (tmpl_ThreeVectorFloat):                                         *
+ *          The difference of P and Q, P - Q.                                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_subtract_no_inline_float.c                              *
+ *          tmpl_vec3_subtract_no_inline_double.c                             *
+ *          tmpl_vec3_subtract_no_inline_ldouble.c                            *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_subtract_float.h                                        *
+ *          tmpl_vec3_subtract_double.h                                       *
+ *          tmpl_vec3_subtract_ldouble.h                                      *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Subtract(const tmpl_ThreeVectorFloat * const P,
+                      const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Subtract(const tmpl_ThreeVectorDouble * const P,
+                       const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Subtract(const tmpl_ThreeVectorLongDouble * const P,
+                        const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_SubtractFrom                                             *
+ *  Purpose:                                                                  *
+ *      Subtracts the source vector from the target vector, the result of     *
+ *      which is stored in the target.                                        *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
+ *          A pointer to the first vector, the difference will be stored here.*
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *          A pointer to the vector to be subtracted from target.             *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_subtract_from_no_inline_float.c                         *
+ *          tmpl_vec3_subtract_from_no_inline_double.c                        *
+ *          tmpl_vec3_subtract_from_no_inline_ldouble.c                       *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_subtract_from_float.h                                   *
+ *          tmpl_vec3_subtract_from_double.h                                  *
+ *          tmpl_vec3_subtract_from_ldouble.h                                 *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void
+tmpl_3DFloat_SubtractFrom(tmpl_ThreeVectorFloat * const target,
+                          const tmpl_ThreeVectorFloat * const source);
+
+extern void
+tmpl_3DDouble_SubtractFrom(tmpl_ThreeVectorDouble * const target,
+                           const tmpl_ThreeVectorDouble * const source);
+
+extern void
+tmpl_3DLDouble_SubtractFrom(tmpl_ThreeVectorLongDouble * const target,
+                            const tmpl_ThreeVectorLongDouble * const source);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
