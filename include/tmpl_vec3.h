@@ -390,9 +390,27 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
  *          tmpl_three_vector_l1_norm_double.c                                *
  *          tmpl_three_vector_l1_norm_ldouble.c                               *
  ******************************************************************************/
-extern float tmpl_3DFloat_L1_Norm(tmpl_ThreeVectorFloat P);
-extern double tmpl_3DDouble_L1_Norm(tmpl_ThreeVectorDouble P);
-extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
+
+/*  Small enough to inline. Just sums the absolute values of the components.  */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_l1_norm_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_l1_norm_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_l1_norm_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Non-inlined versions found in src/vec3.                                   */
+extern float tmpl_3DFloat_L1_Norm(const tmpl_ThreeVectorFloat * const P);
+extern double tmpl_3DDouble_L1_Norm(const tmpl_ThreeVectorDouble * const P);
+
+extern long double
+tmpl_3DLDouble_L1_Norm(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -431,9 +449,11 @@ extern long double tmpl_3DLDouble_L1_Norm(tmpl_ThreeVectorLongDouble P);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the versions in src/vec3.                     */
-extern float tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble *P);
-extern long double tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
+extern float tmpl_3DFloat_L2_Norm(const tmpl_ThreeVectorFloat * const P);
+extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble * const P);
+
+extern long double
+tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const P);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -536,7 +556,6 @@ tmpl_3DDouble_Normalize(const tmpl_ThreeVectorDouble * const P);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P);
-
 
 /******************************************************************************
  *  Function:                                                                 *
