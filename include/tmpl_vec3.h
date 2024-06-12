@@ -215,6 +215,69 @@ tmpl_3DLDouble_Quick_Angle(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Component                                                *
+ *  Purpose:                                                                  *
+ *      Computes the component of the first vector along the second.          *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          The vector P is projected along.                                  *
+ *  Output:                                                                   *
+ *      comp (tmpl_ThreeVectorFloat):                                         *
+ *          The component of P along Q.                                       *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_component_float.c                                       *
+ *          tmpl_vec3_component_double.c                                      *
+ *          tmpl_vec3_component_ldouble.c                                     *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Component(const tmpl_ThreeVectorFloat * const P,
+                       const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Component(const tmpl_ThreeVectorDouble * const P,
+                        const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Component(const tmpl_ThreeVectorLongDouble * const P,
+                         const tmpl_ThreeVectorLongDouble * const Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Component                                          *
+ *  Purpose:                                                                  *
+ *      Computes the component of the first vector along the second.          *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          The vector P is projected along.                                  *
+ *  Output:                                                                   *
+ *      comp (tmpl_ThreeVectorFloat):                                         *
+ *          The component of P along Q.                                       *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_component_float.c                                       *
+ *          tmpl_vec3_component_double.c                                      *
+ *          tmpl_vec3_component_ldouble.c                                     *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Quick_Component(const tmpl_ThreeVectorFloat * const P,
+                             const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Quick_Component(const tmpl_ThreeVectorDouble * const P,
+                              const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Quick_Component(const tmpl_ThreeVectorLongDouble * const P,
+                               const tmpl_ThreeVectorLongDouble * const Q);
+
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Cross_Product                                            *
  *  Purpose:                                                                  *
  *      Computes the cross product of two vectors in R^3 at single precision. *
@@ -458,6 +521,56 @@ extern double tmpl_3DDouble_L2_Norm(const tmpl_ThreeVectorDouble * const P);
 
 extern long double
 tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_L2_Norm_Squared                                          *
+ *  Purpose:                                                                  *
+ *      Computes the square of the Euclidean L2 norm of a vector in R^3. This *
+ *      is defined by the Pythagorean theorem as follows. If P = (x, y, z),   *
+ *      we have:                                                              *
+ *          ||P||^2 = x^2 + y^2 + z^2                                         *
+ *      Functions for single, double, and long double precision are provided. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional vector.                                       *
+ *  Output:                                                                   *
+ *      norm_sq (float):                                                      *
+ *          The square of the Euclidean norm of P.                            *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_l2_norm_squared_no_inline_float.c                       *
+ *          tmpl_vec3_l2_norm_squared_no_inline_double.c                      *
+ *          tmpl_vec3_l2_norm_squared_no_inline_ldouble.c                     *
+ *      libtmpl/src/include/                                                  *
+ *          tmpl_vec3_l2_norm_squared_float.h                                 *
+ *          tmpl_vec3_l2_norm_squared_double.h                                *
+ *          tmpl_vec3_l2_norm_squared_ldouble.h                               *
+ ******************************************************************************/
+
+/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_squared_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_squared_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_squared_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions in src/vec3.                     */
+extern float
+tmpl_3DFloat_L2_Norm_Squared(const tmpl_ThreeVectorFloat * const P);
+
+extern double
+tmpl_3DDouble_L2_Norm_Squared(const tmpl_ThreeVectorDouble * const P);
+
+extern long double
+tmpl_3DLDouble_L2_Norm_Squared(const tmpl_ThreeVectorLongDouble * const P);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
