@@ -1126,9 +1126,13 @@ extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble * const P);
  *          The component of P along Q.                                       *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_component_float.c                                       *
- *          tmpl_vec3_component_double.c                                      *
- *          tmpl_vec3_component_ldouble.c                                     *
+ *          tmpl_vec3_quick_component_no_inline_float.c                       *
+ *          tmpl_vec3_quick_component_no_inline_double.c                      *
+ *          tmpl_vec3_quick_component_no_inline_ldouble.c                     *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_quick_component_float.h                                 *
+ *          tmpl_vec3_quick_component_double.h                                *
+ *          tmpl_vec3_quick_component_ldouble.h                               *
  ******************************************************************************/
 
 /*  The quick version of this function is small enough to inline.             */
