@@ -34,6 +34,7 @@
  *      norm (float):                                                         *
  *          The Euclidean norm of P.                                          *
  *  Called Functions:                                                         *
+ *      tmpl_math.h:                                                          *
  *          tmpl_Float_Quick_Hypot3:                                          *
  *              Computes the magnitude of (x, y, z).                          *
  *  Method:                                                                   *

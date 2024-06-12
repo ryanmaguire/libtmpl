@@ -34,6 +34,7 @@
  *      norm (double):                                                        *
  *          The Euclidean norm of P.                                          *
  *  Called Functions:                                                         *
+ *      tmpl_math.h:                                                          *
  *          tmpl_Double_Quick_Hypot3:                                         *
  *              Computes the magnitude of (x, y, z).                          *
  *  Method:                                                                   *
