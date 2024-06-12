@@ -990,6 +990,117 @@ tmpl_3DLDouble_ScaleBy(tmpl_ThreeVectorLongDouble * const target,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Scaled_Add                                               *
+ *  Purpose:                                                                  *
+ *      Computes the affine transformation L = P + a*Q.                       *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to a three dimensional vector.                          *
+ *      a (float):                                                            *
+ *          The scale factor for Q.                                           *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a three dimensional vector.                    *
+ *  Output:                                                                   *
+ *      sum (tmpl_ThreeVectorFloat):                                          *
+ *          The sum L = P + a*Q.                                              *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_scaled_add_no_inline_float.c                            *
+ *          tmpl_vec3_scaled_add_no_inline_double.c                           *
+ *          tmpl_vec3_scaled_add_no_inline_ldouble.c                          *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_scaled_add_float.h                                      *
+ *          tmpl_vec3_scaled_add_double.h                                     *
+ *          tmpl_vec3_scaled_add_ldouble.h                                    *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Scaled_Add(const tmpl_ThreeVectorFloat * const P,
+                        float a,
+                        const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Scaled_Add(const tmpl_ThreeVectorDouble * const P,
+                         double a,
+                         const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Scaled_Add(const tmpl_ThreeVectorLongDouble * const P,
+                          long double a,
+                          const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Scaled_AddTo                                             *
+ *  Purpose:                                                                  *
+ *      Perform P += a*Q.                                                     *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
+ *          A pointer to the first vector, the sum will be stored here.       *
+ *      scale (float):                                                        *
+ *          Scale factor for source.                                          *
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *          A pointer to the vector to be added to target.                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_scaled_add_to_no_inline_float.c                         *
+ *          tmpl_vec3_scaled_add_to_no_inline_double.c                        *
+ *          tmpl_vec3_scaled_add_to_no_inline_ldouble.c                       *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_scaled_add_to_float.h                                   *
+ *          tmpl_vec3_scaled_add_to_double.h                                  *
+ *          tmpl_vec3_scaled_add_to_ldouble.h                                 *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_to_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_to_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_to_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void
+tmpl_3DFloat_Scaled_AddTo(tmpl_ThreeVectorFloat * const target,
+                          float scale,
+                          const tmpl_ThreeVectorFloat * const source);
+
+extern void
+tmpl_3DDouble_Scaled_AddTo(tmpl_ThreeVectorDouble * const target,
+                           double scale,
+                           const tmpl_ThreeVectorDouble * const source);
+
+extern void
+tmpl_3DLDouble_Scaled_AddTo(tmpl_ThreeVectorLongDouble * const target,
+                            long double scale,
+                            const tmpl_ThreeVectorLongDouble * const source);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_X                                                        *
  *  Purpose:                                                                  *
  *      Returns the x component of a vector.                                  *
