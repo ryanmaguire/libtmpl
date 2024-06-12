@@ -905,6 +905,46 @@ tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_NormalizeSelf                                            *
+ *  Purpose:                                                                  *
+ *      Normalizes the input vector.                                          *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional vector. The unit normal is stored here.       *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_normalize_self_no_inline_float.c                        *
+ *          tmpl_vec3_normalize_self_no_inline_double.c                       *
+ *          tmpl_vec3_normalize_self_no_inline_ldouble.c                      *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_normalize_self_float.h                                  *
+ *          tmpl_vec3_normalize_self_double.h                                 *
+ *          tmpl_vec3_normalize_self_ldouble.h                                *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_normalize_self_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_normalize_self_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_normalize_self_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void tmpl_3DFloat_NormalizeSelf(tmpl_ThreeVectorFloat * const P);
+extern void tmpl_3DDouble_NormalizeSelf(tmpl_ThreeVectorDouble * const P);
+extern void tmpl_3DLDouble_NormalizeSelf(tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Subtract                                                 *
  *  Purpose:                                                                  *
  *      Computes the vector difference of two vectors at single precision.    *
