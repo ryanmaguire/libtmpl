@@ -385,10 +385,14 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
  *      norm (float):                                                         *
  *          The L1 norm of P.                                                 *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_l1_norm_float.c                                 *
- *          tmpl_three_vector_l1_norm_double.c                                *
- *          tmpl_three_vector_l1_norm_ldouble.c                               *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_l1_norm_no_inline_float.c                               *
+ *          tmpl_vec3_l1_norm_no_inline_double.c                              *
+ *          tmpl_vec3_l1_norm_no_inline_ldouble.c                             *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_l1_norm_float.h                                         *
+ *          tmpl_vec3_l1_norm_double.h                                        *
+ *          tmpl_vec3_l1_norm_ldouble.h                                       *
  ******************************************************************************/
 
 /*  Small enough to inline. Just sums the absolute values of the components.  */
@@ -519,10 +523,14 @@ tmpl_3DLDouble_Quick_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
  *      norm (float):                                                         *
  *          The L1 norm of P.                                                 *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_linf_norm_float.c                               *
- *          tmpl_three_vector_linf_norm_double.c                              *
- *          tmpl_three_vector_linf_norm_ldouble.c                             *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_linf_norm_no_inline_float.c                             *
+ *          tmpl_vec3_linf_norm_no_inline_double.c                            *
+ *          tmpl_vec3_linf_norm_no_inline_ldouble.c                           *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_linf_norm_float.h                                       *
+ *          tmpl_vec3_linf_norm_double.h                                      *
+ *          tmpl_vec3_linf_norm_ldouble.h                                     *
  ******************************************************************************/
 
 /*  Small function, can be inlined.                                           */
@@ -769,11 +777,28 @@ tmpl_3DLDouble_Orthogonal(tmpl_ThreeVectorLongDouble P);
  *      P (tmpl_ThreeVectorFloat):                                            *
  *          The vector (x, y, z).                                             *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_rect_float.c                                    *
- *          tmpl_three_vector_rect_double.c                                   *
- *          tmpl_three_vector_rect_ldouble.c                                  *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_rect_no_inline_float.c                                  *
+ *          tmpl_vec3_rect_no_inline_double.c                                 *
+ *          tmpl_vec3_rect_no_inline_ldouble.c                                *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_rect_float.h                                            *
+ *          tmpl_vec3_rect_double.h                                           *
+ *          tmpl_vec3_rect_ldouble.h                                          *
  ******************************************************************************/
+
+/*  This function is small enough to inline.                                  */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_rect_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_rect_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_rect_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Non-inline version found in src/vec3.                                     */
 extern tmpl_ThreeVectorFloat
 tmpl_3DFloat_Rect(float x, float y, float z);
 
@@ -782,6 +807,9 @@ tmpl_3DDouble_Rect(double x, double y, double z);
 
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Rect(long double x, long double y, long double z);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

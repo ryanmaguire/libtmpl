@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_rect_double                       *
+ *                            tmpl_vec3_rect_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for creating 3D vectors via Cartesian coordinates.      *
@@ -35,33 +35,45 @@
  *      z (double):                                                           *
  *          The z coordinate of the output vector.                            *
  *  Output:                                                                   *
- *      V (tmpl_ThreeVectorDouble):                                           *
+ *      P (tmpl_ThreeVectorDouble):                                           *
  *          The vector (x, y, z).                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Set the components of V to x, y, and z.                               *
+ *      Set the components of P to x, y, and z.                               *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
+ *  2.) tmpl_vec3_double.h:                                                   *
+ *          Header containing ThreeVector typedef.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/17/02: Ryan Maguire                                                  *
+ *  2022/10/05: Ryan Maguire                                                  *
  *      Added doc-string.                                                     *
+ *  2024/06/11: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_RECT_DOUBLE_H
+#define TMPL_VEC3_RECT_DOUBLE_H
+
+/*  TMPL_INLINE_DECL macro provided here.                                     */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_double.h>
 
 /*  Function for returning the point (x, y, z) given three doubles x, y, z.   */
+TMPL_INLINE_DECL
 tmpl_ThreeVectorDouble tmpl_3DDouble_Rect(double x, double y, double z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -74,3 +86,6 @@ tmpl_ThreeVectorDouble tmpl_3DDouble_Rect(double x, double y, double z)
     return P;
 }
 /*  End of tmpl_3DDouble_Rect.                                                */
+
+#endif
+/*  End of include guard.                                                     */

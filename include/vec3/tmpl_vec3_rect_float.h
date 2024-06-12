@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_rect_float                        *
+ *                            tmpl_vec3_rect_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains code for creating 3D vectors via Cartesian coordinates.      *
@@ -35,33 +35,45 @@
  *      z (float):                                                            *
  *          The z coordinate of the output vector.                            *
  *  Output:                                                                   *
- *      V (tmpl_ThreeVectorFloat):                                            *
+ *      P (tmpl_ThreeVectorFloat):                                            *
  *          The vector (x, y, z).                                             *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Set the components of V to x, y, and z.                               *
+ *      Set the components of P to x, y, and z.                               *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
+ *  2.) tmpl_vec3_float.h:                                                    *
+ *          Header containing ThreeVector typedef.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 21, 2020                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/17/02: Ryan Maguire                                                  *
+ *  2022/10/05: Ryan Maguire                                                  *
  *      Added doc-string.                                                     *
+ *  2024/06/11: Ryan Maguire                                                  *
+ *      Inlined the function.                                                 *
  ******************************************************************************/
 
-/*  Function prototype and three-vector typedef found here.                   */
-#include <libtmpl/include/tmpl_vec3.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC3_RECT_FLOAT_H
+#define TMPL_VEC3_RECT_FLOAT_H
+
+/*  TMPL_INLINE_DECL macro provided here.                                     */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Three-vector typedef found here.                                          */
+#include <libtmpl/include/tmpl_vec3_float.h>
 
 /*  Function for returning the point (x, y, z) given three floats x, y, z.    */
+TMPL_INLINE_DECL
 tmpl_ThreeVectorFloat tmpl_3DFloat_Rect(float x, float y, float z)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
@@ -74,3 +86,6 @@ tmpl_ThreeVectorFloat tmpl_3DFloat_Rect(float x, float y, float z)
     return P;
 }
 /*  End of tmpl_3DFloat_Rect.                                                 */
+
+#endif
+/*  End of include guard.                                                     */
