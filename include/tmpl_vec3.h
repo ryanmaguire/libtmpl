@@ -790,6 +790,92 @@ tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Negate                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the negative of a vector.                                    *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to a three dimensional vector.                          *
+ *  Output:                                                                   *
+ *      minus_P (tmpl_ThreeVectorFloat):                                      *
+ *          The additive inverse of P.                                        *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_negate_no_inline_float.c                                *
+ *          tmpl_vec3_negate_no_inline_double.c                               *
+ *          tmpl_vec3_negate_no_inline_ldouble.c                              *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_negate_float.h                                          *
+ *          tmpl_vec3_negate_double.h                                         *
+ *          tmpl_vec3_negate_ldouble.h                                        *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_negate_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_negate_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_negate_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Negate(const tmpl_ThreeVectorFloat * const P);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Negate(const tmpl_ThreeVectorDouble * const P);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Negate(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_NegateSelf                                               *
+ *  Purpose:                                                                  *
+ *      Computes the negative of a vector.                                    *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional vector. The negative is stored here.          *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_negate_self_no_inline_float.c                           *
+ *          tmpl_vec3_negate_self_no_inline_double.c                          *
+ *          tmpl_vec3_negate_self_no_inline_ldouble.c                         *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_negate_self_float.h                                     *
+ *          tmpl_vec3_negate_self_double.h                                    *
+ *          tmpl_vec3_negate_self_ldouble.h                                   *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_negate_self_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_negate_self_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_negate_self_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void tmpl_3DFloat_NegateSelf(tmpl_ThreeVectorFloat * const P);
+extern void tmpl_3DDouble_NegateSelf(tmpl_ThreeVectorDouble * const P);
+extern void tmpl_3DLDouble_NegateSelf(tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Normalize                                                *
  *  Purpose:                                                                  *
  *      Computes the unit normal of a given non-zero vector at single         *
