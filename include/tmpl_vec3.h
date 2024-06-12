@@ -747,19 +747,19 @@ tmpl_3DLDouble_Quick_Normalize(const tmpl_ThreeVectorLongDouble * const P);
  *      orth (tmpl_ThreeVectorFloat):                                         *
  *          A non-zero vector orthogonal to the input.                        *
  *  Source Code:                                                              *
- *      libtmpl/src/euclidean_spatial_geometry/                               *
- *          tmpl_three_vector_orthogonal_float.c                              *
- *          tmpl_three_vector_orthogonal_double.c                             *
- *          tmpl_three_vector_orthogonal_ldouble.c                            *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_orthogonal_float.c                                      *
+ *          tmpl_vec3_orthogonal_double.c                                     *
+ *          tmpl_vec3_orthogonal_ldouble.c                                    *
  ******************************************************************************/
 extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Orthogonal(tmpl_ThreeVectorFloat P);
+tmpl_3DFloat_Orthogonal(const tmpl_ThreeVectorFloat * const P);
 
 extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Orthogonal(tmpl_ThreeVectorDouble P);
+tmpl_3DDouble_Orthogonal(const tmpl_ThreeVectorDouble * const P);
 
 extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Orthogonal(tmpl_ThreeVectorLongDouble P);
+tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -27,7 +27,7 @@ tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVectorDouble u)
     u_hat = tmpl_3DDouble_Normalize(&u);
 
     /*  Get a vector orthogonal to u and normalize it.                        */
-    X = tmpl_3DDouble_Orthogonal(u);
+    X = tmpl_3DDouble_Orthogonal(&u);
     X = tmpl_3DDouble_Normalize(&X);
 
     /*  Compute the cross product of X and u, giving as an orthonormal        *
