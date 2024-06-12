@@ -524,9 +524,27 @@ tmpl_3DLDouble_Quick_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
  *          tmpl_three_vector_linf_norm_double.c                              *
  *          tmpl_three_vector_linf_norm_ldouble.c                             *
  ******************************************************************************/
-extern float tmpl_3DFloat_LInf_Norm(tmpl_ThreeVectorFloat P);
-extern double tmpl_3DDouble_LInf_Norm(tmpl_ThreeVectorDouble P);
-extern long double tmpl_3DLDouble_LInf_Norm(tmpl_ThreeVectorLongDouble P);
+
+/*  Small function, can be inlined.                                           */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_linf_norm_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_linf_norm_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_linf_norm_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Non-inline versions found in src/vec3.                                    */
+extern float tmpl_3DFloat_LInf_Norm(const tmpl_ThreeVectorFloat * const P);
+extern double tmpl_3DDouble_LInf_Norm(const tmpl_ThreeVectorDouble * const P);
+
+extern long double
+tmpl_3DLDouble_LInf_Norm(const tmpl_ThreeVectorLongDouble * const P);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *

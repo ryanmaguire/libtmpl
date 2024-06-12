@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_three_vector_constants                         *
+ *                            tmpl_vec3_constants                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provide commonly used constant vectors in R^3.                        *
@@ -24,7 +24,7 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_vec3.h:                                                          *
- *          Header containing ThreeVector typedef and the function prototype. *
+ *          Header containing ThreeVector typedef.                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 17, 2022                                                *
