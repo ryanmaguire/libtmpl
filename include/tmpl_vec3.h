@@ -376,33 +376,33 @@ tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const P,
  *  Function:                                                                 *
  *      tmpl_3DFloat_Divide                                                   *
  *  Purpose:                                                                  *
- *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
+ *      Computes the Hadamard (component-wise) division of two vectors in R^3.*
  *  Arguments:                                                                *
  *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A pointer to a three dimensional vector.                          *
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      prod (tmpl_ThreeVectorFloat):                                         *
- *          The Hadamard product of P and Q.                                  *
+ *      quot (tmpl_ThreeVectorFloat):                                         *
+ *          The Hadamard quotient of P and Q.                                 *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_multiply_no_inline_float.c                              *
- *          tmpl_vec3_multiply_no_inline_double.c                             *
- *          tmpl_vec3_multiply_no_inline_ldouble.c                            *
+ *          tmpl_vec3_divide_no_inline_float.c                                *
+ *          tmpl_vec3_divide_no_inline_double.c                               *
+ *          tmpl_vec3_divide_no_inline_ldouble.c                              *
  *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_multiply_float.h                                        *
- *          tmpl_vec3_multiply_double.h                                       *
- *          tmpl_vec3_multiply_ldouble.h                                      *
+ *          tmpl_vec3_divide_float.h                                          *
+ *          tmpl_vec3_divide_double.h                                         *
+ *          tmpl_vec3_divide_ldouble.h                                        *
  ******************************************************************************/
 
 /*  Arithmetic functions are very small and can be inlined.                   */
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_ldouble.h>
+#include <libtmpl/include/vec3/tmpl_vec3_divide_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_divide_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_divide_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -427,33 +427,32 @@ tmpl_3DLDouble_Divide(const tmpl_ThreeVectorLongDouble * const P,
  *  Function:                                                                 *
  *      tmpl_3DFloat_DivideBy                                                 *
  *  Purpose:                                                                  *
- *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
+ *      Computes the Hadamard (component-wise) division of two vectors in R^3.*
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorFloat * const):                               *
- *          A pointer to a vector. The product is stored here.                *
+ *          A pointer to a vector. The quotient is stored here.               *
  *      source (const tmpl_ThreeVectorFloat * const):                         *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      prod (tmpl_ThreeVectorFloat):                                         *
- *          The Hadamard product of P and Q.                                  *
+ *      None (void).                                                          *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_multiply_by_no_inline_float.c                           *
- *          tmpl_vec3_multiply_by_no_inline_double.c                          *
- *          tmpl_vec3_multiply_by_no_inline_ldouble.c                         *
+ *          tmpl_vec3_divide_by_no_inline_float.c                             *
+ *          tmpl_vec3_divide_by_no_inline_double.c                            *
+ *          tmpl_vec3_divide_by_no_inline_ldouble.c                           *
  *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_multiply_by_float.h                                     *
- *          tmpl_vec3_multiply_by_double.h                                    *
- *          tmpl_vec3_multiply_by_ldouble.h                                   *
+ *          tmpl_vec3_divide_by_float.h                                       *
+ *          tmpl_vec3_divide_by_double.h                                      *
+ *          tmpl_vec3_divide_by_ldouble.h                                     *
  ******************************************************************************/
 
 /*  Arithmetic functions are very small and can be inlined.                   */
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_ldouble.h>
+#include <libtmpl/include/vec3/tmpl_vec3_divide_by_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_divide_by_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_divide_by_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -774,8 +773,7 @@ tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const P,
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      prod (tmpl_ThreeVectorFloat):                                         *
- *          The Hadamard product of P and Q.                                  *
+ *      None (void).                                                          *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
  *          tmpl_vec3_multiply_no_inline_float.c                              *

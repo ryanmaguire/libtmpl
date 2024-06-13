@@ -16,20 +16,20 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_vec3_multiply_by_float                         *
+ *                         tmpl_vec3_divide_by_float                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for performing the Hadamard product.                    *
+ *      Contains code for performing the Hadamard quotient.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_3DFloat_MultiplyBy                                               *
+ *      tmpl_3DFloat_DivideBy                                                 *
  *  Purpose:                                                                  *
- *      Computes the Hadamard product of two vectors at single precision.     *
+ *      Computes the Hadamard quotient of two vectors at single precision.    *
  *  Arguments:                                                                *
  *      target (tmpl_ThreeVectorFloat * const):                               *
- *          A pointer to a vector in R^3. The product will be stored here.    *
+ *          A pointer to a vector in R^3. The quotient will be stored here.   *
  *      source (const tmpl_ThreeVectorFloat * const):                         *
  *          Another pointer to a vector in R^3.                               *
  *  Output:                                                                   *
@@ -37,11 +37,11 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the definition of Hadamard product. If P = (Px, Py, Pz) and       *
- *      Q = (Qx, Qy, Qz), then the product has coordinates:                   *
- *          x = Px * Qx                                                       *
- *          y = Py * Qy                                                       *
- *          z = Pz * Qz                                                       *
+ *      Use the definition of Hadamard division. If P = (Px, Py, Pz) and      *
+ *      Q = (Qx, Qy, Qz), then the quotient has coordinates:                  *
+ *          x = Px / Qx                                                       *
+ *          y = Py / Qy                                                       *
+ *          z = Pz / Qz                                                       *
  *  Notes:                                                                    *
  *      No checks for Infs or NaNs are performed.                             *
  *      No checks for Null pointers are performed.                            *
@@ -54,12 +54,12 @@
  *          The tmpl_ThreeVectorFloat typedef is provided here.               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       June 12, 2024                                                 *
+ *  Date:       June 13, 2024                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_MULTIPLY_BY_FLOAT_H
-#define TMPL_VEC3_MULTIPLY_BY_FLOAT_H
+#ifndef TMPL_VEC3_DIVIDE_BY_FLOAT_H
+#define TMPL_VEC3_DIVIDE_BY_FLOAT_H
 
 /*  The TMPL_INLINE_DECL macro is provided here.                              */
 #include <libtmpl/include/tmpl_config.h>
@@ -67,17 +67,17 @@
 /*  Three-vector typedef found here.                                          */
 #include <libtmpl/include/tmpl_vec3_float.h>
 
-/*  Function for performing the Hadamard product in R^3.                      */
+/*  Function for performing the Hadamard quotient in R^3.                     */
 TMPL_INLINE_DECL
 void
-tmpl_3DFloat_MultiplyBy(tmpl_ThreeVectorFloat * const target,
-                        const tmpl_ThreeVectorFloat * const source)
+tmpl_3DFloat_DivideBy(tmpl_ThreeVectorFloat * const target,
+                      const tmpl_ThreeVectorFloat * const source)
 {
-    target->dat[0] *= source->dat[0];
-    target->dat[1] *= source->dat[1];
-    target->dat[2] *= source->dat[2];
+    target->dat[0] /= source->dat[0];
+    target->dat[1] /= source->dat[1];
+    target->dat[2] /= source->dat[2];
 }
-/*  End of tmpl_3DFloat_MultiplyBy.                                           */
+/*  End of tmpl_3DFloat_DivideBy.                                             */
 
 #endif
 /*  End of include guard.                                                     */

@@ -69,8 +69,9 @@
 
 /*  Function for performing the Hadamard product in R^3.                      */
 TMPL_INLINE_DECL
-void tmpl_3DLDouble_MultiplyBy(tmpl_ThreeVectorLongDouble * const target,
-                               const tmpl_ThreeVectorLongDouble * const source)
+void
+tmpl_3DLDouble_MultiplyBy(tmpl_ThreeVectorLongDouble * const target,
+                          const tmpl_ThreeVectorLongDouble * const source)
 {
     target->dat[0] *= source->dat[0];
     target->dat[1] *= source->dat[1];
