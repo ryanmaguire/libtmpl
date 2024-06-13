@@ -1024,7 +1024,7 @@ extern void tmpl_3DLDouble_NormalizeSelf(tmpl_ThreeVectorLongDouble * const P);
  *  Purpose:                                                                  *
  *      Returns a non-zero vector orthogonal to the input.                    *
  *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
  *          A 3D vector.                                                      *
  *  Output:                                                                   *
  *      orth (tmpl_ThreeVectorFloat):                                         *
@@ -1752,6 +1752,102 @@ tmpl_3DDouble_Quick_Component(const tmpl_ThreeVectorDouble * const P,
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Quick_Component(const tmpl_ThreeVectorLongDouble * const P,
                                const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Orthogonal_Part                                          *
+ *  Purpose:                                                                  *
+ *      Returns the orthogonal component of one vector along another.         *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another 3D vector.                                                *
+ *  Output:                                                                   *
+ *      orth (tmpl_ThreeVectorFloat):                                         *
+ *          The orthogonal component of P along Q.                            *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_orthogonal_part_float.c                                 *
+ *          tmpl_vec3_orthogonal_part_double.c                                *
+ *          tmpl_vec3_orthogonal_part_ldouble.c                               *
+ ******************************************************************************/
+
+/*  This function makes two function calls total. It can be inlined.          */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_orthogonal_part_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_orthogonal_part_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_orthogonal_part_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Orthogonal_Part(const tmpl_ThreeVectorFloat * const P,
+                             const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Orthogonal_Part(const tmpl_ThreeVectorDouble * const P,
+                              const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Orthogonal_Part(const tmpl_ThreeVectorLongDouble * const P,
+                               const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Orthogonal_Part                                    *
+ *  Purpose:                                                                  *
+ *      Returns the orthogonal component of one vector along another.         *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A 3D vector.                                                      *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another 3D vector.                                                *
+ *  Output:                                                                   *
+ *      orth (tmpl_ThreeVectorFloat):                                         *
+ *          The orthogonal component of P along Q.                            *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_orthogonal_part_float.c                           *
+ *          tmpl_vec3_quick_orthogonal_part_double.c                          *
+ *          tmpl_vec3_quick_orthogonal_part_ldouble.c                         *
+ ******************************************************************************/
+
+/*  This function makes two function calls total. It can be inlined.          */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_quick_orthogonal_part_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_orthogonal_part_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_orthogonal_part_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Quick_Orthogonal_Part(const tmpl_ThreeVectorFloat * const P,
+                                   const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Quick_Orthogonal_Part(const tmpl_ThreeVectorDouble * const P,
+                                    const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Quick_Orthogonal_Part(
+    const tmpl_ThreeVectorLongDouble * const P,
+    const tmpl_ThreeVectorLongDouble * const Q
+);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
