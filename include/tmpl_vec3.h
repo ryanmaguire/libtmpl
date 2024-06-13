@@ -161,7 +161,7 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
- *      angle (double):                                                       *
+ *      angle (float):                                                        *
  *          The angle made between P and Q.                                   *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
@@ -1053,7 +1053,7 @@ tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
- *      proj (double):                                                        *
+ *      proj (float):                                                         *
  *          The projection (magnitude) of P onto Q.                           *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
@@ -1101,7 +1101,7 @@ tmpl_3DLDouble_Projection(const tmpl_ThreeVectorLongDouble * const P,
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
- *      angle (double):                                                       *
+ *      angle (float):                                                        *
  *          The angle made between P and Q.                                   *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
@@ -1812,7 +1812,7 @@ tmpl_3DLDouble_Quick_Component(const tmpl_ThreeVectorLongDouble * const P,
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
- *      proj (double):                                                        *
+ *      proj (float):                                                         *
  *          The projection (magnitude) of P onto Q.                           *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
