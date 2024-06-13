@@ -181,37 +181,7 @@ extern long double
 tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const P,
                      const tmpl_ThreeVectorLongDouble * const Q);
 
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_3DFloat_Quick_Angle                                              *
- *  Purpose:                                                                  *
- *      Quickly computes the angle between two vectors, but without checking  *
- *      for overflow or underflow in the computation.                         *
- *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
- *          A pointer to the first vector.                                    *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
- *          Another pointer to a vector.                                      *
- *  Output:                                                                   *
- *      angle (double):                                                       *
-            The angle made between P and Q.                                   *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_quick_angle_float.c                                     *
- *          tmpl_vec3_quick_angle_double.c                                    *
- *          tmpl_vec3_quick_angle_ldouble.c                                   *
- ******************************************************************************/
-extern float
-tmpl_3DFloat_Quick_Angle(const tmpl_ThreeVectorFloat * const P,
-                         const tmpl_ThreeVectorFloat * const Q);
 
-extern double
-tmpl_3DDouble_Quick_Angle(const tmpl_ThreeVectorDouble * const P,
-                          const tmpl_ThreeVectorDouble * const Q);
-
-extern long double
-tmpl_3DLDouble_Quick_Angle(const tmpl_ThreeVectorLongDouble * const P,
-                           const tmpl_ThreeVectorLongDouble * const Q);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -404,51 +374,102 @@ tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Quick_Dist                                               *
+ *      tmpl_3DFloat_Divide                                                   *
  *  Purpose:                                                                  *
- *      Computes the Euclidean distance between two points.                   *
+ *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
  *  Arguments:                                                                *
  *      P (const tmpl_ThreeVectorFloat * const):                              *
- *          A three dimensional vector.                                       *
+ *          A pointer to a three dimensional vector.                          *
  *      Q (const tmpl_ThreeVectorFloat * const):                              *
- *          Another three dimensional vector.                                 *
+ *          Another pointer to a three dimensional vector.                    *
  *  Output:                                                                   *
- *      dist (float):                                                         *
- *          The distance between P and Q.                                     *
+ *      prod (tmpl_ThreeVectorFloat):                                         *
+ *          The Hadamard product of P and Q.                                  *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_quick_dist_no_inline_float.c                            *
- *          tmpl_vec3_quick_dist_no_inline_double.c                           *
- *          tmpl_vec3_quick_dist_no_inline_ldouble.c                          *
- *      libtmpl/src/include/                                                  *
- *          tmpl_vec3_quick_dist_float.h                                      *
- *          tmpl_vec3_quick_dist_double.h                                     *
- *          tmpl_vec3_quick_dist_ldouble.h                                    *
+ *          tmpl_vec3_multiply_no_inline_float.c                              *
+ *          tmpl_vec3_multiply_no_inline_double.c                             *
+ *          tmpl_vec3_multiply_no_inline_ldouble.c                            *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_multiply_float.h                                        *
+ *          tmpl_vec3_multiply_double.h                                       *
+ *          tmpl_vec3_multiply_ldouble.h                                      *
  ******************************************************************************/
 
-/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
+/*  Arithmetic functions are very small and can be inlined.                   */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_ldouble.h>
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the versions in src/vec3.                     */
-extern float
-tmpl_3DFloat_Quick_Dist(const tmpl_ThreeVectorFloat * const P,
-                        const tmpl_ThreeVectorFloat * const Q);
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Divide(const tmpl_ThreeVectorFloat * const P,
+                    const tmpl_ThreeVectorFloat * const Q);
 
-extern double
-tmpl_3DDouble_Quick_Dist(const tmpl_ThreeVectorDouble * const P,
-                         const tmpl_ThreeVectorDouble * const Q);
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Divide(const tmpl_ThreeVectorDouble * const P,
+                     const tmpl_ThreeVectorDouble * const Q);
 
-extern long double
-tmpl_3DLDouble_Quick_Dist(const tmpl_ThreeVectorLongDouble * const P,
-                          const tmpl_ThreeVectorLongDouble * const Q);
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Divide(const tmpl_ThreeVectorLongDouble * const P,
+                      const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_DivideBy                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
+ *          A pointer to a vector. The product is stored here.                *
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *          Another pointer to a three dimensional vector.                    *
+ *  Output:                                                                   *
+ *      prod (tmpl_ThreeVectorFloat):                                         *
+ *          The Hadamard product of P and Q.                                  *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_multiply_by_no_inline_float.c                           *
+ *          tmpl_vec3_multiply_by_no_inline_double.c                          *
+ *          tmpl_vec3_multiply_by_no_inline_ldouble.c                         *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_multiply_by_float.h                                     *
+ *          tmpl_vec3_multiply_by_double.h                                    *
+ *          tmpl_vec3_multiply_by_ldouble.h                                   *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void
+tmpl_3DFloat_DivideBy(tmpl_ThreeVectorFloat * const target,
+                      const tmpl_ThreeVectorFloat * const source);
+
+extern void
+tmpl_3DDouble_DivideBy(tmpl_ThreeVectorDouble * const target,
+                       const tmpl_ThreeVectorDouble * const source);
+
+extern void
+tmpl_3DLDouble_DivideBy(tmpl_ThreeVectorLongDouble * const target,
+                        const tmpl_ThreeVectorLongDouble * const source);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -641,52 +662,6 @@ tmpl_3DDouble_L2_Norm_Squared(const tmpl_ThreeVectorDouble * const P);
 
 extern long double
 tmpl_3DLDouble_L2_Norm_Squared(const tmpl_ThreeVectorLongDouble * const P);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_3DFloat_Quick_L2_Norm                                            *
- *  Purpose:                                                                  *
- *      Computes the Euclidean L2 norm of a vector in R^3. This is defined by *
- *      the Pythagorean theorem as follows. If P = (x, y, z), we have:        *
- *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
- *      Functions for single, double, and long double precision are provided. *
- *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
- *          A three dimensional vector.                                       *
- *  Output:                                                                   *
- *      norm (float):                                                         *
- *          The Euclidean norm of P.                                          *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_quick_l2_norm_no_inline_float.c                         *
- *          tmpl_vec3_quick_l2_norm_no_inline_double.c                        *
- *          tmpl_vec3_quick_l2_norm_no_inline_ldouble.c                       *
- *      libtmpl/src/include/                                                  *
- *          tmpl_vec3_quick_l2_norm_float.h                                   *
- *          tmpl_vec3_quick_l2_norm_double.h                                  *
- *          tmpl_vec3_quick_l2_norm_ldouble.h                                 *
- ******************************************************************************/
-
-/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
-#if TMPL_USE_INLINE == 1
-
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_ldouble.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, use the versions in src/vec3.                     */
-extern float tmpl_3DFloat_Quick_L2_Norm(const tmpl_ThreeVectorFloat *P);
-extern double tmpl_3DDouble_Quick_L2_Norm(const tmpl_ThreeVectorDouble *P);
-
-extern long double
-tmpl_3DLDouble_Quick_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -1047,103 +1022,155 @@ extern void tmpl_3DLDouble_NormalizeSelf(tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_Subtract                                                 *
+ *      tmpl_3DFloat_Orthogonal                                               *
  *  Purpose:                                                                  *
- *      Computes the vector difference of two vectors at single precision.    *
- *      Similar functions are provided for double and long double precisions. *
+ *      Returns a non-zero vector orthogonal to the input.                    *
  *  Arguments:                                                                *
- *      P (const tmpl_ThreeVectorFloat * const):                              *
- *          A pointer to a three dimensional vector.                          *
- *      Q (const tmpl_ThreeVectorFloat * const):                              *
- *          Another pointer to a three dimensional vector.                    *
+ *      P (tmpl_ThreeVectorFloat):                                            *
+ *          A 3D vector.                                                      *
  *  Output:                                                                   *
- *      diff (tmpl_ThreeVectorFloat):                                         *
- *          The difference of P and Q, P - Q.                                 *
+ *      orth (tmpl_ThreeVectorFloat):                                         *
+ *          A non-zero vector orthogonal to the input.                        *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_subtract_no_inline_float.c                              *
- *          tmpl_vec3_subtract_no_inline_double.c                             *
- *          tmpl_vec3_subtract_no_inline_ldouble.c                            *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_subtract_float.h                                        *
- *          tmpl_vec3_subtract_double.h                                       *
- *          tmpl_vec3_subtract_ldouble.h                                      *
+ *          tmpl_vec3_orthogonal_float.c                                      *
+ *          tmpl_vec3_orthogonal_double.c                                     *
+ *          tmpl_vec3_orthogonal_ldouble.c                                    *
+ ******************************************************************************/
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Orthogonal(const tmpl_ThreeVectorFloat * const P);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Orthogonal(const tmpl_ThreeVectorDouble * const P);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Angle                                              *
+ *  Purpose:                                                                  *
+ *      Quickly computes the angle between two vectors, but without checking  *
+ *      for overflow or underflow in the computation.                         *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to the first vector.                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a vector.                                      *
+ *  Output:                                                                   *
+ *      angle (double):                                                       *
+            The angle made between P and Q.                                   *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_angle_float.c                                     *
+ *          tmpl_vec3_quick_angle_double.c                                    *
+ *          tmpl_vec3_quick_angle_ldouble.c                                   *
+ ******************************************************************************/
+extern float
+tmpl_3DFloat_Quick_Angle(const tmpl_ThreeVectorFloat * const P,
+                         const tmpl_ThreeVectorFloat * const Q);
+
+extern double
+tmpl_3DDouble_Quick_Angle(const tmpl_ThreeVectorDouble * const P,
+                          const tmpl_ThreeVectorDouble * const Q);
+
+extern long double
+tmpl_3DLDouble_Quick_Angle(const tmpl_ThreeVectorLongDouble * const P,
+                           const tmpl_ThreeVectorLongDouble * const Q);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Dist                                               *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean distance between two points.                   *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional vector.                                       *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another three dimensional vector.                                 *
+ *  Output:                                                                   *
+ *      dist (float):                                                         *
+ *          The distance between P and Q.                                     *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_dist_no_inline_float.c                            *
+ *          tmpl_vec3_quick_dist_no_inline_double.c                           *
+ *          tmpl_vec3_quick_dist_no_inline_ldouble.c                          *
+ *      libtmpl/src/include/                                                  *
+ *          tmpl_vec3_quick_dist_float.h                                      *
+ *          tmpl_vec3_quick_dist_double.h                                     *
+ *          tmpl_vec3_quick_dist_ldouble.h                                    *
  ******************************************************************************/
 
-/*  Arithmetic functions are very small and can be inlined.                   */
+/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
 #if TMPL_USE_INLINE == 1
 
-/*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_ldouble.h>
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Otherwise, use the versions found in src/vec3/.                           */
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Subtract(const tmpl_ThreeVectorFloat * const P,
-                      const tmpl_ThreeVectorFloat * const Q);
+/*  Lacking inline support, use the versions in src/vec3.                     */
+extern float
+tmpl_3DFloat_Quick_Dist(const tmpl_ThreeVectorFloat * const P,
+                        const tmpl_ThreeVectorFloat * const Q);
 
-extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Subtract(const tmpl_ThreeVectorDouble * const P,
-                       const tmpl_ThreeVectorDouble * const Q);
+extern double
+tmpl_3DDouble_Quick_Dist(const tmpl_ThreeVectorDouble * const P,
+                         const tmpl_ThreeVectorDouble * const Q);
 
-extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Subtract(const tmpl_ThreeVectorLongDouble * const P,
-                        const tmpl_ThreeVectorLongDouble * const Q);
+extern long double
+tmpl_3DLDouble_Quick_Dist(const tmpl_ThreeVectorLongDouble * const P,
+                          const tmpl_ThreeVectorLongDouble * const Q);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_3DFloat_SubtractFrom                                             *
+ *      tmpl_3DFloat_Quick_L2_Norm                                            *
  *  Purpose:                                                                  *
- *      Subtracts the source vector from the target vector, the result of     *
- *      which is stored in the target.                                        *
+ *      Computes the Euclidean L2 norm of a vector in R^3. This is defined by *
+ *      the Pythagorean theorem as follows. If P = (x, y, z), we have:        *
+ *          ||P|| = sqrt(x^2 + y^2 + z^2)                                     *
+ *      Functions for single, double, and long double precision are provided. *
  *  Arguments:                                                                *
- *      target (tmpl_ThreeVectorFloat * const):                               *
- *          A pointer to the first vector, the difference will be stored here.*
- *      source (const tmpl_ThreeVectorFloat * const):                         *
- *          A pointer to the vector to be subtracted from target.             *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A three dimensional vector.                                       *
  *  Output:                                                                   *
- *      None (void).                                                          *
+ *      norm (float):                                                         *
+ *          The Euclidean norm of P.                                          *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_subtract_from_no_inline_float.c                         *
- *          tmpl_vec3_subtract_from_no_inline_double.c                        *
- *          tmpl_vec3_subtract_from_no_inline_ldouble.c                       *
- *      libtmpl/include/vec3/                                                 *
- *          tmpl_vec3_subtract_from_float.h                                   *
- *          tmpl_vec3_subtract_from_double.h                                  *
- *          tmpl_vec3_subtract_from_ldouble.h                                 *
+ *          tmpl_vec3_quick_l2_norm_no_inline_float.c                         *
+ *          tmpl_vec3_quick_l2_norm_no_inline_double.c                        *
+ *          tmpl_vec3_quick_l2_norm_no_inline_ldouble.c                       *
+ *      libtmpl/src/include/                                                  *
+ *          tmpl_vec3_quick_l2_norm_float.h                                   *
+ *          tmpl_vec3_quick_l2_norm_double.h                                  *
+ *          tmpl_vec3_quick_l2_norm_ldouble.h                                 *
  ******************************************************************************/
 
-/*  Arithmetic functions are very small and can be inlined.                   */
+/*  This is a one-liner that calls the Hypot3 function. It can be inlined.    */
 #if TMPL_USE_INLINE == 1
 
-/*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_ldouble.h>
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Otherwise, use the versions found in src/vec3/.                           */
-extern void
-tmpl_3DFloat_SubtractFrom(tmpl_ThreeVectorFloat * const target,
-                          const tmpl_ThreeVectorFloat * const source);
+/*  Lacking inline support, use the versions in src/vec3.                     */
+extern float tmpl_3DFloat_Quick_L2_Norm(const tmpl_ThreeVectorFloat *P);
+extern double tmpl_3DDouble_Quick_L2_Norm(const tmpl_ThreeVectorDouble *P);
 
-extern void
-tmpl_3DDouble_SubtractFrom(tmpl_ThreeVectorDouble * const target,
-                           const tmpl_ThreeVectorDouble * const source);
-
-extern void
-tmpl_3DLDouble_SubtractFrom(tmpl_ThreeVectorLongDouble * const target,
-                            const tmpl_ThreeVectorLongDouble * const source);
+extern long double
+tmpl_3DLDouble_Quick_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -1196,32 +1223,6 @@ tmpl_3DLDouble_Quick_Normalize(const tmpl_ThreeVectorLongDouble * const P);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_3DFloat_Orthogonal                                               *
- *  Purpose:                                                                  *
- *      Returns a non-zero vector orthogonal to the input.                    *
- *  Arguments:                                                                *
- *      P (tmpl_ThreeVectorFloat):                                            *
- *          A 3D vector.                                                      *
- *  Output:                                                                   *
- *      orth (tmpl_ThreeVectorFloat):                                         *
- *          A non-zero vector orthogonal to the input.                        *
- *  Source Code:                                                              *
- *      libtmpl/src/vec3/                                                     *
- *          tmpl_vec3_orthogonal_float.c                                      *
- *          tmpl_vec3_orthogonal_double.c                                     *
- *          tmpl_vec3_orthogonal_ldouble.c                                    *
- ******************************************************************************/
-extern tmpl_ThreeVectorFloat
-tmpl_3DFloat_Orthogonal(const tmpl_ThreeVectorFloat * const P);
-
-extern tmpl_ThreeVectorDouble
-tmpl_3DDouble_Orthogonal(const tmpl_ThreeVectorDouble * const P);
-
-extern tmpl_ThreeVectorLongDouble
-tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1475,6 +1476,109 @@ tmpl_3DDouble_Scaled_AddTo(tmpl_ThreeVectorDouble * const target,
 extern void
 tmpl_3DLDouble_Scaled_AddTo(tmpl_ThreeVectorLongDouble * const target,
                             long double scale,
+                            const tmpl_ThreeVectorLongDouble * const source);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Subtract                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the vector difference of two vectors at single precision.    *
+ *      Similar functions are provided for double and long double precisions. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to a three dimensional vector.                          *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a three dimensional vector.                    *
+ *  Output:                                                                   *
+ *      diff (tmpl_ThreeVectorFloat):                                         *
+ *          The difference of P and Q, P - Q.                                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_subtract_no_inline_float.c                              *
+ *          tmpl_vec3_subtract_no_inline_double.c                             *
+ *          tmpl_vec3_subtract_no_inline_ldouble.c                            *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_subtract_float.h                                        *
+ *          tmpl_vec3_subtract_double.h                                       *
+ *          tmpl_vec3_subtract_ldouble.h                                      *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Subtract(const tmpl_ThreeVectorFloat * const P,
+                      const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Subtract(const tmpl_ThreeVectorDouble * const P,
+                       const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Subtract(const tmpl_ThreeVectorLongDouble * const P,
+                        const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_SubtractFrom                                             *
+ *  Purpose:                                                                  *
+ *      Subtracts the source vector from the target vector, the result of     *
+ *      which is stored in the target.                                        *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
+ *          A pointer to the first vector, the difference will be stored here.*
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *          A pointer to the vector to be subtracted from target.             *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_subtract_from_no_inline_float.c                         *
+ *          tmpl_vec3_subtract_from_no_inline_double.c                        *
+ *          tmpl_vec3_subtract_from_no_inline_ldouble.c                       *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_subtract_from_float.h                                   *
+ *          tmpl_vec3_subtract_from_double.h                                  *
+ *          tmpl_vec3_subtract_from_ldouble.h                                 *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void
+tmpl_3DFloat_SubtractFrom(tmpl_ThreeVectorFloat * const target,
+                          const tmpl_ThreeVectorFloat * const source);
+
+extern void
+tmpl_3DDouble_SubtractFrom(tmpl_ThreeVectorDouble * const target,
+                           const tmpl_ThreeVectorDouble * const source);
+
+extern void
+tmpl_3DLDouble_SubtractFrom(tmpl_ThreeVectorLongDouble * const target,
                             const tmpl_ThreeVectorLongDouble * const source);
 
 #endif
