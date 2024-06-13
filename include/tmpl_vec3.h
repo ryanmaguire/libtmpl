@@ -790,6 +790,108 @@ tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Multiply                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to a three dimensional vector.                          *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a three dimensional vector.                    *
+ *  Output:                                                                   *
+ *      prod (tmpl_ThreeVectorFloat):                                         *
+ *          The Hadamard product of P and Q.                                  *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_multiply_no_inline_float.c                              *
+ *          tmpl_vec3_multiply_no_inline_double.c                             *
+ *          tmpl_vec3_multiply_no_inline_ldouble.c                            *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_multiply_float.h                                        *
+ *          tmpl_vec3_multiply_double.h                                       *
+ *          tmpl_vec3_multiply_ldouble.h                                      *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern tmpl_ThreeVectorFloat
+tmpl_3DFloat_Multiply(const tmpl_ThreeVectorFloat * const P,
+                      const tmpl_ThreeVectorFloat * const Q);
+
+extern tmpl_ThreeVectorDouble
+tmpl_3DDouble_Multiply(const tmpl_ThreeVectorDouble * const P,
+                       const tmpl_ThreeVectorDouble * const Q);
+
+extern tmpl_ThreeVectorLongDouble
+tmpl_3DLDouble_Multiply(const tmpl_ThreeVectorLongDouble * const P,
+                        const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_MultiplyBy                                               *
+ *  Purpose:                                                                  *
+ *      Computes the Hadamard (component-wise) product of two vectors in R^3. *
+ *  Arguments:                                                                *
+ *      target (tmpl_ThreeVectorFloat * const):                               *
+ *          A pointer to a vector. The product is stored here.                *
+ *      source (const tmpl_ThreeVectorFloat * const):                         *
+ *          Another pointer to a three dimensional vector.                    *
+ *  Output:                                                                   *
+ *      prod (tmpl_ThreeVectorFloat):                                         *
+ *          The Hadamard product of P and Q.                                  *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_multiply_by_no_inline_float.c                           *
+ *          tmpl_vec3_multiply_by_no_inline_double.c                          *
+ *          tmpl_vec3_multiply_by_no_inline_ldouble.c                         *
+ *      libtmpl/include/vec3/                                                 *
+ *          tmpl_vec3_multiply_by_float.h                                     *
+ *          tmpl_vec3_multiply_by_double.h                                    *
+ *          tmpl_vec3_multiply_by_ldouble.h                                   *
+ ******************************************************************************/
+
+/*  Arithmetic functions are very small and can be inlined.                   */
+#if TMPL_USE_INLINE == 1
+
+/*  Include versions found here.                                              */
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, use the versions found in src/vec3/.                           */
+extern void
+tmpl_3DFloat_MultiplyBy(tmpl_ThreeVectorFloat * const target,
+                        const tmpl_ThreeVectorFloat * const source);
+
+extern void
+tmpl_3DDouble_MultiplyBy(tmpl_ThreeVectorDouble * const target,
+                         const tmpl_ThreeVectorDouble * const source);
+
+extern void
+tmpl_3DLDouble_MultiplyBy(tmpl_ThreeVectorLongDouble * const target,
+                          const tmpl_ThreeVectorLongDouble * const source);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Negate                                                   *
  *  Purpose:                                                                  *
  *      Computes the negative of a vector.                                    *
