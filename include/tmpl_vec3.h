@@ -162,7 +162,7 @@ tmpl_3DLDouble_AddTo(tmpl_ThreeVectorLongDouble * const target,
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
  *      angle (double):                                                       *
-            The angle made between P and Q.                                   *
+ *          The angle made between P and Q.                                   *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
  *          tmpl_vec3_add_to_no_inline_float.c                                *
@@ -180,8 +180,6 @@ tmpl_3DDouble_Angle(const tmpl_ThreeVectorDouble * const P,
 extern long double
 tmpl_3DLDouble_Angle(const tmpl_ThreeVectorLongDouble * const P,
                      const tmpl_ThreeVectorLongDouble * const Q);
-
-
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1046,6 +1044,53 @@ tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_3DFloat_Projection                                               *
+ *  Purpose:                                                                  *
+ *      Computes the projection of one vector along another.                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to the first vector.                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a vector.                                      *
+ *  Output:                                                                   *
+ *      proj (double):                                                        *
+ *          The projection (magnitude) of P onto Q.                           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_projection_no_inline_float.c                            *
+ *          tmpl_vec3_projection_no_inline_double.c                           *
+ *          tmpl_vec3_projection_no_inline_ldouble.c                          *
+ ******************************************************************************/
+
+/*  This routine makes two function calls total. It can be inlined.           */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_projection_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_projection_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_projection_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions found in src/vec3/.              */
+extern float
+tmpl_3DFloat_Projection(const tmpl_ThreeVectorFloat * const P,
+                        const tmpl_ThreeVectorFloat * const Q);
+
+extern double
+tmpl_3DDouble_Projection(const tmpl_ThreeVectorDouble * const P,
+                         const tmpl_ThreeVectorDouble * const Q);
+
+extern long double
+tmpl_3DLDouble_Projection(const tmpl_ThreeVectorLongDouble * const P,
+                          const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_3DFloat_Quick_Angle                                              *
  *  Purpose:                                                                  *
  *      Quickly computes the angle between two vectors, but without checking  *
@@ -1057,7 +1102,7 @@ tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
  *          Another pointer to a vector.                                      *
  *  Output:                                                                   *
  *      angle (double):                                                       *
-            The angle made between P and Q.                                   *
+ *          The angle made between P and Q.                                   *
  *  Source Code:                                                              *
  *      libtmpl/src/vec3/                                                     *
  *          tmpl_vec3_quick_angle_float.c                                     *
@@ -1752,6 +1797,53 @@ tmpl_3DDouble_Quick_Component(const tmpl_ThreeVectorDouble * const P,
 extern tmpl_ThreeVectorLongDouble
 tmpl_3DLDouble_Quick_Component(const tmpl_ThreeVectorLongDouble * const P,
                                const tmpl_ThreeVectorLongDouble * const Q);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_3DFloat_Quick_Projection                                         *
+ *  Purpose:                                                                  *
+ *      Computes the projection of one vector along another.                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_ThreeVectorFloat * const):                              *
+ *          A pointer to the first vector.                                    *
+ *      Q (const tmpl_ThreeVectorFloat * const):                              *
+ *          Another pointer to a vector.                                      *
+ *  Output:                                                                   *
+ *      proj (double):                                                        *
+ *          The projection (magnitude) of P onto Q.                           *
+ *  Source Code:                                                              *
+ *      libtmpl/src/vec3/                                                     *
+ *          tmpl_vec3_quick_projection_no_inline_float.c                      *
+ *          tmpl_vec3_quick_projection_no_inline_double.c                     *
+ *          tmpl_vec3_quick_projection_no_inline_ldouble.c                    *
+ ******************************************************************************/
+
+/*  This routine makes two function calls total. It can be inlined.           */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/vec3/tmpl_vec3_quick_projection_double.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_projection_float.h>
+#include <libtmpl/include/vec3/tmpl_vec3_quick_projection_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the versions found in src/vec3/.              */
+extern float
+tmpl_3DFloat_Quick_Projection(const tmpl_ThreeVectorFloat * const P,
+                              const tmpl_ThreeVectorFloat * const Q);
+
+extern double
+tmpl_3DDouble_Quick_Projection(const tmpl_ThreeVectorDouble * const P,
+                               const tmpl_ThreeVectorDouble * const Q);
+
+extern long double
+tmpl_3DLDouble_Quick_Projection(const tmpl_ThreeVectorLongDouble * const P,
+                                const tmpl_ThreeVectorLongDouble * const Q);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
