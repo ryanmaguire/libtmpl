@@ -35,12 +35,18 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
+/*  Computes the stationary azimuth angle for the Fresnel kernel.             */
 double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
-                                                      double r0, double phi,
-                                                      double phi0, double B,
-                                                      double rx, double ry,
-                                                      double rz, double eps,
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k,
+                                                      double r,
+                                                      double r0,
+                                                      double phi,
+                                                      double phi0,
+                                                      double B,
+                                                      double rx,
+                                                      double ry,
+                                                      double rz,
+                                                      double eps,
                                                       unsigned int toler)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -58,7 +64,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
     /*  Simultaneously compute sine and cosine of phi.                        */
     tmpl_Double_SinCos(phi0, &sin_phi0, &cos_phi0);
 
-    /*  Normalize the requested error by the wavenumber and distance.         */
+    /*  Normalize the requested error by the wavenumber.                      */
     eps /= k;
 
     /*  Iteratively perform Newton's method until the error is small.         */
@@ -98,7 +104,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
         rcpr_D_squared = rcpr_D * rcpr_D;
 
         /*  Compute the derivative of D with respect to phi.                  */
-        dD = r*(dx*sin_phi - dy*cos_phi)*rcpr_D;
+        dD = r0*(dx*sin_phi - dy*cos_phi)*rcpr_D;
 
         /*  These terms occur frequently.                                     */
         xi_factor = cos_B * rcpr_D;
@@ -117,10 +123,9 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
         deta = eta_factor * sin_phi_phi0 - 2.0 * eta * rcpr_D * dD;
         deta2 = eta_factor * cos_phi_phi0;
 
-        dpsi = D * ((0.5/psi0) * (deta - 2.0*dxi) + dxi);
-        dpsi += dD * (psi0 + xi - 1.0);
-
         num_factor = deta - 2.0*dxi;
+
+        dpsi = D*(0.5 * rcpr_psi0 * num_factor + dxi) + dD*(psi0 + xi - 1.0);
 
         d2psi = -0.25 * rcpr_psi0_cubed * num_factor * num_factor;
         d2psi += (0.5 * rcpr_psi0) * (deta2 - 2.0*dxi2) + dxi2;

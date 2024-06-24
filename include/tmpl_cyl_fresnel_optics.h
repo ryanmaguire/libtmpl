@@ -34,6 +34,8 @@
  ******************************************************************************
  *  2023/03/20: Ryan Maguire                                                  *
  *      Moved here from rss_ringoccs. Cleaned up a bit.                       *
+ *  2024/06/24: Ryan Maguire                                                  *
+ *      Added more routines in degrees.                                       *
  ******************************************************************************/
 
 /*  Include guard to avoid importing this file twice.                         */
@@ -52,10 +54,10 @@
  *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
  *  Arguments:                                                                *
  *      k (double):                                                           *
- *          The wavenumber, in the reciprocal of the units of r.              *
- *      r (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (double):                                                         *
  *          The "dummy" radius, usually a variable that is integrated over.   *
- *      r0 (double):                                                          *
+ *      rho0 (double):                                                        *
  *          The radius of the point of interest.                              *
  *      phi (double):                                                         *
  *          The "dummy" azimuthal angle, often integrated over.               *
@@ -79,15 +81,16 @@
  *    This function assumes B and D are independent of phi.                   *
  ******************************************************************************/
 extern double
-tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double r, double r0, double phi,
-                                    double phi0, double B, double D);
+tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(double k, double rho, double rho0,
+                                    double phi, double phi0,
+                                    double B, double D);
 
 extern float
-tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(float k, float r, float r0, float phi,
+tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(float k, float rho, float rho0, float phi,
                                    float phi0, float B, float D);
 extern long double
-tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
-                                     long double r0, long double phi,
+tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double rho,
+                                     long double rho0, long double phi,
                                      long double phi0, long double B,
                                      long double D);
 
@@ -97,14 +100,14 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the cylindrical Fresnel     *
  *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
- *      Similar to tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2 but all angles are in   *
+ *      Similar to tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2 but all angles are in  *
  *      degrees instead of radians.                                           *
  *  Arguments:                                                                *
  *      k (double):                                                           *
- *          The wavenumber, in the reciprocal of the units of r.              *
- *      r (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (double):                                                         *
  *          The "dummy" radius, usually a variable that is integrated over.   *
- *      r0 (double):                                                          *
+ *      rho0 (double):                                                        *
  *          The radius of the point of interest.                              *
  *      phi (double):                                                         *
  *          The "dummy" azimuthal angle, often integrated over.               *
@@ -128,16 +131,17 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(long double k, long double r,
  *    This function assumes B and D are independent of phi.                   *
  ******************************************************************************/
 extern double
-tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg(double k, double r,
-                                        double r0, double phi, double phi0,
+tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg(double k, double rho, double rho0,
+                                        double phi, double phi0,
                                         double B, double D);
 
 extern float
-tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2_Deg(float k, float r, float r0, float phi,
-                                       float phi0, float B, float D);
+tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2_Deg(float k, float rho, float rho0,
+                                       float phi, float phi0,
+                                       float B, float D);
 extern long double
-tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k, long double r,
-                                         long double r0, long double phi,
+tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k, long double rho,
+                                         long double rho0, long double phi,
                                          long double phi0, long double B,
                                          long double D);
 
@@ -149,10 +153,10 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k, long double r,
  *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
  *  Arguments:                                                                *
  *      k (double):                                                           *
- *          The wavenumber, in the reciprocal of the units of r.              *
- *      r (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (double):                                                         *
  *          The "dummy" radius, usually a variable that is integrated over.   *
- *      r0 (double):                                                          *
+ *      rho0 (double):                                                        *
  *          The radius of the point of interest.                              *
  *      phi (double):                                                         *
  *          The "dummy" azimuthal angle, often integrated over.               *
@@ -176,17 +180,18 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k, long double r,
  *    This function assumes B and D are independent of phi.                   *
  ******************************************************************************/
 extern double
-tmpl_Double_Cyl_Fresnel_dPsi_dPhi(double k, double r, double r0, double phi,
-                                  double phi0, double B, double D);
+tmpl_Double_Cyl_Fresnel_dPsi_dPhi(double k, double rho, double rho0,
+                                  double phi, double phi0, double B, double D);
 
 extern float
 tmpl_Float_Cyl_Fresnel_dPsi_dPhi(float k, float r, float r0, float phi,
                                  float phi0, float B, float D);
 
 extern long double
-tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(long double k, long double r, long double r0,
-                                   long double phi, long double phi0,
-                                   long double B, long double D);
+tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(long double k, long double rho,
+                                   long double rho0, long double phi,
+                                   long double phi0, long double B,
+                                   long double D);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -198,10 +203,10 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(long double k, long double r, long double r0,
  *      degrees.                                                              *
  *  Arguments:                                                                *
  *      k (double):                                                           *
- *          The wavenumber, in the reciprocal of the units of r.              *
- *      r (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (double):                                                         *
  *          The "dummy" radius, usually a variable that is integrated over.   *
- *      r0 (double):                                                          *
+ *      rho0 (double):                                                        *
  *          The radius of the point of interest.                              *
  *      phi (double):                                                         *
  *          The "dummy" azimuthal angle, often integrated over.               *
@@ -225,16 +230,17 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(long double k, long double r, long double r0,
  *    This function assumes B and D are independent of phi.                   *
  ******************************************************************************/
 extern double
-tmpl_Double_Cyl_Fresnel_dPsi_dPhi_Deg(double k, double r, double r0, double phi,
-                                      double phi0, double B, double D);
+tmpl_Double_Cyl_Fresnel_dPsi_dPhi_Deg(double k, double rho, double rho0,
+                                      double phi, double phi0,
+                                      double B, double D);
 
 extern float
-tmpl_Float_Cyl_Fresnel_dPsi_dPhi_Deg(float k, float r, float r0, float phi,
-                                     float phi0, float B, float D);
+tmpl_Float_Cyl_Fresnel_dPsi_dPhi_Deg(float k, float rho, float rho0,
+                                     float phi, float phi0, float B, float D);
 
 extern long double
-tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_Deg(long double k, long double r,
-                                       long double r0, long double phi,
+tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi_Deg(long double k, long double rho,
+                                       long double rho0, long double phi,
                                        long double phi0, long double B,
                                        long double D);
 
@@ -680,6 +686,75 @@ tmpl_LDouble_Cyl_Fresnel_Scale_Deg(long double lambda, long double D,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Elliptical_Fresnel_dPsi_dPhi                              *
+ *  Purpose:                                                                  *
+ *      Computes the first partial derivative of the elliptical Fresnel       *
+ *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of r.              *
+ *      r (double):                                                           *
+ *          The "dummy" radius, usually a variable that is integrated over.   *
+ *      r0 (double):                                                          *
+ *          The radius of the point of interest.                              *
+ *      phi (double):                                                         *
+ *          The "dummy" azimuthal angle, often integrated over.               *
+ *      phi0 (double):                                                        *
+ *          The azimuthal angle of the point of interest. Same units as phi.  *
+ *      B (double):                                                           *
+ *          The opening angle of the plane. For planetary ring systems, this  *
+ *          is the ring opening angle of the rings with respect to Earth.     *
+ *      D (double):                                                           *
+ *          The distance from the observer to the plane.                      *
+ *      ecc (double):                                                         *
+ *          The eccentricity of the ellipse.                                  *
+ *      peri (double):                                                        *
+ *          The periapse of the ellipse.                                      *
+ *  Outputs:                                                                  *
+ *      dpsi_dphi (double):                                                   *
+ *          The first partial derivative of Psi with respect to phi.          *
+ *  Notes:                                                                    *
+ *    Assumes elliptical symmetry with ellipse parameters given by ecc and    *
+ *    peri. Useful for Uranus with elliptical rings.                          *
+ *                                                                            *
+ *    All angles are assumed to be in radians.                                *
+ *    All lengths are assumed to be in the same units.                        *
+ ******************************************************************************/
+extern double
+tmpl_Double_Elliptical_Fresnel_dPsi_dPhi(double k,
+                                         double r,
+                                         double r0,
+                                         double phi,
+                                         double phi0,
+                                         double B,
+                                         double D,
+                                         double ecc,
+                                         double peri);
+
+extern float
+tmpl_Float_Elliptical_Fresnel_dPsi_dPhi(float k,
+                                        float r,
+                                        float r0,
+                                        float phi,
+                                        float phi0,
+                                        float B,
+                                        float D,
+                                        float ecc,
+                                        float peri);
+
+extern long double
+tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi(long double k,
+                                          long double r,
+                                          long double r0,
+                                          long double phi,
+                                          long double phi0,
+                                          long double B,
+                                          long double D,
+                                          long double ecc,
+                                          long double peri);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton                         *
  *  Purpose:                                                                  *
  *      Computes the value phi_s that makes the cylindrical Fresnel kernel    *
@@ -725,30 +800,48 @@ tmpl_LDouble_Cyl_Fresnel_Scale_Deg(long double lambda, long double D,
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
 extern double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton(double k, double r, double r0,
-                                              double phi, double phi0, double B,
-                                              double D, double eps,
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton(double k,
+                                              double r,
+                                              double r0,
+                                              double phi,
+                                              double phi0,
+                                              double B,
+                                              double D,
+                                              double eps,
                                               unsigned int toler);
 
 extern float
-tmpl_Float_Stationary_Cyl_Fresnel_Psi_Newton(float k, float r,
-                                             float r0, float phi,
-                                             float phi0, float B, float D,
-                                             float eps, unsigned int toler);
+tmpl_Float_Stationary_Cyl_Fresnel_Psi_Newton(float k,
+                                             float r,
+                                             float r0,
+                                             float phi,
+                                             float phi0,
+                                             float B,
+                                             float D,
+                                             float eps,
+                                             unsigned int toler);
 
 extern long double
-tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k, long double r,
-                                               long double r0, long double phi,
-                                               long double phi0, long double B,
-                                               long double D, long double eps,
+tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k,
+                                               long double r,
+                                               long double r0,
+                                               long double phi,
+                                               long double phi0,
+                                               long double B,
+                                               long double D,
+                                               long double eps,
                                                unsigned int toler);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Elliptical_Fresnel_dPsi_dPhi                              *
+ *      tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton_Deg                     *
  *  Purpose:                                                                  *
- *      Computes the first partial derivative of the elliptical Fresnel       *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      Computes the value phi_s that makes the cylindrical Fresnel kernel    *
+ *      stationary. That is, the value phi such that dpsi / dphi = 0, as a    *
+ *      function of the other inputs. This is done using Newton's method.     *
+ *      This function is used when the stationary phase approximation is      *
+ *      needed to reduce the double integral of the plane into a single       *
+ *      integral over a curve in the plane.                                   *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -757,7 +850,8 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k, long double r,
  *      r0 (double):                                                          *
  *          The radius of the point of interest.                              *
  *      phi (double):                                                         *
- *          The "dummy" azimuthal angle, often integrated over.               *
+ *          The guess for the stationary value, used as the starting point of *
+ *          Newton's method. phi = phi0 is often a good guess.                *
  *      phi0 (double):                                                        *
  *          The azimuthal angle of the point of interest. Same units as phi.  *
  *      B (double):                                                           *
@@ -765,35 +859,57 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k, long double r,
  *          is the ring opening angle of the rings with respect to Earth.     *
  *      D (double):                                                           *
  *          The distance from the observer to the plane.                      *
- *      ecc (double):                                                         *
- *          The eccentricity of the ellipse.                                  *
- *      peri (double):                                                        *
- *          The periapse of the ellipse.                                      *
+ *      eps (double):                                                         *
+ *          The "epsilon" factor, the allowed error in the computation of the *
+ *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
+ *          stop and the resulting phi will be returned.                      *
+ *      toler (unsigned int):                                                 *
+ *          The tolerance in the computation, the maximum number of           *
+ *          iterations allowed in Newton's method before the algorithm is     *
+ *          halted and the current value of phi is returned. For most         *
+ *          practical application, toler = 4 or toler = 5 is sufficient.      *
  *  Outputs:                                                                  *
- *      dpsi_dphi (double):                                                   *
- *          The first partial derivative of Psi with respect to phi.          *
+ *      phi_s (double):                                                       *
+ *          The stationary value of phi.                                      *
  *  Notes:                                                                    *
- *    Assumes elliptical symmetry with ellipse parameters given by ecc and    *
- *    peri. Useful for Uranus with elliptical rings.                          *
+ *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
+ *    accurate for Uranus. Float and long double precisions are provided.     *
  *                                                                            *
- *    All angles are assumed to be in radians.                                *
+ *    All angles are assumed to be in degrees.                                *
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
 extern double
-tmpl_Double_Elliptical_Fresnel_dPsi_dPhi(double k, double r, double r0,
-                                         double phi, double phi0, double B,
-                                         double D, double ecc, double peri);
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton_Deg(double k,
+                                                  double r,
+                                                  double r0,
+                                                  double phi,
+                                                  double phi0,
+                                                  double B,
+                                                  double D,
+                                                  double eps,
+                                                  unsigned int toler);
 
 extern float
-tmpl_Float_Elliptical_Fresnel_dPsi_dPhi(float k, float r, float r0,
-                                        float phi, float phi0, float B,
-                                        float D, float ecc, float peri);
+tmpl_Float_Stationary_Cyl_Fresnel_Psi_Newton_Deg(float k,
+                                                 float r,
+                                                 float r0,
+                                                 float phi,
+                                                 float phi0,
+                                                 float B,
+                                                 float D,
+                                                 float eps,
+                                                 unsigned int toler);
+
 extern long double
-tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi(long double k, long double r,
-                                          long double r0, long double phi,
-                                          long double phi0, long double B,
-                                          long double D, long double ecc,
-                                          long double peri);
+tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton_Deg(long double k,
+                                                   long double r,
+                                                   long double r0,
+                                                   long double phi,
+                                                   long double phi0,
+                                                   long double B,
+                                                   long double D,
+                                                   long double eps,
+                                                   unsigned int toler);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -846,20 +962,119 @@ tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi(long double k, long double r,
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
 extern double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k, double r,
-                                                double r0, double phi,
-                                                double phi0, double B,
-                                                double rx, double ry,
-                                                double rz, double eps,
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k,
+                                                double r,
+                                                double r0,
+                                                double phi,
+                                                double phi0,
+                                                double B,
+                                                double rx,
+                                                double ry,
+                                                double rz,
+                                                double eps,
                                                 unsigned int toler);
 
 extern float
-tmpl_Float_Stationary_Cyl_Fresnel_Psi_D_Newton(float k, float r,
-                                               float r0, float phi,
-                                               float phi0, float B,
-                                               float rx, float ry,
-                                               float rz, float eps,
+tmpl_Float_Stationary_Cyl_Fresnel_Psi_D_Newton(float k,
+                                               float r,
+                                               float r0,
+                                               float phi,
+                                               float phi0,
+                                               float B,
+                                               float rx,
+                                               float ry,
+                                               float rz,
+                                               float eps,
                                                unsigned int toler);
+
+extern long double
+tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_D_Newton(long double k,
+                                                 long double r,
+                                                 long double r0,
+                                                 long double phi,
+                                                 long double phi0,
+                                                 long double B,
+                                                 long double rx,
+                                                 long double ry,
+                                                 long double rz,
+                                                 long double eps,
+                                                 unsigned int toler);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg                   *
+ *  Purpose:                                                                  *
+ *      Computes the value phi_s that makes the cylindrical Fresnel kernel    *
+ *      stationary. That is, the value phi such that dpsi / dphi = 0, as a    *
+ *      function of the other inputs. This is done using Newton's method.     *
+ *      This function is used when the stationary phase approximation is      *
+ *      needed to reduce the double integral of the plane into a single       *
+ *      integral over a curve in the plane.                                   *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of r.              *
+ *      r (double):                                                           *
+ *          The "dummy" radius, usually a variable that is integrated over.   *
+ *      r0 (double):                                                          *
+ *          The radius of the point of interest.                              *
+ *      phi (double):                                                         *
+ *          The guess for the stationary value, used as the starting point of *
+ *          Newton's method. phi = phi0 is often a good guess.                *
+ *      phi0 (double):                                                        *
+ *          The azimuthal angle of the point of interest. Same units as phi.  *
+ *      B (double):                                                           *
+ *          The opening angle of the plane. For planetary ring systems, this  *
+ *          is the ring opening angle of the rings with respect to Earth.     *
+ *      rx (double):                                                          *
+ *          The x coordinated of the observer with respect to the plane.      *
+ *      ry (double):                                                          *
+ *          The y coordinated of the observer with respect to the plane.      *
+ *      rz (double):                                                          *
+ *          The z coordinated of the observer with respect to the plane.      *
+ *      eps (double):                                                         *
+ *          The "epsilon" factor, the allowed error in the computation of the *
+ *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
+ *          stop and the resulting phi will be returned.                      *
+ *      toler (unsigned int):                                                 *
+ *          The tolerance in the computation, the maximum number of           *
+ *          iterations allowed in Newton's method before the algorithm is     *
+ *          halted and the current value of phi is returned. For most         *
+ *          practical application, toler = 4 or toler = 5 is sufficient.      *
+ *  Outputs:                                                                  *
+ *      phi_s (double):                                                       *
+ *          The stationary value of phi.                                      *
+ *  Notes:                                                                    *
+ *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
+ *    accurate for Uranus. Float and long double precisions are provided.     *
+ *                                                                            *
+ *    All angles are assumed to be in radians.                                *
+ *    All lengths are assumed to be in the same units.                        *
+ ******************************************************************************/
+extern double
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(double k,
+                                                    double r,
+                                                    double r0,
+                                                    double phi,
+                                                    double phi0,
+                                                    double B,
+                                                    double rx,
+                                                    double ry,
+                                                    double rz,
+                                                    double eps,
+                                                    unsigned int toler);
+
+extern float
+tmpl_Float_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(float k,
+                                                   float r,
+                                                   float r0,
+                                                   float phi,
+                                                   float phi0,
+                                                   float B,
+                                                   float rx,
+                                                   float ry,
+                                                   float rz,
+                                                   float eps,
+                                                   unsigned int toler);
 
 extern long double
 tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_D_Newton(long double k,
@@ -876,20 +1091,30 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_D_Newton(long double k,
 
 /******************************************************************************/
 extern double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k, double r,
-                                                      double r0, double phi,
-                                                      double phi0, double B,
-                                                      double rx, double ry,
-                                                      double rz, double eps,
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton(double k,
+                                                      double r,
+                                                      double r0,
+                                                      double phi,
+                                                      double phi0,
+                                                      double B,
+                                                      double rx,
+                                                      double ry,
+                                                      double rz,
+                                                      double eps,
                                                       unsigned int toler);
 
 extern double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Old(double kD, double r,
-                                                    double r0, double phi,
-                                                    double phi0, double B,
-                                                    double rx, double ry,
-                                                    double rz, double eps,
-                                                    unsigned int toler);
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_dD_dPhi_Newton_Deg(double k,
+                                                          double r,
+                                                          double r0,
+                                                          double phi,
+                                                          double phi0,
+                                                          double B,
+                                                          double rx,
+                                                          double ry,
+                                                          double rz,
+                                                          double eps,
+                                                          unsigned int toler);
 
 extern double
 tmpl_Double_Stationary_Elliptical_Fresnel_Psi_Newton(double k, double r,

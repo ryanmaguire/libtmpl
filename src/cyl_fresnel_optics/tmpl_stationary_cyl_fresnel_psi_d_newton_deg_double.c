@@ -36,17 +36,17 @@
 #include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
 double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k,
-                                                double r,
-                                                double r0,
-                                                double phi,
-                                                double phi0,
-                                                double B,
-                                                double rx,
-                                                double ry,
-                                                double rz,
-                                                double eps,
-                                                unsigned int toler)
+tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(double k,
+                                                    double r,
+                                                    double r0,
+                                                    double phi,
+                                                    double phi0,
+                                                    double B,
+                                                    double rx,
+                                                    double ry,
+                                                    double rz,
+                                                    double eps,
+                                                    unsigned int toler)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     double xi, eta, psi0, dxi, deta, deta2, dxi2, rcpr_psi0, rcpr_psi0_cubed;
@@ -58,10 +58,10 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k,
     unsigned int n = 0U;
 
     /*  Precompute cosines and sines to save on computations.                 */
-    const double cos_B = tmpl_Double_Cos(B);
+    const double cos_B = tmpl_Double_Cosd(B);
 
     /*  Simultaneously compute sine and cosine of phi.                        */
-    tmpl_Double_SinCos(phi0, &sin_phi0, &cos_phi0);
+    tmpl_Double_SinCosd(phi0, &sin_phi0, &cos_phi0);
 
     /*  Normalize the requested error by the wavenumber and distance.         */
     eps /= k;
@@ -74,7 +74,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k,
             break;
 
         /*  Simultaneously compute sine and cosine of phi.                    */
-        tmpl_Double_SinCos(phi, &sin_phi, &cos_phi);
+        tmpl_Double_SinCosd(phi, &sin_phi, &cos_phi);
 
         /*  Since we've computed cos and sin of phi and phi0, cos and sin of  *
          *  phi-phi0 can be computed without the need to call cos and sin.    */
@@ -127,7 +127,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton(double k,
         d2psi += (0.5 * rcpr_psi0) * (deta2 - 2.0*dxi2) + dxi2;
 
         /*  Perform the Newton iteration, and increment n.                    */
-        phi = phi - dpsi / d2psi;
+        phi = phi - tmpl_Rad_to_Deg * dpsi / d2psi;
         ++n;
 
         /*  Update the error. We want the partial derivative to be small.     */
