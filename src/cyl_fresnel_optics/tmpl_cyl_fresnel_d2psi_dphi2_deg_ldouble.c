@@ -70,7 +70,7 @@
  *                                                                            *
  *          psi' = (kD [sqrt(1 + eta - 2 xi) + xi - 1])'                      *
  *               = kD ([sqrt(1 + eta - 2 xi)]' + xi')                         *
- *               = kD ([eta' - 2 xi'] / (2 sqrt(1 + eta - 2 xi)) + xi')       *
+ *               = kD ([eta' - 2 xi'] / [2 sqrt(1 + eta - 2 xi)] + xi')       *
  *                                                                            *
  *      We need to compute xi' and eta'.                                      *
  *                                                                            *
