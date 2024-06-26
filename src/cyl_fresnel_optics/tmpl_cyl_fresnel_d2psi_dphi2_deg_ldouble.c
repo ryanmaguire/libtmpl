@@ -84,7 +84,7 @@
  *                                                                            *
  *      The first partial derivative is:                                      *
  *                                                                            *
- *          kD ([eta' - 2 xi'] / [2 sqrt(1 + eta - 2 xi)) + xi']              *
+ *          kD ([eta' - 2 xi'] / [2 sqrt(1 + eta - 2 xi)] + xi')              *
  *                                                                            *
  *      The second partial derivative is then:                                *
  *                                                                            *
