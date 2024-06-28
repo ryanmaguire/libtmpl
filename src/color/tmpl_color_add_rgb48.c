@@ -68,7 +68,7 @@ tmpl_RGB48 tmpl_RGB48_Add(tmpl_RGB48 c0, tmpl_RGB48 c1)
     const unsigned short int g_diff = PEAK - c0.dat[1];
     const unsigned short int b_diff = PEAK - c0.dat[2];
 
-    /*  If a channel will overflow, set the channel to 255 (max value).       *
+    /*  If a channel will overflow, set the channel to 65535 (max value).     *
      *  Otherwise compute the sum as normal. The "& PEAK" at the end is       *
      *  simply to avoid compiler warnings about conversions to int. As a      *
      *  reminder about ternary syntax, x = (a <= b ? c : d) sets x to "c" if  *
