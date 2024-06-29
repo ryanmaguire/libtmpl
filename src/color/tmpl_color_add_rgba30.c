@@ -19,7 +19,7 @@
  *                            tmpl_color_add_rgb30                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by summing over the individual color channels.         *
+ *      Adds two colors by summing over the individual color channels.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -56,9 +56,10 @@
 /*  Clipping functions are provided here.                                     */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  The maximum value for a 10-bit color channel is 1023.                     */
 #define PEAK (0x3FFU)
 
-/*  Function for adding together two colors in 24-bit RGB format.             */
+/*  Function for adding together two colors in 24-bit RGBA format.            */
 tmpl_RGBA30 tmpl_RGBA30_Add(tmpl_RGBA30 c0, tmpl_RGBA30 c1)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
