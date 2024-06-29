@@ -19,21 +19,21 @@
  *                            tmpl_color_add_rgb24                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds to colors by summing over the individual color channels.         *
+ *      Adds two colors by summing over the individual color channels.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_RGB24_Add                                                        *
+ *      tmpl_RGBA24_Add                                                       *
  *  Purpose:                                                                  *
  *      Adds two colors together by summing the color channels.               *
  *  Arguments:                                                                *
- *      c0 (tmpl_RGB24):                                                      *
+ *      c0 (tmpl_RGBA24):                                                     *
  *          A color.                                                          *
- *      c1 (tmpl_RGB24):                                                      *
+ *      c1 (tmpl_RGBA24):                                                     *
  *          Another color.                                                    *
  *  Output:                                                                   *
- *      sum (tmpl_RGB24):                                                     *
+ *      sum (tmpl_RGBA24):                                                    *
  *          The color sum of c0 and c1.                                       *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
@@ -63,9 +63,10 @@
 /*  Clipping functions found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
 
+/*  Maximum value for 8-bit color channels is 255.                            */
 #define PEAK (0xFFU)
 
-/*  Function for adding together two colors in 24-bit RGB format.             */
+/*  Function for adding together two colors in 24-bit RGBA format.            */
 tmpl_RGBA24 tmpl_RGBA24_Add(tmpl_RGBA24 c0, tmpl_RGBA24 c1)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
@@ -89,7 +90,7 @@ tmpl_RGBA24 tmpl_RGBA24_Add(tmpl_RGBA24 c0, tmpl_RGBA24 c1)
     sum.dat[1] = (g_diff <= c1.dat[1] ? PEAK : (c0.dat[1] + c1.dat[1]) & PEAK);
     sum.dat[2] = (b_diff <= c1.dat[2] ? PEAK : (c0.dat[2] + c1.dat[2]) & PEAK);
 
-    /*  Clip the alpha parameter to ensure to doesn't overflow as well.       */
+    /*  Clip the alpha parameter to ensure it doesn't overflow as well.       */
     sum.alpha = tmpl_Double_Unit_Clamp(alpha);
 
     return sum;
