@@ -87,6 +87,10 @@ extern float tmpl_Float_Fresnel_Sin(float x);
 extern double tmpl_Double_Fresnel_Sin(double x);
 extern long double tmpl_LDouble_Fresnel_Sin(long double x);
 
+extern float tmpl_Float_Normalized_Fresnel_Cos(float x);
+extern double tmpl_Double_Normalized_Fresnel_Cos(double x);
+extern long double tmpl_LDouble_Normalized_Fresnel_Cos(long double x);
+
 extern void
 tmpl_Legendre_Polynomials(double *legendre_p, double x, unsigned int order);
 
@@ -97,6 +101,8 @@ extern void
 tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
                                  double *alt_legendre_p,
                                  double Legendre_Coeff, unsigned int order);
+
+extern const double tmpl_normalized_fresnel_cos_remez_table[288];
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
