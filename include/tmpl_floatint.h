@@ -27,8 +27,10 @@
  *          Location of TMPL_HAS_FLOATINT32 and TMPL_HAS_FLOATINT64.          *
  *  2.) tmpl_inttype.h:                                                       *
  *          Header file containing fixed-width integer data types.            *
- *  3.) tmpl_math.h:                                                          *
- *          Header file with macros for IEEE-754 support.                     *
+ *  3.) tmpl_ieee754_float.h:                                                 *
+ *          Header file with a union for IEEE-754 single precision numbers.   *
+ *  4.) tmpl_ieee754_double.h:                                                *
+ *          Header file with a union for IEEE-754 double precision numbers.   *
  ******************************************************************************
  *  Author: Ryan Maguire                                                      *
  *  Date:   2023/08/10                                                        *
@@ -44,12 +46,12 @@
 /*  Fixed-width integer data types found here.                                */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  IEEE-754 support macros found here.                                       */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  If float is represented using the 32-bit IEEE-754 format, and if 32-bit   *
  *  unsigned integers are available, provide a union for type-punning.        */
 #if TMPL_HAS_FLOATINT32 == 1
+
+/*  32-bit float union found here.                                            */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
 /*  Union for type-punning a 32-bit float with a 32-bit int.                  */
 typedef union tmpl_IEEE754_FloatInt32_Def {
@@ -70,6 +72,9 @@ typedef union tmpl_IEEE754_FloatInt32_Def {
 /*  If double is represented using the 64-bit IEEE-754 format, and if 64-bit  *
  *  unsigned integers are available, provide a union for type-punning.        */
 #if TMPL_HAS_FLOATINT64 == 1
+
+/*  64-bit double union found here.                                           */
+#include <libtmpl/include/tmpl_ieee754_double.h>
 
 /*  Union for type-punning a 64-bit double with a 64-bit int.                 */
 typedef union tmpl_IEEE754_FloatInt64_Def {
