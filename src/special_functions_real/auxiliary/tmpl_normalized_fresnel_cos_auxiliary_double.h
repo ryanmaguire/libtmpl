@@ -218,8 +218,6 @@ double tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(double x)
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"
-#undef TMPL_COS_MACLAURIN
-#undef TMPL_SIN_MACLAURIN
 #undef C0
 #undef C1
 #undef S0
