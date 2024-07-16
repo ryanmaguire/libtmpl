@@ -21,7 +21,7 @@
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Remez coefficients for the Normalized Fresnel cosine function on [1, 2].  */
-const double tmpl_normalized_fresnel_cos_remez_table[288] = {
+const double tmpl_double_normalized_fresnel_cos_table[288] = {
     +7.7989340037682282945623858806575438207691181881499E-01,
     +9.4140885878335468586004953991169042173377172029217E-17,
     -1.5707963267949778408538546785678906380368507340123E+00,

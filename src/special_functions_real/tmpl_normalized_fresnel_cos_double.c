@@ -99,9 +99,9 @@
  *                                                                            *
  *      For 2^17 <= x < 2^52 we use the asymptotic expansion. This is:        *
  *                                                                            *
- *                  1   1                                                     *
- *          C(x) ~  - + - sin(pi/2 x^2)                                       *
- *                  2   x                                                     *
+ *                 1    1                                                     *
+ *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
+ *                 2   pi x                                                   *
  *                                                                            *
  *      Again, care is taken to compute sin(pi/2 x^2) without precision loss  *
  *      by computing x^2 using a double-double trick.                         *

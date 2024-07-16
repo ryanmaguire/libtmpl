@@ -102,7 +102,7 @@ tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
                                  double *alt_legendre_p,
                                  double Legendre_Coeff, unsigned int order);
 
-extern const double tmpl_normalized_fresnel_cos_remez_table[288];
+extern const double tmpl_double_normalized_fresnel_cos_table[288];
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
