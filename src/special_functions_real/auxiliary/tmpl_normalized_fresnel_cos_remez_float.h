@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_double_normalized_fresnel_cos_pade_double                  *
+ *               tmpl_float_normalized_fresnel_cos_remez_double               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for small values.              *
@@ -59,8 +59,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_ieee754_double.h:                                                *
- *          Header file with the tmpl_IEEE754_Double data type.               *
+ *  2.) tmpl_ieee754_float.h:                                                 *
+ *          Header file with the tmpl_IEEE754_Float data type.                *
  *  2.) tmpl_floatint.h:                                                      *
  *          Header file with the tmpl_FloatInt64 data type.                   *
  ******************************************************************************
@@ -69,50 +69,40 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_DOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_DOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_COS_FLOAT_H
+#define TMPL_NORMALIZED_FRESNEL_COS_FLOAT_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+/*  TMPL_HAS_IEEE754_FLOAT macro found here.                                  */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const double tmpl_double_normalized_fresnel_cos_table[288];
+extern const float tmpl_float_normalized_fresnel_cos_table[128];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_double_normalized_fresnel_cos_table[n]+z*(\
-    tmpl_double_normalized_fresnel_cos_table[n+1U]+z*(\
-        tmpl_double_normalized_fresnel_cos_table[n+2U]+z*(\
-            tmpl_double_normalized_fresnel_cos_table[n+3u]+z*(\
-                tmpl_double_normalized_fresnel_cos_table[n+4U]+z*(\
-                    tmpl_double_normalized_fresnel_cos_table[n+5U]+z*(\
-                        tmpl_double_normalized_fresnel_cos_table[n+6U]+z*(\
-                            tmpl_double_normalized_fresnel_cos_table[n+7U]+z*(\
-                                tmpl_double_normalized_fresnel_cos_table[n+8U]\
-                            )\
-                        )\
-                    )\
-                )\
-            )\
+tmpl_float_normalized_fresnel_cos_table[n]+z*(\
+    tmpl_float_normalized_fresnel_cos_table[n+1U]+z*(\
+        tmpl_float_normalized_fresnel_cos_table[n+2U]+z*(\
+            tmpl_float_normalized_fresnel_cos_table[n+3U]\
         )\
     )\
 )
 
-/*  64-bit integers available for type punning. Fastest method.               */
-#if TMPL_HAS_FLOATINT64 == 1
+/*  32-bit integers available for type punning. Fastest method.               */
+#if TMPL_HAS_FLOATINT32 == 1
 
 /*  Union of 64-bit integers and IEEE-754 bit representation found here.      */
 #include <libtmpl/include/tmpl_floatint.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
+float tmpl_Float_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Float w)
 {
-    /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
-    tmpl_IEEE754_FloatInt64 u;
+    /*  Union of a 32-bit integer and an IEEE-754 struct.                     */
+    tmpl_IEEE754_FloatInt32 u;
 
     /*  Integer for the index of the Remez polynomial.                        */
     unsigned int n;
@@ -124,13 +114,16 @@ double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
      *  significant than 1/32. The index n computed from these bits as well.  *
      *  Zero out all other bits. There are 11 bits for the exponent and 5     *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
-     *  1/32. 0x7FFF800000000000, in hexidecimal, is the bit-mask for this.   */
-    u.n &= 0x7FFF800000000000U;
+     *  1/32. 0x7FFC0000, in hexidecimal, is the bit-mask for this.           */
+    u.n &= 0x7FFC0000;
 
-    /*  The 5 bits for the mantissa give the index. Read this off by by       *
-     *  shifting over and zeroing out the bits for the exponent. There are 9  *
-     *  coefficients for each polynomial, so we need to scale the result by 9.*/
-    n = 9U * ((u.n >> 47U) & 0x1FU);
+    /*  The 5 bits for the mantissa give the index. Read this off by          *
+     *  shifting over and zeroing out the bits for the exponent. There are 4  *
+     *  coefficients for each polynomial, so we need to scale the result by 4.*
+     *  This is equivalent to shifting up by two. So in total, we need to     *
+     *  shift down by 18, apply a bit-mask, and shift up by 2. The shifts     *
+     *  cancel, so we need to shift down by 16 and apply an altered bit mask. */
+    n = (u.n >> 16U) & 0x7CU;
 
     /*  Shift the input to [0, 1/32) by subtracting off this new value.       */
     w.r -= u.f;
@@ -138,68 +131,68 @@ double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Remez.                          */
+/*  End of tmpl_Float_Normalized_Fresnel_Cos_Remez.                           */
 
 /*  IEEE-754 support but no 64-bit integer type-punning. Only slightly slower.*/
-#elif TMPL_HAS_IEEE754_DOUBLE == 1
+#elif TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
+float tmpl_Float_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Float w)
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
-     *  5 bits of the mantissa. man0 has the upper 4 bits, and man1 has 16    *
-     *  bits. We can disregard the lower 15 bits of man1 by shifting. There   *
-     *  are 9 coefficients for each polynomial, so we scale the result by 9.  */
-    const unsigned int n = 9U * ((w.bits.man0 << 1) + (w.bits.man1 >> 15));
+     *  5 bits of the mantissa. man0 has the upper 7 bits, so we need to zero *
+     *  out the lower 2 bits and shift over by two. There are 4 coefficients  *
+     *  per polynomial so we need to then shift up by two. The shifts cancel, *
+     *  meaning we only need to use the bitmask.                              */
+    const unsigned int n = w.bits.man0 & 0x7CU;
 
     /*  We now shift the input to [0, 1/32) by zeroing out these upper 5 bits *
      *  and subtracting off one from the input. First, zero the bits.         */
-    w.bits.man0 = 0x00U;
-    w.bits.man1 &= 0x7FFFU;
+    w.bits.man0 &= 0x03U;
 
     /*  The input is now between 1 and 1 + 1/32. Shift over to [0, 1/32).     */
-    w.r -= 1.0;
+    w.r -= 1.0F;
 
     /*  Compute using the Remez polynomial and return.                        */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Remez.                          */
+/*  End of tmpl_Float_Normalized_Fresnel_Cos_Remez.                           */
 
 /*  Portable version. Slowest method.                                         */
 #else
 
 /*  Tell the compiler about the floor function.                               */
-extern double tmpl_Double_Floor(double x);
+extern float tmpl_Float_Floor(float x);
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-double tmpl_Double_Normalized_Fresnel_Cos_Remez(double x)
+float tmpl_Float_Normalized_Fresnel_Cos_Remez(float x)
 {
     /*  The index is given by the bits up to the 1/32 place. We can get this  *
      *  using the floor function. x-1 shifts the input to [0, 1). By          *
      *  multiplying by 32 and taking the floor function we get these bits as  *
      *  an integer.                                                           */
-    const double n_by_9 = tmpl_Double_Floor(32.0 * (x - 1.0));
+    const float n_by_4 = tmpl_Float_Floor(32.0F * (x - 1.0F));
 
-    /*  There are 9 coefficients for each polynomial. Scale by 9.             */
-    const unsigned int n = (unsigned int)n_by_9 * 9U;
+    /*  There are 4 coefficients for each polynomial. Scale by 4.             */
+    const unsigned int n = (unsigned int)n_by_4 * 4U;
 
     /*  The shift is floor(32 x) / 32. We've computed floor(32(x-1)) already  *
      *  so we can save a second call to the floor function.                   */
-    const double y = (n_by_9 + 32.0) / 32.0;
+    const float y = (n_by_4 + 32.0F) / 32.0F;
 
     /*  Shift so that the input is between 0 and 1/32.                        */
-    const double z = x - y;
+    const float z = x - y;
 
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(z);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Remez.                          */
+/*  End of tmpl_Float_Normalized_Fresnel_Cos_Remez.                           */
 
 #endif
-/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef TMPL_POLY_EVAL

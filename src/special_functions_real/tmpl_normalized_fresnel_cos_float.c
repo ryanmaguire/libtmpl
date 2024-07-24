@@ -16,43 +16,43 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_normalized_fresnel_cos_double                     *
+ *                     tmpl_normalized_fresnel_cos_float                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine at double precision.           *
+ *      Computes the normalized Fresnel cosine at single precision.           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos                                    *
+ *      tmpl_Float_Normalized_Fresnel_Cos                                     *
  *  Purpose:                                                                  *
- *      Compute the normalized Fresnel cosine of the input.                   *
+ *      Computes the normalized Fresnel cosine of the input.                  *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number, the argument for C(x).                             *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (float):                                                          *
  *          The normalized Fresnel cosine function C(x).                      *
  *  Called Functions:                                                         *
  *      tmpl_special_functions_real.h:                                        *
- *          tmpl_Double_Normalized_Fresnel_Cos_Maclaurin:                     *
+ *          tmpl_Float_Normalized_Fresnel_Cos_Maclaurin:                      *
  *              Computes C(x) using a Maclaurin series.                       *
- *          tmpl_Double_Normalized_Fresnel_Cos_Pade:                          *
+ *          tmpl_Float_Normalized_Fresnel_Cos_Pade:                           *
  *              Computes C(x) using a Pade approximant.                       *
- *          tmpl_Double_Normalized_Fresnel_Cos_Remez:                         *
+ *          tmpl_Float_Normalized_Fresnel_Cos_Remez:                          *
  *              Computes C(x) using a Remez polynomial via a lookup table.    *
- *          tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small:               *
+ *          tmpl_Float_Normalized_Fresnel_Cos_Auxiliary_Small:                *
  *              Computes C(x) using auxiliary functions for 2 <= x < 4.       *
- *          tmpl_Double_Normalized_Fresnel_Cos_Auxiliary:                     *
- *              Computes C(x) using auxiliary functions for 4 <= x < 2^17.    *
- *          tmpl_Double_Normalized_Fresnel_Cos_Asymptotic:                    *
- *              Computes C(x) for x >= 2^17.                                  *
+ *          tmpl_Float_Normalized_Fresnel_Cos_Auxiliary:                      *
+ *              Computes C(x) using auxiliary functions for 4 <= x < 2^7 .    *
+ *          tmpl_Float_Normalized_Fresnel_Cos_Asymptotic:                     *
+ *              Computes C(x) for x >= 2^7.                                   *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_Abs:                                                  *
+ *          tmpl_Float_Abs:                                                   *
  *              Computes |x|. Only used if IEEE-754 support is not available. *
- *          tmpl_Double_Is_NaN_Or_Inf:                                        *
+ *          tmpl_Float_Is_NaN_Or_Inf:                                         *
  *              Determines if a real number is NaN or infinity.               *
- *          tmpl_Double_Is_NaN:                                               *
+ *          tmpl_Float_Is_NaN:                                                *
  *              Determines if the input is Not-a-Number.                      *
  *  Method:                                                                   *
  *      The IEEE-754 method and the portable method use the same tricks.      *
@@ -96,38 +96,40 @@
  *          f(x) = sin(pi/2 x^2) (C(x) - 0.5) - cos(pi/2 x^2) (S(x) - 0.5)    *
  *          g(x) = -sin(pi/2 x^2) (S(x) - 0.5) - cos(pi/2 x^2) (C(x) - 0.5)   *
  *                                                                            *
- *      Remez polynomials are used on the intervals [2, 4] and [4, 2^17] for  *
+ *      Remez polynomials are used on the intervals [2, 4] and [4, 2^7] for   *
  *      f and g in terms of t = 1/x. Care is taken to compute cos(pi/2 x^2)   *
  *      and sin(pi/2 x^2) without the precision loss that occurs from         *
- *      squaring "x" by using a double-double trick.                          *
+ *      squaring "x" by converting to double.                                 *
  *                                                                            *
- *      For 2^17 <= x < 2^52 we use the asymptotic expansion. This is:        *
+ *      For 2^7 <= x < 2^23 we use the asymptotic expansion. This is:         *
  *                                                                            *
  *                 1    1                                                     *
  *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
  *                 2   pi x                                                   *
  *                                                                            *
  *      Again, care is taken to compute sin(pi/2 x^2) without precision loss  *
- *      by computing x^2 using a double-double trick.                         *
+ *      by computing x^2 using a double.                                      *
  *                                                                            *
- *      For very large x, |x| > 2^52, use the limit and return 1/2.           *
+ *      For very large x, |x| > 2^23, use the limit and return 1/2.           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_ieee754_double.h:                                                *
- *          Header file providing a union type for IEEE-754 double.           *
- *  2.) tmpl_special_functions_real.h:                                        *
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file containing the TMPL_HAS_IEEE754_FLOAT macro.          *
+ *  2.) tmpl_ieee754_float.h:                                                 *
+ *          Header file providing a union type for IEEE-754 float.            *
+ *  3.) tmpl_special_functions_real.h:                                        *
  *          Header file containing the functions prototype.                   *
- *  3.) tmpl_math.h:                                                          *
- *          Header file containing tmpl_Double_Abs. Only included if IEEE-754 *
+ *  4.) tmpl_math.h:                                                          *
+ *          Header file containing tmpl_Float_Abs. Only included if IEEE-754  *
  *          support is not available.                                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 11, 2024                                                 *
  ******************************************************************************/
 
-/*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+/*  TMPL_HAS_IEEE754_FLOAT macro found here.                                  */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_special_functions_real.h>
@@ -137,114 +139,115 @@
  ******************************************************************************/
 
 /*  Computes C(x) using auxiliary functions "f" and "g" for large x.          */
-#include "auxiliary/tmpl_normalized_fresnel_cos_auxiliary_double.h"
+#include "auxiliary/tmpl_normalized_fresnel_cos_auxiliary_float.h"
 
 /*  Computes C(x) using auxiliary functions "f" and "g" for 2 <= x < 4.       */
-#include "auxiliary/tmpl_normalized_fresnel_cos_auxiliary_small_double.h"
+#include "auxiliary/tmpl_normalized_fresnel_cos_auxiliary_small_float.h"
 
-/*  Computes C(x) using an asymptotic expansion for x > 2^17.                 */
-#include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_double.h"
+/*  Computes C(x) using an asymptotic expansion for x > 2^7.                  */
+#include "auxiliary/tmpl_normalized_fresnel_cos_asymptotic_float.h"
 
 /*  Computes C(x) using a Maclaurin series for |x| < 1 / 4.                   */
-#include "auxiliary/tmpl_normalized_fresnel_cos_maclaurin_double.h"
+#include "auxiliary/tmpl_normalized_fresnel_cos_maclaurin_float.h"
 
 /*  Computes C(x) using a Pade approximant for |x| < 1.                       */
-#include "auxiliary/tmpl_normalized_fresnel_cos_pade_double.h"
+#include "auxiliary/tmpl_normalized_fresnel_cos_pade_float.h"
 
 /*  Computes C(x) using a lookup table of Remez coefficients for 1 <= x < 2.  */
-#include "auxiliary/tmpl_normalized_fresnel_cos_remez_double.h"
+#include "auxiliary/tmpl_normalized_fresnel_cos_remez_float.h"
 
 /*  Speed boost if IEEE-754 support is available.                             */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
+
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-double tmpl_Double_Normalized_Fresnel_Cos(double x)
+float tmpl_Float_Normalized_Fresnel_Cos(float x)
 {
     /*  Variable for the output.                                              */
-    double out;
+    float out;
 
-    /*  Union of a double and the bits representing it. Used for type-punning.*/
-    tmpl_IEEE754_Double w;
+    /*  Union of a float and the bits representing it. Used for type-punning.*/
+    tmpl_IEEE754_Float w;
 
-    /*  Set the double part of the word to the input.                         */
+    /*  Set the float part of the word to the input.                          */
     w.r = x;
 
     /*  Special case, NaN or Infinity.                                        */
-    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
+    if (TMPL_FLOAT_IS_NAN_OR_INF(w))
     {
         /*  For not-a-number, return the input. Output is also not-a-number.  */
-        if (TMPL_DOUBLE_IS_NAN(w))
+        if (TMPL_FLOAT_IS_NAN(w))
             return x;
 
         /*  The normalized Fresnel integrals are asymptotic to +/- 1/2.       */
-        if (TMPL_DOUBLE_IS_NEGATIVE(w))
-            return -0.5;
+        if (TMPL_FLOAT_IS_NEGATIVE(w))
+            return -0.5F;
 
-        return 0.5;
+        return 0.5F;
     }
 
     /*  For small inputs we can use the Taylor series and Pade approximants.  */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS)
+    if (w.bits.expo < TMPL_FLOAT_UBIAS)
     {
-        /*  Avoid underflow. The error is O(x^4). Return x for |x| < 2^-17.   */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 0x11U)
+        /*  Avoid underflow. The error is O(x^4). Return x for |x| < 2^-7.    */
+        if (w.bits.expo < TMPL_FLOAT_UBIAS - 0x07U)
             return x;
 
         /*  For values bounded by 1/4, use a Maclaurin polynomial.            */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 0x02U)
-            return tmpl_Double_Normalized_Fresnel_Cos_Maclaurin(x);
+        if (w.bits.expo < TMPL_FLOAT_UBIAS - 0x02U)
+            return tmpl_Float_Normalized_Fresnel_Cos_Maclaurin(x);
 
         /*  For |x| < 1 we can use a Pade approximate. The numerator and      *
          *  denominator are in terms of x^4, so we can get very high orders   *
-         *  of the approximant for free. The (20, 16) Pade approximant        *
-         *  requires 5 terms for the numerator and 4 for the denominator.     */
-        return tmpl_Double_Normalized_Fresnel_Cos_Pade(x);
+         *  of the approximant for free. The (12, 8) Pade approximant         *
+         *  requires 3 terms for the numerator and 2 for the denominator.     */
+        return tmpl_Float_Normalized_Fresnel_Cos_Pade(x);
     }
 
     /*  For larger numbers use the fact the the Fresnel functions are odd.    */
     w.bits.sign = 0x00U;
 
-    /*  For |x| < 2^17 we can use the auxiliary functions.                    */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x11U)
+    /*  For |x| < 2^7 we can use the auxiliary functions.                     */
+    if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x07U)
     {
         /*  For 1 <= |x| < 2 it is worth speeding up the computation and      *
          *  avoiding calls to the trig functions. We do this using a table of *
          *  coefficients for Remez polynomials spaced 1/32 apart.             */
-        if (w.bits.expo == TMPL_DOUBLE_UBIAS)
-            out = tmpl_Double_Normalized_Fresnel_Cos_Remez(w);
+        if (w.bits.expo == TMPL_FLOAT_UBIAS)
+            out = tmpl_Float_Normalized_Fresnel_Cos_Remez(w);
 
         /*  For 2 <= |x| < 4, less care is needed to accurately use the       *
          *  auxiliary functions. This gives us a bit of a speed boost.        */
-        else if (w.bits.expo == TMPL_DOUBLE_UBIAS + 0x01)
-            out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small(w.r);
+        else if (w.bits.expo == TMPL_FLOAT_UBIAS + 0x01)
+            out = tmpl_Float_Normalized_Fresnel_Cos_Auxiliary_Small(w.r);
 
         /*  For |x| > 4 we need to use the auxiliary functions more carefully.*
-         *  A "double-double" trick is carried out to maintain accuracy.      */
+         *  Double arithmetic is carried out to maintain accuracy.            */
         else
-            out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(w.r);
+            out = tmpl_Float_Normalized_Fresnel_Cos_Auxiliary(w.r);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
+    /*  For very large inputs, 2^7 <= |x| < 2^23, a single term of the        *
      *  asymptotic series is all that is needed. Use this.                    */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x34U)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(w.r);
+    else if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x17U)
+        out = tmpl_Float_Normalized_Fresnel_Cos_Asymptotic(w.r);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
-     *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
+     *  inputs, |x| > 2^23, we can use the limit, which is 1/2.               */
     else
-        out = 0.5;
+        out = 0.5F;
 
     /*  C(x) is odd. For negative inputs, return -C(-x).                      */
-    if (x < 0.0)
+    if (x < 0.0F)
         return -out;
 
     return out;
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos.                                */
+/*  End of tmpl_Float_Normalized_Fresnel_Cos.                                 */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
@@ -253,31 +256,30 @@ double tmpl_Double_Normalized_Fresnel_Cos(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  tmpl_Double_Abs is found here.                                            */
+/*  tmpl_Float_Abs is found here.                                             */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-double tmpl_Double_Normalized_Fresnel_Cos(double x)
+float tmpl_Float_Normalized_Fresnel_Cos(float x)
 {
     /*  Variable for the output.                                              */
-    double out;
+    float out;
 
     /*  C(x) is odd. Compute |x| and work with that.                          */
-    const double abs_x = tmpl_Double_Abs(x);
-
+    const float abs_x = tmpl_Float_Abs(x);
 
     /*  Special case, NaN or Infinity.                                        */
-    if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_Float_Is_NaN_Or_Inf(x))
     {
         /*  For not-a-number, return the input. Output is also not-a-number.  */
-        if (tmpl_Double_Is_NaN(x))
+        if (tmpl_Float_Is_NaN(x))
             return x;
 
         /*  The normalized Fresnel integrals are asymptotic to +/- 1/2.       */
-        if (x < 0.0)
-            return -0.5;
+        if (x < 0.0F)
+            return -0.5F;
 
-        return 0.5;
+        return 0.5F;
     }
 
     /*  For small inputs we can use the Taylor series and Pade approximants.  */
@@ -289,13 +291,13 @@ double tmpl_Double_Normalized_Fresnel_Cos(double x)
 
         /*  For values bounded by 1/4, use a Maclaurin polynomial.            */
         if (abs_x < 0.25)
-            return tmpl_Double_Normalized_Fresnel_Cos_Maclaurin(x);
+            return tmpl_Float_Normalized_Fresnel_Cos_Maclaurin(x);
 
         /*  For |x| < 1 we can use a Pade approximate. The numerator and      *
          *  denominator are in terms of x^4, so we can get very high orders   *
          *  of the approximant for free. The (20, 16) Pade approximant        *
          *  requires 5 terms for the numerator and 4 for the denominator.     */
-        return tmpl_Double_Normalized_Fresnel_Cos_Pade(x);
+        return tmpl_Float_Normalized_Fresnel_Cos_Pade(x);
     }
 
     /*  For |x| < 2^17 we can use the auxiliary functions.                    */
@@ -305,23 +307,18 @@ double tmpl_Double_Normalized_Fresnel_Cos(double x)
          *  avoiding calls to the trig functions. We do this using a table of *
          *  coefficients for Remez polynomials spaced 1/32 apart.             */
         if (abs_x < 2.0)
-            out = tmpl_Double_Normalized_Fresnel_Cos_Remez(abs_x);
+            out = tmpl_Float_Normalized_Fresnel_Cos_Remez(abs_x);
 
         /*  For 2 <= |x| < 4, less care is needed to accurately use the       *
          *  auxiliary functions. This gives us a bit of a speed boost.        */
-        else if (abs_x < 4.0)
-            out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small(abs_x);
-
-        /*  For |x| > 4 we need to use the auxiliary functions more carefully.*
-         *  A "double-double" trick is carried out to maintain accuracy.      */
         else
-            out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(abs_x);
+            out = tmpl_Float_Normalized_Fresnel_Cos_Auxiliary(abs_x);
     }
 
     /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
      *  asymptotic series is all that is needed. Use this.                    */
     else if (abs_x < 4.503599627370496E+15)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(abs_x);
+        out = tmpl_Float_Normalized_Fresnel_Cos_Asymptotic(abs_x);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
@@ -334,7 +331,7 @@ double tmpl_Double_Normalized_Fresnel_Cos(double x)
 
     return out;
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos.                                */
+/*  End of tmpl_Float_Normalized_Fresnel_Cos.                                 */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
