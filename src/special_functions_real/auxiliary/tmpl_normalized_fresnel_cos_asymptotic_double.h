@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_auxiliary_double                *
+ *                tmpl_normalized_fresnel_cos_asymptotic_double               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for large positive inputs.     *
@@ -52,7 +52,7 @@
  *                                                                            *
  *      xhi is chosen to be the upper 16 bits, and xlo is the lower 36 bits.  *
  *      By doing this we guarantee that xhi^2 / 2 is an integer for all       *
- *      x > 2^17. Since sin(pi/2 t) is periodic with period 2, we can         *
+ *      x > 2^17. Since sin(pi t) is periodic with period 2, we can           *
  *      disregard the xhi^2 term completely and concentrate solely on         *
  *      2 xhi xlo + xlo^2. This term is passed to the SinCosPi function. By   *
  *      doing this we avoid precision loss that occurs with taking the sine   *
@@ -98,7 +98,7 @@ double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(double x)
      *  need the first term of the approximation.                             */
     const double t = 1.0 / (TMPL_ONE_PI * x);
 
-    /*  For x > 2^17 we have that xhi^2 / 2 is an integer. Since sin(pi/2 t)  *
+    /*  For x > 2^17 we have that xhi^2 / 2 is an integer. Since sin(pi t)    *
      *  is periodic with period 2, the xhi^2 term can be disregarded. The     *
      *  argument we then care about is pi (2 xhi xlo + xlo^2) / 2.            */
     double sin_hi, cos_hi, sin_lo, cos_lo, sin_x;

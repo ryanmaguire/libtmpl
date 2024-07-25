@@ -283,14 +283,14 @@ float tmpl_Float_Normalized_Fresnel_Cos(float x)
     }
 
     /*  For small inputs we can use the Taylor series and Pade approximants.  */
-    if (abs_x < 1.0)
+    if (abs_x < 1.0F)
     {
         /*  Avoid underflow. The error is O(x^4). Return x for |x| < 2^-17.   */
-        if (abs_x < 7.62939453125E-06)
+        if (abs_x < 7.62939453125E-06F)
             return x;
 
         /*  For values bounded by 1/4, use a Maclaurin polynomial.            */
-        if (abs_x < 0.25)
+        if (abs_x < 0.25F)
             return tmpl_Float_Normalized_Fresnel_Cos_Maclaurin(x);
 
         /*  For |x| < 1 we can use a Pade approximate. The numerator and      *
@@ -300,33 +300,38 @@ float tmpl_Float_Normalized_Fresnel_Cos(float x)
         return tmpl_Float_Normalized_Fresnel_Cos_Pade(x);
     }
 
-    /*  For |x| < 2^17 we can use the auxiliary functions.                    */
-    if (abs_x < 131072.0)
+    /*  For |x| < 2^7 we can use the auxiliary functions.                     */
+    if (abs_x < 128.0F)
     {
         /*  For 1 <= |x| < 2 it is worth speeding up the computation and      *
          *  avoiding calls to the trig functions. We do this using a table of *
          *  coefficients for Remez polynomials spaced 1/32 apart.             */
-        if (abs_x < 2.0)
+        if (abs_x < 2.0F)
             out = tmpl_Float_Normalized_Fresnel_Cos_Remez(abs_x);
 
         /*  For 2 <= |x| < 4, less care is needed to accurately use the       *
          *  auxiliary functions. This gives us a bit of a speed boost.        */
+        else if (abs_x < 4.0F)
+            out = tmpl_Float_Normalized_Fresnel_Cos_Auxiliary_Small(abs_x);
+
+        /*  For |x| > 4 we need to use the auxiliary functions more carefully.*
+         *  Double arithmetic is carried out to maintain accuracy.            */
         else
             out = tmpl_Float_Normalized_Fresnel_Cos_Auxiliary(abs_x);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
+    /*  For very large inputs, 2^7 <= |x| < 2^23, a single term of the        *
      *  asymptotic series is all that is needed. Use this.                    */
-    else if (abs_x < 4.503599627370496E+15)
+    else if (abs_x < 8.388608E+06F)
         out = tmpl_Float_Normalized_Fresnel_Cos_Asymptotic(abs_x);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
     else
-        out = 0.5;
+        out = 0.5F;
 
     /*  C(x) is odd. For negative inputs, return -C(-x).                      */
-    if (x < 0.0)
+    if (x < 0.0F)
         return -out;
 
     return out;

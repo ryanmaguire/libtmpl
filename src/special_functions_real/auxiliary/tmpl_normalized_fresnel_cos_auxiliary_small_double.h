@@ -19,7 +19,7 @@
  *             tmpl_normalized_fresnel_cos_auxiliary_small_double             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for large positive inputs.     *
+ *      Computes the normalized Fresnel cosine for mid-sized inputs.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************

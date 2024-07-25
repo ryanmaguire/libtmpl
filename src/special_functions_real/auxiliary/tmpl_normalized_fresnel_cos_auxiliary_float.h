@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_auxiliary_double                *
+ *                 tmpl_normalized_fresnel_cos_auxiliary_float                *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for large positive inputs.     *
@@ -24,18 +24,20 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Auxiliary                          *
+ *      tmpl_Float_Normalized_Fresnel_Cos_Auxiliary                           *
  *  Purpose:                                                                  *
  *      Computes C(x) for large positive inputs.                              *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (float):                                                          *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosPi:                                             *
+ *          tmpl_Double_Mod_2:                                                *
+ *              Computes the remainder after division by 2.                   *
+ *          tmpl_Float_SinCosPi:                                              *
  *              Simultaneously computes sin(pi x) and cos(pi x).              *
  *  Method:                                                                   *
  *      The normalized Fresnel functions are asymptotic to 1/2 as x tends to  *
@@ -58,23 +60,11 @@
  *      And compute rational Remez approximations for f(t) and g(t). We must  *
  *      be careful when squaring. Naively squaring a large number may lead    *
  *      precision loss in the calculation of sin(pi/2 x^2) and cos(pi/2 x^2). *
- *      We split the input into two parts to relieve us of this issue. That   *
- *      is, we write:                                                         *
- *                                                                            *
- *                         x = xhi + xlo                                      *
- *                    => x^2 = xhi^2 + 2 xhi xlo + xlo^2                      *
- *          => cos(pi/2 x^2) = cos(u) cos(pi/2 xlo^2) - sin(u) sin(pi/2 xlo^2)*
- *          => sin(pi/2 x^2) = cos(u) sin(pi/2 xlo^2) + sin(u) cos(pi/2 xlo^2)*
- *                                                                            *
- *      where u = pi/2 (xhi^2 + 2 xhi xlo).                                   *
- *                                                                            *
- *      For 4 <= x < 2^17 we have |xlo| < 2^-10, hence xlo^2 < 2^-20.         *
- *      We can compute cos and sin of pi/2 xlo^2 safely using the first few   *
- *      terms of their respective Taylor series. After this, all that is left *
- *      to compute is cos(u) and sin(u). This is done using the angle sum     *
- *      formula for cos and sin, recalling that u = pi/2 (xhi^2 + 2 xhi xlo). *
+ *      Since float has a 23-bit mantissa, and double has 52-bits, for every  *
+ *      representable float x, the square x^2 is perfectly representable by a *
+ *      double. We convert and perform the sin / cos computations with this.  *
  *  Notes:                                                                    *
- *      This function assumes the input is between 4 and 2^17.                *
+ *      This function assumes the input is between 4 and 2^7.                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

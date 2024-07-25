@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *               tmpl_float_normalized_fresnel_cos_remez_double               *
+ *               tmpl_float_normalized_fresnel_cos_remez_float                *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for small values.              *
@@ -24,30 +24,30 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Remez                              *
+ *      tmpl_Float_Normalized_Fresnel_Cos_Remez                               *
  *  Purpose:                                                                  *
  *      Computes C(x) for 1 <= x < 2.                                         *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (float):                                                          *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_Floor:                                                *
+ *          tmpl_Float_Floor:                                                 *
  *              Computes the floor of a real number. Only used if neither     *
- *              64-bit type punning nor IEEE-754 support are available.       *
+ *              32-bit type punning nor IEEE-754 support are available.       *
  *  Method:                                                                   *
- *      A lookup table has the coefficients for the degree 9 Remez            *
+ *      A lookup table has the coefficients for the degree 4 Remez            *
  *      polynomial for C(x + 1 + n/32) on the interval [0, 1/32) for          *
  *      0 <= n < 32. We shift x to [0, 1/32), compute n, and then evaluate    *
  *      the polynomial using Horner's method.                                 *
  *                                                                            *
- *      If type-punning with 64-bit int is available, we can speed up the     *
+ *      If type-punning with 32-bit int is available, we can speed up the     *
  *      computation of n and the shift with bit shifting.                     *
  *                                                                            *
- *      If 64-bit integer type punning is not available, but IEEE-754 support *
+ *      If 32-bit integer type punning is not available, but IEEE-754 support *
  *      exists (rare), we can achieve the same effect by examining the bits   *
  *      of the input.                                                         *
  *                                                                            *
@@ -62,15 +62,15 @@
  *  2.) tmpl_ieee754_float.h:                                                 *
  *          Header file with the tmpl_IEEE754_Float data type.                *
  *  2.) tmpl_floatint.h:                                                      *
- *          Header file with the tmpl_FloatInt64 data type.                   *
+ *          Header file with the tmpl_FloatInt32 data type.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 8, 2024                                                  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_FLOAT_H
-#define TMPL_NORMALIZED_FRESNEL_COS_FLOAT_H
+#ifndef TMPL_NORMALIZED_FRESNEL_COS_REMEZ_FLOAT_H
+#define TMPL_NORMALIZED_FRESNEL_COS_REMEZ_FLOAT_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -94,7 +94,7 @@ tmpl_float_normalized_fresnel_cos_table[n]+z*(\
 /*  32-bit integers available for type punning. Fastest method.               */
 #if TMPL_HAS_FLOATINT32 == 1
 
-/*  Union of 64-bit integers and IEEE-754 bit representation found here.      */
+/*  Union of 32-bit integers and IEEE-754 bit representation found here.      */
 #include <libtmpl/include/tmpl_floatint.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
@@ -112,7 +112,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Float w)
 
     /*  The shift is obtained by zeroing out the bits that are more           *
      *  significant than 1/32. The index n computed from these bits as well.  *
-     *  Zero out all other bits. There are 11 bits for the exponent and 5     *
+     *  Zero out all other bits. There are 8 bits for the exponent and 5      *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
      *  1/32. 0x7FFC0000, in hexidecimal, is the bit-mask for this.           */
     u.n &= 0x7FFC0000;
@@ -133,7 +133,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Float w)
 }
 /*  End of tmpl_Float_Normalized_Fresnel_Cos_Remez.                           */
 
-/*  IEEE-754 support but no 64-bit integer type-punning. Only slightly slower.*/
+/*  IEEE-754 support but no 32-bit integer type-punning. Only slightly slower.*/
 #elif TMPL_HAS_IEEE754_FLOAT == 1
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */

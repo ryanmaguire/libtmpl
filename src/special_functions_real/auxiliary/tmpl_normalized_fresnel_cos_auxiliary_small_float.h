@@ -16,26 +16,28 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *             tmpl_normalized_fresnel_cos_auxiliary_small_double             *
+ *             tmpl_normalized_fresnel_cos_auxiliary_small_float              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for large positive inputs.     *
+ *      Computes the normalized Fresnel cosine for mid-sized inputs.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small                    *
+ *      tmpl_Float_Normalized_Fresnel_Cos_Auxiliary_Small                     *
  *  Purpose:                                                                  *
  *      Computes C(x) for 2 <= x < 4.                                         *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (float):                                                          *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosPi:                                             *
+ *          tmpl_Double_Mod_2:                                                *
+ *              Computes the remainder after division by 2.                   *
+ *          tmpl_Float_SinCosPi:                                              *
  *              Simultaneously computes sin(pi x) and cos(pi x).              *
  *  Method:                                                                   *
  *      The normalized Fresnel functions are asymptotic to 1/2 as x tends to  *
@@ -58,17 +60,8 @@
  *      And compute rational Remez approximations for f(t) and g(t). We must  *
  *      be careful when squaring. Naively squaring a large number may lead    *
  *      precision loss in the calculation of sin(pi/2 x^2) and cos(pi/2 x^2). *
- *      We split the input into two parts to relieve us of this issue. That   *
- *      is, we write:                                                         *
- *                                                                            *
- *                         x = xhi + xlo                                      *
- *                    => x^2 = xhi^2 + 2 xhi xlo + xlo^2                      *
- *          => cos(pi/2 x^2) = cos(u) cos(v) - sin(u) sin(v)                  *
- *          => sin(pi/2 x^2) = cos(u) sin(v) + sin(u) cos(v)                  *
- *                                                                            *
- *      where u = pi/2 xhi^2 and v = pi/2 (2 xhi xlo + xlo^2). v is small     *
- *      enough that cos(v) and sin(v) can be computed using small Taylor      *
- *      polynomials. cos(u) and sin(u) are computed in their entirety.        *
+ *      We convert to a double for some of the intermediate steps to avoid    *
+ *      such errors.                                                          *
  *  Notes:                                                                    *
  *      This function assumes the input is between 2 and 4.                   *
  ******************************************************************************
@@ -78,12 +71,12 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       July 8, 2024                                                  *
+ *  Date:       July 24, 2024                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_SMALL_DOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_SMALL_DOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_SMALL_FLOAT_H
+#define TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_SMALL_FLOAT_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>

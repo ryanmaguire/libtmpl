@@ -88,7 +88,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Asymptotic(float x)
      *  to a double. Do this and compute sin(pi/2 x^2) this way.              */
     const double x_double = (double)x;
 
-    /*  The scale factor for the asymptotic expansion. For x > 2^6 we only    *
+    /*  The scale factor for the asymptotic expansion. For x > 2^7 we only    *
      *  need the first term of the approximation.                             */
     const float t = 1.0F / (TMPL_ONE_PI * x);
 

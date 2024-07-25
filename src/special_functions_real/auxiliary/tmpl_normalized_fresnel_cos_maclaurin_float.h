@@ -36,8 +36,8 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute the Maclaurin series for |x| < 1 / 4 using the first 5 terms  *
- *      (0 <= n <= 4). The series is defined by:                              *
+ *      Compute the Maclaurin series for |x| < 1 / 4 using the first 3 terms  *
+ *      (0 <= n <= 2). The series is defined by:                              *
  *                                                                            *
  *                 infty                                                      *
  *                 -----       n  4n+1  -   -  2n                             *

@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_double_normalized_fresnel_cos_pade_double                  *
+ *              tmpl_double_normalized_fresnel_cos_remez_double               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for small values.              *
@@ -69,8 +69,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_DOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_DOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_COS_REMEZ_DOUBLE_H
+#define TMPL_NORMALIZED_FRESNEL_COS_REMEZ_DOUBLE_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -152,7 +152,7 @@ double tmpl_Double_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Double w)
      *  5 bits of the mantissa. man0 has the upper 4 bits, and man1 has 16    *
      *  bits. We can disregard the lower 15 bits of man1 by shifting. There   *
      *  are 9 coefficients for each polynomial, so we scale the result by 9.  */
-    const unsigned int n = 9U * ((w.bits.man0 << 1) + (w.bits.man1 >> 15));
+    const unsigned int n = 9U * ((w.bits.man0 << 1U) + (w.bits.man1 >> 15U));
 
     /*  We now shift the input to [0, 1/32) by zeroing out these upper 5 bits *
      *  and subtracting off one from the input. First, zero the bits.         */
