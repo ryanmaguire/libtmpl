@@ -912,6 +912,9 @@ long double tmpl_LDouble_Erf_Large(long double x)
     unsigned int n;
     long double z;
 
+    if (x > 9.0L)
+        return 1.0L;
+
     w.r = x + 633825300114114700748351602686.0L;
     n = w.bits.man6 >> 12;
 
