@@ -58,7 +58,7 @@
  *          t = 4 / x                                                         *
  *                                                                            *
  *      And compute rational Remez approximations for f(t) and g(t). We must  *
- *      be careful when squaring. Naively squaring a large number may lead    *
+ *      be careful when squaring. Naively squaring a large number may lead to *
  *      precision loss in the calculation of sin(pi/2 x^2) and cos(pi/2 x^2). *
  *      Since float has a 23-bit mantissa, and double has 52-bits, for every  *
  *      representable float x, the square x^2 is perfectly representable by a *
@@ -82,7 +82,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Computes sin(pi t) at single precision.                                   */
+/*  Computes sin(pi t) and cos(pi t) at single precision.                     */
 extern void tmpl_Float_SinCosPi(float t, float *sin_t, float *cos_t);
 
 /*  Computes the remainder of a double after division by 2.                   */
@@ -158,7 +158,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Auxiliary(float x)
     /*  With the auxiliary functions computed, we can compute C(x).           */
     return 0.5F + (f*sin_x - g*cos_x);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Auxiliary.                      */
+/*  End of tmpl_Float_Normalized_Fresnel_Cos_Auxiliary.                       */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"

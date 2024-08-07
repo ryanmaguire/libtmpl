@@ -56,7 +56,7 @@
  *          t = 4 / x                                                         *
  *                                                                            *
  *      And compute rational Remez approximations for f(t) and g(t). We must  *
- *      be careful when squaring. Naively squaring a large number may lead    *
+ *      be careful when squaring. Naively squaring a large number may lead to *
  *      precision loss in the calculation of sin(pi/2 x^2) and cos(pi/2 x^2). *
  *      We split the input into two parts to relieve us of this issue. That   *
  *      is, we write:                                                         *
