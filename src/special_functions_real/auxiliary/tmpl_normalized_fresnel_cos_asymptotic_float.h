@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_auxiliary_double                *
+ *                 tmpl_normalized_fresnel_cos_auxiliary_float                *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for large positive inputs.     *
