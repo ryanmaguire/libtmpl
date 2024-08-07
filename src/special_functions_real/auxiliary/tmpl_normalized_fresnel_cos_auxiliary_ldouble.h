@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_auxiliary_double                *
+ *                tmpl_normalized_fresnel_cos_auxiliary_ldouble               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for large positive inputs.     *
@@ -24,18 +24,18 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Auxiliary                          *
+ *      tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary                         *
  *  Purpose:                                                                  *
  *      Computes C(x) for large positive inputs.                              *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosPi:                                             *
+ *          tmpl_LDouble_SinCosPi:                                            *
  *              Simultaneously computes sin(pi x) and cos(pi x).              *
  *  Method:                                                                   *
  *      The normalized Fresnel functions are asymptotic to 1/2 as x tends to  *
@@ -68,13 +68,12 @@
  *                                                                            *
  *      where u = pi/2 (xhi^2 + 2 xhi xlo).                                   *
  *                                                                            *
- *      For 4 <= x < 2^17 we have |xlo| < 2^-10, hence xlo^2 < 2^-20.         *
- *      We can compute cos and sin of pi/2 xlo^2 safely using the first few   *
- *      terms of their respective Taylor series. After this, all that is left *
- *      to compute is cos(u) and sin(u). This is done using the angle sum     *
- *      formula for cos and sin, recalling that u = pi/2 (xhi^2 + 2 xhi xlo). *
+ *      xlo^2 is small, and sin and cos of this can be computed by a few      *
+ *      terms from the Taylor series. cos(u) and sin(u) are computed using    *
+ *      the angle sum formula.                                                *
  *  Notes:                                                                    *
- *      This function assumes the input is between 4 and 2^17.                *
+ *      This function assumes the input is between 4 and 2^N, where           *
+ *      N = floor(m / 3), m being the number of bits in the mantissa.         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -96,6 +95,7 @@
 extern void
 tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 
+/*  64-bit long double, needs no precision than ordinary double.              */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
@@ -159,6 +159,7 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYD_EVAL(z) D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*D06)))))
 
+/*  Quadruple precision needs very large sums to obtain 34 decimals.          */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
@@ -398,6 +399,7 @@ D00 + z*(\
   )\
 )
 
+/*  Double double, needs nearly as big a sum as quadruple.                    */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
@@ -619,6 +621,7 @@ D00 + z*(\
   )\
 )
 
+/*  Most common representation, 80-bit extended. 63-bit mantissa.             */
 #else
 
 /******************************************************************************
