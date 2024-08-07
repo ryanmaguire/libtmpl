@@ -48,7 +48,7 @@
  *      double-double trick and split x into two parts, xhi and xlo, so that: *
  *                                                                            *
  *          x^2 = (xhi + xlo)^2                                               *
- *                xhi^2 + 2 xhi xlo + xlo^2                                   *
+ *              = xhi^2 + 2 xhi xlo + xlo^2                                   *
  *                                                                            *
  *      xhi is chosen to be the upper 16 bits, and xlo is the lower 36 bits.  *
  *      By doing this we guarantee that xhi^2 / 2 is an even integer for all  *
@@ -88,8 +88,8 @@ TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    *
-     *  The magic number 68719476737 is 2^16 + 1. This makes xhi have the     *
-     *  upper 16 bits of the mantissa and xlo have the lower 36 bits.         */
+     *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the    *
+     *  upper 16 bits of the mantissa and xlo has the lower 36 bits.          */
     const double split = 68719476737.0 * x;
     const double xhi = split - (split - x);
     const double xlo = x - xhi;

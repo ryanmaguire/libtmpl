@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_asymptotic_double               *
+ *               tmpl_normalized_fresnel_cos_asymptotic_ldouble               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for large positive inputs.     *
@@ -24,18 +24,18 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Asymptotic                         *
+ *      tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic                        *
  *  Purpose:                                                                  *
  *      Computes C(x) for large positive inputs.                              *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosPi:                                             *
+ *          tmpl_LDouble_SinCosPi:                                            *
  *              Simultaneously computes sin(pi t) and cos(pi t).              *
  *  Method:                                                                   *
  *      Use the asymptotic expansion for C(x):                                *
@@ -45,21 +45,29 @@
  *                 2   pi x                                                   *
  *                                                                            *
  *      To avoid precision loss in the computation of sin(pi/2 x^2) we use a  *
- *      double-double trick and split x into two parts, xhi and xlo, so that: *
+ *      (long) double-double trick and split x into two parts so that:        *
  *                                                                            *
  *          x^2 = (xhi + xlo)^2                                               *
- *                xhi^2 + 2 xhi xlo + xlo^2                                   *
+ *              = xhi^2 + 2 xhi xlo + xlo^2                                   *
  *                                                                            *
- *      xhi is chosen to be the upper 16 bits, and xlo is the lower 36 bits.  *
- *      By doing this we guarantee that xhi^2 / 2 is an integer for all       *
- *      x > 2^17. Since sin(pi t) is periodic with period 2, we can           *
- *      disregard the xhi^2 term completely and concentrate solely on         *
- *      2 xhi xlo + xlo^2. This term is passed to the SinCosPi function. By   *
- *      doing this we avoid precision loss that occurs with taking the sine   *
- *      of the square of a large number. This only minimally impacts          *
- *      performance as well.                                                  *
+ *      xhi and xlo are chosen so that xhi^2 / 2 is an even integer. The      *
+ *      exact splitting factor depends on the representation of long double.  *
+ *      The number of bits xhi and xlo get are:                               *
+ *                                                                            *
+ *          Type          | xhi | xlo                                         *
+ *          -------------------------                                         *
+ *          Double        |  16 |  36                                         *
+ *          Extended      |  20 |  43                                         *
+ *          Quadruple     |  36 |  74                                         *
+ *          Double Double |  33 |  71                                         *
+ *                                                                            *
+ *      By doing this we need only concern ourselves with 2 xhi xlo + xlo^2.  *
+ *      We compute sin(pi/2 x^2) using the angle sum formula with this        *
+ *      expression. This avoids precision loss and only minimally impacts     *
+ *      performance.                                                          *
  *  Notes:                                                                    *
- *      This function assumes the input is greater than 2^17.                 *
+ *      This function assumes the input is greater than 2^N where             *
+ *      N = floor(m / 3), m being the number of bits in the mantissa.         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -94,14 +102,20 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 
 /*  52-bit mantissa, value is 2^36 + 1.                                       */
 #define TMPL_LDOUBLE_SPLIT (6.8719476737E+10L)
+
+/*  Quadruple precision has a much large mantissa, hence a larger value.      */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /*  112-bit mantissa, value is 2^76 + 1.                                      */
 #define TMPL_LDOUBLE_SPLIT (+7.5557863725914323419137E+22L)
+
+/*  Double-double is not quite as large, smaller splitting value.             */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  104-bit mantissa, value is 2^71 + 1.                                      */
 #define TMPL_LDOUBLE_SPLIT (+2.361183241434822606849E+21L)
+
+/*  The most common version, 80-bit extended / portable.                      */
 #else
 
 /*  63-bit mantissa, value is 2^43 + 1.                                       */
@@ -119,11 +133,11 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
     const long double xhi = split - (split - x);
     const long double xlo = x - xhi;
 
-    /*  The scale factor for the asymptotic expansion. For x > 2^17 we only   *
+    /*  The scale factor for the asymptotic expansion. For large x we only    *
      *  need the first term of the approximation.                             */
     const long double t = 1.0L / (TMPL_ONE_PI * x);
 
-    /*  For large x we have that xhi^2 / 2 is an integer. Since sin(pi t)     *
+    /*  For large x we have xhi^2 / 2 is an even integer. Since sin(pi t)     *
      *  is periodic with period 2, the xhi^2 term can be disregarded. The     *
      *  argument we then care about is pi (2 xhi xlo + xlo^2) / 2.            */
     long double sin_hi, cos_hi, sin_lo, cos_lo, sin_x;
@@ -136,7 +150,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
     /*  The first term of the asymptotic expansion is all that is needed.     */
     return 0.5L + t * sin_x;
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Asymptotic.                     */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic.                    */
 
 /*  Undefine everything in case someone wants to include this file.           */
 #undef TMPL_ONE_PI
