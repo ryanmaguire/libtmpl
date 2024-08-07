@@ -97,6 +97,8 @@ endif
 # Some old functions still call math.h. This will be replaced soon.
 ifdef NO_MATH
 LFLAGS += -lm
+else
+LFLAGS += -lm
 endif
 
 CWARN := -Wall -Wextra -Wpedantic
