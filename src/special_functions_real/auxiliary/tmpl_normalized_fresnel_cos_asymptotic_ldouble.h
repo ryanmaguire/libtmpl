@@ -59,7 +59,7 @@
  *          Double        |  16 |  36                                         *
  *          Extended      |  20 |  43                                         *
  *          Quadruple     |  36 |  74                                         *
- *          Double Double |  33 |  71                                         *
+ *          Double Double |  19 |  85                                         *
  *                                                                            *
  *      By doing this we need only concern ourselves with 2 xhi xlo + xlo^2.  *
  *      We compute sin(pi/2 x^2) using the angle sum formula with this        *
@@ -109,11 +109,11 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 /*  112-bit mantissa, value is 2^76 + 1.                                      */
 #define TMPL_LDOUBLE_SPLIT (+7.5557863725914323419137E+22L)
 
-/*  Double-double is not quite as large, smaller splitting value.             */
+/*  Double-double, special case, we split the higher double.                  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
-/*  104-bit mantissa, value is 2^71 + 1.                                      */
-#define TMPL_LDOUBLE_SPLIT (+2.361183241434822606849E+21L)
+/*  Double-double, split by 2^19 + 1 (splitting as a "double").               */
+#define TMPL_LDOUBLE_SPLIT (+5.24289E+05)
 
 /*  The most common version, 80-bit extended / portable.                      */
 #else
@@ -129,8 +129,15 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+    volatile const double x_double = (double)x;
+    volatile const double split = x_double * TMPL_LDOUBLE_SPLIT;
+    volatile const double xhi_double = split - (split - x_double);
+    const long double xhi = (long double)xhi_double;
+#else
     const long double split = TMPL_LDOUBLE_SPLIT * x;
     const long double xhi = split - (split - x);
+#endif
     const long double xlo = x - xhi;
 
     /*  The scale factor for the asymptotic expansion. For large x we only    *

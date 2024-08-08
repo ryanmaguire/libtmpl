@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *             tmpl_normalized_fresnel_cos_auxiliary_small_double             *
+ *             tmpl_normalized_fresnel_cos_auxiliary_small_ldouble            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for mid-sized inputs.          *
@@ -24,51 +24,57 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small                    *
+ *      tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small                   *
  *  Purpose:                                                                  *
  *      Computes C(x) for 2 <= x < 4.                                         *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosPi:                                             *
+ *          tmpl_LDouble_SinCosPi:                                            *
  *              Simultaneously computes sin(pi x) and cos(pi x).              *
  *  Method:                                                                   *
- *      The normalized Fresnel functions are asymptotic to 1/2 as x tends to  *
- *      positive infinity. They also have highly oscillatory behavior and can *
- *      be approximated using cosine and sine. That is, we may use auxiliary  *
- *      functions f and g to write:                                           *
+ *      64-Bit Double / 80-Bit Extended / Portable:                           *
+ *          The normalized Fresnel functions are asymptotic to 1/2 as x       *
+ *          tends to positive infinity. They also have highly oscillatory     *
+ *          behavior and can be approximated using cosine and sine. That is,  *
+ *          we may use auxiliary functions f and g to write:                  *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *              C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)          *
+ *              S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)          *
  *                                                                            *
- *      Solving for f and g gives us the following:                           *
+ *          Solving for f and g gives us the following:                       *
  *                                                                            *
- *          f(x) = sin(pi/2 x^2) (C(x) - 0.5) - cos(pi/2 x^2) (S(x) - 0.5)    *
- *          g(x) = -sin(pi/2 x^2) (S(x) - 0.5) - cos(pi/2 x^2) (C(x) - 0.5)   *
+ *              f(x) = sin(pi/2 x^2) (C(x)-0.5) - cos(pi/2 x^2) (S(x)-0.5)    *
+ *              g(x) = -sin(pi/2 x^2) (S(x)-0.5) - cos(pi/2 x^2) (C(x)-0.5)   *
  *                                                                            *
- *      We shift the interval [4, infty):                                     *
+ *          We shift the interval [4, infty):                                 *
  *                                                                            *
- *          t = 1 / x                                                         *
+ *              t = 1 / x                                                     *
  *                                                                            *
- *      And compute rational Remez approximations for f(t) and g(t). We must  *
- *      be careful when squaring. Naively squaring a large number may lead    *
- *      precision loss in the calculation of sin(pi/2 x^2) and cos(pi/2 x^2). *
- *      We split the input into two parts to relieve us of this issue. That   *
- *      is, we write:                                                         *
+ *          And compute rational Remez approximations for f(t) and g(t).      *
+ *          We must be careful when squaring. Naively squaring a large number *
+ *          may lead precision loss in the calculation of sin(pi/2 x^2) and   *
+ *          cos(pi/2 x^2). We split the input into two parts to relieve us    *
+ *          of this issue. That is, we write:                                 *
  *                                                                            *
- *                         x = xhi + xlo                                      *
- *                    => x^2 = xhi^2 + 2 xhi xlo + xlo^2                      *
- *          => cos(pi/2 x^2) = cos(u) cos(v) - sin(u) sin(v)                  *
- *          => sin(pi/2 x^2) = cos(u) sin(v) + sin(u) cos(v)                  *
+ *                             x = xhi + xlo                                  *
+ *                        => x^2 = xhi^2 + 2 xhi xlo + xlo^2                  *
+ *              => cos(pi/2 x^2) = cos(u) cos(v) - sin(u) sin(v)              *
+ *              => sin(pi/2 x^2) = cos(u) sin(v) + sin(u) cos(v)              *
  *                                                                            *
- *      where u = pi/2 xhi^2 and v = pi/2 (2 xhi xlo + xlo^2). v is small     *
- *      enough that cos(v) and sin(v) can be computed using small Taylor      *
- *      polynomials. cos(u) and sin(u) are computed in their entirety.        *
+ *          where u = pi/2 xhi^2 and v = pi/2 (2 xhi xlo + xlo^2). v is small *
+ *          enough that cos(v) and sin(v) can be computed using small Taylor  *
+ *          polynomials. cos(u) and sin(u) are computed in their entirety.    *
+ *      128-Bit Double-Double / 128-Bit Quadruple:                            *
+ *          Nearly the same, except that the Remez algorithm failed to        *
+ *          converge for the large sizes required for double-double and       *
+ *          quadruple. So instead two Pade approximants are used, one on the  *
+ *          interval [2, 2.5), and another on the interval [2.5, 4.0].        *
  *  Notes:                                                                    *
  *      This function assumes the input is between 2 and 4.                   *
  ******************************************************************************
@@ -91,14 +97,6 @@
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
 tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
-
-/*  First two terms for the Maclaurin series of cos(pi/2 x^2).                */
-#define C0 (+1.0000000000000000000000000000000000000000000E+00L)
-#define C1 (-1.2337005501361698273543113749845188919142124E+00L)
-
-/*  First two terms for the Maclaurin series of sin(pi/2 x^2).                */
-#define S0 (+1.5707963267948966192313216916397514420985846E+00L)
-#define S1 (-6.4596409750624625365575656389794573337969351E-01L)
 
 /*  Different splitting values are needed, depending on the type. The magic   *
  *  number is 2^(N - round(N/2 - 1)) + 1, where N is the number of bits in    *
@@ -167,6 +165,9 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*C07))))))
 #define TMPL_POLYD_EVAL(z) \
 D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 
+/*  Quadruple precision. The Remez algorithm failed to converge, so instead   *
+ *  we use two Pade approximants (for both "f" and "g"), and hence need eight *
+ *  sets of coefficients.                                                     */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
@@ -176,7 +177,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 /*  112-bit mantissa, splitting number is 2^57 + 1.                           */
 #define TMPL_LDOUBLE_SPLIT (+1.44115188075855873E+17L)
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
+/*  Coefficients for the numerator of the Pade "f" approximant on [2, 2.5).   */
 #define A00 (+1.5658432163630175780469918404193154311345818779748E-01L)
 #define A01 (+4.4613731941247390152474728733380910202606125528735E-01L)
 #define A02 (+6.2837988794256362122092733555528642300632014163479E-01L)
@@ -195,7 +196,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define A15 (-3.4596402721593121141741801850628465671457534670707E-15L)
 #define A16 (+8.8462529422178506390506929051135664426012813402836E-17L)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
+/*  Coefficients for the denominator of the Pade "f" approximant on [2, 2.5). */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define B01 (+3.3205326071978632678148487841324593820389760334696E+00L)
 #define B02 (+5.3719597799054149099546045685539012437086726401765E+00L)
@@ -213,7 +214,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define B14 (+4.1270330157679065506067457969177919942981625235873E-07L)
 #define B15 (+1.0960954002619175810160779575888197857878198827317E-08L)
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
+/*  Coefficients for the numerator of the Pade "g" approximant on [2, 2.5).   */
 #define C00 (+1.1746593924659245499776496642738962311632845490785E-02L)
 #define C01 (+2.0171172780354119799677844390064533621697388670538E-02L)
 #define C02 (+1.9151795823632584051604491350504334794659676039863E-02L)
@@ -232,7 +233,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define C15 (+3.1690069964489481155143128797493199962451185572709E-15L)
 #define C16 (-7.7742147861796946563696745664333822935155464389372E-17L)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
+/*  Coefficients for the denominator of the Pade "g" approximant on [2, 2.5). */
 #define D00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define D01 (+3.0922039165931219571555775542070429909543741180579E+00L)
 #define D02 (+4.6824220838935257164259309833848704272954642836068E+00L)
@@ -250,7 +251,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define D14 (+1.5810279506434615321166027032277635888874427850943E-07L)
 #define D15 (+3.7672269609312769237129556400414870540855700824760E-09L)
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
+/*  Coefficients for the numerator of the Pade "f" approximant on [2.5, 4].   */
 #define E00 (+1.0572078929768562955616107428715469714522411993832E-01L)
 #define E01 (+3.3075713265190629856730151393806726833602096835605E-01L)
 #define E02 (+5.0638925274356859726650312713385707337984345000219E-01L)
@@ -271,7 +272,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define E17 (+3.0044118762663287015665884456575533744194935728548E-12L)
 #define E18 (-3.0876205013164234734736920295070501332906000707287E-23L)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
+/*  Coefficients for the denominator of the Pade "f" approximant on [2.5, 4]. */
 #define F00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define F01 (+3.4572793218213839818915911474951112705710486217827E+00L)
 #define F02 (+5.8203313697166648361784046113972370305371391171780E+00L)
@@ -292,7 +293,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define F17 (+5.4820942456285046885402934091238494220927337670351E-10L)
 #define F18 (+9.4386382730370109741129245886329823681874620384298E-12L)
 
-/*  Coefficients for the numerator of the Pade approximant.                   */
+/*  Coefficients for the numerator of the Pade "g" approximant on [2.5, 4].   */
 #define G00 (+3.6870010326249639023877347008878961435329654167589E-03L)
 #define G01 (+9.3612547236397542280429620166667972023132902964636E-03L)
 #define G02 (+1.1852553675577991679737548536729780633680496568551E-02L)
@@ -313,7 +314,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #define G17 (+8.7292707171188169521133144385889374570729847009826E-22L)
 #define G18 (-1.5936021547150769491356735808848951681857061546647E-23L)
 
-/*  Coefficients for the denominator of the Pade approximant.                 */
+/*  Coefficients for the denominator of the Pade "g" approximant on [2.5, 4]. */
 #define H00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define H01 (+3.5167578313471641848836441315389991799971291876589E+00L)
 #define H02 (+6.0255878553801980777781353637973359694086452571824E+00L)
@@ -368,7 +369,7 @@ A00 + z*(\
   )\
 )
 
-/*  Evaluates the denominator of the "g" function using Horner's method.      */
+/*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYB_EVAL(z) \
 B00 + z*(\
   B01 + z*(\
@@ -466,6 +467,7 @@ D00 + z*(\
   )\
 )
 
+/*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYE_EVAL(z) \
 E00 + z*(\
   E01 + z*(\
@@ -503,6 +505,7 @@ E00 + z*(\
   )\
 )
 
+/*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYF_EVAL(z) \
 F00 + z*(\
   F01 + z*(\
@@ -540,6 +543,7 @@ F00 + z*(\
   )\
 )
 
+/*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYG_EVAL(z) \
 G00 + z*(\
   G01 + z*(\
@@ -577,6 +581,7 @@ G00 + z*(\
   )\
 )
 
+/*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYH_EVAL(z) \
 H00 + z*(\
   H01 + z*(\
@@ -620,82 +625,149 @@ H00 + z*(\
  *                            128-Bit Double-Double                           *
  ******************************************************************************/
 
-/*  104-bit mantissa, splitting number is 2^53 + 1.                           */
-#define TMPL_LDOUBLE_SPLIT (+9.007199254740993E+15L)
+/*  Coefficients for the numerator of the Pade "f" approximant on [2, 2.5).   */
+#define A00 (+1.5658432163630175780469918404193154311345818779748E-01L)
+#define A01 (+4.0851536175640322240478500808952052675998885510251E-01L)
+#define A02 (+5.3227848594171659865019326599517387341972655348671E-01L)
+#define A03 (+4.5287691056958093096008884621695555129558330763360E-01L)
+#define A04 (+2.7878740104295226755209777967756647122883567029866E-01L)
+#define A05 (+1.3063470767498710323050185547940067300386339319523E-01L)
+#define A06 (+4.7826055131473996883911474482150692903942748621355E-02L)
+#define A07 (+1.3835885224615194293501191072511355155725505679410E-02L)
+#define A08 (+3.1618609148226765630056429355204790277495062885116E-03L)
+#define A09 (+5.6400167664218096721946059999708294725130777321977E-04L)
+#define A10 (+7.6418705916805446852016572669715855694742290263906E-05L)
+#define A11 (+7.4635814657070579171902823467412882257513501198904E-06L)
+#define A12 (+4.7248589862775267519926205545496615880497810703477E-07L)
+#define A13 (+1.4722377190794387986897852337739453661833058784501E-08L)
+#define A14 (-8.9202779724871369382681280272683292740190725452501E-16L)
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
-#define A00 (+9.8683049907443716933256861684468155319855437562341E-09L)
-#define A01 (+3.1830899742281575592337154685378223233693248603938E-01L)
-#define A02 (-1.1077164604338338926210483503879635068896947872593E+00L)
-#define A03 (+3.3053114747143910543807366446046270343776373157119E+00L)
-#define A04 (-4.6148199328603889122954343829102617515928591603551E+00L)
-#define A05 (-4.2294919188997922465587122144712177986591148442147E-01L)
-#define A06 (+4.3026801186395806369140038829197678900127005805054E+00L)
-#define A07 (-4.0363565095382055826392174111962130456530668278490E+01L)
-#define A08 (+3.2596872591616802369995224177007700584308594746899E+02L)
-#define A09 (-2.2519645878617384497349421813216126786356863307486E+03L)
-#define A10 (+1.3272210061809882799215761050303889165642546724974E+04L)
-#define A11 (-6.6852320599485885715756017016317630894635362401495E+04L)
-#define A12 (+2.8905465627262415066668808434733010818606992132442E+05L)
-#define A13 (-1.0757416843096434199096272091508250695241351068831E+06L)
-#define A14 (+3.4507296652112267858615848258912187197857953017128E+06L)
-#define A15 (-9.5444182343561390826325275344826632984371922866806E+06L)
-#define A16 (+2.2750767627898412389743883083168245930304278999593E+07L)
-#define A17 (-4.6675940123168536999621529552195698797552233980504E+07L)
-#define A18 (+8.2252208072794005870415634702646652423096055386394E+07L)
-#define A19 (-1.2411983609909995041905074276583568854126305356088E+08L)
-#define A20 (+1.5968669363410250015949929526347349356420613302205E+08L)
-#define A21 (-1.7406602028173193709610524629424067356476730758058E+08L)
-#define A22 (+1.5934806730592565875005100534596342768568159520754E+08L)
-#define A23 (-1.2100059265315134720529428573362395598859686478377E+08L)
-#define A24 (+7.4890405550401188026660509866102591350773263487668E+07L)
-#define A25 (-3.6834700758322953061960742496452105688035407396163E+07L)
-#define A26 (+1.3856973191224828368593280199811751130496845338655E+07L)
-#define A27 (-3.7466512154853254258798527994982450299682255501187E+06L)
-#define A28 (+6.4855320587556604016313912222110441934805330667628E+05L)
-#define A29 (-5.4009041860853261343882864053682892652646417656464E+04L)
-
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the Pade "f" approximant on [2, 2.5). */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define B01 (-3.4801149019368940850045594366121929383601410772615E+00L)
-#define B02 (+1.0387301219154556008825498910405794867124922005780E+01L)
-#define B03 (-1.4564940544110720149699859613265622341271186811848E+01L)
+#define B01 (+3.0802661663248417572449631233152639094171274837043E+00L)
+#define B02 (+4.6449743954236604621563456453824908391451844503486E+00L)
+#define B03 (+4.5269166042479885436203264682183068217556138559629E+00L)
+#define B04 (+3.1780284519691549842641378528012166391872499094279E+00L)
+#define B05 (+1.6977094004416069658786074622488466751768505742998E+00L)
+#define B06 (+7.1113874064929989490970802815459300165787474001272E-01L)
+#define B07 (+2.3722368030104715345118121115630265551055274272649E-01L)
+#define B08 (+6.3337951526481344122109027305370688589582163865595E-02L)
+#define B09 (+1.3477387880325707431452772133808352737262809976717E-02L)
+#define B10 (+2.2520281295716810877480008145390825613899146581173E-03L)
+#define B11 (+2.8697180945629946727584801985700533195108041055444E-04L)
+#define B12 (+2.6416219073590654337763495498126115177707040973396E-05L)
+#define B13 (+1.5768639057888189097751252306260500338716642315119E-06L)
+#define B14 (+4.6251594127704266270132296994135193501873182397942E-08L)
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
-#define C00 (+1.2830085495822000316758524703355845678778598501918E-08L)
-#define C01 (-1.0882179560997427117481023610885443248657181078099E-06L)
-#define C02 (+4.4297516365328584879080396102321080381877514353246E-05L)
-#define C03 (+1.0016962781775572961451579797737117383223208734134E-01L)
-#define C04 (-2.6866517081405936767839535369795088709540851393482E-01L)
-#define C05 (+6.1929784152855171352578752111981910765029353565711E-01L)
-#define C06 (+2.4690176165879932084336349094573882006618203395379E+00L)
-#define C07 (-3.1597424822145914031266460411198011766736147256866E+01L)
-#define C08 (+2.3834717288186634739527263378855811664420269981493E+02L)
-#define C09 (-1.5075276160264503733760387517553632411642690935478E+03L)
-#define C10 (+8.0460031104976982674596411005862812328737420604301E+03L)
-#define C11 (-3.6451166076360279844768264504370883480914987725670E+04L)
-#define C12 (+1.4059477295466452299289536827000792985354586514894E+05L)
-#define C13 (-4.6232962801753577301816226344687465069097110984882E+05L)
-#define C14 (+1.2964401378052186043384338545617975507572725078710E+06L)
-#define C15 (-3.0971395228382877347368865602171577727853538589682E+06L)
-#define C16 (+6.2915999952379848530005242124954695352858020505875E+06L)
-#define C17 (-1.0838348672279790020191039628553727136070255542796E+07L)
-#define C18 (+1.5771891195770458695022656875816444117704013903660E+07L)
-#define C19 (-1.9280004540530232373585983684200281279838885009105E+07L)
-#define C20 (+1.9640140584585182838058259236970023724880323859153E+07L)
-#define C21 (-1.6480328960654961393956463330018630193740580430194E+07L)
-#define C22 (+1.1201992147177657410617597967989489990113794435539E+07L)
-#define C23 (-6.0177401603146674107420497219124603246532045741564E+06L)
-#define C24 (+2.4606041485564166857502273407192007579614500925989E+06L)
-#define C25 (-7.2001809985762281794337420132944701791843317697638E+05L)
-#define C26 (+1.3437248901705227306496721169828908763208576281162E+05L)
-#define C27 (-1.2023011312664228608358621940800783774801453949939E+04L)
+/*  Coefficients for the numerator of the Pade "g" approximant on [2, 2.5).   */
+#define C00 (+1.1746593924659245499776496642738962311632845490785E-02L)
+#define C01 (+2.0822129811760869102377184702666968644049739721137E-02L)
+#define C02 (+1.9999002505185739814394392618041011897880603416351E-02L)
+#define C03 (+1.2785578390830429474648615707009513033154278498136E-02L)
+#define C04 (+5.9480464743469249836191575236351727892396940587485E-03L)
+#define C05 (+2.0928629359984660633207598638769922061418617944671E-03L)
+#define C06 (+5.6442846938285308281153032275112962037719284265001E-04L)
+#define C07 (+1.1652455433805382807209062391911688699237481615563E-04L)
+#define C08 (+1.7988498430015832626553153030638133302771266209926E-05L)
+#define C09 (+1.9850722354585449885735158362187374429934941929739E-06L)
+#define C10 (+1.4063708576334009333461724762363655455337888698655E-07L)
+#define C11 (+4.9249264901687723863981852366941419802424255124140E-09L)
+#define C12 (-1.6579206292671395660083214639884246494062666453769E-12L)
+#define C13 (+9.1896438154100803019374941510916368799914179214710E-14L)
+#define C14 (-2.5767813682813433283897287406716184885334812368208E-15L)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the Pade "g" approximant on [2, 2.5). */
 #define D00 (+1.0000000000000000000000000000000000000000000000000E+00L)
-#define D01 (-2.8634161337250025695467749558639819483913818615571E+00L)
-#define D02 (+9.1227794387047790412169510006117085650062125107556E+00L)
-#define D03 (-9.5403237999532989862658593059191791968267878453688E+00L)
+#define D01 (+3.1476205791237144395073505937057044415355723424179E+00L)
+#define D02 (+4.8307441847478226902227050007190637115414833133795E+00L)
+#define D03 (+4.7766447533203010601290666120848614336183936621558E+00L)
+#define D04 (+3.3933429330444034540231176775214861266574899604650E+00L)
+#define D05 (+1.8300368456682864769292517996375150182354064313764E+00L)
+#define D06 (+7.7217248718878105452673402262326314509144881854648E-01L)
+#define D07 (+2.5890330332226954677812185544517523176628148252069E-01L)
+#define D08 (+6.9327056177265665327457450517856520412570092246280E-02L)
+#define D09 (+1.4760189954887072174743246410377511715088022944433E-02L)
+#define D10 (+2.4615241162090515296263826262385307407980119323311E-03L)
+#define D11 (+3.1215257758893085001089400223629590365003504141416E-04L)
+#define D12 (+2.8499023087665065753692524176064001797274299239746E-05L)
+#define D13 (+1.6802698800170747264878582445395466964438735740915E-06L)
+#define D14 (+4.8409515628556060394827374448372757010409841110936E-08L)
+
+/*  Coefficients for the numerator of the Pade "f" approximant on [2.5, 4].   */
+#define E00 (+1.0572078929768562955616107428715469714522411993832E-01L)
+#define E01 (+3.1348725298437470356882474167329237462098375438691E-01L)
+#define E02 (+4.5192915609699524013786680612262986754247404106442E-01L)
+#define E03 (+4.1896973524636962250105128443513552304810173494996E-01L)
+#define E04 (+2.7880593428008967759892228735199108909636790400851E-01L)
+#define E05 (+1.4088481823058841491190624575558842819436112509212E-01L)
+#define E06 (+5.5796786928101631351325406263260931996519264812982E-02L)
+#define E07 (+1.7626193873374553272282786331004622247567415300235E-02L)
+#define E08 (+4.4764413987226236624184478404563585510320343873462E-03L)
+#define E09 (+9.1387243979699887961993810034022322431836956902611E-04L)
+#define E10 (+1.4876240017684756063743783092572693946635198807762E-04L)
+#define E11 (+1.8967138589813483072891079378596198153315684162969E-05L)
+#define E12 (+1.8343542359983993744667722461961242603063320015929E-06L)
+#define E13 (+1.2712144485913849969673197749376192964159131972864E-07L)
+#define E14 (+5.6496182958215704813984037556283302443904533187562E-09L)
+#define E15 (+1.2152957451961268908093886726383811321619254217349E-10L)
+#define E16 (-5.3547618528692150012651948912727209549798762275205E-21L)
+
+/*  Coefficients for the denominator of the Pade "f" approximant on [2.5, 4]. */
+#define F00 (+1.0000000000000000000000000000000000000000000000000E+00L)
+#define F01 (+3.2939256448174831424903948610887033013191661264553E+00L)
+#define F02 (+5.2515075735928263835750215649607826260630125255618E+00L)
+#define F03 (+5.3732954361836011915449568873630692680608587326810E+00L)
+#define F04 (+3.9461948156900878589489429887754580684255186379361E+00L)
+#define F05 (+2.2045129817398482446583847834481897049917546211129E+00L)
+#define F06 (+9.6869651943359495617898765967763709703214823324848E-01L)
+#define F07 (+3.4146055492332244086464624358264391477014317258277E-01L)
+#define F08 (+9.7571373647027404631027011405654221192805000686198E-02L)
+#define F09 (+2.2677119405213661600191116845136596010395641346147E-02L)
+#define F10 (+4.2731466350371719925309467613717160096652870554712E-03L)
+#define F11 (+6.4611628417219521724967087104411794208643773492792E-04L)
+#define F12 (+7.6875520638275481796675965736825156009559049188694E-05L)
+#define F13 (+6.9608851879415608884916763328150916660669598975953E-06L)
+#define F14 (+4.5261019495353969500483860008036783276583099039901E-07L)
+#define F15 (+1.8894188609081396580688966815011155772152050083427E-08L)
+#define F16 (+3.8179641764712837993798908877213384958577772929840E-10L)
+
+/*  Coefficients for the numerator of the Pade "g" approximant on [2.5, 4].   */
+#define G00 (+3.6870010326249639023877347008878961435329654167589E-03L)
+#define G01 (+8.1996738841790182332796542544649147985765452024936E-03L)
+#define G02 (+9.1055563744544700097165754985353998314645645750838E-03L)
+#define G03 (+6.5765421897153553849843662678959235493297907387812E-03L)
+#define G04 (+3.4217475086250844743918936057766375601896256134934E-03L)
+#define G05 (+1.3481540535803049778792699348572561855299258090210E-03L)
+#define G06 (+4.1266476275448339733559795907502424048368158664620E-04L)
+#define G07 (+9.9189155960685599151183202585910776194843981584641E-05L)
+#define G08 (+1.8704476959215964029814926988396803775129767189088E-05L)
+#define G09 (+2.7323381731311411380169549344292947889383483276752E-06L)
+#define G10 (+3.0064906000287516976953819704353951947238716561346E-07L)
+#define G11 (+2.3621518344677349184143859308547066273862207985868E-08L)
+#define G12 (+1.1900007746755900923510229241920123063185695848314E-09L)
+#define G13 (+2.9123738674245860103869992420907885822583826595396E-11L)
+#define G14 (+5.2881398222139933527336715653398471086160975908562E-18L)
+#define G15 (-1.8892376462543676997734464131284578591370028129016E-19L)
+#define G16 (+3.4619974122095542713083673046215491011836099653431E-21L)
+
+/*  Coefficients for the denominator of the Pade "g" approximant on [2.5, 4]. */
+#define H00 (+1.0000000000000000000000000000000000000000000000000E+00L)
+#define H01 (+3.2017102278389689598824371622278873717173387099780E+00L)
+#define H02 (+4.9724948634959321770564337947690854225146949412636E+00L)
+#define H03 (+4.9651442057615452051870385693760014157707281771525E+00L)
+#define H04 (+3.5639596364107999710976097317002978753378172247448E+00L)
+#define H05 (+1.9485496323172514461900649786425215041844947411384E+00L)
+#define H06 (+8.3898853160239248680145106726419840631049466783151E-01L)
+#define H07 (+2.9011141644343343609706796168492249564595446279081E-01L)
+#define H08 (+8.1407701377773603184395925125956558986605415871607E-02L)
+#define H09 (+1.8599520607903966455093678630762303534560315054146E-02L)
+#define H10 (+3.4489430044924249855597130271850607497094878208937E-03L)
+#define H11 (+5.1373758101012047487081593959201907464701341196975E-04L)
+#define H12 (+6.0284879634496878581082163416808109444100998850908E-05L)
+#define H13 (+5.3903735937459866852314739964422205830919456614353E-06L)
+#define H14 (+3.4659951548439214041454539740081790144358938263254E-07L)
+#define H15 (+1.4331789348706937829626499335183378680006814237028E-08L)
+#define H16 (+2.8744077492262646329589371746055034074953096063257E-10L)
 
 /*  Evaluates the numerator of the "f" function using Horner's method.        */
 #define TMPL_POLYA_EVAL(z) \
@@ -712,37 +784,7 @@ A00 + z*(\
                     A10 + z*(\
                       A11 + z*(\
                         A12 + z*(\
-                          A13 + z*(\
-                            A14 + z*(\
-                              A15 + z*(\
-                                A16 + z*(\
-                                  A17 + z*(\
-                                    A18 + z*(\
-                                      A19 + z*(\
-                                        A20 + z*(\
-                                          A21 + z*(\
-                                            A22 + z*(\
-                                              A23 + z*(\
-                                                A24 + z*(\
-                                                  A25 + z*(\
-                                                    A26 + z*(\
-                                                      A27 + z*(\
-                                                        A28 + z*A29\
-                                                      )\
-                                                    )\
-                                                  )\
-                                                )\
-                                              )\
-                                            )\
-                                          )\
-                                        )\
-                                      )\
-                                    )\
-                                  )\
-                                )\
-                              )\
-                            )\
-                          )\
+                          A13 + z*A14\
                         )\
                       )\
                     )\
@@ -757,9 +799,35 @@ A00 + z*(\
   )\
 )
 
-
 /*  Evaluates the denominator of the "f" function using Horner's method.      */
-#define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*B03))
+#define TMPL_POLYB_EVAL(z) \
+B00 + z*(\
+  B01 + z*(\
+    B02 + z*(\
+      B03 + z*(\
+        B04 + z*(\
+          B05 + z*(\
+            B06 + z*(\
+              B07 + z*(\
+                B08 + z*(\
+                  B09 + z*(\
+                    B10 + z*(\
+                      B11 + z*(\
+                        B12 + z*(\
+                          B13 + z*B14\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
@@ -776,31 +844,69 @@ C00 + z*(\
                     C10 + z*(\
                       C11 + z*(\
                         C12 + z*(\
-                          C13 + z*(\
-                            C14 + z*(\
-                              C15 + z*(\
-                                C16 + z*(\
-                                  C17 + z*(\
-                                    C18 + z*(\
-                                      C19 + z*(\
-                                        C20 + z*(\
-                                          C21 + z*(\
-                                            C22 + z*(\
-                                              C23 + z*(\
-                                                C24 + z*(\
-                                                  C25 + z*(\
-                                                    C26 + z*C27\
-                                                  )\
-                                                )\
-                                              )\
-                                            )\
-                                          )\
-                                        )\
-                                      )\
-                                    )\
-                                  )\
-                                )\
-                              )\
+                          C13 + z*C14\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
+
+/*  Evaluates the denominator of the "g" function using Horner's method.      */
+#define TMPL_POLYD_EVAL(z) \
+D00 + z*(\
+  D01 + z*(\
+    D02 + z*(\
+      D03 + z*(\
+        D04 + z*(\
+          D05 + z*(\
+            D06 + z*(\
+              D07 + z*(\
+                D08 + z*(\
+                  D09 + z*(\
+                    D10 + z*(\
+                      D11 + z*(\
+                        D12 + z*(\
+                          D13 + z*D14\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
+
+/*  Evaluates the numerator of the "f" function using Horner's method.        */
+#define TMPL_POLYE_EVAL(z) \
+E00 + z*(\
+  E01 + z*(\
+    E02 + z*(\
+      E03 + z*(\
+        E04 + z*(\
+          E05 + z*(\
+            E06 + z*(\
+              E07 + z*(\
+                E08 + z*(\
+                  E09 + z*(\
+                    E10 + z*(\
+                      E11 + z*(\
+                        E12 + z*(\
+                          E13 + z*(\
+                            E14 + z*(\
+                              E15 + z*E16\
                             )\
                           )\
                         )\
@@ -817,10 +923,109 @@ C00 + z*(\
   )\
 )
 
+/*  Evaluates the denominator of the "f" function using Horner's method.      */
+#define TMPL_POLYF_EVAL(z) \
+F00 + z*(\
+  F01 + z*(\
+    F02 + z*(\
+      F03 + z*(\
+        F04 + z*(\
+          F05 + z*(\
+            F06 + z*(\
+              F07 + z*(\
+                F08 + z*(\
+                  F09 + z*(\
+                    F10 + z*(\
+                      F11 + z*(\
+                        F12 + z*(\
+                          F13 + z*(\
+                            F14 + z*(\
+                              F15 + z*F16\
+                            )\
+                          )\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
+
+/*  Evaluates the numerator of the "g" function using Horner's method.        */
+#define TMPL_POLYG_EVAL(z) \
+G00 + z*(\
+  G01 + z*(\
+    G02 + z*(\
+      G03 + z*(\
+        G04 + z*(\
+          G05 + z*(\
+            G06 + z*(\
+              G07 + z*(\
+                G08 + z*(\
+                  G09 + z*(\
+                    G10 + z*(\
+                      G11 + z*(\
+                        G12 + z*(\
+                          G13 + z*(\
+                            G14 + z*(\
+                              G15 + z*G16\
+                            )\
+                          )\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
 /*  Evaluates the denominator of the "g" function using Horner's method.      */
-#define TMPL_POLYD_EVAL(z) D00 + z*(D01 + z*(D02 + z*D03))
+#define TMPL_POLYH_EVAL(z) \
+H00 + z*(\
+  H01 + z*(\
+    H02 + z*(\
+      H03 + z*(\
+        H04 + z*(\
+          H05 + z*(\
+            H06 + z*(\
+              H07 + z*(\
+                H08 + z*(\
+                  H09 + z*(\
+                    H10 + z*(\
+                      H11 + z*(\
+                        H12 + z*(\
+                          H13 + z*(\
+                            H14 + z*(\
+                              H15 + z*H16\
+                            )\
+                          )\
+                        )\
+                      )\
+                    )\
+                  )\
+                )\
+              )\
+            )\
+          )\
+        )\
+      )\
+    )\
+  )\
+)
 
+/*  Extended precision / portable, uses Remez polynomials again.              */
 #else
 
 /******************************************************************************
@@ -880,79 +1085,115 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 #define TMPL_POLYB_EVAL(z) \
 B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*B07))))))
 
-/*  Evaluates the numerator of the "f" function using Horner's method.        */
+/*  Evaluates the numerator of the "g" function using Horner's method.        */
 #define TMPL_POLYC_EVAL(z) \
 C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
 
-/*  Evaluates the denominator of the "f" function using Horner's method.      */
+/*  Evaluates the denominator of the "g" function using Horner's method.      */
 #define TMPL_POLYD_EVAL(z) \
 D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 
 #endif
+/*  End of double vs. extended / portable vs. double-double vs. quadruple.    */
+
+/*  Coefficients for the Taylor polynomial of cos(pi/2 x^2).                  */
+#define C0 (+1.0000000000000000000000000000000000000000000000000E+00L)
+#define C1 (-1.2337005501361698273543113749845188919142124259051E+00L)
+
+/*  Coefficients for the Taylor polynomial of sin(pi/2 x^2).                  */
+#define S0 (+1.5707963267948966192313216916397514420985846996876E+00L)
+#define S1 (-6.4596409750624625365575656389794573337969351178927E-01L)
+
+/*  Helper macros for cos and sin.                                            */
+#define TMPL_COS_TAYLOR(z) (C0 + z*C1)
+#define TMPL_SIN_TAYLOR(z) (S0 + z*S1)
 
 /*  Function for computing the normalized Fresnel cosine for 2 <= x < 4.      */
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    *
-     *  The magic number 134217729 is 2^27 + 1. This results in xhi and xlo   *
-     *  both having half of the bits of x.                                    */
+     *  This results in xhi and xlo both having half of the bits of x.        */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+    const double x_double = (double)x;
+    const long double xhi = (long double)x_double;
+#else
     const long double split = TMPL_LDOUBLE_SPLIT * x;
     const long double xhi = split - (split - x);
+#endif
     const long double xlo = x - xhi;
 
     /*  With v = pi/2 (2 xlo xhi + xlo^2), compute cos(v) and sin(v) using    *
      *  Taylor polynomials. v is small, only a few terms needed.              */
     const long double v = 2.0L * xhi * xlo + xlo * xlo;
     const long double v_sq = v * v;
-    const long double cos_lo = C0 + v_sq * C1;
-    const long double sin_lo = v * (S0 + v_sq * S1);
+    const long double cos_lo = TMPL_COS_TAYLOR(v_sq);
+    const long double sin_lo = v * TMPL_SIN_TAYLOR(v_sq);
 
     /*  Variables for storing the values of sine and cosine.                  */
     long double cos_hi, sin_hi, cos_x, sin_x;
 
+    /*  The auxiliary function "f" and "g" are computed in different ways,    *
+     *  depending on how long double is represented. For quadruple and        *
+     *  double-double precisions, we use two Pade approximants.               */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
     TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
+    /*  Declare variables for the auxiliary functions.                        */
     long double f, g;
 
+    /*  The first Pade approximant is performed on the interval [2, 2.5).     */
     if (x < 2.5L)
     {
+        /*  The Pade approximant is computed near x = 2.0. Shift the variable.*/
         const long double t = x - 2.0L;
+
+        /*  Evaluate the four polynomials using Horner's method.              */
         const long double fn = TMPL_POLYA_EVAL(t);
         const long double fd = TMPL_POLYB_EVAL(t);
         const long double gn = TMPL_POLYC_EVAL(t);
         const long double gd = TMPL_POLYD_EVAL(t);
 
+        /*  The auxiliary functions can be computed as the ratio.             */
         f = fn / fd;
         g = gn / gd;
     }
 
+    /*  Second Pade approximant is performed on the interval [2.5, 4.0].      */
     else
     {
+        /*  The Pade approximant is computed near x = 3.0. Shift the variable.*/
         const long double t = x - 3.0L;
+
+        /*  Evaluate the four polynomials using Horner's method.              */
         const long double fn = TMPL_POLYE_EVAL(t);
         const long double fd = TMPL_POLYF_EVAL(t);
         const long double gn = TMPL_POLYG_EVAL(t);
         const long double gd = TMPL_POLYH_EVAL(t);
 
+        /*  The auxiliary functions can be computed as the ratio.             */
         f = fn / fd;
         g = gn / gd;
     }
 
-
+    /*  For all other precisions we use a single Remez approximation.         */
 #else
 
+    /*  The rational Remez approximation is computed in terms of 1 / x.       */
     const long double t = 1.0L / x;
+
+    /*  Evaluate the polynomials using Horner's method.                       */
     const long double fn = TMPL_POLYA_EVAL(t);
     const long double fd = TMPL_POLYB_EVAL(t);
     const long double gn = TMPL_POLYC_EVAL(t);
     const long double gd = TMPL_POLYD_EVAL(t);
 
+    /*  The auxiliary functions can be computed as the ratio.                 */
     const long double f = fn / fd;
     const long double g = gn / gd;
 
 #endif
+    /*  End of quadruple / double-double vs. double / extended / portable.    */
 
     /*  xhi^2 is big enough that we need to compute cos and sin fully. Do     *
      *  this simultaneously using the SinCosPi function.                      */
@@ -965,7 +1206,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
     /*  With the auxiliary functions computed, we can compute C(x).           */
     return 0.5L + (f*sin_x - g*cos_x);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small.                */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small.               */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"
