@@ -360,11 +360,11 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
      *  5 bits of the mantissa. man0 has the upper 15, so we shift down by    *
      *  10. There are 10 coefficients for each polynomial, so we scale by 10. */
-    const unsigned int n = 16U * (w.bits.man0 >> 10U);
+    const unsigned int n = 16U * (w.bits.man0 >> 11U);
 
     /*  Zero out the upper 5 bits. There are 15 bits total, so the bit-mask   *
      *  is 0x3FF.                                                             */
-    w.bits.man0 &= 0x3FFU;
+    w.bits.man0 &= 0x7FFU;
 
     /*  The input is now between 1 and 1 + 1/32. Shift over to [0, 1/32).     */
     w.r -= 1.0L;
