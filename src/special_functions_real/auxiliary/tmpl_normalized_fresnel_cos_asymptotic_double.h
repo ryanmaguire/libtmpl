@@ -89,8 +89,11 @@ double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    *
      *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the    *
-     *  upper 16 bits of the mantissa and xlo has the lower 36 bits.          */
-    const double split = 68719476737.0 * x;
+     *  upper 16 bits of the mantissa and xlo has the lower 36 bits.          *
+     *                                                                        *
+     *  Some architectures require split to be declared "volatile" for this   *
+     *  trick to work. The TMPL_VOLATILE macro has the correct qualifier.     */
+    TMPL_VOLATILE const double split = 68719476737.0 * x;
     const double xhi = split - (split - x);
     const double xlo = x - xhi;
 

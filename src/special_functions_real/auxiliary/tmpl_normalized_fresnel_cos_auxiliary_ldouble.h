@@ -768,17 +768,24 @@ D00 + z*(\
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(long double x)
 {
-    /*  Use the double-double trick, split x into two parts, high and low.    *
-     *  The magic number 134217729 is 2^27 + 1. This results in xhi and xlo   *
-     *  both having half of the bits of x.                                    */
+    /*  Use the double-double trick, split x into two parts, high and low.    */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+    /*  For double-double, we can just read off the high part by casting.     */
     const double x_double = (double)x;
     const long double xhi = (long double)x_double;
-#else
-    const long double split = TMPL_LDOUBLE_SPLIT * x;
-    const long double xhi = split - (split - x);
-#endif
 
+#else
+/*  Else for #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.              */
+
+    /*  All other representations can be split normally.                      */
+    TMPL_VOLATILE const long double split = TMPL_LDOUBLE_SPLIT * x;
+    const long double xhi = split - (split - x);
+
+#endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
+
+    /*  The low word is just the difference, regardless of representation.    */
     const long double xlo = x - xhi;
 
     /*  The Maclaurin series for cos(pi/2 x^2) is in terms of x^4. Compute.   */

@@ -130,14 +130,29 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-    volatile const double x_double = (double)x;
-    volatile const double split = x_double * TMPL_LDOUBLE_SPLIT;
-    volatile const double xhi_double = split - (split - x_double);
+
+    /*  double-double is handled differently. It cannot be "split" since it   *
+     *  is already represented by two doubles. Instead, we split the high     *
+     *  part of the input (which is a double) into two parts, and then store  *
+     *  the entirety of the input into two long doubles using this. On some   *
+     *  architectures the "volatile" keyword must be used for this to work    *
+     *  properly. The TMPL_VOLATILE macro has the correct qualifier.          */
+    const double x_double = (double)x;
+    TMPL_VOLATILE const double split = TMPL_LDOUBLE_SPLIT * x_double;
+    const double xhi_double = split - (split - x_double);
     const long double xhi = (long double)xhi_double;
+
 #else
-    const long double split = TMPL_LDOUBLE_SPLIT * x;
+/*  Else for #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.              */
+
+    /*  All other representations of long double can be split normally.       */
+    TMPL_VOLATILE const long double split = TMPL_LDOUBLE_SPLIT * x;
     const long double xhi = split - (split - x);
+
 #endif
+/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
+
+    /*  The low word is just the difference, regardless of representation.    */
     const long double xlo = x - xhi;
 
     /*  The scale factor for the asymptotic expansion. For large x we only    *

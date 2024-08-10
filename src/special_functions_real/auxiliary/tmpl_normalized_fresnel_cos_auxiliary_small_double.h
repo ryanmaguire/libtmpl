@@ -160,8 +160,10 @@ double tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small(double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    *
      *  The magic number 134217729 is 2^27 + 1. This results in xhi and xlo   *
-     *  both having half of the bits of x.                                    */
-    const double split = 134217729.0 * x;
+     *  both having half of the bits of x. Some architectures require the     *
+     *  "volatile" keyword for the split to occur correctly. The              *
+     *  TMPL_VOLATILE macro has the correct qualifier.                        */
+    TMPL_VOLATILE const double split = 134217729.0 * x;
     const double xhi = split - (split - x);
     const double xlo = x - xhi;
 

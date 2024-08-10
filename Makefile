@@ -72,6 +72,12 @@
 #           types. The config.c file will try to find the widths of various
 #           integer types. To skip this, set this option. Enable with:
 #               make NO_INT=1 [other-options]
+#       USE_VOLATILE:
+#           On some architectures, like ppc64el, the volatile keyword is
+#           needed to prevent compilers from messing up splitting tricks.
+#           This causes a slight (a few percent) reduction in performance.
+#           Other architectures, like x86_64, arm64, do not need this keyword.
+#           Set USE_VOLATILE=1 if required.
 
 # Name of the library.
 TARGET_LIB := libtmpl.so
@@ -116,6 +122,10 @@ EXCLUDE :=
 ifdef NO_LONGLONG
 CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
 EXCLUDE += -not -name "*_llong.c" -and -not -name "*_ullong.c" -and
+endif
+
+ifdef USE_VOLATILE
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE
 endif
 
 # libtmpl provides its own implementation of libm. If you wish to use the

@@ -1350,6 +1350,12 @@ static int make_config_h(void)
 #endif
     /*  End of #if TMPL_SET_NO_INT == 1.                                      */
 
+#ifdef TMPL_USE_VOLATILE
+    fputs("#define TMPL_VOLATILE volatile", fp);
+#else
+    fputs("#define TMPL_VOLATILE", fp);
+#endif
+
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");
 

@@ -66,6 +66,9 @@ USEINT=1
 # Whether or not to use memcpy when possible.
 USEMEMCPY=0
 
+# Whether or not certain variables must be volatile.
+USEVOLATILE=0
+
 # Compile the entire library by #include'ing all files into one translation
 # unit. The compiler get's to the see the entire library at once and make many
 # optimizations.
@@ -121,6 +124,9 @@ for arg in "$@"; do
 
     elif [ "$arg" == "-memcpy" ]; then
         USEMEMCPY=1
+
+    elif [ "$arg" == "-volatile" ]; then
+        USEVOLATILE=1
 
     elif [ "$arg" == "-remove" ]; then
         SONAME="libtmpl.so"
@@ -232,6 +238,10 @@ fi
 
 if [ $USEMEMCPY == 1 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_USE_MEMCPY_TRUE"
+fi
+
+if [ $USEVOLATILE == 1 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_USE_VOLATILE"
 fi
 
 # Name of the created Shared Object file (.so).
@@ -427,4 +437,3 @@ if [ $INPLACE == 1 ]; then
     echo "    directories using the -I and -L option as follows:"
     echo "        gcc -I$(pwd)/../ -L$(pwd)/ my_file.c -o my_output -ltmpl"
 fi
-
