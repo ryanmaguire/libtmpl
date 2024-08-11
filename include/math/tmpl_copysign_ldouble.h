@@ -99,8 +99,8 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
+#include <libtmpl/include/tmpl_ieee754_ldouble.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1

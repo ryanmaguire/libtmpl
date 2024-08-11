@@ -75,7 +75,7 @@ float tmpl_Float_Floor(float x)
         tmpl_UInt32 i;
     } word32;
     tmpl_UInt32 i, j;
-    
+
     word32.w.r = x;
 
     if (word32.w.bits.expo < TMPL_FLOAT_BIAS)
@@ -113,17 +113,13 @@ float tmpl_Float_Floor(float x)
  *  require that IEEE-754 support for float is available. It is a little      *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
-/*  The mantissa is split into 2 components. The highest component has 7 bits *
- *  and the lowest component has 16 bits, 23 bits total.                      */
-#define A0 8U
-
 /*  Function for computing the floor of a float (floorf equivalent).          */
 float tmpl_Float_Floor(float x)
 {
     tmpl_IEEE754_Float w;
     w.r = x;
 
-    if (w.bits.expo < TMPL_FLOAT_BIAS)
+    if (w.bits.expo < TMPL_FLOAT_UBIAS)
     {
         if (x == 0.0F)
             return x;
@@ -134,31 +130,27 @@ float tmpl_Float_Floor(float x)
             return 0.0F;
     }
 
-    if (w.bits.expo > TMPL_FLOAT_BIAS + 22U)
+    if (w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
-    if (w.bits.expo < TMPL_FLOAT_BIAS + A0)
+    if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x08U)
     {
         w.bits.man1 = 0x00U;
-        w.bits.man0 &= ~(0x7F >> (w.bits.expo - TMPL_FLOAT_BIAS));
+        w.bits.man0 &= (0x007FU << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
     }
+
     else
-        w.bits.man1 &= ~(0xFFFF >> (w.bits.expo - TMPL_FLOAT_BIAS - A0));
+        w.bits.man1 &= (0xFFFFU << (0x17U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
 
-    if (w.r == x)
-        return x;
-
-    if (w.bits.sign)
+    /*  For negative inputs, use floor(x) = -floor(-x) - 1. This is true      *
+     *  unless the input was already an integer. Check for this.              */
+    if (TMPL_FLOAT_IS_NEGATIVE(w) && w.r != x)
         return w.r - 1.0F;
-    else
-        return w.r;
+
+    /*  Otherwise w is now correctly set to the floor of the input.           */
+    return w.r;
 }
 /*  End of tmpl_Float_Floor.                                                  */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
 
 #endif
 /*  End of #if TMPL_HAS_32_BIT_INT == 1.                                      */

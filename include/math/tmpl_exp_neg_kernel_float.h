@@ -82,14 +82,17 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
 /*  Coefficients for the numerator of the Remez polynomial.                   */
 #define A0 (+9.9999999998109338754067767533573865627674687051644E-01F)
 #define A1 (+1.0000076243218341525635923446100548002732087957627E+00F)
 #define A2 (+5.0000187484695511437532498098172375200616122154453E-01F)
 #define TMPL_ONE_BY_128 (0.0078125F)
+
+/*  Lookup table for exp.                                                     */
+extern const float tmpl_float_exp_table[179];
 
 /*  Check for IEEE-754 support. Significantly faster.                         */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -151,8 +154,7 @@ float tmpl_Float_Exp_Neg_Kernel(float x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  This function is declared after this file is included in tmpl_math.h. Give*
- *  the prototype here for safety.                                            */
+/*  Compute 2^n as a float.                                                   */
 extern float tmpl_Float_Pow2(signed int expo);
 
 /*  Function for computing exp(x) for 1 < -x < log(FLT_MAX).                  */

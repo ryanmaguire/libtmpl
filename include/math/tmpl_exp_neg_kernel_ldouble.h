@@ -85,12 +85,14 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
+#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+
+/*  Lookup table for exp.                                                     */
+extern const long double tmpl_ldouble_exp_table[179];
 
 /*  64-bit long double. Uses the same number of terms as 64-bit double.       */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
  *                               64-bit double                                *
@@ -115,11 +117,8 @@
 #define TMPL_BITMASK (0x7FF)
 
 /*  128-bit double-double. More terms to get ~5 x 10^-32 peak error.          */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT || \
+      TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
  *                     128-bit double-double / quadruple                      *
@@ -147,8 +146,7 @@ z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*(A09+z*A10)))))))))
 #define TMPL_LN2_LO (+5.8029889835956905832474897278545862267173858328198E-25L)
 
 /*  Bit masked, this is the number of bits in the exponents, written in hex.  */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 #define TMPL_BITMASK (0x7FF)
 #else
 #define TMPL_BITMASK (0x7FFF)
@@ -236,8 +234,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
     exp_w.r *= tmpl_ldouble_exp_table[ind];
 
     /*  Compute exp(x) via 2^k * exp(n/128 + t).                              */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
     {
         tmpl_IEEE754_LDouble two_to_the_minus_k;
         two_to_the_minus_k.r = 1.0L;
@@ -258,8 +255,7 @@ long double tmpl_LDouble_Exp_Neg_Kernel(long double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  This function is declared after this file is included in tmpl_math.h. Give*
- *  the prototype here for safety.                                            */
+/*  Computes 2^n as a long double.                                            */
 extern long double tmpl_LDouble_Pow2(signed int expo);
 
 /*  Function for computing exp(x) for 1 < -x < log(LDBL_MAX).                 */

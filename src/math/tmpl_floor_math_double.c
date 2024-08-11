@@ -88,7 +88,7 @@ double tmpl_Double_Floor(double x)
 {
     tmpl_IEEE754_FloatInt64 word64;
     tmpl_UInt64 i, j;
-    
+
     word64.f = x;
 
     if (word64.w.bits.expo < TMPL_DOUBLE_BIAS)
@@ -122,68 +122,100 @@ double tmpl_Double_Floor(double x)
  *  require that IEEE-754 support for double is available. It is a little     *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
-/*  The mantissa is split into 4 components. The highest component has 4 bits *
- *  and the other three have 16 each. These three numbers are the cutoff      *
- *  values for the components.                                                */
-#define A0 36U
-#define A1 20U
-#define A2 4U
-
 /*  Function for computing the floor of a double (floor equivalent).          */
 double tmpl_Double_Floor(double x)
 {
     tmpl_IEEE754_Double w;
     w.r = x;
 
-    if (w.bits.expo < TMPL_DOUBLE_BIAS)
+    /*  For arguments |x| < 1, either floor(x) = 0 or floor(x) = -1.          */
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS)
     {
+        /*  Regardless of the sign of x, zero should map to zero.             */
         if (x == 0.0)
             return x;
 
+        /*  For -1 < x < 0, we have floor(x) = -1.                            */
         if (w.bits.sign)
             return -1.0;
-        else
-            return 0.0;
+
+        /*  And for 0 < x < 1, we get floor(x) = 0.                           */
+        return 0.0;
     }
 
-    if (w.bits.expo > TMPL_DOUBLE_BIAS + 51U)
+    /*  For very large arguments, |x| >= 2^52, x is already an integer.       */
+    if (w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
         return x;
 
-    if (w.bits.expo < TMPL_DOUBLE_BIAS + A0)
+    /*  For |x| < 2^36, the floor function will zero out the last part of the *
+     *  mantissa. man3 stores 16 bits, similar to man1 and man2.              */
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x24U)
         w.bits.man3 = 0x00U;
+
+    /*  For 2^36 <= |x| < 2^52, only the last part of the mantissa needs to   *
+     *  modified. The other bits represent the integer part of x.             */
     else
     {
-        w.bits.man3 &= ~(0xFFFF >> (w.bits.expo - TMPL_DOUBLE_BIAS - A0));
+        /*  We create a bit-mask that zeros out the lowest bits, which        *
+         *  represent the fractional part of the number. After this, w is     *
+         *  an integer value. The mask is created as follows. 0xFFFF is the   *
+         *  hexidecimal representation of 16 1's in binary. We want the lower *
+         *  bits to be zero so that bit-wise and will kill these off. The     *
+         *  exact bits we want to be zero is given by the exponent of the     *
+         *  input. There are 52 (0x34 in hex) bits total, so we want the last *
+         *  52 - expo bits to be zero. The exponent is offset by a bias, so   *
+         *  expo = w.bits.expo - TMPL_DOUBL_UBIAS. In total, shifting up by   *
+         *  0x34 - (w.bits.expo - TMPL_DOUBLE_UBIAS) will zero out the lower  *
+         *  bits, creating the appropriate bit-mask.                          */
+        w.bits.man3 &= (0xFFFFU << (0x34U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
         goto TMPL_DOUBLE_FLOOR_FINISH;
     }
 
-    if (w.bits.expo < TMPL_DOUBLE_BIAS + A1)
+    /*  If |x| < 2^20, the second part of the mantissa is zeroed out as well. */
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x14U)
         w.bits.man2 = 0x00U;
+
+    /*  Otherwise, if 2^20 <= |x| < 2^36, the highest part of the mantissa    *
+     *  needs to be zeroed out, and the second high part must be modified.    */
     else
     {
-        w.bits.man2 &= ~(0xFFFF >> (w.bits.expo - TMPL_DOUBLE_BIAS - A1));
+        /*  Similar to before, create a bit-mask to zero out the fractional   *
+         *  parts of the input. Since the upper 16 bits have already been     *
+         *  zeroed out, we shift by 52 - 16 = 36, which is 0x24 in hex.       */
+        w.bits.man2 &= (0xFFFFU << (0x24U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
         goto TMPL_DOUBLE_FLOOR_FINISH;
     }
 
-    if (w.bits.expo < TMPL_DOUBLE_BIAS + A2)
+    /*  If |x| < 2^16, the higher three parts of the mantissa all need to be  *
+     *  zeroed out.                                                           */
+    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x04U)
         w.bits.man1 = 0x00U;
+
+    /*  Otherwise, for 2^16 <= |x| < 2^20, zero out the upper two parts and   *
+     *  modify the second lowest part.                                        */
     else
     {
-        w.bits.man1 &= ~(0xFFFF >> (w.bits.expo - TMPL_DOUBLE_BIAS - A2));
+        /*  Use a bit-mask to zero out the fractional part. The upper 32 bits *
+         *  have been zeroed out, so we shift by 52 - 32 = 20 (0x14 in hex).  */
+        w.bits.man1 &= (0xFFFFU << (0x14U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
         goto TMPL_DOUBLE_FLOOR_FINISH;
     }
 
-    w.bits.man0 &= ~(0xF >> (w.bits.expo - TMPL_DOUBLE_BIAS));
+    /*  The lowest part of the mantissa is 4 bits, unlike the other 3 parts   *
+     *  which are 16 bits each. Use a bit-mask to zero out the fractional     *
+     *  part of the mantissa.                                                 */
+    w.bits.man0 &= (0x000FU << (0x04U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
 
-
+    /*  We need to handle positive and negative inputs carefully.             */
 TMPL_DOUBLE_FLOOR_FINISH:
-    if (w.r == x)
-        return x;
 
-    if (w.bits.sign)
+    /*  For negative inputs, use floor(x) = -floor(-x) - 1. This is true      *
+     *  unless the input was already an integer. Check for this.              */
+    if (TMPL_DOUBLE_IS_NEGATIVE(w) && w.r != x)
         return w.r - 1.0;
-    else
-        return w.r;
+
+    /*  Otherwise w is now correctly set to the floor of the input.           */
+    return w.r;
 }
 /*  End of tmpl_Double_Floor.                                                 */
 

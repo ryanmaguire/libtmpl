@@ -32,6 +32,9 @@
 /*  Only used if libtmpl algorithms are requested and inline support is not.  */
 #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
+/*  Function prototype given here.                                            */
+#include <libtmpl/include/tmpl_math.h>
+
 /*  Implemented in include/math/tmpl_is_nan_ldouble.h.                        */
 #include "../../include/math/tmpl_is_nan_ldouble.h"
 

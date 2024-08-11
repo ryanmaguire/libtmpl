@@ -28,11 +28,8 @@
 /*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only used if libtmpl algorithms are requested.                            */
-#if TMPL_USE_MATH_ALGORITHMS == 1
-
-/*  Only used if inline support is not requested.                             */
-#if TMPL_USE_INLINE != 1
+/*  Only used if libtmpl algorithms are requested and inline support is not.  */
+#if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_math.h>
@@ -41,7 +38,4 @@
 #include "../../include/math/tmpl_abs_float.h"
 
 #endif
-/*  End of #if TMPL_USE_INLINE != 1.                                          */
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
+/*  End of #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1.         */

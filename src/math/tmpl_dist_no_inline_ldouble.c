@@ -31,6 +31,9 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
+/*  Function prototype given here.                                            */
+#include <libtmpl/include/tmpl_math.h>
+
 /*  Implemented in include/math/tmpl_dist_ldouble.h.                          */
 #include "../../include/math/tmpl_dist_ldouble.h"
 

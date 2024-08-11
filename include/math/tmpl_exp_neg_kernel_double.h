@@ -85,8 +85,8 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file where the prototype for the function is defined.              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
+#include <libtmpl/include/tmpl_ieee754_double.h>
 
 /*  Coefficients for the Remez polynomial.                                    */
 #define A0 (+1.0000000000000000098676804486032581931971677454305E+00)
@@ -113,6 +113,9 @@
 /*  Function for converting from int to float.                                */
 #include <libtmpl/include/floatint/tmpl_uint64_to_double.h>
 #include <libtmpl/include/floatint/tmpl_double_to_uint64.h>
+
+/*  Lookup table for the exponential function.                                */
+extern const tmpl_UInt64 tmpl_double_exp_table[256];
 
 /*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
 TMPL_INLINE_DECL
@@ -167,6 +170,9 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
+
+/*  Lookup table for the exponential function.                                */
+extern const double tmpl_double_exp_table[179];
 
 /*  Function for computing exp(x) for 1 < -x < log(DBL_MAX).                  */
 TMPL_INLINE_DECL
@@ -224,9 +230,11 @@ double tmpl_Double_Exp_Neg_Kernel(double x)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  This function is declared after this file is included in tmpl_math.h. Give*
- *  the prototype here for safety.                                            */
+/*  Function for computing 2^n as a double.                                   */
 extern double tmpl_Double_Pow2(signed int expo);
+
+/*  Lookup table for the exponential function.                                */
+extern const double tmpl_double_exp_table[179];
 
 /*  Function for computing exp(x) for 1 < -x < log(DBL_MAX).                  */
 TMPL_INLINE_DECL
