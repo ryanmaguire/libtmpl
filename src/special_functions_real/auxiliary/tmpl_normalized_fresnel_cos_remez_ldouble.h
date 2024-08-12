@@ -426,7 +426,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     w.bits.man0 &= 0x3FFU;
 
     /*  The input is now between 1 and 1 + 1/32. Shift over to [0, 1/32).     */
-    w.r -= 1.0;
+    w.r -= 1.0L;
 
     /*  Compute using the Remez polynomial and return.                        */
     return TMPL_POLY_EVAL(w.r);
