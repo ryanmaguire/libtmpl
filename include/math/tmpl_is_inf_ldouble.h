@@ -79,8 +79,8 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototypes here.                                                 */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
+#include <libtmpl/include/tmpl_ieee754_double.h>
 
 /*  Check for IEEE-754 support. This is the easiest way to work with inf.     */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1

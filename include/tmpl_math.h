@@ -1303,26 +1303,6 @@ extern long double tmpl_LDouble_Infinity(void);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Float_Is_NaN_Or_Inf                                              *
- *  Purpose:                                                                  *
- *      This function tests if a number is Not-a-Number or infinity.          *
- *  Arguments:                                                                *
- *      x (float):                                                            *
- *          A real number.                                                    *
- *  Output:                                                                   *
- *      is_nan_or_inf (tmpl_Bool):                                            *
- *          A Boolean indicating if x is +/- nan/inf or not.                  *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_is_nan_or_inf.c                                 *
- ******************************************************************************/
-extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
-extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
-extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_Double_Hypot                                                     *
  *  Purpose:                                                                  *
  *      Computes the length of the vector (x, y).                             *
@@ -2148,6 +2128,42 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Float_Is_NaN_Or_Inf                                              *
+ *  Purpose:                                                                  *
+ *      This function tests if a number is Not-a-Number or infinity.          *
+ *  Arguments:                                                                *
+ *      x (float):                                                            *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      is_nan_or_inf (tmpl_Bool):                                            *
+ *          A Boolean indicating if x is +/- nan/inf or not.                  *
+ *  NOTE:                                                                     *
+ *      Double and long double equivalents are also provided.                 *
+ *  Source Code:                                                              *
+ *      libtmpl/src/math/tmpl_is_nan_or_inf.c                                 *
+ ******************************************************************************/
+
+/*  These functions are small enough that they should be inlined.             */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline support for these functions are found here.                        */
+#include <libtmpl/include/math/tmpl_is_nan_or_inf_float.h>
+#include <libtmpl/include/math/tmpl_is_nan_or_inf_double.h>
+#include <libtmpl/include/math/tmpl_is_nan_or_inf_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Inline not requested, use the external functions in src/math.             */
+extern tmpl_Bool tmpl_Float_Is_NaN_Or_Inf(float x);
+extern tmpl_Bool tmpl_Double_Is_NaN_Or_Inf(double x);
+extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *                        Dependent Inlined Functions                         *
