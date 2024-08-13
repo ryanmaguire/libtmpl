@@ -519,7 +519,6 @@ long double tmpl_LDouble_Floor(long double x)
         /*  Low word can be zeroed out. The high word has 48 bits. Create a   *
          *  bit-mask by shifting 0xFFFFFFFFFFFF (48 1's in binary) down by    *
          *  exponent.                                                         */
-        word.words.lo = 0;
         fractional_bits = 0x0000FFFFFFFFFFFFU >> exponent;
 
         /*  If none of the fractional bits of the input are 1, then the input *
@@ -539,6 +538,9 @@ long double tmpl_LDouble_Floor(long double x)
          *  fractional bits. This is achieved by using bit-wise and with the  *
          *  complement of the fractional bits.                                */
         word.words.hi &= ~fractional_bits;
+
+        /*  The low part can be made zero. It is only fractional bits.        */
+        word.words.lo = 0;
     }
 
     /*  For very large inputs, |x| > 2^48, the high part of the mantissa      *
