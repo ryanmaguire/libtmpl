@@ -92,5 +92,134 @@ typedef union tmpl_IEEE754_FloatInt64_Def {
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
 
+/*  Long double is a lot more complicated with the various types of           *
+ *  representations. Check them carefully.                                    */
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
+
+/*  Union of a long double and the bits representing it.                      */
+#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+
+/*  Use the same representation as 64-bit double.                             */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+
+/******************************************************************************
+ *                               64-Bit Double                                *
+ ******************************************************************************/
+
+/*  Union for type-punning a 64-bit long double with a 64-bit int.            */
+typedef union tmpl_IEEE754_FloatInt64_Def {
+
+    /*  The "word" the data represents. This splits the double into its bits. */
+    tmpl_IEEE754_LDouble w;
+
+    /*  The integer value the 64-bits for the long double represent.          */
+    tmpl_UInt64 n;
+
+    /*  The actual floating point number.                                     */
+    long double f;
+} tmpl_IEEE754_FloatIntLongDouble;
+
+/*  80-bit extended has 4 representation. 16 bits of padding vs. 48 bits, and *
+ *  little endian vs. big endian. The layout differs for each version.        */
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
+
+/******************************************************************************
+ *                       96-Bit Extended (Little Endian)                      *
+ ******************************************************************************/
+
+/*  Union for type-punning a 96-bit long double with 64-bit and 32-bit ints.  */
+typedef union tmpl_IEEE754_FloatIntLongDouble_Def {
+
+    /*  The "word" the data represents. This splits the double into its bits. */
+    tmpl_IEEE754_LDouble w;
+
+    /*  The integer value the 96-bits for the long double represent.          */
+    struct {
+        tmpl_UInt64 lo;
+        tmpl_UInt32 hi;
+    } words;
+
+    /*  The actual floating point number.                                     */
+    long double f;
+} tmpl_IEEE754_FloatIntLongDouble;
+
+/*  96-bits, but with the order reversed.                                     */
+#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN
+
+/******************************************************************************
+ *                        96-Bit Extended (Big Endian)                        *
+ ******************************************************************************/
+
+/*  Union for type-punning a 96-bit long double with 64-bit and 32-bit ints.  */
+typedef union tmpl_IEEE754_FloatIntLongDouble_Def {
+
+    /*  The "word" the data represents. This splits the double into its bits. */
+    tmpl_IEEE754_LDouble w;
+
+    /*  The integer values the 96-bits for the long double represent.         */
+    struct {
+        tmpl_UInt64 lo;
+        tmpl_UInt32 hi;
+
+    } words;
+
+    /*  The actual floating point number.                                     */
+    long double f;
+} tmpl_IEEE754_FloatIntLongDouble;
+
+/*  All 128-bit types are handles similarly. The endianness differs.          */
+#elif \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
+    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+
+/******************************************************************************
+ *        128-Bit Extended / Quadruple / Double-Double (Little Endian)        *
+ ******************************************************************************/
+
+/*  Union for type-punning a 128-bit long double with 64-bit ints.            */
+typedef union tmpl_IEEE754_FloatIntLongDouble_Def {
+
+    /*  The "word" the data represents. This splits the double into its bits. */
+    tmpl_IEEE754_LDouble w;
+
+    /*  The integer values the 128-bits for the long double represent.        */
+    struct {
+        tmpl_UInt64 lo;
+        tmpl_UInt64 hi;
+    } words;
+
+    /*  The actual floating point number.                                     */
+    long double f;
+} tmpl_IEEE754_FloatIntLongDouble;
+
+#else
+
+/******************************************************************************
+ *          128-Bit Extended / Quadruple / Double-Double (Big Endian)         *
+ ******************************************************************************/
+
+/*  Union for type-punning a 128-bit long double with 64-bit ints.            */
+typedef union tmpl_IEEE754_FloatIntLongDouble_Def {
+
+    /*  The "word" the data represents. This splits the double into its bits. */
+    tmpl_IEEE754_LDouble w;
+
+    /*  The integer values the 128-bits for the long double represent.        */
+    struct {
+        tmpl_UInt64 hi;
+        tmpl_UInt64 lo;
+    } words;
+
+    /*  The actual floating point number.                                     */
+    long double f;
+} tmpl_IEEE754_FloatIntLongDouble;
+
+#endif
+/*  End of #TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                               */
+
+#endif
+/*  End of #if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1.                            */
+
 #endif
 /*  End of include guard.                                                     */

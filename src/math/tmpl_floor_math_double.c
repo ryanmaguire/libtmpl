@@ -86,31 +86,67 @@
 /*  Function for computing the floor of a double (floor equivalent).          */
 double tmpl_Double_Floor(double x)
 {
+    /*  Union of a 64-bit int and a double.                                   */
     tmpl_IEEE754_FloatInt64 word64;
-    tmpl_UInt64 i, j;
 
+    /*  The lower fractional bits (non-integral) will be stored here.         */
+    tmpl_UInt64 fractional_bits;
+
+    /*  Variable for the exponent, not offset by the bias.                    */
+    unsigned int exponent;
+
+    /*  Initialize the word to the input.                                     */
     word64.f = x;
 
-    if (word64.w.bits.expo < TMPL_DOUBLE_BIAS)
+    /*  If |x| < 1, we have floor(x) = 0 or -1, depending on the sign.        */
+    if (word64.w.bits.expo < TMPL_DOUBLE_UBIAS)
     {
+        /*  Regardless of the sign of x, zero should map to zero.             */
+        if (x == 0.0)
+            return x;
+
+        /*  For negative, floor(x) = -1.                                      */
         if (word64.w.bits.sign)
             return -1.0;
 
+        /*  And for 0 < x < 1, floor(x) = 0.                                  */
         return 0.0;
     }
 
-    if (word64.w.bits.expo > TMPL_DOUBLE_BIAS + 51U)
+    /*  If the input is really big, there are no fractional bits. That is,    *
+     *  the input is already an integer. Return the input.                    */
+    if (word64.w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
         return x;
 
-    i = ((word64.n >> 52U) & 0x7FFU) - 0x3FFU;
-    j = 0x000FFFFFFFFFFFFF >> i;
-    if ((word64.n & j) == 0)
+    /*  We now have |x| >= 1, so the exponent in the word is greater than the *
+     *  bias. The difference is hence a positive number, so we do not need to *
+     *  cast to signed ints. Compute the exponent of the input.               */
+    exponent = word64.w.bits.expo - TMPL_DOUBLE_UBIAS;
+
+    /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
+     *  represents 52 1's in binary. By shifting down by the exponent, we     *
+     *  get a bit-mask for the fractional bits of the input.                  */
+    fractional_bits = 0x000FFFFFFFFFFFFFU >> exponent;
+
+    /*  If none of the fractional bits of the input are 1, then the input was *
+     *  already an integer. Return the input.                                 */
+    if ((word64.n & fractional_bits) == 0)
         return x;
 
+    /*  For negative non-integer values, floor(x) = -floor(|x|+1). We can     *
+     *  compute the +1 term by adding to the 1's bit in the word. Note that   *
+     *  if this results in a carry, the sum will bleed over into the exponent *
+     *  part. This is perfectly fine since a carry means the exponent must    *
+     *  increase by 1, which is what the sum does.                            */
     if (word64.w.bits.sign)
-        word64.n += 0x0010000000000000 >> i;
+        word64.n += 0x0010000000000000 >> exponent;
 
-    word64.n &= ~j;
+    /*  The floor function can be computed by zeroing out all of the          *
+     *  fractional bits. This is achieved by using bit-wise and with the      *
+     *  complement of the fractional bits.                                    */
+    word64.n &= ~fractional_bits;
+
+    /*  word64 now has the floor of the input. Output the double part.        */
     return word64.f;
 }
 /*  End of tmpl_Double_Floor.                                                 */
@@ -164,7 +200,7 @@ double tmpl_Double_Floor(double x)
          *  exact bits we want to be zero is given by the exponent of the     *
          *  input. There are 52 (0x34 in hex) bits total, so we want the last *
          *  52 - expo bits to be zero. The exponent is offset by a bias, so   *
-         *  expo = w.bits.expo - TMPL_DOUBL_UBIAS. In total, shifting up by   *
+         *  expo = w.bits.expo - TMPL_DOUBLE_UBIAS. In total, shifting up by  *
          *  0x34 - (w.bits.expo - TMPL_DOUBLE_UBIAS) will zero out the lower  *
          *  bits, creating the appropriate bit-mask.                          */
         w.bits.man3 &= (0xFFFFU << (0x34U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
@@ -186,7 +222,7 @@ double tmpl_Double_Floor(double x)
         goto TMPL_DOUBLE_FLOOR_FINISH;
     }
 
-    /*  If |x| < 2^16, the higher three parts of the mantissa all need to be  *
+    /*  If |x| < 2^4, the higher three parts of the mantissa all need to be   *
      *  zeroed out.                                                           */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x04U)
         w.bits.man1 = 0x00U;
@@ -218,11 +254,6 @@ TMPL_DOUBLE_FLOOR_FINISH:
     return w.r;
 }
 /*  End of tmpl_Double_Floor.                                                 */
-
-/*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */

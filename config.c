@@ -1306,12 +1306,11 @@ static int make_config_h(void)
     else
         fprintf(fp, "#define TMPL_HAS_ASCII 0\n\n");
 
-#ifdef TMPL_SET_NO_INT
+#if defined(TMPL_SET_NO_INT) || defined(TMPL_SET_TMPL_USE_IEEE_FALSE)
     fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
     fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
-
+    fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 0\n");
 #else
-#ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
     if (TMPL_HAS_32_BIT_INT)
     {
         /*  Unheard of by me, but not impossible by the standards. We need    *
@@ -1343,12 +1342,54 @@ static int make_config_h(void)
     }
     else
         fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
-#else
-    fprintf(fp, "#define TMPL_HAS_FLOATINT32 0\n");
-    fprintf(fp, "#define TMPL_HAS_FLOATINT64 0\n");
+
+    /*  Lastly, long double.                                                  */
+    if (ldouble_type == tmpl_ldouble_64_bit_little_endian &&
+        TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_little_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_64_bit_big_endian &&
+        TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_big_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_96_bit_extended_little_endian
+             && TMPL_HAS_64_BIT_INT && TMPL_HAS_32_BIT_INT &&
+             int_type == tmpl_integer_little_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_96_bit_extended_big_endian
+             && TMPL_HAS_64_BIT_INT && TMPL_HAS_32_BIT_INT &&
+             int_type == tmpl_integer_big_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_128_bit_extended_little_endian
+             && TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_little_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_128_bit_extended_big_endian
+             && TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_big_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_little_endian
+             && TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_little_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_128_bit_quadruple_big_endian
+             && TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_big_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_128_bit_doubledouble_little_endian
+             && TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_little_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else if (ldouble_type == tmpl_ldouble_128_bit_doubledouble_big_endian
+             && TMPL_HAS_64_BIT_INT && int_type == tmpl_integer_big_endian)
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 1\n");
+
+    else
+        fprintf(fp, "#define TMPL_HAS_FLOATINT_LONG_DOUBLE 0\n");
 #endif
-#endif
-    /*  End of #if TMPL_SET_NO_INT == 1.                                      */
+/*  End #if defined(TMPL_SET_NO_INT) || defined(TMPL_SET_TMPL_USE_IEEE_FALSE).*/
 
 #ifdef TMPL_USE_VOLATILE
     fputs("#define TMPL_VOLATILE volatile", fp);
