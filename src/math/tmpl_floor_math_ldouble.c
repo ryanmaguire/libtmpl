@@ -524,7 +524,7 @@ long double tmpl_LDouble_Floor(long double x)
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
-        if ((word.words.hi & fractional_bits) == 0)
+        if (((word.words.hi & fractional_bits) | word.words.lo) == 0)
             return x;
 
         /*  For negative non-integer values, floor(x) = -floor(|x|+1). We can *
