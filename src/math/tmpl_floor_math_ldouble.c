@@ -514,7 +514,7 @@ long double tmpl_LDouble_Floor(long double x)
     /*  There are 112-bits in the mantissa, and it is split between two       *
      *  64-bit integers. The low word hold 64 bits, and the high word has 48. *
      *  If the exponent is less than 48, we can zero out the lower part.      */
-    if (exponent < 48)
+    if (exponent < 48U)
     {
         /*  Low word can be zeroed out. The high word has 48 bits. Create a   *
          *  bit-mask by shifting 0xFFFFFFFFFFFF (48 1's in binary) down by    *
@@ -524,7 +524,7 @@ long double tmpl_LDouble_Floor(long double x)
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
-        if ((word.words.hi & fractional_bits) == 0)
+        if ((word.words.lo & fractional_bits) == 0)
             return x;
 
         /*  For negative non-integer values, floor(x) = -floor(|x|+1). We can *
