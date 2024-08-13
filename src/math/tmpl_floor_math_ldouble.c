@@ -478,7 +478,7 @@ long double tmpl_LDouble_Floor(long double x)
     tmpl_IEEE754_FloatIntLongDouble word;
 
     /*  The lower fractional bits (non-integral) will be stored here.         */
-    tmpl_UInt64 fractional_bits, tmp;
+    tmpl_UInt64 fractional_bits;
 
     /*  Variable for the exponent, not offset by the bias.                    */
     unsigned int exponent;
@@ -533,7 +533,7 @@ long double tmpl_LDouble_Floor(long double x)
          *  exponent part. This is perfectly fine since a carry means the     *
          *  exponent must increase by 1, which is what the sum does.          */
         if (word.w.bits.sign)
-            word.words.hi += 0x2000000000000U >> exponent;
+            word.words.hi += 0x1000000000000U >> exponent;
 
         /*  The floor function can be computed by zeroing out all of the      *
          *  fractional bits. This is achieved by using bit-wise and with the  *
