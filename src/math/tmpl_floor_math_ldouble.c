@@ -520,11 +520,11 @@ long double tmpl_LDouble_Floor(long double x)
          *  bit-mask by shifting 0xFFFFFFFFFFFF (48 1's in binary) down by    *
          *  exponent.                                                         */
         word.words.lo = 0;
-        fractional_bits = 0xFFFFFFFFFFFFU >> exponent;
+        fractional_bits = 0x0000FFFFFFFFFFFFU >> exponent;
 
         /*  If none of the fractional bits of the input are 1, then the input *
          *  was already an integer. Return the input.                         */
-        if ((word.words.lo & fractional_bits) == 0)
+        if ((word.words.hi & fractional_bits) == 0)
             return x;
 
         /*  For negative non-integer values, floor(x) = -floor(|x|+1). We can *
