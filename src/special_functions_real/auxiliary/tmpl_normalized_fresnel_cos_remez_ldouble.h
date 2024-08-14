@@ -458,7 +458,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(long double x)
 
     /*  The shift is floor(32 x) / 32. We've computed floor(32(x-1)) already  *
      *  so we can save a second call to the floor function.                   */
-    const long double y = (n_by_9 + 32.0L) / 32.0L;
+    const long double y = (n_by_10 + 32.0L) / 32.0L;
 
     /*  Shift so that the input is between 0 and 1/32.                        */
     const long double z = x - y;

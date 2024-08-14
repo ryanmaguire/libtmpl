@@ -50,12 +50,31 @@
  *      and -1 if x is negative. Otherwise, shift the bit point "exponent" to *
  *      the right and zero out all mantissa bits that are to the right of the *
  *      new bit point.                                                        *
+ *                                                                            *
+ *      The portable method uses a similar idea, but is very slow.            *
+ *  Notes:                                                                    *
+ *      1.) On several architectures (amd64 / x86_64, aarch64 / arm64)        *
+ *          libtmpl implements the floor function in assembly code. This is   *
+ *          decently faster than any of the provided C routines below.        *
+ *      2.) Two different type-punning methods are provided. The fastest      *
+ *          assumes 64-bit integers are available and can be used for type    *
+ *          punning. The slower one does not assume 64-bit fixed width        *
+ *          integers are available. Instead it messes with the bits in the    *
+ *          tmpl_IEEE754_Double union. Both methods assume IEEE-754 support.  *
+ *          libtmpl determines if this is available upon building.            *
+ *      3.) The "portable" method is dreadfully slow, about 10x worse. It is  *
+ *          primarily here for experimentation. Only use it if you have no    *
+ *          other options.                                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_math.h:                                                          *
+ *  2.) tmpl_inttype.h:                                                       *
+ *          Provides fixed-width integer data types.                          *
+ *  3.) tmpl_ieee754_double.h:                                                *
+ *          Contains the tmpl_IEEE754_Double union used for type punning.     *
+ *  4.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -74,11 +93,15 @@
 /*  Check for IEEE-754 support. This makes the function much faster.          */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
-/*  If 64-bit integers are available, we can make the code shorter.           */
-#include <libtmpl/include/tmpl_inttype.h>
-
 /*  Check for 64-bit integer support.                                         */
 #if TMPL_HAS_FLOATINT64 == 1
+
+/******************************************************************************
+ *                   IEEE-754 Version with 64-Bit Integers                    *
+ ******************************************************************************/
+
+/*  Fixed-width integers are found here.                                      */
+#include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatInt64 data type provided here.                          */
 #include <libtmpl/include/tmpl_floatint.h>
@@ -154,14 +177,24 @@ double tmpl_Double_Floor(double x)
 #else
 /*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
 
+/******************************************************************************
+ *                  IEEE-754 Version without 64-Bit Integers                  *
+ ******************************************************************************/
+
 /*  This method does not require 64 bit integer types be available. It does   *
  *  require that IEEE-754 support for double is available. It is a little     *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
+/*  tmpl_IEEE754_Double data type provided here.                              */
+#include <libtmpl/include/tmpl_ieee754_double.h>
+
 /*  Function for computing the floor of a double (floor equivalent).          */
 double tmpl_Double_Floor(double x)
 {
+    /*  Union of a double and the bits that represent it.                     */
     tmpl_IEEE754_Double w;
+
+    /*  Set the double part of the word to the input.                         */
     w.r = x;
 
     /*  For arguments |x| < 1, either floor(x) = 0 or floor(x) = -1.          */
@@ -227,7 +260,7 @@ double tmpl_Double_Floor(double x)
     if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x04U)
         w.bits.man1 = 0x00U;
 
-    /*  Otherwise, for 2^16 <= |x| < 2^20, zero out the upper two parts and   *
+    /*  Otherwise, for 2^4 <= |x| < 2^20, zero out the upper two parts and    *
      *  modify the second lowest part.                                        */
     else
     {
@@ -260,6 +293,10 @@ TMPL_DOUBLE_FLOOR_FINISH:
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+
+/******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
 
 /******************************************************************************
  *  DO NOT USE UNLESS YOU HAVE NO OTHER OPTIONS.                              *
@@ -314,10 +351,12 @@ double tmpl_Double_Floor(double x)
     /*  If expo < 0 we have |x| < 1. floor(x) = 0 if x >= 0 and -1 otherwise. */
     if (expo < 0)
     {
+        /*  For negative values, -1 < x < 0, we have floor(x) = -1.           */
         if (x < 0.0)
             return -1.0;
-        else
-            return 0.0;
+
+        /*  Otherwise, for 0 < x < 1, we have floor(x) = 0.                   */
+        return 0.0;
     }
 
     /*  This function is only accurate to 64 bits in the mantissa. For most   *
@@ -341,24 +380,27 @@ double tmpl_Double_Floor(double x)
     abs_x = abs_x - y;
 
     /*  This highest non-zero bit has been zeroed out, move to the next one.  */
-    expo -= 1;
+    --expo;
 
     /*  Loop over the remaining bits of the integer part of abs_x and repeat. */
     while (expo >= 0)
     {
         y = tmpl_double_pow_2_table[expo];
 
-        /*  If abs_x < y, this bit is already zero. No need to subtract.      */
-        if (abs_x < y)
-            expo--;
-
-        /*  Otherwise, zero this bit out and add it to out.                   */
-        else
+        /*  If abs_x < y, this bit is already zero. No need to subtract.      *
+         *  Otherwise, zero this bit out and add it to out.                   */
+        if (abs_x >= y)
         {
-            abs_x = abs_x - y;
+            abs_x -= y;
             out += y;
-            expo--;
         }
+
+        /*  If abs_x is zero, we are done. Break out of the loop.             */
+        if (abs_x == 0.0)
+            break;
+
+        /*  Get the next power of two and repeat.                             */
+        --expo;
     }
 
     /*  If the input was negative we need to use floor(x) = -1 - floor(-x).   */
@@ -370,13 +412,11 @@ double tmpl_Double_Floor(double x)
             return x;
 
         /*  Otherwise, use the negation formula and return.                   */
-        else
-            return -1.0 - out;
+        return -1.0 - out;
     }
 
     /*  For positive values, we are done with the computation.                */
-    else
-        return out;
+    return out;
 }
 /*  End of tmpl_Double_Floor.                                                 */
 

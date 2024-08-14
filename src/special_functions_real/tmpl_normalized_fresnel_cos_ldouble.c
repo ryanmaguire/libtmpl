@@ -277,84 +277,83 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos(long double x)
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Computes the normalized Fresnel cosine of a real number.                  */
-double tmpl_Double_Normalized_Fresnel_Cos(double x)
+long double tmpl_LDouble_Normalized_Fresnel_Cos(long double x)
 {
     /*  Variable for the output.                                              */
-    double out;
+    long double out;
 
     /*  C(x) is odd. Compute |x| and work with that.                          */
-    const double abs_x = tmpl_Double_Abs(x);
-
+    const long double abs_x = tmpl_LDouble_Abs(x);
 
     /*  Special case, NaN or Infinity.                                        */
-    if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_LDouble_Is_NaN_Or_Inf(x))
     {
         /*  For not-a-number, return the input. Output is also not-a-number.  */
-        if (tmpl_Double_Is_NaN(x))
+        if (tmpl_LDouble_Is_NaN(x))
             return x;
 
         /*  The normalized Fresnel integrals are asymptotic to +/- 1/2.       */
-        if (x < 0.0)
-            return -0.5;
+        if (x < 0.0L)
+            return -0.5L;
 
-        return 0.5;
+        return 0.5L;
     }
 
     /*  For small inputs we can use the Taylor series and Pade approximants.  */
-    if (abs_x < 1.0)
+    if (abs_x < 1.0L)
     {
-        /*  Avoid underflow. The error is O(x^4). Return x for |x| < 2^-17.   */
-        if (abs_x < 7.62939453125E-06)
+        /*  Avoid underflow. The error is O(x^4). Return x for |x| < 2^-21.   */
+        if (abs_x < 4.76837158203125e-07L)
             return x;
 
         /*  For values bounded by 1/4, use a Maclaurin polynomial.            */
-        if (abs_x < 0.25)
-            return tmpl_Double_Normalized_Fresnel_Cos_Maclaurin(x);
+        if (abs_x < 0.25L)
+            return tmpl_LDouble_Normalized_Fresnel_Cos_Maclaurin(x);
 
         /*  For |x| < 1 we can use a Pade approximate. The numerator and      *
          *  denominator are in terms of x^4, so we can get very high orders   *
          *  of the approximant for free. The (20, 16) Pade approximant        *
          *  requires 5 terms for the numerator and 4 for the denominator.     */
-        return tmpl_Double_Normalized_Fresnel_Cos_Pade(x);
+        return tmpl_LDouble_Normalized_Fresnel_Cos_Pade(x);
     }
 
-    /*  For |x| < 2^17 we can use the auxiliary functions.                    */
-    if (abs_x < 131072.0)
+    /*  For |x| < 2^21 we can use the auxiliary functions.                    */
+    if (abs_x < 2097152.0L)
     {
         /*  For 1 <= |x| < 2 it is worth speeding up the computation and      *
          *  avoiding calls to the trig functions. We do this using a table of *
          *  coefficients for Remez polynomials spaced 1/32 apart.             */
-        if (abs_x < 2.0)
-            out = tmpl_Double_Normalized_Fresnel_Cos_Remez(abs_x);
+        if (abs_x < 2.0L)
+            out = tmpl_LDouble_Normalized_Fresnel_Cos_Remez(abs_x);
 
         /*  For 2 <= |x| < 4, less care is needed to accurately use the       *
          *  auxiliary functions. This gives us a bit of a speed boost.        */
-        else if (abs_x < 4.0)
-            out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small(abs_x);
+        else if (abs_x < 4.0L)
+            out = tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(abs_x);
 
         /*  For |x| > 4 we need to use the auxiliary functions more carefully.*
          *  A "double-double" trick is carried out to maintain accuracy.      */
         else
-            out = tmpl_Double_Normalized_Fresnel_Cos_Auxiliary(abs_x);
+            out = tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(abs_x);
     }
 
-    /*  For very large inputs, 2^17 <= |x| < 2^52, a single term of the       *
+    /*  For very large inputs, 2^17 <= |x| < 2^63, a single term of the       *
      *  asymptotic series is all that is needed. Use this.                    */
-    else if (abs_x < 4.503599627370496E+15)
-        out = tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(abs_x);
+    else if (abs_x < 9.223372036854775808E+18L)
+        out = tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(abs_x);
 
     /*  The error of the asymptotic expansion is O(1 / x). For very large     *
      *  inputs, |x| > 2^52, we can use the limit, which is 1/2.               */
     else
-        out = 0.5;
+        out = 0.5L;
 
     /*  C(x) is odd. For negative inputs, return -C(-x).                      */
-    if (x < 0.0)
+    if (x < 0.0L)
         return -out;
 
     return out;
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos.                                */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Cos.                               */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
