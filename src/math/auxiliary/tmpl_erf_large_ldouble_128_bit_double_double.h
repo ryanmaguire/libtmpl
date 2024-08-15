@@ -809,6 +809,9 @@ long double tmpl_LDouble_Erf_Large(long double x)
     unsigned int n;
     long double z;
 
+    if (x > 8.5L)
+        return 1.0L;
+
     w.r = x;
     shift.r = w.d[0] + 549755813886.0;
     n = shift.bits.man3 >> 12;
