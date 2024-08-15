@@ -107,7 +107,7 @@ typedef union tmpl_IEEE754_FloatInt64_Def {
  ******************************************************************************/
 
 /*  Union for type-punning a 64-bit long double with a 64-bit int.            */
-typedef union tmpl_IEEE754_FloatInt64_Def {
+typedef union tmpl_IEEE754_FloatIntLongDouble_Def {
 
     /*  The "word" the data represents. This splits the double into its bits. */
     tmpl_IEEE754_LDouble w;
