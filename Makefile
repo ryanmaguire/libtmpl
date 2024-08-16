@@ -279,6 +279,10 @@ endif
 
 ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
 EXCLUDE +=\
+-not -name "tmpl_trailing_zeros_char.c" -and \
+-not -name "tmpl_trailing_zeros_int.c" -and \
+-not -name "tmpl_trailing_zeros_long.c" -and \
+-not -name "tmpl_trailing_zeros_short.c" -and \
 -not -name "tmpl_trailing_zeros_uchar.c" -and \
 -not -name "tmpl_trailing_zeros_uint.c" -and \
 -not -name "tmpl_trailing_zeros_ulong.c" -and \
