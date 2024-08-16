@@ -124,10 +124,6 @@ CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
 EXCLUDE += -not -name "*_llong.c" -and -not -name "*_ullong.c" -and
 endif
 
-ifdef USE_VOLATILE
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE
-endif
-
 # libtmpl provides its own implementation of libm. If you wish to use the
 # default libm implementation (if it exists) for your system enable this option.
 ifdef NO_MATH
@@ -177,6 +173,10 @@ endif
 # if possible for performance boosts.
 ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
+ifndef USE_VOLATILE
+USE_VOLATILE := 0
+endif
+
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
@@ -223,6 +223,10 @@ endif
 
 else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
 
+ifndef USE_VOLATILE
+USE_VOLATILE := 0
+endif
+
 ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
 EXCLUDE +=\
 -not -name "tmpl_trailing_zeros_char.c" -and \
@@ -243,6 +247,10 @@ EXCLUDE +=\
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
+ifndef USE_VOLATILE
+USE_VOLATILE := 1
+endif
+
 ASM_INCLUDE += -wholename "./src/assembly/aarch64/*.S" -or
 EXCLUDE +=\
 -not -name "tmpl_floor_math_double.c" -and \
@@ -253,17 +261,42 @@ EXCLUDE +=\
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
+ifndef USE_VOLATILE
+USE_VOLATILE := 1
+endif
+
 ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
 EXCLUDE +=\
 -not -name "tmpl_sqrt_double.c" -and \
 -not -name "tmpl_sqrt_float.c" -and \
 -not -name "tmpl_sqrt_ldouble.c" -and
 
+else ifeq ($(uname_m),$(filter $(uname_m),ppc64le))
+
+ifndef USE_VOLATILE
+USE_VOLATILE := 1
+endif
+
+ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
+EXCLUDE +=\
+-not -name "tmpl_trailing_zeros_uchar.c" -and \
+-not -name "tmpl_trailing_zeros_uint.c" -and \
+-not -name "tmpl_trailing_zeros_ulong.c" -and \
+-not -name "tmpl_trailing_zeros_ushort.c" -and \
+-not -name "tmpl_floor_math_double.c" -and \
+-not -name "tmpl_floor_math_float.c" -and \
+-not -name "tmpl_sqrt_double.c" -and \
+-not -name "tmpl_sqrt_float.c" -and
+
 endif
 # End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 
 endif
 # End of ifndef NO_ASM.
+
+ifeq ($(USE_VOLATILE),1)
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE
+endif
 
 INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
