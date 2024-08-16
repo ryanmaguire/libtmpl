@@ -392,7 +392,7 @@ TMPL_LDOUBLE_FLOOR_FINISH:
     /*  For negative inputs, use floor(x) = -floor(-x) - 1. This is true      *
      *  unless the input was already an integer. Check for this.              */
     if (TMPL_LDOUBLE_IS_NEGATIVE(w) && w.r != x)
-        return w.r - 1.0;
+        return w.r - 1.0L;
 
     /*  Otherwise w is now correctly set to the floor of the input.           */
     return w.r;
