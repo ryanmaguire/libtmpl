@@ -77,8 +77,16 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Splitting function for retreiving the high part of a double given here.   */
+#include <libtmpl/include/tmpl_split.h>
+
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 #define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00)
+
+/*  We use a double-double trick to split x into two parts, high and low.     *
+ *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the upper  *
+ *  16 bits of the mantissa and xlo has the lower 36 bits.                    */
+#define TMPL_SPLITTING_FACTOR (+68719476737.0)
 
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void tmpl_Double_SinCosPi(double t, double *sin_t, double *cos_t);
@@ -87,14 +95,9 @@ extern void tmpl_Double_SinCosPi(double t, double *sin_t, double *cos_t);
 TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(double x)
 {
-    /*  Use the double-double trick, split x into two parts, high and low.    *
-     *  The magic number 68719476737 is 2^(52 - 16) + 1. Hence xhi has the    *
-     *  upper 16 bits of the mantissa and xlo has the lower 36 bits.          *
-     *                                                                        *
-     *  Some architectures require split to be declared "volatile" for this   *
-     *  trick to work. The TMPL_VOLATILE macro has the correct qualifier.     */
-    TMPL_VOLATILE const double split = 68719476737.0 * x;
-    const double xhi = split - (split - x);
+    /*  Split the input into two parts. This allows us to compute the square  *
+     *  of x more precisely.                                                  */
+    const double xhi = tmpl_Double_High_Split(x, TMPL_SPLITTING_FACTOR);
     const double xlo = x - xhi;
 
     /*  The scale factor for the asymptotic expansion. For x > 2^17 we only   *
@@ -118,6 +121,7 @@ double tmpl_Double_Normalized_Fresnel_Cos_Asymptotic(double x)
 
 /*  Undefine everything in case someone wants to include this file.           */
 #undef TMPL_ONE_PI
+#undef TMPL_SPLITTING_FACTOR
 
 #endif
 /*  End of include guard.                                                     */
