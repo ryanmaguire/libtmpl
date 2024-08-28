@@ -142,5 +142,8 @@ long double tmpl_LDouble_Even_High_Split(long double x)
 #endif
 /*  End of #if defined(TMPL_LDOUBLE_CAUTIOUS_SPLIT).                          */
 
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_LDOUBLE_SPLITTER
+
 #endif
 /*  End of include guard.                                                     */

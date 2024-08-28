@@ -93,7 +93,7 @@
 
 /*  Splitting function for retreiving the high part of a double given here.   */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/split/tmpl_high_split_double.h>
+#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 #else
 extern long double tmpl_LDouble_Even_High_Split(long double x);
 #endif
@@ -108,9 +108,6 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 /******************************************************************************
  *                                64-Bit Double                               *
  ******************************************************************************/
-
-/*  High-Low splitting factor, set to 2^27 + 1 = 2^(floor(52 / 2) + 1) + 1.   */
-#define TMPL_LDOUBLE_SPLIT (+1.34217729E+08L)
 
 /*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (-2.1447177918579579753388433334911075409571981652522E-17L)
@@ -172,9 +169,6 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
 /******************************************************************************
  *                              128-Bit Quaduple                              *
  ******************************************************************************/
-
-/*  High-Low splitting factor, set to 2^57 + 1 = 2^(floor(112 / 2) + 1) + 1.  */
-#define TMPL_LDOUBLE_SPLIT (+1.44115188075855873E+17L)
 
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (-6.4904766979192653068496179233841491806804722684774E-35L)
@@ -632,9 +626,6 @@ D00 + z*(\
  *                         80-Bit Extended / Portable                         *
  ******************************************************************************/
 
-/*  High-Low splitting factor, set to 2^32 + 1 = 2^(floor(63 / 2) + 1) + 1.   */
-#define TMPL_LDOUBLE_SPLIT (+4.294967297E+09L)
-
 /*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (+3.7917276177869050029828761509968593742453948654175E-20L)
 #define A01 (+7.9577471545947647483162446203605621960785339472695E-02L)
@@ -834,7 +825,6 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(long double x)
 #undef C1
 #undef S0
 #undef S1
-#undef TMPL_LDOUBLE_SPLIT
 #undef TMPL_COS_TAYLOR
 #undef TMPL_SIN_TAYLOR
 
