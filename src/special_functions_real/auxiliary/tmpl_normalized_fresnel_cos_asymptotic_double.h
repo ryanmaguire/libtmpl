@@ -78,7 +78,11 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Splitting function for retreiving the high part of a double given here.   */
-#include <libtmpl/include/tmpl_split.h>
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/split/tmpl_high_split_double.h>
+#else
+extern double tmpl_Double_High_Split(double x, double splitter);
+#endif
 
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 #define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00)

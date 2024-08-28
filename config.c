@@ -1391,10 +1391,22 @@ static int make_config_h(void)
 #endif
 /*  End #if defined(TMPL_SET_NO_INT) || defined(TMPL_SET_TMPL_USE_IEEE_FALSE).*/
 
-#ifdef TMPL_USE_VOLATILE
-    fputs("#define TMPL_VOLATILE volatile", fp);
-#else
-    fputs("#define TMPL_VOLATILE", fp);
+#if defined(TMPL_USE_VOLATILE_DOUBLE_SPLIT)
+    fputs("#define TMPL_DOUBLE_VOLATILE_SPLIT", fp);
+#elif defined(TMPL_USE_CAUTIOUS_DOUBLE_SPLIT)
+    fputs("#define TMPL_DOUBLE_CAUTIOUS_SPLIT", fp);
+#endif
+
+#if defined(TMPL_USE_VOLATILE_FLOAT_SPLIT)
+    fputs("#define TMPL_FLOAT_VOLATILE_SPLIT", fp);
+#elif defined(TMPL_USE_CAUTIOUS_FLOAT_SPLIT)
+    fputs("#define TMPL_FLOAT_CAUTIOUS_SPLIT", fp);
+#endif
+
+#if defined(TMPL_USE_VOLATILE_LDOUBLE_SPLIT)
+    fputs("#define TMPL_LDOUBLE_VOLATILE_SPLIT", fp);
+#elif defined(TMPL_USE_CAUTIOUS_LDOUBLE_SPLIT)
+    fputs("#define TMPL_LDOUBLE_CAUTIOUS_SPLIT", fp);
 #endif
 
     /*  Print the end of the include guard.                                   */

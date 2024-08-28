@@ -223,9 +223,7 @@ endif
 
 else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
 
-ifndef USE_VOLATILE
-USE_VOLATILE := 0
-endif
+CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
 
 ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
 EXCLUDE +=\
@@ -247,9 +245,7 @@ EXCLUDE +=\
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
-ifndef USE_VOLATILE
-USE_VOLATILE := 1
-endif
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
 
 ASM_INCLUDE += -wholename "./src/assembly/aarch64/*.S" -or
 EXCLUDE +=\
@@ -261,9 +257,7 @@ EXCLUDE +=\
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
-ifndef USE_VOLATILE
-USE_VOLATILE := 1
-endif
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
 
 ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
 EXCLUDE +=\
@@ -273,9 +267,7 @@ EXCLUDE +=\
 
 else ifeq ($(uname_m),$(filter $(uname_m),ppc64le))
 
-ifndef USE_VOLATILE
-USE_VOLATILE := 1
-endif
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
 
 ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
 EXCLUDE +=\
@@ -297,10 +289,6 @@ endif
 
 endif
 # End of ifndef NO_ASM.
-
-ifeq ($(USE_VOLATILE),1)
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE
-endif
 
 INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))

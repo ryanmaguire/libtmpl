@@ -94,6 +94,13 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Splitting function for retreiving the high part of a double given here.   */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/split/tmpl_high_split_double.h>
+#else
+extern long double tmpl_LDouble_Even_High_Split(long double x);
+#endif
+
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void
 tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
@@ -1114,23 +1121,7 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
-#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-
-    /*  For double-double, we can just read off the high part by casting.     */
-    const double x_double = (double)x;
-    const long double xhi = (long double)x_double;
-
-#else
-/*  Else for #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.              */
-
-    /*  All other representations can be split normally.                      */
-    TMPL_VOLATILE const long double split = TMPL_LDOUBLE_SPLIT * x;
-    const long double xhi = split - (split - x);
-
-#endif
-/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
-
-    /*  The low word is just the difference, regardless of representation.    */
+    const long double xhi = tmpl_LDouble_Even_High_Split(x);
     const long double xlo = x - xhi;
 
     /*  With v = pi/2 (2 xlo xhi + xlo^2), compute cos(v) and sin(v) using    *

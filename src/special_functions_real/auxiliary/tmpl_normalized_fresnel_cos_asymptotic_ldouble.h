@@ -85,6 +85,15 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Splitting function for retreiving the high part of a double given here.   */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/split/tmpl_high_split_double.h>
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+extern long double tmpl_LDouble_High_Split(long double x, double splitter);
+#else
+extern long double tmpl_LDouble_High_Split(long double x, long double splitter);
+#endif
+
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 #define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00L)
 
@@ -101,25 +110,25 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /*  52-bit mantissa, value is 2^36 + 1.                                       */
-#define TMPL_LDOUBLE_SPLIT (6.8719476737E+10L)
+#define TMPL_LDOUBLE_SPLITTER (6.8719476737E+10L)
 
 /*  Quadruple precision has a much large mantissa, hence a larger value.      */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /*  112-bit mantissa, value is 2^76 + 1.                                      */
-#define TMPL_LDOUBLE_SPLIT (+7.5557863725914323419137E+22L)
+#define TMPL_LDOUBLE_SPLITTER (+7.5557863725914323419137E+22L)
 
 /*  Double-double, special case, we split the higher double.                  */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  Double-double, split by 2^19 + 1 (splitting as a "double").               */
-#define TMPL_LDOUBLE_SPLIT (+5.24289E+05)
+#define TMPL_LDOUBLE_SPLITTER (+5.24289E+05)
 
 /*  The most common version, 80-bit extended / portable.                      */
 #else
 
 /*  63-bit mantissa, value is 2^43 + 1.                                       */
-#define TMPL_LDOUBLE_SPLIT (+8.796093022209E+12L)
+#define TMPL_LDOUBLE_SPLITTER (+8.796093022209E+12L)
 
 #endif
 /*  End of double vs. extended vs. double-double vs. quadruple.               */
@@ -129,30 +138,7 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
-#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-
-    /*  double-double is handled differently. It cannot be "split" since it   *
-     *  is already represented by two doubles. Instead, we split the high     *
-     *  part of the input (which is a double) into two parts, and then store  *
-     *  the entirety of the input into two long doubles using this. On some   *
-     *  architectures the "volatile" keyword must be used for this to work    *
-     *  properly. The TMPL_VOLATILE macro has the correct qualifier.          */
-    const double x_double = (double)x;
-    TMPL_VOLATILE const double split = TMPL_LDOUBLE_SPLIT * x_double;
-    const double xhi_double = split - (split - x_double);
-    const long double xhi = (long double)xhi_double;
-
-#else
-/*  Else for #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.              */
-
-    /*  All other representations of long double can be split normally.       */
-    TMPL_VOLATILE const long double split = TMPL_LDOUBLE_SPLIT * x;
-    const long double xhi = split - (split - x);
-
-#endif
-/*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE.                */
-
-    /*  The low word is just the difference, regardless of representation.    */
+    const long double xhi = tmpl_LDouble_High_Split(x, TMPL_LDOUBLE_SPLITTER);
     const long double xlo = x - xhi;
 
     /*  The scale factor for the asymptotic expansion. For large x we only    *
@@ -176,7 +162,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
 
 /*  Undefine everything in case someone wants to include this file.           */
 #undef TMPL_ONE_PI
-#undef TMPL_LDOUBLE_SPLIT
+#undef TMPL_LDOUBLE_SPLITTER
 
 #endif
 /*  End of include guard.                                                     */

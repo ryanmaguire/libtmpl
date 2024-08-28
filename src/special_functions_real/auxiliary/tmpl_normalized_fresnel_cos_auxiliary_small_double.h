@@ -88,6 +88,13 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Splitting function for retreiving the high part of a double given here.   */
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/split/tmpl_even_high_split_double.h>
+#else
+extern double tmpl_Double_Even_High_Split(double x);
+#endif
+
 /*  Used to compute sin(pi t) and cos(pi t) simultaneously.                   */
 extern void tmpl_Double_SinCosPi(double t, double *sin_t, double *cos_t);
 
@@ -158,13 +165,8 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 TMPL_STATIC_INLINE
 double tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small(double x)
 {
-    /*  Use the double-double trick, split x into two parts, high and low.    *
-     *  The magic number 134217729 is 2^27 + 1. This results in xhi and xlo   *
-     *  both having half of the bits of x. Some architectures require the     *
-     *  "volatile" keyword for the split to occur correctly. The              *
-     *  TMPL_VOLATILE macro has the correct qualifier.                        */
-    TMPL_VOLATILE const double split = 134217729.0 * x;
-    const double xhi = split - (split - x);
+    /*  Split the input into two parts, high and low.                         */
+    const double xhi = tmpl_Double_Even_High_Split(x);
     const double xlo = x - xhi;
 
     /*  The auxiliary functions f and g are computed by shifting the interval *
