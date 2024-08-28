@@ -16,37 +16,41 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_high_split_double                           *
+ *                           tmpl_high_split_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Retrieves the higher order bits of a double by splitting.             *
+ *      Retrieves the higher order bits of a long double by splitting.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_High_Split                                                *
+ *      tmpl_LDouble_High_Split                                               *
  *  Purpose:                                                                  *
  *      Returns the input "x" truncated to its higher order bits.             *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
- *      splitter (double):                                                    *
+ *      splitter (long double):                                               *
  *          The splitting factor. This will most likely by 2^n + 1, where you *
- *          want the higher 52 - n bits to be returned, assuming double has   *
- *          52 bits in the mantissa.                                          *
+ *          want the higher 63 - n bits to be returned, assuming long double  *
+ *          has 63 bits in the mantissa. For quaduple it is 112 - n, and for  *
+ *          double and double-double it is 52 - n.                            *
  *  Output:                                                                   *
- *      x_hi (double):                                                        *
+ *      x_hi (long double):                                                   *
  *          The high part of x.                                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Assuming IEEE-754 format, we have:                                    *
+ *      For all implementations besides double-double, we have:               *
  *                                                                            *
  *          xhi = (splitter * x) - ((splitter * x) - x)                       *
  *                                                                            *
  *      If (computer) arithmetic was associative, this would cancel yielding  *
  *      xhi = x. Since (computer) arithmetic is not associative, this has the *
  *      effect of zeroing out the lower bits of x.                            *
+ *                                                                            *
+ *      For double-double, we split the higher double in the input. That is,  *
+ *      we cast the input to a double and then split this (as a double).      *
  *  Notes:                                                                    *
  *      Depending on compiler and architecture we may need to declare certain *
  *      variables as volatile. Failure to do so results in a poor split.      *
@@ -61,61 +65,82 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DOUBLE_HIGH_SPLIT_H
-#define TMPL_DOUBLE_HIGH_SPLIT_H
+#ifndef TMPL_LDOUBLE_EVEN_HIGH_SPLIT_H
+#define TMPL_LDOUBLE_EVEN_HIGH_SPLIT_H
 
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+#define TMPL_LDOUBLE_SPLITTER (+1.34217729E+08L)
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+#define TMPL_LDOUBLE_SPLITTER (+1.44115188075855873E+17L)
+#elif TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_DOUBLEDOUBLE
+#define TMPL_LDOUBLE_SPLITTER (+4.294967297E+09L)
+#endif
+
+/*  Double-double behaves differently than the rest.                          */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/*  Function for splitting a long double. The high part is returned.          */
+TMPL_INLINE_DECL
+long double tmpl_LDouble_Even_High_Split(long double x)
+{
+    /*  We just need to cast to double since double-double is already split.  */
+    const double x_double = (double)x;
+    return (long double)x_double;
+}
+/*  End of tmpl_LDouble_Even_High_Split.                                      */
+
 /*  Depending on compiler and architecture, we may need to be very careful    *
  *  about how we split numbers. This first method is the most cautious.       */
-#if defined(TMPL_DOUBLE_CAUTIOUS_SPLIT)
+#elif defined(TMPL_LDOUBLE_CAUTIOUS_SPLIT)
 
-/*  Function for splitting a double into two parts. The high part is returned.*/
+/*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+long double tmpl_LDouble_Even_High_Split(long double x)
 {
     /*  On i386, using GCC, TCC, or Clang, extra volatile declarations were   *
-     *  needed to get the splitting trick to work. Without these volatile     *
-     *  statements a call to FMA is used instead, which ruins the split.      */
-    volatile const double split = x * splitter;
-    volatile const double tmp = split - x;
+     *  needed to get the splitting trick to work with double. It doesn't     *
+     *  seem to be necessary for long double. Nevertheless, the overly        *
+     *  cautious method declares each step as volatile and then splits.       */
+    volatile const long double split = x * TMPL_LDOUBLE_SPLITTER;
+    volatile const long double tmp = split - x;
     return split - tmp;
 }
-/*  End of tmpl_Double_High_Split.                                            */
+/*  End of tmpl_LDouble_Even_High_Split.                                      */
 
 /*  For most architectures, one volatile declaration is sufficient.           */
-#elif defined(TMPL_DOUBLE_VOLATILE_SPLIT)
+#elif defined(TMPL_LDOUBLE_VOLATILE_SPLIT)
 
-/*  Function for splitting a double into two parts. The high part is returned.*/
+/*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+long double tmpl_LDouble_Even_High_Split(long double x)
 {
     /*  For arm64, ppc64el, and other architectures, this first product must  *
-     *  be declared as volatile. Failure to do so makes the compiler use FMA  *
-     *  which ruins the split. This costs a bit of performance (about 1-3%)   *
-     *  but the split is performed correctly.                                 */
-    volatile const double split = x * splitter;
+     *  be declared as volatile in the double implementation. Again, for long *
+     *  double this seems unnecessary.                                        */
+    volatile const long double split = x * TMPL_LDOUBLE_SPLITTER;
     return split - (split - x);
 }
-/*  End of tmpl_Double_High_Split.                                            */
+/*  End of tmpl_LDouble_Even_High_Split.                                      */
 
 /*  For x86_64 / amd64 we do not need to use volatile at all.                 */
 #else
 
-/*  Function for splitting a double into two parts. The high part is returned.*/
+/*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+long double tmpl_LDouble_Even_High_Split(long double x)
 {
     /*  This is the "standard" way to perform a split. It works on x86_64     *
-     *  machines and no volatile declaration is required.                     */
-    const double split = x * splitter;
+     *  machines for double, and x86_64, arm64, and more for long double.     */
+    const long double split = x * TMPL_LDOUBLE_SPLITTER;
     return split - (split - x);
 }
-/*  End of tmpl_Double_High_Split.                                            */
+/*  End of tmpl_LDouble_Even_High_Split.                                      */
 
 #endif
-/*  End of #if defined(TMPL_DOUBLE_CAUTIOUS_SPLIT).                           */
+/*  End of #if defined(TMPL_LDOUBLE_CAUTIOUS_SPLIT).                          */
 
 #endif
 /*  End of include guard.                                                     */

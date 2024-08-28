@@ -16,26 +16,26 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                           tmpl_high_split_double                           *
+ *                           tmpl_high_split_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Retrieves the higher order bits of a double by splitting.             *
+ *      Retrieves the higher order bits of a float by splitting.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_High_Split                                                *
+ *      tmpl_Float_High_Split                                                 *
  *  Purpose:                                                                  *
  *      Returns the input "x" truncated to its higher order bits.             *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
- *      splitter (double):                                                    *
+ *      splitter (float):                                                     *
  *          The splitting factor. This will most likely by 2^n + 1, where you *
- *          want the higher 52 - n bits to be returned, assuming double has   *
- *          52 bits in the mantissa.                                          *
+ *          want the higher 23 - n bits to be returned, assuming float has    *
+ *          23 bits in the mantissa.                                          *
  *  Output:                                                                   *
- *      x_hi (double):                                                        *
+ *      x_hi (float):                                                         *
  *          The high part of x.                                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
@@ -61,61 +61,57 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_DOUBLE_HIGH_SPLIT_H
-#define TMPL_DOUBLE_HIGH_SPLIT_H
+#ifndef TMPL_FLOAT_HIGH_SPLIT_H
+#define TMPL_FLOAT_HIGH_SPLIT_H
 
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Depending on compiler and architecture, we may need to be very careful    *
  *  about how we split numbers. This first method is the most cautious.       */
-#if defined(TMPL_DOUBLE_CAUTIOUS_SPLIT)
+#if defined(TMPL_FLOAT_CAUTIOUS_SPLIT)
 
-/*  Function for splitting a double into two parts. The high part is returned.*/
+/*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+float tmpl_Float_High_Split(float x, float splitter)
 {
-    /*  On i386, using GCC, TCC, or Clang, extra volatile declarations were   *
-     *  needed to get the splitting trick to work. Without these volatile     *
-     *  statements a call to FMA is used instead, which ruins the split.      */
-    volatile const double split = x * splitter;
-    volatile const double tmp = split - x;
+    /*  Declaring everything as volatile almost guarantees the split works.   */
+    volatile const float split = x * splitter;
+    volatile const float tmp = split - x;
     return split - tmp;
 }
-/*  End of tmpl_Double_High_Split.                                            */
+/*  End of tmpl_Float_High_Split.                                             */
 
 /*  For most architectures, one volatile declaration is sufficient.           */
-#elif defined(TMPL_DOUBLE_VOLATILE_SPLIT)
+#elif defined(TMPL_FLOAT_VOLATILE_SPLIT)
 
-/*  Function for splitting a double into two parts. The high part is returned.*/
+/*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+float tmpl_Float_High_Split(float x, float splitter)
 {
-    /*  For arm64, ppc64el, and other architectures, this first product must  *
-     *  be declared as volatile. Failure to do so makes the compiler use FMA  *
-     *  which ruins the split. This costs a bit of performance (about 1-3%)   *
-     *  but the split is performed correctly.                                 */
-    volatile const double split = x * splitter;
+    /*  It is usually sufficient to declare the split product as volatile.    *
+     *  With optimizations on this is only slightly slower (1-3%) than        *
+     *  without the volatile declaration, but splits properly.                */
+    volatile const float split = x * splitter;
     return split - (split - x);
 }
-/*  End of tmpl_Double_High_Split.                                            */
+/*  End of tmpl_Float_High_Split.                                             */
 
 /*  For x86_64 / amd64 we do not need to use volatile at all.                 */
 #else
 
-/*  Function for splitting a double into two parts. The high part is returned.*/
+/*  Function for splitting a float into two parts. The high part is returned. */
 TMPL_INLINE_DECL
-double tmpl_Double_High_Split(double x, double splitter)
+float tmpl_Float_High_Split(float x, float splitter)
 {
-    /*  This is the "standard" way to perform a split. It works on x86_64     *
-     *  machines and no volatile declaration is required.                     */
-    const double split = x * splitter;
+    /*  This is the "standard" way to perform a split. No volatile used.      */
+    const float split = x * splitter;
     return split - (split - x);
 }
-/*  End of tmpl_Double_High_Split.                                            */
+/*  End of tmpl_Float_High_Split.                                             */
 
 #endif
-/*  End of #if defined(TMPL_DOUBLE_CAUTIOUS_SPLIT).                           */
+/*  End of #if defined(TMPL_FLOAT_CAUTIOUS_SPLIT).                            */
 
 #endif
 /*  End of include guard.                                                     */
