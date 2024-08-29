@@ -72,12 +72,6 @@
 #           types. The config.c file will try to find the widths of various
 #           integer types. To skip this, set this option. Enable with:
 #               make NO_INT=1 [other-options]
-#       USE_VOLATILE:
-#           On some architectures, like ppc64el, the volatile keyword is
-#           needed to prevent compilers from messing up splitting tricks.
-#           This causes a slight (a few percent) reduction in performance.
-#           Other architectures, like x86_64, arm64, do not need this keyword.
-#           Set USE_VOLATILE=1 if required.
 
 # Name of the library.
 TARGET_LIB := libtmpl.so
@@ -172,10 +166,6 @@ endif
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
 ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
-
-ifndef USE_VOLATILE
-USE_VOLATILE := 0
-endif
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
@@ -294,7 +284,7 @@ INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
-.PHONY: clean install uninstall all
+.PHONY: clean install uninstall all install-local uninstall-local
 
 all: $(TARGET_LIB)
 
@@ -344,3 +334,20 @@ uninstall:
 	rm -f $(TARGET_LIB)
 	rm -rf /usr/local/include/libtmpl/
 	rm -f /usr/local/lib/$(TARGET_LIB)
+
+install-local:
+	mkdir -p $(HOME)/.local/include/libtmpl/
+	mkdir -p $(HOME)/.local/lib/
+	cp -r ./include $(HOME)/.local/include/libtmpl/
+	cp $(TARGET_LIB) $(HOME)/.local/lib/$(TARGET_LIB)
+
+uninstall-local:
+	rm -f *.o
+	rm -rf $(BUILD_DIR)
+	rm -f include/tmpl_config.h
+	rm -f include/tmpl_inttype.h
+	rm -f include/tmpl_limits.h
+	rm -f include/tmpl_float.h
+	rm -f $(TARGET_LIB)
+	rm -rf $(HOME)/.local/include/libtmpl/
+	rm -f $(HOME)/.local/lib/$(TARGET_LIB)
