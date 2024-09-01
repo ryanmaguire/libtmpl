@@ -74,7 +74,14 @@
 #               make NO_INT=1 [other-options]
 
 # Name of the library.
-TARGET_LIB := libtmpl.so
+TARGET_LIB_SHARED := libtmpl.so
+TARGET_LIB_STATIC := libtmpl.a
+ifdef BUILD_STATIC
+TARGET_LIB := $(TARGET_LIB_STATIC)
+AR ?= ar
+else
+TARGET_LIB := $(TARGET_LIB_SHARED)
+endif
 
 # Directory all of the .o files will be placed in.
 BUILD_DIR := ./build
@@ -86,7 +93,7 @@ SRC_DIRS := ./src
 CC ?= cc
 
 CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS := -O3 -flto -shared
+LFLAGS := -O3 -fPIC -flto -DNDEBUG -share
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
@@ -293,9 +300,13 @@ include/tmpl_config.h: ./config.c
 	./config.out
 	rm -f config.out
 
-$(TARGET_LIB): $(OBJS) include/tmpl_config.h
+$(TARGET_LIB_SHARED): $(OBJS) include/tmpl_config.h
 	@echo "Building libtmpl.so ..."
 	@-$(CC) $(OBJS) $(LFLAGS) -o $@
+
+$(TARGET_LIB_STATIC): $(OBJS) include/tmpl_config.h
+	@echo "Building libtmpl.a ..."
+	@-$(AR) rcs $@ $(OBJS)
 
 $(BUILD_DIR)/%.c.o: %.c include/tmpl_config.h
 	@mkdir -p $(@D)
