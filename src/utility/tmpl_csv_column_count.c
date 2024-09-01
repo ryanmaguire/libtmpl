@@ -18,7 +18,7 @@ size_t tmpl_CSV_Column_Count(FILE* file)
         if (ferror(file))
         {
             counter = zero;
-            break;
+            goto FINISH;
         }
 
         for(n = zero; n < chars_read; n++)
@@ -27,13 +27,14 @@ size_t tmpl_CSV_Column_Count(FILE* file)
                 counter++;
 
             else if (buffer[n] == '\n')
-                break;
+                goto FINISH;
         }
 
         if (feof(file))
-            break;
+            goto FINISH;
     }
 
+FINISH:
     rewind(file);
     return counter;
 }

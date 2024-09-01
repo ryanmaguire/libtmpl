@@ -16,7 +16,10 @@ size_t tmpl_Line_Count(FILE* file)
         chars_read = fread(buffer, 1, sizeof(buffer), file);
 
         if (ferror(file))
-            return zero;
+        {
+            counter = zero;
+            goto FINISH;
+        }
 
         for(n = zero; n < chars_read; n++)
         {
@@ -25,9 +28,10 @@ size_t tmpl_Line_Count(FILE* file)
         }
 
         if (feof(file))
-            break;
+            goto FINISH;
     }
 
+FINISH:
     rewind(file);
     return counter;
 }
