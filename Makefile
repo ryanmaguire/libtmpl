@@ -93,7 +93,7 @@ SRC_DIRS := ./src
 CC ?= cc
 
 CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS := -O3 -fPIC -flto -DNDEBUG -share
+LFLAGS := -O3 -fPIC -flto -DNDEBUG -shared
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
