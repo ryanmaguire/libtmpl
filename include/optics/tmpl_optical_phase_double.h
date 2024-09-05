@@ -16,33 +16,33 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_optical_power_double                          *
+ *                         tmpl_optical_phase_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes optical power from complex transmittance.                    *
+ *      Computes optical phase angle from complex transmittance.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Optical_Power                                            *
+ *      tmpl_CDouble_Optical_Phase                                            *
  *  Purpose:                                                                  *
- *      Computes power from (complex) optical transmittance.                  *
+ *      Computes phase from (complex) optical transmittance.                  *
  *  Arguments:                                                                *
  *      transmittance (tmpl_ComplexDouble):                                   *
  *          The complex transmittance, unitless.                              *
  *  Output:                                                                   *
- *      power (double):                                                       *
- *          The corresponding optical power.                                  *
+ *      phase (double):                                                       *
+ *          The corresponding optical phase.                                  *
  *  Called Functions:                                                         *
- *      tmpl_complex.h:                                                       *
- *          tmpl_CDouble_Abs_Squared:                                         *
- *              Computes |z|^2 for a complex number z.                        *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Arctan2:                                              *
+ *              Computes the angle the point (x, y) makes with the x-axis.    *
  *  Method:                                                                   *
  *      Given "power" and "phase", the optical transmittance is defined by:   *
  *                                                                            *
  *          transmittance = sqrt(power) * exp(i phase)                        *
  *                                                                            *
- *      The power can be recovered via |transmittance|^2.                     *
+ *      The phase can be computed as the complex argument.                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -56,8 +56,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_OPTICAL_POWER_DOUBLE_H
-#define TMPL_OPTICAL_POWER_DOUBLE_H
+#ifndef TMPL_OPTICAL_PHASE_DOUBLE_H
+#define TMPL_OPTICAL_PHASE_DOUBLE_H
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
@@ -65,30 +65,18 @@
 /*  Definition of complex numbers provided here.                              */
 #include <libtmpl/include/tmpl_complex_double.h>
 
-/*  The complex abs square function is inlined. Check for inline support.     */
-#if TMPL_USE_INLINE == 1
+/*  The complex argument is computed with the Arctan2 function.               */
+extern double tmpl_Double_Arctan2(double y, double x);
 
-/*  Routine is found here.                                                    */
-#include <libtmpl/include/complex/tmpl_complex_abs_squared_double.h>
-
-#else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
-
-/*  Lacking inline support, declare it as extern.                             */
-extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
-
-/*  Computes the power from the complex optical transmittance.                */
+/*  Computes the phase from the complex optical transmittance.                */
 TMPL_INLINE_DECL
-double tmpl_CDouble_Optical_Power(tmpl_ComplexDouble transmittance)
+double tmpl_CDouble_Optical_Phase(tmpl_ComplexDouble transmittance)
 {
-    /*  Transmittance is sqrt(power) * exp(i phase). Power can be computed    *
-     *  from the square of the absolute value of the transmittance.           */
-    return tmpl_CDouble_Abs_Squared(transmittance);
+    /*  Transmittance is sqrt(power) * exp(i phase). Phase can be computed    *
+     *  from the complex argument, which is the angle made with the x-axis.   */
+    return tmpl_Double_Arctan2(transmittance.dat[1], transmittance.dat[0]);
 }
-/*  End of tmpl_CDouble_Optical_Power.                                        */
+/*  End of tmpl_CDouble_Optical_Phase.                                        */
 
 #endif
 /*  End of include guard.                                                     */
