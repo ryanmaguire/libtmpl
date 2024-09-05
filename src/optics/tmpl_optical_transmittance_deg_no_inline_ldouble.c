@@ -16,14 +16,14 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_wavelength_to_wavenumber_ldouble                   *
+ *                   tmpl_optical_transmittance_deg_ldouble                   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Converts wavelength to wave number. Implemented in                    *
- *      include/optics/tmpl_wavelength_to_wavenumber_ldouble.h                *
+ *      Computes the complex optical transmittance. Implemented in            *
+ *      include/optics/tmpl_optical_transmittance_deg_ldouble.h               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       April 21, 2021                                                *
+ *  Date:       September 4, 2024                                             *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -35,8 +35,8 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_optics.h>
 
-/*  Implemented in include/optics/tmpl_wavelength_to_wavenumber_ldouble.h.    */
-#include "../../include/optics/tmpl_wavelength_to_wavenumber_ldouble.h"
+/*  Implemented in include/optics/tmpl_optical_transmittance_deg_ldouble.h.   */
+#include "../../include/optics/tmpl_optical_transmittance_deg_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

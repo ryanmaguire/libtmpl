@@ -32,6 +32,9 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
+/*  Function prototype given here.                                            */
+#include <libtmpl/include/tmpl_optics.h>
+
 /*  Implemented in include/optics/tmpl_optical_transmittance_ldouble.h.       */
 #include "../../include/optics/tmpl_optical_transmittance_ldouble.h"
 
