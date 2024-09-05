@@ -79,6 +79,74 @@ extern long double tmpl_LDouble_Frequency_To_Wavenumber(long double frequency);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Optical_Phase                                            *
+ *  Purpose:                                                                  *
+ *      Computes the phase angle from a complex optical transmittance.        *
+ *  Arguments:                                                                *
+ *      transmittance (tmpl_ComplexDouble):                                   *
+ *          The input optical transmittance.                                  *
+ *  Outputs:                                                                  *
+ *      phase (double):                                                       *
+ *          The phase of the transmittance.                                   *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_optical_phase_float.h>
+#include <libtmpl/include/optics/tmpl_optical_phase_double.h>
+#include <libtmpl/include/optics/tmpl_optical_phase_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
+extern float tmpl_CFloat_Optical_Phase(tmpl_ComplexFloat frequency);
+extern double tmpl_CDouble_Optical_Phase(tmpl_ComplexDouble frequency);
+
+extern long double
+tmpl_CLDouble_Optical_Phase(tmpl_ComplexLongDouble frequency);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Optical_Power                                            *
+ *  Purpose:                                                                  *
+ *      Computes the power from a complex optical transmittance.              *
+ *  Arguments:                                                                *
+ *      transmittance (tmpl_ComplexDouble):                                   *
+ *          The input optical transmittance.                                  *
+ *  Outputs:                                                                  *
+ *      power (double):                                                       *
+ *          The power of the transmittance.                                   *
+ ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_optical_power_float.h>
+#include <libtmpl/include/optics/tmpl_optical_power_double.h>
+#include <libtmpl/include/optics/tmpl_optical_power_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
+extern float tmpl_CFloat_Optical_Power(tmpl_ComplexFloat frequency);
+extern double tmpl_CDouble_Optical_Power(tmpl_ComplexDouble frequency);
+
+extern long double
+tmpl_CLDouble_Optical_Power(tmpl_ComplexLongDouble frequency);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Wavelength_To_Wavenumber                                  *
  *  Purpose:                                                                  *
  *      Computes the wave number of light given the wavelength.               *
@@ -150,7 +218,7 @@ tmpl_CLDouble_Optical_Transmittance(long double power, long double phase);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_CDouble_Optical_Transmittance_Degrees                            *
+ *      tmpl_CDouble_Optical_Transmittance_Deg                                *
  *  Purpose:                                                                  *
  *      Computes the complex transmittance from optical power and phase,      *
  *      where the phase is given in degrees.                                  *
@@ -163,14 +231,29 @@ tmpl_CLDouble_Optical_Transmittance(long double power, long double phase);
  *      T (tmpl_ComplexDouble):                                               *
  *          The complex transmittance, sqrt(power) * e^{i phase}.             *
  ******************************************************************************/
+
+/*  These functions are small enough to inline.                               */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions are located in libtmpl/include/optics/                    */
+#include <libtmpl/include/optics/tmpl_optical_transmittance_deg_float.h>
+#include <libtmpl/include/optics/tmpl_optical_transmittance_deg_double.h>
+#include <libtmpl/include/optics/tmpl_optical_transmittance_deg_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise use the source code in src/optics/.                             */
 extern tmpl_ComplexFloat
-tmpl_CFloat_Optical_Transmittance_Degrees(float power, float phase_deg);
+tmpl_CFloat_Optical_Transmittance_Deg(float power, float phase);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Optical_Transmittance_Degrees(double power, double phase_deg);
+tmpl_CDouble_Optical_Transmittance_Deg(double power, double phase);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Optical_Transmittance_Degrees(long double power,
-                                            long double phase_deg);
+tmpl_CLDouble_Optical_Transmittance_Deg(long double power, long double phase);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
