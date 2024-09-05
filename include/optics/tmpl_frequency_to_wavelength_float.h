@@ -34,6 +34,8 @@
  *  Output:                                                                   *
  *      lambda (float):                                                       *
  *          The corresponding wavelength.                                     *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
  *      Use the formula frequency * wavelength = speed-of-light.              *
  ******************************************************************************
@@ -41,8 +43,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_optics.h:                                                        *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 21, 2023                                                 *
@@ -54,9 +54,6 @@
 
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_optics.h>
 
 /*  Converts the frequency of a ray of light to the corresponding wavelength. */
 TMPL_INLINE_DECL
