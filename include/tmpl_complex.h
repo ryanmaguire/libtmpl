@@ -73,26 +73,9 @@ extern "C" {
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
-/*  The GNU Scientific Library (GSL) v2.6 defines complex variables via a     *
- *  data structure containing a single array double dat[2];. If you are using *
- *  the GSL v2.6, you can use libtmpl functions with that library. That is,   *
- *  if you have a pointer tmpl_ComplexDouble *z; and another pointer          *
- *  gsl_complex *w; you can safely cast via:                                  *
- *      z = (tmpl_ComplexDouble *)w;                                          *
- *  And similarly we can do w = (gsl_complex *)z;                             */
-typedef struct tmpl_ComplexDouble_Def {
-    double dat[2];
-} tmpl_ComplexDouble;
-
-/*  Define single and long double precision equivalents.                      */
-typedef struct tmpl_ComplexFloat_Def {
-    float dat[2];
-} tmpl_ComplexFloat;
-
-/*  Long double precision complex numbers.                                    */
-typedef struct tmpl_ComplexLongDouble_Def {
-    long double dat[2];
-} tmpl_ComplexLongDouble;
+#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/tmpl_complex_float.h>
+#include <libtmpl/include/tmpl_complex_ldouble.h>
 
 /*  For the sake of ease, tmpl_Complex is an alternative alias for double     *
  *  precision complex. You can use this for cleaner declarations.             */
