@@ -37,6 +37,13 @@
  *  Output:                                                                   *
  *      T (tmpl_ComplexFloat):                                                *
  *          The optical transmittance.                                        *
+ *  Called Functions:                                                         *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Float_Sqrt:                                                  *
+ *              Computes the square root of a real number.                    *
+ *      tmpl_complex.h:                                                       *
+ *          tmpl_CFloat_Polar:                                                *
+ *              Computes r * exp(i theta) with theta in radians.              *
  *  Method:                                                                   *
  *      Compute sqrt(power) * e^{i psi} and return.                           *
  ******************************************************************************
@@ -44,12 +51,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_math.h:                                                          *
+ *  2.) tmpl_complex_float.h:                                                 *
  *          Header file where complex numbers are defined.                    *
- *  3.) tmpl_complex.h:                                                       *
- *          Header file where the sqrt function is declared.                  *
- *  4.) tmpl_optics.h:                                                        *
- *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 21, 2023                                                 *
@@ -62,14 +65,26 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  sqrt function declared here.                                              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex_float.h>
 
-/*  Complex numbers defined here.                                             */
-#include <libtmpl/include/tmpl_complex.h>
+/*  The polar function is inlined. Check for inline support.                  */
+#if TMPL_USE_INLINE == 1
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_optics.h>
+/*  Routine is found here.                                                    */
+#include <libtmpl/include/complex/tmpl_complex_polar_float.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, declare it as extern.                             */
+extern tmpl_ComplexFloat tmpl_CFloat_Polar(float r, float theta);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/*  And tell the compiler about the square root function.                     */
+extern float tmpl_Float_Sqrt(float x);
 
 /*  Computes complex transmittance from power and phase.                      */
 TMPL_INLINE_DECL

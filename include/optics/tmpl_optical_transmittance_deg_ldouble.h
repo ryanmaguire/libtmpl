@@ -66,7 +66,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/tmpl_complex_ldouble.h>
 
 /*  The polar function is inlined. Check for inline support.                  */
 #if TMPL_USE_INLINE == 1
