@@ -72,7 +72,7 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Routine is found here.                                                    */
-#include <libtmpl/include/tmpl_complex_polard_float.h>
+#include <libtmpl/include/complex/tmpl_complex_polard_float.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
