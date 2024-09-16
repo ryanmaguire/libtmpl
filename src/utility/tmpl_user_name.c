@@ -57,12 +57,24 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_utility.h>
 
+/*  Windows has the USERNAME environment variable. POSIX / UNIX uses USER.    */
+#if defined(_WIN32) || defined(_WIN64)
+#define TMPL_USER_VARIABLE "USERNAME"
+#else
+#define TMPL_USER_VARIABLE "USER"
+#endif
+
+/*  TODO:
+ *      Consider implementing this in a way that doesn't
+ *      use environment variables.
+ */
+
 /*  Function for getting the current user name.                               */
 const char *tmpl_User_Name(void)
 {
-    /*  Try getenv on the "USER" environment variable. This should work on    *
-     *  most systems.                                                         */
-    const char *username = getenv("USER");
+    /*  Try getenv on the "USER" / "USERNAME" environment variable. This      *
+     *  should work on most systems.                                          */
+    const char *username = getenv(TMPL_USER_VARIABLE);
 
     /*  If it fails, return Unknown.                                          */
     if (!username)
@@ -71,3 +83,6 @@ const char *tmpl_User_Name(void)
     return username;
 }
 /*  End of tmpl_User_Name.                                                    */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_USER_VARIABLE
