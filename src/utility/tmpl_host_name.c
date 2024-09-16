@@ -75,7 +75,7 @@
  ******************************************************************************/
 
 /*  Disable Windows deprecations for standard library functions.              */
-#define _CRT_SECURE_NO_WARNING
+#define _CRT_SECURE_NO_WARNINGS
 
 /*  Windows specific header files. GetComputerName is provided here.          */
 #include <Windows.h>
