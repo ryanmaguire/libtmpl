@@ -81,6 +81,9 @@
 /*  Char array for the string. We'll return a pointer to this.                */
 static char tmpl_global_host_name_string_array[256];
 
+/*  Disable Windows deprecations for standard library functions.              */
+#define _CRT_SECURE_NO_WARNINGS 1
+
 /*  Function for returning the host name as a string.                         */
 const char *tmpl_Host_Name(void)
 {
@@ -96,7 +99,7 @@ const char *tmpl_Host_Name(void)
 
     if (success)
         for (n = 0; n < arr_len; ++n)
-            hostname[i] = info_buffer[i];
+            hostname[n] = info_buffer[n];
 
     else
         strcpy(hostname, "Unknown");
