@@ -10,7 +10,7 @@ long double tmpl_LDouble_Resolution_Inverse(long double x)
         return TMPL_NANL;
 
     if (tmpl_LDouble_Is_Inf(x))
-        return 0.0;
+        return 0.0L;
 
     P1 = x / (1.0L - x);
     P2 = P1 * tmpl_LDouble_Exp(P1);
