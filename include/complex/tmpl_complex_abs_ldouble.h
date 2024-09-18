@@ -30,8 +30,6 @@
  *                                                                            *
  *          |z| = |x + iy| = sqrt(x^2 + y^2)                                  *
  *                                                                            *
- *  Method:                                                                   *
- *      Pass the real and imaginary parts to tmpl_LDouble_Hypot.              *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexLongDouble):                                           *
  *          A complex number.                                                 *
@@ -42,6 +40,17 @@
  *      tmpl_math.h:                                                          *
  *          tmpl_LDouble_Hypot:                                               *
  *              Function for computing the magnitude of the vector (x, y).    *
+ *  Method:                                                                   *
+ *      The absolute value of a complex number is the distance from the given *
+ *      point and the origin. This is computed via the Pythagorean formula.   *
+ *      Given z = x + iy, which we identify as the point (x, y) in the plane, *
+ *      the absolute value, or modulus, is:                                   *
+ *                                                                            *
+ *          |z| = ||(x, y)|| = sqrt(x^2 + y^2)                                *
+ *                                                                            *
+ *      The intermediate computation x^2 + y^2 may overflow for large inputs. *
+ *      This is mitigated using the hypot function. We pass the real and      *
+ *      imaginary parts to tmpl_LDouble_Hypot for the computation.            *
  *  Error:                                                                    *
  *      Based on 67,108,864 random samples:                                   *
  *          Max Relative Error: 1.084200e-19                                  *
@@ -54,10 +63,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_INLINE_DECL macro found here.                                *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing basic math functions.                      *
- *  3.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header where complex types are given.                             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -93,20 +100,25 @@
  *      the real and imaginary parts to tmpl_LDouble_Hypot.                   *
  *  2023/07/06: Ryan Maguire                                                  *
  *      Changed src/complex/tmpl_complex_abs_ldouble.c to include this file.  *
+ *  2024/09/18: Ryan Maguire                                                  *
+ *      Made inline method consistent with other inline routines.             *
+ *      tmpl_complex.h is not needed (just tmpl_complex_ldouble.h), and       *
+ *      extern is provided for tmpl_LDouble_Hypot so that tmpl_math.h is not  *
+ *      needed explicitly.                                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_ABS_LDOUBLE_H
 #define TMPL_COMPLEX_ABS_LDOUBLE_H
 
-/*  The TMPL_INLINE_DECL macro is found here.                                 */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing basic math functions.                              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Where complex types are defined.                                          */
+#include <libtmpl/include/tmpl_complex_ldouble.h>
 
-/*  Where the prototypes are given and where complex types are defined.       */
-#include <libtmpl/include/tmpl_complex.h>
+/*  The hypot function does all of the heavy lifting.                         */
+extern long double tmpl_LDouble_Hypot(long double x, long double y);
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
 TMPL_INLINE_DECL

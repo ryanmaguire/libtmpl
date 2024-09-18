@@ -31,6 +31,9 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
+/*  Function prototype and complex numbers provided here.                     */
+#include <libtmpl/include/tmpl_complex.h>
+
 /*  Implemented in include/complex/tmpl_complex_abs_ldouble.h.                */
 #include "../../include/complex/tmpl_complex_abs_ldouble.h"
 
