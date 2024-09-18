@@ -117,8 +117,7 @@ const char *tmpl_Host_Name(void)
 #include <unistd.h>
 
 /*  gethostname does not appear in older versions of POSIX. Check for this.   */
-#if _XOPEN_SOURCE >= 500 || _POSIX_C_SOURCE >= 200112L || \
-    _BSD_SOURCE || (defined(__APPLE__) && defined(__MACH__))
+#if (_POSIX_VERSION >= 200112L) || (defined(__APPLE__) && defined(__MACH__))
 
 /******************************************************************************
  *                               POSIX (Modern)                               *
@@ -147,7 +146,7 @@ const char *tmpl_Host_Name(void)
 /*  End of tmpl_Host_Name.                                                    */
 
 #else
-/*  #if _XOPEN_SOURCE >= 500 || _POSIX_C_SOURCE >= 200112L || _BSD_SOURCE     */
+/*  (_POSIX_VERSION >= 200112L) || (defined(__APPLE__) && defined(__MACH__))  */
 
 /******************************************************************************
  *                               POSIX (Legacy)                               *
