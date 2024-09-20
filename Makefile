@@ -74,26 +74,23 @@
 #               make NO_INT=1 [other-options]
 
 # Name of the library.
-TARGET_LIB_SHARED := libtmpl.so
-TARGET_LIB_STATIC := libtmpl.a
+.POSIX:
+TARGET_LIB_SHARED=libtmpl.so
+TARGET_LIB_STATIC=libtmpl.a
 ifdef BUILD_STATIC
-TARGET_LIB := $(TARGET_LIB_STATIC)
-AR ?= ar
+TARGET_LIB=$(TARGET_LIB_STATIC)
 else
-TARGET_LIB := $(TARGET_LIB_SHARED)
+TARGET_LIB=$(TARGET_LIB_SHARED)
 endif
 
 # Directory all of the .o files will be placed in.
-BUILD_DIR := ./build
+BUILD_DIR=./build
 
 # Location of all .c and .S files.
-SRC_DIRS := ./src
+SRC_DIRS=./src
 
-# Compiler to be used. Override this to whatever you choose.
-CC ?= cc
-
-CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS := -O3 -fPIC -flto -DNDEBUG -shared
+CFLAGS=-I../ -O3 -fPIC -flto -DNDEBUG -c
+LFLAGS=-O3 -fPIC -flto -DNDEBUG -shared
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
@@ -108,14 +105,14 @@ else
 LFLAGS += -lm
 endif
 
-CWARN := -Wall -Wextra -Wpedantic
+CWARN=-Wall -Wextra -Wpedantic
 
 ifdef EXTRA_FLAGS
 CWARN += $(EXTRA_FLAGS)
 endif
 
-CONFIG_FLAGS :=
-EXCLUDE :=
+CONFIG_FLAGS=
+EXCLUDE=
 
 # libtmpl will check if long long is available in config.c. If you do not want
 # long long functions compiled (for example, you're on a GNU/Linux machine where
@@ -154,7 +151,7 @@ ifdef NO_INT
 CONFIG_FLAGS += -DTMPL_SET_NO_INT
 endif
 
-ASM_INCLUDE :=
+ASM_INCLUDE=
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
@@ -164,9 +161,9 @@ ifndef NO_ASM
 
 # The architecture libtmpl is being built on.
 ifndef ARCH
-uname_m := $(shell uname -m)
+uname_m=$(shell uname -m)
 else
-uname_m := $(ARCH)
+uname_m=$(ARCH)
 endif
 
 # Else for ifdef NO_ASM
@@ -287,9 +284,9 @@ endif
 endif
 # End of ifndef NO_ASM.
 
-INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
-SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+INCLUDE=\( $(ASM_INCLUDE) -name "*.c" \)
+SRCS=$(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
+OBJS=$(SRCS:%=$(BUILD_DIR)/%.o)
 
 .PHONY: clean install uninstall all install-local uninstall-local
 
