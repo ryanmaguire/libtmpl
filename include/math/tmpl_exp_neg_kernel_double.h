@@ -117,6 +117,17 @@
 /*  Lookup table for the exponential function.                                */
 extern const tmpl_UInt64 tmpl_double_exp_table[256];
 
+/*
+ *  TODO:
+ *      Rewrite to work on i386.
+ *      Need to declare kd_shift and kd as "volatile" for the shift to work.
+ *      Bring back TMPL_VOLATILE so that other architectures are not slowed
+ *      down by the unnecessary volatile declaration.
+ *
+ *      Also, find out why tmpl_Double_Exp_Pos_Kernel does NOT require
+ *      volatile. Very strange indeed.
+ */
+
 /*  Function for computing exp(x) for 1 < x < log(DBL_MAX).                   */
 TMPL_INLINE_DECL
 double tmpl_Double_Exp_Neg_Kernel(double x)
