@@ -22,4 +22,16 @@ tmpl_Double_Light_Distance(const double t0, double t1);
 extern long double
 tmpl_LDouble_Light_Distance(const long double t0, const long double t1);
 
+extern float
+tmpl_Float_Optical_Depth_Enhancement_Factor(const float opening,
+                                            const float azimuth);
+
+extern double
+tmpl_Double_Optical_Depth_Enhancement_Factor(const double opening,
+                                             const double azimuth);
+
+extern long double
+tmpl_LDouble_Optical_Depth_Enhancement_Factor(const long double opening,
+                                              const long double azimuth);
+
 #endif
