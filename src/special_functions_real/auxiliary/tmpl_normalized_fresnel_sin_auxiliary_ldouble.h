@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_auxiliary_ldouble               *
+ *                tmpl_normalized_fresnel_sin_auxiliary_ldouble               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for large positive inputs.     *
+ *      Computes the normalized Fresnel sine for large positive inputs.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -32,7 +32,7 @@
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      C_x (long double):                                                    *
- *          The normalized Fresnel cosine of x.                               *
+ *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_LDouble_SinCosPi:                                            *
@@ -85,8 +85,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_LDOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_LDOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_SIN_AUXILIARY_LDOUBLE_H
+#define TMPL_NORMALIZED_FRESNEL_SIN_AUXILIARY_LDOUBLE_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -762,9 +762,9 @@ D00 + z*(\
 #define TMPL_COS_TAYLOR(z) (C0 + z*C1)
 #define TMPL_SIN_TAYLOR(z) (S0 + z*S1)
 
-/*  Function for computing the normalized Fresnel cosine of a large input.    */
+/*  Function for computing the normalized Fresnel sine of a large input.      */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Auxiliary(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
     const long double xhi = tmpl_LDouble_Even_High_Split(x);
@@ -815,9 +815,9 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(long double x)
     sin_x = cos_hi * sin_midlo + sin_hi * cos_midlo;
 
     /*  With the auxiliary functions computed, we can compute C(x).           */
-    return 0.5L + (f*sin_x - g*cos_x);
+    return 0.5L - (f*cos_x + g*sin_x);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Auxiliary.                      */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Auxiliary.                     */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"

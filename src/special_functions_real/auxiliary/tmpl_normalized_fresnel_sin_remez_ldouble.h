@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *              tmpl_double_normalized_fresnel_cos_remez_double               *
+ *              tmpl_double_normalized_fresnel_sin_remez_double               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for small values.              *
+ *      Computes the normalized Fresnel sine for small values.                *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Remez                              *
+ *      tmpl_LDouble_Normalized_Fresnel_Sin_Remez                             *
  *  Purpose:                                                                  *
  *      Computes C(x) for 1 <= x < 2.                                         *
  *  Arguments:                                                                *
@@ -32,7 +32,7 @@
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      C_x (double):                                                         *
- *          The normalized Fresnel cosine of x.                               *
+ *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_Floor:                                                *
@@ -69,8 +69,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_REMEZ_LDOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_REMEZ_LDOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_SIN_REMEZ_LDOUBLE_H
+#define TMPL_NORMALIZED_FRESNEL_SIN_REMEZ_LDOUBLE_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -86,19 +86,19 @@
  ******************************************************************************/
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const long double tmpl_ldouble_normalized_fresnel_cos_table[288];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[288];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
-    tmpl_ldouble_normalized_fresnel_cos_table[n+1U]+z*(\
-        tmpl_ldouble_normalized_fresnel_cos_table[n+2U]+z*(\
-            tmpl_ldouble_normalized_fresnel_cos_table[n+3u]+z*(\
-                tmpl_ldouble_normalized_fresnel_cos_table[n+4U]+z*(\
-                    tmpl_ldouble_normalized_fresnel_cos_table[n+5U]+z*(\
-                        tmpl_ldouble_normalized_fresnel_cos_table[n+6U]+z*(\
-                            tmpl_ldouble_normalized_fresnel_cos_table[n+7U]+z*(\
-                                tmpl_ldouble_normalized_fresnel_cos_table[n+8U]\
+tmpl_ldouble_normalized_fresnel_sin_table[n]+z*(\
+    tmpl_ldouble_normalized_fresnel_sin_table[n+1U]+z*(\
+        tmpl_ldouble_normalized_fresnel_sin_table[n+2U]+z*(\
+            tmpl_ldouble_normalized_fresnel_sin_table[n+3u]+z*(\
+                tmpl_ldouble_normalized_fresnel_sin_table[n+4U]+z*(\
+                    tmpl_ldouble_normalized_fresnel_sin_table[n+5U]+z*(\
+                        tmpl_ldouble_normalized_fresnel_sin_table[n+6U]+z*(\
+                            tmpl_ldouble_normalized_fresnel_sin_table[n+7U]+z*(\
+                                tmpl_ldouble_normalized_fresnel_sin_table[n+8U]\
                             )\
                         )\
                     )\
@@ -120,7 +120,7 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
     tmpl_IEEE754_FloatInt64 u;
@@ -149,7 +149,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 /*  IEEE-754 support but no 64-bit integer type-punning. Only slightly slower.*/
 #else
@@ -160,7 +160,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -180,7 +180,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     /*  Compute using the Remez polynomial and return.                        */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 #endif
 /*  End of 64-bit methods.                                                    */
@@ -193,25 +193,25 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
  ******************************************************************************/
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const long double tmpl_ldouble_normalized_fresnel_cos_table[480];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[480];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
- tmpl_ldouble_normalized_fresnel_cos_table[n+1U]+z*(\
-  tmpl_ldouble_normalized_fresnel_cos_table[n+2U]+z*(\
-   tmpl_ldouble_normalized_fresnel_cos_table[n+3u]+z*(\
-    tmpl_ldouble_normalized_fresnel_cos_table[n+4U]+z*(\
-     tmpl_ldouble_normalized_fresnel_cos_table[n+5U]+z*(\
-      tmpl_ldouble_normalized_fresnel_cos_table[n+6U]+z*(\
-       tmpl_ldouble_normalized_fresnel_cos_table[n+7U]+z*(\
-        tmpl_ldouble_normalized_fresnel_cos_table[n+8U]+z*(\
-         tmpl_ldouble_normalized_fresnel_cos_table[n+9U]+z*(\
-          tmpl_ldouble_normalized_fresnel_cos_table[n+10U]+z*(\
-           tmpl_ldouble_normalized_fresnel_cos_table[n+11U]+z*(\
-            tmpl_ldouble_normalized_fresnel_cos_table[n+12U]+z*(\
-             tmpl_ldouble_normalized_fresnel_cos_table[n+13U]+z*(\
-              tmpl_ldouble_normalized_fresnel_cos_table[n+14U]\
+tmpl_ldouble_normalized_fresnel_sin_table[n]+z*(\
+ tmpl_ldouble_normalized_fresnel_sin_table[n+1U]+z*(\
+  tmpl_ldouble_normalized_fresnel_sin_table[n+2U]+z*(\
+   tmpl_ldouble_normalized_fresnel_sin_table[n+3u]+z*(\
+    tmpl_ldouble_normalized_fresnel_sin_table[n+4U]+z*(\
+     tmpl_ldouble_normalized_fresnel_sin_table[n+5U]+z*(\
+      tmpl_ldouble_normalized_fresnel_sin_table[n+6U]+z*(\
+       tmpl_ldouble_normalized_fresnel_sin_table[n+7U]+z*(\
+        tmpl_ldouble_normalized_fresnel_sin_table[n+8U]+z*(\
+         tmpl_ldouble_normalized_fresnel_sin_table[n+9U]+z*(\
+          tmpl_ldouble_normalized_fresnel_sin_table[n+10U]+z*(\
+           tmpl_ldouble_normalized_fresnel_sin_table[n+11U]+z*(\
+            tmpl_ldouble_normalized_fresnel_sin_table[n+12U]+z*(\
+             tmpl_ldouble_normalized_fresnel_sin_table[n+13U]+z*(\
+              tmpl_ldouble_normalized_fresnel_sin_table[n+14U]\
              )\
             )\
            )\
@@ -239,7 +239,7 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
     tmpl_IEEE754_FloatInt64 u;
@@ -268,7 +268,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 /*  IEEE-754 support but no 64-bit integer type-punning. Only slightly slower.*/
 #else
@@ -282,7 +282,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -302,7 +302,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     /*  Compute using the Remez polynomial and return.                        */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 #endif
 /*  End of double-double methods.                                             */
@@ -316,26 +316,26 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
  ******************************************************************************/
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const long double tmpl_ldouble_normalized_fresnel_cos_table[512];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[512];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
- tmpl_ldouble_normalized_fresnel_cos_table[n+1U]+z*(\
-  tmpl_ldouble_normalized_fresnel_cos_table[n+2U]+z*(\
-   tmpl_ldouble_normalized_fresnel_cos_table[n+3u]+z*(\
-    tmpl_ldouble_normalized_fresnel_cos_table[n+4U]+z*(\
-     tmpl_ldouble_normalized_fresnel_cos_table[n+5U]+z*(\
-      tmpl_ldouble_normalized_fresnel_cos_table[n+6U]+z*(\
-       tmpl_ldouble_normalized_fresnel_cos_table[n+7U]+z*(\
-        tmpl_ldouble_normalized_fresnel_cos_table[n+8U]+z*(\
-         tmpl_ldouble_normalized_fresnel_cos_table[n+9U]+z*(\
-          tmpl_ldouble_normalized_fresnel_cos_table[n+10U]+z*(\
-           tmpl_ldouble_normalized_fresnel_cos_table[n+11U]+z*(\
-            tmpl_ldouble_normalized_fresnel_cos_table[n+12U]+z*(\
-             tmpl_ldouble_normalized_fresnel_cos_table[n+13U]+z*(\
-              tmpl_ldouble_normalized_fresnel_cos_table[n+14U]+z*(\
-               tmpl_ldouble_normalized_fresnel_cos_table[n+15U]\
+tmpl_ldouble_normalized_fresnel_sin_table[n]+z*(\
+ tmpl_ldouble_normalized_fresnel_sin_table[n+1U]+z*(\
+  tmpl_ldouble_normalized_fresnel_sin_table[n+2U]+z*(\
+   tmpl_ldouble_normalized_fresnel_sin_table[n+3u]+z*(\
+    tmpl_ldouble_normalized_fresnel_sin_table[n+4U]+z*(\
+     tmpl_ldouble_normalized_fresnel_sin_table[n+5U]+z*(\
+      tmpl_ldouble_normalized_fresnel_sin_table[n+6U]+z*(\
+       tmpl_ldouble_normalized_fresnel_sin_table[n+7U]+z*(\
+        tmpl_ldouble_normalized_fresnel_sin_table[n+8U]+z*(\
+         tmpl_ldouble_normalized_fresnel_sin_table[n+9U]+z*(\
+          tmpl_ldouble_normalized_fresnel_sin_table[n+10U]+z*(\
+           tmpl_ldouble_normalized_fresnel_sin_table[n+11U]+z*(\
+            tmpl_ldouble_normalized_fresnel_sin_table[n+12U]+z*(\
+             tmpl_ldouble_normalized_fresnel_sin_table[n+13U]+z*(\
+              tmpl_ldouble_normalized_fresnel_sin_table[n+14U]+z*(\
+               tmpl_ldouble_normalized_fresnel_sin_table[n+15U]\
               )\
              )\
             )\
@@ -354,7 +354,7 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -372,7 +372,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     /*  Compute using the Remez polynomial and return.                        */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 #else
 
@@ -381,20 +381,20 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
  ******************************************************************************/
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const long double tmpl_ldouble_normalized_fresnel_cos_table[320];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[320];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
-  tmpl_ldouble_normalized_fresnel_cos_table[n+1U]+z*(\
-    tmpl_ldouble_normalized_fresnel_cos_table[n+2U]+z*(\
-      tmpl_ldouble_normalized_fresnel_cos_table[n+3u]+z*(\
-        tmpl_ldouble_normalized_fresnel_cos_table[n+4U]+z*(\
-          tmpl_ldouble_normalized_fresnel_cos_table[n+5U]+z*(\
-            tmpl_ldouble_normalized_fresnel_cos_table[n+6U]+z*(\
-              tmpl_ldouble_normalized_fresnel_cos_table[n+7U]+z*(\
-                tmpl_ldouble_normalized_fresnel_cos_table[n+8U]+z*(\
-                  tmpl_ldouble_normalized_fresnel_cos_table[n+9U]\
+tmpl_ldouble_normalized_fresnel_sin_table[n]+z*(\
+  tmpl_ldouble_normalized_fresnel_sin_table[n+1U]+z*(\
+    tmpl_ldouble_normalized_fresnel_sin_table[n+2U]+z*(\
+      tmpl_ldouble_normalized_fresnel_sin_table[n+3u]+z*(\
+        tmpl_ldouble_normalized_fresnel_sin_table[n+4U]+z*(\
+          tmpl_ldouble_normalized_fresnel_sin_table[n+5U]+z*(\
+            tmpl_ldouble_normalized_fresnel_sin_table[n+6U]+z*(\
+              tmpl_ldouble_normalized_fresnel_sin_table[n+7U]+z*(\
+                tmpl_ldouble_normalized_fresnel_sin_table[n+8U]+z*(\
+                  tmpl_ldouble_normalized_fresnel_sin_table[n+9U]\
                 )\
               )\
             )\
@@ -413,7 +413,7 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
@@ -431,7 +431,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     /*  Compute using the Remez polynomial and return.                        */
     return TMPL_POLY_EVAL(w.r);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 /*  Portable version. Slowest method.                                         */
 #else
@@ -445,7 +445,7 @@ extern long double tmpl_LDouble_Floor(long double x);
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(long double x)
 {
     /*  The index is given by the bits up to the 1/32 place. We can get this  *
      *  using the floor function. x-1 shifts the input to [0, 1). By          *
@@ -466,7 +466,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(long double x)
     /*  Compute the Remez polynomial and return.                              */
     return TMPL_POLY_EVAL(z);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Remez.                         */
 
 #endif
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT.                      */

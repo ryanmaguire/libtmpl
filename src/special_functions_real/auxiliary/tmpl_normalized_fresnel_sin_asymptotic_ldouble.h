@@ -16,15 +16,15 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *               tmpl_normalized_fresnel_cos_asymptotic_ldouble               *
+ *               tmpl_normalized_fresnel_sin_asymptotic_ldouble               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for large positive inputs.     *
+ *      Computes the normalized Fresnel sine for large positive inputs.       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic                        *
+ *      tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic                        *
  *  Purpose:                                                                  *
  *      Computes C(x) for large positive inputs.                              *
  *  Arguments:                                                                *
@@ -32,7 +32,7 @@
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      C_x (long double):                                                    *
- *          The normalized Fresnel cosine of x.                               *
+ *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_LDouble_SinCosPi:                                            *
@@ -79,8 +79,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_ASYMPTOTIC_LDOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_ASYMPTOTIC_LDOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_SIN_ASYMPTOTIC_LDOUBLE_H
+#define TMPL_NORMALIZED_FRESNEL_SIN_ASYMPTOTIC_LDOUBLE_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -133,9 +133,9 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 #endif
 /*  End of double vs. extended vs. double-double vs. quadruple.               */
 
-/*  Function for computing the normalized Fresnel cosine of a large input.    */
+/*  Function for computing the normalized Fresnel sine of a large input.      */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
     const long double xhi = tmpl_LDouble_High_Split(x, TMPL_LDOUBLE_SPLITTER);
@@ -148,17 +148,17 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic(long double x)
     /*  For large x we have xhi^2 / 2 is an even integer. Since sin(pi t)     *
      *  is periodic with period 2, the xhi^2 term can be disregarded. The     *
      *  argument we then care about is pi (2 xhi xlo + xlo^2) / 2.            */
-    long double sin_hi, cos_hi, sin_lo, cos_lo, sin_x;
+    long double sin_hi, cos_hi, sin_lo, cos_lo, minus_cos_x;
 
     /*  Compute sin(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
     tmpl_LDouble_SinCosPi(xlo * xhi, &sin_hi, &cos_hi);
     tmpl_LDouble_SinCosPi(0.5L * xlo * xlo, &sin_lo, &cos_lo);
-    sin_x = cos_hi*sin_lo + cos_lo*sin_hi;
+    minus_cos_x = sin_hi*sin_lo - cos_hi*cos_lo;
 
     /*  The first term of the asymptotic expansion is all that is needed.     */
-    return 0.5L + t * sin_x;
+    return 0.5L + t * minus_cos_x;
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Asymptotic.                    */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic.                    */
 
 /*  Undefine everything in case someone wants to include this file.           */
 #undef TMPL_ONE_PI

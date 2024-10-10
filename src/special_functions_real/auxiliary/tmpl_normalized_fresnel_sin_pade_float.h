@@ -59,15 +59,15 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
-#define A00 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define A01 (-1.9637858757438116175137002487047900980006840573679E-01F)
-#define A02 (+1.6708370770642898530936206203417127459330883394306E-02F)
-#define A03 (-4.1959388313855184433110178699156176515428005452814E-04F)
+#define A00 (+5.2359877559829887307710723054658381403286156656252E-01F)
+#define A01 (-7.0579602539957014002998550718326173656823363505594E-02F)
+#define A02 (+3.7447636474822540031860566299303887593243566451154E-03F)
+#define A03 (-6.9063640501784258881417564221884521303531043100421E-05F)
 
 /*  Coefficients for the denominator of the Pade approximant.                 */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define B01 (+5.0361522452852803719492250126424768582774079444228E-02F)
-#define B02 (+9.4907748390458936063725198743888402078802521713238E-04F)
+#define B01 (+4.1445824225393146045607857705930695799938591298533E-02F)
+#define B02 (+6.1998686509498982291526655383097093457925233545907E-04F)
 
 /*  Helper macro for evaluating the numerator via Horner's method.            */
 #define TMPL_NUM_EVAL(z) A00 + z*(A01 + z*(A02 + z*A03))
@@ -86,7 +86,7 @@ float tmpl_Float_Normalized_Fresnel_Sin_Pade(float x)
     /*  Compute the Pade approximant.                                         */
     const float num = TMPL_NUM_EVAL(x4);
     const float den = TMPL_DEN_EVAL(x4);
-    return x * num / den;
+    return x * x2 * num / den;
 }
 /*  End of tmpl_Float_Normalized_Fresnel_Sin_Pade.                            */
 

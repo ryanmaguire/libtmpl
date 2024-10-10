@@ -79,19 +79,19 @@
 #include <libtmpl/include/tmpl_ieee754_double.h>
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const double tmpl_double_normalized_fresnel_cos_table[288];
+extern const double tmpl_double_normalized_fresnel_sin_table[288];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_double_normalized_fresnel_cos_table[n]+z*(\
-    tmpl_double_normalized_fresnel_cos_table[n+1U]+z*(\
-        tmpl_double_normalized_fresnel_cos_table[n+2U]+z*(\
-            tmpl_double_normalized_fresnel_cos_table[n+3u]+z*(\
-                tmpl_double_normalized_fresnel_cos_table[n+4U]+z*(\
-                    tmpl_double_normalized_fresnel_cos_table[n+5U]+z*(\
-                        tmpl_double_normalized_fresnel_cos_table[n+6U]+z*(\
-                            tmpl_double_normalized_fresnel_cos_table[n+7U]+z*(\
-                                tmpl_double_normalized_fresnel_cos_table[n+8U]\
+tmpl_double_normalized_fresnel_sin_table[n]+z*(\
+    tmpl_double_normalized_fresnel_sin_table[n+1U]+z*(\
+        tmpl_double_normalized_fresnel_sin_table[n+2U]+z*(\
+            tmpl_double_normalized_fresnel_sin_table[n+3u]+z*(\
+                tmpl_double_normalized_fresnel_sin_table[n+4U]+z*(\
+                    tmpl_double_normalized_fresnel_sin_table[n+5U]+z*(\
+                        tmpl_double_normalized_fresnel_sin_table[n+6U]+z*(\
+                            tmpl_double_normalized_fresnel_sin_table[n+7U]+z*(\
+                                tmpl_double_normalized_fresnel_sin_table[n+8U]\
                             )\
                         )\
                     )\

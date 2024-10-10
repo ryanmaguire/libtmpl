@@ -79,14 +79,14 @@
 #include <libtmpl/include/tmpl_ieee754_float.h>
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
-extern const float tmpl_float_normalized_fresnel_cos_table[128];
+extern const float tmpl_float_normalized_fresnel_sin_table[128];
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) \
-tmpl_float_normalized_fresnel_cos_table[n]+z*(\
-    tmpl_float_normalized_fresnel_cos_table[n+1U]+z*(\
-        tmpl_float_normalized_fresnel_cos_table[n+2U]+z*(\
-            tmpl_float_normalized_fresnel_cos_table[n+3U]\
+tmpl_float_normalized_fresnel_sin_table[n]+z*(\
+    tmpl_float_normalized_fresnel_sin_table[n+1U]+z*(\
+        tmpl_float_normalized_fresnel_sin_table[n+2U]+z*(\
+            tmpl_float_normalized_fresnel_sin_table[n+3U]\
         )\
     )\
 )

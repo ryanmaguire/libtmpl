@@ -67,9 +67,9 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the polynomial.                                          */
-#define A00 (+1.0000000000000000000000000000000000000000000000000E+00F)
-#define A01 (-2.4674011002723396547086227499690377838284248518102E-01F)
-#define A02 (+2.8185500877894223737395929597426247468092472706217E-02F)
+#define A00 (+5.2359877559829887307710723054658381403286156656252E-01F)
+#define A01 (-9.2280585358035179093679509128277961911384787398468E-02F)
+#define A02 (+7.2447842041970041018641408627707293200828765773692E-03F)
 
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*A02)
@@ -84,7 +84,7 @@ float tmpl_Float_Normalized_Fresnel_Sin_Maclaurin(float x)
 
     /*  Evaluate using Horner's method and return.                            */
     const float poly = TMPL_POLY_EVAL(xqt);
-    return x*poly;
+    return x*xsq*poly;
 }
 /*  End of tmpl_Float_Normalized_Fresnel_Sin_Maclaurin.                       */
 

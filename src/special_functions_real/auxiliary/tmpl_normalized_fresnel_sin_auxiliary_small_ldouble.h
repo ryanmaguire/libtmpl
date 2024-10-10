@@ -19,19 +19,19 @@
  *             tmpl_normalized_fresnel_cos_auxiliary_small_ldouble            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the normalized Fresnel cosine for mid-sized inputs.          *
+ *      Computes the normalized Fresnel sine for mid-sized inputs.            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small                   *
+ *      tmpl_LDouble_Normalized_Fresnel_Sin_Auxiliary_Small                   *
  *  Purpose:                                                                  *
- *      Computes C(x) for 2 <= x < 4.                                         *
+ *      Computes S(x) for 2 <= x < 4.                                         *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (long double):                                                    *
+ *      S_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
@@ -88,8 +88,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_SMALL_LDOUBLE_H
-#define TMPL_NORMALIZED_FRESNEL_COS_AUXILIARY_SMALL_LDOUBLE_H
+#ifndef TMPL_NORMALIZED_FRESNEL_SIN_AUXILIARY_SMALL_LDOUBLE_H
+#define TMPL_NORMALIZED_FRESNEL_SIN_AUXILIARY_SMALL_LDOUBLE_H
 
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
@@ -1109,7 +1109,7 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 
 /*  Function for computing the normalized Fresnel cosine for 2 <= x < 4.      */
 TMPL_STATIC_INLINE
-long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
+long double tmpl_LDouble_Normalized_Fresnel_Sin_Auxiliary_Small(long double x)
 {
     /*  Use the double-double trick, split x into two parts, high and low.    */
     const long double xhi = tmpl_LDouble_Even_High_Split(x);
@@ -1196,9 +1196,9 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
     sin_x = cos_hi * sin_lo + sin_hi * cos_lo;
 
     /*  With the auxiliary functions computed, we can compute C(x).           */
-    return 0.5L + (f*sin_x - g*cos_x);
+    return 0.5L - (f*cos_x + g*sin_x);
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small.               */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Auxiliary_Small.               */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"

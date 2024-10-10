@@ -107,15 +107,23 @@ tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
                                  double Legendre_Coeff, unsigned int order);
 
 extern const float tmpl_float_normalized_fresnel_cos_table[128];
+extern const float tmpl_float_normalized_fresnel_sin_table[128];
+
 extern const double tmpl_double_normalized_fresnel_cos_table[288];
+extern const double tmpl_double_normalized_fresnel_sin_table[288];
+
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 extern const long double tmpl_ldouble_normalized_fresnel_cos_table[288];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[288];
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 extern const long double tmpl_ldouble_normalized_fresnel_cos_table[480];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[480];
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 extern const long double tmpl_ldouble_normalized_fresnel_cos_table[512];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[512];
 #else
 extern const long double tmpl_ldouble_normalized_fresnel_cos_table[320];
+extern const long double tmpl_ldouble_normalized_fresnel_sin_table[320];
 #endif
 
 /*  End of extern "C" statement allowing C++ compatibility.                   */

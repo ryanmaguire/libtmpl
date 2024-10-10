@@ -73,8 +73,8 @@
 /*  The denominator of the asymptotic expansion is scaled by pi.              */
 #define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939E+00F)
 
-/*  Computes sin(pi t) at single precision.                                   */
-extern float tmpl_Float_SinPi(float t);
+/*  Computes cos(pi t) at single precision.                                   */
+extern float tmpl_Float_CosPi(float t);
 
 /*  Computes the remainder of a double after division by 2.                   */
 extern double tmpl_Double_Mod_2(double t);
@@ -95,7 +95,7 @@ float tmpl_Float_Normalized_Fresnel_Sin_Asymptotic(float x)
     /*  Compute sin(pi/2 x^2) using the promoted double. Since sin(pi t) is   *
      *  periodic with period 2, we can reduce the argument first.             */
     const double cos_arg = tmpl_Double_Mod_2(0.5 * x_double * x_double);
-    const float cos_val = tmpl_Float_SinPi((float)cos_arg);
+    const float cos_val = tmpl_Float_CosPi((float)cos_arg);
 
     /*  The first term of the asymptotic expansion is all that is needed.     */
     return 0.5F - t * cos_val;
