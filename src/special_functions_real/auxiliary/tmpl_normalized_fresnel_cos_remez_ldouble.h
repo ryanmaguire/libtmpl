@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *              tmpl_double_normalized_fresnel_cos_remez_double               *
+ *              tmpl_double_normalized_fresnel_cos_remez_ldouble              *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for small values.              *
@@ -24,34 +24,25 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Remez                              *
+ *      tmpl_LDouble_Normalized_Fresnel_Cos_Remez                             *
  *  Purpose:                                                                  *
  *      Computes C(x) for 1 <= x < 2.                                         *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
- *          tmpl_Double_Floor:                                                *
+ *          tmpl_LDouble_Floor:                                               *
  *              Computes the floor of a real number. Only used if neither     *
- *              64-bit type punning nor IEEE-754 support are available.       *
+ *              type punning nor IEEE-754 support are available.              *
  *  Method:                                                                   *
- *      A lookup table has the coefficients for the degree 9 Remez            *
- *      polynomial for C(x + 1 + n/32) on the interval [0, 1/32) for          *
- *      0 <= n < 32. We shift x to [0, 1/32), compute n, and then evaluate    *
- *      the polynomial using Horner's method.                                 *
- *                                                                            *
- *      If type-punning with 64-bit int is available, we can speed up the     *
- *      computation of n and the shift with bit shifting.                     *
- *                                                                            *
- *      If 64-bit integer type punning is not available, but IEEE-754 support *
- *      exists (rare), we can achieve the same effect by examining the bits   *
- *      of the input.                                                         *
- *                                                                            *
- *      Lacking IEEE-754 support we compute n using the floor function.       *
+ *      A lookup table has the coefficients for the Remez polynomial for      *
+ *      C(x + 1 + n/32) on the interval [0, 1/32) for 0 <= n < 32. We shift x *
+ *      to [0, 1/32), compute n, and then evaluate the polynomial using       *
+ *      Horner's method.                                                      *
  *  Notes:                                                                    *
  *      This function assumes the input is between 1 and 2.                   *
  ******************************************************************************
@@ -59,8 +50,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
- *  2.) tmpl_ieee754_double.h:                                                *
- *          Header file with the tmpl_IEEE754_Double data type.               *
+ *  2.) tmpl_ieee754_ldouble.h:                                               *
+ *          Header file with the tmpl_IEEE754_LDouble data type.              *
  *  2.) tmpl_floatint.h:                                                      *
  *          Header file with the tmpl_FloatInt64 data type.                   *
  ******************************************************************************
@@ -132,7 +123,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     u.f = (double)w.r;
 
     /*  The shift is obtained by zeroing out the bits that are more           *
-     *  significant than 1/32. The index n computed from these bits as well.  *
+     *  significant than 1/32. The index n is also computed from these bits.  *
      *  Zero out all other bits. There are 11 bits for the exponent and 5     *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
      *  1/32. 0x7FFF800000000000, in hexidecimal, is the bit-mask for this.   */
@@ -251,7 +242,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
     u.f = w.d[0];
 
     /*  The shift is obtained by zeroing out the bits that are more           *
-     *  significant than 1/32. The index n computed from these bits as well.  *
+     *  significant than 1/32. The index n is also computed from these bits.  *
      *  Zero out all other bits. There are 11 bits for the exponent and 5     *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
      *  1/32. 0x7FFF800000000000, in hexidecimal, is the bit-mask for this.   */
@@ -288,8 +279,8 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
      *  5 bits of the mantissa. man0 has the upper 4 bits, and man1 has 16    *
      *  bits. We can disregard the lower 15 bits of man1 by shifting. There   *
-     *  are 9 coefficients for each polynomial, so we scale the result by 9.  */
-    const unsigned int n = 9U * ((w.bits.man0 << 1U) + (w.bits.man1 >> 15U));
+     *  are 15 coefficients for each polynomial, so we scale the result by 15.*/
+    const unsigned int n = 15U * ((w.bits.man0 << 1U) + (w.bits.man1 >> 15U));
 
     /*  We now shift the input to [0, 1/32) by zeroing out these upper 5 bits *
      *  and subtracting off one from the input. First, zero the bits.         */
@@ -358,12 +349,14 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  The index is obtained from the bits that are at least as significant  *
      *  as 1/32. That is, 1/2, 1/4, 1/8, 1/16, and 1/32. These are the upper  *
-     *  5 bits of the mantissa. man0 has the upper 15, so we shift down by    *
-     *  10. There are 10 coefficients for each polynomial, so we scale by 10. */
-    const unsigned int n = 16U * (w.bits.man0 >> 11U);
+     *  5 bits of the mantissa. man0 has the upper 16 bits, so we shift by 11.*
+     *  There are 16 coefficients for each polynomial, so we scale by 16.     *
+     *  This is equivalent to shifting up by 4. The shifts cancel, so we need *
+     *  to shift down by 7 and zero out the lower 4 bits.                     */
+    const unsigned int n = (w.bits.man0 >> 7U) & 0xFFF0;
 
-    /*  Zero out the upper 5 bits. There are 15 bits total, so the bit-mask   *
-     *  is 0x3FF.                                                             */
+    /*  Zero out the upper 5 bits. There are 16 bits total, so the bit-mask   *
+     *  is 0x7FF.                                                             */
     w.bits.man0 &= 0x7FFU;
 
     /*  The input is now between 1 and 1 + 1/32. Shift over to [0, 1/32).     */
@@ -374,6 +367,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_LDouble w)
 }
 /*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Remez.                         */
 
+/*  Extended / portable. Extended is nearly identical to quadruple.           */
 #else
 
 /******************************************************************************
@@ -405,6 +399,10 @@ tmpl_ldouble_normalized_fresnel_cos_table[n]+z*(\
   )\
 )
 
+/*  Extended uses a bit trick similar to quadruple, but with different values *
+ *  for the number of bits. Explicitly, quadruple has 16 bits in the highest  *
+ *  mantissa component, but extended has 15. Also, quadruple uses a degree 15 *
+ *  expansion, and extended uses degree 9. These are the only differences.    */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
 
 /******************************************************************************
@@ -472,6 +470,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Remez(long double x)
 /*  End of #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT.                      */
 
 #endif
+/*  End of double vs. double-double vs. quadruple vs. extended vs. portable.  */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef TMPL_POLY_EVAL
