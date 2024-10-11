@@ -43,8 +43,8 @@
  *      be approximated using cosine and sine. That is, we may use auxiliary  *
  *      functions f and g to write:                                           *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          C(x) = 0.5 + f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          S(x) = 0.5 - f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
  *                                                                            *
  *      Solving for f and g gives us the following:                           *
  *                                                                            *
@@ -88,7 +88,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retreiving the high part of a double given here.   */
+/*  Splitting function for retrieving the high part of a double given here.   */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/split/tmpl_even_high_split_double.h>
 #else
@@ -153,11 +153,11 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*C07))))))
 #define TMPL_POLYD_EVAL(z) \
 D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 
-/*  First two terms for the Maclaurin series of cos(pi/2 x^2).                */
+/*  First two terms for the Maclaurin series of cos(pi/2 x).                  */
 #define C0 (+1.0000000000000000000000000000000000000000000E+00)
 #define C1 (-1.2337005501361698273543113749845188919142124E+00)
 
-/*  First two terms for the Maclaurin series of sin(pi/2 x^2).                */
+/*  First two terms for the Maclaurin series of sin(pi/2 x).                  */
 #define S0 (+1.5707963267948966192313216916397514420985846E+00)
 #define S1 (-6.4596409750624625365575656389794573337969351E-01)
 
@@ -183,7 +183,7 @@ double tmpl_Double_Normalized_Fresnel_Cos_Auxiliary_Small(double x)
     const double gd = TMPL_POLYD_EVAL(t);
     const double g = gn / gd;
 
-    /*  With v = pi/2 (2 xlo xhi + xlo^2), compute cos(v) and sin(v) using    *
+    /*  With v = 2 xlo xhi + xlo^2, compute cos(pi/2 v) and sin(pi/2 v) using *
      *  Taylor polynomials. v is small, only a few terms needed.              */
     const double v = 2.0 * xhi * xlo + xlo * xlo;
     const double v_sq = v * v;
