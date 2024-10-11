@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                   tmpl_normalized_fresnel_cos_pade_double                  *
+ *                  tmpl_normalized_fresnel_cos_pade_ldouble                  *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for small values.              *
@@ -24,21 +24,30 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Pade                               *
+ *      tmpl_LDouble_Normalized_Fresnel_Cos_Pade                              *
  *  Purpose:                                                                  *
  *      Computes C(x) for |x| < 1.                                            *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute the (20, 16) Pade approximant for C(x). The polynomials are   *
- *      in terms of x^4, so only 5 terms are needed for the numerator and     *
- *      4 terms required for the denominator.                                 *
+ *      Compute the (m, n) Pade approximant for C(x). The approximant is in   *
+ *      terms of x^4 so only m / 4 coefficients are needed for the numerator  *
+ *      and n / 4 are required for the denominator. The values of m and n     *
+ *      depend on how long double is represented:                             *
+ *                                                                            *
+ *          type          |  m |  n                                           *
+ *          --------------|----|----                                          *
+ *          double        | 20 | 16                                           *
+ *          double-double | 32 | 28                                           *
+ *          quadruple     | 32 | 32                                           *
+ *          extended      | 24 | 20                                           *
+ *                                                                            *
  *  Notes:                                                                    *
  *      This function assumes the input is bounded by 1.                      *
  ******************************************************************************
@@ -58,7 +67,12 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  64-bit long double, no more precision than ordinary double.               */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+
+/******************************************************************************
+ *                                64-Bit Double                               *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -81,7 +95,12 @@
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
+/*  Double-double needs a lot more terms.                                     */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/******************************************************************************
+ *                           128-Bit Double-Double                            *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -112,7 +131,12 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 #define TMPL_DEN_EVAL(z) \
 B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*B07))))))
 
+/*  Quadruple needs only 1 more coefficients than double-double.              */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+/******************************************************************************
+ *                             128-Bit Quadruple                              *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -144,7 +168,12 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 #define TMPL_DEN_EVAL(z) \
 B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
 
+/*  Extended / portable, only slightly more coefficients than 64-bit double.  */
 #else
+
+/******************************************************************************
+ *                         80-Bit Extended / Portable                         *
+ ******************************************************************************/
 
 /*  Coefficients for the numerator of the Pade approximant.                   */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -170,6 +199,7 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*B08)))))))
 #define TMPL_DEN_EVAL(z) B00+z*(B01+z*(B02+z*(B03+z*(B04+z*B05))))
 
 #endif
+/*  End of double vs. double-double vs. quadruple vs extended / portable.     */
 
 /*  Computes the normalized Fresnel cosine function using a Pade approximant. */
 TMPL_STATIC_INLINE
@@ -184,7 +214,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Pade(long double x)
     const long double den = TMPL_DEN_EVAL(x4);
     return x * num / den;
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Pade.                           */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Pade.                          */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"
