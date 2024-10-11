@@ -26,25 +26,25 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Normalized_Fresnel_Sin_Asymptotic                         *
  *  Purpose:                                                                  *
- *      Computes C(x) for large positive inputs.                              *
+ *      Computes S(x) for large positive inputs.                              *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      S_x (double):                                                         *
  *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_SinCosPi:                                             *
  *              Simultaneously computes sin(pi t) and cos(pi t).              *
  *  Method:                                                                   *
- *      Use the asymptotic expansion for C(x):                                *
+ *      Use the asymptotic expansion for S(x):                                *
  *                                                                            *
  *                 1    1                                                     *
- *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
+ *          S(x) ~ - - ---- cos(pi/2 x^2)                                     *
  *                 2   pi x                                                   *
  *                                                                            *
- *      To avoid precision loss in the computation of sin(pi/2 x^2) we use a  *
+ *      To avoid precision loss in the computation of cos(pi/2 x^2) we use a  *
  *      double-double trick and split x into two parts, xhi and xlo, so that: *
  *                                                                            *
  *          x^2 = (xhi + xlo)^2                                               *
@@ -52,10 +52,10 @@
  *                                                                            *
  *      xhi is chosen to be the upper 16 bits, and xlo is the lower 36 bits.  *
  *      By doing this we guarantee that xhi^2 / 2 is an even integer for all  *
- *      x > 2^17. Since sin(pi t) is periodic with period 2, we can           *
+ *      x > 2^17. Since cos(pi t) is periodic with period 2, we can           *
  *      disregard the xhi^2 term completely and concentrate solely on         *
  *      2 xhi xlo + xlo^2. This term is passed to the SinCosPi function. By   *
- *      doing this we avoid precision loss that occurs with taking the sine   *
+ *      doing this we avoid precision loss that occurs with taking the cosine *
  *      of the square of a large number. This only minimally impacts          *
  *      performance as well.                                                  *
  *  Notes:                                                                    *
@@ -108,7 +108,7 @@ double tmpl_Double_Normalized_Fresnel_Sin_Asymptotic(double x)
      *  need the first term of the approximation.                             */
     const double t = 1.0 / (TMPL_ONE_PI * x);
 
-    /*  For x > 2^17, we have xhi^2 / 2 is an even integer. Since sin(pi t)   *
+    /*  For x > 2^17, we have xhi^2 / 2 is an even integer. Since cos(pi t)   *
      *  is periodic with period 2, the xhi^2 term can be disregarded. The     *
      *  argument we then care about is pi (2 xhi xlo + xlo^2) / 2.            */
     double sin_hi, cos_hi, sin_lo, cos_lo, minus_cos_x;
