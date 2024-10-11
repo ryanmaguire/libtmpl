@@ -91,7 +91,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retreiving the high part of a double given here.   */
+/*  Splitting function for retrieving the high part of a long double.         */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 #else

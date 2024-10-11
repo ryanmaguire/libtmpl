@@ -44,8 +44,8 @@
  *          behavior and can be approximated using cosine and sine. That is,  *
  *          we may use auxiliary functions f and g to write:                  *
  *                                                                            *
- *              C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)          *
- *              S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)          *
+ *              C(x) = 0.5 + f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)          *
+ *              S(x) = 0.5 - f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)          *
  *                                                                            *
  *          Solving for f and g gives us the following:                       *
  *                                                                            *
@@ -94,7 +94,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retreiving the high part of a double given here.   */
+/*  Splitting function for retrieving the high part of a long double.         */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
 #else
@@ -105,9 +105,7 @@ extern long double tmpl_LDouble_Even_High_Split(long double x);
 extern void
 tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 
-/*  Different splitting values are needed, depending on the type. The magic   *
- *  number is 2^(N - round(N/2 - 1)) + 1, where N is the number of bits in    *
- *  the mantissa. Thus xhi and xlo both have, roughly, half the bits of x.    */
+/*  Remez / Pade coefficients for the various long double implementations.    */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
@@ -620,6 +618,8 @@ H00 + z*(\
   )\
 )
 
+/*  The Remez algorithm also failed to converge with double-double. We again  *
+ *  use two Pade approximants, one on [2, 2.5) and another on [2.5, 4].       */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /******************************************************************************
@@ -1026,14 +1026,14 @@ H00 + z*(\
   )\
 )
 
-/*  Extended precision / portable, uses Remez polynomials again.              */
+/*  Extended precision / portable, uses Remez rational approximations again.  */
 #else
 
 /******************************************************************************
  *                         80-Bit Extended / Portable                         *
  ******************************************************************************/
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (-1.0684376308340724432025730534298461179595627608839E-07L)
 #define A01 (+3.1831475507382908907436560739654094704655840289067E-01L)
 #define A02 (-1.1691864490468752274496177092758262888145527574071E+00L)
@@ -1045,7 +1045,7 @@ H00 + z*(\
 #define A08 (-2.4385227117045454507957037146789833022612661919264E+00L)
 #define A09 (+3.2467602439918592010128784434067344948770860567324E-01L)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the "f" auxiliary function.           */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define B01 (-3.6727865635753519146261099845230432571763174073947E+00L)
 #define B02 (+1.2376668060570839227915084796148735391713521410824E+01L)
@@ -1095,11 +1095,11 @@ D00+z*(D01+z*(D02+z*(D03+z*(D04+z*(D05+z*(D06+z*D07))))))
 #endif
 /*  End of double vs. extended / portable vs. double-double vs. quadruple.    */
 
-/*  Coefficients for the Taylor polynomial of cos(pi/2 x^2).                  */
+/*  Coefficients for the Taylor polynomial of cos(pi/2 x).                    */
 #define C0 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define C1 (-1.2337005501361698273543113749845188919142124259051E+00L)
 
-/*  Coefficients for the Taylor polynomial of sin(pi/2 x^2).                  */
+/*  Coefficients for the Taylor polynomial of sin(pi/2 x).                    */
 #define S0 (+1.5707963267948966192313216916397514420985846996876E+00L)
 #define S1 (-6.4596409750624625365575656389794573337969351178927E-01L)
 
@@ -1115,7 +1115,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
     const long double xhi = tmpl_LDouble_Even_High_Split(x);
     const long double xlo = x - xhi;
 
-    /*  With v = pi/2 (2 xlo xhi + xlo^2), compute cos(v) and sin(v) using    *
+    /*  With v = 2 xlo xhi + xlo^2, compute cos(pi/2 v) and sin(pi/2 v) using *
      *  Taylor polynomials. v is small, only a few terms needed.              */
     const long double v = 2.0L * xhi * xlo + xlo * xlo;
     const long double v_sq = v * v;
@@ -1146,7 +1146,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
         const long double gn = TMPL_POLYC_EVAL(t);
         const long double gd = TMPL_POLYD_EVAL(t);
 
-        /*  The auxiliary functions can be computed as the ratio.             */
+        /*  The auxiliary functions can be computed as the ratios.            */
         f = fn / fd;
         g = gn / gd;
     }
@@ -1163,7 +1163,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
         const long double gn = TMPL_POLYG_EVAL(t);
         const long double gd = TMPL_POLYH_EVAL(t);
 
-        /*  The auxiliary functions can be computed as the ratio.             */
+        /*  The auxiliary functions can be computed as the ratios.            */
         f = fn / fd;
         g = gn / gd;
     }
@@ -1180,7 +1180,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary_Small(long double x)
     const long double gn = TMPL_POLYC_EVAL(t);
     const long double gd = TMPL_POLYD_EVAL(t);
 
-    /*  The auxiliary functions can be computed as the ratio.                 */
+    /*  The auxiliary functions can be computed as the ratios.                */
     const long double f = fn / fd;
     const long double g = gn / gd;
 
