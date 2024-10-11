@@ -84,7 +84,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Maclaurin(float x)
 
     /*  Evaluate using Horner's method and return.                            */
     const float poly = TMPL_POLY_EVAL(xqt);
-    return x*poly;
+    return x * poly;
 }
 /*  End of tmpl_Float_Normalized_Fresnel_Cos_Maclaurin.                       */
 

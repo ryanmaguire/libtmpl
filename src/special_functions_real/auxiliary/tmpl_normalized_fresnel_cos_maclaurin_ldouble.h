@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                tmpl_normalized_fresnel_cos_maclaurin_double                *
+ *                tmpl_normalized_fresnel_cos_maclaurin_ldouble               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the normalized Fresnel cosine for small values.              *
@@ -24,20 +24,20 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Normalized_Fresnel_Cos_Maclaurin                          *
+ *      tmpl_LDouble_Normalized_Fresnel_Cos_Maclaurin                         *
  *  Purpose:                                                                  *
  *      Computes C(x) for |x| < 1/4.                                          *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (double):                                                         *
+ *      C_x (long double):                                                    *
  *          The normalized Fresnel cosine of x.                               *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute the Maclaurin series for |x| < 1 / 4 using the first 5 terms  *
- *      (0 <= n <= 4). The series is defined by:                              *
+ *      Compute the Maclaurin series for |x| < 1 / 4 using the first few      *
+ *      terms. The series is defined by:                                      *
  *                                                                            *
  *                 infty                                                      *
  *                 -----       n  4n+1  -   -  2n                             *
@@ -66,7 +66,12 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  64-bit long double, no more precision than ordinary double.               */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
+
+/******************************************************************************
+ *                                64-Bit Double                               *
+ ******************************************************************************/
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -78,7 +83,12 @@
 /*  Helper macro for evaluating the polynomial using Horner's method.         */
 #define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 
+/*  128-bit double-double, accurate to about 32 decimals.                     */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
+
+/******************************************************************************
+ *                           128-Bit Double-Double                            *
+ ******************************************************************************/
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -95,7 +105,12 @@
 #define TMPL_POLY_EVAL(z) \
 A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 
+/*  128-bit quadruple precision achieves roughly 34 decimals.                 */
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+/******************************************************************************
+ *                             128-Bit Quadruple                              *
+ ******************************************************************************/
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -113,7 +128,12 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 #define TMPL_POLY_EVAL(z) \
 A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
 
+/*  Extended precision and portable. Peak theoretical error is 10^-19.        */
 #else
+
+/******************************************************************************
+ *                         80-Bit Extended / Portable                         *
+ ******************************************************************************/
 
 /*  Coefficients for the polynomial.                                          */
 #define A00 (+1.0000000000000000000000000000000000000000000000000E+00L)
@@ -127,6 +147,7 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*(A08+z*A09))))))))
 #define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
 
 #endif
+/*  End of double vs. double-double vs. quadruple vs extended / portable.     */
 
 /*  Computes the normalized Fresnel cosine for |x| < 1/4.                     */
 TMPL_STATIC_INLINE
@@ -138,7 +159,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Maclaurin(long double x)
 
     /*  Evaluate using Horner's method and return.                            */
     const long double poly = TMPL_POLY_EVAL(xqt);
-    return x*poly;
+    return x * poly;
 }
 /*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Maclaurin.                     */
 
