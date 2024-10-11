@@ -26,31 +26,31 @@
  *  Function Name:                                                            *
  *      tmpl_Float_Normalized_Fresnel_Sin_Asymptotic                          *
  *  Purpose:                                                                  *
- *      Computes C(x) for large positive inputs.                              *
+ *      Computes S(x) for large positive inputs.                              *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (float):                                                          *
+ *      S_x (float):                                                          *
  *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_Mod_2:                                                *
  *              Computes the remainder after division by 2.                   *
- *          tmpl_Float_SinPi:                                                 *
- *              Computes sin(pi t) for a real number t.                       *
+ *          tmpl_Float_CosPi:                                                 *
+ *              Computes cos(pi t) for a real number t.                       *
  *  Method:                                                                   *
  *      Use the asymptotic expansion for C(x):                                *
  *                                                                            *
  *                 1    1                                                     *
- *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
+ *          C(x) ~ - - ---- cos(pi/2 x^2)                                     *
  *                 2   pi x                                                   *
  *                                                                            *
- *      To avoid precision loss in the computation of sin(pi/2 x^2) we        *
+ *      To avoid precision loss in the computation of cos(pi/2 x^2) we        *
  *      convert to a double. Since float has a 23-bit mantissa, and double    *
  *      has 52-bits, the entirety of x^2 can be stored in a double. We pass   *
  *      x^2 / 2 to the mod 2 function (at double precision), and then compute *
- *      the sine of this (at single precision).                               *
+ *      the cosine of this (at single precision).                             *
  *  Notes:                                                                    *
  *      This function assumes the input is greater than 2^7.                  *
  ******************************************************************************
@@ -92,7 +92,7 @@ float tmpl_Float_Normalized_Fresnel_Sin_Asymptotic(float x)
      *  need the first term of the approximation.                             */
     const float t = 1.0F / (TMPL_ONE_PI * x);
 
-    /*  Compute sin(pi/2 x^2) using the promoted double. Since sin(pi t) is   *
+    /*  Compute cos(pi/2 x^2) using the promoted double. Since cos(pi t) is   *
      *  periodic with period 2, we can reduce the argument first.             */
     const double cos_arg = tmpl_Double_Mod_2(0.5 * x_double * x_double);
     const float cos_val = tmpl_Float_CosPi((float)cos_arg);
