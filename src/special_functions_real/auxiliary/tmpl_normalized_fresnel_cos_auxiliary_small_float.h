@@ -45,8 +45,8 @@
  *      be approximated using cosine and sine. That is, we may use auxiliary  *
  *      functions f and g to write:                                           *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          C(x) = 0.5 + f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          S(x) = 0.5 - f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
  *                                                                            *
  *      Solving for f and g gives us the following:                           *
  *                                                                            *
@@ -87,24 +87,24 @@ extern void tmpl_Float_SinCosPi(float t, float *sin_t, float *cos_t);
 /*  Computes the remainder of a double after division by 2.                   */
 extern double tmpl_Double_Mod_2(double t);
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (+1.5246280421910551878368225585204082614852964232248E-04F)
 #define A01 (+3.1609653241314679857283357836150343739921097859062E-01F)
 #define A02 (-4.9623331840301738262354883540181548632010550808145E-01F)
 #define A03 (+3.3098392167588884276231638901226486916051539529096E-01F)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the "f" auxiliary function.           */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00F)
 #define B01 (-1.5965639622977909738889451915430533331550459849930E+00F)
 #define B02 (+1.1221940714096073759406009822681650387256187326180E+00F)
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the "g" auxiliary function.             */
 #define C00 (-2.4396874784627198132005931327540722310053184512274E-05F)
 #define C01 (+1.4676320705970029295603754665410727533417990698878E-04F)
 #define C02 (+1.5245048902221946247159304582189880370421596905789E-03F)
 #define C03 (+8.2909288144704840406411074152712650884087132659313E-02F)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the "g" auxiliary function.           */
 #define D00 (+1.0000000000000000000000000000000000000000000000000E+00F)
 #define D01 (-7.0655337204858631339156855315997334162929299457167E-01F)
 #define D02 (+1.0886493929373154383903053885964644577967820375110E+00F)
