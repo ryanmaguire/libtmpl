@@ -25,6 +25,7 @@ include/tmpl_config.h
 include/tmpl_inttype.h
 include/tmpl_limits.h
 include/tmpl_float.h
+*conflicted*
 
 # Various filetypes to be excluded from LaTeX, C, C++, and Python output.
 # Plus a bunch of random ones GitHub recommended be in the .gitignore file.
