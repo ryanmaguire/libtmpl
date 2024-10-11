@@ -42,20 +42,9 @@
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 3, 2022                                                   *
  ******************************************************************************/
-
 .arch armv7-a
-.eabi_attribute 28, 1
-.eabi_attribute 20, 1
-.eabi_attribute 21, 1
-.eabi_attribute 23, 3
-.eabi_attribute 24, 1
-.eabi_attribute 25, 1
-.eabi_attribute 26, 2
-.eabi_attribute 30, 2
-.eabi_attribute 34, 1
-.eabi_attribute 18, 4
 .text
-.align  1
+.align 1
 .p2align 2,,3
 .global tmpl_Double_Sqrt
 .arch armv7-a
@@ -63,17 +52,17 @@
 .thumb
 .thumb_func
 .fpu vfpv3-d16
-.type   tmpl_Double_Sqrt, %function
+.type tmpl_Double_Sqrt, %function
 
 tmpl_Double_Sqrt:
-        vcmp.f64    d0, #0
-        vmov.f64    d7, d0
-        vmrs        APSR_nzcv, FPSCR
-        vsqrt.f64   d0, d7
-        bx          lr
+    vcmp.f64   d0, #0
+    vmov.f64   d7, d0
+    vmrs       APSR_nzcv, FPSCR
+    vsqrt.f64  d0, d7
+    bx         lr
 
-.size   tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
+.size tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
 
 #if defined(__ELF__)
-.section        .note.GNU-stack,"",%progbits
+.section .note.GNU-stack,"",%progbits
 #endif
