@@ -85,7 +85,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retrieving the high part of a double given here.   */
+/*  Splitting function for retrieving the high part of a long double.         */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/split/tmpl_high_split_ldouble.h>
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -104,7 +104,7 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 /*  Different splitting values are needed, depending on the type. If the      *
  *  mantissa is N bits, the magic number is 2^(N - floor(N/3) + 1) + 1. This  *
  *  guarantees that for |x| > 2^floor(N/3) the high part is an integer and a  *
- *  multiple of four, meaning xhi^2 / 2 is an even integer. Since sin(pi x)   *
+ *  multiple of two, meaning xhi^2 / 2 is an even integer. Since sin(pi x)    *
  *  periodic with period 2, we can then discard this computation entirely.    *
  *  We need only concentrate on the lower N - floor(N/3) bits.                */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT

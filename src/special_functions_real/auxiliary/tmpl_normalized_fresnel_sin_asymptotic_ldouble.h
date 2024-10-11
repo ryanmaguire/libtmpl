@@ -26,25 +26,25 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic                        *
  *  Purpose:                                                                  *
- *      Computes C(x) for large positive inputs.                              *
+ *      Computes S(x) for large positive inputs.                              *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      C_x (long double):                                                    *
+ *      S_x (long double):                                                    *
  *          The normalized Fresnel sine of x.                                 *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_LDouble_SinCosPi:                                            *
  *              Simultaneously computes sin(pi t) and cos(pi t).              *
  *  Method:                                                                   *
- *      Use the asymptotic expansion for C(x):                                *
+ *      Use the asymptotic expansion for S(x):                                *
  *                                                                            *
  *                 1    1                                                     *
- *          C(x) ~ - + ---- sin(pi/2 x^2)                                     *
+ *          S(x) ~ - - ---- cos(pi/2 x^2)                                     *
  *                 2   pi x                                                   *
  *                                                                            *
- *      To avoid precision loss in the computation of sin(pi/2 x^2) we use a  *
+ *      To avoid precision loss in the computation of cos(pi/2 x^2) we use a  *
  *      (long) double-double trick and split x into two parts so that:        *
  *                                                                            *
  *          x^2 = (xhi + xlo)^2                                               *
@@ -62,7 +62,7 @@
  *          Double Double |  19 |  85                                         *
  *                                                                            *
  *      By doing this we need only concern ourselves with 2 xhi xlo + xlo^2.  *
- *      We compute sin(pi/2 x^2) using the angle sum formula with this        *
+ *      We compute cos(pi/2 x^2) using the angle sum formula with this        *
  *      expression. This avoids precision loss and only minimally impacts     *
  *      performance.                                                          *
  *  Notes:                                                                    *
@@ -85,7 +85,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retreiving the high part of a double given here.   */
+/*  Splitting function for retrieving the high part of a long double.         */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/split/tmpl_high_split_ldouble.h>
 #elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
@@ -103,10 +103,10 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 
 /*  Different splitting values are needed, depending on the type. If the      *
  *  mantissa is N bits, the magic number is 2^(N - floor(N/3) + 1) + 1. This  *
- *  guarantees that for |x| > 2^floor(N/3) the high part is even, meaning     *
- *  xhi^2 / 2 is an integer. Since sin(pi x) and cos(pi x) are periodic, we   *
- *  can then discard this computation entirely. We need only concentrate on   *
- *  the lower N - floor(N/3) bits.                                            */
+ *  guarantees that for |x| > 2^floor(N/3) the high part is an integer and a  *
+ *  multiple of two, meaning xhi^2 / 2 is an even integer. Since cos(pi x)    *
+ *  periodic with period 2, we can then discard this computation entirely.    *
+ *  We need only concentrate on the lower N - floor(N/3) bits.                */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /*  52-bit mantissa, value is 2^36 + 1.                                       */
@@ -150,7 +150,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin_Asymptotic(long double x)
      *  argument we then care about is pi (2 xhi xlo + xlo^2) / 2.            */
     long double sin_hi, cos_hi, sin_lo, cos_lo, minus_cos_x;
 
-    /*  Compute sin(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
+    /*  Compute cos(pi/2 (2 xhi xlo + xlo^2)) using the angle sum formula.    */
     tmpl_LDouble_SinCosPi(xlo * xhi, &sin_hi, &cos_hi);
     tmpl_LDouble_SinCosPi(0.5L * xlo * xlo, &sin_lo, &cos_lo);
     minus_cos_x = sin_hi*sin_lo - cos_hi*cos_lo;

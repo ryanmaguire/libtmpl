@@ -43,7 +43,7 @@
  *      Use the asymptotic expansion for C(x):                                *
  *                                                                            *
  *                 1    1                                                     *
- *          C(x) ~ - - ---- cos(pi/2 x^2)                                     *
+ *          S(x) ~ - - ---- cos(pi/2 x^2)                                     *
  *                 2   pi x                                                   *
  *                                                                            *
  *      To avoid precision loss in the computation of cos(pi/2 x^2) we        *
