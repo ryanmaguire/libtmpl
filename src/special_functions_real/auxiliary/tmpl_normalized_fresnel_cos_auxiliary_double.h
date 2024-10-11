@@ -43,8 +43,8 @@
  *      be approximated using cosine and sine. That is, we may use auxiliary  *
  *      functions f and g to write:                                           *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          C(x) = 0.5 + f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          S(x) = 0.5 - f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
  *                                                                            *
  *      Solving for f and g gives us the following:                           *
  *                                                                            *
@@ -92,7 +92,7 @@
 /*  TMPL_STATIC_INLINE macro found here.                                      */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Splitting function for retreiving the high part of a double given here.   */
+/*  Splitting function for retrieving the high part of a double given here.   */
 #if TMPL_USE_INLINE == 1
 #include <libtmpl/include/split/tmpl_even_high_split_double.h>
 #else
