@@ -39,7 +39,7 @@
  *              Computes the floor of a real number. Only used if neither     *
  *              32-bit type punning nor IEEE-754 support are available.       *
  *  Method:                                                                   *
- *      A lookup table has the coefficients for the degree 4 Remez            *
+ *      A lookup table has the coefficients for the degree 3 Remez            *
  *      polynomial for C(x + 1 + n/32) on the interval [0, 1/32) for          *
  *      0 <= n < 32. We shift x to [0, 1/32), compute n, and then evaluate    *
  *      the polynomial using Horner's method.                                 *
@@ -111,7 +111,7 @@ float tmpl_Float_Normalized_Fresnel_Cos_Remez(tmpl_IEEE754_Float w)
     u.w = w;
 
     /*  The shift is obtained by zeroing out the bits that are more           *
-     *  significant than 1/32. The index n computed from these bits as well.  *
+     *  significant than 1/32. The index n is also computed from these bits.  *
      *  Zero out all other bits. There are 8 bits for the exponent and 5      *
      *  bits for the mantissa needed, the bits for 1/2, 1/4, 1/8, 1/16, and   *
      *  1/32. 0x7FFC0000, in hexidecimal, is the bit-mask for this.           */
