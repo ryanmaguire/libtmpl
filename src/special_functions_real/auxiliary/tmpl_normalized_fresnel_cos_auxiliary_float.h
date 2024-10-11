@@ -45,8 +45,8 @@
  *      be approximated using cosine and sine. That is, we may use auxiliary  *
  *      functions f and g to write:                                           *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          C(x) = 0.5 + f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          S(x) = 0.5 - f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
  *                                                                            *
  *      Solving for f and g gives us the following:                           *
  *                                                                            *

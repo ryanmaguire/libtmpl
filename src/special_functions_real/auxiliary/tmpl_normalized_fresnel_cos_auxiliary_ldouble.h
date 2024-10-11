@@ -43,8 +43,8 @@
  *      be approximated using cosine and sine. That is, we may use auxiliary  *
  *      functions f and g to write:                                           *
  *                                                                            *
- *          C(x) = 0.5 + f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
- *          S(x) = 0.5 - f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          C(x) = 0.5 + f(x) sin(pi/2 x^2) - g(x) cos(pi/2 x^2)              *
+ *          S(x) = 0.5 - f(x) cos(pi/2 x^2) - g(x) sin(pi/2 x^2)              *
  *                                                                            *
  *      Solving for f and g gives us the following:                           *
  *                                                                            *
@@ -102,7 +102,7 @@ extern long double tmpl_LDouble_Even_High_Split(long double x);
 extern void
 tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 
-/*  64-bit long double, needs no precision than ordinary double.              */
+/*  64-bit long double, needs no more precision than ordinary double.         */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
@@ -170,7 +170,7 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
  *                              128-Bit Quaduple                              *
  ******************************************************************************/
 
-/*  Coefficients for the numerator of the Remez rational approximation.       */
+/*  Coefficients for the numerator of the "f" auxiliary function.             */
 #define A00 (-6.4904766979192653068496179233841491806804722684774E-35L)
 #define A01 (+7.9577471545947667884441881686417353500492022430675E-02L)
 #define A02 (-1.4919298595807526766220211268241052042107772610231E-01L)
@@ -191,7 +191,7 @@ C00+z*(C01+z*(C02+z*(C03+z*(C04+z*(C05+z*(C06+z*(C07+z*C08)))))))
 #define A17 (+1.1097488402703227654540866115001016275215156645990E-06L)
 #define A18 (-2.5295094882280476886540007946268130752321613128307E-08L)
 
-/*  Coefficients for the denominator of the Remez rational approximation.     */
+/*  Coefficients for the denominator of the "f" auxiliary function.           */
 #define B00 (+1.0000000000000000000000000000000000000000000000000E+00L)
 #define B01 (-1.8748143546120577650108301397768506783520955756534E+00L)
 #define B02 (+3.0242439583456434379964328487030292384647213291886E+00L)
@@ -517,7 +517,7 @@ A00 + z*(\
   )\
 )
 
-/*  Evaluates the denominator of the "g" function using Horner's method.      */
+/*  Evaluates the denominator of the "f" function using Horner's method.      */
 #define TMPL_POLYB_EVAL(z) \
 B00 + z*(\
   B01 + z*(\
@@ -817,7 +817,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary(long double x)
     /*  With the auxiliary functions computed, we can compute C(x).           */
     return 0.5L + (f*sin_x - g*cos_x);
 }
-/*  End of tmpl_Double_Normalized_Fresnel_Cos_Auxiliary.                      */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Cos_Auxiliary.                     */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"
