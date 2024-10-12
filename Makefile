@@ -95,6 +95,9 @@ CC ?= cc
 CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
 LFLAGS := -O3 -fPIC -flto -DNDEBUG -shared
 
+VOLATILE_SPLIT_ARCHS = aarch64 arm64 armv7l ppc ppc64 ppc64le riscv64
+CAUTIOUS_SPLIT_ARCHS = i386 x86
+
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
 CFLAGS += -fopenmp
@@ -220,8 +223,6 @@ endif
 
 else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
 
-CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
-
 ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
 EXCLUDE +=\
 -not -name "tmpl_trailing_zeros_char.c" -and \
@@ -242,8 +243,6 @@ EXCLUDE +=\
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
-
 ASM_INCLUDE += -wholename "./src/assembly/aarch64/*.S" -or
 EXCLUDE +=\
 -not -name "tmpl_floor_math_double.c" -and \
@@ -254,8 +253,6 @@ EXCLUDE +=\
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
-
 ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
 EXCLUDE +=\
 -not -name "tmpl_sqrt_double.c" -and \
@@ -263,8 +260,6 @@ EXCLUDE +=\
 -not -name "tmpl_sqrt_ldouble.c" -and
 
 else ifeq ($(uname_m),$(filter $(uname_m),ppc64le))
-
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
 
 ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
 EXCLUDE +=\
@@ -286,6 +281,17 @@ endif
 
 endif
 # End of ifndef NO_ASM.
+
+ifeq ($(uname_m),$(filter $(uname_m), $(VOLATILE_SPLIT_ARCHS)))
+
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
+
+else ifeq ($(uname_m),$(filter $(uname_m), $(CAUTIOUS_SPLIT_ARCHS)))
+
+CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
+
+endif
+
 
 INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
