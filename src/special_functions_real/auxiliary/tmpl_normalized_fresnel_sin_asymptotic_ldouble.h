@@ -104,7 +104,7 @@ tmpl_LDouble_SinCosPi(long double t, long double *sin_t, long double *cos_t);
 /*  Different splitting values are needed, depending on the type. If the      *
  *  mantissa is N bits, the magic number is 2^(N - floor(N/3) + 1) + 1. This  *
  *  guarantees that for |x| > 2^floor(N/3) the high part is an integer and a  *
- *  multiple of two, meaning xhi^2 / 2 is an even integer. Since cos(pi x)    *
+ *  multiple of two, meaning xhi^2 / 2 is an even integer. Since cos(pi x) is *
  *  periodic with period 2, we can then discard this computation entirely.    *
  *  We need only concentrate on the lower N - floor(N/3) bits.                */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT

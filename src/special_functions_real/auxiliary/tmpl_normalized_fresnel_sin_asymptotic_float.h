@@ -40,7 +40,7 @@
  *          tmpl_Float_CosPi:                                                 *
  *              Computes cos(pi t) for a real number t.                       *
  *  Method:                                                                   *
- *      Use the asymptotic expansion for C(x):                                *
+ *      Use the asymptotic expansion for S(x):                                *
  *                                                                            *
  *                 1    1                                                     *
  *          S(x) ~ - - ---- cos(pi/2 x^2)                                     *
