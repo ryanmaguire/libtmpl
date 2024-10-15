@@ -24,13 +24,41 @@
 # make on macOS and GNU/Linux.
 
 #   OPTIONS:
+#       BUILD_STATIC:
+#           Build a static library (libtmpl.a) instead of a dynamic one
+#           (libtmpl.so). rss_ringoccs uses this option to simplify builds.
+#           Enable with:
+#               make BUILD_STATIC=1 [other-options]
 #       CC:
 #           C compiler to be used. Tested with:
 #               gcc:   GNU C compiler.
 #               clang: LLVM's C compiler.
-#               tcc:   The Tiny C Compiler
-#               pcc:   The Portable C Compiler
-#               aocc:  AMD's optimizing C Compiler
+#                   Note: Apple's version of clang has also been tested.
+#               tcc:   The Tiny C Compiler.
+#               pcc:   The Portable C Compiler.
+#               aocc:  AMD's optimizing C Compiler.
+#               icx:   Intel's C compiler.
+#                   NOTE: icc not tested, but this compiler is deprecated.
+#               nvc:   NVIDIA's C compiler.
+#                   NOTE: The -flto option must be removed from CFLAGS and
+#                         LFLAGS for nvc to compile this.
+#               Enable with:
+#                   make CC=c_compiler_name [other-options]
+#       AR:
+#           Set the archiver. This is only used if a static
+#           build is begin created. Enable with:
+#               make AR=archiver_name
+#       ARCH:
+#           Manually set the output of uname -m. The Makefile uses this to see
+#           which architecture you are using in order to select the correct
+#           assembly code. If you are emulating an architecture, this value
+#           may not be set correctly. For example, emulating i386 on x86_64,
+#           uname -m still outputs x86_64. Enabling ARCH=i386 will cause the
+#           Makefile to select the correct assembly code (the code for i386,
+#           instead of the code for x86_64). Note that if you disable assembly
+#           code by passing NO_ASM=1 to the Makefile, this keyword has no
+#           effect. Enable with:
+#               make ARCH=name_of_architecture [other-options]
 #       OMP:
 #           Set OpenMP flags. Useful if you want to build libtmpyl, the Python
 #           wrapper for libtmpl, and use with numpy arrays for parallel
@@ -72,31 +100,103 @@
 #           types. The config.c file will try to find the widths of various
 #           integer types. To skip this, set this option. Enable with:
 #               make NO_INT=1 [other-options]
+#       NO_ASM:
+#           Disable all assembly code when building libtmpl. This is not
+#           recommended. On several architectures, x86_64 / amd64,
+#           aarch64 / arm64, ppc64le, several built-in functions like square
+#           root can be used directly via assembly code. This outperforms the
+#           C code by a considerable amount. If you would like to force libtmpl
+#           to use only C code, enable this option. Note, if you are on an
+#           architecture that libtmpl does not have assembly code for
+#           (mips, for example) enabling this flag does nothing as the C code
+#           will be selected automatically. Enable with:
+#               make NO_ASM=1 [other-options]
+#       FASM:
+#           For x86_64 / amd64 you can use either GNU Assembly code (GAS) or
+#           flat assembly code (FASM). GAS is the default. To use FASM, enable
+#           this option. Enable with:
+#               make FASM=1 [other-options]
+#       USE_MEMCPY:
+#           Some functions copy data by using a simple for-loop.
+#           Depending on several things (compiler, libc implementation,
+#           architecture), it may be faster to use a single call to the memcpy
+#           function, which is found in the C standard library. Modern
+#           compilers optimize the for-loop very well, and this outperforms the
+#           memcpy call in many speed tests. If you would to like to force
+#           use of the memcpy function, enable this option. Enable with:
+#               make USE_MEMCPY=1 [other-options]
+#       VOLATILE_SPLIT:
+#           Force the double splitting method to use the volatile keyword.
+#           Several architectures (aarch64, ppc64) require the volatile keyword
+#           for the splitting method to work properly. The splitting method
+#           is needed to preserve accuracy in functions like cos, sin, the
+#           Fresnel integrals, and more. This Makefile has a list of known
+#           architectures that require the volatile keyword to make the split
+#           work. Thus far they are:
+#               aarch64
+#               arm64
+#               armv7l
+#               ppc
+#               ppc64
+#               ppc64le
+#               riscv64
+#           If your architecture is on here, no action is needed. If it is not,
+#           and you are getting inaccurate results, set VOLATILE_SPLIT=1 when
+#           building libtmpl. Enable with:
+#               make VOLATILE_SPLIT=1 [other-options]
+#       CAUTIOUS_SPLIT:
+#           Force the double splitting method to use several volatile keywords.
+#           This could also be called the "paranoid" method. Only one
+#           architecture tested so far needs this, the i386 / x86 arch. Note
+#           that x86_64 / amd64 does NOT need this. If you are getting
+#           inaccurate results for cos, sin, the Fresnel integrals, or any
+#           other function making use of the splitting technique, and if
+#           VOLATILE_SPLIT isn't doing the trick, enable this option. Each step
+#           of the split is declared volatile, which should force the compiler
+#           to cooperate. This results in a slight reduction of performance,
+#           but produces accurate results. Enable with:
+#               make CAUTIOUS_SPLIT=1 [other-options]
+#       NO_VOLATILE_SPLIT:
+#           Disable the volatile keyword for the splitting technique, even if
+#           you are on an architecture that requires it. This is for
+#           experimenting only and should not be used in actual builds.
+#           Enable with:
+#               make NO_VOLATILE_SPLIT=1 [other-options]
+#       EXTRA_FLAGS:
+#           Any extra flags you wish to pass to the C compiler.
+#           For example, with clang you can enable -Weverything via:
+#               make CC=clang \
+#                   EXTRA_FLAGS="-Weverything -Wno-float-equal -Wno-padded"
+#           In general, enable with:
+#               make EXTRA_FLAGS="flags" [other-options]
 
 # Name of the library.
-TARGET_LIB_SHARED := libtmpl.so
-TARGET_LIB_STATIC := libtmpl.a
-ifdef BUILD_STATIC
-TARGET_LIB := $(TARGET_LIB_STATIC)
-AR ?= ar
-else
-TARGET_LIB := $(TARGET_LIB_SHARED)
-endif
+TARGET_LIB_SHARED = libtmpl.so
+TARGET_LIB_STATIC = libtmpl.a
 
 # Directory all of the .o files will be placed in.
-BUILD_DIR := ./build
+BUILD_DIR = ./build
 
 # Location of all .c and .S files.
-SRC_DIRS := ./src
+SRC_DIRS = ./src
 
 # Compiler to be used. Override this to whatever you choose.
 CC ?= cc
 
-CFLAGS := -I../ -O3 -fPIC -flto -DNDEBUG -c
-LFLAGS := -O3 -fPIC -flto -DNDEBUG -shared
+# Archiver to be used. Only needed if a static build is made.
+AR ?= ar
 
-VOLATILE_SPLIT_ARCHS = aarch64 arm64 armv7l ppc ppc64 ppc64le riscv64
-CAUTIOUS_SPLIT_ARCHS = i386 x86
+ifdef BUILD_STATIC
+TARGET_LIB := $(TARGET_LIB_STATIC)
+else
+TARGET_LIB := $(TARGET_LIB_SHARED)
+endif
+
+# Default C flags. Note, some compilers (NVIDIA's, for example) do not
+# support the flto flag. Remove whichever flags your compiler does not
+# support. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
+CFLAGS = -I../ -O3 -flto -fPIC -DNDEBUG -c
+LFLAGS = -O3 -fPIC -flto -DNDEBUG -shared
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
@@ -111,14 +211,63 @@ else
 LFLAGS += -lm
 endif
 
-CWARN := -Wall -Wextra -Wpedantic
+# Warnings for the build. The bash script has nearly every warning for
+# GCC enabled, and if clang is being used the -Weverything warning is set,
+# which literally enables every warning. This helps check for standards
+# compliance. This Makefile has far fewer warnings enabled.
+CWARN = -Wall -Wextra -Wpedantic
 
+# The user is allowed to specify their own flags.
 ifdef EXTRA_FLAGS
 CWARN += $(EXTRA_FLAGS)
 endif
 
-CONFIG_FLAGS :=
-EXCLUDE :=
+# The architecture libtmpl is being built on.
+ifndef ARCH
+uname_m := $(shell uname -m)
+else
+uname_m := $(ARCH)
+endif
+
+# A common trick in numerical analysis with floating point number is to
+# "split" a double, or long double, into two parts to preserver accuracy.
+# Some architectures need the volatile keyword to prevent optimizing the split
+# away, and some architectures (i386) need several volatile keywords used.
+# Below is a non-exhaustive list of architectures that require the keyword.
+# If you would like to force enabling of volatile, set VOLATILE_SPLIT=1.
+# If you would like to force enabling of several volatile keywords, set
+# CAUTIOUS_SPLIT=1. If you want to experiment and disable volatile (which is
+# not recommended), set NO_VOLATILE_SPLIT=1.
+ifndef NO_VOLATILE_SPLIT
+
+# Architectures known to need the volatile keyword for splitting.
+VOLATILE_SPLIT_ARCHS = aarch64 arm64 armv7l ppc ppc64 ppc64le riscv64
+CAUTIOUS_SPLIT_ARCHS = i386 x86
+
+# The user can force the volatile split flag to be enabled.
+ifdef VOLATILE_SPLIT
+VOLATILE_SPLIT_ARCHS += $(uname_m)
+endif
+
+# The user can also force the cautious splitting flag to be enabled.
+ifdef CAUTIOUS_SPLIT
+CAUTIOUS_SPLIT_ARCHS += $(uname_m)
+endif
+
+else
+# Else for ifndef NO_VOLATILE_SPLIT.
+
+# If the user requested no volatile flags at all, even if they are
+# recommended, set these variables to be blank. This should be for
+# experimenting only and is not recommended for actual use of libtmpl.
+VOLATILE_SPLIT_ARCHS =
+CAUTIOUS_SPLIT_ARCHS =
+
+endif
+# End of ifndef NO_VOLATILE_SPLIT.
+
+CONFIG_FLAGS =
+EXCLUDE =
 
 # libtmpl will check if long long is available in config.c. If you do not want
 # long long functions compiled (for example, you're on a GNU/Linux machine where
@@ -143,11 +292,12 @@ CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
 EXCLUDE += -not -name "*_no_inline_*.c" -and
 endif
 
-# Whether or not to use the strictly portable code, of IEEE-754 compliant code.
+# Whether or not to use the strictly portable code, or IEEE-754 compliant code.
 ifdef NO_IEEE
 CONFIG_FLAGS += -DTMPL_SET_TMPL_USE_IEEE_FALSE
 endif
 
+# Whether to use memcpy or for-loops for copying data.
 ifdef USE_MEMCPY
 CONFIG_FLAGS += -DTMPL_SET_USE_MEMCPY_TRUE
 endif
@@ -157,7 +307,7 @@ ifdef NO_INT
 CONFIG_FLAGS += -DTMPL_SET_NO_INT
 endif
 
-ASM_INCLUDE :=
+ASM_INCLUDE =
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
@@ -165,14 +315,6 @@ ASM_INCLUDE :=
 # assembly code. GCC, Clang, and PCC can. I'm unsure about TCC.
 ifndef NO_ASM
 
-# The architecture libtmpl is being built on.
-ifndef ARCH
-uname_m := $(shell uname -m)
-else
-uname_m := $(ARCH)
-endif
-
-# Else for ifdef NO_ASM
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
 ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
@@ -181,7 +323,7 @@ ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 # much better times than the default C code.
 ifdef FASM
 ASM_INCLUDE += -wholename "./src/assembly/fasm/*.fasm" -or
-EXCLUDE +=\
+EXCLUDE += \
 -not -name "tmpl_trailing_zeros_char.c" -and \
 -not -name "tmpl_trailing_zeros_int.c" -and \
 -not -name "tmpl_trailing_zeros_long.c" -and \
@@ -199,11 +341,11 @@ EXCLUDE +=\
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to compile this, tested on
-# Debian GNU/Linux 11.
+# Debian GNU/Linux 11 and 12.
 else
 
 ASM_INCLUDE += -wholename "./src/assembly/x86_64/*.S" -or
-EXCLUDE +=\
+EXCLUDE += \
 -not -name "tmpl_trailing_zeros_char.c" -and \
 -not -name "tmpl_trailing_zeros_int.c" -and \
 -not -name "tmpl_trailing_zeros_long.c" -and \
@@ -221,6 +363,7 @@ EXCLUDE +=\
 endif
 # End of ifdef FASM.
 
+# x86 / i386 assembly is also available using GNU assembly (GAS).
 else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
 
 ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
@@ -254,15 +397,16 @@ EXCLUDE +=\
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
 ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
-EXCLUDE +=\
+EXCLUDE += \
 -not -name "tmpl_sqrt_double.c" -and \
 -not -name "tmpl_sqrt_float.c" -and \
 -not -name "tmpl_sqrt_ldouble.c" -and
 
+# Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
 else ifeq ($(uname_m),$(filter $(uname_m),ppc64le))
 
 ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
-EXCLUDE +=\
+EXCLUDE += \
 -not -name "tmpl_trailing_zeros_char.c" -and \
 -not -name "tmpl_trailing_zeros_int.c" -and \
 -not -name "tmpl_trailing_zeros_long.c" -and \
@@ -282,22 +426,24 @@ endif
 endif
 # End of ifndef NO_ASM.
 
-ifeq ($(uname_m),$(filter $(uname_m), $(VOLATILE_SPLIT_ARCHS)))
-
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
-
-else ifeq ($(uname_m),$(filter $(uname_m), $(CAUTIOUS_SPLIT_ARCHS)))
+# Enable splitting flags if requested, or if required. Cautious split
+# gets precedence over volatile split.
+ifeq ($(uname_m),$(filter $(uname_m), $(CAUTIOUS_SPLIT_ARCHS)))
 
 CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
 
-endif
+else ifeq ($(uname_m),$(filter $(uname_m), $(VOLATILE_SPLIT_ARCHS)))
 
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
+
+endif
+# End of splitting flags.
 
 INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
 SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
-.PHONY: clean install uninstall all install-local uninstall-local
+.PHONY: clean install uninstall all install-local uninstall-local help
 
 all: $(TARGET_LIB)
 
@@ -368,3 +514,89 @@ uninstall-local:
 	rm -f $(TARGET_LIB)
 	rm -rf $(HOME)/.local/include/libtmpl/
 	rm -f $(HOME)/.local/lib/$(TARGET_LIB)
+
+help:
+	@echo "\033[0;96mBuild and install libtmpl.\n\nExecutive summary:"
+	@echo "\033[0;96m\tTo build and install onto your system:"
+	@echo "\033[0;96m\t\tmake -j && sudo make install"
+	@echo "\033[0;96m\tTo build and install locally (current user only):"
+	@echo "\033[0;96m\t\tmake -j && make install-local\n"
+	@echo "\033[0;96mRecognized commands:"
+	@echo "\033[0;96m\tmake:"
+	@echo "\033[0;96m\t\tCompile the library. Use -j to speed this up."
+	@echo "\033[0;96m\tmake install:"
+	@echo "\033[0;96m\t\tInstall library into /usr/local/."
+	@echo "\033[0;96m\t\tsudo privileges required."
+	@echo "\033[0;96m\tmake clean:"
+	@echo "\033[0;96m\t\tRemove all compiled files in this directory."
+	@echo "\033[0;96m\tmake uninstall:"
+	@echo "\033[0;96m\t\tRemove all compiled files from this directory and from"
+	@echo "\033[0;96m\t\t/usr/local/. sudo privileges required."
+	@echo "\033[0;96m\tmake install-local:"
+	@echo "\033[0;96m\t\tInstall library into ~/.local/."
+	@echo "\033[0;96m\t\tsudo privileges are not required."
+	@echo "\033[0;96m\tmake uninstall-local:"
+	@echo "\033[0;96m\t\tRemove all compiled files from this directory and from"
+	@echo "\033[0;96m\t\t~/.local/. sudo privileges are not required."
+	@echo "\033[0;96m\tmake help:"
+	@echo "\033[0;96m\t\tPrint this message.\n"
+	@echo "\033[0;96mBuild options (see comments in Makefile for more details):"
+	@echo "\033[0;96m\tBUILD_STATIC:"
+	@echo "\033[0;96m\t\tCreate a static libary (libtmpl.a) instead of a"
+	@echo "\033[0;96m\t\tdynamic library (libtmpl.so)."
+	@echo "\033[0;96m\t\tExample: make BUILD_STATIC=1"
+	@echo "\033[0;96m\tCC:"
+	@echo "\033[0;96m\t\tSet the C compiler. Example: make CC=gcc"
+	@echo "\033[0;96m\tAR (static builds only):"
+	@echo "\033[0;96m\t\tSet the archiver. Example: make AR=ar"
+	@echo "\033[0;96m\tARCH:"
+	@echo "\033[0;96m\t\tChange the output of uname -m. Example: make ARCH=i386"
+	@echo "\033[0;96m\tOMP:"
+	@echo "\033[0;96m\t\tCompile with OpenMP support. Example: make OMP=1"
+	@echo "\033[0;96m\tNO_MATH:"
+	@echo "\033[0;96m\t\tUse the system libm instead of libtmpl's."
+	@echo "\033[0;96m\t\tExample: make NO_MATH=1"
+	@echo "\033[0;96m\tNO_LONGLONG:"
+	@echo "\033[0;96m\t\tDo not compile any code for long long or"
+	@echo "\033[0;96m\t\tunsigned long long. Example: make NO_LONGLONG=1"
+	@echo "\033[0;96m\tNO_INLINE:"
+	@echo "\033[0;96m\t\tDo not inline any code. Example: make NO_INLINE=1"
+	@echo "\033[0;96m\tNO_IEEE:"
+	@echo "\033[0;96m\t\tDo not probe for IEEE-754 support and instead only"
+	@echo "\033[0;96m\t\tonly use portable C code (NOT RECOMMENDED)."
+	@echo "\033[0;96m\t\tExample: make NO_IEEE=1"
+	@echo "\033[0;96m\tNO_INT:"
+	@echo "\033[0;96m\t\tDo not probe for fixed-width integers and do not"
+	@echo "\033[0;96m\t\tattempt any type punning (NOT RECOMMENDED)."
+	@echo "\033[0;96m\t\tExample: make NO_INT=1"
+	@echo "\033[0;96m\tNO_ASM:"
+	@echo "\033[0;96m\t\tDo not use any assembly code."
+	@echo "\033[0;96m\t\tExample: make NO_ASM=1"
+	@echo "\033[0;91m\t\tNOTE:"
+	@echo "\033[0;91m\t\t\tThis is NOT recommended on most architectures"
+	@echo "\033[0;91m\t\t\tsince the assembly code outperforms the C code."
+	@echo "\033[0;91m\t\t\tSome architectures require this to be set."
+	@echo "\033[0;91m\t\t\tIf you are on armv7l and lack floating point"
+	@echo "\033[0;91m\t\t\thardware support, you MUST set NO_ASM=1."
+	@echo "\033[0;91m\t\t\tThis is because the Makefile assumes armv7l"
+	@echo "\033[0;91m\t\t\tmachines will have hardware floats, even"
+	@echo "\033[0;91m\t\t\tthough this is not required."
+	@echo "\033[0;96m\tFASM (x86_64 / amd64 only):"
+	@echo "\033[0;96m\t\tUse Flat Assembly (FASM) code instead of"
+	@echo "\033[0;96m\t\tGNU Assembly (GAS). Example: make FASM=1"
+	@echo "\033[0;96m\tUSE_MEMCPY:"
+	@echo "\033[0;96m\t\tUse memcpy for copying data instead of for-loops."
+	@echo "\033[0;96m\t\tExample: make USE_MEMCPY=1"
+	@echo "\033[0;96m\tVOLATILE_SPLIT:"
+	@echo "\033[0;96m\t\tForce double splits to use the volatile keyword."
+	@echo "\033[0;96m\t\tExample: make VOLATILE_SPLIT=1"
+	@echo "\033[0;96m\tCAUTIOUS_SPLIT:"
+	@echo "\033[0;96m\t\tForce double splits to use several volatile keywords,"
+	@echo "\033[0;96m\t\tbreaking the computation into several lines."
+	@echo "\033[0;96m\t\tExample: make CAUTIOUS_SPLIT=1"
+	@echo "\033[0;96m\tNO_VOLATILE_SPLIT:"
+	@echo "\033[0;96m\t\tForce double splits to never use the volatile keyword"
+	@echo "\033[0;96m\t\t(NOT RECOMMENDED). Example: make NO_VOLATILE_SPLIT=1"
+	@echo "\033[0;96m\tEXTRA_FLAGS:"
+	@echo "\033[0;96m\t\tAdd extra flags for the C compiler."
+	@echo "\033[0;96m\t\tExample: make EXTRA_FLAGS=\"-Wno-float-equal\""
