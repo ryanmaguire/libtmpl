@@ -4,7 +4,9 @@
 #include <libtmpl/include/tmpl_spherical_geometry.h>
 
 tmpl_ThreeVectorDouble
-tmpl_Inverse_Orthographic_Projection_Torus(tmpl_TwoVectorDouble P, double r, double R)
+tmpl_Inverse_Orthographic_Projection_Torus(tmpl_TwoVectorDouble P,
+                                           double r,
+                                           double R)
 {
     /*  Declare all necessary variables. C89 requires this at the top.        */
     double x, y, z, threshold;

@@ -1973,7 +1973,7 @@ const long double tmpl_ldouble_factorial_table[1755] = {
 /*  For portable we use a table for n! up to 10^38. This yields 0 <= n <= 33. */
 #else
 
-    /*  Lookup table for the factorial function.                                  */
+/*  Lookup table for the factorial function.                                  */
 const long double tmpl_ldouble_factorial_table[34] = {
     1.000000000000000000000000000000e+00L,
     1.000000000000000000000000000000e+00L,

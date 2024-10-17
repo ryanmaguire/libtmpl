@@ -99,7 +99,8 @@ extern void
 tmpl_Legendre_Polynomials(double *legendre_p, double x, unsigned int order);
 
 extern void
-tmpl_Alt_Legendre_Polynomials(double *poly, double *legendre_p, unsigned int order);
+tmpl_Alt_Legendre_Polynomials(double *poly, double *legendre_p,
+                              unsigned int order);
 
 extern void
 tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,

@@ -34,7 +34,7 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_vec3.h>
 
-/*  Implemented in include/vec3/tmpl_vec3_midpoint_ldouble.h.                   */
+/*  Implemented in include/vec3/tmpl_vec3_midpoint_ldouble.h.                 */
 #include "../../include/vec3/tmpl_vec3_midpoint_ldouble.h"
 
 #endif

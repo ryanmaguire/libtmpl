@@ -7,7 +7,8 @@
 
 
 extern tmpl_ThreeVectorDouble
-tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P, tmpl_ThreeVectorDouble u);
+tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P,
+                                     tmpl_ThreeVectorDouble u);
 
 extern tmpl_ThreeVectorDouble
 tmpl_Inverse_Orthographic_Projection_Torus(tmpl_TwoVector P,

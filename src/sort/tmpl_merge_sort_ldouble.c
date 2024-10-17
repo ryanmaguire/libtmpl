@@ -70,7 +70,7 @@ int tmpl_LDouble_Merge_Sort(long double *arr, size_t len)
             m = left;
             n = right;
 
-            /*  Loop over all of the values in the current window we're merging.      */
+            /*  Loop over all of the values in the window we're merging.      */
             for (k = left; k < end; ++k)
             {
                 if ((m < right) && ((n >= end) || (arr[m] <= arr[n])))

@@ -172,7 +172,7 @@ void kissvg_DestroyArrow(kissvg_Arrow **arrow_pointer)
  ******************************************************************************
  ******************************************************************************/
 
-/*  Private error checking function for a kissvg_Path2D pointer.               */
+/*  Private error checking function for a kissvg_Path2D pointer.              */
 static void __check_path_error(kissvg_Path2D *path, char *FuncName)
 {
     /*  If the input path is NULL, it was not set via kissvg_CreatePath2D     *

@@ -474,7 +474,8 @@ extern long double
 tmpl_UChar_Array_LDouble_Average(const unsigned char * const arr, size_t len);
 
 extern long double
-tmpl_Short_Array_LDouble_Average(const signed short int * const arr, size_t len);
+tmpl_Short_Array_LDouble_Average(const signed short int * const arr,
+                                 size_t len);
 
 extern long double
 tmpl_UShort_Array_LDouble_Average(const unsigned short * const arr, size_t len);

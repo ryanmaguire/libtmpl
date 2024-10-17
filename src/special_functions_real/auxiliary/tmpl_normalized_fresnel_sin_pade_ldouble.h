@@ -184,7 +184,7 @@ long double tmpl_LDouble_Normalized_Fresnel_Sin_Pade(long double x)
     const long double den = TMPL_DEN_EVAL(x4);
     return x * x2 * num / den;
 }
-/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Pade.                           */
+/*  End of tmpl_LDouble_Normalized_Fresnel_Sin_Pade.                          */
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #include "../../math/auxiliary/tmpl_math_undef.h"

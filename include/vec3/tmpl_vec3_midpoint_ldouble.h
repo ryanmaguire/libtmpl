@@ -83,7 +83,7 @@ tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const P,
     midpoint.dat[2] = (P->dat[2] + Q->dat[2]) * 0.5L;
     return midpoint;
 }
-/*  End of tmpl_3DLDouble_Midpoint.                                             */
+/*  End of tmpl_3DLDouble_Midpoint.                                           */
 
 #endif
 /*  End of include guard.                                                     */

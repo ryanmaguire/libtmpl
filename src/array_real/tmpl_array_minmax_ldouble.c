@@ -191,7 +191,7 @@ tmpl_LDouble_Array_MinMax(long double *arr, size_t len,
 /*  End of tmpl_LDouble_Array_MinMax.                                         */
 
 #endif
-/*  End of #if TMPL_LDOUBLE_ARRAY_MINMAX_METHOD == 1.                          */
+/*  End of #if TMPL_LDOUBLE_ARRAY_MINMAX_METHOD == 1.                         */
 
 /*  The rest of libtmpl does not need this, so undef it.                      */
 #undef TMPL_LDOUBLE_ARRAY_MINMAX_METHOD

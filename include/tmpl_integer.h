@@ -478,7 +478,8 @@ tmpl_UShort_GCD_Mixed_Binary(unsigned short int m, unsigned short int n);
 
 #if TMPL_HAS_LONGLONG == 1
 extern unsigned long long int
-tmpl_ULLong_GCD_Mixed_Binary(unsigned long long int m, unsigned long long int n);
+tmpl_ULLong_GCD_Mixed_Binary(unsigned long long int m,
+                             unsigned long long int n);
 #endif
 
 /*  Macros for taking advantage of several builtin's different compilers      *
