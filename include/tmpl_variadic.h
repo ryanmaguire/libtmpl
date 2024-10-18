@@ -74,19 +74,20 @@ do {                                                                           \
     const size_t my_tmp_ptr_arr_len = TMPL_ARRAY_SIZE(my_tmp_ptr_arr);         \
     size_t my_tmp_iter;                                                        \
     const size_t my_tmp_length = TMPL_CAST(length, size_t);                    \
+    for (my_tmp_iter = 0; my_tmp_iter < my_tmp_ptr_arr_len; ++my_tmp_iter)     \
+    {                                                                          \
+        *my_tmp_ptr_arr[my_tmp_iter] = NULL;                                   \
+    }                                                                          \
     if (my_tmp_length == 0)                                                    \
     {                                                                          \
-        for (my_tmp_iter = 0; my_tmp_iter < my_tmp_ptr_arr_len; ++my_tmp_iter) \
-        {                                                                      \
-            *my_tmp_ptr_arr[my_tmp_iter] = NULL;                               \
-        }                                                                      \
+        break;                                                                 \
     }                                                                          \
-    else                                                                       \
+    for (my_tmp_iter = 0; my_tmp_iter < my_tmp_ptr_arr_len; ++my_tmp_iter)     \
     {                                                                          \
-        for (my_tmp_iter = 0; my_tmp_iter < my_tmp_ptr_arr_len; ++my_tmp_iter) \
+        *my_tmp_ptr_arr[my_tmp_iter] = TMPL_MALLOC(type, my_tmp_length);       \
+        if (!*my_tmp_ptr_arr[my_tmp_iter])                                     \
         {                                                                      \
-            *my_tmp_ptr_arr[my_tmp_iter] =                                     \
-                TMPL_MALLOC(my_tmp_ptr_arr[my_tmp_iter], type, my_tmp_length); \
+            break;                                                             \
         }                                                                      \
     }                                                                          \
 } while (0)
@@ -166,6 +167,40 @@ do {                                                                           \
 do {                                                                           \
     TMPL_MALLOC_VARS_HELPER(type, length, __VA_ARGS__);                        \
     TMPL_NULL_CHECKER(success, type, __VA_ARGS__);                             \
+} while (0)
+
+/******************************************************************************
+ *  Macro:                                                                    *
+ *      TMPL_FREE_VARS                                                        *
+ *  Purpose:                                                                  *
+ *      Free memory allocated to several pointers.                            *
+ *  Arguments:                                                                *
+ *      type:                                                                 *
+ *          The type of the data (double, float, int, char, etc.).            *
+ *      ptr1, ptr2, ...:                                                      *
+ *          Pointers to the pointers that will be allocated memory.           *
+ *  Example:                                                                  *
+ *      size_t len = 10;                                                      *
+ *      double *x, *y, *z;                                                    *
+ *      int success;                                                          *
+ *      TMPL_MALLOC_VARS(double, len, &x, &y, &z);                            *
+ *                                                                            *
+ *      if (!success)                                                         *
+ *          return -1;                                                        *
+ *                                                                            *
+ *      ...                                                                   *
+ *                                                                            *
+ *      TMPL_FREE_VARS(double, &x, &y, &z);                                   *
+ ******************************************************************************/
+#define TMPL_FREE_VARS(type, ...)                                              \
+do {                                                                           \
+    type **my_tmp_ptr_arr[] = {__VA_ARGS__};                                   \
+    const size_t my_tmp_ptr_arr_len = TMPL_ARRAY_SIZE(my_tmp_ptr_arr);         \
+    size_t my_tmp_iter;                                                        \
+    for (my_tmp_iter = 0; my_tmp_iter < my_tmp_ptr_arr_len; ++my_tmp_iter)     \
+    {                                                                          \
+        TMPL_FREE(*my_tmp_ptr_arr[my_tmp_iter]);                               \
+    }                                                                          \
 } while (0)
 
 #endif

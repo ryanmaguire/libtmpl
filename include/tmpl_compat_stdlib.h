@@ -41,7 +41,7 @@
 #include <cstdlib>
 
 /*  Macro for allocating memory. In C++ one must cast the result of malloc.   */
-#define TMPL_MALLOC(x, type, N) static_cast<type *>(std::malloc(sizeof(*x) * N))
+#define TMPL_MALLOC(type, N) static_cast<type *>(std::malloc(sizeof(type) * N))
 
 /*  Free's a pointer and sets it to NULL to avoid double free's.              */
 #define TMPL_FREE(var) if (var){std::free(var); var = NULL;}
@@ -53,7 +53,7 @@
 #include <stdlib.h>
 
 /*  Macro for malloc. In C one should not cast the result of malloc.          */
-#define TMPL_MALLOC(x, type, N) malloc(sizeof(*x) * N)
+#define TMPL_MALLOC(type, N) malloc(sizeof(type) * N)
 
 /*  Free's a pointer and sets it to NULL to avoid double free's.              */
 #define TMPL_FREE(var) if (var){free(var); var = NULL;}
