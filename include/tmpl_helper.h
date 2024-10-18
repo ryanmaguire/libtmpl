@@ -36,5 +36,8 @@
 /*  Computes the size of a non-dynamically allocated array.                   */
 #define TMPL_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
+/*  Computes the absolute value of a number (integer or floating point).      */
+#define TMPL_ABS(x) (x < 0 ? -x : x)
+
 #endif
 /*  End of include guard.                                                     */
