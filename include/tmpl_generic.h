@@ -26,6 +26,10 @@
  *      preserve portability. To use this header you must explicitly include  *
  *      it via #include <libtmpl/include/tmpl_generic.h>. That is,            *
  *      #include <libtmpl/include/tmpl.h> will skip this header file.         *
+ *                                                                            *
+ *      If using libtmpl with a C++ compiler, this file uses function         *
+ *      overloading instead of the _Generic keyword since _Generic is a C11   *
+ *      extension, and not required by C++ compilers.                         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -42,8 +46,66 @@
 #ifndef TMPL_GENERIC_H
 #define TMPL_GENERIC_H
 
+/*  Machine precision macros found here.                                      */
 #include <libtmpl/include/tmpl_float.h>
+
+/*  libtmpl's implementations of isnan and isinf given here.                  */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  C++ does not have the _Generic keyword, which is a C11 extension. C++     *
+ *  does have function overloading, which achieves the same goal.             */
+#ifdef __cplusplus
+
+/*  C++ function overloading for getting machine epsilon for a given type.    */
+static inline float TMPL_EPS(float x)
+{
+    return TMPL_FLT_EPS;
+}
+
+static inline double TMPL_EPS(double x)
+{
+    return TMPL_DBL_EPS;
+}
+
+static inline long double TMPL_EPS(long double x)
+{
+    return TMPL_LDBL_EPS;
+}
+
+/*  C++ function overloading for checking if a floating point number is inf.  */
+static inline tmpl_Bool TMPL_IS_INF(float x)
+{
+    return tmpl_Float_Is_Inf(x);
+}
+
+static inline tmpl_Bool TMPL_IS_INF(double x)
+{
+    return tmpl_Double_Is_Inf(x);
+}
+
+static inline tmpl_Bool TMPL_IS_INF(long double x)
+{
+    return tmpl_LDouble_Is_Inf(x);
+}
+
+/*  C++ function overloading for checking if a floating point number is NaN.  */
+static inline tmpl_Bool TMPL_IS_NAN(float x)
+{
+    return tmpl_Float_Is_NaN(x);
+}
+
+static inline tmpl_Bool TMPL_IS_NAN(double x)
+{
+    return tmpl_Double_Is_NaN(x);
+}
+
+static inline tmpl_Bool TMPL_IS_NAN(long double x)
+{
+    return tmpl_LDouble_Is_NaN(x);
+}
+
+/*  C11 introduced the _Generic keyword instead of function overloading.      */
+#else
 
 /*  C11 generic macro for getting machine epsilon for a given data type.      */
 #define TMPL_EPS(x) _Generic((x),                                              \
@@ -65,6 +127,9 @@
     default:     tmpl_Double_Is_NaN,                                           \
     float:       tmpl_Float_Is_NaN                                             \
 )(x)
+
+#endif
+/*  End of #ifdef __cplusplus.                                                */
 
 #endif
 /*  End of include guard.                                                     */
