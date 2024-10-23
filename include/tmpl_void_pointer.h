@@ -16,7 +16,7 @@ tmpl_get_void_from_void_l2l(void *in, void * out,
                             long int (*f)(long int));
 
 extern void
-tmpl_Void_Array_F2C(const void * const in,
+tmpl_Void_Array_F2F(const void * const in,
                     void * const out,
                     const size_t length,
                     const tmpl_FloatFunction func);
