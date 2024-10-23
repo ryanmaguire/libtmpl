@@ -7,13 +7,15 @@
 #include <libtmpl/include/tmpl_complex_ldouble.h>
 #include <libtmpl/include/tmpl_complex_function_types.h>
 #include <libtmpl/include/tmpl_complex_path_types.h>
+#include <libtmpl/include/tmpl_integer_function_types.h>
 #include <libtmpl/include/tmpl_real_function_types.h>
 #include <stddef.h>
 
 extern void
-tmpl_get_void_from_void_l2l(void *in, void * out,
-                            unsigned long int dim,
-                            long int (*f)(long int));
+tmpl_Void_Array_L2L(const void * const in,
+                    void * const out,
+                    size_t length,
+                    tmpl_LongFunction func);
 
 extern void
 tmpl_Void_Array_F2F(const void * const in,
