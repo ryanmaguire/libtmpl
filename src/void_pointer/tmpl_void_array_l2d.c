@@ -1,17 +1,17 @@
 
-#include <libtmpl/include/tmpl_integer_function_types.h>
+#include <libtmpl/include/tmpl_real_function_types.h>
 #include <libtmpl/include/tmpl_void_pointer.h>
 #include <stddef.h>
 
 void
-tmpl_Void_Array_L2L(const void * const in,
+tmpl_Void_Array_L2D(const void * const in,
                     void * const out,
                     size_t length,
-                    const tmpl_LongFunction func)
+                    const tmpl_DoubleFunction func)
 {
     size_t n;
     const signed long int * const x = in;
-    signed long int * const y = out;
+    double * const y = out;
 
     if (!in || !out || !length)
         return;
@@ -20,5 +20,5 @@ tmpl_Void_Array_L2L(const void * const in,
 #pragma omp parallel for
 #endif
     for (n = 0; n < length; ++n)
-        y[n] = func(x[n]);
+        y[n] = func((double)(x[n]));
 }

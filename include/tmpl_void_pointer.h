@@ -6,6 +6,7 @@
 #include <libtmpl/include/tmpl_complex_float.h>
 #include <libtmpl/include/tmpl_complex_ldouble.h>
 #include <libtmpl/include/tmpl_complex_function_types.h>
+#include <libtmpl/include/tmpl_complex_functional_types.h>
 #include <libtmpl/include/tmpl_complex_path_types.h>
 #include <libtmpl/include/tmpl_integer_function_types.h>
 #include <libtmpl/include/tmpl_real_function_types.h>
@@ -15,7 +16,19 @@ extern void
 tmpl_Void_Array_L2L(const void * const in,
                     void * const out,
                     size_t length,
-                    tmpl_LongFunction func);
+                    const tmpl_LongFunction func);
+
+extern void
+tmpl_Void_Array_L2D(const void * const in,
+                    void * const out,
+                    size_t length,
+                    const tmpl_DoubleFunction func);
+
+extern void
+tmpl_Void_Array_L2CD(const void * const in,
+                     void * const out,
+                     size_t length,
+                     const tmpl_ComplexDoublePath func);
 
 extern void
 tmpl_Void_Array_F2F(const void * const in,
@@ -70,5 +83,23 @@ tmpl_Void_Array_CLD2CLD(const void * const in,
                         void * const out,
                         const size_t length,
                         const tmpl_ComplexLongDoubleFunction func);
+
+extern void
+tmpl_Void_Array_CF2F(const void * const in,
+                     void * const out,
+                     const size_t length,
+                     const tmpl_ComplexFloatFunctional func);
+
+extern void
+tmpl_Void_Array_CD2D(const void * const in,
+                     void * const out,
+                     const size_t length,
+                     const tmpl_ComplexDoubleFunctional func);
+
+extern void
+tmpl_Void_Array_CLD2LD(const void * const in,
+                       void * const out,
+                       const size_t length,
+                       const tmpl_ComplexLongDoubleFunctional func);
 
 #endif
