@@ -339,6 +339,11 @@ if [ $MAKEMONSTER == 1 ]; then
     touch monster.c
 
     for file in include/*.h; do
+        if [[ $file == "include/tmpl_generic.h" ]]; then
+            continue;
+        elif [[ "$file" == "include/tmpl_variadic.h" ]]; then
+            continue;
+        fi
         echo "#include \"$file\"" >> monster.c;
     done
 
