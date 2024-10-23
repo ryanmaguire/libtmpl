@@ -124,6 +124,9 @@
  *      is set to zero).                                                      *
  *  2023/04/18: Ryan Maguire                                                  *
  *      Changed src/math/tmpl_abs_ldouble.c to just include this file.        *
+ *  2024/10/23: Ryan Maguire                                                  *
+ *      Added clarification that the portable method does not change signed   *
+ *      zeros. That is, negative zero will output negative zero.              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -218,11 +221,13 @@ long double tmpl_LDouble_Abs(long double x)
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Abs(long double x)
 {
-    /*  If x is positive return it, otherwise return its negative.            */
-    if (x >= 0.0L)
-        return x;
-    else
+    /*  For negative inputs, flip the sign and make it positive.              */
+    if (x < 0.0L)
         return -x;
+
+    /*  Otherwise return the input. Note, "negative" zeros are still negative.*
+     *  The portable method is unable to detect signed zeros.                 */
+    return x;
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
 
