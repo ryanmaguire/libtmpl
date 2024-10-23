@@ -825,7 +825,7 @@ long double tmpl_LDouble_Floor(long double x)
         }
 
         /*  If abs_x is zero, we are done. Break out of the loop.             */
-        if (abs_x == 0.0)
+        if (abs_x == 0.0L)
             break;
 
         /*  Get the next power of two and repeat.                             */
