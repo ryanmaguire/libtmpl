@@ -112,6 +112,12 @@ float tmpl_Float_Mod_360(float x)
         invpow2_360.bits.expo += 16U;
     }
 
+    /*  If w.r * invpow2_360 was off by a bit, the floor of this may be off   *
+     *  by one. It is then possible that too many multiples of 360 were       *
+     *  subtracted off. If w.r is negative, add back 360.                     */
+    if (w.bits.sign)
+        w.r += 360.0F;
+
     /*  tmp still has the original sign. Copy this into the output and return.*/
     w.bits.sign = tmp.bits.sign;
     return w.r;
@@ -186,6 +192,12 @@ float tmpl_Float_Mod_360(float x)
         /*  And shift the negative power up.                                  */
         invpow2_360 *= pow16;
     }
+
+    /*  If abs_x * invpow2_360 was off by a bit, the floor of this may be off *
+     *  by one. It is then possible that too many multiples of 360 were       *
+     *  subtracted off. If w.r is negative, add back 360.                     */
+    if (abs_x < 0.0F)
+        w.r += 360.0F;
 
     /*  x mod 360 is an odd function. Use the original sign of x to finish.   */
     if (x < 0.0F)
