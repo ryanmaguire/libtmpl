@@ -62,7 +62,10 @@
  *              64-bit double:                                                *
  *                  Tiny:   |x| < 2^-57                                       *
  *                  Small:  |x| < 2^-3                                        *
- *              128-bit double-double / 128-bit quadruple:                    *
+ *              128-bit double-double:                                        *
+ *                  Tiny:   |x| < 2^-105                                      *
+ *                  Small:  |x| < 2^-4                                        *
+ *              128-bit quadruple:                                            *
  *                  Tiny:   |x| < 2^-116                                      *
  *                  Small:  |x| < 2^-4                                        *
  *              80-bit extended / portable:                                   *
