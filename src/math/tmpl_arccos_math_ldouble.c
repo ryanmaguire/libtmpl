@@ -152,6 +152,8 @@
  *      Added comments, algorithm description, and fixed error values.        *
  *  2023/05/31: Ryan Maguire                                                  *
  *      Added optimizations for small x and denormal values.                  *
+ *  2024/10/28: Ryan Maguire                                                  *
+ *      Replacing use of const variables with macros for multiples of pi.     *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -176,13 +178,20 @@
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_ldouble.h"
 
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The limit at zero is pi / 2, and the negation formula needs pi as well.   */
+#define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939937511E+00L)
+#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00L)
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
 /*  The trade off from very tiny to very small to small depends on how long   *
  *  double is implemented. Save these values as macros.                       */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /*  acos(x) = pi / 2 to double precision for |x| < 2^-57.                     */
 #define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 57U)
@@ -191,16 +200,20 @@
  *  |x| < 0.15 meaning we can safely use this for |x| < 2^-3.                 */
 #define TMPL_ARCCOS_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
 
-/*  128-bit quadruple and double-double require smaller exponents.            */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+/*  128-bit double-double uses much smaller exponents.                        */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
-/*  For |x| < 2^-105 acos(x) = pi / 2 to double-double precision and for      *
- *  |x| < 2^-116 acos(x) = pi / 2 to quadruple precision. Use 2^-116 for both *
- *  double-double and quadruple precisions for simplicity.                    */
+/*  For |x| < 2^-105 acos(x) = pi / 2 to double-double precision.             */
+#define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 105U)
+
+/*  The Maclaurin series is accurate to double-double precision for |x|       *
+ *  bounded by 2^-4.                                                          */
+#define TMPL_ARCCOS_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 4U)
+
+/*  128-bit quadruple requires even smaller exponents.                        */
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+/*  For |x| < 2^-116 acos(x) = pi / 2 to quadruple precision.                 */
 #define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 116U)
 
 /*  The Maclaurin series is accurate to quadruple precision for |x| < 0.1 so  *
@@ -242,7 +255,7 @@ long double tmpl_LDouble_Arccos(long double x)
     {
         /*  For very small x, acos(x) = pi / 2 to long double precision.      */
         if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_TINY_EXPONENT)
-            return tmpl_Pi_By_Two_L;
+            return TMPL_PI_BY_TWO;
 
         /*  For small x the Maclaurin series is sufficient.                   */
         else if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_ARCCOS_SMALL_EXPONENT)
@@ -257,7 +270,7 @@ long double tmpl_LDouble_Arccos(long double x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-            return tmpl_One_Pi_L - tmpl_LDouble_Arccos_Tail_End(-x);
+            return TMPL_ONE_PI - tmpl_LDouble_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_LDouble_Arccos_Tail_End(x);
@@ -265,7 +278,7 @@ long double tmpl_LDouble_Arccos(long double x)
 
     /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
     if (x == -1.0L)
-        return tmpl_One_Pi_L;
+        return TMPL_ONE_PI;
     else if (x == 1.0L)
         return 0.0L;
 
@@ -299,7 +312,7 @@ long double tmpl_LDouble_Arccos(long double x)
     {
         /*  For very small inputs return pi / 2.                              */
         if (abs_x < 2.710505431213760E-20L)
-            return tmpl_Pi_By_Two_L;
+            return TMPL_PI_BY_TWO;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
         else if (abs_x < 0.125L)
@@ -314,7 +327,7 @@ long double tmpl_LDouble_Arccos(long double x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (x < 0.0L)
-            return tmpl_One_Pi_L - tmpl_LDouble_Arccos_Tail_End(abs_x);
+            return TMPL_ONE_PI - tmpl_LDouble_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_LDouble_Arccos_Tail_End(abs_x);
@@ -322,7 +335,7 @@ long double tmpl_LDouble_Arccos(long double x)
 
     /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
     if (x == -1.0L)
-        return tmpl_One_Pi_L;
+        return TMPL_ONE_PI;
     else if (x == 1.0L)
         return 0.0L;
 
@@ -333,6 +346,10 @@ long double tmpl_LDouble_Arccos(long double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_ONE_PI
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
