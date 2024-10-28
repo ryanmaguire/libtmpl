@@ -118,6 +118,8 @@
  *      Added comments, algorithm description, and fixed error values.        *
  *  2023/05/31: Ryan Maguire                                                  *
  *      Added optimizations for small x, |x| < 0.25, and denormal values.     *
+ *  2024/10/28: Ryan Maguire                                                  *
+ *      Replacing use of const variables with macros for multiples of pi.     *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -141,6 +143,14 @@
 
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_float.h"
+
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The limit at zero is pi / 2, and the negation formula needs pi as well.   */
+#define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939937511E+00F)
+#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00F)
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
@@ -167,7 +177,7 @@ float tmpl_Float_Arccos(float x)
     {
         /*  For |x| < 2^-26, acos(x) = pi / 2 to single precision.            */
         if (w.bits.expo < TMPL_FLOAT_UBIAS - 26U)
-            return tmpl_Pi_By_Two_F;
+            return TMPL_PI_BY_TWO;
 
         /*  For small x, |x| < 2^-2, the Maclaurin series is sufficient.      */
         else if (w.bits.expo < TMPL_FLOAT_UBIAS - 2U)
@@ -182,7 +192,7 @@ float tmpl_Float_Arccos(float x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (w.bits.sign)
-            return tmpl_One_Pi_F - tmpl_Float_Arccos_Tail_End(-x);
+            return TMPL_ONE_PI - tmpl_Float_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Float_Arccos_Tail_End(x);
@@ -190,7 +200,7 @@ float tmpl_Float_Arccos(float x)
 
     /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
     if (x == -1.0F)
-        return tmpl_One_Pi_F;
+        return TMPL_ONE_PI;
     else if (x == 1.0F)
         return 0.0F;
 
@@ -220,7 +230,7 @@ float tmpl_Float_Arccos(float x)
     {
         /*  For very small inputs return pi / 2.                              */
         if (abs_x < 1.4901161193847656E-08F)
-            return tmpl_Pi_By_Two_F;
+            return TMPL_PI_BY_TWO;
 
         /*  Small inputs, |x| < 0.25, use the Maclaurin series.               */
         else if (abs_x < 0.25F)
@@ -235,7 +245,7 @@ float tmpl_Float_Arccos(float x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (x < 0.0F)
-            return tmpl_One_Pi_F - tmpl_Float_Arccos_Tail_End(abs_x);
+            return TMPL_ONE_PI - tmpl_Float_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Float_Arccos_Tail_End(abs_x);
@@ -243,7 +253,7 @@ float tmpl_Float_Arccos(float x)
 
     /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
     if (x == -1.0F)
-        return tmpl_One_Pi_F;
+        return TMPL_ONE_PI;
     else if (x == 1.0F)
         return 0.0F;
 
@@ -254,6 +264,10 @@ float tmpl_Float_Arccos(float x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#undef TMPL_ONE_PI
+#undef TMPL_PI_BY_TWO
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
