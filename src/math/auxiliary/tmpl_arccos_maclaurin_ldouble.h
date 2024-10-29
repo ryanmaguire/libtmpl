@@ -41,7 +41,9 @@
  *          Degree 15 Maclaurin series.                                       *
  *      80-bit extended / portable:                                           *
  *          Degree 19 Maclaurin series.                                       *
- *      128-bit quadruple / 128-bit double-double:                            *
+ *      128-bit double-double:                                                *
+ *          Degree 25 Maclaurin series.                                       *
+ *      128-bit quadruple:                                                    *
  *          Degree 27 Maclaurin series.                                       *
  *  Notes:                                                                    *
  *      64-bit double:                                                        *
@@ -50,7 +52,10 @@
  *      80-bit extended / portable:                                           *
  *          Accurate to extended precision for |x| < 0.17. For |x| < 0.5 the  *
  *          approximation is accurate to 9 decimals.                          *
- *      128-bit quadruple / 128-bit double-double.                            *
+ *      128-bit double-double:                                                *
+ *          Accurate to double-double (~10^-32) precision for |x| < 0.1.      *
+ *          Safe to use for all |x| < 2^-4.                                   *
+ *      128-bit quadruple:                                                    *
  *          Accurate to quadruple precision for |x| < 0.10. For |x| < 0.5 the *
  *          approximation is accurate to 11 decimals.                         *
  ******************************************************************************
