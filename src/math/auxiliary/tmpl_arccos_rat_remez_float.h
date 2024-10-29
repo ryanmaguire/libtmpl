@@ -105,7 +105,8 @@ float tmpl_Float_Arccos_Rat_Remez(float x)
     const float q = B00 + x2*B01;
     const float r = x2*p/q;
 
-    /*  p/q is the minimax approximation for (acos(x) - pi/2 + x) / x^3.      */
+    /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. *
+     *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
     return TMPL_PI_BY_TWO - (x + x*r);
 }
 /*  End of tmpl_Float_Arccos_Rat_Remez.                                       */
