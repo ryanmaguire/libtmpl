@@ -72,6 +72,15 @@
  *      for the numerator and one for the denominator. That is, to attain     *
  *      double precision on [-0.5, 0.5] the (12, 10) Pade approximant is      *
  *      needed.                                                               *
+ *  2024/10/29: Ryan Maguire                                                  *
+ *      In an effort to have reproducible results, the Remez coefficients are *
+ *      now the exact same ones that are output from the Python script found  *
+ *      in libtmpl_data. The previous coefficients were truncated.            *
+ *  2024/10/29: Ryan Maguire                                                  *
+ *      After some experimenting, I noticed that the (8, 8) rational Remez    *
+ *      approximation is sufficient for double precision. Peak theoretical    *
+ *      is 8.5 * 10^-17. Unit tests show the actual error is within 1 ULP of  *
+ *      other libm implementations. Slight performance boost using this.      *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -81,23 +90,22 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Coefficients for the numerator.                                           */
-#define A00 (+1.66666666666666657415E-01)
-#define A01 (-3.25565818622400915405E-01)
-#define A02 (+2.01212532134862925881E-01)
-#define A03 (-4.00555345006794114027E-02)
-#define A04 (+7.91534994289814532176E-04)
-#define A05 (+3.47933107596021167570E-05)
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define A00 (+1.6666666666666675172610409335401762495970069423667E-01)
+#define A01 (-2.9647442738212244852684254810912673101657174481766E-01)
+#define A02 (+1.6001969221867813049084016184632874497094695883901E-01)
+#define A03 (-2.5510481570872249173776491491771394448907125511346E-02)
+#define A04 (+2.6066097969323856113412749790103952111930280796716E-04)
 
-/*  Coefficients for the denominator.                                         */
-#define B00 (+1.00000000000000000000E+00)
-#define B01 (-2.40339491173441421878E+00)
-#define B02 (+2.02094576023350569471E+00)
-#define B03 (-6.88283971605453293030E-01)
-#define B04 (+7.70381505559019352791e-02)
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define B01 (-2.2288465642924490579275829949790393075345284377974E+00)
+#define B02 (+1.6952419643599424152439428142515867324057155650851E+00)
+#define B03 (-5.0120096652328631713045487959099718175996563925832E-01)
+#define B04 (+4.5088915315077310386265964807853660211534733521946E-02)
 
 /*  Helper macros for evaluating polynomials using Horner's method.           */
-#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
+#define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*A04)))
 #define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
 
 /*  The constant Pi / 2.                                                      */
@@ -115,7 +123,8 @@ double tmpl_Double_Arccos_Rat_Remez(double x)
     const double q = TMPL_POLYB_EVAL(x2);
     const double r = x2*p/q;
 
-    /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. */
+    /*  p/q is the rational minimax approximant for (acos(x) - pi/2 + x)/x^3. *
+     *  Solving for acos(x), we get pi/2 - (x + x*x2*p/q).                    */
     return TMPL_PI_BY_TWO - (x + x*r);
 }
 /*  End of tmpl_Double_Arccos_Rat_Remez.                                      */
