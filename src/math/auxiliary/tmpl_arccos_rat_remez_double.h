@@ -19,7 +19,7 @@
  *                        tmpl_arccos_rat_remez_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the (10, 8) rational minimax approximation of acos(x)        *
+ *      Computes the (8, 8) rational minimax approximation of acos(x)         *
  *      centered about the origin at double precision.                        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
@@ -27,7 +27,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Arccos_Rat_Remez                                          *
  *  Purpose:                                                                  *
- *      Computes the (10, 8) rational minimax approximation for arccos.       *
+ *      Computes the (8, 8) rational minimax approximation for arccos.        *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -39,10 +39,10 @@
  *  Method:                                                                   *
  *      The function f(x) = (acos(x) + x - pi/2) / x^3 is even. Pre-compute   *
  *      the coefficients for the rational minimax function R(x) of degree     *
- *      (10, 8) for f(x). The odd terms have zero coefficients. We may thus   *
+ *      (8, 8) for f(x). The odd terms have zero coefficients. We may thus    *
  *      compute the minimax approximation via:                                *
  *                                                                            *
- *                                   a0 + a2 x^2 + ... + a10 x^10             *
+ *                                   a0 + a2 x^2 + ... + a8 x^8               *
  *          acos(x) = pi/2 - x + x^3 ----------------------------             *
  *                                   b0 + b2 x^2 + ... + b8 x^8               *
  *                                                                            *
@@ -111,7 +111,7 @@
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
 
-/*  Function for computing the (10, 8) minimax approximation for acos(x).     */
+/*  Function for computing the (8, 8) minimax approximation for acos(x).      */
 TMPL_STATIC_INLINE
 double tmpl_Double_Arccos_Rat_Remez(double x)
 {
