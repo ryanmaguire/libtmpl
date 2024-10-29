@@ -68,6 +68,10 @@
  *      Corrected name and comments. This was previously called a "Pade"      *
  *      approximant, but it is not. The coefficients for the Pade approximant *
  *      and the rational minimax function are slightly different.             *
+ *  2024/10/29: Ryan Maguire                                                  *
+ *      Updating coefficients. These are now the exact output of the python   *
+ *      script found in libtmpl_data. Attempting to create reproducible       *
+ *      results in doing this.                                                *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -77,14 +81,14 @@
 /*  Location of the TMPL_STATIC_INLINE macro.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Coefficients for the numerator.                                           */
-#define A00 (+1.6666586697E-01F)
-#define A01 (-4.2743422091E-02F)
-#define A02 (-8.6563630030E-03F)
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define A00 (+1.6666657332654782511630744878585859634321997276656E-01F)
+#define A01 (-4.2035660448040502977938914900697450640872894337286E-02F)
+#define A02 (-8.2125492968317658201629446415138054874693066700587E-03F)
 
-/*  Coefficients for the denominator.                                         */
-#define B00 (+1.0000000000E+00F)
-#define B01 (-7.0662963390E-01F)
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00F)
+#define B01 (-7.0227698493007347430817019567204548858969498944150E-01F)
 
 /*  The constant Pi / 2.                                                      */
 #define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
