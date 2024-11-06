@@ -1279,6 +1279,22 @@ extern long double tmpl_LDouble_Floor(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Fractional_Part                                           *
+ *  Purpose:                                                                  *
+ *      Computes the fractional part of the input.                            *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double frac_x:                                                        *
+ *          The fractional part of x.                                         *
+ ******************************************************************************/
+extern float tmpl_Float_Fractional_Part(float x);
+extern double tmpl_Double_Fractional_Part(double x);
+extern long double tmpl_LDouble_Fractional_Part(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Float_Infinity                                                   *
  *  Purpose:                                                                  *
  *      Returns positive infinity.                                            *

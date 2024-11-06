@@ -322,103 +322,50 @@ ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
-ASM_INCLUDE += -wholename "./src/assembly/fasm/*.fasm" -or
-EXCLUDE += \
--not -name "tmpl_trailing_zeros_char.c" -and \
--not -name "tmpl_trailing_zeros_int.c" -and \
--not -name "tmpl_trailing_zeros_long.c" -and \
--not -name "tmpl_trailing_zeros_short.c" -and \
--not -name "tmpl_trailing_zeros_uint.c" -and \
--not -name "tmpl_trailing_zeros_uchar.c" -and \
--not -name "tmpl_trailing_zeros_ulong.c" -and \
--not -name "tmpl_trailing_zeros_ushort.c" -and \
--not -name "tmpl_sqrt_double.c" -and \
--not -name "tmpl_sqrt_float.c" -and \
--not -name "tmpl_sqrt_ldouble.c" -and \
--not -name "tmpl_floor_math_double.c" -and \
--not -name "tmpl_floor_math_float.c" -and \
--not -name "tmpl_floor_math_ldouble.c" -and
+
+ASM_FILES = $(shell find ./src/assembly/fasm/ -name "*.fasm" -printf "-not -name \"*%f*\" -and ")
+ASM_INCLUDE += -wholename "./src/assembly/fasm/*.S" -or
+EXCLUDE += $(subst _x86_64.fasm,.c,$(ASM_FILES))
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to compile this, tested on
 # Debian GNU/Linux 11 and 12.
 else
 
+ASM_FILES = $(shell find ./src/assembly/x86_64/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
 ASM_INCLUDE += -wholename "./src/assembly/x86_64/*.S" -or
-EXCLUDE += \
--not -name "tmpl_trailing_zeros_char.c" -and \
--not -name "tmpl_trailing_zeros_int.c" -and \
--not -name "tmpl_trailing_zeros_long.c" -and \
--not -name "tmpl_trailing_zeros_short.c" -and \
--not -name "tmpl_trailing_zeros_uint.c" -and \
--not -name "tmpl_trailing_zeros_uchar.c" -and \
--not -name "tmpl_trailing_zeros_ulong.c" -and \
--not -name "tmpl_trailing_zeros_ushort.c" -and \
--not -name "tmpl_sqrt_double.c" -and \
--not -name "tmpl_sqrt_float.c" -and \
--not -name "tmpl_sqrt_ldouble.c" -and \
--not -name "tmpl_floor_math_double.c" -and \
--not -name "tmpl_floor_math_float.c" -and \
--not -name "tmpl_floor_math_ldouble.c" -and
+EXCLUDE += $(subst _x86_64.S,.c,$(ASM_FILES))
+
 endif
 # End of ifdef FASM.
 
 # x86 / i386 assembly is also available using GNU assembly (GAS).
 else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
 
+ASM_FILES = $(shell find ./src/assembly/i386/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
 ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
-EXCLUDE +=\
--not -name "tmpl_trailing_zeros_char.c" -and \
--not -name "tmpl_trailing_zeros_int.c" -and \
--not -name "tmpl_trailing_zeros_long.c" -and \
--not -name "tmpl_trailing_zeros_short.c" -and \
--not -name "tmpl_trailing_zeros_uint.c" -and \
--not -name "tmpl_trailing_zeros_uchar.c" -and \
--not -name "tmpl_trailing_zeros_ulong.c" -and \
--not -name "tmpl_trailing_zeros_ushort.c" -and \
--not -name "tmpl_sqrt_double.c" -and \
--not -name "tmpl_sqrt_float.c" -and \
--not -name "tmpl_sqrt_ldouble.c" -and \
--not -name "tmpl_floor_math_double.c" -and \
--not -name "tmpl_floor_math_float.c" -and \
--not -name "tmpl_floor_math_ldouble.c" -and
+EXCLUDE += $(subst _i386.S,.c,$(ASM_FILES))
 
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
 
+ASM_FILES = $(shell find ./src/assembly/aarch64/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
 ASM_INCLUDE += -wholename "./src/assembly/aarch64/*.S" -or
-EXCLUDE +=\
--not -name "tmpl_floor_math_double.c" -and \
--not -name "tmpl_floor_math_float.c" -and \
--not -name "tmpl_sqrt_double.c" -and \
--not -name "tmpl_sqrt_float.c" -and
+EXCLUDE += $(subst _aarch64.S,.c,$(ASM_FILES))
 
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
 else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
 
+ASM_FILES = $(shell find ./src/assembly/armv7l/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
 ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
-EXCLUDE += \
--not -name "tmpl_sqrt_double.c" -and \
--not -name "tmpl_sqrt_float.c" -and \
--not -name "tmpl_sqrt_ldouble.c" -and
+EXCLUDE += $(subst _armv7l.S,.c,$(ASM_FILES))
 
 # Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
 else ifeq ($(uname_m),$(filter $(uname_m),ppc64le))
 
+ASM_FILES = $(shell find ./src/assembly/ppc64le/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
 ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
-EXCLUDE += \
--not -name "tmpl_trailing_zeros_char.c" -and \
--not -name "tmpl_trailing_zeros_int.c" -and \
--not -name "tmpl_trailing_zeros_long.c" -and \
--not -name "tmpl_trailing_zeros_short.c" -and \
--not -name "tmpl_trailing_zeros_uchar.c" -and \
--not -name "tmpl_trailing_zeros_uint.c" -and \
--not -name "tmpl_trailing_zeros_ulong.c" -and \
--not -name "tmpl_trailing_zeros_ushort.c" -and \
--not -name "tmpl_floor_math_double.c" -and \
--not -name "tmpl_floor_math_float.c" -and \
--not -name "tmpl_sqrt_double.c" -and \
--not -name "tmpl_sqrt_float.c" -and
+EXCLUDE += $(subst _ppc64le.S,.c,$(ASM_FILES))
 
 endif
 # End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
