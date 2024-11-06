@@ -112,6 +112,12 @@ double tmpl_Double_Mod_360(double x)
         invpow2_360.bits.expo += 32U;
     }
 
+    /*  If w.r * invpow2_360 was off by a bit, the floor of this may be off   *
+     *  by one. It is then possible that too many multiples of 360 were       *
+     *  subtracted off. If w.r is negative, add back 360.                     */
+    if (w.bits.sign)
+        w.r += 360.0;
+
     /*  tmp still has the original sign. Copy this into the output and return.*/
     w.bits.sign = tmp.bits.sign;
     return w.r;
