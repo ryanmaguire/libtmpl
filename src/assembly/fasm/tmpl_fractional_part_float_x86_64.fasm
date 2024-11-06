@@ -17,13 +17,11 @@
 ;   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          ;
 ;******************************************************************************;
 format ELF64
-public tmpl_UChar_Trailing_Zeros
+public tmpl_Float_Fractional_Part
 
-tmpl_UChar_Trailing_Zeros:
-    bsf    ecx, edi
-    xor    eax, eax
-    test   dil, dil
-    cmovne eax, ecx
-    ret
+tmpl_Float_Fractional_Part:
+    roundss xmm1, xmm0, 0x3 ; xmm1 = trunc(xmm0)
+    subss xmm0, xmm1        ; xmm0 = xmm0 - xmm1
+    ret                     ; return xmm0
 
 section '.note.GNU-stack'

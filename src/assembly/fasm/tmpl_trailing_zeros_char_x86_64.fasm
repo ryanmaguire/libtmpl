@@ -29,3 +29,5 @@ tmpl_Char_Trailing_Zeros:
     cmovne eax, edi
 .L1:
     ret
+
+section '.note.GNU-stack'

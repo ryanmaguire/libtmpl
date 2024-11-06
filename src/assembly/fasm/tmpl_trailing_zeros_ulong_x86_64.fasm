@@ -22,3 +22,5 @@ public tmpl_ULong_Trailing_Zeros
 tmpl_ULong_Trailing_Zeros:
     bsf rax, rdi
     ret
+
+section '.note.GNU-stack'

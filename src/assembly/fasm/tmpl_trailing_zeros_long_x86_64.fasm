@@ -26,3 +26,5 @@ tmpl_Long_Trailing_Zeros:
     test      rdi, rdi
     cmovne    rax, rdx
     ret
+
+section '.note.GNU-stack'

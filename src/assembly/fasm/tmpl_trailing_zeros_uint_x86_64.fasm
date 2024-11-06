@@ -22,3 +22,5 @@ public tmpl_UInt_Trailing_Zeros
 tmpl_UInt_Trailing_Zeros:
     bsf eax, edi
     ret
+
+section '.note.GNU-stack'

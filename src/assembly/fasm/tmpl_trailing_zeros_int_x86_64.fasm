@@ -26,3 +26,5 @@ tmpl_Int_Trailing_Zeros:
     test      edi, edi
     cmovne    eax, ecx
     ret
+
+section '.note.GNU-stack'

@@ -25,3 +25,5 @@ tmpl_UShort_Trailing_Zeros:
     test   di, di
     cmovne eax, ecx
     ret
+
+section '.note.GNU-stack'

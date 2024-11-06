@@ -17,8 +17,11 @@
 ;   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          ;
 ;******************************************************************************;
 format ELF64
-public tmpl_Float_Floor
+public tmpl_Double_Fractional_Part
 
-tmpl_Float_Floor:
-    roundss xmm0, xmm0, 0x1
-    ret
+tmpl_Double_Fractional_Part:
+    roundsd xmm1, xmm0, 0x3 ; xmm1 = trunc(xmm0)
+    subsd xmm0, xmm1        ; xmm0 = xmm0 - xmm1
+    ret                     ; return xmm0
+
+section '.note.GNU-stack'

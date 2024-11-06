@@ -17,8 +17,10 @@
 ;   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          ;
 ;******************************************************************************;
 format ELF64
-public tmpl_Float_Sqrt
+public tmpl_Double_Floor
 
-tmpl_Float_Sqrt:
-    sqrtss xmm0,xmm0
+tmpl_Double_Floor:
+    roundsd xmm0, xmm0, 0x1
     ret
+
+section '.note.GNU-stack'
