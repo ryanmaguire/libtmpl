@@ -138,7 +138,7 @@
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_arccos_maclaurin_double.h"
 
-/*  Rational remez minimax approximation for arccos.                          */
+/*  Rational Remez minimax approximation for arccos.                          */
 #include "auxiliary/tmpl_arccos_rat_remez_double.h"
 
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */

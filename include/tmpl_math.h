@@ -647,9 +647,9 @@ extern const long double tmpl_ldouble_sinpi_table[128];
  *      Float and long double equivalents are provided as well.               *
  *  Source Code:                                                              *
  *      libtmpl/src/math/                                                     *
- *          tmpl_arccos_double.c                                              *
- *          tmpl_arccos_float.c                                               *
- *          tmpl_arccos_ldouble.c                                             *
+ *          tmpl_arccos_math_double.c                                         *
+ *          tmpl_arccos_math_float.c                                          *
+ *          tmpl_arccos_math_ldouble.c                                        *
  ******************************************************************************/
 
 /*  Alias functions to acos from math.h if libtmpl algorithms not requested.  */
