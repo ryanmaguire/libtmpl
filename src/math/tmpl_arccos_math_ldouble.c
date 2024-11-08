@@ -175,7 +175,7 @@
 /*  Maclaurin expansion provided here.                                        */
 #include "auxiliary/tmpl_arccos_maclaurin_ldouble.h"
 
-/*  Rational remez minimax approximation for arccos.                          */
+/*  Rational Remez minimax approximation for arccos.                          */
 #include "auxiliary/tmpl_arccos_rat_remez_ldouble.h"
 
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
@@ -200,7 +200,7 @@
 #define TMPL_ARCCOS_TINY_EXPONENT (TMPL_LDOUBLE_UBIAS - 57U)
 
 /*  For 64-bit double the Maclaurin series is accurate to double precision    *
- *  |x| < 0.15 meaning we can safely use this for |x| < 2^-3.                 */
+ *  for |x| < 0.15 meaning we can safely use this for |x| < 2^-3.             */
 #define TMPL_ARCCOS_SMALL_EXPONENT (TMPL_LDOUBLE_UBIAS - 3U)
 
 /*  128-bit double-double uses much smaller exponents.                        */
