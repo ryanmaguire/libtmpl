@@ -56,6 +56,9 @@
  ******************************************************************************
  *  2023/04/18: Ryan Maguire                                                  *
  *      Changed src/math/tmpl_arccos_tail_end_float.c to include this file.   *
+ *  2024/11/08: Ryan Maguire                                                  *
+ *      Changed coefficients to be the exact output of the Python scripts in  *
+ *      libtmpl_data. This is to improve reproducibility of the results.      *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -68,14 +71,14 @@
 /*  The compiler needs to know about the sqrt function.                       */
 extern float tmpl_Float_Sqrt(float x);
 
-/*  Coefficients for the numerator.                                           */
-#define A00 (+1.6666586697E-01F)
-#define A01 (-4.2743422091E-02F)
-#define A02 (-8.6563630030E-03F)
+/*  Coefficients for the numerator of the Remez rational approximation.       */
+#define A00 (+1.6666657332654782511630744878585859634321997276656E-01F)
+#define A01 (-4.2035660448040502977938914900697450640872894337286E-02F)
+#define A02 (-8.2125492968317658201629446415138054874693066700587E-03F)
 
-/*  Coefficients for the denominator.                                         */
-#define B00 (+1.0000000000E+00F)
-#define B01 (-7.0662963390E-01F)
+/*  Coefficients for the denominator of the Remez rational approximation.     */
+#define B00 (+1.0000000000000000000000000000000000000000000000000E+00F)
+#define B01 (-7.0227698493007347430817019567204548858969498944150E-01F)
 
 /*  Function for computing acos(x) for 0.5 <= x < 1.0.                        */
 TMPL_STATIC_INLINE
@@ -91,11 +94,11 @@ float tmpl_Float_Arccos_Tail_End(float x)
     /*  p(z) / q(z) is the rational minimax approximant for                   *
      *  (asin(sqrt(z)) - sqrt(z)) / z^{3/2}. We need to multiply by z^{3/2}.  */
     const float r = z*p/q;
-    const float s = tmpl_Float_Sqrt(z);
-    const float t = r*s;
+    const float sqrt_z = tmpl_Float_Sqrt(z);
+    const float t = r * sqrt_z;
 
-    /*  We now have asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).         */
-    return 2.0F*(s + t);
+    /*  We now have t = asin(sqrt(z)) - sqrt(z). We need 2*asin(sqrt(z)).     */
+    return 2.0F*(sqrt_z + t);
 }
 /*  End of tmpl_Float_Arccos_Tail_End.                                        */
 
