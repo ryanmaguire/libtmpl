@@ -48,21 +48,15 @@
     .quad 0x3FE0000000000000
 
 ASM_BEGIN(tmpl_Double_Mod_2)
-    push    %rbp
-    mov     %rsp, %rbp
-    sub     $16, %rsp
-    movsd   %xmm0, -8(%rbp)
-    movsd   -8(%rbp), %xmm0
-    movsd   %xmm0, -16(%rbp)
-    movsd   .TMPL_DOUBLE_MOD2_HALF_AS_HEX(%rip), %xmm0
-    mulsd   -8(%rbp), %xmm0
+    sub     $24, %rsp
+    movsd   %xmm0, 8(%rsp)
+    mulsd   .TMPL_DOUBLE_MOD2_HALF_AS_HEX(%rip), %xmm0
     roundsd $3, %xmm0, %xmm0
-    movaps  %xmm0, %xmm1
-    movsd   -16(%rbp), %xmm0
-    addsd   %xmm1, %xmm1
-    subsd   %xmm1, %xmm0
-    add     $16, %rsp
-    pop     %rbp
+    movsd   8(%rsp), %xmm1
+    add     $24, %rsp
+    addsd   %xmm0, %xmm0
+    subsd   %xmm0, %xmm1
+    movapd  %xmm1, %xmm0
     ret
 ASM_END(tmpl_Double_Mod_2)
 

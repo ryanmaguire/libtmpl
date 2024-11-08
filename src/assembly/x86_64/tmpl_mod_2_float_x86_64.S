@@ -48,21 +48,15 @@
     .long 0x3F000000
 
 ASM_BEGIN(tmpl_Float_Mod_2)
-    push    %rbp
-    mov     %rsp, %rbp
-    sub     $16, %rsp
-    movss   %xmm0, -4(%rbp)
-    movss   -4(%rbp), %xmm0
-    movss   %xmm0, -8(%rbp)
-    movss   .TMPL_FLOAT_MOD2_HALF_AS_HEX(%rip), %xmm0
-    mulss   -4(%rbp), %xmm0
+    sub     $24, %rsp
+    movss   %xmm0, 12(%rsp)
+    mulss   .TMPL_FLOAT_MOD2_HALF_AS_HEX(%rip), %xmm0
     roundss $3, %xmm0, %xmm0
-    movaps  %xmm0, %xmm1
-    movss   -8(%rbp), %xmm0
-    addss   %xmm1, %xmm1
-    subss   %xmm1, %xmm0
-    add     $16, %rsp
-    pop     %rbp
+    movss   12(%rsp), %xmm1
+    add     $24, %rsp
+    addss   %xmm0, %xmm0
+    subss   %xmm0, %xmm1
+    movaps  %xmm1, %xmm0
     ret
 ASM_END(tmpl_Float_Mod_2)
 

@@ -44,28 +44,21 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_LDouble_Mod_2)
-    push    %rbp
-    mov     %rsp, %rbp
-    fldt    16(%rbp)
-    fldt    .TMPL_LDOUBLE_MOD2_HALF_AS_HEX(%rip)
-    fmulp   %st, %st(1)
-    fnstcw  -2(%rbp)
-    movzwl  -2(%rbp), %eax
+    fnstcw  -10(%rsp)
+    fldt    8(%rsp)
+    movzwl  -10(%rsp), %eax
+    fld     %st(0)
+    fmuls   .TMPL_LDOUBLE_MOD2_HALF_AS_HEX(%rip)
     orb     $12, %ah
-    movw    %ax, -4(%rbp)
-    fldcw   -4(%rbp)
+    movw    %ax, -12(%rsp)
+    fldcw   -12(%rsp)
     frndint
-    fldcw   -2(%rbp)
+    fldcw   -10(%rsp)
     fadd    %st(0), %st
-    fldt    16(%rbp)
-    fsubp   %st, %st(1)
-    pop     %rbp
+    fsubrp  %st, %st(1)
     ret
 .TMPL_LDOUBLE_MOD2_HALF_AS_HEX:
-    .long 0
-    .long -2147483648
-    .long 16382
-    .long 0
+    .long 0x3F000000
 ASM_END(tmpl_LDouble_Mod_2)
 
 /* Enable stack protection.                                                   */
