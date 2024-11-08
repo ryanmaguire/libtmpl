@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
-#include "tmpl_aarch_asm.h"
+#include "tmpl_aarch64_asm.h"
 
 ASM_BEGIN(tmpl_UInt_Trailing_Zeros)
     rbit w8, w0     /*  Reverse the bits of the input.          */
