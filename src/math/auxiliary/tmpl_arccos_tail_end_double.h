@@ -56,7 +56,7 @@
  ******************************************************************************
  *  2023/04/18: Ryan Maguire                                                  *
  *      Changed src/math/tmpl_arccos_tail_end_double.c to include this file.  *
- *  2024/10/08: Ryan Maguire                                                  *
+ *  2024/11/08: Ryan Maguire                                                  *
  *      Updating coefficients to use the (8, 8) approximant.                  *
  ******************************************************************************/
 
