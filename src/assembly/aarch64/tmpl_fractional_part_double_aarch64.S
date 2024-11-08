@@ -16,39 +16,43 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_sqrt_float                               *
+ *                         tmpl_fractional_part_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing square roots at single precision.         *
+ *      Computes the fractional part of a real number at double precision.    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Sqrt                                                       *
+ *      tmpl_Double_Fractional_Part                                           *
  *  Purpose:                                                                  *
- *      Computes y = sqrt(x), the largest integer less than or equal to x.    *
+ *      Computes the fractional part of the input.                            *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      sqrt_x (float):                                                       *
- *          The square root of x at single precision.                         *
+ *      frac_x (double):                                                      *
+ *          The fractional part of x at double precision.                     *
  *  Called Functions:                                                         *
- *      fsqrt                                                                 *
+ *      frintz:                                                               *
+ *          Truncates a real number, or "rounds to zero."                     *
+ *      fsub:                                                                 *
+ *          Subtracts real numbers.                                           *
  *  Method:                                                                   *
- *      Use fsqrt on the argument.                                            *
+ *      Compute x - trunc(x) and return.                                      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       October 11, 2022                                              *
+ *  Date:       November 8, 2024                                              *
  ******************************************************************************/
 
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-ASM_BEGIN(tmpl_Float_Sqrt)
-    fsqrt s0, s0
-    ret
-ASM_END(tmpl_Float_Sqrt)
+ASM_BEGIN(tmpl_Double_Fractional_Part)
+    frintz d31, d0      /*  y = trunc(x);       */
+    fsub   d0, d0, d31  /*  y = x - trunc(x);   */
+    ret                 /*  return y;           */
+ASM_END(tmpl_Double_Fractional_Part)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)

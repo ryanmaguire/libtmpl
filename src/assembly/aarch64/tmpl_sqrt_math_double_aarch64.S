@@ -26,8 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Sqrt                                                      *
  *  Purpose:                                                                  *
- *      Computes y = sqrt(x), the unique non-negative number y such that for  *
- *      non-negative x we have x = y^2.                                       *
+ *      Computes y = sqrt(x), the largest integer less than or equal to x.    *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
@@ -37,41 +36,19 @@
  *  Called Functions:                                                         *
  *      fsqrt                                                                 *
  *  Method:                                                                   *
- *      For aarch64 (arm64) machines sqrt is a built-in function.             *
+ *      Use fsqrt on the argument.                                            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       May 3, 2022                                                   *
+ *  Date:       October 11, 2022                                              *
  ******************************************************************************/
 
-/*  The following code works with Apple's M1 chip. Tested with Apple's        *
- *  version of clang.                                                         */
-#ifdef __APPLE__
-.section  __TEXT,__text,regular,pure_instructions
-.globl    _tmpl_Double_Sqrt
-.p2align  2
+/*  Helper macros found here.                                                 */
+#include "tmpl_aarch64_asm.h"
 
-_tmpl_Double_Sqrt:
-    fsqrt   d0, d0
-    ret
-
-#else
-/*  Else of #ifdef __APPLE__.                                                 */
-
-/*  The following works with GCC and LLVM's clang on GNU/Linux platforms. Not *
- *  tested on anything else.                                                  */
-.text
-.align  2
-.global tmpl_Double_Sqrt
-.type   tmpl_Double_Sqrt, %function
-
-tmpl_Double_Sqrt:
+ASM_BEGIN(tmpl_Double_Sqrt)
     fsqrt d0, d0
     ret
-
-.size   tmpl_Double_Sqrt, .-tmpl_Double_Sqrt
-
-#endif
-/*  End of #ifdef __APPLE__.                                                  */
+ASM_END(tmpl_Double_Sqrt)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)
