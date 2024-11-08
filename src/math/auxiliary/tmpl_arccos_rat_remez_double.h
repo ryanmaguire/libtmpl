@@ -43,7 +43,7 @@
  *      compute the minimax approximation via:                                *
  *                                                                            *
  *                                   a0 + a2 x^2 + ... + a8 x^8               *
- *          acos(x) = pi/2 - x + x^3 ----------------------------             *
+ *          acos(x) = pi/2 - x + x^3 --------------------------               *
  *                                   b0 + b2 x^2 + ... + b8 x^8               *
  *                                                                            *
  *      Where the coefficients a_n and b_n are for the rational minimax       *
