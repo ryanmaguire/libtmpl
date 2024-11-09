@@ -21,10 +21,13 @@
 #include "tmpl_aarch64_asm.h"
 
 ASM_BEGIN(tmpl_Short_Trailing_Zeros)
-    sxth    w0, w0  /* "Signed-Extend-Half," extend input to entire register. */
-    rbit    w0, w0  /* Reverse the order of the bits in the input.            */
-    clz     w0, w0  /* Count the number of leading zeros in the reverse.      */
-    ret             /* Return the count.                                      */
+    sxth    w0, w0          /* "Signed-Extend-Halfword", extends input.       */
+    cmp     w0, 0
+    csneg   w0, w0, w0, ge  /* Compute the absolute value of the input.       */
+    and     w0, w0, 0xFFFF  /* Zero out all but the lower 16 bits.            */
+    rbit    w0, w0          /* Reverse the order of the input.                */
+    clz     w0, w0          /* Count the number of leading zeros.             */
+    ret                     /* Return the count.                              */
 ASM_END(tmpl_Short_Trailing_Zeros)
 
 /* Enable stack protection.                                                   */
