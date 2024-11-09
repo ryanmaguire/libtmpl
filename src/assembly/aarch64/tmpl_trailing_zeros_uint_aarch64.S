@@ -21,9 +21,11 @@
 #include "tmpl_aarch64_asm.h"
 
 ASM_BEGIN(tmpl_UInt_Trailing_Zeros)
-    rbit w0, w0     /*  Reverse the bits of the input.          */
-    clz  w0, w0     /*  Count the leading zeros of the reverse. */
-    ret             /*  Return the count.                       */
+    rbit    w1, w0          /* Reverse the order of the input.                */
+    cmp     w0, 0           /* Check if the input is zero.                    */
+    clz     w1, w1          /* Count the number of leading zeros.             */
+    csel    w0, w1, wzr, ne /* If the input was zero, return zero.            */
+    ret                     /* Return the count.                              */
 ASM_END(tmpl_UInt_Trailing_Zeros)
 
 /* Enable stack protection.                                                   */
