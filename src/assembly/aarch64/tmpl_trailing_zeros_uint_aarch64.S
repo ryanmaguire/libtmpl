@@ -21,8 +21,8 @@
 #include "tmpl_aarch64_asm.h"
 
 ASM_BEGIN(tmpl_UInt_Trailing_Zeros)
-    rbit w8, w0     /*  Reverse the bits of the input.          */
-    clz  w0, w8     /*  Count the leading zeros of the reverse. */
+    rbit w0, w0     /*  Reverse the bits of the input.          */
+    clz  w0, w0     /*  Count the leading zeros of the reverse. */
     ret
 ASM_END(tmpl_UInt_Trailing_Zeros)
 
