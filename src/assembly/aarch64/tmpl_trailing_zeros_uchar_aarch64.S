@@ -20,11 +20,12 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
-ASM_BEGIN(tmpl_UInt_Trailing_Zeros)
-    rbit w0, w0     /*  Reverse the bits of the input.          */
-    clz  w0, w0     /*  Count the leading zeros of the reverse. */
-    ret             /*  Return the count.                       */
-ASM_END(tmpl_UInt_Trailing_Zeros)
+ASM_BEGIN(tmpl_UChar_Trailing_Zeros)
+    and     w0, w0, 0xFF    /* Zero out higher bits, keep lower 8 bits only.  */
+    rbit    w0, w0          /* Reverse the order of the bits in the input.    */
+    clz     w0, w0          /* Count the number of leading zeros.             */
+    ret                     /* Return the count.                              */
+ASM_END(tmpl_UChar_Trailing_Zeros)
 
 /* Enable stack protection.                                                   */
 #if defined(__ELF__)
