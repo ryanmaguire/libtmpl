@@ -21,10 +21,10 @@
 #include "tmpl_aarch64_asm.h"
 
 ASM_BEGIN(tmpl_Char_Trailing_Zeros)
-    and     w0, w0, 0xFF    /* Zero out higher bits, keep lower 8 bits only.  */
-    rbit    w0, w0          /* Reverse the order of the bits in the input.    */
-    clz     w0, w0          /* Count the number of leading zeros.             */
-    ret                     /* Return the count.                              */
+    sxtb    w0, w0  /* "Signed-Extend-Byte" extend input to entire register.  */
+    rbit    w0, w0  /* Reverse the order of the bits in the input.            */
+    clz     w0, w0  /* Count the number of leading zeros.                     */
+    ret             /* Return the count.                                      */
 ASM_END(tmpl_Char_Trailing_Zeros)
 
 /* Enable stack protection.                                                   */
