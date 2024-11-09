@@ -1812,6 +1812,22 @@ extern float tmpl_Float_Tanh(float x);
 extern double tmpl_Double_Tanh(double x);
 extern long double tmpl_LDouble_Tanh(long double x);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Truncate                                                  *
+ *  Purpose:                                                                  *
+ *      Computes the truncation (round to zero) of the input.                 *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double trunc_x:                                                       *
+ *          The truncation of x.                                              *
+ ******************************************************************************/
+extern float tmpl_Float_Truncate(float x);
+extern double tmpl_Double_Truncate(double x);
+extern long double tmpl_LDouble_Truncate(long double x);
+
 /*  Macro for positive infinity                                               */
 #define TMPL_INFINITYF (tmpl_Float_Infinity())
 #define TMPL_INFINITY (tmpl_Double_Infinity())
