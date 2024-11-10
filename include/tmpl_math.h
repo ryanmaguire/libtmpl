@@ -987,6 +987,28 @@ extern long double tmpl_LDouble_Cbrt(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Ceil                                                      *
+ *  Purpose:                                                                  *
+ *      Computes the ceiling, the smallest integer greater than the input.    *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      double ceil_x:                                                        *
+ *          The ceiling function evaluated at x.                              *
+ ******************************************************************************/
+#if TMPL_USE_MATH_ALGORITHMS != 1
+#define tmpl_Float_Ceil ceilf
+#define tmpl_Double_Ceil ceil
+#define tmpl_LDouble_Ceil ceill
+#else
+extern float tmpl_Float_Ceil(float x);
+extern double tmpl_Double_Ceil(double x);
+extern long double tmpl_LDouble_Ceil(long double x);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Cos                                                       *
  *  Purpose:                                                                  *
  *      Computes the cosine of a real number.                                 *
