@@ -324,7 +324,7 @@ ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
 ifdef FASM
 
 ASM_FILES = $(shell find ./src/assembly/fasm/ -name "*.fasm" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/fasm/*.S" -or
+ASM_INCLUDE += -wholename "./src/assembly/fasm/*.fasm" -or
 EXCLUDE += $(subst _x86_64.fasm,.c,$(ASM_FILES))
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
