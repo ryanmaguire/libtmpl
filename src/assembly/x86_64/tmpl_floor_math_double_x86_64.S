@@ -36,7 +36,7 @@
  *  Called Functions:                                                         *
  *      roundsd                                                               *
  *  Method:                                                                   *
- *      The roundsd instruction with 9 passed to it computes floor(x).        *
+ *      The roundsd instruction with 1 passed to it computes floor(x).        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 5, 2022                                                 *
@@ -46,7 +46,7 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Double_Floor)
-    roundsd $9, %xmm0, %xmm0
+    roundsd $1, %xmm0, %xmm0
     ret
 ASM_END(tmpl_Double_Floor)
 

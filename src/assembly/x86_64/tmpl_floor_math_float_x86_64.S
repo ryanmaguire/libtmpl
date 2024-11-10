@@ -36,7 +36,7 @@
  *  Called Functions:                                                         *
  *      roundss                                                               *
  *  Method:                                                                   *
- *      The roundss instruction with 9 passed to it computes floor(x).        *
+ *      The roundss instruction with 1 passed to it computes floor(x).        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 5, 2022                                                 *
@@ -46,7 +46,7 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_Float_Floor)
-    roundss $9, %xmm0, %xmm0
+    roundss $1, %xmm0, %xmm0
     ret
 ASM_END(tmpl_Float_Floor)
 
