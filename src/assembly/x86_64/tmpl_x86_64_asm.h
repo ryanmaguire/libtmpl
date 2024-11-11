@@ -27,11 +27,13 @@
 #ifdef __ELF__
 #define ELF_FUNC(func) .type func, @function
 #define ELF_SIZE(func) .size func, . - func
+#define GNU_STACK_PROTECTION .section .note.GNU-stack, "", %progbits
 #else
 /*  Else for #ifdef __ELF__.                                                  */
 
 #define ELF_FUNC(func)
 #define ELF_SIZE(func)
+#define GNU_STACK_PROTECTION
 #endif
 /*  End of #ifdef __ELF__.                                                    */
 
@@ -73,23 +75,26 @@ EXT(x):
 #endif
 /*  End of #ifndef __NO_UNDERSCORES__.                                        */
 
-#define ASM_END(func) ELF_SIZE(EXT(func))
-#define ASM_BEGIN(func)       \
-.globl EXT(func);             \
-ELF_FUNC(EXT(func));          \
-.align ALIGN;                 \
+#define ASM_END(func)       \
+ELF_SIZE(EXT(func))
+#define ASM_BEGIN(func)     \
+.globl EXT(func);           \
+ELF_FUNC(EXT(func));        \
+.align ALIGN;               \
 EXT(func):
 
 /******************************************************************************
  *                           GNU/Linux and FreeBSD                            *
  ******************************************************************************/
 #else
-#define ASM_END(func) ELF_SIZE(func)
-#define ASM_BEGIN(func)       \
-.text;                        \
-.p2align ALIGN;               \
-.globl func;                  \
-ELF_FUNC(func);               \
+#define ASM_END(func)       \
+ELF_SIZE(func);
+GNU_STACK_PROTECTION
+#define ASM_BEGIN(func)     \
+.text;                      \
+.p2align ALIGN;             \
+.globl func;                \
+ELF_FUNC(func);             \
 func:
 #endif
 /*  End of #if defined(_WIN32).                                               */

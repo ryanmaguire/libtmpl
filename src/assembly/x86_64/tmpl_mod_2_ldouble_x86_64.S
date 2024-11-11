@@ -60,8 +60,3 @@ ASM_BEGIN(tmpl_LDouble_Mod_2)
 .TMPL_LDOUBLE_MOD2_HALF_AS_HEX:
     .long 0x3F000000
 ASM_END(tmpl_LDouble_Mod_2)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

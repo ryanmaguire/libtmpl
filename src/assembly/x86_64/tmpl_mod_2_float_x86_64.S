@@ -43,10 +43,6 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
-/*  The hexidecimal representation (IEEE-754 format) of x = 0.5.              */
-.TMPL_FLOAT_MOD2_HALF_AS_HEX:
-    .long 0x3F000000
-
 ASM_BEGIN(tmpl_Float_Mod_2)
     sub     $24, %rsp
     movss   %xmm0, 12(%rsp)
@@ -58,9 +54,8 @@ ASM_BEGIN(tmpl_Float_Mod_2)
     subss   %xmm0, %xmm1
     movaps  %xmm1, %xmm0
     ret
-ASM_END(tmpl_Float_Mod_2)
 
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
+/*  The hexidecimal representation (IEEE-754 format) of x = 0.5.              */
+.TMPL_FLOAT_MOD2_HALF_AS_HEX:
+    .long 0x3F000000
+ASM_END(tmpl_Float_Mod_2)

@@ -50,8 +50,3 @@ ASM_BEGIN(tmpl_Float_Truncate)
     roundss $3, %xmm0, %xmm0    /*  xmm0 = trunc(xmm0)  */
     ret                         /*  return xmm0.        */
 ASM_END(tmpl_Float_Truncate)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

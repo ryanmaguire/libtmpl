@@ -49,8 +49,3 @@ ASM_BEGIN(tmpl_Double_Ceil)
     roundsd $2, %xmm0, %xmm0
     ret
 ASM_END(tmpl_Double_Ceil)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

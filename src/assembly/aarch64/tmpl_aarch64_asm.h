@@ -80,4 +80,3 @@ func:
 
 #endif
 /*  End of include guard.                                                     */
-

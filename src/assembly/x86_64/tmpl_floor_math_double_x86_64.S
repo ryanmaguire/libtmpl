@@ -49,8 +49,3 @@ ASM_BEGIN(tmpl_Double_Floor)
     roundsd $1, %xmm0, %xmm0
     ret
 ASM_END(tmpl_Double_Floor)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

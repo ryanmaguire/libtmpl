@@ -43,10 +43,6 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_x86_64_asm.h"
 
-/*  The hexidecimal representation (IEEE-754 format) of x = 0.5.              */
-.TMPL_DOUBLE_MOD2_HALF_AS_HEX:
-    .quad 0x3FE0000000000000
-
 ASM_BEGIN(tmpl_Double_Mod_2)
 
     /*  Some moving around of bits. We are moving the input, xmm0, to a new   *
@@ -75,9 +71,8 @@ ASM_BEGIN(tmpl_Double_Mod_2)
 
     /*  Return y = x - 2.0 * trunc(0.5 * x).                                  */
     ret
-ASM_END(tmpl_Double_Mod_2)
 
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
+/*  The hexidecimal representation (IEEE-754 format) of x = 0.5.              */
+.TMPL_DOUBLE_MOD2_HALF_AS_HEX:
+    .quad 0x3FE0000000000000
+ASM_END(tmpl_Double_Mod_2)

@@ -53,8 +53,3 @@ ASM_BEGIN(tmpl_Float_Fractional_Part)
     subss %xmm1, %xmm0          /*  xmm0 = xmm0 - xmm1  */
     ret                         /*  return xmm0.        */
 ASM_END(tmpl_Float_Fractional_Part)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

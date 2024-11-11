@@ -28,9 +28,3 @@ ASM_BEGIN(tmpl_Long_Trailing_Zeros)
     cmovne   %edx, %eax
     ret
 ASM_END(tmpl_Long_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
-

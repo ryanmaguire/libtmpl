@@ -32,8 +32,3 @@ ASM_BEGIN(tmpl_LDouble_Floor)
     fldcw   -10(%rsp)
     ret
 ASM_END(tmpl_LDouble_Floor)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

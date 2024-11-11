@@ -49,8 +49,3 @@ ASM_BEGIN(tmpl_Float_Floor)
     roundss $1, %xmm0, %xmm0
     ret
 ASM_END(tmpl_Float_Floor)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

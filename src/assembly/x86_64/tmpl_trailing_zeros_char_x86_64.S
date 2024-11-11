@@ -28,8 +28,3 @@ ASM_BEGIN(tmpl_Char_Trailing_Zeros)
     cmove    %edx, %eax
     ret
 ASM_END(tmpl_Char_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

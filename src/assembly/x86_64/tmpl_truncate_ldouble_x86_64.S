@@ -52,8 +52,3 @@ ASM_BEGIN(tmpl_LDouble_Truncate)
     fldcw   -10(%rsp)
     ret
 ASM_END(tmpl_LDouble_Truncate)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

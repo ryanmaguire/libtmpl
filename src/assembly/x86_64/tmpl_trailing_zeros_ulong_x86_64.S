@@ -24,8 +24,3 @@ ASM_BEGIN(tmpl_ULong_Trailing_Zeros)
     bsf %rdi, %rax
     ret
 ASM_END(tmpl_ULong_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
