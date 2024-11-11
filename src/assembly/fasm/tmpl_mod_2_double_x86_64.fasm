@@ -1,0 +1,36 @@
+;******************************************************************************;
+;                                   LICENSE                                    ;
+;******************************************************************************;
+;   This file is part of libtmpl.                                              ;
+;                                                                              ;
+;   libtmpl is free software: you can redistribute it and/or modify it         ;
+;   under the terms of the GNU General Public License as published by          ;
+;   the Free Software Foundation, either version 3 of the License, or          ;
+;   (at your option) any later version.                                        ;
+;                                                                              ;
+;   libtmpl is distributed in the hope that it will be useful,                 ;
+;   but WITHOUT ANY WARRANTY; without even the implied warranty of             ;
+;   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              ;
+;   GNU General Public License for more details.                               ;
+;                                                                              ;
+;   You should have received a copy of the GNU General Public License          ;
+;   along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.          ;
+;******************************************************************************;
+format ELF64
+public tmpl_Double_Mod_2
+
+TMPL_DOUBLE_MOD2_HALF_AS_HEX dq 0x3FE0000000000000
+
+tmpl_Double_Mod_2:
+    sub     rsp, 24
+    movsd   qword [rsp + 8], xmm0
+    mulsd   xmm0, qword [TMPL_DOUBLE_MOD2_HALF_AS_HEX]
+    roundsd xmm0, xmm0, 0x3
+    movsd   xmm1, qword [rsp + 8]
+    add     rsp, 24
+    addsd   xmm0, xmm0
+    subsd   xmm1, xmm0
+    movapd  xmm0, xmm1
+    ret
+
+section '.note.GNU-stack'

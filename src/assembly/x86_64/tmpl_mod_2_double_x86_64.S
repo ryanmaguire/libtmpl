@@ -48,15 +48,32 @@
     .quad 0x3FE0000000000000
 
 ASM_BEGIN(tmpl_Double_Mod_2)
+
+    /*  Some moving around of bits. We are moving the input, xmm0, to a new   *
+     *  spot so we don't overwrite it.                                        */
     sub     $24, %rsp
     movsd   %xmm0, 8(%rsp)
+
+    /*  Set y = 0.5 * x.                                                      */
     mulsd   .TMPL_DOUBLE_MOD2_HALF_AS_HEX(%rip), %xmm0
+
+    /*  Compute y = trunc(0.5 * x). roundsd $3 is round-to-zero, or truncate. */
     roundsd $3, %xmm0, %xmm0
+
+    /*  More bit-shuffling.                                                   */
     movsd   8(%rsp), %xmm1
     add     $24, %rsp
+
+    /*  Compute y = 2.0 * trunc(0.5 * x) = trunc(0.5 * x) + trunc(0.5 * x).   */
     addsd   %xmm0, %xmm0
+
+    /*  Compute y = x - 2.0 * trunc(0.5 * x). The is x mod 2.                 */
     subsd   %xmm0, %xmm1
+
+    /*  Move y = x - 2.0 * trunc(0.5 * x) into xmm0.                          */
     movapd  %xmm1, %xmm0
+
+    /*  Return y = x - 2.0 * trunc(0.5 * x).                                  */
     ret
 ASM_END(tmpl_Double_Mod_2)
 
