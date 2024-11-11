@@ -18,15 +18,14 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_LDouble_Mod_2
-
-TMPL_MOD_2_LDOUBLE_HALF_AS_HEX dd 0x3F000000
+section '.text' executable align 16
 
 tmpl_LDouble_Mod_2:
     fnstcw  word [rsp - 10]
     fld     tword [rsp + 8]
     movzx   eax, word [rsp - 10]
     fld     st0
-    fmul    dword [TMPL_MOD_2_LDOUBLE_HALF_AS_HEX]
+    fmul    dword [TMPL_LDOUBLE_MOD2_HALF_AS_HEX]
     or      ah, 12
     mov     word [rsp - 12], ax
     fldcw   word [rsp - 12]
@@ -35,5 +34,9 @@ tmpl_LDouble_Mod_2:
     fadd    st, st0
     fsubp   st1, st
     ret
+
+section '.rodata' align 16
+TMPL_LDOUBLE_MOD2_HALF_AS_HEX:
+    dd 0x3F000000
 
 section '.note.GNU-stack'

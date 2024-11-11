@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_LDouble_Ceil
+section '.text' executable align 16
 
 tmpl_LDouble_Ceil:
     fnstcw  [rsp - 10]

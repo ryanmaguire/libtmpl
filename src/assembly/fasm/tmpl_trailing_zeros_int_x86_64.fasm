@@ -18,13 +18,14 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Int_Trailing_Zeros
+section '.text' executable align 16
 
 tmpl_Int_Trailing_Zeros:
-    xor       ecx, ecx
-    mov       eax, edi
-    rep bsf   ecx, edi
-    test      edi, edi
-    cmovne    eax, ecx
+    xor     edx, edx
+    mov     eax, edi
+    rep bsf edx, edi
+    test    edi, edi
+    cmovne  eax, edx
     ret
 
 section '.note.GNU-stack'

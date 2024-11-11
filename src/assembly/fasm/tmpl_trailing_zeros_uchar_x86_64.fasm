@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_UChar_Trailing_Zeros
+section '.text' executable align 16
 
 tmpl_UChar_Trailing_Zeros:
     bsf    ecx, edi

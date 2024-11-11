@@ -18,8 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Double_Mod_2
-
-TMPL_DOUBLE_MOD2_HALF_AS_HEX dq 0x3FE0000000000000
+section '.text' executable align 16
 
 tmpl_Double_Mod_2:
     sub     rsp, 24
@@ -32,5 +31,9 @@ tmpl_Double_Mod_2:
     subsd   xmm1, xmm0
     movapd  xmm0, xmm1
     ret
+
+section '.rodata' align 16
+TMPL_DOUBLE_MOD2_HALF_AS_HEX:
+    dq 0x3FE0000000000000
 
 section '.note.GNU-stack'

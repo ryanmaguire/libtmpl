@@ -18,13 +18,14 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Long_Trailing_Zeros
+section '.text' executable align 16
 
 tmpl_Long_Trailing_Zeros:
-    xor       edx, edx
-    xor       eax, eax
-    rep bsf   rdx, rdi
-    test      rdi, rdi
-    cmovne    rax, rdx
+    xor     edx, edx
+    xor     eax, eax
+    rep bsf rdx, rdi
+    test    rdi, rdi
+    cmovne  eax, edx
     ret
 
 section '.note.GNU-stack'

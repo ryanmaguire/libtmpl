@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Float_Floor
+section '.text' executable align 16
 
 tmpl_Float_Floor:
     roundss xmm0, xmm0, 0x1

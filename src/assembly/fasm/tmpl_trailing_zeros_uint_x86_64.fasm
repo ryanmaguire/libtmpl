@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_UInt_Trailing_Zeros
+section '.text' executable align 16
 
 tmpl_UInt_Trailing_Zeros:
     bsf eax, edi

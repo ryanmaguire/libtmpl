@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Double_Ceil
+section '.text' executable align 16
 
 tmpl_Double_Ceil:
     roundsd xmm0, xmm0, 0x2

@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_LDouble_Floor
+section '.text' executable align 16
 
 tmpl_LDouble_Floor:
     fnstcw  [rsp - 10]

@@ -18,9 +18,10 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Float_Sqrt
+section '.text' executable align 16
 
 tmpl_Float_Sqrt:
-    sqrtss xmm0,xmm0
+    sqrtss xmm0, xmm0
     ret
 
 section '.note.GNU-stack'

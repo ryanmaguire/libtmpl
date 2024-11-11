@@ -18,8 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Float_Mod_2
-
-TMPL_FLOAT_MOD2_HALF_AS_HEX dd 0x3F000000
+section '.text' executable align 16
 
 tmpl_Float_Mod_2:
     sub     rsp, 24
@@ -32,5 +31,9 @@ tmpl_Float_Mod_2:
     subss   xmm1, xmm0
     movaps  xmm0, xmm1
     ret
+
+section '.rodata' align 16
+TMPL_FLOAT_MOD2_HALF_AS_HEX:
+    dd 0x3F000000
 
 section '.note.GNU-stack'

@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_LDouble_Fractional_Part
+section '.text' executable align 16
 
 tmpl_LDouble_Fractional_Part:
     fnstcw  word [rsp - 10]

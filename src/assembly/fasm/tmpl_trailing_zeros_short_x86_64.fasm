@@ -18,16 +18,14 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Short_Trailing_Zeros
+section '.text' executable align 16
 
 tmpl_Short_Trailing_Zeros:
-    xor    eax, eax
-    test   di, di
-    je    .L1
-    movzx  edi, di
-    mov    eax, -1
-    bsf    edi, edi
-    cmovne eax, edi
-.L1:
+    movsx   eax, di
+    xor     edx, edx
+    rep bsf eax, eax
+    test    di, di
+    cmove   eax, edx
     ret
 
 section '.note.GNU-stack'

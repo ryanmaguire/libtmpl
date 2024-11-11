@@ -18,6 +18,7 @@
 ;******************************************************************************;
 format ELF64
 public tmpl_Float_Fractional_Part
+section '.text' executable align 16
 
 tmpl_Float_Fractional_Part:
     roundss xmm1, xmm0, 0x3 ; xmm1 = trunc(xmm0)
