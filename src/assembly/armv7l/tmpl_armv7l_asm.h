@@ -34,7 +34,7 @@ func:
 #if defined(__ELF__)
 #define ASM_END(func)   \
 .size func, . - func;   \
-.section .note.GNU-stack,"",%progbits
+.section .note.GNU-stack, "", %progbits
 #else
 #define ASM_END(func)   \
 .size func, . - func

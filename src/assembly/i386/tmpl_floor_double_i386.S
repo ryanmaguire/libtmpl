@@ -57,8 +57,3 @@ ASM_BEGIN(tmpl_Double_Floor)
     addl    $12, %esp
     ret
 ASM_END(tmpl_Double_Floor)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

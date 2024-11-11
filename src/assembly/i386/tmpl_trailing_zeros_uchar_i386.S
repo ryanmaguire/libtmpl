@@ -25,8 +25,3 @@ ASM_BEGIN(tmpl_UChar_Trailing_Zeros)
     bsfl      %eax, %eax
     ret
 ASM_END(tmpl_UChar_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
