@@ -16,53 +16,40 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_sqrt_float                               *
+ *                             tmpl_sqrt_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains code for computing square roots at single precision.         *
+ *      Contains code for computing square roots at long double precision.    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Sqrt                                                       *
+ *      tmpl_LDouble_Sqrt                                                     *
  *  Purpose:                                                                  *
  *      Computes y = sqrt(x), the unique non-negative number y such that for  *
  *      non-negative x we have x = y^2.                                       *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      sqrt_x (float):                                                       *
- *          The square root of x at single precision.                         *
+ *      sqrt_x (long double):                                                 *
+ *          The square root of x at long double precision.                    *
  *  Called Functions:                                                         *
  *      vsqrt                                                                 *
  *  Method:                                                                   *
- *      For armv7l (armel/armhf) machines sqrt is a built-in function.        *
+ *      For armv7l (armhf) machines sqrt is a built-in function.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 3, 2022                                                   *
  ******************************************************************************/
-.arch armv7-a
-.text
-.align  1
-.p2align 2,,3
-.global tmpl_Float_Sqrt
-.arch armv7-a
-.syntax unified
-.thumb
-.thumb_func
-.fpu vfpv3-d16
-.type tmpl_Float_Sqrt, %function
 
-tmpl_Float_Sqrt:
-        vcmp.f32   s0, #0
-        vmov.f32   s15, s0
-        vmrs       APSR_nzcv, FPSCR
-        vsqrt.f32  s0, s15
-        bx         lr
+/*  Helper macros for armv7 assembly found here.                              */
+#include "tmpl_armv7l_asm.h"
 
-.size tmpl_Float_Sqrt, .-tmpl_Float_Sqrt
-
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
+ASM_BEGIN(tmpl_LDouble_Sqrt)
+    vcmp.f64   d0, #0
+    vmov.f64   d7, d0
+    vmrs       APSR_nzcv, FPSCR
+    vsqrt.f64  d0, d7
+    bx         lr
+ASM_END(tmpl_LDouble_Sqrt)
