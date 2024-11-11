@@ -29,8 +29,3 @@ ASM_BEGIN(tmpl_Short_Trailing_Zeros)
     clz     w0, w0          /* Count the number of leading zeros.             */
     ret                     /* Return the count.                              */
 ASM_END(tmpl_Short_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

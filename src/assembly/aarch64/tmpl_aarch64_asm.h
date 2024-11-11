@@ -27,11 +27,13 @@
 #ifdef __ELF__
 #define ELF_FUNC(func) .type func, %function
 #define ELF_SIZE(func) .size func, . - func
+#define GNU_STACK_PROTECTION .section .note.GNU-stack, "", %progbits
 #else
 /*  Else for #ifdef __ELF__.                                                  */
 
 #define ELF_FUNC(func)
 #define ELF_SIZE(func)
+#define GNU_STACK_PROTECTION
 #endif
 /*  End of #ifdef __ELF__.                                                    */
 
@@ -63,12 +65,14 @@ EXT(func):
  ******************************************************************************/
 #else
 
-#define ASM_END(func) ELF_SIZE(func)
-#define ASM_BEGIN(func)       \
-.text;                        \
-.align ALIGN;                 \
-.globl func;                  \
-ELF_FUNC(func);               \
+#define ASM_END(func)       \
+ELF_SIZE(func);             \
+GNU_STACK_PROTECTION
+#define ASM_BEGIN(func)     \
+.text;                      \
+.align ALIGN;               \
+.globl func;                \
+ELF_FUNC(func);             \
 func:
 
 #endif

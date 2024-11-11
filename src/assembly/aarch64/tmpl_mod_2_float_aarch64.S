@@ -51,8 +51,3 @@ ASM_BEGIN(tmpl_Float_Mod_2)
     fmsub   s0, s31, s30, s0    /* y = x - 2.0 * trunc(0.5 * x);    */
     ret                         /* return y;                        */
 ASM_END(tmpl_Float_Mod_2)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

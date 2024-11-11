@@ -51,8 +51,3 @@ ASM_BEGIN(tmpl_Double_Mod_2)
     fmsub   d0, d31, d30, d0    /* y = x - 2.0 * trunc(0.5 * x);    */
     ret                         /* return y;                        */
 ASM_END(tmpl_Double_Mod_2)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

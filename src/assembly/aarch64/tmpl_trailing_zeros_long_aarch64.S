@@ -25,8 +25,3 @@ ASM_BEGIN(tmpl_Long_Trailing_Zeros)
     clz  x0, x0     /*  Count the leading zeros of the reverse. */
     ret             /*  Return the count.                       */
 ASM_END(tmpl_Long_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

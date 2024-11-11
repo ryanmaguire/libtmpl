@@ -53,9 +53,3 @@ ASM_BEGIN(tmpl_Float_Fractional_Part)
     fsub   s0, s0, s31  /*  y = x - trunc(x);   */
     ret                 /*  return y;           */
 ASM_END(tmpl_Float_Fractional_Part)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
-/*  End of #if defined(__ELF__).                                              */

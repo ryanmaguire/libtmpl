@@ -53,9 +53,3 @@ ASM_BEGIN(tmpl_Double_Fractional_Part)
     fsub   d0, d0, d31  /*  y = x - trunc(x);   */
     ret                 /*  return y;           */
 ASM_END(tmpl_Double_Fractional_Part)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
-/*  End of #if defined(__ELF__).                                              */

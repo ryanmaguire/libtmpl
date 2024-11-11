@@ -27,8 +27,3 @@ ASM_BEGIN(tmpl_UInt_Trailing_Zeros)
     csel    w0, w1, wzr, ne /* If the input was zero, return zero.            */
     ret                     /* Return the count.                              */
 ASM_END(tmpl_UInt_Trailing_Zeros)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif

@@ -49,9 +49,3 @@ ASM_BEGIN(tmpl_Double_Floor)
     frintm d0, d0
     ret
 ASM_END(tmpl_Double_Floor)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
-/*  End of #if defined(__ELF__).                                              */

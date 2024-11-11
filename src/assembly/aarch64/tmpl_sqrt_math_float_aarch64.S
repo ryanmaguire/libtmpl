@@ -49,9 +49,3 @@ ASM_BEGIN(tmpl_Float_Sqrt)
     fsqrt s0, s0
     ret
 ASM_END(tmpl_Float_Sqrt)
-
-/* Enable stack protection.                                                   */
-#if defined(__ELF__)
-.section .note.GNU-stack,"",%progbits
-#endif
-/*  End of #if defined(__ELF__).                                              */
