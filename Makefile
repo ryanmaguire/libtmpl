@@ -175,28 +175,34 @@ TARGET_LIB_SHARED = libtmpl.so
 TARGET_LIB_STATIC = libtmpl.a
 
 # Directory all of the .o files will be placed in.
-BUILD_DIR = ./build
+BUILD_DIR = build
 
 # Location of all .c and .S files.
-SRC_DIRS = ./src
+SRC_DIRS = src
 
 # Compiler to be used. Override this to whatever you choose.
-CC ?= cc
+CC = cc
 
 # Archiver to be used. Only needed if a static build is made.
-AR ?= ar
+AR = ar
 
-ifdef BUILD_STATIC
-TARGET_LIB := $(TARGET_LIB_STATIC)
-else
-TARGET_LIB := $(TARGET_LIB_SHARED)
-endif
+# The user is allowed to specify their own flags.
+EXTRA_FLAGS =
+
+# The architecture libtmpl is being built on.
+ARCH = $(uname -m)
 
 # Default C flags. Note, some compilers (NVIDIA's, for example) do not
 # support the flto flag. Remove whichever flags your compiler does not
 # support. GCC, Clang, TCC, PCC, and AOCC handle these ones just fine.
 CFLAGS = -I../ -O3 -flto -fPIC -DNDEBUG -c
 LFLAGS = -O3 -fPIC -flto -DNDEBUG -shared
+
+ifdef BUILD_STATIC
+TARGET_LIB = $(TARGET_LIB_STATIC)
+else
+TARGET_LIB = $(TARGET_LIB_SHARED)
+endif
 
 # Some functions use omp with for-loops (void_pointer functions), if available.
 ifdef OMP
@@ -215,19 +221,9 @@ endif
 # GCC enabled, and if clang is being used the -Weverything warning is set,
 # which literally enables every warning. This helps check for standards
 # compliance. This Makefile has far fewer warnings enabled.
-CWARN = -Wall -Wextra -Wpedantic
-
-# The user is allowed to specify their own flags.
-ifdef EXTRA_FLAGS
-CWARN += $(EXTRA_FLAGS)
-endif
-
-# The architecture libtmpl is being built on.
-ifndef ARCH
-uname_m := $(shell uname -m)
-else
-uname_m := $(ARCH)
-endif
+CWARN = -Wall -Wextra -Wpedantic $(EXTRA_FLAGS)
+CONFIG_FLAGS =
+EXCLUDE =
 
 # A common trick in numerical analysis with floating point number is to
 # "split" a double, or long double, into two parts to preserver accuracy.
@@ -246,12 +242,12 @@ CAUTIOUS_SPLIT_ARCHS = i386 x86
 
 # The user can force the volatile split flag to be enabled.
 ifdef VOLATILE_SPLIT
-VOLATILE_SPLIT_ARCHS += $(uname_m)
+VOLATILE_SPLIT_ARCHS += $(ARCH)
 endif
 
 # The user can also force the cautious splitting flag to be enabled.
 ifdef CAUTIOUS_SPLIT
-CAUTIOUS_SPLIT_ARCHS += $(uname_m)
+CAUTIOUS_SPLIT_ARCHS += $(ARCH)
 endif
 
 else
@@ -266,21 +262,31 @@ CAUTIOUS_SPLIT_ARCHS =
 endif
 # End of ifndef NO_VOLATILE_SPLIT.
 
-CONFIG_FLAGS =
-EXCLUDE =
+# Enable splitting flags if requested, or if required. Cautious split
+# gets precedence over volatile split.
+ifeq ($(ARCH),$(filter $(ARCH), $(CAUTIOUS_SPLIT_ARCHS)))
+
+CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
+
+else ifeq ($(ARCH),$(filter $(ARCH), $(VOLATILE_SPLIT_ARCHS)))
+
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
+
+endif
+# End of splitting flags.
 
 # libtmpl will check if long long is available in config.c. If you do not want
 # long long functions compiled (for example, you're on a GNU/Linux machine where
 # long and long long are the same thing), set this option.
 ifdef NO_LONGLONG
 CONFIG_FLAGS += -DTMPL_SET_LONGLONG_FALSE
-EXCLUDE += -not -name "*_llong.c" -and -not -name "*_ullong.c" -and
+EXCLUDE += -not -name "*llong.c"
 endif
 
 # libtmpl provides its own implementation of libm. If you wish to use the
 # default libm implementation (if it exists) for your system enable this option.
 ifdef NO_MATH
-EXCLUDE += -not -name "*_math_*.c" -and
+EXCLUDE += -not -name "*_math_*.c"
 else
 CONFIG_FLAGS += -DTMPL_SET_USE_MATH_TRUE
 endif
@@ -289,7 +295,7 @@ endif
 # want to inline functions, set this option.
 ifndef NO_INLINE
 CONFIG_FLAGS += -DTMPL_SET_INLINE_TRUE
-EXCLUDE += -not -name "*_no_inline_*.c" -and
+EXCLUDE += -not -name "*_no_inline_*.c"
 endif
 
 # Whether or not to use the strictly portable code, or IEEE-754 compliant code.
@@ -307,7 +313,8 @@ ifdef NO_INT
 CONFIG_FLAGS += -DTMPL_SET_NO_INT
 endif
 
-ASM_INCLUDE =
+FASM_SRCS =
+ASM_SRCS =
 
 # If the user does not want to use any assembly code (that is, C only) only
 # include .c files. Ignore all .S or .fasm files. For x86_64/amd64, aarch64,
@@ -317,78 +324,61 @@ ifndef NO_ASM
 
 # amd64/x86_64 have various functions built-in, such as sqrt. Use assembly code
 # if possible for performance boosts.
-ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
+ifeq ($(ARCH),$(filter $(ARCH),x86_64 amd64))
 
 # Some function for x86_64 are written in FASM, the Flat Assembler, and have
 # much better times than the default C code.
 ifdef FASM
 
-ASM_FILES = $(shell find ./src/assembly/fasm/ -name "*.fasm" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/fasm/*.fasm" -or
-EXCLUDE += $(subst _x86_64.fasm,.c,$(ASM_FILES))
+FASM_SRCS = $(wildcard src/assembly/fasm/*.fasm)
+EXCLUDE += $(patsubst %_x86_64.fasm,-not -name "*%.c",$(notdir $(FASM_SRCS)))
 
 # The default is to use assembly code that GCC can understand. LLVM's clang and
 # the Portable C Compiler (PCC) are also able to compile this, tested on
 # Debian GNU/Linux 11 and 12.
 else
 
-ASM_FILES = $(shell find ./src/assembly/x86_64/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/x86_64/*.S" -or
-EXCLUDE += $(subst _x86_64.S,.c,$(ASM_FILES))
+ASM_SRCS = $(wildcard src/assembly/x86_64/*.S)
+EXCLUDE += $(patsubst %_x86_64.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
 
 endif
 # End of ifdef FASM.
 
 # x86 / i386 assembly is also available using GNU assembly (GAS).
-else ifeq ($(uname_m),$(filter $(uname_m),i386 x86))
+else ifeq ($(ARCH),$(filter $(ARCH),i386 x86))
 
-ASM_FILES = $(shell find ./src/assembly/i386/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/i386/*.S" -or
-EXCLUDE += $(subst _i386.S,.c,$(ASM_FILES))
+ASM_SRCS = $(wildcard src/assembly/i386/*.S)
+EXCLUDE += $(patsubst %_i386.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
 
 # Same idea, but for aarch64 (arm64). sqrt is also a built-in function.
-else ifeq ($(uname_m),$(filter $(uname_m),aarch64 arm64))
+else ifeq ($(ARCH),$(filter $(ARCH),aarch64 arm64))
 
-ASM_FILES = $(shell find ./src/assembly/aarch64/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/aarch64/*.S" -or
-EXCLUDE += $(subst _aarch64.S,.c,$(ASM_FILES))
+ASM_SRCS = $(wildcard src/assembly/aarch64/*.S)
+EXCLUDE += $(patsubst %_aarch64.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
 
 # Same idea, but for armv7l (armhf). sqrt is also a built-in function.
-else ifeq ($(uname_m),$(filter $(uname_m),armv7l))
+else ifeq ($(ARCH),$(filter $(ARCH),armv7l))
 
-ASM_FILES = $(shell find ./src/assembly/armv7l/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/armv7l/*.S" -or
-EXCLUDE += $(subst _armv7l.S,.c,$(ASM_FILES))
+ASM_SRCS = $(wildcard src/assembly/armv7l/*.S)
+EXCLUDE += $(patsubst %_armv7l.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
 
 # Lastly, PowerPC 64-bit little endian. Some assembly functions are provided.
-else ifeq ($(uname_m),$(filter $(uname_m),ppc64le))
+else ifeq ($(ARCH),$(filter $(ARCH),ppc64le))
 
-ASM_FILES = $(shell find ./src/assembly/ppc64le/ -name "*.S" -printf "-not -name \"*%f*\" -and ")
-ASM_INCLUDE += -wholename "./src/assembly/ppc64le/*.S" -or
-EXCLUDE += $(subst _ppc64le.S,.c,$(ASM_FILES))
+ASM_SRCS = $(wildcard src/assembly/ppc64le/*.S)
+EXCLUDE += $(patsubst %_ppc64le.S,-not -name "*%.c",$(notdir $(ASM_SRCS)))
 
 endif
-# End of ifeq ($(uname_m),$(filter $(uname_m),x86_64 amd64))
+# End of ifeq ($(ARCH),$(filter $(ARCH),x86_64 amd64))
 
 endif
 # End of ifndef NO_ASM.
 
-# Enable splitting flags if requested, or if required. Cautious split
-# gets precedence over volatile split.
-ifeq ($(uname_m),$(filter $(uname_m), $(CAUTIOUS_SPLIT_ARCHS)))
-
-CONFIG_FLAGS += -DTMPL_USE_CAUTIOUS_DOUBLE_SPLIT
-
-else ifeq ($(uname_m),$(filter $(uname_m), $(VOLATILE_SPLIT_ARCHS)))
-
-CONFIG_FLAGS += -DTMPL_USE_VOLATILE_DOUBLE_SPLIT
-
-endif
-# End of splitting flags.
-
-INCLUDE := \( $(ASM_INCLUDE) -name "*.c" \)
-SRCS := $(shell find $(SRC_DIRS) $(EXCLUDE) $(INCLUDE))
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+C_SRCS = $(shell find $(SRC_DIRS) $(EXCLUDE) -name "*.c")
+C_OBJS = $(C_SRCS:%=$(BUILD_DIR)/%.o)
+ASM_OBJS = $(ASM_SRCS:%=$(BUILD_DIR)/%.o)
+FASM_OBJS = $(FASM_SRCS:%=$(BUILD_DIR)/%.o)
+OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 
 .PHONY: clean install uninstall all install-local uninstall-local help
 
