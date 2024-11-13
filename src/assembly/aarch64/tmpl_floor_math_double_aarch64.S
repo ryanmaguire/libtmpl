@@ -45,7 +45,16 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl tmpl_Double_Floor
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Double_Floor)
+
+    /*  frintm is Round-to-Minus-Infinity (floor function).                   */
     frintm d0, d0
     ret
+
 ASM_END(tmpl_Double_Floor)

@@ -43,11 +43,30 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl tmpl_Float_Mod_2
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Float_Mod_2)
-    fmov    s31, 5.0e-1         /* Create constant 0.5.             */
-    fmov    s30, 2.0e+0         /* Create constant 2.0.             */
-    fmul    s31, s0, s31        /* y = 0.5*x;                       */
-    frintz  s31, s31            /* y = trunc(0.5*x);                */
-    fmsub   s0, s31, s30, s0    /* y = x - 2.0 * trunc(0.5 * x);    */
-    ret                         /* return y;                        */
+
+    /*  Create constant 0.5.                                                  */
+    fmov s31, 5.0e-1
+
+    /*  Create constant 2.0.                                                  */
+    fmov s30, 2.0e+0
+
+    /*  y = 0.5*x;                                                            */
+    fmul s31, s0, s31
+
+    /*  y = trunc(0.5*x); frintz is round-to-zero (truncate).                 */
+    frintz s31, s31
+
+    /*  y = x - 2.0 * trunc(0.5 * x);                                         */
+    fmsub s0, s31, s30, s0
+
+    /* return y;                                                              */
+    ret
+
 ASM_END(tmpl_Float_Mod_2)

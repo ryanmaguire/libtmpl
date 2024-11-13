@@ -54,11 +54,7 @@
 #endif
 
 #define ASM_END(func) ELF_SIZE(EXT(func))
-#define ASM_BEGIN(func)                                 \
-.section __TEXT, __text, regular, pure_instructions;    \
-.globl EXT(func);                                       \
-.p2align ALIGN;                                         \
-EXT(func):
+#define ASM_BEGIN(func) EXT(func):
 
 /******************************************************************************
  *                           GNU/Linux and FreeBSD                            *
@@ -68,6 +64,7 @@ EXT(func):
 #define ASM_END(func)       \
 ELF_SIZE(func);             \
 GNU_STACK_PROTECTION
+
 #define ASM_BEGIN(func)     \
 .text;                      \
 .align ALIGN;               \

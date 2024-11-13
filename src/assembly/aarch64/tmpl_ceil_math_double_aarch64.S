@@ -45,7 +45,16 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl tmpl_Double_Ceil
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Double_Ceil)
+
+    /*  frintp is Round-to-Positive-Infinity (ceiling function).              */
     frintp d0, d0
     ret
+
 ASM_END(tmpl_Double_Ceil)

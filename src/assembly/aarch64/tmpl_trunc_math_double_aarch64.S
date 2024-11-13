@@ -45,7 +45,18 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl tmpl_Double_Truncate
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Double_Truncate)
+
+    /*  frintz is Round-to-Zero (truncation). Compute y = trunc(x).           */
     frintz d0, d0
+
+    /*  return y;                                                             */
     ret
+
 ASM_END(tmpl_Double_Truncate)

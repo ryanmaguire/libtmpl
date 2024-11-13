@@ -48,8 +48,21 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl tmpl_Double_Fractional_Part
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Double_Fractional_Part)
-    frintz d31, d0      /*  y = trunc(x);       */
-    fsub   d0, d0, d31  /*  y = x - trunc(x);   */
-    ret                 /*  return y;           */
+
+    /*  frintz is Round-to-Zero (truncate function). Compute y = trunc(x).    */
+    frintz d31, d0
+
+    /*  The fractional part is the input minus the integer part. Compute.     */
+    fsub d0, d0, d31
+
+    /*  Return x - trunc(x).                                                  */
+    ret
+
 ASM_END(tmpl_Double_Fractional_Part)

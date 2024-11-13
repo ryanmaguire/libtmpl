@@ -190,7 +190,7 @@ AR = ar
 EXTRA_FLAGS =
 
 # The architecture libtmpl is being built on.
-ARCH = $(uname -m)
+ARCH = $(shell uname -m)
 
 # Default C flags. Note, some compilers (NVIDIA's, for example) do not
 # support the flto flag. Remove whichever flags your compiler does not
