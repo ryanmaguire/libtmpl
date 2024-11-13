@@ -195,9 +195,9 @@ float tmpl_Float_Mod_360(float x)
 
     /*  If abs_x * invpow2_360 was off by a bit, the floor of this may be off *
      *  by one. It is then possible that too many multiples of 360 were       *
-     *  subtracted off. If w.r is negative, add back 360.                     */
+     *  subtracted off. If abs_x is negative, add back 360.                   */
     if (abs_x < 0.0F)
-        w.r += 360.0F;
+        abs_x += 360.0F;
 
     /*  x mod 360 is an odd function. Use the original sign of x to finish.   */
     if (x < 0.0F)
