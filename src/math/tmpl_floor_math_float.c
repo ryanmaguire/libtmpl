@@ -42,7 +42,13 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_math.h:                                                          *
+ *  2.) tmpl_inttype.h:                                                       *
+ *          Provides fixed-width integer data types.                          *
+ *  3.) tmpl_ieee754_float.h:                                                 *
+ *          Contains the tmpl_IEEE754_Float union used for type punning.      *
+ *  4.) tmpl_floatint.h:                                                      *
+ *          Contains the tmpl_IEEE754_FloatInt32 union for type punning.      *
+ *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -61,84 +67,152 @@
 /*  Check for IEEE-754 support. This makes the function much faster.          */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
+/*  Check for 32-bit integer support.                                         */
+#if TMPL_HAS_FLOATINT32 == 1
+
+/******************************************************************************
+ *                   IEEE-754 Version with 32-Bit Integers                    *
+ ******************************************************************************/
+
 /*  If 32-bit integers are available, we can make the code shorter.           */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  Check for 32-bit integer support.                                         */
-#if TMPL_HAS_32_BIT_INT == 1
+/*  tmpl_IEEE754_FloatInt32 data type provided here.                          */
+#include <libtmpl/include/tmpl_floatint.h>
 
 /*  Function for computing the floor of a float (floorf equivalent).          */
 float tmpl_Float_Floor(float x)
 {
-    union {
-        tmpl_IEEE754_Float w;
-        tmpl_UInt32 i;
-    } word32;
-    tmpl_UInt32 i, j;
+    /*  Union of a 32-bit int and a float.                                    */
+    tmpl_IEEE754_FloatInt32 word32;
 
-    word32.w.r = x;
+    /*  The lower fractional bits (non-integral) will be stored here.         */
+    tmpl_UInt32 fractional_bits;
 
-    if (word32.w.bits.expo < TMPL_FLOAT_BIAS)
+    /*  Variable for the exponent, not offset by the bias.                    */
+    unsigned int exponent;
+
+    /*  Initialize the word to the input.                                     */
+    word32.f = x;
+
+    /*  If |x| < 1, we have floor(x) = 0 or -1, depending on the sign.        */
+    if (word32.w.bits.expo < TMPL_FLOAT_UBIAS)
     {
+        /*  Regardless of the sign of x, zero should map to zero.             */
         if (x == 0.0F)
             return x;
 
+        /*  For negative, floor(x) = -1.                                      */
         if (word32.w.bits.sign)
-            return -1.0;
-        else
-            return 0.0;
+            return -1.0F;
+
+        /*  And for 0 < x < 1, floor(x) = 0.                                  */
+        return 0.0F;
     }
 
-    if (word32.w.bits.expo > TMPL_FLOAT_BIAS + 22U)
+    /*  If the input is really big, there are no fractional bits. That is,    *
+     *  the input is already an integer. Return the input.                    */
+    if (word32.w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
-    i = ((word32.i >> 23U) & TMPL_FLOAT_NANINF_EXP) - TMPL_FLOAT_BIAS;
-    j = (tmpl_UInt32)(0x007FFFFF) >> i;
+    /*  We now have |x| >= 1, so the exponent in the word is greater than the *
+     *  bias. The difference is hence a positive number, so we do not need to *
+     *  cast to signed ints. Compute the exponent of the input.               */
+    exponent = word32.w.bits.expo - TMPL_FLOAT_UBIAS;
 
-    if ((word32.i & j) == 0)
+    /*  There are 23-bits in the mantissa. The bit-mask 0x007FFFFFU           *
+     *  represents 23 1's in binary. By shifting down by the exponent, we     *
+     *  get a bit-mask for the fractional bits of the input.                  */
+    fractional_bits = 0x007FFFFFU >> exponent;
+
+    /*  If none of the fractional bits of the input are 1, then the input was *
+     *  already an integer. Return the input.                                 */
+    if ((word32.n & fractional_bits) == 0)
         return x;
 
+    /*  For negative non-integer values, floor(x) = -floor(|x|+1). We can     *
+     *  compute the +1 term by adding to the 1's bit in the word. Note that   *
+     *  if this results in a carry, the sum will bleed over into the exponent *
+     *  part. This is perfectly fine since a carry means the exponent must    *
+     *  increase by 1, which is what the sum does.                            */
     if (word32.w.bits.sign)
-        word32.i += (tmpl_UInt32)(0x00800000) >> i;
+        word32.n += 0x00800000U >> exponent;
 
-    word32.i &= ~j;
-    return word32.w.r;
+    /*  The floor function can be computed by zeroing out all of the          *
+     *  fractional bits. This is achieved by using bit-wise and with the      *
+     *  complement of the fractional bits.                                    */
+    word32.n &= ~fractional_bits;
+
+    /*  word32 now has the floor of the input. Output the float part.         */
+    return word32.f;
 }
 /*  End of tmpl_Float_Floor.                                                  */
 
 #else
 /*  Else for #if TMPL_HAS_32_BIT_INT == 1.                                    */
 
+/******************************************************************************
+ *                  IEEE-754 Version without 32-Bit Integers                  *
+ ******************************************************************************/
+
 /*  This method does not require 32 bit integer types be available. It does   *
  *  require that IEEE-754 support for float is available. It is a little      *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
+/*  tmpl_IEEE754_Float data type provided here.                               */
+#include <libtmpl/include/tmpl_ieee754_float.h>
+
 /*  Function for computing the floor of a float (floorf equivalent).          */
 float tmpl_Float_Floor(float x)
 {
+    /*  Union of a float and the bits that represent it.                      */
     tmpl_IEEE754_Float w;
+
+    /*  Set the float part of the word to the input.                          */
     w.r = x;
 
+    /*  For arguments |x| < 1, either floor(x) = 0 or floor(x) = -1.          */
     if (w.bits.expo < TMPL_FLOAT_UBIAS)
     {
+        /*  Regardless of the sign of x, zero should map to zero.             */
         if (x == 0.0F)
             return x;
 
+        /*  For -1 < x < 0, we have floor(x) = -1.                            */
         if (w.bits.sign)
             return -1.0F;
-        else
-            return 0.0F;
+
+        /*  And for 0 < x < 1, we get floor(x) = 0.                           */
+        return 0.0F;
     }
 
+    /*  For very large arguments, |x| >= 2^23, x is already an integer.       */
     if (w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
+    /*  For |x| < 2^8, the floor function will zero out the last part of the  *
+     *  mantissa. man1 stores 16 bits, total.                                 */
     if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x08U)
     {
         w.bits.man1 = 0x00U;
-        w.bits.man0 &= (0x007FU << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
+
+        /*  We create a bit-mask that zeros out the lowest bits, which        *
+         *  represent the fractional part of the number. After this, w is     *
+         *  an integer value. The mask is created as follows. There are 23    *
+         *  bits total in the mantissa, 7 in man0 and 16 in man1. We've       *
+         *  already zeroed out the lower 16 bits in man1, so we need to zero  *
+         *  out the lower expo - 16 bits of man0, where expo is the exponent  *
+         *  of the input. Taking into account the bias, this is:              *
+         *      expo = w.bits.expo - TMPL_FLOAT_UBIAS                         *
+         *  To lower out the lower expo bits, we take the bit-mask 0x7F,      *
+         *  which is the hexidecimal representation of 7 1's in binary, and   *
+         *  shift this up 7 - expo bits. We then perform bit-wise and.        */
+        w.bits.man0 &= (0x7FU << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
     }
 
+    /*  Same idea as before, but this time we use a bit-mask starting with    *
+     *  0xFFFF, which is 16 1's in binary. This is because man1 contains 16   *
+     *  bits. We shift up 23 - expo = 0x17 - expo bits and do bit-wise and.   */
     else
         w.bits.man1 &= (0xFFFFU << (0x17U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
 
@@ -159,6 +233,10 @@ float tmpl_Float_Floor(float x)
 /*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
+ *                              Portable Version                              *
+ ******************************************************************************/
+
+/******************************************************************************
  *  DO NOT USE UNLESS YOU HAVE NO OTHER OPTIONS.                              *
  *      This code is portable but stupidly slow. The default build of libtmpl *
  *      uses assembly code that is very fast. If the user requested no        *
@@ -173,7 +251,7 @@ float tmpl_Float_Floor(float x)
  ******************************************************************************/
 
 /*  Powers of 2, 2^n, for n = 0 to n = 64.                                    */
-static const float tmpl_float_pow_2_table[65] = {
+static const float tmpl_float_floor_function_pow_2_table[65] = {
     1.0F, 2.0F, 4.0F, 8.0F, 16.0F, 32.0F, 64.0F, 128.0F, 256.0F, 512.0F,
     1024.0F, 2048.0F, 4096.0F, 8192.0F, 16384.0F, 32768.0F, 65536.0F, 131072.0F,
     262144.0F, 524288.0F, 1048576.0F, 2097152.0F, 4194304.0F, 8388608.0F,
@@ -194,6 +272,7 @@ static const float tmpl_float_pow_2_table[65] = {
 /*  Function for computing the floor of a float (floorf equivalent).          */
 float tmpl_Float_Floor(float x)
 {
+    /*  Declare necessary variables. C89 requires declarations are the top.   */
     float abs_x, mant, y, out;
     signed int expo;
 
@@ -212,10 +291,12 @@ float tmpl_Float_Floor(float x)
     /*  If expo < 0 we have |x| < 1. floor(x) = 0 if x >= 0 and -1 otherwise. */
     if (expo < 0)
     {
+        /*  For negative values, -1 < x < 0, we have floor(x) = -1.           */
         if (x < 0.0F)
             return -1.0F;
-        else
-            return 0.0F;
+
+        /*  Otherwise, for 0 < x < 1, we have floor(x) = 0.                   */
+        return 0.0F;
     }
 
     /*  This function is only accurate to 64 bits in the mantissa. For most   *
@@ -229,7 +310,7 @@ float tmpl_Float_Floor(float x)
 
     /*  We're going to "zero" the highest bit of the integer part of abs_x    *
      *  by substracting it off. Compute this from the lookup table.           */
-    y = tmpl_float_pow_2_table[expo];
+    y = tmpl_float_floor_function_pow_2_table[expo];
 
     /*  We will iteratively add the non-zero bits of the integer part to out, *
      *  resulting in us computing floor(abs_x).                               */
@@ -244,7 +325,7 @@ float tmpl_Float_Floor(float x)
     /*  Loop over the remaining bits of the integer part of abs_x and repeat. */
     while (expo >= 0)
     {
-        y = tmpl_float_pow_2_table[expo];
+        y = tmpl_float_floor_function_pow_2_table[expo];
 
         /*  If abs_x < y, this bit is already zero. No need to subtract.      */
         if (abs_x < y)
@@ -268,13 +349,11 @@ float tmpl_Float_Floor(float x)
             return x;
 
         /*  Otherwise, use the negation formula and return.                   */
-        else
-            return -1.0F - out;
+        return -1.0F - out;
     }
 
     /*  For positive values, we are done with the computation.                */
-    else
-        return out;
+    return out;
 }
 /*  End of tmpl_Float_Floor.                                                  */
 
