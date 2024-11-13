@@ -46,7 +46,7 @@
  *      sign exponent                mantissa                                 *
  *                                                                            *
  *      If exponent >= 52, the number is an integer. If exponent < 0, the     *
- *      number is such that |x| < 1, so floor(x) = 0 is x is non-negative,    *
+ *      number is such that |x| < 1, so floor(x) = 0 if x is non-negative,    *
  *      and -1 if x is negative. Otherwise, shift the bit point "exponent" to *
  *      the right and zero out all mantissa bits that are to the right of the *
  *      new bit point.                                                        *
@@ -74,7 +74,9 @@
  *          Provides fixed-width integer data types.                          *
  *  3.) tmpl_ieee754_double.h:                                                *
  *          Contains the tmpl_IEEE754_Double union used for type punning.     *
- *  4.) tmpl_math.h:                                                          *
+ *  4.) tmpl_floatint.h:                                                      *
+ *          Contains the tmpl_IEEE754_FloatInt64 union for type punning.      *
+ *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -313,7 +315,7 @@ TMPL_DOUBLE_FLOOR_FINISH:
  ******************************************************************************/
 
 /*  Powers of 2, 2^n, for n = 0 to n = 64.                                    */
-static const double tmpl_double_pow_2_table[65] = {
+static const double tmpl_double_floor_function_pow_2_table[65] = {
     1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256.0, 512.0, 1024.0, 2048.0,
     4096.0, 8192.0, 16384.0, 32768.0, 65536.0, 131072.0, 262144.0, 524288.0,
     1048576.0, 2097152.0, 4194304.0, 8388608.0, 16777216.0, 33554432.0,
@@ -333,6 +335,7 @@ static const double tmpl_double_pow_2_table[65] = {
 /*  Function for computing the floor of a double (floor equivalent).          */
 double tmpl_Double_Floor(double x)
 {
+    /*  Declare necessary variables. C89 requires declarations are the top.   */
     double abs_x, mant, y, out;
     signed int expo;
 
@@ -370,7 +373,7 @@ double tmpl_Double_Floor(double x)
 
     /*  We're going to "zero" the highest bit of the integer part of abs_x    *
      *  by substracting it off. Compute this from the lookup table.           */
-    y = tmpl_double_pow_2_table[expo];
+    y = tmpl_double_floor_function_pow_2_table[expo];
 
     /*  We will iteratively add the non-zero bits of the integer part to out, *
      *  resulting in us computing floor(abs_x).                               */
@@ -385,7 +388,7 @@ double tmpl_Double_Floor(double x)
     /*  Loop over the remaining bits of the integer part of abs_x and repeat. */
     while (expo >= 0)
     {
-        y = tmpl_double_pow_2_table[expo];
+        y = tmpl_double_floor_function_pow_2_table[expo];
 
         /*  If abs_x < y, this bit is already zero. No need to subtract.      *
          *  Otherwise, zero this bit out and add it to out.                   */
