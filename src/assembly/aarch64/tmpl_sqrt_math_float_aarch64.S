@@ -47,7 +47,7 @@
 
 #ifdef __APPLE__
 .section __TEXT, __text, regular, pure_instructions
-.globl tmpl_Float_Sqrt
+.globl EXT(tmpl_Float_Sqrt)
 .p2align ALIGN
 #endif
 

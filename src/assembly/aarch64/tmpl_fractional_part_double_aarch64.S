@@ -50,7 +50,7 @@
 
 #ifdef __APPLE__
 .section __TEXT, __text, regular, pure_instructions
-.globl tmpl_Double_Fractional_Part
+.globl EXT(tmpl_Double_Fractional_Part)
 .p2align ALIGN
 #endif
 

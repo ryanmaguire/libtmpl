@@ -47,7 +47,7 @@
 
 #ifdef __APPLE__
 .section __TEXT, __text, regular, pure_instructions
-.globl tmpl_Double_Floor
+.globl EXT(tmpl_Double_Floor)
 .p2align ALIGN
 #endif
 
