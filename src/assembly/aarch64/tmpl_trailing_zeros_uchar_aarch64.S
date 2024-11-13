@@ -20,10 +20,18 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl EXT(tmpl_UChar_Trailing_Zeros)
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_UChar_Trailing_Zeros)
+
     ands    w0, w0, 0xFF    /* Zero out all but the lowest 8 bits.            */
     rbit    w1, w0          /* Reverse the order of the input.                */
     clz     w1, w1          /* Count the number of leading zeros.             */
     csel    w0, w1, wzr, ne /* Set output to zero if the input was zero.      */
     ret                     /* Return the count.                              */
+
 ASM_END(tmpl_UChar_Trailing_Zeros)

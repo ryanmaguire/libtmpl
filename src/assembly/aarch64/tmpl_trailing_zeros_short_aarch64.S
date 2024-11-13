@@ -20,7 +20,14 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl EXT(tmpl_Short_Trailing_Zeros)
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Short_Trailing_Zeros)
+
     sxth    w0, w0          /* "Signed-Extend-Halfword", extends input.       */
     cmp     w0, 0
     csneg   w0, w0, w0, ge  /* Compute the absolute value of the input.       */
@@ -28,4 +35,5 @@ ASM_BEGIN(tmpl_Short_Trailing_Zeros)
     rbit    w0, w0          /* Reverse the order of the input.                */
     clz     w0, w0          /* Count the number of leading zeros.             */
     ret                     /* Return the count.                              */
+
 ASM_END(tmpl_Short_Trailing_Zeros)

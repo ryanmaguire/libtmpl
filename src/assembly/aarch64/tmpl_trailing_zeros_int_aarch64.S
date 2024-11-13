@@ -20,8 +20,16 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl EXT(tmpl_Int_Trailing_Zeros)
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Int_Trailing_Zeros)
+
     rbit w0, w0     /*  Reverse the bits of the input.          */
     clz  w0, w0     /*  Count the leading zeros of the reverse. */
     ret             /*  Return the count.                       */
+
 ASM_END(tmpl_Int_Trailing_Zeros)

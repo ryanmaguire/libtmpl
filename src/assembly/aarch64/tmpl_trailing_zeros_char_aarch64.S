@@ -20,9 +20,17 @@
 /*  Helper macros found here.                                                 */
 #include "tmpl_aarch64_asm.h"
 
+#ifdef __APPLE__
+.section __TEXT, __text, regular, pure_instructions
+.globl EXT(tmpl_Char_Trailing_Zeros)
+.p2align ALIGN
+#endif
+
 ASM_BEGIN(tmpl_Char_Trailing_Zeros)
+
     sxtb    w0, w0  /* "Signed-Extend-Byte" extend input to entire register.  */
     rbit    w0, w0  /* Reverse the order of the bits in the input.            */
     clz     w0, w0  /* Count the number of leading zeros.                     */
     ret             /* Return the count.                                      */
+
 ASM_END(tmpl_Char_Trailing_Zeros)
