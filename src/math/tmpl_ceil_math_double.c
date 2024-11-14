@@ -16,25 +16,25 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_floor_double                              *
+ *                              tmpl_ceil_double                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x) = |_x_|, the floor of x. This is the largest integer    *
- *      that is less than or equal to the input x.                            *
+ *      Computes the ceiling of x. This is the smallest integer that is       *
+ *      greater than or equal to the input x.                                 *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Floor                                                     *
+ *      tmpl_Double_Ceil                                                      *
  *  Purpose:                                                                  *
- *      Computes the floor function. The largest integer less than or equal   *
- *      to the input.                                                         *
+ *      Computes the ceiling function. The smallest integer that is greater   *
+ *      than or equal to the input.                                           *
  *  Arguments:                                                                *
  *      x (double):                                                           *
- *          A real number, the argument for |_x_|.                            *
+ *          A real number, the argument for ceil(x).                          *
  *  Output:                                                                   *
- *      floor_x (double):                                                     *
- *          The floor of x.                                                   *
+ *      ceil_x (double):                                                      *
+ *          The ceiling of x.                                                 *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -46,15 +46,16 @@
  *      sign exponent                mantissa                                 *
  *                                                                            *
  *      If exponent >= 52, the number is an integer. If exponent < 0, the     *
- *      number is such that |x| < 1, so floor(x) = 0 if x is non-negative,    *
- *      and -1 if x is negative. Otherwise, shift the bit point "exponent" to *
+ *      number is such that |x| < 1, so ceil(x) = 1 if x is positive,         *
+ *      and 0 if x is negative. Otherwise, shift the bit point "exponent" to  *
  *      the right and zero out all mantissa bits that are to the right of the *
- *      new bit point.                                                        *
+ *      new bit point. This computes the floor of x. If x = floor(x), we are  *
+ *      done, otherwise return floor(x) + 1.                                  *
  *                                                                            *
  *      The portable method uses a similar idea, but is very slow.            *
  *  Notes:                                                                    *
  *      1.) On several architectures (amd64 / x86_64, aarch64 / arm64)        *
- *          libtmpl implements the floor function in assembly code. This is   *
+ *          libtmpl implements the ceil function in assembly code. This is    *
  *          decently faster than any of the provided C routines below.        *
  *      2.) Two different type-punning methods are provided. The fastest      *
  *          assumes 64-bit integers are available and can be used for type    *
@@ -80,7 +81,7 @@
  *          Header file with the functions prototype.                         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 26, 2022                                            *
+ *  Date:       November 14, 2024                                             *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS is found here.                                   */
@@ -108,8 +109,8 @@
 /*  tmpl_IEEE754_FloatInt64 data type provided here.                          */
 #include <libtmpl/include/tmpl_floatint.h>
 
-/*  Function for computing the floor of a double (floor equivalent).          */
-double tmpl_Double_Floor(double x)
+/*  Function for computing the ceiling of a double (ceil equivalent).         */
+double tmpl_Double_Ceil(double x)
 {
     /*  Union of a 64-bit int and a double.                                   */
     tmpl_IEEE754_FloatInt64 word64;
@@ -123,19 +124,19 @@ double tmpl_Double_Floor(double x)
     /*  Initialize the word to the input.                                     */
     word64.f = x;
 
-    /*  If |x| < 1, we have floor(x) = 0 or -1, depending on the sign.        */
+    /*  If |x| < 1, we have ceil(x) = 1 or 0, depending on the sign.          */
     if (word64.w.bits.expo < TMPL_DOUBLE_UBIAS)
     {
         /*  Regardless of the sign of x, zero should map to zero.             */
         if (x == 0.0)
             return x;
 
-        /*  For negative, floor(x) = -1.                                      */
+        /*  For negative, ceil(x) = 0.                                        */
         if (word64.w.bits.sign)
-            return -1.0;
+            return 0.0;
 
-        /*  And for 0 < x < 1, floor(x) = 0.                                  */
-        return 0.0;
+        /*  And for 0 < x < 1, ceil(x) = 1.                                   */
+        return 1.0;
     }
 
     /*  If the input is really big, there are no fractional bits. That is,    *
@@ -158,23 +159,24 @@ double tmpl_Double_Floor(double x)
     if ((word64.n & fractional_bits) == 0)
         return x;
 
-    /*  For negative non-integer values, floor(x) = -floor(|x|+1). We can     *
+    /*  For positive non-integer values, ceil(x) = floor(x+1). We can         *
      *  compute the +1 term by adding to the 1's bit in the word. Note that   *
      *  if this results in a carry, the sum will bleed over into the exponent *
      *  part. This is perfectly fine since a carry means the exponent must    *
      *  increase by 1, which is what the sum does.                            */
-    if (word64.w.bits.sign)
+    if (!word64.w.bits.sign)
         word64.n += 0x0010000000000000 >> exponent;
 
-    /*  The floor function can be computed by zeroing out all of the          *
-     *  fractional bits. This is achieved by using bit-wise and with the      *
-     *  complement of the fractional bits.                                    */
+    /*  For negative non-integer values, we have ceil(x) = -floor(-x), and    *
+     *  for positive numbers we have ceil(x) = floor(x+1). In either case we  *
+     *  just compute the floor function. This is done by zeroing out all of   *
+     *  the fractional bits.                                                  */
     word64.n &= ~fractional_bits;
 
-    /*  word64 now has the floor of the input. Output the double part.        */
+    /*  word64 now has the ceil of the input. Output the double part.         */
     return word64.f;
 }
-/*  End of tmpl_Double_Floor.                                                 */
+/*  End of tmpl_Double_Ceil.                                                  */
 
 #else
 /*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
@@ -190,8 +192,8 @@ double tmpl_Double_Floor(double x)
 /*  tmpl_IEEE754_Double data type provided here.                              */
 #include <libtmpl/include/tmpl_ieee754_double.h>
 
-/*  Function for computing the floor of a double (floor equivalent).          */
-double tmpl_Double_Floor(double x)
+/*  Function for computing the ceiling of a double (ceil equivalent).         */
+double tmpl_Double_Ceil(double x)
 {
     /*  Union of a double and the bits that represent it.                     */
     tmpl_IEEE754_Double w;
@@ -199,26 +201,26 @@ double tmpl_Double_Floor(double x)
     /*  Set the double part of the word to the input.                         */
     w.r = x;
 
-    /*  For arguments |x| < 1, either floor(x) = 0 or floor(x) = -1.          */
+    /*  For arguments |x| < 1, either ceil(x) = 0 or ceil(x) = 1.             */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS)
     {
         /*  Regardless of the sign of x, zero should map to zero.             */
         if (x == 0.0)
             return x;
 
-        /*  For -1 < x < 0, we have floor(x) = -1.                            */
-        if (w.bits.sign)
-            return -1.0;
+        /*  For -1 < x < 0, we have ceil(x) = 0.                              */
+        if (TMPL_DOUBLE_IS_NEGATIVE(w))
+            return 0.0;
 
-        /*  And for 0 < x < 1, we get floor(x) = 0.                           */
-        return 0.0;
+        /*  And for 0 < x < 1, we get ceil(x) = 1.                            */
+        return 1.0;
     }
 
     /*  For very large arguments, |x| >= 2^52, x is already an integer.       */
     if (w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
         return x;
 
-    /*  For |x| < 2^36, the floor function will zero out the last part of the *
+    /*  For |x| < 2^36, the ceil function will zero out the last part of the  *
      *  mantissa. man3 stores 16 bits, similar to man1 and man2.              */
     if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x24U)
         w.bits.man3 = 0x00U;
@@ -239,7 +241,7 @@ double tmpl_Double_Floor(double x)
          *  0x34 - (w.bits.expo - TMPL_DOUBLE_UBIAS) will zero out the lower  *
          *  bits, creating the appropriate bit-mask.                          */
         w.bits.man3 &= (0xFFFFU << (0x34U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_FLOOR_FINISH;
+        goto TMPL_DOUBLE_CEIL_FINISH;
     }
 
     /*  If |x| < 2^20, the second part of the mantissa is zeroed out as well. */
@@ -254,7 +256,7 @@ double tmpl_Double_Floor(double x)
          *  parts of the input. Since the upper 16 bits have already been     *
          *  zeroed out, we shift by 52 - 16 = 36, which is 0x24 in hex.       */
         w.bits.man2 &= (0xFFFFU << (0x24U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_FLOOR_FINISH;
+        goto TMPL_DOUBLE_CEIL_FINISH;
     }
 
     /*  If |x| < 2^4, the higher three parts of the mantissa all need to be   *
@@ -269,7 +271,7 @@ double tmpl_Double_Floor(double x)
         /*  Use a bit-mask to zero out the fractional part. The upper 32 bits *
          *  have been zeroed out, so we shift by 52 - 32 = 20 (0x14 in hex).  */
         w.bits.man1 &= (0xFFFFU << (0x14U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_FLOOR_FINISH;
+        goto TMPL_DOUBLE_CEIL_FINISH;
     }
 
     /*  The lowest part of the mantissa is 4 bits, unlike the other 3 parts   *
@@ -278,17 +280,17 @@ double tmpl_Double_Floor(double x)
     w.bits.man0 &= (0x000FU << (0x04U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
 
     /*  We need to handle positive and negative inputs carefully.             */
-TMPL_DOUBLE_FLOOR_FINISH:
+TMPL_DOUBLE_CEIL_FINISH:
 
-    /*  For negative inputs, use floor(x) = -floor(-x) - 1. This is true      *
+    /*  For positive inputs, use ceil(x) = floor(x) + 1. This is true         *
      *  unless the input was already an integer. Check for this.              */
-    if (TMPL_DOUBLE_IS_NEGATIVE(w) && w.r != x)
-        return w.r - 1.0;
+    if (!TMPL_DOUBLE_IS_NEGATIVE(w) && w.r != x)
+        return w.r + 1.0;
 
-    /*  Otherwise w is now correctly set to the floor of the input.           */
+    /*  Otherwise w is now correctly set to the ceil of the input.            */
     return w.r;
 }
-/*  End of tmpl_Double_Floor.                                                 */
+/*  End of tmpl_Double_Ceil.                                                  */
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
@@ -308,20 +310,20 @@ TMPL_DOUBLE_FLOOR_FINISH:
  *      used, and is nearly as fast. This portable code is available in case  *
  *      assembly language nor IEEE-754 support can be used, but it is slow.   *
  *                                                                            *
- *      On x86_64 machines, the assembly code and both versions of the floor  *
+ *      On x86_64 machines, the assembly code and both versions of the ceil   *
  *      function above that take advantage of the IEEE-754 format have        *
  *      computational time comparable to other libm implementations. This     *
  *      version is about 10x slower.                                          *
  ******************************************************************************/
 
-/*  Function for computing the floor of a double (floor equivalent).          */
-double tmpl_Double_Floor(double x)
+/*  Function for computing the ceiling of a double (ceil equivalent).         */
+double tmpl_Double_Ceil(double x)
 {
     /*  Declare necessary variables. C89 requires declarations are the top.   */
     double abs_x, mant, y, out;
     signed int expo;
 
-    /*  Special case, floor(0) = 0.                                           */
+    /*  Special case, ceil(0) = 0.                                            */
     if (x == 0.0)
         return x;
 
@@ -333,15 +335,15 @@ double tmpl_Double_Floor(double x)
      *  1 <= |mant| < 2. That is, the base 2 scientific notation of x.        */
     tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
 
-    /*  If expo < 0 we have |x| < 1. floor(x) = 0 if x >= 0 and -1 otherwise. */
+    /*  If expo < 0 we have |x| < 1. ceil(x) = 1 if x >= 0 and 0 otherwise.   */
     if (expo < 0)
     {
-        /*  For negative values, -1 < x < 0, we have floor(x) = -1.           */
+        /*  For negative values, -1 < x < 0, we have ceil(x) = 0.             */
         if (x < 0.0)
-            return -1.0;
+            return 0.0;
 
-        /*  Otherwise, for 0 < x < 1, we have floor(x) = 0.                   */
-        return 0.0;
+        /*  Otherwise, for 0 < x < 1, we have ceil(x) = 1.                    */
+        return 1.0;
     }
 
     /*  This function is only accurate to 64 bits in the mantissa. For most   *
@@ -349,8 +351,8 @@ double tmpl_Double_Floor(double x)
     else if (expo > 64)
         return x;
 
-    /*  Use the fact that floor(x) = -1 - floor(-x) for negative non-integer  *
-     *  values to reduce the argument.                                        */
+    /*  Use the fact that ceil(x) = floor(x + 1) for positive non-integer and *
+     *  ceil(x) = -floor(-x) for negative inputs to reduce the argument.      */
     abs_x = tmpl_Double_Abs(x);
 
     /*  We're going to "zero" the highest bit of the integer part of abs_x    *
@@ -358,7 +360,7 @@ double tmpl_Double_Floor(double x)
     y = tmpl_double_pow_2_table[expo];
 
     /*  We will iteratively add the non-zero bits of the integer part to out, *
-     *  resulting in us computing floor(abs_x).                               */
+     *  resulting in us computing ceil(abs_x).                                */
     out = y;
 
     /*  Zero out the highest bit of abs_x by subtracting y.                   */
@@ -388,7 +390,7 @@ double tmpl_Double_Floor(double x)
         --expo;
     }
 
-    /*  If the input was negative we need to use floor(x) = -1 - floor(-x).   */
+    /*  If the input was negative we need to use ceil(x) = -floor(-x).        */
     if (x < 0.0)
     {
         /*  The formula does not work for integers. If the input was an       *
@@ -397,13 +399,13 @@ double tmpl_Double_Floor(double x)
             return x;
 
         /*  Otherwise, use the negation formula and return.                   */
-        return -1.0 - out;
+        return -out;
     }
 
-    /*  For positive values, we are done with the computation.                */
-    return out;
+    /*  For positive values, use ceil(x) = floor(x + 1) and return.           */
+    return out + 1.0;
 }
-/*  End of tmpl_Double_Floor.                                                 */
+/*  End of tmpl_Double_Ceil.                                                  */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */

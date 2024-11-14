@@ -628,6 +628,18 @@ extern const double tmpl_double_sinpi_table[128];
 extern const float tmpl_float_sinpi_table[128];
 extern const long double tmpl_ldouble_sinpi_table[128];
 
+#if TMPL_HAS_IEEE754_DOUBLE != 1
+extern const double tmpl_double_pow_2_table[65];
+#endif
+
+#if TMPL_HAS_IEEE754_FLOAT != 1
+extern const float tmpl_float_pow_2_table[65];
+#endif
+
+#if TMPL_HAS_IEEE754_LDOUBLE != 1
+extern const long double tmpl_ldouble_pow_2_table[65];
+#endif
+
 /******************************************************************************
  *                           Non-Inlined Functions                            *
  ******************************************************************************/
