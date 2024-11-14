@@ -225,7 +225,22 @@ void tmpl_Double_Base2_Mant_and_Exp(double x, double *mant, signed int *expo)
     /*  If |x| < 1,0, compute with 1/|x|. We'll then negate the exponent at   *
      *  the end of the computation.                                           */
     if (abs_x < 1.0)
+    {
         *mant = 1.0 / abs_x;
+
+        /*  Check if this division caused an overflow.                        */
+        if (tmpl_Double_Is_Inf(*mant))
+        {
+            /*  The input is probably subnormal / denormal. There is no good  *
+             *  way to handle this portably without IEEE-754 assumptions.     *
+             *  Signal this to the caller, set the exponent to -65535. This   *
+             *  is much smaller than any of the common representations of     *
+             *  double, or long double.                                       */
+            *mant = 1.0;
+            *expo = -65535;
+            return;
+        }
+    }
 
     /*  If |x| >= 1.0, the exponent is non-negative. No need to invert.       */
     else
