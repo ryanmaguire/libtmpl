@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_ceil_double                              *
+ *                              tmpl_ceil_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the ceiling of x. This is the smallest integer that is       *
@@ -25,27 +25,27 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Ceil                                                      *
+ *      tmpl_Float_Ceil                                                       *
  *  Purpose:                                                                  *
  *      Computes the ceiling function. The smallest integer that is greater   *
  *      than or equal to the input.                                           *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number, the argument for ceil(x).                          *
  *  Output:                                                                   *
- *      ceil_x (double):                                                      *
+ *      ceil_x (float):                                                       *
  *          The ceiling of x.                                                 *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      If IEEE-754 support is available, use bit-twiddling. A double is      *
+ *      If IEEE-754 support is available, use bit-twiddling. A float is       *
  *      represented as follows:                                               *
  *                                                                            *
- *        s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  *
- *        - ----------- ----------------------------------------------------  *
- *      sign exponent                mantissa                                 *
+ *              s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                            *
+ *              - -------- -----------------------                            *
+ *           sign exponent        mantissa                                    *
  *                                                                            *
- *      If exponent >= 52, the number is an integer. If exponent < 0, the     *
+ *      If exponent >= 23, the number is an integer. If exponent < 0, the     *
  *      number is such that |x| < 1, so ceil(x) = 1 if x is positive,         *
  *      and 0 if x is negative. Otherwise, shift the bit point "exponent" to  *
  *      the right and zero out all mantissa bits that are to the right of the *
@@ -58,10 +58,10 @@
  *          libtmpl implements the ceil function in assembly code. This is    *
  *          decently faster than any of the provided C routines below.        *
  *      2.) Two different type-punning methods are provided. The fastest      *
- *          assumes 64-bit integers are available and can be used for type    *
- *          punning. The slower one does not assume 64-bit fixed width        *
+ *          assumes 32-bit integers are available and can be used for type    *
+ *          punning. The slower one does not assume 32-bit fixed width        *
  *          integers are available. Instead it messes with the bits in the    *
- *          tmpl_IEEE754_Double union. Both methods assume IEEE-754 support.  *
+ *          tmpl_IEEE754_Floar union. Both methods assume IEEE-754 support.   *
  *          libtmpl determines if this is available upon building.            *
  *      3.) The "portable" method is dreadfully slow, about 10x worse. It is  *
  *          primarily here for experimentation. Only use it if you have no    *
@@ -73,10 +73,10 @@
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_inttype.h:                                                       *
  *          Provides fixed-width integer data types.                          *
- *  3.) tmpl_ieee754_double.h:                                                *
- *          Contains the tmpl_IEEE754_Double union used for type punning.     *
+ *  3.) tmpl_ieee754_float.h:                                                 *
+ *          Contains the tmpl_IEEE754_Float union used for type punning.      *
  *  4.) tmpl_floatint.h:                                                      *
- *          Contains the tmpl_IEEE754_FloatInt64 union for type punning.      *
+ *          Contains the tmpl_IEEE754_FloatInt32 union for type punning.      *
  *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -94,69 +94,69 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support. This makes the function much faster.          */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
-/*  Check for 64-bit integer support.                                         */
-#if TMPL_HAS_FLOATINT64 == 1
+/*  Check for 32-bit integer support.                                         */
+#if TMPL_HAS_FLOATINT32 == 1
 
 /******************************************************************************
- *                   IEEE-754 Version with 64-Bit Integers                    *
+ *                   IEEE-754 Version with 32-Bit Integers                    *
  ******************************************************************************/
 
 /*  Fixed-width integers are found here.                                      */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  tmpl_IEEE754_FloatInt64 data type provided here.                          */
+/*  tmpl_IEEE754_FloatInt32 data type provided here.                          */
 #include <libtmpl/include/tmpl_floatint.h>
 
-/*  Function for computing the ceiling of a double (ceil equivalent).         */
-double tmpl_Double_Ceil(double x)
+/*  Function for computing the ceiling of a float (ceilf equivalent).         */
+float tmpl_Float_Ceil(float x)
 {
-    /*  Union of a 64-bit int and a double.                                   */
-    tmpl_IEEE754_FloatInt64 word64;
+    /*  Union of a 32-bit int and a float.                                    */
+    tmpl_IEEE754_FloatInt32 word32;
 
     /*  The lower fractional bits (non-integral) will be stored here.         */
-    tmpl_UInt64 fractional_bits;
+    tmpl_UInt32 fractional_bits;
 
     /*  Variable for the exponent, not offset by the bias.                    */
     unsigned int exponent;
 
     /*  Initialize the word to the input.                                     */
-    word64.f = x;
+    word32.f = x;
 
     /*  If |x| < 1, we have ceil(x) = 1 or 0, depending on the sign.          */
-    if (word64.w.bits.expo < TMPL_DOUBLE_UBIAS)
+    if (word32.w.bits.expo < TMPL_FLOAT_UBIAS)
     {
         /*  Regardless of the sign of x, zero should map to zero.             */
-        if (x == 0.0)
+        if (x == 0.0F)
             return x;
 
         /*  For negative, ceil(x) = 0.                                        */
-        if (word64.w.bits.sign)
-            return 0.0;
+        if (word32.w.bits.sign)
+            return 0.0F;
 
         /*  And for 0 < x < 1, ceil(x) = 1.                                   */
-        return 1.0;
+        return 1.0F;
     }
 
     /*  If the input is really big, there are no fractional bits. That is,    *
      *  the input is already an integer. Return the input.                    */
-    if (word64.w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
+    if (word32.w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
     /*  We now have |x| >= 1, so the exponent in the word is greater than the *
      *  bias. The difference is hence a positive number, so we do not need to *
      *  cast to signed ints. Compute the exponent of the input.               */
-    exponent = word64.w.bits.expo - TMPL_DOUBLE_UBIAS;
+    exponent = word32.w.bits.expo - TMPL_FLOAT_UBIAS;
 
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x000FFFFFFFFFFFFFU >> exponent;
+    fractional_bits = 0x007FFFFFU >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
-    if ((word64.n & fractional_bits) == 0)
+    if ((word32.n & fractional_bits) == 0)
         return x;
 
     /*  For positive non-integer values, ceil(x) = floor(x+1). We can         *
@@ -164,139 +164,103 @@ double tmpl_Double_Ceil(double x)
      *  if this results in a carry, the sum will bleed over into the exponent *
      *  part. This is perfectly fine since a carry means the exponent must    *
      *  increase by 1, which is what the sum does.                            */
-    if (!word64.w.bits.sign)
-        word64.n += 0x0010000000000000 >> exponent;
+    if (!word32.w.bits.sign)
+        word32.n += 0x00800000U >> exponent;
 
     /*  For negative non-integer values, we have ceil(x) = -floor(-x), and    *
      *  for positive numbers we have ceil(x) = floor(x+1). In either case we  *
      *  just compute the floor function. This is done by zeroing out all of   *
      *  the fractional bits.                                                  */
-    word64.n &= ~fractional_bits;
+    word32.n &= ~fractional_bits;
 
-    /*  word64 now has the ceil of the input. Output the double part.         */
-    return word64.f;
+    /*  word32 now has the ceil of the input. Output the float part.          */
+    return word32.f;
 }
-/*  End of tmpl_Double_Ceil.                                                  */
+/*  End of tmpl_Float_Ceil.                                                   */
 
 #else
-/*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
+/*  Else for #if TMPL_HAS_FLOATINT32 == 1.                                    */
 
 /******************************************************************************
- *                  IEEE-754 Version without 64-Bit Integers                  *
+ *                  IEEE-754 Version without 32-Bit Integers                  *
  ******************************************************************************/
 
-/*  This method does not require 64 bit integer types be available. It does   *
- *  require that IEEE-754 support for double is available. It is a little     *
+/*  This method does not require 32 bit integer types be available. It does   *
+ *  require that IEEE-754 support for float is available. It is a little      *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
-/*  tmpl_IEEE754_Double data type provided here.                              */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+/*  tmpl_IEEE754_Float data type provided here.                               */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
-/*  Function for computing the ceiling of a double (ceil equivalent).         */
-double tmpl_Double_Ceil(double x)
+/*  Function for computing the ceiling of a float (ceilf equivalent).         */
+float tmpl_Float_Ceil(float x)
 {
-    /*  Union of a double and the bits that represent it.                     */
-    tmpl_IEEE754_Double w;
+    /*  Union of a float and the bits that represent it.                      */
+    tmpl_IEEE754_Float w;
 
-    /*  Set the double part of the word to the input.                         */
+    /*  Set the float part of the word to the input.                          */
     w.r = x;
 
     /*  For arguments |x| < 1, either ceil(x) = 0 or ceil(x) = 1.             */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS)
+    if (w.bits.expo < TMPL_FLOAT_UBIAS)
     {
         /*  Regardless of the sign of x, zero should map to zero.             */
-        if (x == 0.0)
+        if (x == 0.0F)
             return x;
 
         /*  For -1 < x < 0, we have ceil(x) = 0.                              */
-        if (TMPL_DOUBLE_IS_NEGATIVE(w))
-            return 0.0;
+        if (TMPL_FLOAT_IS_NEGATIVE(w))
+            return 0.0F;
 
         /*  And for 0 < x < 1, we get ceil(x) = 1.                            */
-        return 1.0;
+        return 1.0F;
     }
 
-    /*  For very large arguments, |x| >= 2^52, x is already an integer.       */
-    if (w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
+    /*  For very large arguments, |x| >= 2^23, x is already an integer.       */
+    if (w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
-    /*  For |x| < 2^36, the ceil function will zero out the last part of the  *
-     *  mantissa. man3 stores 16 bits, similar to man1 and man2.              */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x24U)
-        w.bits.man3 = 0x00U;
-
-    /*  For 2^36 <= |x| < 2^52, only the last part of the mantissa needs to   *
-     *  modified. The other bits represent the integer part of x.             */
-    else
+    /*  For |x| < 2^8, the floor function will zero out the last part of the  *
+     *  mantissa. man1 stores 16 bits, total.                                 */
+    if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x08U)
     {
-        /*  We create a bit-mask that zeros out the lowest bits, which        *
-         *  represent the fractional part of the number. After this, w is     *
-         *  an integer value. The mask is created as follows. 0xFFFF is the   *
-         *  hexidecimal representation of 16 1's in binary. We want the lower *
-         *  bits to be zero so that bit-wise and will kill these off. The     *
-         *  exact bits we want to be zero is given by the exponent of the     *
-         *  input. There are 52 (0x34 in hex) bits total, so we want the last *
-         *  52 - expo bits to be zero. The exponent is offset by a bias, so   *
-         *  expo = w.bits.expo - TMPL_DOUBLE_UBIAS. In total, shifting up by  *
-         *  0x34 - (w.bits.expo - TMPL_DOUBLE_UBIAS) will zero out the lower  *
-         *  bits, creating the appropriate bit-mask.                          */
-        w.bits.man3 &= (0xFFFFU << (0x34U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_CEIL_FINISH;
-    }
-
-    /*  If |x| < 2^20, the second part of the mantissa is zeroed out as well. */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x14U)
-        w.bits.man2 = 0x00U;
-
-    /*  Otherwise, if 2^20 <= |x| < 2^36, the highest part of the mantissa    *
-     *  needs to be zeroed out, and the second high part must be modified.    */
-    else
-    {
-        /*  Similar to before, create a bit-mask to zero out the fractional   *
-         *  parts of the input. Since the upper 16 bits have already been     *
-         *  zeroed out, we shift by 52 - 16 = 36, which is 0x24 in hex.       */
-        w.bits.man2 &= (0xFFFFU << (0x24U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_CEIL_FINISH;
-    }
-
-    /*  If |x| < 2^4, the higher three parts of the mantissa all need to be   *
-     *  zeroed out.                                                           */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x04U)
         w.bits.man1 = 0x00U;
 
-    /*  Otherwise, for 2^4 <= |x| < 2^20, zero out the upper two parts and    *
-     *  modify the second lowest part.                                        */
-    else
-    {
-        /*  Use a bit-mask to zero out the fractional part. The upper 32 bits *
-         *  have been zeroed out, so we shift by 52 - 32 = 20 (0x14 in hex).  */
-        w.bits.man1 &= (0xFFFFU << (0x14U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_CEIL_FINISH;
+        /*  We create a bit-mask that zeros out the lowest bits, which        *
+         *  represent the fractional part of the number. After this, w is     *
+         *  an integer value. The mask is created as follows. There are 23    *
+         *  bits total in the mantissa, 7 in man0 and 16 in man1. We've       *
+         *  already zeroed out the lower 16 bits in man1, so we need to zero  *
+         *  out the lower expo - 16 bits of man0, where expo is the exponent  *
+         *  of the input. Taking into account the bias, this is:              *
+         *      expo = w.bits.expo - TMPL_FLOAT_UBIAS                         *
+         *  To lower out the lower expo bits, we take the bit-mask 0x7F,      *
+         *  which is the hexidecimal representation of 7 1's in binary, and   *
+         *  shift this up 7 - expo bits. We then perform bit-wise and.        */
+        w.bits.man0 &= (0x7FU << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
     }
 
-    /*  The lowest part of the mantissa is 4 bits, unlike the other 3 parts   *
-     *  which are 16 bits each. Use a bit-mask to zero out the fractional     *
-     *  part of the mantissa.                                                 */
-    w.bits.man0 &= (0x000FU << (0x04U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-
-    /*  We need to handle positive and negative inputs carefully.             */
-TMPL_DOUBLE_CEIL_FINISH:
+    /*  Same idea as before, but this time we use a bit-mask starting with    *
+     *  0xFFFF, which is 16 1's in binary. This is because man1 contains 16   *
+     *  bits. We shift up 23 - expo = 0x17 - expo bits and do bit-wise and.   */
+    else
+        w.bits.man1 &= (0xFFFFU << (0x17U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
 
     /*  For positive inputs, use ceil(x) = floor(x) + 1. This is true         *
      *  unless the input was already an integer. Check for this.              */
-    if (!TMPL_DOUBLE_IS_NEGATIVE(w) && w.r != x)
-        return w.r + 1.0;
+    if (!TMPL_FLOAT_IS_NEGATIVE(w) && w.r != x)
+        return w.r + 1.0F;
 
     /*  Otherwise w is now correctly set to the ceil of the input.            */
     return w.r;
 }
-/*  End of tmpl_Double_Ceil.                                                  */
+/*  End of tmpl_Float_Ceil.                                                   */
 
 #endif
-/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
@@ -316,34 +280,34 @@ TMPL_DOUBLE_CEIL_FINISH:
  *      version is about 10x slower.                                          *
  ******************************************************************************/
 
-/*  Function for computing the ceiling of a double (ceil equivalent).         */
-double tmpl_Double_Ceil(double x)
+/*  Function for computing the ceiling of a float (ceil equivalent).          */
+float tmpl_Float_Ceil(float x)
 {
     /*  Declare necessary variables. C89 requires declarations are the top.   */
-    double abs_x, mant, y, out;
+    float abs_x, mant, y, out;
     signed int expo;
 
     /*  Special case, ceil(0) = 0.                                            */
-    if (x == 0.0)
+    if (x == 0.0F)
         return x;
 
     /*  Next special case, NaN or inf. Return the input.                      */
-    if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_Float_Is_NaN_Or_Inf(x))
         return x;
 
     /*  Get the numbers mant and expo such that x = mant * 2^expo with        *
      *  1 <= |mant| < 2. That is, the base 2 scientific notation of x.        */
-    tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
+    tmpl_Float_Base2_Mant_and_Exp(x, &mant, &expo);
 
     /*  If expo < 0 we have |x| < 1. ceil(x) = 1 if x >= 0 and 0 otherwise.   */
     if (expo < 0)
     {
         /*  For negative values, -1 < x < 0, we have ceil(x) = 0.             */
-        if (x < 0.0)
-            return 0.0;
+        if (x < 0.0F)
+            return 0.0F;
 
         /*  Otherwise, for 0 < x < 1, we have ceil(x) = 1.                    */
-        return 1.0;
+        return 1.0F;
     }
 
     /*  This function is only accurate to 64 bits in the mantissa. For most   *
@@ -353,11 +317,11 @@ double tmpl_Double_Ceil(double x)
 
     /*  Use the fact that ceil(x) = floor(x + 1) for positive non-integer and *
      *  ceil(x) = -floor(-x) for negative inputs to reduce the argument.      */
-    abs_x = tmpl_Double_Abs(x);
+    abs_x = tmpl_Float_Abs(x);
 
     /*  We're going to "zero" the highest bit of the integer part of abs_x    *
      *  by substracting it off. Compute this from the lookup table.           */
-    y = tmpl_double_pow_2_table[expo];
+    y = tmpl_float_pow_2_table[expo];
 
     /*  We will iteratively add the non-zero bits of the integer part to out, *
      *  resulting in us computing ceil(abs_x).                                */
@@ -372,7 +336,7 @@ double tmpl_Double_Ceil(double x)
     /*  Loop over the remaining bits of the integer part of abs_x and repeat. */
     while (expo >= 0)
     {
-        y = tmpl_double_pow_2_table[expo];
+        y = tmpl_float_pow_2_table[expo];
 
         /*  If abs_x < y, this bit is already zero. No need to subtract.      *
          *  Otherwise, zero this bit out and add it to out.                   */
@@ -383,7 +347,7 @@ double tmpl_Double_Ceil(double x)
         }
 
         /*  If abs_x is zero, we are done. Break out of the loop.             */
-        if (abs_x == 0.0)
+        if (abs_x == 0.0F)
             break;
 
         /*  Get the next power of two and repeat.                             */
@@ -391,7 +355,7 @@ double tmpl_Double_Ceil(double x)
     }
 
     /*  If the input was positive we need to use ceil(x) = floor(x) + 1.      */
-    if (x > 0.0)
+    if (x > 0.0F)
     {
         /*  The formula does not work for integers. If the input was an       *
          *  integer to begin with, return it.                                 */
@@ -399,16 +363,16 @@ double tmpl_Double_Ceil(double x)
             return x;
 
         /*  Otherwise, use the negation formula and return.                   */
-        return out + 1.0;
+        return out + 1.0F;
     }
 
     /*  For negative values, use ceil(x) = -floor(x) and return.              */
     return -out;
 }
-/*  End of tmpl_Double_Ceil.                                                  */
+/*  End of tmpl_Float_Ceil.                                                   */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
 /*  End of TMPL_USE_MATH_ALGORITHMS.                                          */
