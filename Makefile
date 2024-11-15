@@ -286,7 +286,7 @@ endif
 # libtmpl provides its own implementation of libm. If you wish to use the
 # default libm implementation (if it exists) for your system enable this option.
 ifdef NO_MATH
-EXCLUDE += -not -name "*_math_*.c"
+EXCLUDE += -not -name "*_math_*.c" -not -name "*_math_*.S"
 else
 CONFIG_FLAGS += -DTMPL_SET_USE_MATH_TRUE
 endif
@@ -301,6 +301,7 @@ endif
 # Whether or not to use the strictly portable code, or IEEE-754 compliant code.
 ifdef NO_IEEE
 CONFIG_FLAGS += -DTMPL_SET_TMPL_USE_IEEE_FALSE
+EXCLUDE += -not -name "*_no_ieee_*.c"
 endif
 
 # Whether to use memcpy or for-loops for copying data.
