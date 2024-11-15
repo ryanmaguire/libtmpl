@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_truncate_double                            *
+ *                            tmpl_truncate_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the truncation of x. This is the input minus the fractional  *
@@ -25,31 +25,31 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Truncation                                                *
+ *      tmpl_Float_Truncation                                                 *
  *  Purpose:                                                                  *
  *      Computes the integer part of the input (round-to-zero).               *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (float):                                                            *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      trunc_x (double):                                                     *
+ *      trunc_x (float):                                                      *
  *          The truncation of x.                                              *
- *  IEEE-754 Version with 64-Bit Integers:                                    *
+ *  IEEE-754 Version with 32-Bit Integers:                                    *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          If we can use 64-bit integers for type punning, we do the         *
- *          following. A 64-bit IEEE-754 double is represented as follows:    *
+ *          If we can use 32-bit integers for type punning, we do the         *
+ *          following. A 32-bit IEEE-754 float is represented as follows:     *
  *                                                                            *
- *                s eeeeeeeeeee xxxxxxxxxxxxxxxxxxxxxxxxxxxxx ...             *
- *                - ----------- ---------------------------------             *
- *              sign exponent                mantissa                         *
+ *                s eeeeeeee xxxxxxxxxxxxxxxxxxxxxxx                          *
+ *                - -------- -----------------------                          *
+ *             sign exponent        mantissa                                  *
  *                                                                            *
- *          Where there is 1 s, 11 e's, and 52 x's. The true exponent is the  *
+ *          Where there is 1 s, 8 e's, and 23 x's. The true exponent is the   *
  *          exponent component (written in binary) minus the bias, which is   *
- *          1023. That is:                                                    *
+ *          127. That is:                                                     *
  *                                                                            *
- *              exponent = eeeeeeeeeee_2 - 1023                               *
+ *              exponent = eeeeeeee_2 - 127                                   *
  *                                                                            *
  *          First, special cases.                                             *
  *              If x is NaN or infinity, return x.                            *
@@ -58,7 +58,7 @@
  *          the last "exponent" bits of the mantissa. This is equivalent to   *
  *          setting the fractional part of the input to zero, meaning it is   *
  *          now an integer value. We could do this by creating a bit-mask of  *
- *          64 1's, and then "bit-shift" up by "exponent" number of bits.     *
+ *          32 1's, and then "bit-shift" up by "exponent" number of bits.     *
  *          This makes the bottom "exponent" bits equal to zero. We could     *
  *          then perform bit-wise-and with the input to zero out the          *
  *          fractional bits of the number.                                    *
@@ -70,32 +70,32 @@
  *          easily check if the input is already an integer, potentially      *
  *          skipping some redundant computations.                             *
  *      Error:                                                                *
- *          Based on 788,968,857 samples with -10^6 < x < 10^6.               *
+ *          Based on 1,577,937,714 samples with -10^6 < x < 10^6.             *
  *              max relative error: 0.0000000000000000e+00                    *
  *              rms relative error: 0.0000000000000000e+00                    *
  *              max absolute error: 0.0000000000000000e+00                    *
  *              rms absolute error: 0.0000000000000000e+00                    *
  *          Values are based on unit tests using glibc and libtmpl.           *
- *  IEEE-754 Version without 64-Bit Integers:                                 *
+ *  IEEE-754 Version without 32-Bit Integers:                                 *
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
  *          This method is mostly for experimentation, as it is highly        *
- *          unlikely that one would have 64-bit IEEE-754 compliant doubles,   *
- *          but not have 64-bit integers available. One can force this in the *
+ *          unlikely that one would have 32-bit IEEE-754 compliant floats,    *
+ *          but not have 32-bit integers available. One can force this in the *
  *          build process via -noint when using make.sh, or NO_INT=1 with the *
  *          Makefile.                                                         *
  *                                                                            *
- *          The algorithm is nearly identical to the version using 64-bit     *
+ *          The algorithm is nearly identical to the version using 32-bit     *
  *          integers for type punning, but since we only have the IEEE-754    *
  *          struct to work with, we move through the mantissa 16 bits at a    *
  *          time. The previous method does the entire computation in one step *
- *          since the entire mantissa fits in a single 64-bit integer.        *
+ *          since the entire mantissa fits in a single 32-bit integer.        *
  *                                                                            *
  *          This version is a fair amount slower than the previous one, about *
- *          1.3 to 1.7 times slower.                                          *
+ *          1.2 to 1.5 times slower.                                          *
  *      Error:                                                                *
- *          Based on 788,968,857 samples with -10^6 < x < 10^6.               *
+ *          Based on 1,577,937,714 samples with -10^6 < x < 10^6.             *
  *              max relative error: 0.0000000000000000e+00                    *
  *              rms relative error: 0.0000000000000000e+00                    *
  *              max absolute error: 0.0000000000000000e+00                    *
@@ -104,13 +104,13 @@
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
  *          tmpl_math.h:                                                      *
- *              tmpl_Double_Base2_Mant_and_Exp:                               *
+ *              tmpl_Float_Base2_Mant_and_Exp:                                *
  *                  Gets the base-2 scientific representation of the input.   *
  *                  That is, writes x = r * 2^n with 1 <= r < 2.              *
- *              tmpl_Double_Is_NaN_Or_Inf:                                    *
+ *              tmpl_Float_Is_NaN_Or_Inf:                                     *
  *                  Determines if a number is NaN or infinity.                *
- *              tmpl_Double_Abs:                                              *
- *                  Computes the absolute value of a double.                  *
+ *              tmpl_Float_Abs:                                               *
+ *                  Computes the absolute value of a float.                   *
  *      Method:                                                               *
  *          This version is extremely slow, but does not assume IEEE-754      *
  *          numbers, and it does not use type-punning. It is mostly for       *
@@ -132,7 +132,7 @@
  *          have computed out = trunc(|x|) in binary. We conclude by          *
  *          returning "out" if x is positive, and -out otherwise.             *
  *      Error:                                                                *
- *          Based on 788,968,857 samples with -10^6 < x < 10^6.               *
+ *          Based on 1,577,937,714 samples with -10^6 < x < 10^6.             *
  *              max relative error: 0.0000000000000000e+00                    *
  *              rms relative error: 0.0000000000000000e+00                    *
  *              max absolute error: 0.0000000000000000e+00                    *
@@ -143,10 +143,10 @@
  *          libtmpl implements the truncation function in assembly code. This *
  *          is decently faster than any of the provided C routines below.     *
  *      2.) Two different type-punning methods are provided. The fastest      *
- *          assumes 64-bit integers are available and can be used for type    *
- *          punning. The slower one does not assume 64-bit fixed width        *
+ *          assumes 32-bit integers are available and can be used for type    *
+ *          punning. The slower one does not assume 32-bit fixed width        *
  *          integers are available. Instead it messes with the bits in the    *
- *          tmpl_IEEE754_Double union. Both methods assume IEEE-754 support.  *
+ *          tmpl_IEEE754_Float union. Both methods assume IEEE-754 support.   *
  *          libtmpl determines if this is available upon building.            *
  *      3.) The "portable" method is dreadfully slow, about 10x worse. It is  *
  *          primarily here for experimentation. Only use it if you have no    *
@@ -158,10 +158,10 @@
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_inttype.h:                                                       *
  *          Provides fixed-width integer data types.                          *
- *  3.) tmpl_ieee754_double.h:                                                *
- *          Contains the tmpl_IEEE754_Double union used for type punning.     *
+ *  3.) tmpl_ieee754_float.h:                                                 *
+ *          Contains the tmpl_IEEE754_Float union used for type punning.      *
  *  4.) tmpl_floatint.h:                                                      *
- *          Contains the tmpl_IEEE754_FloatInt64 union for type punning.      *
+ *          Contains the tmpl_IEEE754_FloatInt32 union for type punning.      *
  *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
  ******************************************************************************
@@ -179,171 +179,137 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Check for IEEE-754 support. This makes the function much faster.          */
-#if TMPL_HAS_IEEE754_DOUBLE == 1
+#if TMPL_HAS_IEEE754_FLOAT == 1
 
-/*  Check for 64-bit integer support.                                         */
-#if TMPL_HAS_FLOATINT64 == 1
+/*  Check for 32-bit integer support.                                         */
+#if TMPL_HAS_FLOATINT32 == 1
 
 /******************************************************************************
- *                   IEEE-754 Version with 64-Bit Integers                    *
+ *                   IEEE-754 Version with 32-Bit Integers                    *
  ******************************************************************************/
 
 /*  Fixed-width integers are found here.                                      */
 #include <libtmpl/include/tmpl_inttype.h>
 
-/*  tmpl_IEEE754_FloatInt64 data type provided here.                          */
+/*  tmpl_IEEE754_FloatInt32 data type provided here.                          */
 #include <libtmpl/include/tmpl_floatint.h>
 
-/*  Function for computing the truncation of a double (trunc equivalent).     */
-double tmpl_Double_Truncate(double x)
+/*  Function for computing the truncation of a float (truncf equivalent).     */
+float tmpl_Float_Truncate(float x)
 {
-    /*  Union of a 64-bit int and a double.                                   */
-    tmpl_IEEE754_FloatInt64 word64;
+    /*  Union of a 32-bit int and a float.                                    */
+    tmpl_IEEE754_FloatInt32 word32;
 
     /*  The lower fractional bits (non-integral) will be stored here.         */
-    tmpl_UInt64 fractional_bits;
+    tmpl_UInt32 fractional_bits;
 
     /*  Variable for the exponent, not offset by the bias.                    */
     unsigned int exponent;
 
     /*  Initialize the word to the input.                                     */
-    word64.f = x;
+    word32.f = x;
 
     /*  If |x| < 1, we have trunc(x) = 0.                                     */
-    if (word64.w.bits.expo < TMPL_DOUBLE_UBIAS)
-        return 0.0;
+    if (word32.w.bits.expo < TMPL_FLOAT_UBIAS)
+        return 0.0F;
 
     /*  If the input is really big, there are no fractional bits. That is,    *
      *  the input is already an integer. Return the input.                    */
-    if (word64.w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
+    if (word32.w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
     /*  We now have |x| >= 1, so the exponent in the word is greater than the *
      *  bias. The difference is hence a positive number, so we do not need to *
      *  cast to signed ints. Compute the exponent of the input.               */
-    exponent = word64.w.bits.expo - TMPL_DOUBLE_UBIAS;
+    exponent = word32.w.bits.expo - TMPL_FLOAT_UBIAS;
 
     /*  There are 52-bits in the mantissa. The bit-mask 0x000FFFFFFFFFFFFF    *
      *  represents 52 1's in binary. By shifting down by the exponent, we     *
      *  get a bit-mask for the fractional bits of the input.                  */
-    fractional_bits = 0x000FFFFFFFFFFFFFU >> exponent;
+    fractional_bits = 0x007FFFFFU >> exponent;
 
     /*  If none of the fractional bits of the input are 1, then the input was *
      *  already an integer. Return the input.                                 */
-    if ((word64.n & fractional_bits) == 0)
+    if ((word32.n & fractional_bits) == 0)
         return x;
 
     /*  The truncation function can be computed by zeroing out all of the     *
      *  fractional bits. This is achieved by using bit-wise-and with the      *
      *  complement of the fractional bits.                                    */
-    word64.n &= ~fractional_bits;
+    word32.n &= ~fractional_bits;
 
-    /*  word64 now has the truncation of the input. Output the double part.   */
-    return word64.f;
+    /*  word32 now has the truncation of the input. Output the float part.    */
+    return word32.f;
 }
-/*  End of tmpl_Double_Truncate.                                              */
+/*  End of tmpl_Float_Truncate.                                               */
 
 #else
-/*  Else for #if TMPL_HAS_FLOATINT64 == 1.                                    */
+/*  Else for #if TMPL_HAS_FLOATINT32 == 1.                                    */
 
 /******************************************************************************
- *                  IEEE-754 Version without 64-Bit Integers                  *
+ *                  IEEE-754 Version without 32-Bit Integers                  *
  ******************************************************************************/
 
-/*  This method does not require 64 bit integer types be available. It does   *
- *  require that IEEE-754 support for double is available. It is a little     *
+/*  This method does not require 32 bit integer types be available. It does   *
+ *  require that IEEE-754 support for float is available. It is a little      *
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
-/*  tmpl_IEEE754_Double data type provided here.                              */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+/*  tmpl_IEEE754_Float data type provided here.                               */
+#include <libtmpl/include/tmpl_ieee754_float.h>
 
-/*  Function for computing the truncation of a double (trunc equivalent).     */
-double tmpl_Double_Truncate(double x)
+/*  Function for computing the truncation of a float (truncf equivalent).     */
+float tmpl_Float_Truncate(float x)
 {
-    /*  Union of a double and the bits that represent it.                     */
-    tmpl_IEEE754_Double w;
+    /*  Union of a float and the bits that represent it.                      */
+    tmpl_IEEE754_Float w;
 
-    /*  Set the double part of the word to the input.                         */
+    /*  Set the float part of the word to the input.                          */
     w.r = x;
 
     /*  For arguments |x| < 1, we have trunc(x) = 0.                          */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS)
-        return 0.0;
+    if (w.bits.expo < TMPL_FLOAT_UBIAS)
+        return 0.0F;
 
-    /*  For very large arguments, |x| >= 2^52, x is already an integer.       */
-    if (w.bits.expo > TMPL_DOUBLE_UBIAS + 51U)
+    /*  For very large arguments, |x| >= 2^22, x is already an integer.       */
+    if (w.bits.expo > TMPL_FLOAT_UBIAS + 22U)
         return x;
 
-    /*  For |x| < 2^36, the trunc function will zero out the last part of the *
-     *  mantissa. man3 stores 16 bits, similar to man1 and man2.              */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x24U)
-        w.bits.man3 = 0x00U;
-
-    /*  For 2^36 <= |x| < 2^52, only the last part of the mantissa needs to   *
-     *  modified. The other bits represent the integer part of x.             */
-    else
+    /*  For |x| < 2^8, the trunc function will zero out the last part of the  *
+     *  mantissa. man1 stores 16 bits, total.                                 */
+    if (w.bits.expo < TMPL_FLOAT_UBIAS + 0x08U)
     {
-        /*  We create a bit-mask that zeros out the lowest bits, which        *
-         *  represent the fractional part of the number. After this, w is     *
-         *  an integer value. The mask is created as follows. 0xFFFF is the   *
-         *  hexidecimal representation of 16 1's in binary. We want the lower *
-         *  bits to be zero so that bit-wise-and will kill these off. The     *
-         *  exact bits we want to be zero is given by the exponent of the     *
-         *  input. There are 52 (0x34 in hex) bits total, so we want the last *
-         *  52 - expo bits to be zero. The exponent is offset by a bias, so   *
-         *  expo = w.bits.expo - TMPL_DOUBLE_UBIAS. In total, shifting up by  *
-         *  0x34 - (w.bits.expo - TMPL_DOUBLE_UBIAS) will zero out the lower  *
-         *  bits, creating the appropriate bit-mask.                          */
-        w.bits.man3 &= (0xFFFFU << (0x34U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_TRUNCATE_FINISH;
-    }
-
-    /*  If |x| < 2^20, the second part of the mantissa is zeroed out as well. */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x14U)
-        w.bits.man2 = 0x00U;
-
-    /*  Otherwise, if 2^20 <= |x| < 2^36, the highest part of the mantissa    *
-     *  needs to be zeroed out, and the second high part must be modified.    */
-    else
-    {
-        /*  Similar to before, create a bit-mask to zero out the fractional   *
-         *  parts of the input. Since the upper 16 bits have already been     *
-         *  zeroed out, we shift by 52 - 16 = 36, which is 0x24 in hex.       */
-        w.bits.man2 &= (0xFFFFU << (0x24U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_TRUNCATE_FINISH;
-    }
-
-    /*  If |x| < 2^4, the higher three parts of the mantissa all need to be   *
-     *  zeroed out.                                                           */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS + 0x04U)
         w.bits.man1 = 0x00U;
 
-    /*  Otherwise, for 2^4 <= |x| < 2^20, zero out the upper two parts and    *
-     *  modify the second lowest part.                                        */
-    else
-    {
-        /*  Use a bit-mask to zero out the fractional part. The upper 32 bits *
-         *  have been zeroed out, so we shift by 52 - 32 = 20 (0x14 in hex).  */
-        w.bits.man1 &= (0xFFFFU << (0x14U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
-        goto TMPL_DOUBLE_TRUNCATE_FINISH;
+        /*  We create a bit-mask that zeros out the lowest bits, which        *
+         *  represent the fractional part of the number. After this, w is     *
+         *  an integer value. The mask is created as follows. There are 23    *
+         *  bits total in the mantissa, 7 in man0 and 16 in man1. We've       *
+         *  already zeroed out the lower 16 bits in man1, so we need to zero  *
+         *  out the lower expo - 16 bits of man0, where expo is the exponent  *
+         *  of the input. Taking into account the bias, this is:              *
+         *      expo = w.bits.expo - TMPL_FLOAT_UBIAS                         *
+         *  To lower out the lower expo bits, we take the bit-mask 0x7F,      *
+         *  which is the hexidecimal representation of 7 1's in binary, and   *
+         *  shift this up 7 - expo bits. We then perform bit-wise and.        */
+        w.bits.man0 &= (0x7FU << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
     }
 
-    /*  The lowest part of the mantissa is 4 bits, unlike the other 3 parts   *
-     *  which are 16 bits each. Use a bit-mask to zero out the fractional     *
-     *  part of the mantissa.                                                 */
-    w.bits.man0 &= (0x000FU << (0x04U - (w.bits.expo - TMPL_DOUBLE_UBIAS)));
+    /*  Same idea as before, but this time we use a bit-mask starting with    *
+     *  0xFFFF, which is 16 1's in binary. This is because man1 contains 16   *
+     *  bits. We shift up 23 - expo = 0x17 - expo bits and do bit-wise and.   */
+    else
+        w.bits.man1 &= (0xFFFFU << (0x17U - (w.bits.expo - TMPL_FLOAT_UBIAS)));
 
     /*  w is now correctly set to the truncation of the input.                */
-TMPL_DOUBLE_TRUNCATE_FINISH:
     return w.r;
 }
-/*  End of tmpl_Double_Truncate.                                              */
+/*  End of tmpl_Float_Truncate.                                               */
 
 #endif
-/*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
+/*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
+/*  Else for #if TMPL_HAS_IEEE754_FLOAT == 1.                                 */
 
 /******************************************************************************
  *                              Portable Version                              *
@@ -363,28 +329,28 @@ TMPL_DOUBLE_TRUNCATE_FINISH:
  *      version is about 10x slower.                                          *
  ******************************************************************************/
 
-/*  Function for computing the truncation of a double (trunc equivalent).     */
-double tmpl_Double_Truncate(double x)
+/*  Function for computing the truncation of a float (truncf equivalent).     */
+float tmpl_Float_Truncate(float x)
 {
     /*  Declare necessary variables. C89 requires declarations are the top.   */
-    double abs_x, mant, y, out;
+    float abs_x, mant, y, out;
     signed int expo;
 
     /*  Special case, trunc(0) = 0.                                           */
-    if (x == 0.0)
+    if (x == 0.0F)
         return x;
 
     /*  Next special case, NaN or inf. Return the input.                      */
-    if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_Float_Is_NaN_Or_Inf(x))
         return x;
 
     /*  Get the numbers mant and expo such that x = mant * 2^expo with        *
      *  1 <= |mant| < 2. That is, the base 2 scientific notation of x.        */
-    tmpl_Double_Base2_Mant_and_Exp(x, &mant, &expo);
+    tmpl_Float_Base2_Mant_and_Exp(x, &mant, &expo);
 
     /*  If expo < 0 we have |x| < 1. trunc(x) = 0.                            */
     if (expo < 0)
-        return 0.0;
+        return 0.0F;
 
     /*  This function is only accurate to 64 bits in the mantissa. For most   *
      *  machines the mantissa has 52 bits, so this is probably overkill.      */
@@ -392,11 +358,11 @@ double tmpl_Double_Truncate(double x)
         return x;
 
     /*  Use the fact that trunc(x) = -trunc(-x) to reduce the argument.       */
-    abs_x = tmpl_Double_Abs(x);
+    abs_x = tmpl_Float_Abs(x);
 
     /*  We're going to "zero" the highest bit of the integer part of abs_x    *
      *  by substracting it off. Compute this from the lookup table.           */
-    y = tmpl_double_pow_2_table[expo];
+    y = tmpl_float_pow_2_table[expo];
 
     /*  We will iteratively add the non-zero bits of the integer part to out, *
      *  resulting in us computing trunc(abs_x).                               */
@@ -411,7 +377,7 @@ double tmpl_Double_Truncate(double x)
     /*  Loop over the remaining bits of the integer part of abs_x and repeat. */
     while (expo >= 0)
     {
-        y = tmpl_double_pow_2_table[expo];
+        y = tmpl_float_pow_2_table[expo];
 
         /*  If abs_x < y, this bit is already zero. No need to subtract.      *
          *  Otherwise, zero this bit out and add it to out.                   */
@@ -422,7 +388,7 @@ double tmpl_Double_Truncate(double x)
         }
 
         /*  If abs_x is zero, we are done. Break out of the loop.             */
-        if (abs_x == 0.0)
+        if (abs_x == 0.0F)
             break;
 
         /*  Get the next power of two and repeat.                             */
@@ -430,16 +396,16 @@ double tmpl_Double_Truncate(double x)
     }
 
     /*  If the input was negative we need to use trunc(x) = -trunc(-x).       */
-    if (x < 0.0)
+    if (x < 0.0F)
         return -out;
 
     /*  For positive values, we are done with the computation.                */
     return out;
 }
-/*  End of tmpl_Double_Truncate.                                              */
+/*  End of tmpl_Float_Truncate.                                               */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+/*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
 
 #endif
 /*  End of TMPL_USE_MATH_ALGORITHMS.                                          */
