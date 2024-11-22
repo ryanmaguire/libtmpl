@@ -1409,6 +1409,12 @@ static int make_config_h(void)
     fputs("#define TMPL_LDOUBLE_CAUTIOUS_SPLIT", fp);
 #endif
 
+#if defined(TMPL_USE_VOLATILE)
+    fputs("#define TMPL_VOLATILE volatile", fp);
+#else
+    fputs("#define TMPL_VOLATILE", fp);
+#endif
+
     /*  Print the end of the include guard.                                   */
     fprintf(fp, "\n#endif\n");
 
