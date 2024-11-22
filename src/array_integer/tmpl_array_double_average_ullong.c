@@ -38,10 +38,22 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Loop through the elements of the array and add. Divide this by the    *
- *      number of elements in the array. If the array is empty return NaN.    *
+ *      The average is defined as follows. Given a finite sequence "a",       *
+ *      the average "a bar" is:                                               *
+ *                                                                            *
+ *                   N - 1                                                    *
+ *                   -----                                                    *
+ *          _    1   \                                                        *
+ *          a = ---  /      a                                                 *
+ *               N   -----   n                                                *
+ *                   n = 0                                                    *
+ *                                                                            *
+ *      We compute the sum iteratively.                                       *
  *  Notes:                                                                    *
- *      This file is only compiled if long long support is available.         *
+ *      1.) If the array is NULL, or if len is zero, NaN will return.         *
+ *      2.) This file is only compiled if long long support is unavailable.   *
+ *  References:                                                               *
+ *      1.) https://en.wikipedia.org/wiki/Arithmetic_mean                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

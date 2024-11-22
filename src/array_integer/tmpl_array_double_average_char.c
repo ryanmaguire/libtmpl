@@ -39,54 +39,20 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      The average is defined as follows. Given a finite sequence "a",       *
- *      we have:                                                              *
+ *      the average "a bar" is:                                               *
  *                                                                            *
  *                   N - 1                                                    *
  *                   -----                                                    *
  *          _    1   \                                                        *
- *          a = ---  /                                                        *
- *               N   -----                                                    *
+ *          a = ---  /      a                                                 *
+ *               N   -----   n                                                *
  *                   n = 0                                                    *
  *                                                                            *
- *      where "a bar" denotes the average of a. We compute the sum using the  *
- *      Kahan compensated summation algorithm. That is, given a finite        *
- *      sequence of numbers a_{n}, we compute:                                *
- *                                                                            *
- *          x_{n}   = a_{n} - c_{n}                                           *
- *          s_{n+1} = s_{n} + x_{n}                                           *
- *          c_{n+1} = (s_{n+1} - s_{n}) - x_{n}                               *
- *                                                                            *
- *      with initial conditions s_{0} = c_{0} = 0. Here, s is the "sum" and   *
- *      c is the "compensation." Note that if arithmetic were exact, we'd     *
- *      have:                                                                 *
- *                                                                            *
- *          c_{n+1} = (s_{n+1} - s_{n}) - x_{n}                               *
- *                  = (s_{n} + x_{n} - s_{n}) - x_{n}                         *
- *                  = (x_{n} + s_{n} - s_{n}) - x_{n}                         *
- *                  = x_{n} - x_{n}                                           *
- *                  = 0                                                       *
- *                                                                            *
- *      That is, there would be no compensation term. The problem is that     *
- *      floating point arithmetic is not associative, since rounding can kill *
- *      off lower order bits. Because of this, c_{n} may not be zero for each *
- *      n. The expected error from this compensated sum is O(N eps^2) where   *
- *      N is the number of terms in the sequence, and eps is machine epsilon  *
- *      for double. For IEEE-754 double precision this is 2^-52 ~= 2 x 10^-16.*
+ *      We compute the sum iteratively.                                       *
  *  Notes:                                                                    *
- *      1.) Since we are working with an array of chars, the Kahan algorithm  *
- *          is likely overkill. The compensated summation also slows down the *
- *          computation a bit. For most use cases, you can safely use the     *
- *          naive summation algorithm. This is implemented via the            *
- *          tmpl_Char_Array_Quick_Double_Average function.                    *
- *                                                                            *
- *      2.) If the array is NULL, or if len is zero, NaN will return.         *
+ *      1.) If the array is NULL, or if len is zero, NaN will return.         *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/Arithmetic_mean                     *
- *      2.) Kahan, William (January 1965),                                    *
- *          "Further remarks on reducing truncation errors",                  *
- *          Communications of the ACM, volume 8, number 1: 40                 *
- *      3.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
- *      4.) https://en.wikipedia.org/wiki/2Sum                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
