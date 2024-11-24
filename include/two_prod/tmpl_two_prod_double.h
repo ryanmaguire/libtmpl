@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_fast_two_prod_double                         *
+ *                            tmpl_two_prod_double                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Uses the 2Prod algorithm for multiplying with error.                  *
@@ -39,12 +39,35 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_split.h:                                                         *
+ *          tmpl_Double_Even_High_Split:                                      *
+ *              Splits a double into two parts, xhi and xlo, so that xhi and  *
+ *              xlo have half the number of bits of x. This function returns  *
+ *              xhi. xlo is computed via xlo = x - hi.                        *
+ *  Method:                                                                   *
+ *      This is the standard 2Prod algorithm. Split x and y into two parts:   *
+ *                                                                            *
+ *          x = xhi + xlo                                                     *
+ *          y = yhi + ylo                                                     *
+ *                                                                            *
+ *      The product is then:                                                  *
+ *                                                                            *
+ *          x * y = (xhi + xlo) * (yhi + ylo)                                 *
+ *                = xhi*yhi + xhi*ylo + xlo*yhi + xlo*ylo                     *
+ *                                                                            *
+ *      xhi*yhi has the highest order bits of the product. Let prod be the    *
+ *      product of x and y, with rounding. The error is then:                 *
+ *                                                                            *
+ *          err = ((xhi*yhi - prod) + xhi*ylo + yhi*xlo) + xlo*ylo            *
+ *                                                                            *
+ *      We store prod in "out" and err in "err", and return.                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_split.h:                                                         *
+ *          Contains functions for splitting an input into two parts.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
@@ -54,7 +77,7 @@
 #ifndef TMPL_TWO_PROD_DOUBLE_H
 #define TMPL_TWO_PROD_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
+/*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Splitting functions for breaking a number into two parts.                 */
@@ -63,9 +86,12 @@
 /*  Standard 2Prod algorithm at double precision.                             */
 TMPL_INLINE_DECL
 void
-tmpl_Double_Two_Prod(double x, double y, double * const out, double * const err)
+tmpl_Double_Two_Prod(double x,
+                     double y,
+                     double * TMPL_RESTRICT const out,
+                     double * TMPL_RESTRICT const err)
 {
-    /*  Split the input into two parts with half the bits stored in each.     */
+    /*  Split the inputs into two parts with half the bits stored in each.    */
     const double xhi = tmpl_Double_Even_High_Split(x);
     const double yhi = tmpl_Double_Even_High_Split(y);
 
@@ -74,9 +100,9 @@ tmpl_Double_Two_Prod(double x, double y, double * const out, double * const err)
     const double ylo = y - yhi;
 
     /*  Perform the two-product. We have:                                     *
-    *       x * y = (xhi + xlo) * (yhi + ylo)                                 *
-    *             = xhi * yhi + xhi * ylo + xlo * yhi + xlo * ylo.            *
-    *   We perform this sum, and keep track of the error term from rounding.  */
+     *      x * y = (xhi + xlo) * (yhi + ylo)                                 *
+     *            = xhi * yhi + xhi * ylo + xlo * yhi + xlo * ylo.            *
+     *  We perform this sum, and keep track of the error term from rounding.  */
     const double prod = x * y;
     const double err_hi = xhi * yhi - prod;
     const double prod_mid = xhi * ylo + xlo * yhi;

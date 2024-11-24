@@ -21,7 +21,7 @@
 #ifndef TMPL_TWO_SUM_H
 #define TMPL_TWO_SUM_H
 
-/*  TMPL_USE_INLINE macro provided here.                                      */
+/*  TMPL_USE_INLINE macro provided here, as is TMPL_RESTRICT.                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /******************************************************************************
@@ -60,20 +60,20 @@
 extern void
 tmpl_Float_Fast_Two_Sum(float x,
                         float y,
-                        float * const out,
-                        float * const err);
+                        float * TMPL_RESTRICT const out,
+                        float * TMPL_RESTRICT const err);
 
 extern void
 tmpl_Double_Fast_Two_Sum(double x,
                          double y,
-                         double * const out,
-                         double * const err);
+                         double * TMPL_RESTRICT const out,
+                         double * TMPL_RESTRICT const err);
 
 extern void
 tmpl_LDouble_Fast_Two_Sum(long double x,
                           long double y,
-                          long double * const out,
-                          long double * const err);
+                          long double * TMPL_RESTRICT const out,
+                          long double * TMPL_RESTRICT const err);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -113,20 +113,20 @@ tmpl_LDouble_Fast_Two_Sum(long double x,
 extern void
 tmpl_Float_Two_Sum(float x,
                    float y,
-                   float * const out,
-                   float * const err);
+                   float * TMPL_RESTRICT const out,
+                   float * TMPL_RESTRICT const err);
 
 extern void
 tmpl_Double_Two_Sum(double x,
                     double y,
-                    double * const out,
-                    double * const err);
+                    double * TMPL_RESTRICT const out,
+                    double * TMPL_RESTRICT const err);
 
 extern void
 tmpl_LDouble_Two_Sum(long double x,
                      long double y,
-                     long double * const out,
-                     long double * const err);
+                     long double * TMPL_RESTRICT const out,
+                     long double * TMPL_RESTRICT const err);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

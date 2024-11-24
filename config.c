@@ -1392,27 +1392,33 @@ static int make_config_h(void)
 /*  End #if defined(TMPL_SET_NO_INT) || defined(TMPL_SET_TMPL_USE_IEEE_FALSE).*/
 
 #if defined(TMPL_USE_VOLATILE_DOUBLE_SPLIT)
-    fputs("#define TMPL_DOUBLE_VOLATILE_SPLIT", fp);
+    fprintf(fp, "#define TMPL_DOUBLE_VOLATILE_SPLIT\n");
 #elif defined(TMPL_USE_CAUTIOUS_DOUBLE_SPLIT)
-    fputs("#define TMPL_DOUBLE_CAUTIOUS_SPLIT", fp);
+    fprintf(fp, "#define TMPL_DOUBLE_CAUTIOUS_SPLIT\n");
 #endif
 
 #if defined(TMPL_USE_VOLATILE_FLOAT_SPLIT)
-    fputs("#define TMPL_FLOAT_VOLATILE_SPLIT", fp);
+    fprintf(fp, "#define TMPL_FLOAT_VOLATILE_SPLIT\n");
 #elif defined(TMPL_USE_CAUTIOUS_FLOAT_SPLIT)
-    fputs("#define TMPL_FLOAT_CAUTIOUS_SPLIT", fp);
+    fprintf(fp, "#define TMPL_FLOAT_CAUTIOUS_SPLIT\n");
 #endif
 
 #if defined(TMPL_USE_VOLATILE_LDOUBLE_SPLIT)
-    fputs("#define TMPL_LDOUBLE_VOLATILE_SPLIT", fp);
+    fprintf(fp, "#define TMPL_LDOUBLE_VOLATILE_SPLIT\n");
 #elif defined(TMPL_USE_CAUTIOUS_LDOUBLE_SPLIT)
-    fputs("#define TMPL_LDOUBLE_CAUTIOUS_SPLIT", fp);
+    fprintf(fp, "#define TMPL_LDOUBLE_CAUTIOUS_SPLIT\n");
 #endif
 
 #if defined(TMPL_USE_VOLATILE)
-    fputs("#define TMPL_VOLATILE volatile", fp);
+    fprintf(fp, "#define TMPL_VOLATILE volatile\n");
 #else
-    fputs("#define TMPL_VOLATILE", fp);
+    fprintf(fp, "#define TMPL_VOLATILE\n");
+#endif
+
+#if __STDC_VERSION__ >= 199901L && !defined(TMPL_NO_RESTRICT)
+    fprintf(fp, "#define TMPL_RESTRICT restrict\n");
+#else
+    fprintf(fp, "#define TMPL_RESTRICT\n");
 #endif
 
     /*  Print the end of the include guard.                                   */

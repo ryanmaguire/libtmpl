@@ -101,8 +101,8 @@ TMPL_INLINE_DECL
 void
 tmpl_LDouble_Two_Sum(long double x,
                      long double y,
-                     long double * const out,
-                     long double * const err)
+                     long double * TMPL_RESTRICT const out,
+                     long double * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     const long double sum = x + y;

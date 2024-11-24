@@ -21,7 +21,7 @@
 #ifndef TMPL_TWO_PROD_H
 #define TMPL_TWO_PROD_H
 
-/*  TMPL_USE_INLINE macro provided here.                                      */
+/*  TMPL_USE_INLINE macro provided here, as is TMPL_RESTRICT.                 */
 #include <libtmpl/include/tmpl_config.h>
 
 /******************************************************************************
@@ -59,20 +59,20 @@
 extern void
 tmpl_Float_Two_Prod(float x,
                     float y,
-                    float * const out,
-                    float * const err);
+                    float * const TMPL_RESTRICT out,
+                    float * const TMPL_RESTRICT err);
 
 extern void
 tmpl_Double_Two_Prod(double x,
                      double y,
-                     double * const out,
-                     double * const err);
+                     double * const TMPL_RESTRICT out,
+                     double * const TMPL_RESTRICT err);
 
 extern void
 tmpl_LDouble_Two_Prod(long double x,
                       long double y,
-                      long double * const out,
-                      long double * const err);
+                      long double * const TMPL_RESTRICT out,
+                      long double * const TMPL_RESTRICT err);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

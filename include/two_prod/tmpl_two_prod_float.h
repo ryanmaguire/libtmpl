@@ -16,58 +16,41 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_fast_two_sum_float                           *
+ *                            tmpl_two_prod_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Uses the Fast2Sum algorithm for summing with error.                   *
+ *      Computes the product of two floats with rounding error.               *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Float_Fast_Two_Sum                                               *
+ *      tmpl_Float_Two_Prod                                                   *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two floats, returning the sum and the error.     *
+ *      Evaluates the product of two float, with the rounding error.          *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
  *      y (float):                                                            *
  *          Another real number.                                              *
  *      out (float * const):                                                  *
- *          The rounded sum x + y will be stored here.                        *
+ *          The rounded product x * y will be stored here.                    *
  *      err (float * const):                                                  *
- *          The error term, sum(x, y) - (x + y), is stored here.              *
+ *          The error term, prod(x, y) - (x * y), is stored here.             *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      None (void).                                                          *
  *  Method:                                                                   *
- *      Use the standard Fast2Sum algorithm. Letting "sum" denote the real    *
- *      sum of x and y, and "+" denote floating-point addition, we have:      *
+ *      We can skip the 2Prod algorithm by the casting to double. An IEEE-754 *
+ *      double has a 52-bit mantissa, and a single precision number has 23    *
+ *      bits. This means the product of two floats can fit exactly inside a   *
+ *      double. We compute the product with error as follows:                 *
  *                                                                            *
- *          sum(x, y) = (x + y) + err                                         *
- *                    = (x + y) + (y - ycomp)                                 *
- *                    = (x + y) + (y - ((x + y) - x))                         *
+ *          prod_exact = (double)x * (double)y                                *
+ *          prod_round = (float)prod_exact                                    *
+ *          prod_error = prod_exact - prod_round                              *
  *                                                                            *
- *      This assumes |x| >= |y|. Note that if floating-point addition were    *
- *      associative, the error term would be zero and we'd have               *
- *      sum(x, y) = x + y. Since floating-point arithmetic is not associative *
- *      it is often the case that the error is non-zero. We compute the sum   *
- *      and the error by reversing the above equations. We have:              *
- *                                                                            *
- *          sum   = x + y                                                     *
- *          ycomp = sum - x                                                   *
- *          err   = y - ycomp                                                 *
- *                                                                            *
- *      The values "sum" and "err" are returned.                              *
- *  Notes:                                                                    *
- *      Depending on compiler and architecture we may need to declare certain *
- *      variables as volatile. Failure to do so results in a poor Fast2Sum.   *
- *  References:                                                               *
- *      1.) https://en.wikipedia.org/wiki/2Sum                                *
- *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
- *      3.) Dekker, T.J. (June 1971).                                         *
- *          A floating-point technique for extending the available precision. *
- *          Numerische Mathematik. Volume 18, Number 3: Pages 224–242.        *
+ *      prod_round is stored in "out" and prod_error is stored in "err".      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -75,36 +58,47 @@
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 22, 2024                                             *
+ *  Date:       November 24, 2024                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_FAST_TWO_SUM_FLOAT_H
-#define TMPL_FAST_TWO_SUM_FLOAT_H
+#ifndef TMPL_TWO_PROD_FLOAT_H
+#define TMPL_TWO_PROD_FLOAT_H
 
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
+/*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Standard Fast2Sum algorithm at single precision.                          */
+/*  Helper macros for C vs. C++ compatibility.                                */
+#include <libtmpl/include/tmpl_compat_cast.h>
+
+/*  Multiplication with rounding error at single precision.                   */
 TMPL_INLINE_DECL
 void
-tmpl_Float_Fast_Two_Sum(float x,
-                        float y,
-                        float * TMPL_RESTRICT const out,
-                        float * TMPL_RESTRICT const err)
+tmpl_Float_Two_Prod(float x,
+                    float y,
+                    float * TMPL_RESTRICT const out,
+                    float * TMPL_RESTRICT const err)
 {
-    /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    TMPL_VOLATILE const float sum = x + y;
+    /*  Convert the inputs into doubles. The product will then be exact.      */
+    const double x_double = TMPL_CAST(x, double);
+    const double y_double = TMPL_CAST(y, double);
 
-    /*  The compensated y term, i.e. the bits lost from summing with x.       */
-    TMPL_VOLATILE const float ycomp = sum - x;
+    /*  The mantissa of an IEEE-754 double is much larger than that of a      *
+     *  float, so x*y can be computed exactly.                                */
+    const double prod_exact = x_double * y_double;
 
-    /*  The output is the floating point sum, the error can be computed by    *
-     *  summing together the error terms for x and y.                         */
-    *out = sum;
-    *err = y - ycomp;
+    /*  The rounded product can be computed by casting back to float.         */
+    const float prod_round = TMPL_CAST(prod_exact, float);
+
+    /*  The error can be computed by subtracting.                             */
+    const double prod_round_double = TMPL_CAST(prod_round, double);
+    const double prod_error = prod_exact - prod_round_double;
+
+    /*  "prod" has the rounded product. The error is computed from the sum.   */
+    *out = prod_round;
+    *err = TMPL_CAST(prod_error, float);
 }
-/*  End of tmpl_Float_Fast_Two_Sum.                                           */
+/*  End of tmpl_Float_Two_Prod.                                               */
 
 #endif
 /*  End of include guard.                                                     */

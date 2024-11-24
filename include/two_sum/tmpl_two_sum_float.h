@@ -99,7 +99,10 @@
 /*  Standard 2Sum algorithm at single precision.                              */
 TMPL_INLINE_DECL
 void
-tmpl_Float_Two_Sum(float x, float y, float * const out, float * const err)
+tmpl_Float_Two_Sum(float x,
+                   float y,
+                   float * TMPL_RESTRICT const out,
+                   float * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     const float sum = x + y;

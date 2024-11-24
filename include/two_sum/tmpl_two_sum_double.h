@@ -99,7 +99,10 @@
 /*  Standard 2Sum algorithm at double precision.                              */
 TMPL_INLINE_DECL
 void
-tmpl_Double_Two_Sum(double x, double y, double * const out, double * const err)
+tmpl_Double_Two_Sum(double x,
+                    double y,
+                    double * TMPL_RESTRICT const out,
+                    double * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     const double sum = x + y;

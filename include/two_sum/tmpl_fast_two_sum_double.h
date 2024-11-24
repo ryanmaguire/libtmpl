@@ -90,8 +90,8 @@ TMPL_INLINE_DECL
 void
 tmpl_Double_Fast_Two_Sum(double x,
                          double y,
-                         double * const out,
-                         double * const err)
+                         double * TMPL_RESTRICT const out,
+                         double * TMPL_RESTRICT const err)
 {
     /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
     TMPL_VOLATILE const double sum = x + y;

@@ -16,58 +16,51 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_fast_two_sum_ldouble                         *
+ *                           tmpl_two_prod_ldouble                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Uses the Fast2Sum algorithm for summing with error.                   *
+ *      Uses the 2Prod algorithm for multiplying with error.                  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Fast_Two_Sum                                             *
+ *      tmpl_LDouble_Two_Prod                                                 *
  *  Purpose:                                                                  *
- *      Evaluates the sum of two long doubles returning the sum and error.    *
+ *      Evaluates the product of two long doubles, with the rounding error.   *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
- *      y (long double):                                                      *
+ *      y (ong double):                                                       *
  *          Another real number.                                              *
  *      out (long double * const):                                            *
- *          The rounded sum x + y will be stored here.                        *
+ *          The rounded product x * y will be stored here.                    *
  *      err (long double * const):                                            *
- *          The error term, sum(x, y) - (x + y), is stored here.              *
+ *          The error term, prod(x, y) - (x * y), is stored here.             *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_split.h:                                                         *
+ *          tmpl_LDouble_Even_High_Split:                                     *
+ *              Splits an input into two parts, xhi and xlo, so that xhi and  *
+ *              xlo have half the number of bits of x. This function returns  *
+ *              xhi. xlo is computed via xlo = x - hi.                        *
  *  Method:                                                                   *
- *      Use the standard Fast2Sum algorithm. Letting "sum" denote the real    *
- *      sum of x and y, and "+" denote floating-point addition, we have:      *
+ *      This is the standard 2Prod algorithm. Split x and y into two parts:   *
  *                                                                            *
- *          sum(x, y) = (x + y) + err                                         *
- *                    = (x + y) + (y - ycomp)                                 *
- *                    = (x + y) + (y - ((x + y) - x))                         *
+ *          x = xhi + xlo                                                     *
+ *          y = yhi + ylo                                                     *
  *                                                                            *
- *      This assumes |x| >= |y|. Note that if floating-point addition were    *
- *      associative, the error term would be zero and we'd have               *
- *      sum(x, y) = x + y. Since floating-point arithmetic is not associative *
- *      it is often the case that the error is non-zero. We compute the sum   *
- *      and the error by reversing the above equations. We have:              *
+ *      The product is then:                                                  *
  *                                                                            *
- *          sum   = x + y                                                     *
- *          ycomp = sum - x                                                   *
- *          err   = y - ycomp                                                 *
+ *          x * y = (xhi + xlo) * (yhi + ylo)                                 *
+ *                = xhi*yhi + xhi*ylo + xlo*yhi + xlo*ylo                     *
  *                                                                            *
- *      The values "sum" and "err" are returned.                              *
- *  Notes:                                                                    *
- *      Depending on compiler and architecture we may need to declare certain *
- *      variables as volatile. Failure to do so results in a poor Fast2Sum.   *
- *  References:                                                               *
- *      1.) https://en.wikipedia.org/wiki/2Sum                                *
- *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
- *      3.) Dekker, T.J. (June 1971).                                         *
- *          A floating-point technique for extending the available precision. *
- *          Numerische Mathematik. Volume 18, Number 3: Pages 224–242.        *
+ *      xhi*yhi has the highest order bits of the product. Let prod be the    *
+ *      product of x and y, with rounding. The error is then:                 *
+ *                                                                            *
+ *          err = ((xhi*yhi - prod) + xhi*ylo + yhi*xlo) + xlo*ylo            *
+ *                                                                            *
+ *      We store prod in "out" and err in "err", and return.                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -75,36 +68,49 @@
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 22, 2024                                             *
+ *  Date:       November 24, 2024                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_FAST_TWO_SUM_LDOUBLE_H
-#define TMPL_FAST_TWO_SUM_LDOUBLE_H
+#ifndef TMPL_TWO_PROD_LDOUBLE_H
+#define TMPL_TWO_PROD_LDOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here, as is TMPL_VOLATILE.                   */
+/*  TMPL_INLINE_DECL macro found here, as is TMPL_RESTRICT.                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Standard Fast2Sum algorithm at long double precision.                     */
+/*  Splitting functions for breaking a number into two parts.                 */
+#include <libtmpl/include/tmpl_split.h>
+
+/*  Standard 2Prod algorithm at double precision.                             */
 TMPL_INLINE_DECL
 void
-tmpl_LDouble_Fast_Two_Sum(long double x,
-                          long double y,
-                          long double * TMPL_RESTRICT const out,
-                          long double * TMPL_RESTRICT const err)
+tmpl_LDouble_Two_Prod(long double x,
+                      long double y,
+                      long double * TMPL_RESTRICT const out,
+                      long double * TMPL_RESTRICT const err)
 {
-    /*  The sum, to whatever rounding mode is being used (likely to-nearest). */
-    TMPL_VOLATILE const long double sum = x + y;
+    /*  Split the inputs into two parts with half the bits stored in each.    */
+    const long double xhi = tmpl_LDouble_Even_High_Split(x);
+    const long double yhi = tmpl_LDouble_Even_High_Split(y);
 
-    /*  The compensated y term, i.e. the bits lost from summing with x.       */
-    TMPL_VOLATILE const long double ycomp = sum - x;
+    /*  The low parts can be computed from the difference.                    */
+    const long double xlo = x - xhi;
+    const long double ylo = y - yhi;
 
-    /*  The output is the floating point sum, the error can be computed by    *
-     *  summing together the error terms for x and y.                         */
-    *out = sum;
-    *err = y - ycomp;
+    /*  Perform the two-product. We have:                                     *
+     *      x * y = (xhi + xlo) * (yhi + ylo)                                 *
+     *            = xhi * yhi + xhi * ylo + xlo * yhi + xlo * ylo.            *
+     *  We perform this sum, and keep track of the error term from rounding.  */
+    const long double prod = x * y;
+    const long double err_hi = xhi * yhi - prod;
+    const long double prod_mid = xhi * ylo + xlo * yhi;
+    const long double prod_lo = xlo * ylo;
+
+    /*  "prod" has the rounded product. The error is computed from the sum.   */
+    *out = prod;
+    *err = (err_hi + prod_mid) + prod_lo;
 }
-/*  End of tmpl_LDouble_Fast_Two_Sum.                                         */
+/*  End of tmpl_LDouble_Two_Prod.                                             */
 
 #endif
 /*  End of include guard.                                                     */
