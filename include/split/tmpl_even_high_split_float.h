@@ -42,14 +42,21 @@
  *                                                                            *
  *          xhi = (splitter * x) - ((splitter * x) - x)                       *
  *                                                                            *
- *      Where splitter = 2^12 + 1. If (computer) arithmetic was associative,  *
+ *      where splitter = 2^12 + 1. If (computer) arithmetic were associative, *
  *      this would cancel yielding xhi = x. Since (computer) arithmetic is    *
  *      not associative, this has the effect of zeroing out the lower bits    *
  *      of x. In particular, if float has a 23-bit mantissa, xhi has the      *
- *      upper 12 bits stored in it, correctly rounded.                        *
+ *      upper 11 bits stored in it, correctly rounded.                        *
  *  Notes:                                                                    *
  *      Depending on compiler and architecture we may need to declare certain *
  *      variables as volatile. Failure to do so results in a poor split.      *
+ *  References:                                                               *
+ *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
+ *          Library for Double-Double and Quad-Double Arithmetic              *
+ *      2.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -76,7 +83,7 @@ TMPL_INLINE_DECL
 float tmpl_Float_Even_High_Split(float x)
 {
     /*  Declaring everything as volatile almost guarantees the split works.   */
-    volatile const float split = x * 134217729.0F;
+    volatile const float split = x * 4097.0F;
     volatile const float tmp = split - x;
     return split - tmp;
 }
@@ -92,7 +99,7 @@ float tmpl_Float_Even_High_Split(float x)
     /*  It is usually sufficient to declare the split product as volatile.    *
      *  With optimizations on this is only slightly slower (1-3%) than        *
      *  without the volatile declaration, but splits properly.                */
-    volatile const float split = x * 134217729.0F;
+    volatile const float split = x * 4097.0F;
     return split - (split - x);
 }
 /*  End of tmpl_Float_Even_High_Split.                                        */
@@ -105,7 +112,7 @@ TMPL_INLINE_DECL
 float tmpl_Float_Even_High_Split(float x)
 {
     /*  This is the "standard" way to perform a split. No volatile used.      */
-    const float split = x * 134217729.0F;
+    const float split = x * 4097.0F;
     return split - (split - x);
 }
 /*  End of tmpl_Float_Even_High_Split.                                        */
