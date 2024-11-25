@@ -26,7 +26,7 @@
  *  Function Name:                                                            *
  *      tmpl_Float_High_Split                                                 *
  *  Purpose:                                                                  *
- *      Returns the input "x" truncated to its higher order bits.             *
+ *      Returns the input "x" rounded to its higher order bits.               *
  *  Arguments:                                                                *
  *      x (float):                                                            *
  *          A real number.                                                    *
@@ -44,12 +44,17 @@
  *                                                                            *
  *          xhi = (splitter * x) - ((splitter * x) - x)                       *
  *                                                                            *
- *      If (computer) arithmetic was associative, this would cancel yielding  *
+ *      If (computer) arithmetic were associative, this would cancel yielding *
  *      xhi = x. Since (computer) arithmetic is not associative, this has the *
  *      effect of zeroing out the lower bits of x.                            *
  *  Notes:                                                                    *
  *      Depending on compiler and architecture we may need to declare certain *
  *      variables as volatile. Failure to do so results in a poor split.      *
+ *  References:                                                               *
+ *      1.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

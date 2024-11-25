@@ -26,15 +26,15 @@
  *  Function Name:                                                            *
  *      tmpl_LDouble_High_Split                                               *
  *  Purpose:                                                                  *
- *      Returns the input "x" truncated to its higher order bits.             *
+ *      Returns the input "x" rounded to its higher order bits.               *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
  *          A real number.                                                    *
  *      splitter (long double):                                               *
  *          The splitting factor. This will most likely by 2^n + 1, where you *
- *          want the higher 63 - n bits to be returned, assuming long double  *
- *          has 63 bits in the mantissa. For quaduple it is 112 - n, and for  *
- *          double and double-double it is 52 - n.                            *
+ *          want the higher 64 - n bits to be returned, assuming long double  *
+ *          has 63 bits in the mantissa. For quadruple it is 113 - n, and for *
+ *          double and double-double it is 53 - n.                            *
  *  Output:                                                                   *
  *      x_hi (long double):                                                   *
  *          The high part of x.                                               *
@@ -45,7 +45,7 @@
  *                                                                            *
  *          xhi = (splitter * x) - ((splitter * x) - x)                       *
  *                                                                            *
- *      If (computer) arithmetic was associative, this would cancel yielding  *
+ *      If (computer) arithmetic were associative, this would cancel yielding *
  *      xhi = x. Since (computer) arithmetic is not associative, this has the *
  *      effect of zeroing out the lower bits of x.                            *
  *                                                                            *
@@ -54,11 +54,18 @@
  *  Notes:                                                                    *
  *      Depending on compiler and architecture we may need to declare certain *
  *      variables as volatile. Failure to do so results in a poor split.      *
+ *  References:                                                               *
+ *      1.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_compat_cast.h:                                                   *
+ *          Provides a helper macro for C vs. C++ compatibility with casting. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 28, 2024                                               *
@@ -74,21 +81,24 @@
 /*  Double-double behaves differently than the rest.                          */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
+/*  Helper macros for casting with C vs. C++ compatibility.                   */
+#include <libtmpl/include/tmpl_compat_cast.h>
+
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_High_Split(long double x, double splitter)
 {
     /*  Splitting a double-double is somewhat useless, since a double-double  *
-     *  is already "split"as two doubles. It is, however, useful to split the *
+     *  is already "split" as two doubles. It is however useful to split the  *
      *  higher double and cast this back to long double. This is done here.   */
-    const double x_double = (double)x;
+    const double x_double = TMPL_CAST(x, double);
 
     /*  Split the higher double.                                              */
     volatile const double split = splitter * x_double;
     const double xhi_double = split - (split - x_double);
 
     /*  Cast this back to long double (the low part will be zero) and return. */
-    return (long double)xhi_double;
+    return TMPL_CAST(xhi_double, long double);
 }
 /*  End of tmpl_LDouble_High_Split.                                           */
 

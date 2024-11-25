@@ -60,6 +60,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_compat_cast.h:                                                   *
+ *          Provides a helper macro for C vs. C++ compatibility with casting. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 28, 2024                                               *
@@ -96,13 +98,16 @@
 /*  Double-double behaves differently than the rest.                          */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
+/*  Helper macros for casting with C vs. C++ compatibility.                   */
+#include <libtmpl/include/tmpl_compat_cast.h>
+
 /*  Function for splitting a long double. The high part is returned.          */
 TMPL_INLINE_DECL
 long double tmpl_LDouble_Even_High_Split(long double x)
 {
     /*  We just need to cast to double since double-double is already split.  */
-    const double x_double = (double)x;
-    return (long double)x_double;
+    const double x_double = TMPL_CAST(x, double);
+    return TMPL_CAST(x_double, long double);
 }
 /*  End of tmpl_LDouble_Even_High_Split.                                      */
 
