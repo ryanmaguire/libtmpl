@@ -16,13 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_two_sum_float                             *
+ *                             tmpl_two_prod_float                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      2Sum algorithm. See include/two_sum/tmpl_two_sum_float.h.             *
+ *      2Prod algorithm. See include/two_prod/tmpl_two_prod_float.h.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 22, 2024                                             *
+ *  Date:       November 24, 2024                                             *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -32,10 +32,10 @@
 #if TMPL_USE_INLINE != 1
 
 /*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_two_sum.h>
+#include <libtmpl/include/tmpl_two_prod.h>
 
-/*  Implemented in include/two_sum/tmpl_two_sum_float.h.                      */
-#include "../../include/two_sum/tmpl_two_sum_float.h"
+/*  Implemented in include/two_prod/tmpl_two_prod_float.h.                    */
+#include "../../include/two_prod/tmpl_two_prod_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

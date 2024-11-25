@@ -19,7 +19,7 @@
  *                            tmpl_two_sum_ldouble                            *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Fast2Sum algorithm. See include/two_sum/tmpl_two_sum_ldouble.h.       *
+ *      2Sum algorithm. See include/two_sum/tmpl_two_sum_ldouble.h.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 22, 2024                                             *
