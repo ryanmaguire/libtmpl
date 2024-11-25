@@ -42,14 +42,21 @@
  *                                                                            *
  *          xhi = (splitter * x) - ((splitter * x) - x)                       *
  *                                                                            *
- *      Where splitter = 2^27 + 1. If (computer) arithmetic was associative,  *
+ *      where splitter = 2^27 + 1. If (computer) arithmetic were associative, *
  *      this would cancel yielding xhi = x. Since (computer) arithmetic is    *
  *      not associative, this has the effect of zeroing out the lower bits    *
  *      of x. In particular, if double has a 52-bit mantissa, xhi has the     *
- *      upper 27 bits stored in it, correctly rounded.                        *
+ *      upper 26 bits stored in it, correctly rounded.                        *
  *  Notes:                                                                    *
  *      Depending on compiler and architecture we may need to declare certain *
  *      variables as volatile. Failure to do so results in a poor split.      *
+ *  References:                                                               *
+ *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
+ *          Library for Double-Double and Quad-Double Arithmetic              *
+ *      2.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
