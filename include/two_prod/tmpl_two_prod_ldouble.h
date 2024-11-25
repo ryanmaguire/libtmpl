@@ -32,9 +32,9 @@
  *          A real number.                                                    *
  *      y (ong double):                                                       *
  *          Another real number.                                              *
- *      out (long double * const):                                            *
+ *      out (long double * TMPL_RESTRICT const):                              *
  *          The rounded product x * y will be stored here.                    *
- *      err (long double * const):                                            *
+ *      err (long double * TMPL_RESTRICT const):                              *
  *          The error term, prod(x, y) - (x * y), is stored here.             *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -61,6 +61,18 @@
  *          err = ((xhi*yhi - prod) + xhi*ylo + yhi*xlo) + xlo*ylo            *
  *                                                                            *
  *      We store prod in "out" and err in "err", and return.                  *
+ *  Notes:                                                                    *
+ *      1.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          declared as "restrict" pointers. This requires that out and err   *
+ *          point to different locations. To properly use this function, the  *
+ *          caller should do this regardless.                                 *
+ *  References:                                                               *
+ *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
+ *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *      2.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

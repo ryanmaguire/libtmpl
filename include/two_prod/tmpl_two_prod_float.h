@@ -32,9 +32,9 @@
  *          A real number.                                                    *
  *      y (float):                                                            *
  *          Another real number.                                              *
- *      out (float * const):                                                  *
+ *      out (float * TMPL_RESTRICT const):                                    *
  *          The rounded product x * y will be stored here.                    *
- *      err (float * const):                                                  *
+ *      err (float * TMPL_RESTRICT const):                                    *
  *          The error term, prod(x, y) - (x * y), is stored here.             *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -51,11 +51,25 @@
  *          prod_error = prod_exact - prod_round                              *
  *                                                                            *
  *      prod_round is stored in "out" and prod_error is stored in "err".      *
+ *  Notes:                                                                    *
+ *      1.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          declared as "restrict" pointers. This requires that out and err   *
+ *          point to different locations. To properly use this function, the  *
+ *          caller should do this regardless.                                 *
+ *  References:                                                               *
+ *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
+ *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *      2.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
+ *  2.) tmpl_compat_cast.h:                                                   *
+ *          Provides a helper macro for C vs. C++ compatibility with casting. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 24, 2024                                             *
@@ -94,7 +108,8 @@ tmpl_Float_Two_Prod(float x,
     const double prod_round_double = TMPL_CAST(prod_round, double);
     const double prod_error = prod_exact - prod_round_double;
 
-    /*  "prod" has the rounded product. The error is computed from the sum.   */
+    /*  "prod_round" has the rounded product, "prod_error" has the error.     *
+     *  Convert this back to a float and return these two values.             */
     *out = prod_round;
     *err = TMPL_CAST(prod_error, float);
 }
