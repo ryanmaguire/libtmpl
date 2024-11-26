@@ -37,24 +37,68 @@
 #define TMPL_DOUBLEDOUBLE_H
 
 #include <libtmpl/include/tmpl_config.h>
+#include <libtmpl/include/tmpl_doubledouble_double.h>
+#include <libtmpl/include/tmpl_doubledouble_ldouble.h>
 
-/*  If we already have double-double for long double, we don't need anything  *
- *  new and can just typedef long double.                                     */
-#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
-typedef long double tmpl_DoubleDouble;
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_DoubleDouble_Add                                                 *
+ *  Purpose:                                                                  *
+ *      Performs the (safe) sum of two double-doubles.                        *
+ *  Arguments:                                                                *
+ *      x (const tmpl_DoubleDouble * const):                                  *
+ *          A double-double.                                                  *
+ *      y (const tmpl_DoubleDouble * const):                                  *
+ *          Another double-double.                                            *
+ *  Output:                                                                   *
+ *      sum (tmpl_DoubleDouble):                                              *
+ *          The double-double sum x + y.                                      *
+ *  Notes:                                                                    *
+ *      long double-double is also provided.                                  *
+ ******************************************************************************/
+
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/doubledouble/tmpl_add_doubledouble.h>
+#include <libtmpl/include/doubledouble/tmpl_add_ldoubledouble.h>
 #else
-typedef struct tmpl_DoubleDouble_Def {
-    double dat[2];
-} tmpl_DoubleDouble;
+extern tmpl_DoubleDouble
+tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
+                      const tmpl_DoubleDouble * const y);
+
+extern tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
+                       const tmpl_LongDoubleDouble * const y);
 #endif
 
-/*  If long double and double are the same we don't need two types.           */
-#if TMPL_LDOUBLE_TYPE != TMPL_LDOUBLE_64_BIT
-typedef struct tmpld_LongDoubleDouble_Def {
-    long double dat[2];
-} tmpl_LongDoubleDouble;
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_DoubleDouble_Quick_Add                                           *
+ *  Purpose:                                                                  *
+ *      Performs the (non-safe) sum of two double-doubles.                    *
+ *  Arguments:                                                                *
+ *      x (const tmpl_DoubleDouble * const):                                  *
+ *          A double-double.                                                  *
+ *      y (const tmpl_DoubleDouble * const):                                  *
+ *          Another double-double.                                            *
+ *  Output:                                                                   *
+ *      sum (tmpl_DoubleDouble):                                              *
+ *          The double-double sum x + y.                                      *
+ *  Notes:                                                                    *
+ *      This algorithm works just as well as the safe add when x and y have   *
+ *      the same sign. Problems arise if one is negative and one is positive. *
+ ******************************************************************************/
+
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/doubledouble/tmpl_quick_add_doubledouble.h>
+#include <libtmpl/include/doubledouble/tmpl_quick_add_ldoubledouble.h>
 #else
-typedef tmpl_DoubleDouble tmpl_LongDoubleDouble;
+extern tmpl_DoubleDouble
+tmpl_DoubleDouble_Quick_Add(const tmpl_DoubleDouble * const x,
+                            const tmpl_DoubleDouble * const y);
+
+extern tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Quick_Add(const tmpl_LongDoubleDouble * const x,
+                             const tmpl_LongDoubleDouble * const y);
 #endif
 
 /******************************************************************************
@@ -73,11 +117,17 @@ typedef tmpl_DoubleDouble tmpl_LongDoubleDouble;
  *  Notes:                                                                    *
  *      long double-double is also provided.                                  *
  ******************************************************************************/
+
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/doubledouble/tmpl_create_doubledouble.h>
+#include <libtmpl/include/doubledouble/tmpl_create_ldoubledouble.h>
+#else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Create(double hi, double lo);
 
 extern tmpl_LongDoubleDouble
 tmpl_LongDoubleDouble_Create(long double hi, long double lo);
+#endif
 
 #endif
 /*  End of include guard.                                                     */
