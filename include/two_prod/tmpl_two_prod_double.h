@@ -68,7 +68,7 @@
  *          caller should do this regardless.                                 *
  *  References:                                                               *
  *      1.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
- *          "Library for Double-Double and Quad-Double Arithmetic"            *
+ *          "Library for Double-Double and Quad-Double Arithmetic."           *
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *

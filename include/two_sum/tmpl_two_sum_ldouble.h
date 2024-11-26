@@ -32,9 +32,9 @@
  *          A real number.                                                    *
  *      y (long double):                                                      *
  *          Another real number.                                              *
- *      out (long double * const):                                            *
+ *      out (long double * TMPL_RESTRICT const):                              *
  *          The rounded sum x + y will be stored here.                        *
- *      err (long double * const):                                            *
+ *      err (long double * TMPL_RESTRICT const):                              *
  *          The error term, sum(x, y) - (x + y), is stored here.              *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -71,14 +71,25 @@
  *                                                                            *
  *      The values "sum" and "err" are returned.                              *
  *  Notes:                                                                    *
- *      Depending on compiler and architecture we may need to declare certain *
- *      variables as volatile. Failure to do so results in a poor 2Sum.       *
+ *      1.) Depending on compiler and architecture we may need to declare     *
+ *          certain variables as volatile. Failure to do so results in a      *
+ *          poor Fast2Sum.                                                    *
+ *      2.) On compilers supporting the "restrict" keyword, out and err are   *
+ *          declared as "restrict" pointers. This requires that out and err   *
+ *          point to different locations. To properly use this function, the  *
+ *          caller should do this regardless.                                 *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
  *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
  *      3.) Moller, Ole (March 1965).                                         *
- *          "Quasi double-precision in floating point addition".              *
+ *          "Quasi double-precision in floating point addition."              *
  *          BIT Numerical Mathematics. Volume 5: Pages 37–50.                 *
+ *      4.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
+ *          "Library for Double-Double and Quad-Double Arithmetic."           *
+ *      5.) Schewchuk, J. (October 1997).                                     *
+ *          "Adaptive Precision Floating-Point Arithmetic                     *
+ *              and Fast Robust Geometric Predicates."                        *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
