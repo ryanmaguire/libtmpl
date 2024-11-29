@@ -314,6 +314,11 @@ ifdef NO_INT
 CONFIG_FLAGS += -DTMPL_SET_NO_INT
 endif
 
+# Whether or not to force some computations to use the volatile keyword.
+ifdef USE_VOLATILE
+CONFIG_FLAGS += -DTMPL_USE_VOLATILE
+endif
+
 FASM_SRCS =
 ASM_SRCS =
 
