@@ -33,7 +33,7 @@
  *      y (const tmpl_DoubleDouble * const):                                  *
  *          Another double-double real number.                                *
  *  Output:                                                                   *
- *      x (tmpl_DoubleDouble):                                                *
+ *      sum (tmpl_DoubleDouble):                                              *
  *          The double-double sum of x and y.                                 *
  *  Called Functions:                                                         *
  *      tmpl_two_sum.h:                                                       *
