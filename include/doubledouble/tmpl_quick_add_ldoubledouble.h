@@ -89,8 +89,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_QUICK_ADD_DOUBLEDOUBLE_H
-#define TMPL_QUICK_ADD_DOUBLEDOUBLE_H
+#ifndef TMPL_QUICK_ADD_LDOUBLEDOUBLE_H
+#define TMPL_QUICK_ADD_LDOUBLEDOUBLE_H
 
 /*  TMPL_INLINE_DECL macro found here, as is TMPL_USE_INLINE.                 */
 #include <libtmpl/include/tmpl_config.h>

@@ -103,6 +103,36 @@ tmpl_LDoubleDouble_Quick_Add(const tmpl_LongDoubleDouble * const x,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_DoubleDouble_Multiply                                            *
+ *  Purpose:                                                                  *
+ *      Performs the product of two double-doubles.                           *
+ *  Arguments:                                                                *
+ *      x (const tmpl_DoubleDouble * const):                                  *
+ *          A double-double.                                                  *
+ *      y (const tmpl_DoubleDouble * const):                                  *
+ *          Another double-double.                                            *
+ *  Output:                                                                   *
+ *      prod (tmpl_DoubleDouble):                                             *
+ *          The double-double product x * y.                                  *
+ *  Notes:                                                                    *
+ *      long double-double is also provided.                                  *
+ ******************************************************************************/
+
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/doubledouble/tmpl_multiply_doubledouble.h>
+#include <libtmpl/include/doubledouble/tmpl_multiply_ldoubledouble.h>
+#else
+extern tmpl_DoubleDouble
+tmpl_DoubleDouble_Multiply(const tmpl_DoubleDouble * const x,
+                           const tmpl_DoubleDouble * const y);
+
+extern tmpl_LongDoubleDouble
+tmpl_LDoubleDouble_Multiply(const tmpl_LongDoubleDouble * const x,
+                            const tmpl_LongDoubleDouble * const y);
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_DoubleDouble_Create                                              *
  *  Purpose:                                                                  *
  *      Creates a double-double from two doubles.                             *
@@ -126,7 +156,7 @@ extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Create(double hi, double lo);
 
 extern tmpl_LongDoubleDouble
-tmpl_LongDoubleDouble_Create(long double hi, long double lo);
+tmpl_LDoubleDouble_Create(long double hi, long double lo);
 #endif
 
 #endif
