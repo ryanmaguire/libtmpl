@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#include <stddef.h>
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Bessel_I0                                                 *
@@ -96,16 +98,10 @@ extern double tmpl_Double_Normalized_Fresnel_Sin(double x);
 extern long double tmpl_LDouble_Normalized_Fresnel_Sin(long double x);
 
 extern void
-tmpl_Legendre_Polynomials(double *legendre_p, double x, unsigned int order);
-
-extern void
-tmpl_Alt_Legendre_Polynomials(double *poly, double *legendre_p,
-                              unsigned int order);
-
-extern void
-tmpl_Fresnel_Kernel_Coefficients(double *fresnel_ker_coeffs, double *legendre_p,
-                                 double *alt_legendre_p,
-                                 double Legendre_Coeff, unsigned int order);
+tmpl_Double_Fresnel_Legendre(double * TMPL_RESTRICT const fresnel_ker_coeffs,
+                             const double * TMPL_RESTRICT const legendre,
+                             const double * TMPL_RESTRICT const mod_legendre,
+                             double beta, size_t order);
 
 extern const float tmpl_float_normalized_fresnel_cos_table[128];
 extern const float tmpl_float_normalized_fresnel_sin_table[128];
