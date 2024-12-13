@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                            tmpl_legendre_double                            *
+ *                           tmpl_legendre_p_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the evaluation of the Legendre polynomials at a real number. *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Legendre                                                  *
+ *      tmpl_Double_Legendre_P                                                *
  *  Purpose:                                                                  *
  *      Computes P_n(x) for a fixed x and for n = 0, 1, ..., length - 1.      *
  *  Arguments:                                                                *
@@ -127,7 +127,7 @@
 #include <stddef.h>
 
 /*  Computes the Legendre polynomials P_n(x) for n = 0, 1, ..., length - 1.   */
-void tmpl_Double_Legendre(double * const evals, double x, size_t length)
+void tmpl_Double_Legendre_P(double * const evals, double x, size_t length)
 {
     /*  Cast some constant values to size_t, avoiding implicit conversion.    */
     const size_t zero = TMPL_CAST(0, size_t);
@@ -168,4 +168,4 @@ void tmpl_Double_Legendre(double * const evals, double x, size_t length)
     }
     /*  End of for-loop for the upward recurrence using Bonnet's formula.     */
 }
-/*  End of tmpl_Double_Legendre.                                              */
+/*  End of tmpl_Double_Legendre_P.                                            */

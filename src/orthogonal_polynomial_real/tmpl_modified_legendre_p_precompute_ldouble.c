@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                  tmpl_modified_legendre_precompute_ldouble                 *
+ *                 tmpl_modified_legendre_p_precompute_ldouble                *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes modified Legendre polynomials from the Legendre polynomials. *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Modified_Legendre_Precompute                             *
+ *      tmpl_LDouble_Modified_Legendre_P_Precompute                           *
  *  Purpose:                                                                  *
  *      Computes the modified Legendre polynomials from the precomputed       *
  *      Legendre polynomials. That is, given P_n(x) precomputed for n = 0, 1, *
@@ -111,8 +111,8 @@
 
 /*  Computes the modified Legendre polynomials b_n(x) from P_n(x).            */
 void
-tmpl_LDouble_Modified_Legendre_Precompute(
-    long double * const evals,
+tmpl_LDouble_Modified_Legendre_P_Precompute(
+    long double * TMPL_RESTRICT const evals,
     const long double * TMPL_RESTRICT const legendre,
     size_t length
 )
@@ -147,4 +147,4 @@ tmpl_LDouble_Modified_Legendre_Precompute(
     }
     /*  End of for-loop for the modified Legendre polynomials.                */
 }
-/*  End of tmpl_LDouble_Modified_Legendre_Precompute.                         */
+/*  End of tmpl_LDouble_Modified_Legendre_P_Precompute.                       */

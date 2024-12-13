@@ -53,7 +53,7 @@
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Legendre                                                  *
+ *      tmpl_Double_Legendre_P                                                *
  *  Purpose:                                                                  *
  *      Evaluates the first "length" Legendre polynomials at the input.       *
  *  Arguments:                                                                *
@@ -72,15 +72,19 @@
  *      1.) Float and long double equivalents are provided as well.           *
  *      2.) evals must have "length" elements allocated to it.                *
  ******************************************************************************/
-extern void tmpl_Float_Legendre(float * const evals, float x, size_t order);
-extern void tmpl_Double_Legendre(double * const evals, double x, size_t order);
+extern void
+tmpl_Float_Legendre_P(float * const evals, float x, size_t length);
 
 extern void
-tmpl_LDouble_Legendre(long double * const evals, long double x, size_t order);
+tmpl_Double_Legendre_P(double * const evals, double x, size_t length);
+
+extern void
+tmpl_LDouble_Legendre_P(long double * const evals,
+                        long double x, size_t length);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Modified_Legendre                                         *
+ *      tmpl_Double_Modified_Legendre_P                                       *
  *  Purpose:                                                                  *
  *      Evaluates the first "length" Modified Legendre polynomials.           *
  *  Arguments:                                                                *
@@ -100,18 +104,18 @@ tmpl_LDouble_Legendre(long double * const evals, long double x, size_t order);
  *      2.) evals must have "length" elements allocated to it.                *
  ******************************************************************************/
 extern void
-tmpl_Float_Modified_Legendre(float * const evals, float x, size_t order);
+tmpl_Float_Modified_Legendre_P(float * const evals, float x, size_t order);
 
 extern void
-tmpl_Double_Modified_Legendre(double * const evals, double x, size_t order);
+tmpl_Double_Modified_Legendre_P(double * const evals, double x, size_t order);
 
 extern void
-tmpl_LDouble_Modified_Legendre(long double * const evals,
-                               long double x, size_t order);
+tmpl_LDouble_Modified_Legendre_P(long double * const evals,
+                                 long double x, size_t order);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Modified_Legendre_Precompute                              *
+ *      tmpl_Double_Modified_Legendre_P_Precompute                            *
  *  Purpose:                                                                  *
  *      Evaluates the first "length" Modified Legendre polynomials, given     *
  *      that the Legendre polynomials have already been precomputed.          *
@@ -137,21 +141,21 @@ tmpl_LDouble_Modified_Legendre(long double * const evals,
  *          P_n(x), use tmpl_Double_Modified_Legendre instead.                *
  ******************************************************************************/
 extern void
-tmpl_Float_Modified_Legendre_Precompute(
+tmpl_Float_Modified_Legendre_P_Precompute(
     float * TMPL_RESTRICT const evals,
     const float * TMPL_RESTRICT const legendre,
     size_t order
 );
 
 extern void
-tmpl_Double_Modified_Legendre_Precompute(
+tmpl_Double_Modified_Legendre_P_Precompute(
     double * TMPL_RESTRICT const evals,
     const double * TMPL_RESTRICT const legendre,
     size_t order
 );
 
 extern void
-tmpl_LDouble_Modified_Legendre_Precompute(
+tmpl_LDouble_Modified_Legendre_P_Precompute(
     long double * TMPL_RESTRICT const evals,
     const long double * TMPL_RESTRICT const legendre,
     size_t order
