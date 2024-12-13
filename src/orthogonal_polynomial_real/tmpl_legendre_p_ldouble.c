@@ -67,10 +67,10 @@
  *          Err = O(epsilon * n * P_n(x))                                     *
  *                                                                            *
  *      For extremely large n, one may obtain a meaningless result.           *
- *      Since epsilon = 2^-52 ~= 2x10^-16 on most machines, one would need    *
- *      n to be on an order of magnitude equal to the reciprocal of epsilon   *
- *      to achieve completely meaningless results, but for n ~ 10^7 the error *
- *      may accumulate to single precision accuracy (~10^-8 relative error).  *
+ *      Since long double usually has at least 52-bits of precision, you      *
+ *      should be able to safely compute with n >= 1,000, and any |x| <= 1.   *
+ *      Machines using extended, double-double, or quadruple precision can go *
+ *      much higher.                                                          *
  *  Notes:                                                                    *
  *      1.) This functions checks for NULL pointers, and checks if length is  *
  *          zero. If length is non-zero, and if evals is not NULL, then the   *

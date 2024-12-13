@@ -16,75 +16,78 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                      tmpl_modified_legendre_p_ldouble                      *
+ *                           tmpl_chebyshev_u_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the modified Legendre polynomials.                           *
+ *      Computes the evaluation of the Chebyshev U polynomials (first kind).  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_LDouble_Modified_Legendre_P                                      *
+ *      tmpl_Double_Chebyshev_U                                               *
  *  Purpose:                                                                  *
- *      Computes the modified Legendre polynomials using upwards recursion.   *
+ *      Computes U_n(x) for a fixed x and for n = 0, 1, ..., length - 1.      *
  *  Arguments:                                                                *
- *      evals (long double * const):                                          *
- *          The array of evaluations. evals[n] stores the value b_n(x).       *
- *      x (long double):                                                      *
+ *      evals (double * const):                                               *
+ *          The array of evaluations. evals[n] stores the value U_n(x).       *
+ *      x (double):                                                           *
  *          A real number. Typically this is between -1 and 1.                *
  *      length (size_t):                                                      *
- *          The number of elements in the array. The highest modified         *
- *          Legendre polynomial that is computed is b_{length - 1}(x).        *
+ *          The number of elements in the array. The highest Chebyshev        *
+ *          polynomial that is computed is U_{length - 1}(x).                 *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      The modified Legendre polynomials are defined in terms of the         *
- *      Legendre polynomials. They are:                                       *
+ *      For length = 0, abort the computation since the array is empty. For   *
+ *      length = 1 or length = 2, use the explicit formulas for the Chebyshev *
+ *      polynomials. They are:                                                *
  *                                                                            *
- *                  P (x) - x P   (x)                                         *
- *          b (x) =  n         n+1                                            *
- *           n      -----------------                                         *
- *                        n + 2                                               *
+ *          U (x) = 1                                                         *
+ *           0                                                                *
  *                                                                            *
- *      From this one may prove the following recursion relation (see [1]):   *
+ *          U (x) = 2 x                                                       *
+ *           1                                                                *
  *                                                                            *
- *                    (2n + 5) x b   (x) - (n + 1) b (x)                      *
- *                                n+1               n                         *
- *          b   (x) = ----------------------------------                      *
- *           n+2                    n + 4                                     *
+ *      For length > 2, use the recursion relation:                           *
  *                                                                            *
- *      starting with b_0(x) = (1 - x^2)/2 and b_1(x) = x(1 - x^2)/2. We use  *
- *      this to compute b_n(x) in an upward fashion.                          *
+ *          U   (x) = 2 x U   (x) - U (x)                                     *
+ *           n+2           n+1       n                                        *
+ *                                                                            *
+ *      Doing this in an upward iterative fashion is linear in time, whereas  *
+ *      naively applying this recursive formula would be exponential. We      *
+ *      perform the upwards linear expansion and return.                      *
  *  Error:                                                                    *
- *      The error depends on the number of modified Legendre polynomials      *
- *      requested. In general, the error for b_n(x) is on the order of:       *
+ *      The error depends on the number of Chebyshev polynomials requested.   *
+ *      In general, the error for U_n(x) is on the order of:                  *
  *                                                                            *
- *          Err = O(epsilon * n * b_n(x))                                     *
+ *          Err = O(epsilon * n * U_n(x))                                     *
  *                                                                            *
  *      For extremely large n, one may obtain a meaningless result.           *
- *      Since long double usually has at least 52-bits of precision, you      *
- *      should be able to safely compute with n >= 1,000, and any |x| <= 1.   *
- *      Machines using extended, double-double, or quadruple precision can go *
- *      much higher.                                                          *
+ *      Since epsilon = 2^-52 ~= 2x10^-16 on most machines, one would need    *
+ *      n to be on an order of magnitude equal to the reciprocal of epsilon   *
+ *      to achieve completely meaningless results, but for n ~ 10^7 the error *
+ *      may accumulate to single precision accuracy (~10^-8 relative error).  *
  *  Notes:                                                                    *
  *      1.) This functions checks for NULL pointers, and checks if length is  *
  *          zero. If length is non-zero, and if evals is not NULL, then the   *
  *          evals array must have at least length elements allocated to it.   *
- *      2.) The domain of the modified Legendre polynomials is -1 <= x <= 1.  *
- *          There are no checks for this in the function and you may use this *
- *          for |x| > 1. The modified Legendre polynomials typically do not   *
+ *      2.) The domain of the Chebyshev polynomials is -1 <= x <= 1. There    *
+ *          are no checks for this in the function, and you may use this      *
+ *          routine for |x| > 1. The Chebyshev polynomials typically do not   *
  *          have much use when |x| > 1.                                       *
  *      3.) No checks for NaN or Infinity are made.                           *
  *  References:                                                               *
- *      1.) Maguire, R., French, R. (2024)                                    *
- *          "Applications of Legendre Polynomials for Fresnel Inversion       *
- *              and Occultation Observations"                                 *
+ *      1.) McQuarrie, Donald (2003),                                         *
+ *          "Mathematical Methods for Scientists and Engineers",              *
+ *          University Science Books, ISBN 1-891389-29-7,                     *
+ *          Chapter 14 "Orthogonal Polynomials and Sturm-Liouville Problems"  *
  *      2.) Arfken, G., Weber, H., Harris, F. (2013)                          *
  *          "Mathematical Methods for Physicists, Seventh Edition"            *
  *          Academic Press, Elsevier                                          *
- *          Chapter 15 "Legendre Functions"                                   *
+ *          Chapter 18 "More Special Functions"                               *
+ *          Section 4 "Chebyshev Polynomials"                                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -96,7 +99,14 @@
  *          Standard library header file providing the size_t data type.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 13, 2024                                             *
+ *  Date:       December 11, 2024                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2021/04/21: Ryan Maguire                                                  *
+ *      Initial rough draft used in rss_ringoccs.                             *
+ *  2024/12/11: Ryan Maguire                                                  *
+ *      Migrated from special_functions_real. Added license and comments.     *
  ******************************************************************************/
 
 /*  Helper macro providing casting for C vs. C++ styles.                      */
@@ -108,10 +118,8 @@
 /*  Standard library header file. The size_t type is found here.              */
 #include <stddef.h>
 
-/*  Computes the modified Legendre polynomials b_n(x) for n = 0 to length - 1.*/
-void
-tmpl_LDouble_Modified_Legendre_P(long double * const evals,
-                                 long double x, size_t length)
+/*  Computes the Chebyshev polynomials U_n(x) for n = 0, 1, ..., length - 1.  */
+void tmpl_Double_Chebyshev_U(double * const evals, double x, size_t length)
 {
     /*  Cast some constant values to size_t, avoiding implicit conversion.    */
     const size_t zero = TMPL_CAST(0, size_t);
@@ -119,39 +127,26 @@ tmpl_LDouble_Modified_Legendre_P(long double * const evals,
     const size_t two = TMPL_CAST(2, size_t);
 
     /*  Declare necessary variables. C89 requires declarations at the top of  *
-     *  a block. n is used for indexing the Legendre polynomials.             */
+     *  a block. n is used for indexing the Chebyshev polynomials.            */
     size_t n;
 
     /*  Check for NULL pointers and empty arrays. Nothing to do in this case. */
     if (!evals || length == zero)
         return;
 
-    /*  evals has at least one element allocated to it. b_0(x) = (1-x^2)/2.   */
-    evals[0] = 0.5L*(1.0L - x*x);
+    /*  evals has at least one element allocated to it. U_0(x) = 1. Use this. */
+    evals[0] = 1.0;
 
-    /*  If length is not greater than two, we can skip the recursion formula. *
-     *  In this case, we are just computing b_0(x). Return.                   */
+    /*  If length is not greater than two, we can skip the recursion          *
+     *  formula. In this case, we are just computing U_0(x). Return.          */
     if (length == one)
         return;
 
-    /*  length >= 2, use the next modified polynomial: b_1(x) = x(1 - x^2)/2. *
-     *  We have already computed (1 - x^2)/2, this is evals[0]. Simply scale  *
-     *  this by x to compute b_1(x).                                          */
-    evals[1] = x * evals[0];
+    /*  length >= 2, use the next Chebyshev polynomial. U_1(x) = 2x.          */
+    evals[1] = 2.0 * x;
 
-    /*  Start the recursion formula, using an upwards iteration.              */
+    /*  U_{n}(x) = 2*x*U_{n-1}(x) - U_{n}(x). Compute.                        */
     for (n = two; n < length; ++n)
-    {
-        /*  Cast to long double to avoid implicit conversions.                */
-        const long double index = TMPL_CAST(n, long double);
-
-        /*  (n + 2) b_n(x) = (2n + 1) x b_{n-1}(x) - (n - 1) b_{n-2}(x).      */
-        const long double left = (2.0L*index + 1.0L) * x * evals[n - 1];
-        const long double right = (index - 1.0L) * evals[n - 2];
-
-        /*  Dividing the above equation by "n + 2" gives b_{n}(x). Compute.   */
-        evals[n] = (left - right) / (index + 2.0L);
-    }
-    /*  End of for-loop for the upward recurrence relation.                   */
+        evals[n] = 2.0 * x * evals[n - 1] - evals[n - 2];
 }
-/*  End of tmpl_LDouble_Modified_Legendre_P.                                  */
+/*  End of tmpl_Double_Chebyshev_U.                                           */
