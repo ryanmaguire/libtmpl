@@ -80,17 +80,18 @@ tmpl_Double_Fresnel_Legendre_L(double * const evals,
     for (n = zero; n < length; ++n)
     {
         /*  Cast to double to prevent implicit conversions.                   */
-        const double index = TMPL_CAST(index, double);
+        const double index = TMPL_CAST(n, double);
+        const double rcpr = 1.0 / (index + 2.0);
 
         /*  Use the definition of the Fresnel-Legendre polynomials to compute.*/
-        const double left = (Pn - alpha*Pn1) / (index + 2.0);
+        const double left = (Pn - alpha*Pn1) * rcpr;
         const double right = Un2 - 2.0*Pn2;
         evals[n] = left - beta * right;
 
         /*  Compute the next set of Chebysev and Legendre polynomials.        */
         Pn = Pn1;
         Pn1 = Pn2;
-        Pn2 = ((2.0*index - 1.0) * alpha * Pn1 - (index - 1.0) * Pn) / index;
+        Pn2 = ((2.0*index + 3.0) * alpha * Pn1 - (index + 1.0) * Pn) * rcpr;
 
         Un = Un1;
         Un1 = Un2;
