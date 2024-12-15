@@ -86,7 +86,7 @@
  *  2023/07/06: Ryan Maguire                                                  *
  *      Changed src/complex/tmpl_complex_add_imag_double.c to use this file.  *
  *  2024/12/15: Ryan Maguire                                                  *
- *      Added references. Changed include to "complex_double.h".              *
+ *      Added references. Changed include to "tmpl_complex_double.h".         *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */

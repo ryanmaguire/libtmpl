@@ -28,7 +28,9 @@
  *  Purpose:                                                                  *
  *      Adds a real number to a complex one.                                  *
  *                                                                            *
- *          w = z + x = (a + ib) + x = (a + x) + ib                           *
+ *          w = z + x                                                         *
+ *            = (a + ib) + x                                                  *
+ *            = (a + x) + ib                                                  *
  *                                                                            *
  *  Arguments:                                                                *
  *      x (long double):                                                      *
@@ -42,13 +44,25 @@
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Add the real-valued input to the real part of the complex number.     *
+ *  Notes:                                                                    *
+ *      1.) No checks for NaN or infinity are made.                           *
+ *      2.) A lot of the complex number code was originally written for       *
+ *          rss_ringoccs, but has since migrated to libtmpl.                  *
+ *          librssringoccs is also released under the GPLv3.                  *
+ *  References:                                                               *
+ *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *      2.) Ahfors, L. (1979)                                                 *
+ *          "Complex Analysis, Third Edition"                                 *
+ *          McGraw-Hill, Internation Series in Pure and Applied Mathematics   *
+ *          Chapter 1 "The Algebra of Complex Numbers"                        *
+ *          Section 1 "Arithmetic Operations"                                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where the TMPL_INLINE_DECL macro is found.            *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header where complex types are defined.                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -71,6 +85,8 @@
  *      Updated and added comments.                                           *
  *  2023/07/08: Ryan Maguire                                                  *
  *      Changed src/complex/tmpl_complex_add_real_ldouble.c to use this file. *
+ *  2024/12/15: Ryan Maguire                                                  *
+ *      Added references. Changed include to "tmpl_complex_ldouble.h".        *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -80,8 +96,8 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex_ldouble.h>
 
 /*  In C99, since _Complex is a built-in data type, long doubles and _Complex *
  *  long doubles can be added via x + z. With C89 we use structs to define    *
