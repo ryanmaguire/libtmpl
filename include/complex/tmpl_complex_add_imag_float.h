@@ -28,7 +28,9 @@
  *  Purpose:                                                                  *
  *      Adds an imaginary number to a complex one.                            *
  *                                                                            *
- *          w = z + iy = (a + ib) + iy = a + i(b + y)                         *
+ *          w = z + iy                                                        *
+ *            = (a + ib) + iy                                                 *
+ *            = a + i(b + y)                                                  *
  *                                                                            *
  *  Arguments:                                                                *
  *      y (float):                                                            *
@@ -43,15 +45,24 @@
  *  Method:                                                                   *
  *      Add the real-valued input to the imaginary part of the complex number.*
  *  Notes:                                                                    *
- *      This file is a fork of the code I wrote for rss_ringoccs.             *
- *      librssringoccs is also released under GPL3.                           *
+ *      1.) No checks for NaN or infinity are made.                           *
+ *      2.) A lot of the complex number code was originally written for       *
+ *          rss_ringoccs, but has since migrated to libtmpl.                  *
+ *          librssringoccs is also released under the GPLv3.                  *
+ *  References:                                                               *
+ *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *      2.) Ahfors, L. (1979)                                                 *
+ *          "Complex Analysis, Third Edition"                                 *
+ *          McGraw-Hill, Internation Series in Pure and Applied Mathematics   *
+ *          Chapter 1 "The Algebra of Complex Numbers"                        *
+ *          Section 1 "Arithmetic Operations"                                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header where complex types are defined.                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -74,6 +85,8 @@
  *      Added inline support.                                                 *
  *  2023/07/06: Ryan Maguire                                                  *
  *      Changed src/complex/tmpl_complex_add_imag_float.c to use this file.   *
+ *  2024/12/15: Ryan Maguire                                                  *
+ *      Added references. Changed include to "complex_float.h".               *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -83,8 +96,8 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex_float.h>
 
 /*  In C99, since _Complex is a built-in data type, floats and _Complex       *
  *  floats can be added via y*_Complex_I + z. With C89 we use structs to      *
