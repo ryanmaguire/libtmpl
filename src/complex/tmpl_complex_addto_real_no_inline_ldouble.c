@@ -32,6 +32,9 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
+/*  Function prototype found here.                                            */
+#include <libtmpl/include/tmpl_complex.h>
+
 /*  Implemented in include/complex/tmpl_complex_addto_real_ldouble.h.         */
 #include "../../include/complex/tmpl_complex_addto_real_ldouble.h"
 
