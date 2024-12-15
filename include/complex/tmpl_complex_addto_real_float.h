@@ -74,7 +74,7 @@
 
 /*  Single precision complex addition. Equivalent of += operation.            */
 TMPL_INLINE_DECL
-void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat *z, float x)
+void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat * const z, float x)
 {
     /*  Add the value to the real part of the complex number.                 */
     z->dat[0] += x;

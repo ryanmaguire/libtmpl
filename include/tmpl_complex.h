@@ -392,9 +392,9 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
  *  Purpose:                                                                  *
  *      Add two complex numbers.                                              *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble *z:                                                *
+ *      z (tmpl_ComplexDouble * const):                                       *
  *          A complex number. The sum is stored here.                         *
- *      const tmpl_ComplexDouble *:                                           *
+ *      w (const tmpl_ComplexDouble * const):                                 *
  *          Another complex number.                                           *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -413,13 +413,16 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
 
 /*  Lacking inline support, use the functions in src/complex/.                */
 extern void
-tmpl_CFloat_AddTo(tmpl_ComplexFloat *z, const tmpl_ComplexFloat *w);
+tmpl_CFloat_AddTo(tmpl_ComplexFloat * const z,
+                  const tmpl_ComplexFloat * const w);
 
 extern void
-tmpl_CDouble_AddTo(tmpl_ComplexDouble *z, const tmpl_ComplexDouble *w);
+tmpl_CDouble_AddTo(tmpl_ComplexDouble * const z,
+                   const tmpl_ComplexDouble * const w);
 
 extern void
-tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w);
+tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble * const z,
+                    const tmpl_ComplexLongDouble * const w);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -430,9 +433,9 @@ tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w);
  *  Purpose:                                                                  *
  *      Add an imaginary number to a complex one.                             *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble *z:                                                *
+ *      z (tmpl_ComplexDouble * const):                                       *
  *          A complex number. The sum is stored here.                         *
- *      double y:                                                             *
+ *      y (double):                                                           *
  *          An imaginary number.                                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -450,9 +453,11 @@ tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-extern void tmpl_CFloat_AddTo_Imag(tmpl_ComplexFloat *z, float y);
-extern void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble *z, double y);
-extern void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y);
+extern void tmpl_CFloat_AddTo_Imag(tmpl_ComplexFloat * const z, float y);
+extern void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble * const z, double y);
+
+extern void
+tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble * const z, long double y);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -463,9 +468,9 @@ extern void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y);
  *  Purpose:                                                                  *
  *      Add a real number to a complex one.                                   *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble *z:                                                *
+ *      z (tmpl_ComplexDouble * const):                                       *
  *          A complex number. The sum is stored here.                         *
- *      double x:                                                             *
+ *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -483,9 +488,11 @@ extern void tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble *z, long double y);
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, use the functions in src/complex/.                */
-extern void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat *z, float x);
-extern void tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble *z, double x);
-extern void tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble *z, long double x);
+extern void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat * const z, float x);
+extern void tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble * const z, double x);
+
+extern void
+tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble * const z, long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */

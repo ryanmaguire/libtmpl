@@ -75,7 +75,7 @@
 
 /*  Double precision complex addition. Equivalent of += operation.            */
 TMPL_INLINE_DECL
-void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble *z, double y)
+void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble * const z, double y)
 {
     /*  Add the value to the imaginary part of the complex number.            */
     z->dat[1] += y;

@@ -53,7 +53,7 @@
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
  *      2.) Ahfors, L. (1979)                                                 *
  *          "Complex Analysis, Third Edition"                                 *
- *          McGraw-Hill, Internation Series in Pure and Applied Mathematics   *
+ *          McGraw-Hill, International Series in Pure and Applied Mathematics *
  *          Chapter 1 "The Algebra of Complex Numbers"                        *
  *          Section 1 "Arithmetic Operations"                                 *
  ******************************************************************************

@@ -82,7 +82,8 @@
 /*  Long double precision complex addition. Equivalent of += operation.       */
 TMPL_INLINE_DECL
 void
-tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble *z, const tmpl_ComplexLongDouble *w)
+tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble * const z,
+                    const tmpl_ComplexLongDouble * const w)
 {
     /*  Complex addition is done component-wise.                              */
     z->dat[0] += w->dat[0];

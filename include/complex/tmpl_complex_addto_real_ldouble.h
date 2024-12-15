@@ -75,7 +75,7 @@
 
 /*  Long double precision complex addition. Equivalent of += operation.       */
 TMPL_INLINE_DECL
-void tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble *z, long double x)
+void tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble * const z, long double x)
 {
     /*  Add the value to the real part of the complex number.                 */
     z->dat[0] += x;

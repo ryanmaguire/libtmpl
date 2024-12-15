@@ -80,7 +80,9 @@
 
 /*  Single precision complex addition. Equivalent of += operation.            */
 TMPL_INLINE_DECL
-void tmpl_CFloat_AddTo(tmpl_ComplexFloat *z, const tmpl_ComplexFloat *w)
+void
+tmpl_CFloat_AddTo(tmpl_ComplexFloat * const z,
+                  const tmpl_ComplexFloat * const w)
 {
     /*  Complex addition is done component-wise.                              */
     z->dat[0] += w->dat[0];
