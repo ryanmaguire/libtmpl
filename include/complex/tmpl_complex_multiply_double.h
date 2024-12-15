@@ -48,21 +48,8 @@
 /*  TMPL_USE_INLINE macro found here.                                         */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
-
 /*  Where the prototypes are declared and where complex types are defined.    */
 #include <libtmpl/include/tmpl_complex.h>
-
-/*  Two algorithms are offered. The standard one, and the Gauss-Karatsuba     *
- *  algorithm for complex multiplication.                                     */
-#ifndef TMPL_COMPLEX_DOUBLE_MULTIPLY_ALGORITHM
-#define TMPL_COMPLEX_DOUBLE_MULTIPLY_ALGORITHM 0
-#endif
-
-/*  Check the value of the macro. 0 corresponds to the classic method, and 1  *
- *  represents the Gauss-Karatsuba algorithm.                                 */
-#if TMPL_COMPLEX_DOUBLE_MULTIPLY_ALGORITHM == 0
 
 /*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
  *  and double _Complex z2, you can just do z1 * z2. Structs cannot be        *
@@ -83,34 +70,6 @@ tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
     return prod;
 }
 /*  End of tmpl_CDouble_Multiply.                                             */
-
-#else
-/*  Else for #if TMPL_COMPLEX_DOUBLE_MULTIPLY_ALGORITHM == 0.                 */
-
-/*  Double precision complex multiplication.                                  */
-TMPL_INLINE_DECL
-tmpl_ComplexDouble
-tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexDouble prod;
-
-    /*  The Gauss-Karatsuba algorithm requires 3 multipications, instead of   *
-     *  4, but needs more additions and subtractions.                         */
-    const double k1 = z1.dat[0] * (z0.dat[0] + z0.dat[1]);
-    const double k2 = z0.dat[0] * (z1.dat[1] - z1.dat[0]);
-    const double k3 = z0.dat[1] * (z1.dat[0] + z1.dat[1]);
-    prod.dat[0] = k1 - k3;
-    prod.dat[1] = k1 + k2;
-    return prod;
-}
-/*  End of tmpl_CDouble_Multiply.                                             */
-
-#endif
-/*  End of #if TMPL_COMPLEX_DOUBLE_MULTIPLY_ALGORITHM == 0.                   */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
