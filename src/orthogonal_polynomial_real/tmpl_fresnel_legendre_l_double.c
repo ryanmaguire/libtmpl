@@ -59,42 +59,38 @@ tmpl_Double_Fresnel_Legendre_L(double * const evals,
 
     /*  These are used for the recursive formulas for Legendre P and          *
      *  Chebyshev U.                                                          */
-    double alpha_squared, Pn, Pn1, Pn2, Un, Un1, Un2;
+    double Pn, Pn1, Un, Un1;
 
     /*  Check for NULL pointers and empty arrays. Nothing to do in this case. */
     if (!evals || length == zero)
         return;
 
     /*  Start the computation. Use the formulas for P_n and U_n for small n.  */
-    alpha_squared = alpha * alpha;
-
     Pn = 1.0;
     Pn1 = alpha;
-    Pn2 = 0.5 * (3.0 * alpha_squared - 1.0);
-
     Un = 1.0;
     Un1 = 2.0 * alpha;
-    Un2 = 4.0 * alpha_squared - 1.0;
 
     /*  Start the upwards iterative loop.                                     */
     for (n = zero; n < length; ++n)
     {
         /*  Cast to double to prevent implicit conversions.                   */
-        const double index = TMPL_CAST(n, double);
-        const double rcpr = 1.0 / (index + 2.0);
+        const double ind = TMPL_CAST(n, double);
+        const double rcpr = 1.0 / (ind + 2.0);
+
+        /*  Compute the next Legendre and Chebyshev polynomials.              */
+        const double Pn2 = ((2.0*ind + 3.0)*alpha*Pn1 - (ind + 1.0)*Pn)*rcpr;
+        const double Un2 = 2.0 * alpha * Un1 - Un;
 
         /*  Use the definition of the Fresnel-Legendre polynomials to compute.*/
         const double left = (Pn - alpha*Pn1) * rcpr;
         const double right = Un2 - 2.0*Pn2;
         evals[n] = left - beta * right;
 
-        /*  Compute the next set of Chebysev and Legendre polynomials.        */
+        /*  Reset the Legendre and Chebyshev polynomials for the next index.  */
         Pn = Pn1;
         Pn1 = Pn2;
-        Pn2 = ((2.0*index + 3.0) * alpha * Pn1 - (index + 1.0) * Pn) * rcpr;
-
         Un = Un1;
         Un1 = Un2;
-        Un2 = 2.0 * alpha * Un1 - Un;
     }
 }
