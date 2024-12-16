@@ -48,7 +48,7 @@
  *      3.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
- *      4.) This provides a "+=" operator. It is faster use:                  *
+ *      4.) This provides a "+=" operator. It is faster to use:               *
  *              tmpl_CDouble_AddTo(&z, &w)                                    *
  *          instead of writing:                                               *
  *              z = tmpl_CDouble_Add(z, w).                                   *
