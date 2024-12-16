@@ -267,5 +267,48 @@ tmpl_LDouble_Modified_Legendre_P_Precompute(
     size_t order
 );
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Split_Fresnel_Legendre_L                                  *
+ *  Purpose:                                                                  *
+ *      Evaluates the first "length" Fresnel-Legendre polynomials at the      *
+ *      input, splitting the result into two parts.                           *
+ *  Arguments:                                                                *
+ *      left (double * const):                                                *
+ *          An array of real numbers, the output of the function. The nth     *
+ *          element will contain (P_n(alpha) - alpha P_{n+1}(alpha))/(n + 2). *
+ *      right (double * const):                                               *
+ *          An array of real numbers, the output of the function. The nth     *
+ *          element will contain U_{n+2}(alpha) - 2 P_{n+2}(alpha).           *
+ *      alpha (double):                                                       *
+ *          A real number. For most uses, this should be between -1 and 1.    *
+ *          This is the domain for the Legendre polynomial. However, alpha    *
+ *          can technically be any real number.                               *
+ *      length (size_t):                                                      *
+ *          The number of elements in the evals array.                        *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      1.) Float and long double equivalents are provided as well.           *
+ *      2.) left and right must have "length" elements allocated to it.       *
+ ******************************************************************************/
+extern void
+tmpl_Float_Split_Fresnel_Legendre_L(float * const left,
+                                    float * const right,
+                                    float alpha,
+                                    size_t length);
+
+extern void
+tmpl_Double_Split_Fresnel_Legendre_L(double * const left,
+                                     double * const right,
+                                     double alpha,
+                                     size_t length);
+
+extern void
+tmpl_LDouble_Split_Fresnel_Legendre_L(long double * const left,
+                                      long double * const right,
+                                      long double alpha,
+                                      size_t length);
+
 #endif
 /*  End of include guard.                                                     */
