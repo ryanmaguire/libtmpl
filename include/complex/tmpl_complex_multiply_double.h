@@ -21,12 +21,64 @@
  *  Purpose:                                                                  *
  *      Contains the source code for complex multiplication.                  *
  ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_CDouble_Multiply                                                 *
+ *  Purpose:                                                                  *
+ *      Multiplies two complex numbers:                                       *
+ *                                                                            *
+ *          z * w = (a + ib) * (c + id)                                       *
+ *                = (ac + ibc + iad + i^2bd                                   *
+ *                = (ac - bd) + i(bc + ad)                                    *
+ *                                                                            *
+ *  Arguments:                                                                *
+ *      z (tmpl_ComplexDouble):                                               *
+ *          A complex number.                                                 *
+ *      w (tmpl_ComplexDouble):                                               *
+ *          Another complex number.                                           *
+ *  Output:                                                                   *
+ *      prod (tmpl_ComplexDouble):                                            *
+ *          The product of z and w.                                           *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      Use the product formula, which is given by the distributive law and   *
+ *      the property that i^2 = -1.                                           *
+ *  Notes:                                                                    *
+ *      1.) No checks for NaN or infinity are made.                           *
+ *      2.) A lot of the complex number code was originally written for       *
+ *          rss_ringoccs, but has since migrated to libtmpl.                  *
+ *          librssringoccs is also released under the GPLv3.                  *
+ *      3.) This function used to implement the Karastuba-Gauss algorithm:    *
+ *                                                                            *
+ *              z = a + ib                                                    *
+ *              w = c + id                                                    *
+ *                                                                            *
+ *              f = c * (a + b)                                               *
+ *              g = a * (d - c)                                               *
+ *              h = b * (c + d)                                               *
+ *                                                                            *
+ *              z * w = (f - h) + i(f + g)                                    *
+ *                                                                            *
+ *          This uses 3 multiplications, whereas the naive method uses 4.     *
+ *          On every processor tested, the naive method is faster. This makes *
+ *          sense since multiplication isn't too much slower than addition,   *
+ *          and hence the extra sums needed result in a slower computation.   *
+ *  References:                                                               *
+ *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *      2.) Ahfors, L. (1979)                                                 *
+ *          "Complex Analysis, Third Edition"                                 *
+ *          McGraw-Hill, International Series in Pure and Applied Mathematics *
+ *          Chapter 1 "The Algebra of Complex Numbers"                        *
+ *          Section 1 "Arithmetic Operations"                                 *
+ ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_USE_INLINE macro.                 *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *          Contains the TMPL_INLINE_DECL macro.                              *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header where complex types are defined.                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 18, 2021                                             *
@@ -39,17 +91,19 @@
  *      Copied from rss_ringoccs.                                             *
  *  2021/02/18: Ryan Maguire                                                  *
  *      Edited file for use in libtmpl.                                       *
+ *  2024/12/16: Ryan Maguire                                                  *
+ *      Added references. Removed Karatsuba-Gauss method.                     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_COMPLEX_MULTIPLY_DOUBLE_H
 #define TMPL_COMPLEX_MULTIPLY_DOUBLE_H
 
-/*  TMPL_USE_INLINE macro found here.                                         */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/tmpl_complex_double.h>
 
 /*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
  *  and double _Complex z2, you can just do z1 * z2. Structs cannot be        *
