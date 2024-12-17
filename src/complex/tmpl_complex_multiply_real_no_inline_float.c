@@ -16,11 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_complex_multiply_ldouble                        *
+ *                      tmpl_complex_multiply_real_float                      *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Complex multiplication. See                                           *
- *      include/complex/tmpl_complex_multiply_ldouble.h.                      *
+ *      include/complex/tmpl_complex_multiply_real_float.h.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 18, 2021                                             *
@@ -35,8 +35,8 @@
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Implemented in include/complex/tmpl_complex_multiply_ldouble.h.           */
-#include "../../include/complex/tmpl_complex_multiply_ldouble.h"
+/*  Implemented in include/complex/tmpl_complex_multiply_real_float.h.        */
+#include "../../include/complex/tmpl_complex_multiply_real_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

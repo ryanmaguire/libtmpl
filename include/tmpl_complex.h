@@ -1110,6 +1110,19 @@ tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      tmpl_ComplexDouble prod:                                              *
  *          The product y * z.                                                *
  ******************************************************************************/
+
+/*  Simple arithmetic function that is small enough to inline.                */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/complex/tmpl_complex_multiply_imag_double.h>
+#include <libtmpl/include/complex/tmpl_complex_multiply_imag_float.h>
+#include <libtmpl/include/complex/tmpl_complex_multiply_imag_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply_Imag(float y, tmpl_ComplexFloat z);
 
@@ -1118,6 +1131,9 @@ tmpl_CDouble_Multiply_Imag(double y, tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
