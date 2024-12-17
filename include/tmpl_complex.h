@@ -1144,6 +1144,47 @@ tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_MultiplyBy                                               *
+ *  Purpose:                                                                  *
+ *      Mutliply two complex numbers.                                         *
+ *  Arguments:                                                                *
+ *      z0 (tmpl_ComplexDouble * const):                                      *
+ *          A pointer to a complex number. The product is stored here.        *
+ *      z1 (tmpl_ComplexDouble * const):                                      *
+ *          Another pointer to a complex number.                              *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+
+/*  Simple arithmetic function that is small enough to inline.                */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_double.h>
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_float.h>
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the functions in src/complex/.                */
+extern void
+tmpl_CFloat_MultiplyBy(tmpl_ComplexFloat * const z0,
+                       const tmpl_ComplexFloat * const z1);
+
+extern void
+tmpl_CDouble_MultiplyBy(tmpl_ComplexDouble * const z0,
+                        const tmpl_ComplexDouble * const z1);
+
+extern void
+tmpl_CLDouble_MultiplyBy(tmpl_ComplexLongDouble * const z0,
+                         const tmpl_ComplexLongDouble * const z1);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_Negate                                                   *
  *  Purpose:                                                                  *
  *      Computes the additive inverse of a complex number. That is, given     *
