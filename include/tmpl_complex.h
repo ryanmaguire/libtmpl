@@ -1149,6 +1149,19 @@ tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble prod:                                              *
  *          The product x * z.                                                *
  ******************************************************************************/
+
+/*  Simple arithmetic function that is small enough to inline.                */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/complex/tmpl_complex_multiply_real_double.h>
+#include <libtmpl/include/complex/tmpl_complex_multiply_real_float.h>
+#include <libtmpl/include/complex/tmpl_complex_multiply_real_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply_Real(float x, tmpl_ComplexFloat z);
 
@@ -1157,6 +1170,9 @@ tmpl_CDouble_Multiply_Real(double x, tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1195,6 +1211,82 @@ tmpl_CDouble_MultiplyBy(tmpl_ComplexDouble * const z0,
 extern void
 tmpl_CLDouble_MultiplyBy(tmpl_ComplexLongDouble * const z0,
                          const tmpl_ComplexLongDouble * const z1);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_MultiplyBy_Imag                                          *
+ *  Purpose:                                                                  *
+ *      Mutliply two complex numbers.                                         *
+ *  Arguments:                                                                *
+ *      z (tmpl_ComplexDouble * const):                                       *
+ *          A pointer to a complex number. The product is stored here.        *
+ *      y (double):                                                           *
+ *          An imaginary number.                                              *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+
+/*  Simple arithmetic function that is small enough to inline.                */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_imag_double.h>
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_imag_float.h>
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_imag_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the functions in src/complex/.                */
+extern void
+tmpl_CFloat_MultiplyBy_Imag(tmpl_ComplexFloat * const z, float y);
+
+extern void
+tmpl_CDouble_MultiplyBy_Imag(tmpl_ComplexDouble * const z, double y);
+
+extern void
+tmpl_CLDouble_MultiplyBy_Imag(tmpl_ComplexLongDouble * const z, long double y);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_MultiplyBy_Real                                          *
+ *  Purpose:                                                                  *
+ *      Mutliply two complex numbers.                                         *
+ *  Arguments:                                                                *
+ *      z (tmpl_ComplexDouble * const):                                       *
+ *          A pointer to a complex number. The product is stored here.        *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+
+/*  Simple arithmetic function that is small enough to inline.                */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline versions found here.                                               */
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_real_double.h>
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_real_float.h>
+#include <libtmpl/include/complex/tmpl_complex_multiplyby_real_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, use the functions in src/complex/.                */
+extern void
+tmpl_CFloat_MultiplyBy_Real(tmpl_ComplexFloat * const z, float x);
+
+extern void
+tmpl_CDouble_MultiplyBy_Real(tmpl_ComplexDouble * const z, double x);
+
+extern void
+tmpl_CLDouble_MultiplyBy_Real(tmpl_ComplexLongDouble * const z, long double x);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
