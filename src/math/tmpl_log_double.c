@@ -279,6 +279,7 @@
 #define A3 0.285714285714285714285714
 #define A4 0.222222222222222222222222
 #define A5 0.181818181818181818181818
+#define TMPL_LOG_TWO (+6.931471805599453094172321214581765680755E-01)
 
 /*  If IEEE-754 support is available, use this. It's much faster.             */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
@@ -422,7 +423,7 @@ double tmpl_Double_Log(double x)
     poly = A * (A0 + A_sq * (A1 + A_sq * A2));
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two*exponent + poly + tmpl_double_log_table[ind];
+    return TMPL_LOG_TWO*exponent + poly + tmpl_double_log_table[ind];
 }
 /*  End of tmpl_Double_Log.                                                   */
 
@@ -480,7 +481,7 @@ double tmpl_Double_Log(double x)
     poly =                 poly * A_sq + 0.66666666666666667;
     poly =                 poly * A_sq + 2.0000000000000000;
 
-    return tmpl_Natural_Log_of_Two*exponent + A*poly;
+    return TMPL_LOG_TWO*exponent + A*poly;
 }
 
 #endif
@@ -493,6 +494,7 @@ double tmpl_Double_Log(double x)
 #undef A3
 #undef A4
 #undef A5
+#undef TMPL_LOG_TWO
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

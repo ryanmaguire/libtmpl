@@ -189,6 +189,7 @@
 #define ONE_HALF 0.5F
 #define ONE_THIRD 0.3333333333333333333333333333F
 #define ONE_FOURTH 0.25F
+#define TMPL_LOG_TWO (+6.931471805599453094172321214581765680755E-01F)
 
 /*  Function for computing natural log at single precision.                   */
 float tmpl_Float_Log(float x)
@@ -311,8 +312,7 @@ float tmpl_Float_Log(float x)
     A = 2.0F*(s - 1.0F) / (s + 1.0F);
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_F*(float)exponent + A +
-        tmpl_float_log_table[w.bits.man0];
+    return TMPL_LOG_TWO*(float)exponent + A + tmpl_float_log_table[w.bits.man0];
 }
 /*  End of tmpl_Float_Log.                                                    */
 
@@ -320,6 +320,7 @@ float tmpl_Float_Log(float x)
 #undef ONE_HALF
 #undef ONE_THIRD
 #undef ONE_FOURTH
+#undef TMPL_LOG_TWO
 
 #else
 /*  IEEE754 support not available, or libtmpl algorithms not requested.       */
@@ -353,4 +354,3 @@ float tmpl_Float_Log(float x)
 
 #endif
 /*  End of if for TMPL_HAS_IEEE754_FLOAT and TMPL_USE_MATH_ALGORITHMS.        */
-

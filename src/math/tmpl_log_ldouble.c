@@ -166,6 +166,8 @@
 #define ONE_NINTH 0.11111111111111111111111111111111111L
 #endif
 
+#define TMPL_LOG_TWO (+6.931471805599453094172321214581765680755E-01L)
+
 /*  Double double uses a different algorithm. 64-bit, 80-bit extended, and    *
  *  128-bit quadruple use the same idea.                                      */
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN \
@@ -318,8 +320,7 @@ long double tmpl_LDouble_Log(long double x)
 #endif
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_L*exponent + poly +
-        tmpl_ldouble_log_table[ind];
+    return TMPL_LOG_TWO*exponent + poly + tmpl_ldouble_log_table[ind];
 }
 /*  End of tmpl_LDouble_Log.                                                  */
 
@@ -366,8 +367,7 @@ long double tmpl_LDouble_Log(long double x)
     );
 
     /*  We wrote x = 2^b * ut/t. Return b*log(2) + log(u/t) + log(t).         */
-    return tmpl_Natural_Log_of_Two_L*exponent + polya + polyb +
-        tmpl_ldouble_log_table[ind];
+    return TMPL_LOG_TWO*exponent + polya + polyb + tmpl_ldouble_log_table[ind];
 }
 #endif
 /*  End of if for double double.                                              */
@@ -379,6 +379,7 @@ long double tmpl_LDouble_Log(long double x)
 #undef ONE_FIFTH
 #undef ONE_SIXTH
 #undef ONE_SEVENTH
+#undef TMPL_LOG_TWO
 
 /*  Not defined for 64-bit.                                                   */
 #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_64_BIT_BIG_ENDIAN && \
