@@ -78,6 +78,9 @@ extern double tmpl_Double_Sqrt(double x);
 #define B03 (-6.88283971605453293030E-01)
 #define B04 (+7.70381505559019352791e-02)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996)
+
 /*  Helper macros for evaluating polynomials using Horner's method.           */
 #define TMPL_POLYA_EVAL(z) A00 + z*(A01 + z*(A02 + z*(A03 + z*(A04 + z*A05))))
 #define TMPL_POLYB_EVAL(z) B00 + z*(B01 + z*(B02 + z*(B03 + z*B04)))
@@ -100,7 +103,7 @@ double tmpl_Double_Arcsin_Tail_End(double x)
     const double t = r*s;
 
     /*  We now have asin(sqrt(z)) - sqrt(z). We need pi/2 - 2*asin(sqrt(z)).  */
-    return tmpl_Pi_By_Two - 2.0*(s + t);
+    return TMPL_PI_BY_TWO - 2.0*(s + t);
 }
 /*  End of tmpl_Double_Arcsin_Tail_End.                                       */
 

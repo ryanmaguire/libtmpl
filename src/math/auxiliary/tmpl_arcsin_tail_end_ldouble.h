@@ -170,6 +170,9 @@ B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*(B07+z*(B08+z*B09))))))))
 #endif
 /*  End of 80-bit extended / portable version.                                */
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996L)
+
 /*  Function for computing asin(x) for 0.5 <= x < 1.0.                        */
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Arcsin_Tail_End(long double x)
@@ -188,7 +191,7 @@ long double tmpl_LDouble_Arcsin_Tail_End(long double x)
     const long double t = r*s;
 
     /*  We now have asin(sqrt(z)) - sqrt(z). We need pi/2 - 2*asin(sqrt(z)).  */
-    return tmpl_Pi_By_Two_L - 2.0L*(s + t);
+    return TMPL_PI_BY_TWO - 2.0L*(s + t);
 }
 /*  End of tmpl_LDouble_Arcsin_Tail_End.                                      */
 

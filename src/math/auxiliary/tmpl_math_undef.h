@@ -529,6 +529,11 @@
 #undef TMPL_DEN_EVAL
 
 /*  Constant macros that occur in several functions.                          */
+#undef TMPL_ONE_PI
+#undef TMPL_TWO_PI
 #undef TMPL_PI_BY_TWO
+#undef TMPL_PI_BY_FOUR
+#undef TMPL_THREE_PI_BY_FOUR
+#undef TMPL_RCPR_SQRT_PI
 
 /*  No include guard needed, so no #endif is needed either.                   */

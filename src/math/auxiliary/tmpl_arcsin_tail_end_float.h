@@ -72,6 +72,9 @@ extern float tmpl_Float_Sqrt(float x);
 #define B00 (+1.0000000000E+00F)
 #define B01 (-7.0662963390E-01F)
 
+/*  The constant Pi / 2.                                                      */
+#define TMPL_PI_BY_TWO (+1.5707963267948966192313216916397514420985846996F)
+
 /*  Function for computing asin(x) for 0.5 <= x < 1.0.                        */
 TMPL_STATIC_INLINE
 float tmpl_Float_Arcsin_Tail_End(float x)
@@ -90,7 +93,7 @@ float tmpl_Float_Arcsin_Tail_End(float x)
     const float t = r*s;
 
     /*  We now have asin(sqrt(z)) - sqrt(z). We need pi/2 - 2*asin(sqrt(z)).  */
-    return tmpl_Pi_By_Two_F - 2.0F*(s + t);
+    return TMPL_PI_BY_TWO - 2.0F*(s + t);
 }
 /*  End of tmpl_Float_Arcsin_Tail_End.                                        */
 
