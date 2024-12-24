@@ -351,8 +351,7 @@ long double tmpl_LDouble_Arccos(long double x)
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
 
 /*  Undefine everything in case someone wants to #include this file.          */
-#undef TMPL_ONE_PI
-#undef TMPL_PI_BY_TWO
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

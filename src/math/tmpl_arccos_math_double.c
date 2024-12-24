@@ -266,8 +266,7 @@ double tmpl_Double_Arccos(double x)
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
 /*  Undefine everything in case someone wants to #include this file.          */
-#undef TMPL_ONE_PI
-#undef TMPL_PI_BY_TWO
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
