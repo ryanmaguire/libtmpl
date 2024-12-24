@@ -135,6 +135,13 @@
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
 #include "auxiliary/tmpl_arcsin_tail_end_double.h"
 
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The endpoints evaluate to +/- pi/2, depending on the sign of the input.   */
+#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00)
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -183,9 +190,9 @@ double tmpl_Double_Arcsin(double x)
 
     /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
     if (x == -1.0)
-        return -tmpl_Pi_By_Two;
+        return -TMPL_PI_BY_TWO;
     else if (x == 1.0)
-        return tmpl_Pi_By_Two;
+        return TMPL_PI_BY_TWO;
 
     /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN. Note *
      *  this catches NaN and infinity since we are checking the exponent of   *
@@ -236,9 +243,9 @@ double tmpl_Double_Arcsin(double x)
 
     /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
     if (x == -1.0)
-        return -tmpl_Pi_By_Two;
+        return -TMPL_PI_BY_TWO;
     else if (x == 1.0)
-        return tmpl_Pi_By_Two;
+        return TMPL_PI_BY_TWO;
 
     /*  For |x| > 1 the function is undefined. Return NaN.                    */
     return TMPL_NAN;
@@ -247,6 +254,9 @@ double tmpl_Double_Arcsin(double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

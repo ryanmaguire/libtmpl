@@ -169,6 +169,13 @@
 /*  Tail-end arcsin function that uses the reflection formula with arccos.    */
 #include "auxiliary/tmpl_arcsin_tail_end_ldouble.h"
 
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The endpoints evaluate to +/- pi/2, depending on the sign of the input.   */
+#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00L)
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
@@ -258,9 +265,9 @@ long double tmpl_LDouble_Arcsin(long double x)
 
     /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
     if (x == -1.0L)
-        return -tmpl_Pi_By_Two_L;
+        return -TMPL_PI_BY_TWO;
     else if (x == 1.0L)
-        return tmpl_Pi_By_Two_L;
+        return TMPL_PI_BY_TWO;
 
     /*  For a real input, asin(x) is undefined with |x| > 1. Return NaN.      *
      *  Note, this catches NaN and infinity since we are checking the         *
@@ -311,9 +318,9 @@ long double tmpl_LDouble_Arcsin(long double x)
 
     /*  asin(-1) = -pi/2 and asin(1) = pi/2. Use this.                        */
     if (x == -1.0L)
-        return -tmpl_Pi_By_Two_L;
+        return -TMPL_PI_BY_TWO;
     else if (x == 1.0L)
-        return tmpl_Pi_By_Two_L;
+        return TMPL_PI_BY_TWO;
 
     /*  For |x| > 1 the function is undefined. Return NaN.                    */
     return TMPL_NANL;
@@ -322,6 +329,9 @@ long double tmpl_LDouble_Arcsin(long double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
