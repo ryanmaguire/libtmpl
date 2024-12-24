@@ -42,12 +42,11 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
-/*  Header file which contains aliases for the function in the standard C     *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+/*  Constants involving pi found here.                                        */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Definition of rssringoccs_ComplexDouble found here.                       */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Definition of tmpl_ComplexDouble found here.                              */
+#include <libtmpl/include/tmpl_complex_double.h>
 
 /*  The Fresnel integrals are found here.                                     */
 #include <libtmpl/include/tmpl_special_functions_real.h>
@@ -61,7 +60,7 @@ tmpl_CDouble_Fresnel_Diffraction_Right_Straightedge(double x,
                                                     double fresnel_scale)
 {
     tmpl_ComplexDouble T;
-    const double scale_factor = tmpl_Sqrt_Pi_By_Two / fresnel_scale;
+    const double scale_factor = tmpl_Double_Sqrt_Pi_By_Two / fresnel_scale;
     const double arg = scale_factor * (edge - x);
     const double re = tmpl_Double_Fresnel_Cos(arg);
     const double im = tmpl_Double_Fresnel_Sin(arg);

@@ -41,8 +41,7 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
-/*  Header file which contains aliases for the function in the standard C     *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+/*  atan2 function provided here. Used for computing angles.                  */
 #include <libtmpl/include/tmpl_math.h>
 
 /*  The Fresnel integrals are found here.                                     */
@@ -74,7 +73,7 @@ tmpl_Double_Fresnel_Diffraction_Well_Phase(double x,
                                            double b,
                                            double fresnel_scale)
 {
-    const double scale_factor = tmpl_Sqrt_Pi_By_Two / fresnel_scale;
+    const double scale_factor = tmpl_Double_Sqrt_Pi_By_Two / fresnel_scale;
     const double arg1 = scale_factor*(a - x);
     const double arg2 = scale_factor*(b - x);
 
@@ -83,7 +82,7 @@ tmpl_Double_Fresnel_Diffraction_Well_Phase(double x,
     const double fc1 = tmpl_Double_Fresnel_Cos(arg1);
     const double fc2 = tmpl_Double_Fresnel_Cos(arg2);
 
-    const double im = tmpl_Sqrt_One_By_Two_Pi * (fs2 - fs1 -  fc2 + fc1);
-    const double re = 1.0 - tmpl_Sqrt_One_By_Two_Pi * (fc2 - fc1 + fs2 - fs1);
+    const double im = tmpl_Double_Rcpr_Sqrt_Two_Pi * (fs2 - fs1 -  fc2 + fc1);
+    const double re = 1.0 - tmpl_Double_Rcpr_Sqrt_Two_Pi * (fc2 - fc1 + fs2 - fs1);
     return tmpl_Double_Arctan2(im, re);
 }

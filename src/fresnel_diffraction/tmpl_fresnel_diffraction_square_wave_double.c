@@ -41,15 +41,14 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
-/*  Header file which contains aliases for the function in the standard C     *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+/*  Helper macro for casting with C vs. C++ compatibility.                    */
+#include <libtmpl/include/tmpl_compat_cast.h>
+
+/*  Definition of tmpl_ComplexDouble found here.                              */
+#include <libtmpl/include/tmpl_complex_double.h>
+
+/*  Floor function declared here.                                             */
 #include <libtmpl/include/tmpl_math.h>
-
-/*  Definition of rssringoccs_ComplexDouble found here.                       */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  The Fresnel integrals are found here.                                     */
-#include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Header file containing the prototypes for the functions.                  */
 #include <libtmpl/include/tmpl_fresnel_diffraction.h>
@@ -65,9 +64,9 @@ tmpl_CDouble_Fresnel_Diffraction_Square_Wave(double x,
 
     const unsigned int n_waves = 2U*number_of_wells;
     const double wave_start = tmpl_Double_Floor(0.5* x * well_width);
-    double a = 2.0*well_width*wave_start - (double)number_of_wells;
-    double b = a + well_width;
     const double shift = 2.0 * well_width;
+    double a = 2.0*well_width*wave_start - TMPL_CAST(number_of_wells, double);
+    double b = a + well_width;
 
     T_hat = tmpl_CDouble_Fresnel_Diffraction_Gap(x, a, b, fresnel_scale);
 

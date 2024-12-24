@@ -41,12 +41,11 @@
  *      Frozen for v1.3.                                                      *
  ******************************************************************************/
 
-/*  Header file which contains aliases for the function in the standard C     *
- *  library math.h. This allows compatibility of C89 and C99 math.h headers.  */
+/*  Constants involving pi found here.                                        */
 #include <libtmpl/include/tmpl_math.h>
 
-/*  Definition of rssringoccs_ComplexDouble found here.                       */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Definition of tmpl_ComplexDouble found here.                              */
+#include <libtmpl/include/tmpl_complex_double.h>
 
 /*  The Fresnel integrals are found here.                                     */
 #include <libtmpl/include/tmpl_special_functions_complex.h>
@@ -83,7 +82,7 @@ tmpl_CDouble_Fresnel_Diffraction_Well(double x,
 
     /*  The bounds of the integral are sqrt(pi/2)(a-x)/F and                  *
      *  sqrt(pi/2)(b-x)/F, and the output is computed in terms of this.       */
-    const double scale_factor = tmpl_Sqrt_Pi_By_Two / fresnel_scale;
+    const double scale_factor = tmpl_Double_Sqrt_Pi_By_Two / fresnel_scale;
     const double arg1 = scale_factor * (left_edge - x);
     const double arg2 = scale_factor * (right_edge - x);
 
@@ -96,8 +95,7 @@ tmpl_CDouble_Fresnel_Diffraction_Well(double x,
     out.dat[0] = (z2.dat[0] + z2.dat[1]) - (z1.dat[0] + z1.dat[1]);
     out.dat[1] = (z2.dat[1] - z2.dat[0]) - (z1.dat[1] - z1.dat[0]);
 
-    out.dat[0] = 1.0 - tmpl_Sqrt_One_By_Two_Pi*out.dat[0];
-    out.dat[1] *= -tmpl_Sqrt_One_By_Two_Pi;
+    out.dat[0] = 1.0 - tmpl_Double_Rcpr_Sqrt_Two_Pi*out.dat[0];
+    out.dat[1] *= -tmpl_Double_Rcpr_Sqrt_Two_Pi;
     return out;
 }
-
