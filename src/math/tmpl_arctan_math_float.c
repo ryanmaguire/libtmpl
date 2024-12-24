@@ -168,6 +168,13 @@
 /*  Asymptotic expansion for arctan. Good for large positive inputs.          */
 #include "auxiliary/tmpl_arctan_asymptotic_float.h"
 
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The angles north-east, north-west, south-west, and south-east use these.  */
+#define TMPL_PI_BY_TWO (+1.570796326794896619231321691639751442099E+00F)
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
 
@@ -195,9 +202,9 @@ float tmpl_Float_Arctan(float x)
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (w.bits.sign)
-            return -tmpl_Pi_By_Two_F;
+            return -TMPL_PI_BY_TWO;
 
-        return tmpl_Pi_By_Two_F;
+        return TMPL_PI_BY_TWO;
     }
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
@@ -270,9 +277,9 @@ float tmpl_Float_Arctan(float x)
     {
         /*  The limit as x -> inf is pi/2 and -pi/2 as x -> -inf.             */
         if (x < 0.0F)
-            return -tmpl_Pi_By_Two_F;
+            return -TMPL_PI_BY_TWO;
 
-        return tmpl_Pi_By_Two_F;
+        return TMPL_PI_BY_TWO;
     }
 
     /*  The inverse tangent function is odd. Reduce x to non-negative.        */
@@ -330,6 +337,9 @@ float tmpl_Float_Arctan(float x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_FLOAT == 1.                                   */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

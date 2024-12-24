@@ -214,6 +214,13 @@
 #endif
 /*  End of double-double / quadruple vs. double / extended / portable.        */
 
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The angles north-east, north-west, south-west, and south-east use these.  */
+#define TMPL_PI_BY_TWO (+1.570796326794896619231321691639751442099E+00L)
+
 /*  Check for IEEE-754 long double support.                                   */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
 
@@ -249,9 +256,9 @@ long double tmpl_LDouble_Arctan(long double x)
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-            return -tmpl_Pi_By_Two_L;
+            return -TMPL_PI_BY_TWO;
 
-        return tmpl_Pi_By_Two_L;
+        return TMPL_PI_BY_TWO;
     }
 
     /*  Small values, |x| < 1/16. Use the MacLaurin series to a few terms.    */
@@ -331,9 +338,9 @@ long double tmpl_LDouble_Arctan(long double x)
 
         /*  For infinity the limit is pi/2. Negative infinity gives -pi/2.    */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-            return -tmpl_Pi_By_Two_L;
+            return -TMPL_PI_BY_TWO;
 
-        return tmpl_Pi_By_Two_L;
+        return TMPL_PI_BY_TWO;
     }
 
     /*  Avoid underflow. If |x| < 2^-56, atan(x) = x to quadruple precision.  */
@@ -345,7 +352,7 @@ long double tmpl_LDouble_Arctan(long double x)
 
     /*  For |x| > 16, use the asymptotic expansion.                           */
     if (TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_UBIAS + 3U)
-        out = tmpl_Pi_By_Two_L - tmpl_LDouble_Arctan_Pade(1.0L/w.r);
+        out = TMPL_PI_BY_TWO - tmpl_LDouble_Arctan_Pade(1.0L/w.r);
 
     else
     {
@@ -388,9 +395,9 @@ long double tmpl_LDouble_Arctan(long double x)
     {
         /*  The limit as x -> inf is pi/2 and -pi/2 as x -> -inf.             */
         if (x < 0.0L)
-            return -tmpl_Pi_By_Two_L;
+            return -TMPL_PI_BY_TWO;
 
-        return tmpl_Pi_By_Two_L;
+        return TMPL_PI_BY_TWO;
     }
 
     /*  The inverse tangent function is odd. Reduce x to non-negative.        */
@@ -448,6 +455,9 @@ long double tmpl_LDouble_Arctan(long double x)
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
