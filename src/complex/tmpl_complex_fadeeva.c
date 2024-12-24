@@ -328,7 +328,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
                 if (abs_x > abs_y)
                 {
                     abs_y_by_xs = abs_y / xs;
-                    denom = tmpl_Sqrt_One_By_Pi / (xs + abs_y_by_xs*abs_y);
+                    denom = tmpl_Double_Rcpr_Sqrt_Pi / (xs + abs_y_by_xs*abs_y);
                     w_x = denom*abs_y_by_xs;
                     w_y = denom;
                     w = tmpl_CDouble_Rect(w_x, w_y);
@@ -351,7 +351,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
                 else
                 {
                     xs_by_abs_y = xs / abs_y;
-                    denom = tmpl_Sqrt_One_By_Pi / (xs_by_abs_y*xs + abs_y);
+                    denom = tmpl_Double_Rcpr_Sqrt_Pi / (xs_by_abs_y*xs + abs_y);
                     w_x = denom;
                     w_y = denom*xs_by_abs_y;
                     w = tmpl_CDouble_Rect(w_x, w_y);
@@ -363,7 +363,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
             {
                 dr = xs*xs - abs_y*abs_y - 0.5;
                 di = 2.0*xs*abs_y;
-                denom = tmpl_Sqrt_One_By_Pi / (dr*dr + di*di);
+                denom = tmpl_Double_Rcpr_Sqrt_Pi / (dr*dr + di*di);
                 w_x = denom * (xs*di - abs_y*dr);
                 w_y = denom * (xs*dr + abs_y*di);
                 w = tmpl_CDouble_Rect(w_x, w_y);
@@ -391,7 +391,7 @@ tmpl_ComplexDouble tmpl_CDouble_Faddeeva(tmpl_ComplexDouble z)
                 nu -= 0.5;
             }
             /*  w(z) = i/sqrt(pi) / w:                                        */
-            denom = tmpl_Sqrt_One_By_Pi / (wr*wr + wi*wi);
+            denom = tmpl_Double_Rcpr_Sqrt_Pi / (wr*wr + wi*wi);
             w_x = denom*wi;
             w_y = denom*wr;
             w = tmpl_CDouble_Rect(w_x, w_y);
