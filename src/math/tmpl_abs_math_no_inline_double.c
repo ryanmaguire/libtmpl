@@ -31,8 +31,8 @@
 /*  Only used if libtmpl algorithms are requested and inline support is not.  */
 #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Function prototype / forward declaration.                                 */
+extern double tmpl_Double_Abs(double x);
 
 /*  Implemented in include/math/tmpl_abs_double.h.                            */
 #include "../../include/math/tmpl_abs_double.h"

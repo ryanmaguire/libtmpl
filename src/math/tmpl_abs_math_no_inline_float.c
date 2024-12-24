@@ -31,8 +31,8 @@
 /*  Only used if libtmpl algorithms are requested and inline support is not.  */
 #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Function prototype / forward declaration.                                 */
+extern float tmpl_Float_Abs(float x);
 
 /*  Implemented in include/math/tmpl_abs_float.h.                             */
 #include "../../include/math/tmpl_abs_float.h"
