@@ -185,7 +185,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton_Deg(double k,
         d2psi += (0.5 * rcpr_psi0) * (deta2 - 2.0*dxi2) + dxi2;
 
         /*  Perform the Newton iteration, and increment n.                    */
-        phi = phi - tmpl_Rad_to_Deg * dpsi / d2psi;
+        phi = phi - tmpl_Double_Rad_To_Deg * dpsi / d2psi;
         ++n;
 
         /*  Update the error. We want the partial derivative to be small.     */
