@@ -182,6 +182,16 @@
 /*  Asymptotic expansion for arctan. Good for large positive inputs.          */
 #include "auxiliary/tmpl_arctan_asymptotic_double.h"
 
+/******************************************************************************
+ *                              Constant Values                               *
+ ******************************************************************************/
+
+/*  The angles north-east, north-west, south-west, and south-east use these.  */
+#define TMPL_ONE_PI (+3.141592653589793238462643383279502884197E+00)
+#define TMPL_PI_BY_TWO (+1.570796326794896619231321691639751442099E+00)
+#define TMPL_PI_BY_FOUR (+7.85398163397448309615660845819875721049E-01)
+#define TMPL_THREE_PI_BY_FOUR (+2.356194490192344928846982537459627163E+00)
+
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -217,23 +227,23 @@ double tmpl_Double_Arctan2(double y, double x)
              *  North-East, North-West, South-West, and South-East. First     *
              *  case, x and y are both positive. Return north-east.           */
             if (!wx.bits.sign && !wy.bits.sign)
-                return tmpl_Pi_By_Four;
+                return TMPL_PI_BY_FOUR;
 
             /*  y is positive, x is negative, return north-west.              */
             else if (wx.bits.sign && !wy.bits.sign)
-                return tmpl_Three_Pi_By_Four;
+                return TMPL_THREE_PI_BY_FOUR;
 
             /*  x and y are both negative, return south-west.                 */
             else if (wx.bits.sign && wy.bits.sign)
-                return -tmpl_Three_Pi_By_Four;
+                return -TMPL_THREE_PI_BY_FOUR;
 
             /*  Lastly, x is positive and y is negative, return south-east.   */
-            return -tmpl_Pi_By_Four;
+            return -TMPL_PI_BY_FOUR;
         }
 
         /*  y is finite and x is infinite. The angle is 0 or pi.              */
         if (wx.bits.sign)
-            out.r = tmpl_One_Pi;
+            out.r = TMPL_ONE_PI;
         else
             out.r = 0.0;
 
@@ -250,7 +260,7 @@ double tmpl_Double_Arctan2(double y, double x)
             return y;
 
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
-        out.r = tmpl_Pi_By_Two;
+        out.r = TMPL_PI_BY_TWO;
 
         /*  The sign of the output is the same as the sign of y. Copy this.   */
         out.bits.sign = wy.bits.sign;
@@ -264,7 +274,7 @@ double tmpl_Double_Arctan2(double y, double x)
         if (wx.bits.sign)
         {
             /*  Preserve the sign of y. If y is a negative zero, return -Pi.  */
-            out.r = tmpl_One_Pi;
+            out.r = TMPL_ONE_PI;
 
             /*  The sign of the output is the same as the sign of y.          */
             out.bits.sign = wy.bits.sign;
@@ -279,7 +289,7 @@ double tmpl_Double_Arctan2(double y, double x)
     else if (x == 0.0)
     {
         /*  y is not zero, so the answer is +/- pi/2.                         */
-        out.r = tmpl_Pi_By_Two;
+        out.r = TMPL_PI_BY_TWO;
 
         /*  The sign of the output is the same as the sign of y. Copy this.   */
         out.bits.sign = wy.bits.sign;
@@ -311,7 +321,7 @@ double tmpl_Double_Arctan2(double y, double x)
          *  remainder term is less than double precision epsilon (2^-52) so   *
          *  we can safely return pi/2.                                        */
         if (wz.bits.expo > TMPL_DOUBLE_UBIAS + 60U)
-            out.r = tmpl_Pi_By_Two;
+            out.r = TMPL_PI_BY_TWO;
 
         /*  Otherwise use the asymptotic expansion.                           */
         else
@@ -342,13 +352,13 @@ double tmpl_Double_Arctan2(double y, double x)
 
     /*  Reduce to the case where x > 0 via atan2(y, -x) = pi - atan2(y, x).   */
     if (wx.bits.sign)
-        out.r = tmpl_One_Pi - out.r;
+        out.r = TMPL_ONE_PI - out.r;
 
     /*  Reduce to y > 0 via atan2(-y, x) = -atan2(y, x).                      */
     out.bits.sign = wy.bits.sign;
     return out.r;
 }
-/*  End of tmpl_Double_Arctan.                                                */
+/*  End of tmpl_Double_Arctan2.                                               */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
@@ -377,18 +387,18 @@ double tmpl_Double_Arctan2(double y, double x)
             /*  Both x and y are infinity. 4 special cases corresponding to   *
              *  North-East, North-West, South-West, and South-East.           */
             if (x > 0.0 && y > 0.0)
-                return tmpl_Pi_By_Four;
+                return TMPL_PI_BY_FOUR;
             else if (x < 0.0 && y > 0.0)
-                return tmpl_Three_Pi_By_Four;
+                return TMPL_THREE_PI_BY_FOUR;
             else if (x < 0.0 && y < 0.0)
-                return -tmpl_Three_Pi_By_Four;
+                return -TMPL_THREE_PI_BY_FOUR;
             else
-                return -tmpl_Pi_By_Four;
+                return -TMPL_PI_BY_FOUR;
         }
 
         /*  y is finite and x is infinite. The angle is 0 or pi.              */
         if (x < 0.0)
-            return tmpl_One_Pi;
+            return TMPL_ONE_PI;
         else
             return 0.0;
     }
@@ -398,9 +408,9 @@ double tmpl_Double_Arctan2(double y, double x)
     {
         /*  y is infinite and x is finite. The angle is +/- pi/2.             */
         if (y < 0.0)
-            return -tmpl_Pi_By_Two;
+            return -TMPL_PI_BY_TWO;
         else
-            return tmpl_Pi_By_Two;
+            return TMPL_PI_BY_TWO;
     }
 
     /*  Next special case, y = 0.                                             */
@@ -408,7 +418,7 @@ double tmpl_Double_Arctan2(double y, double x)
     {
         /*  If x is negative, return Pi.                                      */
         if (x < 0.0)
-            return tmpl_One_Pi;
+            return TMPL_ONE_PI;
 
         /*  Otherwise, return 0. To preserve the sign of y, return y.         */
         else
@@ -420,9 +430,9 @@ double tmpl_Double_Arctan2(double y, double x)
     {
         /*  y is not zero, so the answer is +/- pi/2.                         */
         if (y < 0.0)
-            return -tmpl_Pi_By_Two;
+            return -TMPL_PI_BY_TWO;
         else
-            return tmpl_Pi_By_Two;
+            return TMPL_PI_BY_TWO;
     }
 
     /*  We have z = y/x. Reduce by computing the absolute value of this.      */
@@ -477,7 +487,7 @@ TMPL_DOUBLE_ARCTAN2_FINISH:
 
     /*  Reduce to x > 0 via atan2(y, x) = pi - atan2(y, -x).                  */
     if (x < 0.0)
-        out = tmpl_One_Pi - out;
+        out = TMPL_ONE_PI - out;
 
     /*  Reduce to y > 0 via atan2(y, x) = -atan2(-y, x).                      */
     if (y < 0.0)
@@ -485,10 +495,13 @@ TMPL_DOUBLE_ARCTAN2_FINISH:
     else
         return out;
 }
-/*  End of tmpl_Double_Arctan.                                                */
+/*  End of tmpl_Double_Arctan2.                                               */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
+
+/*  Undefine everything in case someone wants to #include this file.          */
+#include "auxiliary/tmpl_math_undef.h"
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
