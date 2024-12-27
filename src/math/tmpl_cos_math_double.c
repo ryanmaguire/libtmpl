@@ -34,7 +34,8 @@ double tmpl_Double_Cos(double x)
     double a, da, out;
     tmpl_IEEE754_Double w;
     unsigned int n;
-    const double pi_by_two_low_half = 6.123233995736766035868820147292E-17;
+    const double pi_by_two_hi = 1.570796326794896619231321691639E+00;
+    const double pi_by_two_lo = 6.123233995736766035868820147292E-17;
 
     w.r = x;
 
@@ -51,9 +52,9 @@ double tmpl_Double_Cos(double x)
 
     if (w.r < 2.426265)
     {
-        w.r = tmpl_Pi_By_Two - w.r;
-        a = w.r + pi_by_two_low_half;
-        da = (w.r - a) + pi_by_two_low_half;
+        w.r = pi_by_two_hi - w.r;
+        a = w.r + pi_by_two_lo;
+        da = (w.r - a) + pi_by_two_lo;
         return tmpl_Double_Sin_Precise_Eval(a, da);
     }
 
@@ -77,7 +78,7 @@ double tmpl_Double_Cos(double x)
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
 
-    arg = tmpl_Double_Mod_2(tmpl_Double_Abs(x) * tmpl_One_By_Pi);
+    arg = tmpl_Double_Mod_2(tmpl_Double_Abs(x) * tmpl_Double_Rcpr_Pi);
 
     if (arg >= 1.0)
     {
