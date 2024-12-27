@@ -1417,7 +1417,7 @@ double tmpl_Double_Faddeeva_Im(double x)
         {
             /*  For very large values simply use the first term.              */
             if (x > 5e7)
-                out = tmpl_Sqrt_One_By_Pi / x;
+                out = tmpl_Double_Rcpr_Sqrt_Pi / x;
 
             /*  And use five terms for not-so-large values.                   */
             else
@@ -1426,7 +1426,7 @@ double tmpl_Double_Faddeeva_Im(double x)
                 x4 = x2*x2;
                 numer = x4 - 4.5*x2 + 2.0;
                 denom = x*(x4 - 5.0*x2 + 3.75);
-                out = tmpl_Sqrt_One_By_Pi * numer / denom;
+                out = tmpl_Double_Rcpr_Sqrt_Pi * numer / denom;
             }
         }
         else
@@ -1441,7 +1441,7 @@ double tmpl_Double_Faddeeva_Im(double x)
         {
             /*  For very large values simply use the first term.              */
             if (x < -5e7)
-                out = tmpl_Sqrt_One_By_Pi / x;
+                out = tmpl_Double_Rcpr_Sqrt_Pi / x;
 
             /*  And use five terms for not-so-large values.                   */
             else
@@ -1450,7 +1450,7 @@ double tmpl_Double_Faddeeva_Im(double x)
                 x4 = x2*x2;
                 numer = x4 - 4.5*x2 + 2.0;
                 denom = x*(x4 - 5.0*x2 + 3.75);
-                out = tmpl_Sqrt_One_By_Pi * numer / denom;
+                out = tmpl_Double_Rcpr_Sqrt_Pi * numer / denom;
             }
         }
         else
