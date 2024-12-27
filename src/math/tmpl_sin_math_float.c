@@ -34,7 +34,7 @@ float tmpl_Float_Sin(float x)
         sgn_x = -1.0F;
     }
 
-    arg = tmpl_Float_Mod_2(abs_x * tmpl_One_By_Pi_F);
+    arg = tmpl_Float_Mod_2(abs_x * tmpl_Float_Rcpr_Pi);
 
     if (arg >= 1.0F)
     {

@@ -29,13 +29,13 @@
 #include "auxiliary/tmpl_sincos_reduction.h"
 #include "auxiliary/tmpl_sincos_reduction_very_large.h"
 
-#define TMPL_PI_BY_TWO_LOW_HALF (6.123233995736766035868820147292E-17)
-
 double tmpl_Double_Sin(double x)
 {
     double a, da, out;
     tmpl_IEEE754_Double w;
     unsigned int n;
+    const double pi_by_two_hi = 1.570796326794896619231321691639E+00;
+    const double pi_by_two_lo = 6.123233995736766035868820147292E-17;
 
     w.r = x;
     w.bits.sign = 0x00U;
@@ -48,8 +48,8 @@ double tmpl_Double_Sin(double x)
 
     else if (w.r < 2.426265)
     {
-        w.r = tmpl_Pi_By_Two - w.r;
-        da = TMPL_PI_BY_TWO_LOW_HALF;
+        w.r = pi_by_two_hi - w.r;
+        da = pi_by_two_lo;
         return tmpl_Double_Copysign(tmpl_Double_Cos_Precise_Eval(w.r, da), x);
     }
     else if (w.bits.expo < TMPL_DOUBLE_NANINF_EXP)
@@ -69,8 +69,6 @@ double tmpl_Double_Sin(double x)
     else
         return TMPL_NAN;
 }
-
-#undef TMPL_PI_BY_TWO_LOW_HALF
 
 #else
 
@@ -93,7 +91,7 @@ double tmpl_Double_Sin(double x)
         sgn_x = -1.0;
     }
 
-    arg = tmpl_Double_Mod_2(abs_x * tmpl_One_By_Pi);
+    arg = tmpl_Double_Mod_2(abs_x * tmpl_Double_Rcpr_Pi);
 
     if (arg >= 1.0)
     {
