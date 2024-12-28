@@ -22,12 +22,33 @@
 #include "auxiliary/tmpl_sinpi_remez_double.h"
 #include "auxiliary/tmpl_sinpi_rat_remez_double.h"
 
+/*  Significantly faster, and more accurate near integers, using IEEE-754.    */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
+/*  Computes sin(pi x) at double precision.                                   */
 double tmpl_Double_SinPi(double x)
 {
-    double out, cos_pi_r, cos_pi_dr, sin_pi_r, sin_pi_dr, dr;
-    unsigned int lowest_eight_bits, index, negate, sign;
+    /*  We compute using the angle sum formula for sin(pi(r + dr)). Set aside *
+     *  four variables for the right hand side of that equation.              */
+    double cos_pi_r, cos_pi_dr, sin_pi_r, sin_pi_dr;
+
+    /*  We will write y = |x| mod 2 = r + dr, and compute sin(pi(r + dr)).    *
+     *  r will be an integer multiple of 1 / 128, and sin(pi r) and cos(pi r) *
+     *  are computed via a lookup table. Declare a variable for dr.           */
+    double dr;
+
+    /*  Variable for the output, sin(pi x).                                   */
+    double out;
+
+    /*  We compute the index of the lookup table using some bit-shifting      *
+     *  tricks. Declare necessary variables. C89 requires this at the top.    */
+    unsigned int lowest_eight_bits, index;
+
+    /*  sin(pi x) is odd, so we reduce x to |x| and compute with this. These  *
+     *  variables keep track of whether or not we need to negate the output.  */
+    unsigned int negate, sign;
+
+    /*  Unions of doubles and the bits representing them.                     */
     tmpl_IEEE754_Double w, shifted;
 
     /*  The value 2^45 = 2^(53 - 8). We will use this to get the index of the *
@@ -88,7 +109,7 @@ double tmpl_Double_SinPi(double x)
      *  negative which cancels, meaning we do not need to negate the output.  *
      *  Hence, we negate the output if the input is negative XOR 1 <= r < 2,  *
      *  where XOR means "exclusive or." By extracting the leading bit, and    *
-     *  perform the exlcusive or "^" with the sign, we get the Boolean for    *
+     *  performing the exclusive or "^" with the sign, we get the Boolean for *
      *  negating the output.                                                  *
      *                                                                        *
      *  Note:                                                                 *
@@ -121,9 +142,9 @@ double tmpl_Double_SinPi(double x)
      *                = cos(pi r) sin(pi dr) + sin(pi r) cos(pi dr)           *
      *                                                                        *
      *  cos(pi r) and sin(pi r) and computed by a lookup table. The index for *
-     *  this lookup table the integer n such that r = n / 128. This is equal  *
-     *  to the lower 7 bits of the "shifted" word. That is, shifted is equal  *
-     *  to y + 2^45. Since floating point arithmetic truncates, the lowest    *
+     *  this lookup table is the integer n such that r = n / 128. This is     *
+     *  the lower 7 bits of the "shifted" word. That is, shifted is equal to  *
+     *  y + 2^45. Since floating point arithmetic truncates, the lowest       *
      *  8 bits of shifted are equal to the most significant 8 bits of y.      *
      *                                                                        *
      *  If the 8th bit is one, we have 1 <= r < 2. To shift to 0 <= r < 1 we  *
@@ -163,9 +184,12 @@ double tmpl_Double_SinPi(double x)
 /*  End of tmpl_Double_SinPi.                                                 */
 
 #else
+/*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
+/*  Helper macro for C vs. C++ compatibility with casting.                    */
 #include <libtmpl/include/tmpl_compat_cast.h>
 
+/*  Computes sin(pi x) at double precision.                                   */
 double tmpl_Double_SinPi(double x)
 {
     double arg, abs_x, sgn_x, cx, cdx, sx, sdx, dx;
@@ -213,6 +237,7 @@ double tmpl_Double_SinPi(double x)
     cdx = tmpl_Double_CosPi_Maclaurin(dx);
     return sgn_x * (cdx*sx + cx*sdx);
 }
-
+/*  End of tmpl_Double_SinPi.                                                 */
 
 #endif
+/*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
