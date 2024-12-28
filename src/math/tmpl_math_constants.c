@@ -34,145 +34,188 @@
 /*  All constants are declared in this header file.                           */
 #include <libtmpl/include/tmpl_math.h>
 
+#include <libtmpl/include/tmpl_math_constants.h>
+
 #if TMPL_HAS_IEEE754_FLOAT == 0  || \
     TMPL_HAS_IEEE754_DOUBLE == 0 || \
     TMPL_HAS_IEEE754_LDOUBLE == 0
 #include <float.h>
 #endif
 
-/*  sqrt( 1 / (2 pi) )                                                        */
-const float
-tmpl_Sqrt_One_By_Two_Pi_F = 0.3989422804014326779399460599343818684759F;
+/******************************************************************************
+ *                              Multiples of Pi                               *
+ ******************************************************************************/
+const float tmpl_Float_Pi = TMPL_FLOAT_PI;
+const double tmpl_Double_Pi = TMPL_DOUBLE_PI;
+const long double tmpl_LDouble_Pi = TMPL_LDOUBLE_PI;
 
-const double
-tmpl_Sqrt_One_By_Two_Pi = 0.3989422804014326779399460599343818684759;
+const float tmpl_Float_Two_Pi = TMPL_FLOAT_TWO_PI;
+const double tmpl_Double_Two_Pi = TMPL_DOUBLE_TWO_PI;
+const long double tmpl_LDouble_Two_Pi = TMPL_LDOUBLE_TWO_PI;
 
-const long double
-tmpl_Sqrt_One_By_Two_Pi_L = 0.3989422804014326779399460599343818684759L;
+const float tmpl_Float_Four_Pi = TMPL_FLOAT_FOUR_PI;
+const double tmpl_Double_Four_Pi = TMPL_DOUBLE_FOUR_PI;
+const long double tmpl_LDouble_Four_Pi = TMPL_LDOUBLE_FOUR_PI;
 
-/*  sqrt( pi / 8 )                                                            */
-const float
-tmpl_Sqrt_Pi_By_Eight_F = 0.6266570686577501256039413212027613132517F;
+const float tmpl_Float_Eight_Pi = TMPL_FLOAT_EIGHT_PI;
+const double tmpl_Double_Eight_Pi = TMPL_DOUBLE_EIGHT_PI;
+const long double tmpl_LDouble_Eight_Pi = TMPL_LDOUBLE_EIGHT_PI;
 
-const double
-tmpl_Sqrt_Pi_By_Eight = 0.6266570686577501256039413212027613132517;
+/******************************************************************************
+ *                          Fractional Values of Pi                           *
+ ******************************************************************************/
+const float tmpl_Float_Pi_By_Two = TMPL_FLOAT_PI_BY_TWO;
+const double tmpl_Double_Pi_By_Two = TMPL_DOUBLE_PI_BY_TWO;
+const long double tmpl_LDouble_Pi_By_Two = TMPL_LDOUBLE_PI_BY_TWO;
 
-const long double
-tmpl_Sqrt_Pi_By_Eight_L = 0.6266570686577501256039413212027613132517L;
+const float tmpl_Float_Pi_By_Three = TMPL_FLOAT_PI_BY_THREE;
+const double tmpl_Double_Pi_By_Three = TMPL_DOUBLE_PI_BY_THREE;
+const long double tmpl_LDouble_Pi_By_Three = TMPL_LDOUBLE_PI_BY_THREE;
 
-/*  sqrt( pi / 2 )                                                            */
-const float tmpl_Sqrt_Pi_By_Two_F = 1.253314137315500251207882642405522626503F;
-const double tmpl_Sqrt_Pi_By_Two = 1.253314137315500251207882642405522626503;
+const float tmpl_Float_Pi_By_Four = TMPL_FLOAT_PI_BY_FOUR;
+const double tmpl_Double_Pi_By_Four = TMPL_DOUBLE_PI_BY_FOUR;
+const long double tmpl_LDouble_Pi_By_Four = TMPL_LDOUBLE_PI_BY_FOUR;
 
-const long double
-tmpl_Sqrt_Pi_By_Two_L = 1.253314137315500251207882642405522626503L;
+const float tmpl_Float_Pi_By_Five = TMPL_FLOAT_PI_BY_FIVE;
+const double tmpl_Double_Pi_By_Five = TMPL_DOUBLE_PI_BY_FIVE;
+const long double tmpl_LDouble_Pi_By_Five = TMPL_LDOUBLE_PI_BY_FIVE;
 
-/*  sqrt( 1 / pi )                                                            */
-const float tmpl_Sqrt_One_By_Pi_F = 0.5641895835477562869480794515607725858441F;
-const double tmpl_Sqrt_One_By_Pi = 0.5641895835477562869480794515607725858441;
+const float tmpl_Float_Pi_By_Six = TMPL_FLOAT_PI_BY_SIX;
+const double tmpl_Double_Pi_By_Six = TMPL_DOUBLE_PI_BY_SIX;
+const long double tmpl_LDouble_Pi_By_Six = TMPL_LDOUBLE_PI_BY_SIX;
 
-const long double
-tmpl_Sqrt_One_By_Pi_L = 0.5641895835477562869480794515607725858441L;
+const float tmpl_Float_Pi_By_Eight = TMPL_FLOAT_PI_BY_EIGHT;
+const double tmpl_Double_Pi_By_Eight = TMPL_DOUBLE_PI_BY_EIGHT;
+const long double tmpl_LDouble_Pi_By_Eight = TMPL_LDOUBLE_PI_BY_EIGHT;
 
-/*  sqrt( 2 / pi )                                                            */
-const float tmpl_Sqrt_Two_By_Pi_F = 0.7978845608028653558798921198687637369517F;
-const double tmpl_Sqrt_Two_By_Pi = 0.7978845608028653558798921198687637369517;
+const float tmpl_Float_Pi_By_Twelve = TMPL_FLOAT_PI_BY_TWELVE;
+const double tmpl_Double_Pi_By_Twelve = TMPL_DOUBLE_PI_BY_TWELVE;
+const long double tmpl_LDouble_Pi_By_Twelve = TMPL_LDOUBLE_PI_BY_TWELVE;
 
-const long double
-tmpl_Sqrt_Two_By_Pi_L = 0.7978845608028653558798921198687637369517L;
+const float tmpl_Float_Three_Pi_By_Four = TMPL_FLOAT_THREE_PI_BY_FOUR;
+const double tmpl_Double_Three_Pi_By_Four = TMPL_DOUBLE_THREE_PI_BY_FOUR;
+const long double tmpl_LDouble_Three_Pi_By_Four = TMPL_LDOUBLE_THREE_PI_BY_FOUR;
 
-/*  1 / pi.                                                                   */
-const float tmpl_One_By_Pi_F = 0.318309886183790671537767526745028724068F;
-const double tmpl_One_By_Pi = 0.318309886183790671537767526745028724068;
-const long double tmpl_One_By_Pi_L = 0.318309886183790671537767526745028724068L;
+const float tmpl_Float_Pi_By_Sqrt_Two = TMPL_FLOAT_PI_BY_SQRT_TWO;
+const double tmpl_Double_Pi_By_Sqrt_Two = TMPL_DOUBLE_PI_BY_SQRT_TWO;
+const long double tmpl_LDouble_Pi_By_Sqrt_Two = TMPL_LDOUBLE_PI_BY_SQRT_TWO;
 
-/*  2 / sqrt( pi )                                                            */
-const float tmpl_Two_By_Sqrt_Pi_F = 1.128379167095512573896158903121545171688F;
-const double tmpl_Two_By_Sqrt_Pi = 1.128379167095512573896158903121545171688;
+/******************************************************************************
+ *                      Conversions Radians and Degrees                       *
+ ******************************************************************************/
+const float tmpl_Float_Rad_To_Deg = TMPL_FLOAT_RAD_TO_DEG;
+const double tmpl_Double_Rad_To_Deg = TMPL_DOUBLE_RAD_TO_DEG;
+const long double tmpl_LDouble_Rad_To_Deg = TMPL_LDOUBLE_RAD_TO_DEG;
 
-const long double
-tmpl_Two_By_Sqrt_Pi_L = 1.128379167095512573896158903121545171688L;
+const float tmpl_Float_Deg_To_Rad = TMPL_FLOAT_DEG_TO_RAD;
+const double tmpl_Double_Deg_To_Rad = TMPL_DOUBLE_DEG_TO_RAD;
+const long double tmpl_LDouble_Deg_To_Rad = TMPL_LDOUBLE_DEG_TO_RAD;
 
-/*  pi / 2                                                                    */
-const float tmpl_Pi_By_Two_F = 1.570796326794896619231321691639751442099F;
-const double tmpl_Pi_By_Two = 1.570796326794896619231321691639751442099;
-const long double tmpl_Pi_By_Two_L = 1.570796326794896619231321691639751442099L;
+/******************************************************************************
+ *                            Multiples of 1 / Pi                             *
+ ******************************************************************************/
+const float tmpl_Float_Rcpr_Pi = TMPL_FLOAT_RCPR_PI;
+const double tmpl_Double_Rcpr_Pi = TMPL_DOUBLE_RCPR_PI;
+const long double tmpl_LDouble_Rcpr_Pi = TMPL_LDOUBLE_RCPR_PI;
 
-/*  3 pi / 4                                                                  */
-const float
-tmpl_Three_Pi_By_Four_F = 2.356194490192344928846982537459627163148F;
+const float tmpl_Float_Two_By_Pi = TMPL_FLOAT_TWO_BY_PI;
+const double tmpl_Double_Two_By_Pi = TMPL_DOUBLE_TWO_BY_PI;
+const long double tmpl_LDouble_Two_By_Pi = TMPL_LDOUBLE_TWO_BY_PI;
 
-const double
-tmpl_Three_Pi_By_Four = 2.356194490192344928846982537459627163148;
+const float tmpl_Float_Rcpr_Two_Pi = TMPL_FLOAT_RCPR_TWO_PI;
+const double tmpl_Double_Rcpr_Two_Pi = TMPL_DOUBLE_RCPR_TWO_PI;
+const long double tmpl_LDouble_Rcpr_Two_Pi = TMPL_LDOUBLE_RCPR_TWO_PI;
 
-const long double
-tmpl_Three_Pi_By_Four_L = 2.356194490192344928846982537459627163148L;
+const float tmpl_Float_Rcpr_Four_Pi = TMPL_FLOAT_RCPR_FOUR_PI;
+const double tmpl_Double_Rcpr_Four_Pi = TMPL_DOUBLE_RCPR_FOUR_PI;
+const long double tmpl_LDouble_Rcpr_Four_Pi = TMPL_LDOUBLE_RCPR_FOUR_PI;
 
-/*  pi / 4                                                                    */
-const float tmpl_Pi_By_Four_F = 0.7853981633974483096156608458198757210493F;
-const double tmpl_Pi_By_Four = 0.7853981633974483096156608458198757210493;
+/******************************************************************************
+ *                           Multiples of Sqrt(Pi)                            *
+ ******************************************************************************/
+const float tmpl_Float_Sqrt_Pi = TMPL_FLOAT_SQRT_PI;
+const double tmpl_Double_Sqrt_Pi = TMPL_DOUBLE_SQRT_PI;
+const long double tmpl_LDouble_Sqrt_Pi = TMPL_LDOUBLE_SQRT_PI;
 
-const long double
-tmpl_Pi_By_Four_L = 0.7853981633974483096156608458198757210493L;
+const float tmpl_Float_Sqrt_Two_Pi = TMPL_FLOAT_SQRT_TWO_PI;
+const double tmpl_Double_Sqrt_Two_Pi = TMPL_DOUBLE_SQRT_TWO_PI;
+const long double tmpl_LDouble_Sqrt_Two_Pi = TMPL_LDOUBLE_SQRT_TWO_PI;
 
-/*  pi                                                                        */
-const float tmpl_One_Pi_F = 3.141592653589793238462643383279502884197F;
-const double tmpl_One_Pi = 3.141592653589793238462643383279502884197;
-const long double tmpl_One_Pi_L = 3.141592653589793238462643383279502884197L;
+const float tmpl_Float_Sqrt_Pi_By_Two = TMPL_FLOAT_SQRT_PI_BY_TWO;
+const double tmpl_Double_Sqrt_Pi_By_Two = TMPL_DOUBLE_SQRT_PI_BY_TWO;
+const long double tmpl_LDouble_Sqrt_Pi_By_Two = TMPL_LDOUBLE_SQRT_PI_BY_TWO;
 
-/*  2 pi                                                                      */
-const float tmpl_Two_Pi_F = 6.283185307179586476925286766559005768394F;
-const double tmpl_Two_Pi = 6.283185307179586476925286766559005768394;
-const long double tmpl_Two_Pi_L = 6.283185307179586476925286766559005768394L;
+const float tmpl_Float_Sqrt_Pi_By_Four = TMPL_FLOAT_SQRT_PI_BY_FOUR;
+const double tmpl_Double_Sqrt_Pi_By_Four = TMPL_DOUBLE_SQRT_PI_BY_FOUR;
+const long double tmpl_LDouble_Sqrt_Pi_By_Four = TMPL_LDOUBLE_SQRT_PI_BY_FOUR;
 
-/*  sqrt( 2 )                                                                 */
-const float tmpl_Sqrt_Two_F = 1.414213562373095048801688724209698078570F;
-const double tmpl_Sqrt_Two = 1.414213562373095048801688724209698078570;
-const long double tmpl_Sqrt_Two_L = 1.414213562373095048801688724209698078570L;
+const float tmpl_Float_Sqrt_Pi_By_Eight = TMPL_FLOAT_SQRT_PI_BY_EIGHT;
+const double tmpl_Double_Sqrt_Pi_By_Eight = TMPL_DOUBLE_SQRT_PI_BY_EIGHT;
+const long double tmpl_LDouble_Sqrt_Pi_By_Eight = TMPL_LDOUBLE_SQRT_PI_BY_EIGHT;
 
-/*  e = exp( 1 )                                                              */
-const float tmpl_Euler_E_F = 2.718281828459045235360287471352662497757F;
-const double tmpl_Euler_E = 2.718281828459045235360287471352662497757;
-const long double tmpl_Euler_E_L = 2.718281828459045235360287471352662497757L;
+/******************************************************************************
+ *                         Multiples of Sqrt(1 / Pi)                          *
+ ******************************************************************************/
+const float tmpl_Float_Rcpr_Sqrt_Pi = TMPL_FLOAT_RCPR_SQRT_PI;
+const double tmpl_Double_Rcpr_Sqrt_Pi = TMPL_DOUBLE_RCPR_SQRT_PI;
+const long double tmpl_LDouble_Rcpr_Sqrt_Pi = TMPL_LDOUBLE_RCPR_SQRT_PI;
 
-/*  1 / e = exp( -1 )                                                         */
-const float tmpl_Rcpr_Euler_E_F = 0.3678794411714423215955237701614608674458F;
-const double tmpl_Rcpr_Euler_E = 0.3678794411714423215955237701614608674458;
+const float tmpl_Float_Rcpr_Sqrt_Two_Pi = TMPL_FLOAT_RCPR_SQRT_TWO_PI;
+const double tmpl_Double_Rcpr_Sqrt_Two_Pi = TMPL_DOUBLE_RCPR_SQRT_TWO_PI;
+const long double tmpl_LDouble_Rcpr_Sqrt_Two_Pi = TMPL_LDOUBLE_RCPR_SQRT_TWO_PI;
 
-const long double
-tmpl_Rcpr_Euler_E_L = 0.3678794411714423215955237701614608674458L;
+const float tmpl_Float_Two_By_Sqrt_Pi = TMPL_FLOAT_TWO_BY_SQRT_PI;
+const double tmpl_Double_Two_By_Sqrt_Pi = TMPL_DOUBLE_TWO_BY_SQRT_PI;
+const long double tmpl_LDouble_Two_By_Sqrt_Pi = TMPL_LDOUBLE_TWO_BY_SQRT_PI;
 
-/*  log_e( 2 ) = ln( 2 )                                                      */
-const float
-tmpl_Natural_Log_of_Two_F = 0.6931471805599453094172321214581765680755F;
+const float tmpl_Float_Sqrt_Two_By_Pi = TMPL_FLOAT_SQRT_TWO_BY_PI;
+const double tmpl_Double_Sqrt_Two_By_Pi = TMPL_DOUBLE_SQRT_TWO_BY_PI;
+const long double tmpl_LDouble_Sqrt_Two_By_Pi = TMPL_LDOUBLE_SQRT_TWO_BY_PI;
 
-const double
-tmpl_Natural_Log_of_Two = 0.6931471805599453094172321214581765680755;
+/******************************************************************************
+ *                            Common Square Roots                             *
+ ******************************************************************************/
+const float tmpl_Float_Sqrt_Two = TMPL_FLOAT_SQRT_TWO;
+const double tmpl_Double_Sqrt_Two = TMPL_DOUBLE_SQRT_TWO;
+const long double tmpl_LDouble_Sqrt_Two = TMPL_LDOUBLE_SQRT_TWO;
 
-const long double
-tmpl_Natural_Log_of_Two_L = 0.6931471805599453094172321214581765680755L;
+const float tmpl_Float_Sqrt_Three = TMPL_FLOAT_SQRT_THREE;
+const double tmpl_Double_Sqrt_Three = TMPL_DOUBLE_SQRT_THREE;
+const long double tmpl_LDouble_Sqrt_Three = TMPL_LDOUBLE_SQRT_THREE;
 
-/*  log_e( 10 ) = ln( 10 )                                                    */
-const float
-tmpl_Natural_Log_of_Ten_F = 2.302585092994045684017991454684364207601F;
+const float tmpl_Float_Sqrt_Five = TMPL_FLOAT_SQRT_FIVE;
+const double tmpl_Double_Sqrt_Five = TMPL_DOUBLE_SQRT_FIVE;
+const long double tmpl_LDouble_Sqrt_Five = TMPL_LDOUBLE_SQRT_FIVE;
 
-const double
-tmpl_Natural_Log_of_Ten = 2.302585092994045684017991454684364207601;
+const float tmpl_Float_Rcpr_Sqrt_Two = TMPL_FLOAT_RCPR_SQRT_TWO;
+const double tmpl_Double_Rcpr_Sqrt_Two = TMPL_DOUBLE_RCPR_SQRT_TWO;
+const long double tmpl_LDouble_Rcpr_Sqrt_Two = TMPL_LDOUBLE_RCPR_SQRT_TWO;
 
-const long double
-tmpl_Natural_Log_of_Ten_L = 2.302585092994045684017991454684364207601L;
+const float tmpl_Float_Rcpr_Sqrt_Three = TMPL_FLOAT_RCPR_SQRT_THREE;
+const double tmpl_Double_Rcpr_Sqrt_Three = TMPL_DOUBLE_RCPR_SQRT_THREE;
+const long double tmpl_LDouble_Rcpr_Sqrt_Three = TMPL_LDOUBLE_RCPR_SQRT_THREE;
 
-/*  pi / 180                                                                  */
-const float tmpl_Deg_to_Rad_F = 1.745329251994329576923690768488612713443E-2F;
-const double tmpl_Deg_to_Rad = 1.745329251994329576923690768488612713443E-2;
+/******************************************************************************
+ *                      Euler's Exponential Constant (e)                      *
+ ******************************************************************************/
+const float tmpl_Float_Euler_E = TMPL_FLOAT_EULER_E;
+const double tmpl_Double_Euler_E = TMPL_DOUBLE_EULER_E;
+const long double tmpl_LDouble_Euler_E = TMPL_LDOUBLE_EULER_E;
 
-const long double
-tmpl_Deg_to_Rad_L = 1.745329251994329576923690768488612713443E-2L;
+const float tmpl_Float_Rcpr_Euler_E = TMPL_FLOAT_RCPR_EULER_E;
+const double tmpl_Double_Rcpr_Euler_E = TMPL_DOUBLE_RCPR_EULER_E;
+const long double tmpl_LDouble_Rcpr_Euler_E = TMPL_LDOUBLE_RCPR_EULER_E;
 
-/*  180 / pi                                                                  */
-const float tmpl_Rad_to_Deg_F = 57.2957795130823208767981548141051703324F;
-const double tmpl_Rad_to_Deg = 57.2957795130823208767981548141051703324;
-const long double tmpl_Rad_to_Deg_L = 57.2957795130823208767981548141051703324L;
+/******************************************************************************
+ *                              Common Logarithms                             *
+ ******************************************************************************/
+const float tmpl_Float_Log_E_Two = TMPL_FLOAT_LOG_E_TWO;
+const double tmpl_Double_Log_E_Two = TMPL_DOUBLE_LOG_E_TWO;
+const long double tmpl_LDouble_Log_E_Two = TMPL_LDOUBLE_LOG_E_TWO;
+
+const float tmpl_Float_Log_E_Ten = TMPL_FLOAT_LOG_E_TEN;
+const double tmpl_Double_Log_E_Ten = TMPL_DOUBLE_LOG_E_TEN;
+const long double tmpl_LDouble_Log_E_Ten = TMPL_LDOUBLE_LOG_E_TEN;
 
 #if TMPL_HAS_IEEE754_FLOAT == 1
 const float tmpl_Min_Float_Base_E = -85.1956484408F;
