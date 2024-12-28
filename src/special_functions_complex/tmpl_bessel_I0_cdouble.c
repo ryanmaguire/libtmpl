@@ -1,3 +1,4 @@
+#include <libtmpl/include/tmpl_math_constants.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_special_functions_real.h>
@@ -152,7 +153,7 @@ tmpl_CDouble_Bessel_I0(tmpl_ComplexDouble z)
         bessel_I0 = tmpl_CDouble_Add_Real(tmpl_BESSEL_I0_ASYM_00, bessel_I0);
 
         /*  Multiply by the coefficient factor and return.                    */
-        arg = tmpl_CDouble_Multiply_Real(tmpl_Two_Pi, z);
+        arg = tmpl_CDouble_Multiply_Real(tmpl_Double_Two_Pi, z);
         exp_arg = tmpl_CDouble_Exp(z);
         sqrt_arg = tmpl_CDouble_Sqrt(arg);
         arg = tmpl_CDouble_Divide(exp_arg, sqrt_arg);
@@ -199,4 +200,3 @@ tmpl_CDouble_Bessel_I0(tmpl_ComplexDouble z)
 #undef tmpl_BESSEL_I0_ASYM_04
 #undef tmpl_BESSEL_I0_ASYM_05
 #undef tmpl_BESSEL_I0_ASYM_06
-
