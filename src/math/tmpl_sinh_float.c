@@ -175,7 +175,7 @@ float tmpl_Float_Sinh(float x)
      *  formula exp(-x) = 1/exp(x). This saves us from computing two          *
      *  exponentials at the cost of an extra division.                        */
     const float exp_x = tmpl_Float_Exp(x);
-    const float exp_minus_x = 1.0 / exp_x;
+    const float exp_minus_x = 1.0F / exp_x;
 
     /*  Compute sinh from the two exponentials and return.                    */
     return 0.5F * (exp_x - exp_minus_x);
