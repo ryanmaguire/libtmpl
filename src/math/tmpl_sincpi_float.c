@@ -3,12 +3,8 @@
 
 float tmpl_Float_SincPi(float x)
 {
-    float y;
-
     if (x == 0.0F)
-        y = 1.0F;
-    else
-        y = tmpl_Float_SinPi(x)/(tmpl_One_Pi_F*x);
+        return 1.0F;
 
-    return y;
+    return tmpl_Float_SinPi(x) / (tmpl_Float_Pi * x);
 }

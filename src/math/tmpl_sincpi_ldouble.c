@@ -3,12 +3,8 @@
 
 long double tmpl_LDouble_SincPi(long double x)
 {
-    long double y;
-
     if (x == 0.0L)
-        y = 1.0L;
-    else
-        y = tmpl_LDouble_SinPi(x)/(tmpl_One_Pi_L*x);
+        return 1.0L;
 
-    return y;
+    return tmpl_LDouble_SinPi(x) / (tmpl_LDouble_Pi * x);
 }
