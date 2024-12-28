@@ -221,7 +221,7 @@ long double tmpl_LDouble_Bessel_I0(long double x)
 
         /*  Multiply by the coefficient factor and return.                    */
         bessel_I0 *= tmpl_LDouble_Exp(abs_x) /
-                     tmpl_LDouble_Sqrt(tmpl_Two_Pi_L*abs_x);
+                     tmpl_LDouble_Sqrt(tmpl_LDouble_Two_Pi*abs_x);
     }
 
     /*  For very large inputs, return infinity.                               */

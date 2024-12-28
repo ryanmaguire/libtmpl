@@ -97,7 +97,7 @@ long double tmpl_LDouble_Bessel_J0(long double x)
         sinarg  = arg * sinarg + tmpl_LDouble_Bessel_J0_Asym[1];
 
         /*  Multiply the output by the coefficient factor.                    */
-        sinarg *= tmpl_LDouble_Sin(x - tmpl_Pi_By_Four_L)/x;
+        sinarg *= tmpl_LDouble_Sin(x - tmpl_LDouble_Pi_By_Four)/x;
 
         /*  Do the same as above for the Cosine portion.                      */
         cosarg  = arg * tmpl_LDouble_Bessel_J0_Asym[8] +
@@ -105,10 +105,10 @@ long double tmpl_LDouble_Bessel_J0(long double x)
         cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[4];
         cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[2];
         cosarg  = arg * cosarg + tmpl_LDouble_Bessel_J0_Asym[0];
-        cosarg *= tmpl_LDouble_Cos(x - tmpl_Pi_By_Four_L);
+        cosarg *= tmpl_LDouble_Cos(x - tmpl_LDouble_Pi_By_Four);
 
         /*  For very large arguments, use the limit (which is zero).          */
-        J0_x = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi_L;
+        J0_x = (cosarg + sinarg)*tmpl_LDouble_Sqrt_Two_By_Pi;
         J0_x = J0_x / tmpl_LDouble_Sqrt(x);
     }
 

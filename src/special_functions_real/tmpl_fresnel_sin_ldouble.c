@@ -186,18 +186,18 @@ long double tmpl_LDouble_Fresnel_Sin(long double x)
         sx *= x;
 
         if (x > 0.0L)
-            sx += tmpl_Sqrt_Pi_By_Eight_L;
+            sx += tmpl_LDouble_Sqrt_Pi_By_Eight;
         else
-            sx -= tmpl_Sqrt_Pi_By_Eight_L;
+            sx -= tmpl_LDouble_Sqrt_Pi_By_Eight;
     }
 
     /*  For large values, return the limit of S(x) as x -> +/- infinity.      */
     else
     {
         if (x > 0.0L)
-            sx = tmpl_Sqrt_Pi_By_Eight_L;
+            sx = tmpl_LDouble_Sqrt_Pi_By_Eight;
         else
-            sx = -tmpl_Sqrt_Pi_By_Eight_L;
+            sx = -tmpl_LDouble_Sqrt_Pi_By_Eight;
     }
 
     return sx;

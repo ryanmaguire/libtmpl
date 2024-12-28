@@ -181,18 +181,18 @@ double tmpl_Double_Fresnel_Sin(double x)
         sx *= x;
 
         if (x > 0.0)
-            sx += tmpl_Sqrt_Pi_By_Eight;
+            sx += tmpl_Double_Sqrt_Pi_By_Eight;
         else
-            sx -= tmpl_Sqrt_Pi_By_Eight;
+            sx -= tmpl_Double_Sqrt_Pi_By_Eight;
     }
 
     /*  For large values, return the limit of S(x) as x -> +/- infinity.      */
     else
     {
         if (x > 0.0)
-            sx = tmpl_Sqrt_Pi_By_Eight;
+            sx = tmpl_Double_Sqrt_Pi_By_Eight;
         else
-            sx = -tmpl_Sqrt_Pi_By_Eight;
+            sx = -tmpl_Double_Sqrt_Pi_By_Eight;
     }
 
     return sx;

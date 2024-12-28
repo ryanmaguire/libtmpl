@@ -170,18 +170,18 @@ float tmpl_Float_Fresnel_Sin(float x)
         sx *= x;
 
         if (x > 0.0F)
-            sx += tmpl_Sqrt_Pi_By_Eight_F;
+            sx += tmpl_Float_Sqrt_Pi_By_Eight;
         else
-            sx -= tmpl_Sqrt_Pi_By_Eight_F;
+            sx -= tmpl_Float_Sqrt_Pi_By_Eight;
     }
 
     /*  For large values, return the limit of S(x) as x -> +/- infinity.      */
     else
     {
         if (x > 0.0F)
-            sx = tmpl_Sqrt_Pi_By_Eight_F;
+            sx = tmpl_Float_Sqrt_Pi_By_Eight;
         else
-            sx = -tmpl_Sqrt_Pi_By_Eight_F;
+            sx = -tmpl_Float_Sqrt_Pi_By_Eight;
     }
 
     return sx;

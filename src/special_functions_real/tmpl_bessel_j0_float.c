@@ -213,17 +213,17 @@ float tmpl_Float_Bessel_J0(float x)
         sinarg = arg * sinarg + tmpl_BESSEL_J0_ASYMF_01;
 
         /*  Multiply the output by the coefficient factor.                    */
-        sinarg *= tmpl_Float_Sin(x - tmpl_Pi_By_Four_F)/x;
+        sinarg *= tmpl_Float_Sin(x - tmpl_Float_Pi_By_Four)/x;
 
         /*  Do the same as above for the Cosine portion.                      */
         cosarg  = arg * tmpl_BESSEL_J0_ASYMF_08 + tmpl_BESSEL_J0_ASYMF_06;
         cosarg  = arg * cosarg + tmpl_BESSEL_J0_ASYMF_04;
         cosarg  = arg * cosarg + tmpl_BESSEL_J0_ASYMF_02;
         cosarg  = arg * cosarg + tmpl_BESSEL_J0_ASYMF_00;
-        cosarg *= tmpl_Float_Cos(x - tmpl_Pi_By_Four_F);
+        cosarg *= tmpl_Float_Cos(x - tmpl_Float_Pi_By_Four);
 
         /*  Multiply the result by the coefficient and return.                */
-        bessel_J0 = (cosarg + sinarg)*tmpl_Sqrt_Two_By_Pi_F;
+        bessel_J0 = (cosarg + sinarg)*tmpl_Float_Sqrt_Two_By_Pi;
         bessel_J0 = bessel_J0 / tmpl_Float_Sqrt(x);
     }
 

@@ -67,7 +67,7 @@ double tmpl_Double_LambertW(double x)
         }
 
         /*  The function is undefined for x < -1/e. Compute x + 1/e.          */
-        w.r = x + tmpl_Rcpr_Euler_E;
+        w.r = x + tmpl_Double_Rcpr_Euler_E;
 
         /*  If this sum is negative, return NaN.                              */
         if (w.bits.sign)
@@ -144,7 +144,7 @@ double tmpl_Double_LambertW(double x)
             return tmpl_Double_LambertW_Pade(x);
 
         /*  The function is undefined for x < -1/e. Compute x + 1/e.          */
-        w.r = x + tmpl_Rcpr_Euler_E;
+        w.r = x + tmpl_Double_Rcpr_Euler_E;
 
         /*  If this sum is negative, return NaN.                              */
         if (w.bits.sign)
@@ -161,7 +161,7 @@ double tmpl_Double_LambertW(double x)
 
         /*  For all other inputs use the Halley method below with initial     *
          *  guess x0 = sqrt(2(1 + e*x)) = sqrt(2*e*w.r)                       */
-        x0 = tmpl_Double_Sqrt(2.0*tmpl_Euler_E*w.r);
+        x0 = tmpl_Double_Sqrt(2.0*tmpl_Double_Euler_E*w.r);
         w.r = x + 1.0;
     }
 
@@ -246,7 +246,7 @@ double tmpl_Double_LambertW(double x)
             return tmpl_Double_LambertW_Pade(x);
 
         /*  The function is undefined for x < -1/e. Compute x + 1/e.          */
-        y = x + tmpl_Rcpr_Euler_E;
+        y = x + tmpl_Double_Rcpr_Euler_E;
 
         /*  If this sum is negative, return NaN.                              */
         if (y < 0.0)
@@ -263,7 +263,7 @@ double tmpl_Double_LambertW(double x)
 
         /*  For all other inputs use the Halley method below with initial     *
          *  guess x0 = sqrt(2(1 + e*x)) = sqrt(2*e*y)                         */
-        x0 = tmpl_Double_Sqrt(2.0*tmpl_Euler_E*y);
+        x0 = tmpl_Double_Sqrt(2.0*tmpl_Double_Euler_E*y);
         y = x + 1.0;
     }
 
