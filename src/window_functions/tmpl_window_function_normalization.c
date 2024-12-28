@@ -18,6 +18,6 @@ float tmpl_Float_Window_Normalization(float *ker, long dim,
     T1 = tmpl_Float_Abs(T1 * dx);
 
     /* Return the normalization factor.                                       */
-    out = tmpl_Sqrt_Two_F * f_scale / T1;
+    out = tmpl_Float_Sqrt_Two * f_scale / T1;
     return out;
 }

@@ -20,6 +20,6 @@ tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,
     abs_T1 = dx*tmpl_CDouble_Abs(T1);
 
     /* Return the normalization factor.                                       */
-    out = tmpl_Sqrt_Two * f_scale / abs_T1;
+    out = tmpl_Double_Sqrt_Two * f_scale / abs_T1;
     return out;
 }
