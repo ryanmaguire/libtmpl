@@ -16,26 +16,24 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                tmpl_minmax                                 *
+ *                                  tmpl_max                                  *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides type-independent macros for computing min and max.           *
+ *      Provides type-independent macros for computing maximums.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 20, 2023                                                  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MINMAX_H
-#define TMPL_MINMAX_H
+#ifndef TMPL_HELPER_MAX_H
+#define TMPL_HELPER_MAX_H
 
-/*  Computes the max and min of two real numbers (ints or floats).            */
+/*  Computes the max of two real numbers (ints or floats).                    */
 #define TMPL_MAX(x, y) ((x) < (y) ? (y) : (x))
-#define TMPL_MIN(x, y) ((x) < (y) ? (x) : (y))
 
-/*  Computes the max and min of three real numbers (ints or floats).          */
+/*  Computes the max of three real numbers (ints or floats).                  */
 #define TMPL_MAX3(x, y, z) TMPL_MAX((x), TMPL_MAX((y), (z)))
-#define TMPL_MIN3(x, y, z) TMPL_MIN((x), TMPL_MIN((y), (z)))
 
 #endif
 /*  End of include guard.                                                     */

@@ -16,10 +16,11 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                 tmpl_helper                                *
+ *                               tmpl_array_size                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides common helper macros.                                        *
+ *      Provides a helper macro for computing the size (number of elements)   *
+ *      in a static array.                                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -30,14 +31,11 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_HELPER_H
-#define TMPL_HELPER_H
+#ifndef TMPL_HELPER_ARRAY_SIZE_H
+#define TMPL_HELPER_ARRAY_SIZE_H
 
 /*  Computes the size of a non-dynamically allocated array.                   */
 #define TMPL_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
-
-/*  Computes the absolute value of a number (integer or floating point).      */
-#define TMPL_ABS(x) (x < 0 ? -x : x)
 
 #endif
 /*  End of include guard.                                                     */
