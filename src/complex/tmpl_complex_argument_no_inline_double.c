@@ -19,7 +19,8 @@
  *                        tmpl_complex_argument_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Complex argument. See include/complex/tmpl_complex_argument_double.h. *
+ *      Complex argument.                                                     *
+ *      Source: include/inline/complex/tmpl_complex_argument_double.h.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -31,8 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Implemented in include/complex/tmpl_complex_argument_double.h.            */
-#include "../../include/complex/tmpl_complex_argument_double.h"
+/*  Function prototype and complex numbers provided here.                     */
+#include <libtmpl/include/tmpl_complex.h>
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_argument_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

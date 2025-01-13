@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Checks if two complex numbers are equal.                              *
- *      See include/complex/tmpl_complex_are_equal_ldouble.h. for details.    *
+ *      Source: include/inline/complex/tmpl_complex_are_equal_ldouble.h.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -32,8 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Implemented in include/complex/tmpl_complex_are_equal_ldouble.h.          */
-#include "../../include/complex/tmpl_complex_are_equal_ldouble.h"
+/*  Function prototype and complex numbers provided here.                     */
+#include <libtmpl/include/tmpl_complex.h>
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_are_equal_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
