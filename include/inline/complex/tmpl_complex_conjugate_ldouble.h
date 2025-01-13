@@ -45,8 +45,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header providing long double precision complex numbers.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2020                                             *
@@ -73,8 +73,8 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
 /*  Long double precision complex conjugate function (conjl equivalent).      */
 TMPL_INLINE_DECL
