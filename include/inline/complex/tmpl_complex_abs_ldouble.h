@@ -64,7 +64,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_INLINE_DECL macro found here.                                *
  *  2.) tmpl_complex_ldouble.h:                                               *
- *          Header where complex types are given.                             *
+ *          Header providing long double precision complex numbers.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -114,8 +114,8 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where complex types are defined.                                          */
-#include <libtmpl/include/tmpl_complex_ldouble.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
 /*  The hypot function does all of the heavy lifting.                         */
 extern long double tmpl_LDouble_Hypot(long double x, long double y);

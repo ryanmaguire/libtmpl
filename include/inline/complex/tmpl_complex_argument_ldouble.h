@@ -54,10 +54,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing 2D arctan.                                 *
- *  3.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header providing long double precision complex numbers.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -88,11 +86,11 @@
 /*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Arctan2 function found here.                                              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the arctan2 function. Provided by tmpl_math.h.    */
+extern long double tmpl_LDouble_Arctan2(long double y, long double x);
 
 /*  Long double precision complex argument function (cargl equivalent).       */
 TMPL_INLINE_DECL

@@ -62,7 +62,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
  *  2.) tmpl_complex_ldouble.h:                                               *
- *          Header where complex types are defined.                           *
+ *          Header providing long double precision complex numbers.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -97,7 +97,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
 /*  In C99, since _Complex is a built-in data type, long doubles and _Complex *
  *  long doubles can be added via y*_Complex_I + z. With C89 we use structs to*

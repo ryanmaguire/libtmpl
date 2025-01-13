@@ -49,8 +49,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where the macro TMPL_INLINE_DECL is found.            *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -85,8 +85,8 @@
 /*  The TMPL_INLINE_DECL macro is found here.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are given and where complex types are defined.       */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  Single precision abs squared function.                                    */
 TMPL_INLINE_DECL

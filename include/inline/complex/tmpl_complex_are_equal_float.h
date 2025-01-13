@@ -42,8 +42,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header providing single precision complex numbers.                *
  *  3.) tmpl_bool.h:                                                          *
  *          Header containing Boolean typedef.                                *
  ******************************************************************************
@@ -75,8 +75,8 @@
 /*  Boolean data type and True/False are defined here.                        */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  Double precision complex comparison.                                      */
 TMPL_INLINE_DECL

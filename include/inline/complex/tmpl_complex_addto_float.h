@@ -67,7 +67,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex_float.h:                                                 *
- *          Header where complex types are defined.                           *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 8, 2022                                             *
@@ -90,7 +90,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  In C99, since _Complex is a built-in data type, given float _Complex z0   *
  *  and float _Complex z1, you can just do z0 += z1. With C89 we use structs  *

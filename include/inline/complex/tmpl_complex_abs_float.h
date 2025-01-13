@@ -63,7 +63,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          TMPL_INLINE_DECL macro found here.                                *
  *  2.) tmpl_complex_float.h:                                                 *
- *          Header where complex types are given.                             *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -89,8 +89,8 @@
 /*  The TMPL_INLINE_DECL macro is found here.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are given and where complex types are defined.       */
-#include <libtmpl/include/tmpl_complex_float.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  The hypot function does all of the heavy lifting.                         */
 extern float tmpl_Float_Hypot(float x, float y);
