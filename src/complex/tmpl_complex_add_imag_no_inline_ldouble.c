@@ -19,7 +19,8 @@
  *                        tmpl_complex_add_imag_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Complex addition. See include/complex/tmpl_complex_add_imag_ldouble.h.*
+ *      Complex addition of the form w = z + iy where y is real.              *
+ *      Source: include/inline/complex/tmpl_complex_add_imag_ldouble.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -31,11 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype found here.                                            */
+/*  Function prototype and complex numbers provided here.                     */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Implemented in include/complex/tmpl_complex_add_imag_ldouble.h.           */
-#include "../../include/complex/tmpl_complex_add_imag_ldouble.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_add_imag_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

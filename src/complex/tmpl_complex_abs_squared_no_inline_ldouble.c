@@ -19,8 +19,8 @@
  *                      tmpl_complex_abs_squared_ldouble                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(z) = |z|^2. Function is implemented in                     *
- *      include/complex/tmpl_complex_abs_squared_ldouble.h.                   *
+ *      Computes f(z) = |z|^2.                                                *
+ *      Source: include/inline/complex/tmpl_complex_abs_squared_ldouble.h.    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -32,8 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Implemented in include/complex/tmpl_complex_abs_squared_ldouble.h.        */
-#include "../../include/complex/tmpl_complex_abs_squared_ldouble.h"
+/*  Function prototype and complex numbers provided here.                     */
+#include <libtmpl/include/tmpl_complex.h>
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_abs_squared_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

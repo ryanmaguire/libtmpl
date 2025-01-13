@@ -19,7 +19,8 @@
  *                           tmpl_complex_abs_float                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(z) = |z|. See include/complex/tmpl_complex_abs_float.h.    *
+ *      Computes f(z) = |z|, the modulus of a complex number.                 *
+ *      Source: include/inline/complex/tmpl_complex_abs_float.h.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -34,8 +35,8 @@
 /*  Function prototype and complex numbers provided here.                     */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Implemented in include/complex/tmpl_complex_abs_float.h.                  */
-#include "../../include/complex/tmpl_complex_abs_float.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_abs_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

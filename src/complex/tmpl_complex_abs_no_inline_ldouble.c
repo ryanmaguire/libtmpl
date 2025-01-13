@@ -19,7 +19,8 @@
  *                          tmpl_complex_abs_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(z) = |z|. See include/complex/tmpl_complex_abs_ldouble.h.  *
+ *      Computes f(z) = |z|, the modulus of a complex number.                 *
+ *      Source: include/inline/complex/tmpl_complex_abs_ldouble.h.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -34,8 +35,8 @@
 /*  Function prototype and complex numbers provided here.                     */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Implemented in include/complex/tmpl_complex_abs_ldouble.h.                */
-#include "../../include/complex/tmpl_complex_abs_ldouble.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_abs_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
