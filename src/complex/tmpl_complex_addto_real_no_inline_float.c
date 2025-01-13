@@ -19,8 +19,8 @@
  *                       tmpl_complex_addto_real_float                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Complex addition. Implemented in                                      *
- *      include/complex/tmpl_complex_addto_real_float.h. See for details.     *
+ *      Complex addition of the form z += x where x is real.                  *
+ *      Source: include/inline/complex/tmpl_complex_addto_real_float.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 6, 2023                                              *
@@ -32,11 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype found here.                                            */
+/*  Function prototype and complex numbers provided here.                     */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Implemented in include/complex/tmpl_complex_addto_real_float.h.           */
-#include "../../include/complex/tmpl_complex_addto_real_float.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_addto_real_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

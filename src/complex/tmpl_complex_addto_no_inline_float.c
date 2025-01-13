@@ -19,10 +19,11 @@
  *                          tmpl_complex_addto_float                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Complex addition. See include/complex/tmpl_complex_addto_float.h.     *
+ *      Complex addition of the form z += w where w is complex.               *
+ *      Source: include/inline/complex/tmpl_complex_addto_float.h.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       September 8, 2022                                             *
+ *  Date:       February 6, 2023                                              *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_INLINE macro.                                    */
@@ -31,11 +32,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype found here.                                            */
+/*  Function prototype and complex numbers provided here.                     */
 #include <libtmpl/include/tmpl_complex.h>
 
-/*  Implemented in include/complex/tmpl_complex_addto_float.h.                */
-#include "../../include/complex/tmpl_complex_addto_float.h"
+/*  Implemented here.                                                         */
+#include "../../include/inline/complex/tmpl_complex_addto_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
