@@ -16,47 +16,34 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                             tmpl_compat_stdlib                             *
+ *                                  tmpl_cast                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides macros for C vs. C++ compatibility for malloc and free.      *
+ *      Provides macros for casting with C vs. C++ compatibility.             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *    1.) stdlib.h:                                                           *
- *          Standard library header file providing malloc and free.           *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 21, 2024                                            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPAT_STDLIB_H
-#define TMPL_COMPAT_STDLIB_H
+#ifndef TMPL_COMPAT_CAST_H
+#define TMPL_COMPAT_CAST_H
 
 /*  Standard macro for C++ usage. Check for this.                             */
 #ifdef __cplusplus
 
-/*  malloc provided here. As is free.                                         */
-#include <cstdlib>
-
-/*  Macro for allocating memory. In C++ one must cast the result of malloc.   */
-#define TMPL_MALLOC(type, N) static_cast<type *>(std::malloc(sizeof(type) * N))
-
-/*  Free's a pointer and sets it to NULL to avoid double free's.              */
-#define TMPL_FREE(var) if (var){std::free(var); var = NULL;}
+/*  Macro for casting data using C++ static_cast syntax.                      */
+#define TMPL_CAST(x, type) static_cast<type>((x))
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
 
-/*  malloc provided here. As is free.                                         */
-#include <stdlib.h>
-
-/*  Macro for malloc. In C one should not cast the result of malloc.          */
-#define TMPL_MALLOC(type, N) malloc(sizeof(type) * N)
-
-/*  Free's a pointer and sets it to NULL to avoid double free's.              */
-#define TMPL_FREE(var) if (var){free(var); var = NULL;}
+/*  Macro for casting data using the standard C syntax.                       */
+#define TMPL_CAST(x, type) (type)((x))
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
