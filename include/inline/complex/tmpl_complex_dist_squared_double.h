@@ -16,20 +16,23 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_complex_quick_dist_double                       *
+ *                      tmpl_complex_dist_squared_double                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the function f(z,w) = |z - w|.           *
+ *      Contains the source code for the function f(z, w) = |z - w|^2.        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Quick_Dist                                               *
+ *      tmpl_CDouble_Dist_Squared                                             *
  *  Purpose:                                                                  *
- *      Computes the distance between two complex numbers:                    *
+ *      Computes the square of the distance between two complex numbers:      *
  *                                                                            *
- *          dist(z, w) = dist(a + ib, c + id)                                 *
- *                     = sqrt((c-a)^2 + (d-b)^2)                              *
+ *          dist(z, w)^2 = dist(a + ib, c + id)^2                             *
+ *                       = (c - a)^2 + (d - b)^2                              *
+ *                                                                            *
+ *      This is provided so that users can avoid redundant and expensive      *
+ *      calls to the hypot function made with tmpl_CDouble_Dist.              *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
@@ -39,56 +42,49 @@
  *      dist (double):                                                        *
  *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
- *          Computes the square root of a real number.                        *
+ *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute sqrt((c-a)^2 + (d-b)^2). The method is a bit faster than      *
- *      calling the hypot function, which is what tmpl_CDouble_Dist does,     *
- *      but may cause overflow or underflow because of the intermediate step  *
- *      of computing (c-a)^2 + (d-b)^2.                                       *
+ *      Treat the points as elements of the Euclidean plane and use           *
+ *      the Pythagorean formula.                                              *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_USE_INLINE is found.                       *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 07, 2023                                             *
+ *  Date:       February 16, 2021                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Created file.                                                         *
+ *  2023/07/13: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_dist_squared_double.c to use this.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_QUICK_DIST_DOUBLE_H
-#define TMPL_COMPLEX_QUICK_DIST_DOUBLE_H
+#ifndef TMPL_COMPLEX_DIST_SQUARED_DOUBLE_H
+#define TMPL_COMPLEX_DIST_SQUARED_DOUBLE_H
 
-/*  TMPL_USE_INLINE found here.                                               */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Header file containing the hypot function.                                */
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  Double precision distance function for complex variables.                 */
+/*  Double precision distance squared function for complex variables.         */
 TMPL_INLINE_DECL
-double tmpl_CDouble_Quick_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
+double tmpl_CDouble_Dist_Squared(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
     /*  Compute the difference in both components and use Pythagoras.         */
     const double dx = z0.dat[0] - z1.dat[0];
     const double dy = z0.dat[1] - z1.dat[1];
-    return tmpl_Double_Sqrt(dx*dx + dy*dy);
+    return dx*dx + dy*dy;
 }
-/*  End of tmpl_CDouble_Quick_Dist.                                           */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of tmpl_CDouble_Dist_Squared.                                         */
 
 #endif
 /*  End of include guard.                                                     */

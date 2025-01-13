@@ -16,94 +16,72 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_complex_polar_double                          *
+ *                          tmpl_complex_expi_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for creating complex numbers using their     *
- *      polar representation.                                                 *
+ *      Contains the source code for the f(t) = exp(i t) for real t.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Polar                                                    *
+ *      tmpl_CDouble_Expi                                                     *
  *  Purpose:                                                                  *
- *      Computes the point in the plane given its polar representation. That  *
- *      is, given radius r and angle theta, computes:                         *
+ *      Computes the point on the unit circle corresponding to a real angle t.*
  *                                                                            *
- *          z = r e^{i theta}                                                 *
- *            = r exp(i theta)                                                *
- *            = r cos(theta) + i r sin(theta)                                 *
+ *          f(t) = e^{i t}                                                    *
+ *               = exp(i t)                                                   *
+ *               = (cos(t), sin(t))                                           *
  *                                                                            *
  *  Arguments:                                                                *
- *      r (double):                                                           *
- *          The magnitude of the point.                                       *
- *      theta (double):                                                       *
+ *      t (double):                                                           *
  *          The angle of the point.                                           *
  *  Output:                                                                   *
- *      z (tmpl_ComplexDouble):                                               *
- *          The point r e^{i theta} in the plane.                             *
+ *      exp_i_t (tmpl_ComplexDouble):                                         *
+ *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
  *      tmpl_math.h:                                                          *
  *          tmpl_Double_SinCos:                                               *
  *              Computes sin(t) and cos(t) simultaneously.                    *
  *  Method:                                                                   *
- *      Compute x = cos(t) and y = sin(t) and return z = rx + iry.            *
+ *      Compute x = cos(t) and y = sin(t) and return z = x + iy.              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 18, 2021                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2020/12/01: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *  2021/02/18: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *      Added float and long double support.                                  *
- *  2023/07/13: Ryan Maguire                                                  *
- *      Simplified code. Added inline support. Moved float and long double    *
- *      versions to their own files.                                          *
+ *  Date:       July 13, 2023                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_POLAR_DOUBLE_H
-#define TMPL_COMPLEX_POLAR_DOUBLE_H
+#ifndef TMPL_COMPLEX_EXPI_DOUBLE_H
+#define TMPL_COMPLEX_EXPI_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file with math functions.                                          */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the SinCos function.                              */
+extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
 
-/*  Create a double precision complex number from its polar coordinates.      */
+/*  Computes the point on the unit circle with angle t from the real axis.    */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble tmpl_CDouble_Polar(double r, double theta)
+tmpl_ComplexDouble tmpl_CDouble_Expi(double t)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    /*  Declare a variable for the output.                                    */
     tmpl_ComplexDouble z;
 
-    /*  Compute sin(theta) and cos(theta) simultaneously.                     */
-    tmpl_Double_SinCos(theta, &z.dat[1], &z.dat[0]);
-
-    /*  Scale the real and imaginary parts by r to finish the computation.    */
-    z.dat[0] *= r;
-    z.dat[1] *= r;
+    /*  Use SinCos to compute sin(t) and cos(t), simultaneously, and store    *
+     *  the results in the imaginary and real part of z, respectively.        */
+    tmpl_Double_SinCos(t, &z.dat[1], &z.dat[0]);
     return z;
 }
-/*  End of tmpl_CDouble_Polar.                                                */
+/*  End of tmpl_CDouble_Expi.                                                 */
 
 #endif
 /*  End of include guard.                                                     */

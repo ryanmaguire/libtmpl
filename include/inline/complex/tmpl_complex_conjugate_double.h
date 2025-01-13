@@ -16,94 +16,75 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_complex_multiply_real_double                      *
+ *                       tmpl_complex_conjugate_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex multiplication.                  *
+ *      Contains the source code for the complex conjugate.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Multiply_Real                                            *
+ *      tmpl_CDouble_Conjugate                                                *
  *  Purpose:                                                                  *
- *      Multiplies two complex numbers:                                       *
+ *      Computes the complex conjugate of a complex number.                   *
  *                                                                            *
- *          z * x = (a + ib) * x                                              *
- *                = ax + ibx                                                  *
+ *          conj(z) = conj(x + iy) = x - iy                                   *
  *                                                                            *
  *  Arguments:                                                                *
- *      x (double):                                                           *
- *          A real number.                                                    *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      prod (tmpl_ComplexDouble):                                            *
- *          The product of z and x.                                           *
+ *      conj_z (tmpl_ComplexDouble):                                          *
+ *          The complex conjugate of z.                                       *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Multiplying by a real number is the same thing as scalar              *
- *      multiplication in the plane. We scale the components of z and return. *
- *  Notes:                                                                    *
- *      1.) No checks for NaN or infinity are made.                           *
- *      2.) A lot of the complex number code was originally written for       *
- *          rss_ringoccs, but has since migrated to libtmpl.                  *
- *          librssringoccs is also released under the GPLv3.                  *
- *  References:                                                               *
- *      1.) https://en.wikipedia.org/wiki/complex_number                      *
- *      2.) Ahfors, L. (1979)                                                 *
- *          "Complex Analysis, Third Edition"                                 *
- *          McGraw-Hill, International Series in Pure and Applied Mathematics *
- *          Chapter 1 "The Algebra of Complex Numbers"                        *
- *          Section 1 "Arithmetic Operations"                                 *
+ *      Negate the imaginary part of z and return.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_INLINE_DECL macro.                              *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 18, 2021                                             *
+ *  Date:       February 16, 2020                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2021/02/18: Ryan Maguire                                                  *
- *      Created file.                                                         *
- *  2024/12/16: Ryan Maguire                                                  *
- *      Added inline version. Moved float and long double to their own files. *
+ *  2020/11/30: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2020/12/02: Ryan Maguire                                                  *
+ *      Frozen for v1.3 of rss_ringoccs.                                      *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied from rss_ringoccs.                                             *
+ *      Soft freeze for alpha release of libtmpl.                             *
+ *  2023/02/06: Ryan Maguire                                                  *
+ *      Moved float and long double to their own file. Added inline support.  *
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_conjugate_double.c to use this file. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_MULTIPLY_REAL_DOUBLE_H
-#define TMPL_COMPLEX_MULTIPLY_REAL_DOUBLE_H
+#ifndef TMPL_COMPLEX_CONJUGATE_DOUBLE_H
+#define TMPL_COMPLEX_CONJUGATE_DOUBLE_H
 
-/*  TMPL_INLINE_DECL found here.                                              */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
- *  and double x, you can just do z * x. With C89 we use structs to define    *
- *  complex numbers. Structs cannot be multiplied, so we need a function for  *
- *  computing the product.                                                    */
-
-/*  Double precision complex multiplication.                                  */
+/*  Double precision complex conjugate function (conj equivalent).            */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble
-tmpl_CDouble_Multiply_Real(double x, tmpl_ComplexDouble z)
+tmpl_ComplexDouble tmpl_CDouble_Conjugate(tmpl_ComplexDouble z)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexDouble prod;
-
-    /*  (a + ib) * x = ax + ibx.                                              */
-    prod.dat[0] = x * z.dat[0];
-    prod.dat[1] = x * z.dat[1];
-    return prod;
+    /*  The complex conjugate of x + iy is x - iy. Negate the imagary part.   */
+    z.dat[1] = -z.dat[1];
+    return z;
 }
-/*  End of tmpl_CDouble_Multiply_Real.                                        */
+/*  End of tmpl_CDouble_Conjugate.                                            */
 
 #endif
 /*  End of include guard.                                                     */

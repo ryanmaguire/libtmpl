@@ -65,7 +65,7 @@
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 16, 2024                                             *
@@ -79,7 +79,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
 /*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
  *  and double _Complex z2, you can just do z1 * z2. Structs cannot be        *

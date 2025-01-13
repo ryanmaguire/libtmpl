@@ -16,84 +16,72 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_complex_multiplyby_real_double                    *
+ *                          tmpl_complex_expid_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex multiplication.                  *
+ *      Contains the source code for the f(t) = exp(i t) for real t.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_MultiplyBy_Real                                          *
+ *      tmpl_CDouble_Expid                                                    *
  *  Purpose:                                                                  *
- *      Multiplies two complex numbers:                                       *
+ *      Computes the point on the unit circle corresponding to a real angle t.*
  *                                                                            *
- *          z * x = (a + ib) * x                                              *
- *                = ax + ibx                                                  *
+ *          f(t) = e^{i t}                                                    *
+ *               = exp(i t)                                                   *
+ *               = (cosd(t), sind(t))                                         *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexDouble * const):                                       *
- *          A pointer to a complex number, the product is stored here.        *
- *      x (double):                                                           *
- *          A real number.                                                    *
+ *      t (double):                                                           *
+ *          The angle of the point, in degrees.                               *
  *  Output:                                                                   *
- *      None (void).                                                          *
+ *      exp_i_t (tmpl_ComplexDouble):                                         *
+ *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_SinCosd:                                              *
+ *              Computes sind(t) and cosd(t) simultaneously.                  *
  *  Method:                                                                   *
- *      Multiplying by a real number is the same thing as scalar              *
- *      multiplication in the plane. We scale the components of z and return. *
- *  Notes:                                                                    *
- *      1.) No checks for NaN or infinity are made.                           *
- *      2.) No checks for NULL pointers are made.                             *
- *      3.) This provides a "*=" operator. It is faster to use:               *
- *              tmpl_CDouble_MultiplyBy_Real(&z, x)                           *
- *          instead of writing:                                               *
- *              z = tmpl_CDouble_Multiply_Real(x, z).                         *
- *          The improvement varies depending on compiler and architecture.    *
- *  References:                                                               *
- *      1.) https://en.wikipedia.org/wiki/complex_number                      *
- *      2.) Ahfors, L. (1979)                                                 *
- *          "Complex Analysis, Third Edition"                                 *
- *          McGraw-Hill, International Series in Pure and Applied Mathematics *
- *          Chapter 1 "The Algebra of Complex Numbers"                        *
- *          Section 1 "Arithmetic Operations"                                 *
+ *      Compute x = cosd(t) and y = sind(t) and return z = x + iy.            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_INLINE_DECL macro.                              *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       December 16, 2024                                             *
+ *  Date:       July 22, 2023                                                 *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_MULTIPLYBY_IMAG_DOUBLE_H
-#define TMPL_COMPLEX_MULTIPLYBY_IMAG_DOUBLE_H
+#ifndef TMPL_COMPLEX_EXPID_DOUBLE_H
+#define TMPL_COMPLEX_EXPID_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
- *  and double x, you can just do z * x. Structs cannot be multiplied so we   *
- *  need a function for computing this.                                       */
+/*  Tell the compiler about the SinCosd function.                             */
+extern void tmpl_Double_SinCosd(double t, double *sind_t, double *cosd_t);
 
-/*  Double precision complex multiplication. Equivalent of *= operation.      */
+/*  Computes the point on the unit circle with angle t from the real axis.    */
 TMPL_INLINE_DECL
-void
-tmpl_CDouble_MultiplyBy_Imag(tmpl_ComplexDouble * const z, double y)
+tmpl_ComplexDouble tmpl_CDouble_Expid(double t)
 {
-    const double z_real = z->dat[0];
-    z->dat[0] = -z->dat[1] * y;
-    z->dat[1] = z_real * y;
+    /*  Declare a variable for the output.                                    */
+    tmpl_ComplexDouble z;
+
+    /*  Use SinCosd to compute sind(t) and cosd(t), simultaneously, and store  *
+     *  the results in the imaginary and real part of z, respectively.        */
+    tmpl_Double_SinCosd(t, &z.dat[1], &z.dat[0]);
+    return z;
 }
-/*  End of tmpl_CDouble_MultiplyBy_Imag.                                      */
+/*  End of tmpl_CDouble_Expid.                                                */
 
 #endif
 /*  End of include guard.                                                     */

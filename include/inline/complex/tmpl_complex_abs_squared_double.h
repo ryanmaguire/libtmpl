@@ -16,48 +16,41 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_complex_argument_double                        *
+ *                      tmpl_complex_abs_squared_double                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the complex argument.                    *
+ *      Contains the source code for f(z) = |z|^2.                            *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Argument                                                 *
+ *      tmpl_CDouble_Abs_Squared                                              *
  *  Purpose:                                                                  *
- *      Computes the argument of a complex number:                            *
+ *      Computes the square of the absolute value, f(z) = |z|^2:              *
  *                                                                            *
- *          arg(z) =  arg(r * exp(i theta)) = theta                           *
- *                                                                            *
- *      Equivalently:                                                         *
- *                                                                            *
- *          arg(z) = arg(x + iy) = arctan(y, x)                               *
+ *          f(z) = f(x + iy) = x^2 + y^2                                      *
  *                                                                            *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
  *  Output:                                                                   *
- *      arg (double):                                                         *
- *          The argument of z.                                                *
+ *      abs_sq_z (double):                                                    *
+ *          The square of the absolute value of z.                            *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
  *  Method:                                                                   *
- *      Extract the real and imaginary parts and return atan2(y, x).          *
- *  Notes:                                                                    *
- *      Because the atan2 function is used, there is a discontinuity along    *
- *      the negative real axis. That is, the argument returns a real value    *
- *      in the interval (-pi, pi] (+pi is inclusive).                         *
- *                                                                            *
- *      This file is a fork of the code I wrote for rss_rinoccs.              *
- *      librssringoccs is also released under GPL3.                           *
+ *      Extract the real and imaginary parts of z and return x^2 + y^2.       *
+ *  Error:                                                                    *
+ *      Based on 134,217,728 random samples:                                  *
+ *          Max Relative Error: 0.000000e+00                                  *
+ *          RMS Relative Error: 0.000000e+00                                  *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_INLINE_DECL macro.                *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing 2D arctan.                                 *
- *  3.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *          Header file where the macro TMPL_INLINE_DECL is found.            *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -65,43 +58,44 @@
  *                              Revision History                              *
  ******************************************************************************
  *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/12/02 (Ryan Maguire):                                                *
+ *      Wrote routines for the complex abs squared function (Wellesley        *
+ *      College for librssringoccs).                                          *
+ *  2020/12/02: Ryan Maguire                                                  *
+ *      Moved functions here from rss_ringoccs_complex_abs.c                  *
  *      Frozen for v1.3.                                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
- *      Made compatible with the rest of libtmpl.                             *
+ *      Edited to make it compatible with libtmpl.                            *
  *      Soft freeze for alpha release of libtmpl.                             *
- *  2021/06/26: Ryan Maguire                                                  *
+ *  2021/05/11: Ryan Maguire                                                  *
  *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
  *      No more changes unless something breaks.                              *
+ *  2022/04/28: Ryan Maguire                                                  *
+ *      Added this function as an optional inline function.                   *
  *  2023/02/06: Ryan Maguire                                                  *
- *      Moved float and long double to their own files. Inlined routines.     *
- *  2023/07/10: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_argument_double.c to include this.   *
+ *      Moved float and long double to their own files.                       *
+ *  2023/07/06: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_abs_squared_double.c to use this.    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ARGUMENT_DOUBLE_H
-#define TMPL_COMPLEX_ARGUMENT_DOUBLE_H
+#ifndef TMPL_COMPLEX_ABS_SQUARED_DOUBLE_H
+#define TMPL_COMPLEX_ABS_SQUARED_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  The TMPL_INLINE_DECL macro is found here.                                 */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Arctan2 function found here.                                              */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  Double precision complex argument function (carg equivalent).             */
+/*  Double precision abs squared function.                                    */
 TMPL_INLINE_DECL
-double tmpl_CDouble_Argument(tmpl_ComplexDouble z)
+double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z)
 {
-    /*  Compute the argument using arctan and return.                         */
-    return tmpl_Double_Arctan2(z.dat[1], z.dat[0]);
+    /*  Use the Pythagorean formula |z|^2 = x^2 + y^2 and return.             */
+    return z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1];
 }
-/*  End of tmpl_CDouble_Argument.                                             */
+/*  End of tmpl_CDouble_Abs_Squared.                                          */
 
 #endif
 /*  End of include guard.                                                     */

@@ -16,38 +16,20 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_complex_quick_abs_double                        *
+ *                          tmpl_complex_abs_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex modulus (absolute value), done   *
- *      "quickly". This method is about 1.5 times faster than the default one *
- *      but may overflow for certain values.                                  *
+ *      Contains the source code for complex modulus (absolute value).        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Quick_Abs                                                *
+ *      tmpl_CDouble_Abs                                                      *
  *  Purpose:                                                                  *
  *      Computes the absolute value, or modulus, of a complex number:         *
  *                                                                            *
  *          |z| = |x + iy| = sqrt(x^2 + y^2)                                  *
  *                                                                            *
- *      Because x^2 and y^2 are computed as intermediate steps, this method   *
- *      will overflow for values greater than sqrt(DBL_MAX). The safe way to  *
- *      do this is via:                                                       *
- *                                                                            *
- *          |z| = |x| sqrt(1+(y/x)^2)                                         *
- *                                                                            *
- *      if |x| > |y|, and:                                                    *
- *                                                                            *
- *          |z| = |y| sqrt(1 + (x/y)^2)                                       *
- *                                                                            *
- *      otherwise. This involves computing |x|, |y|, and seeing which one is  *
- *      the max as intermediate steps, and a division. The resulting time     *
- *      tests indicate that this is about 1.5x slower. The naive method is    *
- *      kept here in case the user needs extra speed and is not worried about *
- *      overflowing. On IEEE-754 compliant implementations, this means        *
- *      working with numbers less than 10^154, which is very plausible.       *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
@@ -55,20 +37,33 @@
  *      abs_z (double):                                                       *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_Double_Sqrt        (tmpl_math.h)                                 *
- *          Computes the square root of a real number.                        *
- *  Notes:                                                                    *
- *      This code is a fork of the code I wrote for rss_ringoccs.             *
- *      librssringoccs is also released under GPL3.                           *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Hypot:                                                *
+ *              Function for computing the magnitude of the vector (x, y).    *
+ *  Method:                                                                   *
+ *      The absolute value of a complex number is the distance from the given *
+ *      point and the origin. This is computed via the Pythagorean formula.   *
+ *      Given z = x + iy, which we identify as the point (x, y) in the plane, *
+ *      the absolute value, or modulus, is:                                   *
+ *                                                                            *
+ *          |z| = ||(x, y)|| = sqrt(x^2 + y^2)                                *
+ *                                                                            *
+ *      The intermediate computation x^2 + y^2 may overflow for large inputs. *
+ *      This is mitigated using the hypot function. We pass the real and      *
+ *      imaginary parts to tmpl_Double_Hypot for the computation.             *
+ *  Error:                                                                    *
+ *      Based on 134,217,728 random samples:                                  *
+ *          Max Relative Error: 2.220446e-16                                  *
+ *          RMS Relative Error: 3.751642e-17                                  *
+ *      Values assume 100% accuracy of glibc. Actual error in glibc is        *
+ *      less than 1 ULP (~2 x 10^-16).                                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file containing the TMPL_USE_INLINE macro.                 *
- *  2.) tmpl_math.h:                                                          *
- *          Header file containing basic math functions.                      *
- *  3.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *          TMPL_INLINE_DECL macro found here.                                *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -93,43 +88,44 @@
  *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
  *      No more changes unless something breaks.                              *
  *  2021/10/19: Ryan Maguire                                                  *
- *      Changed this to "QuickAbs". Numbers greater than sqrt(DBL_MAX) will   *
- *      overflow using this method. On most computers, this is 10^154. These  *
- *      numbers shouldn't overflow for a proper implementation of complex abs.*
- *      A proper implementation is now implemented in tmpl_CDouble_Abs. These *
- *      functions are 1.3-1.5x faster and are kept for users who will not be  *
- *      using large numbers but would prefer speed.                           *
- *  2023/02/06: Ryan Maguire                                                  *
- *      Moved float and long double versions to their own files.              *
+ *      Changed the algorithm to prevent certain numbers from overflowing.    *
+ *      Complex numbers with a magnitude greater than sqrt(DBL_MAX) will      *
+ *      overflow, even though they shouldn't for a proper implementation.     *
+ *      This has been fixed, albeit at the expense of speed.                  *
+ *  2022/04/28: Ryan Maguire                                                  *
+ *      Changed algorithm to incorporate IEEE-754 tricks. 1.4x speed up.      *
+ *  2022/12/30: Ryan Maguire                                                  *
+ *      Moved main algorithm to tmpl_hypot_double.c Function now passes the   *
+ *      the real and imaginary parts to tmpl_Double_Hypot.                    *
+ *  2023/07/06: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_abs_double.c to include this file.   *
+ *  2024/09/18: Ryan Maguire                                                  *
+ *      Made inline method consistent with other inline routines.             *
+ *      tmpl_complex.h is not needed (just tmpl_complex_double.h), and        *
+ *      extern is provided for tmpl_Double_Hypot so that tmpl_math.h is not   *
+ *      needed explicitly.                                                    *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_QUICK_ABS_DOUBLE_H
-#define TMPL_COMPLEX_QUICK_ABS_DOUBLE_H
+#ifndef TMPL_COMPLEX_ABS_DOUBLE_H
+#define TMPL_COMPLEX_ABS_DOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only used if inline support is requested.                    */
-#if TMPL_USE_INLINE == 1
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Header file containing basic math functions.                              */
-#include <libtmpl/include/tmpl_math.h>
+/*  The hypot function does all of the heavy lifting.                         */
+extern double tmpl_Double_Hypot(double x, double y);
 
-/*  Where the prototypes are given and where complex types are defined.       */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  Double precision complex abs function (cabs equivalent).                  */
+/*  Function for computing the magnitude, or modulus, of a complex number.    */
 TMPL_INLINE_DECL
-double tmpl_CDouble_Quick_Abs(tmpl_ComplexDouble z)
+double tmpl_CDouble_Abs(tmpl_ComplexDouble z)
 {
-    /*  The absolute value is just sqrt(x^2 + y^2) so compute this.           */
-    return tmpl_Double_Sqrt(z.dat[0]*z.dat[0] + z.dat[1]*z.dat[1]);
+    return tmpl_Double_Hypot(z.dat[0], z.dat[1]);
 }
-/*  End of tmpl_CDouble_Quick_Abs.                                            */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
+/*  End of tmpl_CDouble_Abs.                                                  */
 
 #endif
 /*  End of include guard.                                                     */

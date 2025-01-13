@@ -16,39 +16,41 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_complex_add_real_double                        *
+ *                     tmpl_complex_multiplyby_real_double                    *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex addition.                        *
+ *      Contains the source code for complex multiplication.                  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Add_Real                                                 *
+ *      tmpl_CDouble_MultiplyBy_Real                                          *
  *  Purpose:                                                                  *
- *      Adds a real number to a complex one.                                  *
+ *      Multiplies two complex numbers:                                       *
  *                                                                            *
- *          w = z + x                                                         *
- *            = (a + ib) + x                                                  *
- *            = (a + x) + ib                                                  *
+ *          z * x = (a + ib) * x                                              *
+ *                = ax + ibx                                                  *
  *                                                                            *
  *  Arguments:                                                                *
+ *      z (tmpl_ComplexDouble * const):                                       *
+ *          A pointer to a complex number, the product is stored here.        *
  *      x (double):                                                           *
- *          The real number we wish to add to z.                              *
- *      z (tmpl_ComplexDouble):                                               *
- *          A complex number.                                                 *
+ *          A real number.                                                    *
  *  Output:                                                                   *
- *      w (tmpl_ComplexDouble):                                               *
- *          The sum of z and x.                                               *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Add the real-valued input to the real part of the complex number.     *
+ *      Multiplying by a real number is the same thing as scalar              *
+ *      multiplication in the plane. We scale the components of z and return. *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
- *      2.) A lot of the complex number code was originally written for       *
- *          rss_ringoccs, but has since migrated to libtmpl.                  *
- *          librssringoccs is also released under the GPLv3.                  *
+ *      2.) No checks for NULL pointers are made.                             *
+ *      3.) This provides a "*=" operator. It is faster to use:               *
+ *              tmpl_CDouble_MultiplyBy_Real(&z, x)                           *
+ *          instead of writing:                                               *
+ *              z = tmpl_CDouble_Multiply_Real(x, z).                         *
+ *          The improvement varies depending on compiler and architecture.    *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
  *      2.) Ahfors, L. (1979)                                                 *
@@ -60,59 +62,38 @@
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where the TMPL_INLINE_DECL macro is found.            *
+ *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 16, 2021                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2020/12/03: Ryan Maguire                                                  *
- *      Created function (Wellesley college for librssringoccs).              *
- *      Moved here from rss_ringoccs_complex_add.c.                           *
- *      Frozen for v1.3 of rss_ringoccs.                                      *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *      Made compatible with libtmpl.                                         *
- *      Soft freeze for alpha release of libtmpl.                             *
- *  2021/06/26: Ryan Maguire                                                  *
- *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
- *      No more changes unless something breaks.                              *
- *  2023/02/06: Ryan Maguire                                                  *
- *      Moved float and long double to their own files. Inlined routines.     *
- *      Updated and added comments.                                           *
- *  2023/07/08: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_add_real_double.c to use this file.  *
- *  2024/12/15: Ryan Maguire                                                  *
- *      Added references. Changed include to "tmpl_complex_double.h".         *
+ *  Date:       December 16, 2024                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ADD_REAL_DOUBLE_H
-#define TMPL_COMPLEX_ADD_REAL_DOUBLE_H
+#ifndef TMPL_COMPLEX_MULTIPLYBY_REAL_DOUBLE_H
+#define TMPL_COMPLEX_MULTIPLYBY_REAL_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, doubles and _Complex      *
- *  doubles can be added via x + z. With C89 we use structs to define complex *
- *  numbers. Since we can't add a double to a struct, we need a function      *
- *  for computing the sum of complex numbers with real ones.                  */
+/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
+ *  and double x, you can just do z * x. Structs cannot be multiplied so we   *
+ *  need a function for computing this.                                       */
 
-/*  Double precision complex addition where one variable is real.             */
+/*  Double precision complex multiplication. Equivalent of *= operation.      */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble tmpl_CDouble_Add_Real(double x, tmpl_ComplexDouble z)
+void
+tmpl_CDouble_MultiplyBy_Real(tmpl_ComplexDouble * const z, double x)
 {
-    /*  Add the value to the real part of the complex number and return.      */
-    z.dat[0] += x;
-    return z;
+    /*  Multiplying by a real number is just scalar multiplication.           */
+    z->dat[0] *= x;
+    z->dat[1] *= x;
 }
-/*  End of tmpl_CDouble_Add_Real.                                             */
+/*  End of tmpl_CDouble_MultiplyBy_Real.                                      */
 
 #endif
 /*  End of include guard.                                                     */

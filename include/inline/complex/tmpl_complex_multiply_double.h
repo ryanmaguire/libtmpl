@@ -16,43 +16,55 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_complex_addto_imag_double                       *
+ *                        tmpl_complex_multiply_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex addition.                        *
+ *      Contains the source code for complex multiplication.                  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_AddTo_Imag                                               *
+ *      tmpl_CDouble_Multiply                                                 *
  *  Purpose:                                                                  *
- *      Adds a complex number with an imaginary one:                          *
+ *      Multiplies two complex numbers:                                       *
  *                                                                            *
- *          z + iy = (a + ib) + iy                                            *
- *                 = a + i(b + y)                                             *
+ *          z * w = (a + ib) * (c + id)                                       *
+ *                = (ac + ibc + iad + i^2bd                                   *
+ *                = (ac - bd) + i(bc + ad)                                    *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexDouble * const):                                       *
- *          A pointer to a complex number. The sum is stored here.            *
- *      y (double):                                                           *
- *          An imaginary number.                                              *
+ *      z (tmpl_ComplexDouble):                                               *
+ *          A complex number.                                                 *
+ *      w (tmpl_ComplexDouble):                                               *
+ *          Another complex number.                                           *
  *  Output:                                                                   *
- *      None (void).                                                          *
+ *      prod (tmpl_ComplexDouble):                                            *
+ *          The product of z and w.                                           *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute the component-wise sum and store it in the first pointer.     *
+ *      Use the product formula, which is given by the distributive law and   *
+ *      the property that i^2 = -1.                                           *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
- *      2.) No checks for NULL pointers are made.                             *
- *      3.) A lot of the complex number code was originally written for       *
+ *      2.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
- *      4.) This provides a "+=" operator. It is faster to use:               *
- *              tmpl_CDouble_AddTo_Imag(&z, y)                                *
- *          instead of writing:                                               *
- *              z = tmpl_CDouble_Add_Imag(y, z).                              *
- *          The improvement varies depending on compiler and architecture.    *
+ *      3.) This function used to implement the Karastuba-Gauss algorithm:    *
+ *                                                                            *
+ *              z = a + ib                                                    *
+ *              w = c + id                                                    *
+ *                                                                            *
+ *              f = c * (a + b)                                               *
+ *              g = a * (d - c)                                               *
+ *              h = b * (c + d)                                               *
+ *                                                                            *
+ *              z * w = (f - h) + i(f + g)                                    *
+ *                                                                            *
+ *          This uses 3 multiplications, whereas the naive method uses 4.     *
+ *          On every processor tested, the naive method is faster. This makes *
+ *          sense since multiplication isn't too much slower than addition,   *
+ *          and hence the extra sums needed result in a slower computation.   *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
  *      2.) Ahfors, L. (1979)                                                 *
@@ -66,42 +78,52 @@
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 6, 2023                                              *
+ *  Date:       February 18, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2023/07/10: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_addto_imag_double.c to include this. *
+ *  2020/11/30: Ryan Maguire                                                  *
+ *      Created file (Wellesley College for librssringoccs).                  *
+ *  2021/02/16: Ryan Maguire                                                  *
+ *      Copied from rss_ringoccs.                                             *
+ *  2021/02/18: Ryan Maguire                                                  *
+ *      Edited file for use in libtmpl.                                       *
  *  2024/12/16: Ryan Maguire                                                  *
- *      Added references. Changed include to "tmpl_complex_double.h".         *
+ *      Added references. Removed Karatsuba-Gauss method.                     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ADDTO_IMAG_DOUBLE_H
-#define TMPL_COMPLEX_ADDTO_IMAG_DOUBLE_H
+#ifndef TMPL_COMPLEX_MULTIPLY_DOUBLE_H
+#define TMPL_COMPLEX_MULTIPLY_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
- *  and double y, you can just do z += _Complex_I*y. With C89 we use structs  *
- *  to define complex numbers. Structs cannot be added, so we need a function *
- *  for computing the sum.                                                    */
+/*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
+ *  and double _Complex z2, you can just do z1 * z2. Structs cannot be        *
+ *  multiplied so we need a function for computing this.                      */
 
-/*  Double precision complex addition. Equivalent of += operation.            */
+/*  Double precision complex multiplication.                                  */
 TMPL_INLINE_DECL
-void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble * const z, double y)
+tmpl_ComplexDouble
+tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
-    /*  Add the value to the imaginary part of the complex number.            */
-    z->dat[1] += y;
+    /*  Declare necessary variables. C89 requires declarations at the top.    */
+    tmpl_ComplexDouble prod;
+
+    /*  The product uses the distributive law in combination with the fact    *
+     *  that i^2 = -1. This gives us the following formulas:                  */
+    prod.dat[0] = z0.dat[0]*z1.dat[0] - z0.dat[1]*z1.dat[1];
+    prod.dat[1] = z0.dat[0]*z1.dat[1] + z0.dat[1]*z1.dat[0];
+    return prod;
 }
-/*  End of tmpl_CDouble_AddTo_Imag.                                           */
+/*  End of tmpl_CDouble_Multiply.                                             */
 
 #endif
 /*  End of include guard.                                                     */

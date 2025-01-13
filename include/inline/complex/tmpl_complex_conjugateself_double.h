@@ -16,74 +16,64 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_expid_double                         *
+ *                     tmpl_complex_conjugateself_double                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the f(t) = exp(i t) for real t.          *
+ *      Contains the source code for the complex conjugate.                   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Expid                                                    *
+ *      tmpl_CDouble_ConjugateSelf                                            *
  *  Purpose:                                                                  *
- *      Computes the point on the unit circle corresponding to a real angle t.*
+ *      Computes the complex conjugate of a complex number.                   *
  *                                                                            *
- *          f(t) = e^{i t}                                                    *
- *               = exp(i t)                                                   *
- *               = (cosd(t), sind(t))                                         *
+ *          conj(z) = conj(x + iy) = x - iy                                   *
  *                                                                            *
  *  Arguments:                                                                *
- *      t (double):                                                           *
- *          The angle of the point, in degrees.                               *
+ *      z (tmpl_ComplexDouble *):                                             *
+ *          A pointer to a complex number.                                    *
  *  Output:                                                                   *
- *      exp_i_t (tmpl_ComplexDouble):                                         *
- *          The point on the unit circle corresponding to t.                  *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Double_SinCosd:                                              *
- *              Computes sind(t) and cosd(t) simultaneously.                  *
+ *      None.                                                                 *
  *  Method:                                                                   *
- *      Compute x = cosd(t) and y = sind(t) and return z = x + iy.            *
+ *      Negate the imaginary part of z and return.                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       July 22, 2023                                                 *
+ *  Date:       February 07, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_conjugateself_double.c to use this.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_EXPID_DOUBLE_H
-#define TMPL_COMPLEX_EXPID_DOUBLE_H
+#ifndef TMPL_COMPLEX_CONJUGATESELF_DOUBLE_H
+#define TMPL_COMPLEX_CONJUGATESELF_DOUBLE_H
 
-/*  TMPL_INLINE_DECL found here.                                              */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing math functions.                                    */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
-
-/*  Computes the point on the unit circle with angle t from the real axis.    */
+/*  Double precision complex conjugate function.                              */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble tmpl_CDouble_Expid(double t)
+void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble *z)
 {
-    /*  Declare a variable for the output.                                    */
-    tmpl_ComplexDouble z;
-
-    /*  Use SinCosd to compute sind(t) and cosd(t), simultaneously, and store  *
-     *  the results in the imaginary and real part of z, respectively.        */
-    tmpl_Double_SinCosd(t, &z.dat[1], &z.dat[0]);
-    return z;
+    /*  The complex conjugate of x + iy is x - iy. Negate the imagary part.   */
+    z->dat[1] = -z->dat[1];
 }
-/*  End of tmpl_CDouble_Expid.                                                */
+/*  End of tmpl_CDouble_Conjugate.                                            */
 
 #endif
 /*  End of include guard.                                                     */

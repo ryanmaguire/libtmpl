@@ -16,88 +16,90 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_dist_double                          *
+ *                        tmpl_complex_argument_double                        *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the function f(z, w) = |z - w|.          *
+ *      Contains the source code for the complex argument.                    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Dist                                                     *
+ *      tmpl_CDouble_Argument                                                 *
  *  Purpose:                                                                  *
- *      Computes the distance between two complex numbers:                    *
+ *      Computes the argument of a complex number:                            *
  *                                                                            *
- *          dist(z, w) = dist(a + ib, c + id)                                 *
- *                     = sqrt((c-a)^2 + (d-b)^2)                              *
+ *          arg(z) =  arg(r * exp(i theta)) = theta                           *
+ *                                                                            *
+ *      Equivalently:                                                         *
+ *                                                                            *
+ *          arg(z) = arg(x + iy) = arctan(y, x)                               *
+ *                                                                            *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
- *      w (tmpl_ComplexDouble):                                               *
- *          Another complex number.                                           *
  *  Output:                                                                   *
- *      dist (double):                                                        *
- *          The distance between z and w.                                     *
- *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
- *          tmpl_Double_Hypot:                                                *
- *              Computes the magnitude of the vector (x, y).                  *
+ *      arg (double):                                                         *
+ *          The argument of z.                                                *
  *  Method:                                                                   *
- *      Treat the points as elements of the Euclidean plane and use           *
- *      the Pythagorean formula.                                              *
+ *      Extract the real and imaginary parts and return atan2(y, x).          *
+ *  Notes:                                                                    *
+ *      Because the atan2 function is used, there is a discontinuity along    *
+ *      the negative real axis. That is, the argument returns a real value    *
+ *      in the interval (-pi, pi] (+pi is inclusive).                         *
+ *                                                                            *
+ *      This file is a fork of the code I wrote for rss_rinoccs.              *
+ *      librssringoccs is also released under GPL3.                           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *          Header file containing the TMPL_INLINE_DECL macro.                *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2020/11/23: Ryan Maguire                                                  *
+ *  2020/11/30: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/12/23: Ryan Maguire                                                  *
- *      Frozen for v1.3 of rss_ringoccs.                                      *
+ *  2020/12/02 (Ryan Maguire):                                                *
+ *      Frozen for v1.3.                                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
+ *      Made compatible with the rest of libtmpl.                             *
  *      Soft freeze for alpha release of libtmpl.                             *
+ *  2021/06/26: Ryan Maguire                                                  *
+ *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
+ *      No more changes unless something breaks.                              *
  *  2023/02/06: Ryan Maguire                                                  *
- *      Changed algorithm to be safe, avoid overflow for large elements.      *
- *      Moved float and long double versions to their own files.              *
- *      Added inline support.                                                 *
- *  2023/07/13: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_dist_double.c to include this file.  *
+ *      Moved float and long double to their own files. Inlined routines.     *
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_argument_double.c to include this.   *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_DIST_DOUBLE_H
-#define TMPL_COMPLEX_DIST_DOUBLE_H
+#ifndef TMPL_COMPLEX_ARGUMENT_DOUBLE_H
+#define TMPL_COMPLEX_ARGUMENT_DOUBLE_H
 
-/*  TMPL_INLINE_DECL found here.                                              */
+/*  TMPL_INLINE_DECL macro found here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing the hypot function.                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the arctan2 function. Provided by tmpl_math.h.    */
+extern double tmpl_Double_Arctan2(double y, double x);
 
-/*  Double precision distance function for complex variables.                 */
+/*  Double precision complex argument function (carg equivalent).             */
 TMPL_INLINE_DECL
-double tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
+double tmpl_CDouble_Argument(tmpl_ComplexDouble z)
 {
-    /*  Compute the difference in both components and use Pythagoras.         */
-    const double dx = z0.dat[0] - z1.dat[0];
-    const double dy = z0.dat[1] - z1.dat[1];
-    return tmpl_Double_Hypot(dx, dy);
+    /*  Compute the argument using arctan and return.                         */
+    return tmpl_Double_Arctan2(z.dat[1], z.dat[0]);
 }
-/*  End of tmpl_CDouble_Dist.                                                 */
+/*  End of tmpl_CDouble_Argument.                                             */
 
 #endif
 /*  End of include guard.                                                     */

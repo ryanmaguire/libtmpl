@@ -16,108 +16,86 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_complex_add_double                           *
+ *                          tmpl_complex_dist_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex addition.                        *
+ *      Contains the source code for the function f(z, w) = |z - w|.          *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Add                                                      *
+ *      tmpl_CDouble_Dist                                                     *
  *  Purpose:                                                                  *
- *      Adds two complex numbers:                                             *
+ *      Computes the distance between two complex numbers:                    *
  *                                                                            *
- *          z + w = (a + ib) + (c + id)                                       *
- *                = (a + c) + i(b + d)                                        *
- *                                                                            *
+ *          dist(z, w) = dist(a + ib, c + id)                                 *
+ *                     = sqrt((c-a)^2 + (d-b)^2)                              *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
  *      w (tmpl_ComplexDouble):                                               *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      sum (tmpl_ComplexDouble):                                             *
- *          The sum of z and w.                                               *
+ *      dist (double):                                                        *
+ *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_math.h:                                                          *
+ *          tmpl_Double_Hypot:                                                *
+ *              Computes the magnitude of the vector (x, y).                  *
  *  Method:                                                                   *
- *      Sum the components and return.                                        *
- *  Notes:                                                                    *
- *      1.) No checks for NaN or infinity are made.                           *
- *      2.) A lot of the complex number code was originally written for       *
- *          rss_ringoccs, but has since migrated to libtmpl.                  *
- *          librssringoccs is also released under the GPLv3.                  *
- *  References:                                                               *
- *      1.) https://en.wikipedia.org/wiki/complex_number                      *
- *      2.) Ahfors, L. (1979)                                                 *
- *          "Complex Analysis, Third Edition"                                 *
- *          McGraw-Hill, International Series in Pure and Applied Mathematics *
- *          Chapter 1 "The Algebra of Complex Numbers"                        *
- *          Section 1 "Arithmetic Operations"                                 *
+ *      Treat the points as elements of the Euclidean plane and use           *
+ *      the Pythagorean formula.                                              *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Contains the TMPL_INLINE_DECL macro.                              *
+ *          Header file where TMPL_INLINE_DECL is found.                      *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
+ *  2020/11/23: Ryan Maguire                                                  *
  *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/12/02: Ryan Maguire                                                  *
+ *  2020/12/23: Ryan Maguire                                                  *
  *      Frozen for v1.3 of rss_ringoccs.                                      *
  *  2021/02/16: Ryan Maguire                                                  *
  *      Copied from rss_ringoccs.                                             *
- *      Edited to make compatibile with libtmpl.                              *
  *      Soft freeze for alpha release of libtmpl.                             *
- *  2021/05/11: Ryan Maguire                                                  *
- *      Hard freeze for alpha release of libtmpl. Reviewed code and comments. *
- *      No more changes unless something breaks.                              *
- *  2022/09/08: Ryan Maguire                                                  *
- *      Greatly simplified code. Added inline support.                        *
  *  2023/02/06: Ryan Maguire                                                  *
- *      Moved float and long double to their own files.                       *
- *  2023/07/06: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_add_double.c to include this file.   *
- *  2024/12/15: Ryan Maguire                                                  *
- *      Added references. Changed include to "tmpl_complex_double.h".         *
+ *      Changed algorithm to be safe, avoid overflow for large elements.      *
+ *      Moved float and long double versions to their own files.              *
+ *      Added inline support.                                                 *
+ *  2023/07/13: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_dist_double.c to include this file.  *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_ADD_DOUBLE_H
-#define TMPL_COMPLEX_ADD_DOUBLE_H
+#ifndef TMPL_COMPLEX_DIST_DOUBLE_H
+#define TMPL_COMPLEX_DIST_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z0  *
- *  and double _Complex z1, you can just do z0 + z1. With C89 we use structs  *
- *  to define complex numbers. Structs cannot be added, so we need a function *
- *  for computing the sum of two complex values.                              */
+/*  Tell the compiler about the hypot function.                               */
+extern double tmpl_Double_Hypot(double x, double y);
 
-/*  Double precision complex addition.                                        */
+/*  Double precision distance function for complex variables.                 */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble
-tmpl_CDouble_Add(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
+double tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexDouble sum;
-
-    /*  The sum of two complex numbers simply adds their components.          */
-    sum.dat[0] = z0.dat[0] + z1.dat[0];
-    sum.dat[1] = z0.dat[1] + z1.dat[1];
-    return sum;
+    /*  Compute the difference in both components and use Pythagoras.         */
+    const double dx = z0.dat[0] - z1.dat[0];
+    const double dy = z0.dat[1] - z1.dat[1];
+    return tmpl_Double_Hypot(dx, dy);
 }
-/*  End of tmpl_CDouble_Add.                                                  */
+/*  End of tmpl_CDouble_Dist.                                                 */
 
 #endif
 /*  End of include guard.                                                     */

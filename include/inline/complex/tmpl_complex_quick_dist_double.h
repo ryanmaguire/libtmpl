@@ -16,75 +16,71 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_complex_conjugate_double                        *
+ *                       tmpl_complex_quick_dist_double                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for the complex conjugate.                   *
+ *      Contains the source code for the function f(z,w) = |z - w|.           *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Conjugate                                                *
+ *      tmpl_CDouble_Quick_Dist                                               *
  *  Purpose:                                                                  *
- *      Computes the complex conjugate of a complex number.                   *
+ *      Computes the distance between two complex numbers:                    *
  *                                                                            *
- *          conj(z) = conj(x + iy) = x - iy                                   *
- *                                                                            *
+ *          dist(z, w) = dist(a + ib, c + id)                                 *
+ *                     = sqrt((c-a)^2 + (d-b)^2)                              *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
+ *      w (tmpl_ComplexDouble):                                               *
+ *          Another complex number.                                           *
  *  Output:                                                                   *
- *      conj_z (tmpl_ComplexDouble):                                          *
- *          The complex conjugate of z.                                       *
+ *      dist (double):                                                        *
+ *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
+ *          Computes the square root of a real number.                        *
  *  Method:                                                                   *
- *      Negate the imaginary part of z and return.                            *
+ *      Compute sqrt((c-a)^2 + (d-b)^2). The method is a bit faster than      *
+ *      calling the hypot function, which is what tmpl_CDouble_Dist does,     *
+ *      but may cause overflow or underflow because of the intermediate step  *
+ *      of computing (c-a)^2 + (d-b)^2.                                       *
  ******************************************************************************
- *                                DEPENDENCIES                                *
+ *                               DEPENDENCIES                                 *
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
- *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
+ *          Header file where TMPL_USE_INLINE is found.                       *
+ *  2.) tmpl_complex_double.h:                                                *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 16, 2020                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2020/12/02: Ryan Maguire                                                  *
- *      Frozen for v1.3 of rss_ringoccs.                                      *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *      Soft freeze for alpha release of libtmpl.                             *
- *  2023/02/06: Ryan Maguire                                                  *
- *      Moved float and long double to their own file. Added inline support.  *
- *  2023/07/10: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_conjugate_double.c to use this file. *
+ *  Date:       February 07, 2023                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_CONJUGATE_DOUBLE_H
-#define TMPL_COMPLEX_CONJUGATE_DOUBLE_H
+#ifndef TMPL_COMPLEX_QUICK_DIST_DOUBLE_H
+#define TMPL_COMPLEX_QUICK_DIST_DOUBLE_H
 
-/*  TMPL_INLINE_DECL macro found here.                                        */
+/*  TMPL_USE_INLINE found here.                                               */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  Double precision complex conjugate function (conj equivalent).            */
+/*  Tell the compiler about the square root function.                         */
+extern double tmpl_Double_Sqrt(double x);
+
+/*  Double precision distance function for complex variables.                 */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble tmpl_CDouble_Conjugate(tmpl_ComplexDouble z)
+double tmpl_CDouble_Quick_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 {
-    /*  The complex conjugate of x + iy is x - iy. Negate the imagary part.   */
-    z.dat[1] = -z.dat[1];
-    return z;
+    /*  Compute the difference in both components and use Pythagoras.         */
+    const double dx = z0.dat[0] - z1.dat[0];
+    const double dy = z0.dat[1] - z1.dat[1];
+    return tmpl_Double_Sqrt(dx*dx + dy*dy);
 }
-/*  End of tmpl_CDouble_Conjugate.                                            */
+/*  End of tmpl_CDouble_Quick_Dist.                                           */
 
 #endif
 /*  End of include guard.                                                     */

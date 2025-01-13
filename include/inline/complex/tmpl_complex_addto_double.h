@@ -16,39 +16,44 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_complex_multiply_imag_double                      *
+ *                         tmpl_complex_addto_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Contains the source code for complex multiplication.                  *
+ *      Contains the source code for complex addition.                        *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Multiply_Imag                                            *
+ *      tmpl_CDouble_AddTo                                                    *
  *  Purpose:                                                                  *
- *      Multiplies two complex numbers:                                       *
+ *      Adds two complex numbers:                                             *
  *                                                                            *
- *          z * iy = (a + ib) * iy                                            *
- *                 = -by + ayi                                                *
+ *          z + w = (a + ib) + (c + id)                                       *
+ *                = (a + c) + i(b + d)                                        *
  *                                                                            *
  *  Arguments:                                                                *
- *      y (double):                                                           *
- *          An imaginary number.                                              *
- *      z (tmpl_ComplexDouble):                                               *
- *          A complex number.                                                 *
+ *      z (tmpl_ComplexDouble * const):                                       *
+ *          A pointer to a complex number. The sum is stored here.            *
+ *      w (const tmpl_ComplexDouble * const):                                 *
+ *          Another complex number.                                           *
  *  Output:                                                                   *
- *      prod (tmpl_ComplexDouble):                                            *
- *          The product of z and iy.                                          *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the product formula, which is given by the distributive law and   *
- *      the property that i^2 = -1.                                           *
+ *      Compute the component-wise sum and store it in the first pointer.     *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
- *      2.) A lot of the complex number code was originally written for       *
+ *      2.) No checks for NULL pointers are made.                             *
+ *      3.) A lot of the complex number code was originally written for       *
  *          rss_ringoccs, but has since migrated to libtmpl.                  *
  *          librssringoccs is also released under the GPLv3.                  *
+ *      4.) This provides a "+=" operator. It is faster to use:               *
+ *              tmpl_CDouble_AddTo(&z, &w)                                    *
+ *          instead of writing:                                               *
+ *              z = tmpl_CDouble_Add(z, w).                                   *
+ *          Some benchmarks show this can up to 2x faster, depending on       *
+ *          compiler and hardware.                                            *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
  *      2.) Ahfors, L. (1979)                                                 *
@@ -62,48 +67,47 @@
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 18, 2021                                             *
+ *  Date:       September 8, 2022                                             *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2021/02/18: Ryan Maguire                                                  *
- *      Created file.                                                         *
- *  2024/12/16: Ryan Maguire                                                  *
- *      Added inline version. Moved float and long double to their own files. *
+ *  2023/02/06: Ryan Maguire                                                  *
+ *      Moved float and long double versions to their own files.              *
+ *  2023/07/08: Ryan Maguire                                                  *
+ *      Changed src/complex/tmpl_complex_addto_double.c to include this file. *
+ *  2024/12/15: Ryan Maguire                                                  *
+ *      Added references. Changed include to "tmpl_complex_double.h".         *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_MULTIPLY_IMAG_DOUBLE_H
-#define TMPL_COMPLEX_MULTIPLY_IMAG_DOUBLE_H
+#ifndef TMPL_COMPLEX_ADDTO_DOUBLE_H
+#define TMPL_COMPLEX_ADDTO_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
- *  and double y, you can just do z * _Complex_I*y. With C89 we use structs   *
- *  to define complex numbers. Structs cannot be multiplied, so we need a     *
- *  function for computing the product.                                       */
+/*  In C99, since _Complex is a built-in data type, given double _Complex z0  *
+ *  and double _Complex z1, you can just do z0 += z1. With C89 we use structs *
+ *  to define complex numbers. Structs cannot be added, so we need a function *
+ *  for computing the sum of two complex values.                              */
 
-/*  Double precision complex multiplication.                                  */
+/*  Double precision complex addition. Equivalent of += operation.            */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble
-tmpl_CDouble_Multiply_Imag(double y, tmpl_ComplexDouble z)
+void
+tmpl_CDouble_AddTo(tmpl_ComplexDouble * const z,
+                   const tmpl_ComplexDouble * const w)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexDouble prod;
-
-    /*  (a + ib) * yi = -by + ayi, compute and return.                        */
-    prod.dat[0] = -y * z.dat[1];
-    prod.dat[1] = y * z.dat[0];
-    return prod;
+    /*  Complex addition is done component-wise.                              */
+    z->dat[0] += w->dat[0];
+    z->dat[1] += w->dat[1];
 }
-/*  End of tmpl_CDouble_Multiply_Imag.                                        */
+/*  End of tmpl_CDouble_AddTo.                                                */
 
 #endif
 /*  End of include guard.                                                     */

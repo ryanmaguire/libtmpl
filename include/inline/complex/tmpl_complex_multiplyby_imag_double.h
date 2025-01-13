@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_complex_multiply_double                        *
+ *                     tmpl_complex_multiplyby_real_double                    *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Contains the source code for complex multiplication.                  *
@@ -24,47 +24,33 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_CDouble_Multiply                                                 *
+ *      tmpl_CDouble_MultiplyBy_Real                                          *
  *  Purpose:                                                                  *
  *      Multiplies two complex numbers:                                       *
  *                                                                            *
- *          z * w = (a + ib) * (c + id)                                       *
- *                = (ac + ibc + iad + i^2bd                                   *
- *                = (ac - bd) + i(bc + ad)                                    *
+ *          z * x = (a + ib) * x                                              *
+ *                = ax + ibx                                                  *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexDouble):                                               *
- *          A complex number.                                                 *
- *      w (tmpl_ComplexDouble):                                               *
- *          Another complex number.                                           *
+ *      z (tmpl_ComplexDouble * const):                                       *
+ *          A pointer to a complex number, the product is stored here.        *
+ *      x (double):                                                           *
+ *          A real number.                                                    *
  *  Output:                                                                   *
- *      prod (tmpl_ComplexDouble):                                            *
- *          The product of z and w.                                           *
+ *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Use the product formula, which is given by the distributive law and   *
- *      the property that i^2 = -1.                                           *
+ *      Multiplying by a real number is the same thing as scalar              *
+ *      multiplication in the plane. We scale the components of z and return. *
  *  Notes:                                                                    *
  *      1.) No checks for NaN or infinity are made.                           *
- *      2.) A lot of the complex number code was originally written for       *
- *          rss_ringoccs, but has since migrated to libtmpl.                  *
- *          librssringoccs is also released under the GPLv3.                  *
- *      3.) This function used to implement the Karastuba-Gauss algorithm:    *
- *                                                                            *
- *              z = a + ib                                                    *
- *              w = c + id                                                    *
- *                                                                            *
- *              f = c * (a + b)                                               *
- *              g = a * (d - c)                                               *
- *              h = b * (c + d)                                               *
- *                                                                            *
- *              z * w = (f - h) + i(f + g)                                    *
- *                                                                            *
- *          This uses 3 multiplications, whereas the naive method uses 4.     *
- *          On every processor tested, the naive method is faster. This makes *
- *          sense since multiplication isn't too much slower than addition,   *
- *          and hence the extra sums needed result in a slower computation.   *
+ *      2.) No checks for NULL pointers are made.                             *
+ *      3.) This provides a "*=" operator. It is faster to use:               *
+ *              tmpl_CDouble_MultiplyBy_Real(&z, x)                           *
+ *          instead of writing:                                               *
+ *              z = tmpl_CDouble_Multiply_Real(x, z).                         *
+ *          The improvement varies depending on compiler and architecture.    *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
  *      2.) Ahfors, L. (1979)                                                 *
@@ -78,52 +64,36 @@
  *  1.) tmpl_config.h:                                                        *
  *          Contains the TMPL_INLINE_DECL macro.                              *
  *  2.) tmpl_complex_double.h:                                                *
- *          Header where complex types are defined.                           *
+ *          Header providing double precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 18, 2021                                             *
- ******************************************************************************
- *                              Revision History                              *
- ******************************************************************************
- *  2020/11/30: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/02/16: Ryan Maguire                                                  *
- *      Copied from rss_ringoccs.                                             *
- *  2021/02/18: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *  2024/12/16: Ryan Maguire                                                  *
- *      Added references. Removed Karatsuba-Gauss method.                     *
+ *  Date:       December 16, 2024                                             *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPLEX_MULTIPLY_DOUBLE_H
-#define TMPL_COMPLEX_MULTIPLY_DOUBLE_H
+#ifndef TMPL_COMPLEX_MULTIPLYBY_IMAG_DOUBLE_H
+#define TMPL_COMPLEX_MULTIPLYBY_IMAG_DOUBLE_H
 
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
- *  and double _Complex z2, you can just do z1 * z2. Structs cannot be        *
- *  multiplied so we need a function for computing this.                      */
+/*  In C99, since _Complex is a built-in data type, given double _Complex z   *
+ *  and double x, you can just do z * x. Structs cannot be multiplied so we   *
+ *  need a function for computing this.                                       */
 
-/*  Double precision complex multiplication.                                  */
+/*  Double precision complex multiplication. Equivalent of *= operation.      */
 TMPL_INLINE_DECL
-tmpl_ComplexDouble
-tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
+void
+tmpl_CDouble_MultiplyBy_Imag(tmpl_ComplexDouble * const z, double y)
 {
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_ComplexDouble prod;
-
-    /*  The product uses the distributive law in combination with the fact    *
-     *  that i^2 = -1. This gives us the following formulas:                  */
-    prod.dat[0] = z0.dat[0]*z1.dat[0] - z0.dat[1]*z1.dat[1];
-    prod.dat[1] = z0.dat[0]*z1.dat[1] + z0.dat[1]*z1.dat[0];
-    return prod;
+    const double z_real = z->dat[0];
+    z->dat[0] = -z->dat[1] * y;
+    z->dat[1] = z_real * y;
 }
-/*  End of tmpl_CDouble_Multiply.                                             */
+/*  End of tmpl_CDouble_MultiplyBy_Imag.                                      */
 
 #endif
 /*  End of include guard.                                                     */
