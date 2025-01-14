@@ -39,87 +39,17 @@
  *                                  Typedefs                                  *
  ******************************************************************************/
 
-/*  Standard color struct for 24-bit colors using three color channels.       */
-typedef struct tmpl_RGB24_Def {
+/*  RGB structs without alpha compositing.                                    */
+#include <libtmpl/include/types/tmpl_rgb.h>
+#include <libtmpl/include/types/tmpl_rgb24.h>
+#include <libtmpl/include/types/tmpl_rgb30.h>
+#include <libtmpl/include/types/tmpl_rgb48.h>
 
-    /*  Unsigned is required to be at least 8 bits by the standard. It is     *
-     *  usually 8 bits exactly on nearly every computer imaginable. Use an    *
-     *  array with three unsigned chars representing "red", "green", and      *
-     *  "blue", in that order. The array ensures that the data is contiguous. */
-    unsigned char dat[3];
-} tmpl_RGB24;
-
-/*  Color struct for using 24-bit colors and alpha compositing.               */
-typedef struct tmpl_RGBA24_Def {
-
-    /*  Same idea as before, use an array with 3 unsigned chars for colors.   */
-    unsigned char dat[3];
-
-    /*  And a real number (should be between 0 and 1) for alpha compositing.  */
-    double alpha;
-} tmpl_RGBA24;
-
-/*  Color struct for 30-bit colors. Common in HDR images.                     */
-typedef struct tmpl_RGB30_Def {
-
-    /*  Unsigned int is required to be at least 16 bits long. We can create   *
-     *  a 30-bit color using a bit field with 3 10-bit integers. Note, the    *
-     *  compiler will almost surely pad the struct with two bits to create a  *
-     *  single 32-bit object, but that's fine.                                */
-    unsigned int red : 10;
-    unsigned int green : 10;
-    unsigned int blue : 10;
-} tmpl_RGB30;
-
-/*  Color struct for 30-bit colors with alpha compositing.                    */
-typedef struct tmpl_RGBA30_Def {
-
-    /*  Again, we mimic the previous struct but add an alpha parameter.       */
-    unsigned int red : 10;
-    unsigned int green : 10;
-    unsigned int blue : 10;
-
-    /*  Real number for alpha compositing (should be between 0 and 1).        */
-    double alpha;
-} tmpl_RGBA30;
-
-/*  Color struct for 48-bit colors in RGB format.                             */
-typedef struct tmpl_RGB48_Def {
-
-    /*  Unsigned short is required to be at least 16 bits wide. It is usually *
-     *  exactly this size on most computers. Use an array of three unsigned   *
-     *  shorts to represent the three colors.                                 */
-    unsigned short dat[3];
-} tmpl_RGB48;
-
-/*  Color struct for 48-bit colors with alpha compositing.                    */
-typedef struct tmpl_RGBA48_Def {
-
-    /*  Same idea as before, use an array of three unsigned shorts for colors.*/
-    unsigned short dat[3];
-
-    /*  Parameter for alpha compositing (real number between 0 and 1).        */
-    double alpha;
-} tmpl_RGBA48;
-
-/*  Color struct for "arbitrary" RGB color depth. In reality double has a     *
- *  52-bit mantissa, so this is a 156-bit color. There are 10^47 possible     *
- *  colors, far beyond the 10^14 colors possible with 48-bit colors, and      *
- *  much higher than the 10^7 colors present in standard 24-bit depths. So    *
- *  one may safely consider this "arbitrary" color depth.                     */
-typedef struct tmpl_RGB_Def {
-
-    /*  To make the data contiguous, use an array of three doubles.           */
-    double dat[3];
-} tmpl_RGB;
-
-/*  RGB color with alpha compositing.                                         */
-typedef struct tmpl_RGBA_Def {
-
-    /*  The alpha and color parameters are represented by the same type, a    *
-     *  double. Use an array with four doubles for all of the data.           */
-    double dat[4];
-} tmpl_RGBA;
+/*  RGB structs with alpha compositing.                                       */
+#include <libtmpl/include/types/tmpl_rgba.h>
+#include <libtmpl/include/types/tmpl_rgba24.h>
+#include <libtmpl/include/types/tmpl_rgba30.h>
+#include <libtmpl/include/types/tmpl_rgba48.h>
 
 /******************************************************************************
  *                             Predefined Colors                              *
