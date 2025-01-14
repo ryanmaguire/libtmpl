@@ -240,9 +240,9 @@
  *    Sign Exponent        Fraction                                           *
  *                                                                            *
  ******************************************************************************/
-#include <libtmpl/include/tmpl_ieee754_double.h>
-#include <libtmpl/include/tmpl_ieee754_float.h>
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Sanity check for all of the above code. The following macros should be    *
  *  defined. Abort compiling if not.                                          */
@@ -420,12 +420,6 @@
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
-
-/*  TODO:
- *      Remove this include.
- *      Files that use tmpl_math_constants.h should include that file.
- */
-#include <libtmpl/include/tmpl_math_constants.h>
 
 /*  Largest value such that exp(x) will not return infinity.                  */
 extern const float tmpl_Max_Float_Base_E;
@@ -1105,9 +1099,9 @@ extern long double tmpl_LDouble_Exp(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_double.h>
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_float.h>
-#include <libtmpl/include/math/tmpl_exp_pos_kernel_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_exp_pos_kernel_double.h>
+#include <libtmpl/include/inline/math/tmpl_exp_pos_kernel_float.h>
+#include <libtmpl/include/inline/math/tmpl_exp_pos_kernel_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1137,9 +1131,9 @@ extern long double tmpl_LDouble_Exp_Pos_Kernel(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_exp_neg_kernel_double.h>
-#include <libtmpl/include/math/tmpl_exp_neg_kernel_float.h>
-#include <libtmpl/include/math/tmpl_exp_neg_kernel_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_exp_neg_kernel_double.h>
+#include <libtmpl/include/inline/math/tmpl_exp_neg_kernel_float.h>
+#include <libtmpl/include/inline/math/tmpl_exp_neg_kernel_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1804,9 +1798,9 @@ extern long double tmpl_LDouble_Truncate(long double x);
  *      libtmpl/src/math/tmpl_abs_float.c                                     *
  *      libtmpl/src/math/tmpl_abs_double.c                                    *
  *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
- *      libtmpl/include/math/tmpl_abs_double.h (inline version)               *
- *      libtmpl/include/math/tmpl_abs_float.h (inline version)                *
- *      libtmpl/include/math/tmpl_abs_ldouble.h (inline version)              *
+ *      libtmpl/include/inline/math/tmpl_abs_double.h (inline version)        *
+ *      libtmpl/include/inline/math/tmpl_abs_float.h (inline version)         *
+ *      libtmpl/include/inline/math/tmpl_abs_ldouble.h (inline version)       *
  *  Examples:                                                                 *
  *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
  *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
@@ -1839,9 +1833,9 @@ extern long double tmpl_LDouble_Truncate(long double x);
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for absolute value functions are found here.               */
-#include <libtmpl/include/math/tmpl_abs_float.h>
-#include <libtmpl/include/math/tmpl_abs_double.h>
-#include <libtmpl/include/math/tmpl_abs_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_abs_float.h>
+#include <libtmpl/include/inline/math/tmpl_abs_double.h>
+#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -1876,9 +1870,9 @@ extern long double tmpl_LDouble_Abs(long double x);
 
 #if TMPL_USE_INLINE == 1
 
-#include <libtmpl/include/math/tmpl_clamp_float.h>
-#include <libtmpl/include/math/tmpl_clamp_double.h>
-#include <libtmpl/include/math/tmpl_clamp_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_clamp_float.h>
+#include <libtmpl/include/inline/math/tmpl_clamp_double.h>
+#include <libtmpl/include/inline/math/tmpl_clamp_ldouble.h>
 
 #else
 
@@ -1907,9 +1901,9 @@ tmpl_LDouble_Clamp(long double x, long double min, long double max);
 
 #if TMPL_USE_INLINE == 1
 
-#include <libtmpl/include/math/tmpl_unit_clamp_float.h>
-#include <libtmpl/include/math/tmpl_unit_clamp_double.h>
-#include <libtmpl/include/math/tmpl_unit_clamp_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_unit_clamp_float.h>
+#include <libtmpl/include/inline/math/tmpl_unit_clamp_double.h>
+#include <libtmpl/include/inline/math/tmpl_unit_clamp_ldouble.h>
 
 #else
 
@@ -1945,9 +1939,9 @@ extern long double tmpl_LDouble_Unit_Clamp(long double x);
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support to copysign found here.                                    */
-#include <libtmpl/include/math/tmpl_copysign_double.h>
-#include <libtmpl/include/math/tmpl_copysign_float.h>
-#include <libtmpl/include/math/tmpl_copysign_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_copysign_double.h>
+#include <libtmpl/include/inline/math/tmpl_copysign_float.h>
+#include <libtmpl/include/inline/math/tmpl_copysign_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
@@ -1995,9 +1989,9 @@ extern long double tmpl_LDouble_CosPi_Pade(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for dist functions found here.                             */
-#include <libtmpl/include/math/tmpl_dist_double.h>
-#include <libtmpl/include/math/tmpl_dist_float.h>
-#include <libtmpl/include/math/tmpl_dist_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_dist_double.h>
+#include <libtmpl/include/inline/math/tmpl_dist_float.h>
+#include <libtmpl/include/inline/math/tmpl_dist_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2024,7 +2018,7 @@ extern long double tmpl_LDouble_Dist(long double x, long double y);
  *  Notes:                                                                    *
  *      Float and long double equivalents are also provided.                  *
  *  Source Code:                                                              *
- *      libtmpl/include/math/                                                 *
+ *      libtmpl/include/inline/math/                                          *
  *          tmpl_is_inf_double.h                                              *
  *          tmpl_is_inf_float.h                                               *
  *          tmpl_is_inf_ldouble.h                                             *
@@ -2041,9 +2035,9 @@ extern long double tmpl_LDouble_Dist(long double x, long double y);
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for is_inf functions are found here.                       */
-#include <libtmpl/include/math/tmpl_is_inf_float.h>
-#include <libtmpl/include/math/tmpl_is_inf_double.h>
-#include <libtmpl/include/math/tmpl_is_inf_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_is_inf_float.h>
+#include <libtmpl/include/inline/math/tmpl_is_inf_double.h>
+#include <libtmpl/include/inline/math/tmpl_is_inf_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -2070,7 +2064,7 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
  *  NOTE:                                                                     *
  *      Float and long double equivalents are also provided.                  *
  *  Source Code:                                                              *
- *      libtmpl/include/math/                                                 *
+ *      libtmpl/include/inline/math/                                          *
  *          tmpl_is_nan_double.h                                              *
  *          tmpl_is_nan_float.h                                               *
  *          tmpl_is_nan_ldouble.h                                             *
@@ -2087,9 +2081,9 @@ extern tmpl_Bool tmpl_LDouble_Is_Inf(long double x);
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for is_nan functions are found here.                       */
-#include <libtmpl/include/math/tmpl_is_nan_float.h>
-#include <libtmpl/include/math/tmpl_is_nan_double.h>
-#include <libtmpl/include/math/tmpl_is_nan_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_is_nan_float.h>
+#include <libtmpl/include/inline/math/tmpl_is_nan_double.h>
+#include <libtmpl/include/inline/math/tmpl_is_nan_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -2123,9 +2117,9 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline support for these functions are found here.                        */
-#include <libtmpl/include/math/tmpl_is_nan_or_inf_float.h>
-#include <libtmpl/include/math/tmpl_is_nan_or_inf_double.h>
-#include <libtmpl/include/math/tmpl_is_nan_or_inf_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_is_nan_or_inf_float.h>
+#include <libtmpl/include/inline/math/tmpl_is_nan_or_inf_double.h>
+#include <libtmpl/include/inline/math/tmpl_is_nan_or_inf_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -2172,9 +2166,9 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
 #elif TMPL_USE_INLINE == 1
 
 /*  Inline support for positive difference functions are found here.          */
-#include <libtmpl/include/math/tmpl_positive_difference_float.h>
-#include <libtmpl/include/math/tmpl_positive_difference_double.h>
-#include <libtmpl/include/math/tmpl_positive_difference_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_positive_difference_float.h>
+#include <libtmpl/include/inline/math/tmpl_positive_difference_double.h>
+#include <libtmpl/include/inline/math/tmpl_positive_difference_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -2208,9 +2202,9 @@ tmpl_LDouble_Positive_Difference(long double x, long double y);
  *      or very small inputs, use tmpl_Double_Hypot.                          *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_quick_hypot_float.h>
-#include <libtmpl/include/math/tmpl_quick_hypot_double.h>
-#include <libtmpl/include/math/tmpl_quick_hypot_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_quick_hypot_float.h>
+#include <libtmpl/include/inline/math/tmpl_quick_hypot_double.h>
+#include <libtmpl/include/inline/math/tmpl_quick_hypot_ldouble.h>
 #else
 extern double tmpl_Double_Quick_Hypot(double x, double y);
 extern float tmpl_Float_Quick_Hypot(float x, float y);
@@ -2238,9 +2232,9 @@ extern long double tmpl_LDouble_Quick_Hypot(long double x, long double y);
  *      or very small inputs, use tmpl_Double_Hypot3.                         *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_quick_hypot3_float.h>
-#include <libtmpl/include/math/tmpl_quick_hypot3_double.h>
-#include <libtmpl/include/math/tmpl_quick_hypot3_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_quick_hypot3_float.h>
+#include <libtmpl/include/inline/math/tmpl_quick_hypot3_double.h>
+#include <libtmpl/include/inline/math/tmpl_quick_hypot3_ldouble.h>
 #else
 extern double tmpl_Double_Quick_Hypot3(double x, double y, double z);
 extern float tmpl_Float_Quick_Hypot3(float x, float y, float z);
