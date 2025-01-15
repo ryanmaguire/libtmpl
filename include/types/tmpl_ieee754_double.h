@@ -23,6 +23,11 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 12, 2024                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/01/13: Ryan Maguire                                                  *
+ *      Moved this typedef to the types directory.                            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -41,7 +46,7 @@
 
 /*  If TMPL_DOUBLE_ENDIANNESS is undefined, there is a problem with libtmpl.  *
  *  Abort compiling.                                                          */
-#error "tmpl_math.h: TMPL_DOUBLE_ENDIANNESS is undefined."
+#error "tmpl_ieee754_double.h: TMPL_DOUBLE_ENDIANNESS is undefined."
 
 /*  If TMPL_DOUBLE_ENDIANNESS is set to neither big nor little endian it is   *
  *  likely unknown. We will not use IEEE-754 features in this case.           */
@@ -97,9 +102,30 @@
 /*  Big-Endian 64-bit double.                                                 */
 #if TMPL_DOUBLE_ENDIANNESS == TMPL_BIG_ENDIAN
 
-/*  Same idea as the union used for float, but for a 64-bit double.           */
+/*  64-bit union for an IEEE-754 double precision floating point number with  *
+ *  big endianness. Found in MIPS, s390x, powerPC, and sparc architectures.   */
 typedef union tmpl_IEEE754_Double_Def {
+
+    /*  Struct for type-punning the components of a double.                   */
     struct {
+
+        /*  A 64-bit double has 1 bit for the sign, 11 bits for the exponent, *
+         *  and 52 bits for the mantissa. We use a bit field to represent     *
+         *  this. The C standard requires bit fields to support at least 16   *
+         *  bit words (which is the minimum possible size for unsigned int).  *
+         *  While most platforms use 32-bit unsigned int, for the sake of     *
+         *  portability, we use a maximum of 16 bits per bit-field. Functions *
+         *  that could benefit from the availability of 32-bit and 64-bit     *
+         *  unsigned integers use the tmpl_FloatInt64 data type, which is a   *
+         *  generalized version of the tmpl_IEEE754_Double struct.            *
+         *                                                                    *
+         *  It is crucial that the bits in this struct are not padded. If     *
+         *  padding occurs, we get a gibberish result and cannot perform type *
+         *  punning. To prevent padding, the order of the bits matters. We    *
+         *  split the 52-bit mantissa into 3 48-bit components and 1 4-bit    *
+         *  piece. The 4-bit part follows immediately after the 1-bit sign    *
+         *  and 11-bit exponent, meaning sign-expo-man0 form a 16-bit block.  *
+         *  On all compilers tested, such an ordering prevents padding.       */
         unsigned int sign : 1;
         unsigned int expo : 11;
         unsigned int man0 : 4;
@@ -107,16 +133,22 @@ typedef union tmpl_IEEE754_Double_Def {
         unsigned int man2 : 16;
         unsigned int man3 : 16;
     } bits;
+
+    /*  The double precision number the above bits represent.                 */
     double r;
 } tmpl_IEEE754_Double;
 
 /*  Little-Endian 64-bit double.                                              */
 #elif TMPL_DOUBLE_ENDIANNESS == TMPL_LITTLE_ENDIAN
 
-/*  Same idea as the 32-bit union, but for 64-bit double, and with little     *
- *  endianness. See the above comments for information on this data type.     */
+/*  64-bit union for an IEEE-754 double precision floating point number with  *
+ *  little endianness. Found in x86, arm64, mipsel, and sh4 architectures.    */
 typedef union tmpl_IEEE754_Double_Def {
+
+    /*  Struct for type-punning the components of a double.                   */
     struct {
+
+        /*  Same idea as with big endianness, only the order is reversed.     */
         unsigned int man3 : 16;
         unsigned int man2 : 16;
         unsigned int man1 : 16;
@@ -124,6 +156,8 @@ typedef union tmpl_IEEE754_Double_Def {
         unsigned int expo : 11;
         unsigned int sign : 1;
     } bits;
+
+    /*  The double precision number the above bits represent.                 */
     double r;
 } tmpl_IEEE754_Double;
 
