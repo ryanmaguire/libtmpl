@@ -23,13 +23,18 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 12, 2024                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/01/13: Ryan Maguire                                                  *
+ *      Moved this typedef to the types directory.                            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_IEEE754_FLOAT_H
-#define TMPL_IEEE754_FLOAT_H
+#ifndef TMPL_TYPES_IEEE754_FLOAT_H
+#define TMPL_TYPES_IEEE754_FLOAT_H
 
-/*  TMPL_DOUBLE_ENDIANNESS macro is provided here.                            */
+/*  TMPL_FLOAT_ENDIANNESS macro is provided here.                             */
 #include <libtmpl/include/tmpl_config.h>
 
 /******************************************************************************
@@ -41,7 +46,7 @@
 #if !defined(TMPL_FLOAT_ENDIANNESS)
 
 /*  If not, there is a problem with libtmpl. Abort compiling.                 */
-#error "tmpl_math.h: TMPL_FLOAT_ENDIANNESS is undefined."
+#error "tmpl_ieee754_float.h: TMPL_FLOAT_ENDIANNESS is undefined."
 
 /*  If TMPL_FLOAT_ENDIANNESS is neither big nor little endian it is likely    *
  *  unknown. We will not use IEEE-754 features in this case.                  */
@@ -98,14 +103,14 @@
 
 /*  To access the binary representation of a floating point number, we use    *
  *  unions. Unions allow us to have different data types share the same block *
- *  of memory. If we have a union of a floating point and an integer, and then*
- *  set the floating point part to some number, then when we try to access the*
- *  integer part it will already have its bits set (They'll be set by the     *
+ *  of memory. If we have a union of a floating point and an integer and then *
+ *  set the floating point part to some number, then when we access the       *
+ *  integer part it will already have its bits set (they'll be set by the     *
  *  floating point value). This is known as "type-punning." Note, the C       *
  *  standard says type-punning is undefined behavior. Indeed, it says you can *
  *  only access the member of a union that was most recently written to. In   *
- *  practice, most compilers support type punning and use it to implement the *
- *  IEEE-754 format of floating point arithmetic.                             */
+ *  practice, most compilers support type punning and this practice is very   *
+ *  common in implementations of libm, the C mathematical library.            */
 typedef union tmpl_IEEE754_Float_Def {
 
     /*  Use a bit-field for the binary representation of a float. A bit-field *
@@ -114,9 +119,17 @@ typedef union tmpl_IEEE754_Float_Def {
      *  for the exponent, and 2 variables adding up to 23 bits for the        *
      *  mantissa.                                                             */
     struct {
+
         /*  The notation x : n; means x will be a variable in the struct with *
          *  exactly n bits reserved. So unsigned int sign : 1; means the      *
-         *  variable "sign" will have exactly 1 bit reserved for it.          */
+         *  variable "sign" will have exactly 1 bit reserved for it. sign = 0 *
+         *  indicates a positive number, sign = 1 means negative.             *
+         *                                                                    *
+         *  Note, it is crucial that we avoid padding in the struct. If the   *
+         *  compiler pads additional bits, type punning will not work. To     *
+         *  avoid this, the order of the bits is crucial. By making man0 into *
+         *  a 7-bit object, the combination sign-expo-man0 creates a 16-bit   *
+         *  block. Using this ordering avoids padding on all compilers tested.*/
         unsigned int sign : 1;
         unsigned int expo : 8;
         unsigned int man0 : 7;

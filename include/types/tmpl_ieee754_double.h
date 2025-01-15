@@ -31,8 +31,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_IEEE754_DOUBLE_H
-#define TMPL_IEEE754_DOUBLE_H
+#ifndef TMPL_TYPES_IEEE754_DOUBLE_H
+#define TMPL_TYPES_IEEE754_DOUBLE_H
 
 /*  TMPL_DOUBLE_ENDIANNESS macro is provided here.                            */
 #include <libtmpl/include/tmpl_config.h>
