@@ -27,7 +27,7 @@
  *                              Revision History                              *
  ******************************************************************************
  *  2025/01/13: Ryan Maguire                                                  *
- *      Moved this typedef to the type directory.                             *
+ *      Moved this typedef to the types directory.                            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */

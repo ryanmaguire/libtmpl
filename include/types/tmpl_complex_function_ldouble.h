@@ -34,7 +34,7 @@
 #ifndef TMPL_TYPES_COMPLEX_FUNCTION_LDOUBLE_H
 #define TMPL_TYPES_COMPLEX_FUNCTION_LDOUBLE_H
 
-/*  Double precision complex numbers provided here.                           */
+/*  Long double precision complex numbers provided here.                      */
 #include "tmpl_complex_ldouble.h"
 
 /*  Function pointer for long double precision complex-valued functions.      */
