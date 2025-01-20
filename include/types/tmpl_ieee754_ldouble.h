@@ -23,11 +23,16 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 12, 2024                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/01/13: Ryan Maguire                                                  *
+ *      Moved this typedef to the types directory.                            *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_IEEE754_LDOUBLE_H
-#define TMPL_IEEE754_LDOUBLE_H
+#ifndef TMPL_TYPES_IEEE754_LDOUBLE_H
+#define TMPL_TYPES_IEEE754_LDOUBLE_H
 
 /*  TMPL_LDOUBLE_ENDIANNESS and TMPL_LDOUBLE_TYPE provided here.              */
 #include <libtmpl/include/tmpl_config.h>
@@ -36,20 +41,37 @@
  *                        Long Double Macros and Unions                       *
  ******************************************************************************/
 
-/*  Same thing for long double. Long double is not as standardized as float   *
+/*  Sanity check for long double. Long double is not as standardized as float *
  *  and double and there are several ways to implement it. This includes      *
  *  64-bit, 80-bit, 96-bit, and 128-bit implementations, and with big or      *
  *  little endianness. The macro TMPL_LDOUBLE_ENDIANNESS contains this        *
  *  information.                                                              */
-#if !defined(TMPL_LDOUBLE_ENDIANNESS) || !defined(TMPL_LDOUBLE_TYPE)
+#if !defined(TMPL_LDOUBLE_ENDIANNESS)
 
 /*  If TMPL_LDOUBLE_ENDIANNESS is undefined, there is a problem with libtmpl. *
  *  Abort compiling.                                                          */
-#error "tmpl_math.h: TMPL_LDOUBLE_ENDIANNESS / TMPL_LDOUBLE_TYPE undefined."
+#error "tmpl_ieee754_ldouble.h: TMPL_LDOUBLE_ENDIANNESS is undefined."
+
+#endif
+/*  End of sanity check, #if !defined(TMPL_LDOUBLE_ENDIANNESS).               */
+
+/*  The TMPL_LDOUBLE_TYPE groups the types from TMPL_LDOUBLE_ENDIANNESS, but  *
+ *  does not distinguish endianness. For example 128-bit quadruple big-endian *
+ *  and 128-bit quadruple little-endian will both be given by                 *
+ *  TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT, where TMPL_LDOUBLE_ENDIANNESS  *
+ *  will have different values for these two types. This macro should have    *
+ *  been created when building libtmpl. Check for this.                       */
+#if !defined(TMPL_LDOUBLE_TYPE)
+
+/*  If TMPL_LDOUBLE_TYPE is undefined, there is a problem with libtmpl. Abort.*/
+#error "tmpl_ieee754_ldouble.h: TMPL_LDOUBLE_TYPE is undefined."
+
+#endif
+/*  End of sanity check, #if !defined(TMPL_LDOUBLE_TYPE).                     */
 
 /*  If TMPL_LDOUBLE_ENDIANNESS is not set to double, extended, quadruple, or  *
  *  double-double, we do not have IEEE-754 support and can not use it.        */
-#elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
+#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
 
 /*  No support for IEEE-754 long double. Set this to zero.                    */
 #define TMPL_HAS_IEEE754_LDOUBLE 0
@@ -81,7 +103,7 @@
 #define TMPL_LDOUBLE_MANTISSA_LENGTH (52)
 #define TMPL_LDOUBLE_MANTISSA_ULENGTH (52U)
 
-/*  The value 2**52, used to normalize subnormal/denormal values.             */
+/*  The value 2**52, used to normalize subnormal / denormal values.           */
 #define TMPL_LDOUBLE_NORMALIZE (4.503599627370496E+15L)
 
 /*  Macro for determining if a word is NaN or Infinity.                       */
@@ -116,7 +138,7 @@
 #define TMPL_LDOUBLE_MANTISSA_LENGTH (112)
 #define TMPL_LDOUBLE_MANTISSA_ULENGTH (112U)
 
-/*  The value 2**112, used to normalize subnormal/denormal values.            */
+/*  The value 2**112, used to normalize subnormal / denormal values.          */
 #define TMPL_LDOUBLE_NORMALIZE (5.192296858534827628530496329220096E+33L)
 
 /*  Macro for determining if a word is NaN or Infinity.                       */
@@ -138,7 +160,7 @@
 #define TMPL_LDOUBLE_MANTISSA_LENGTH (63)
 #define TMPL_LDOUBLE_MANTISSA_ULENGTH (63U)
 
-/*  The value 2**63, used to normalize subnormal/denormal values.             */
+/*  The value 2**63, used to normalize subnormal / denormal values.           */
 #define TMPL_LDOUBLE_NORMALIZE (9.223372036854775808E+18L)
 
 /*  Macro for determining if a word is NaN or Infinity.                       */
@@ -176,7 +198,7 @@
 /*  Little-endian 64-bit long double. Same idea as 64-bit double.             */
 #if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN
 
-/*  Same struct for 64-bit double, little-endian.                             */
+/*  Same union for 64-bit double, little-endian.                              */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
@@ -192,7 +214,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Big-endian 64-bit long double. Uses the same struct as big-endian double. */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
 
-/*  Same struct for 64-bit double, big-endian.                                */
+/*  Same union for 64-bit double, big-endian.                                 */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int sign : 1;
@@ -208,7 +230,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Little-endian, 80-bit extended precision with 16 bits of padding.         */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN
 
-/*  80-bit extended precision struct with 16 bits of padding, 96 bits total.  */
+/*  80-bit extended precision union with 16 bits of padding, 96 bits total.   */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int man3 : 16;
@@ -279,7 +301,7 @@ typedef union tmpl_IEEE754_LDouble_Def {
 /*  Big-endian, 80-bit extended precision with 48 bits of padding.            */
 #elif TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
 
-/*  80-bit extended precision struct with 48 bits of padding, 128 bits total. */
+/*  80-bit extended precision union with 48 bits of padding, 128 bits total.  */
 typedef union tmpl_IEEE754_LDouble_Def {
     struct {
         unsigned int pad0 : 16;
@@ -288,10 +310,10 @@ typedef union tmpl_IEEE754_LDouble_Def {
         unsigned int expo : 15;
         unsigned int pad2 : 16;
         unsigned int intr : 1;
-        unsigned int man3 : 15;
-        unsigned int man2 : 16;
+        unsigned int man0 : 15;
         unsigned int man1 : 16;
-        unsigned int man0 : 16;
+        unsigned int man2 : 16;
+        unsigned int man3 : 16;
     } bits;
 
     /*  Long double the above struct represents.                              */
