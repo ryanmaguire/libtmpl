@@ -78,7 +78,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
 /*  In C99, since _Complex is a built-in type, given long double _Complex z   *
  *  and long double x, you can just do z*x. Structs cannot be multiplied so   *

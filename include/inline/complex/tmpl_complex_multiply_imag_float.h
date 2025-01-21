@@ -83,7 +83,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  In C99, since _Complex is a built-in data type, given float _Complex z    *
  *  and float y, you can just do z * _Complex_I*y. With C89 we use structs    *

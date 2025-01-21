@@ -53,10 +53,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header where complex types are defined.                           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 18, 2021                                             *
@@ -82,11 +80,12 @@
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file with math functions.                                          */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
-/*  Where the prototypes are declared and where complex types are defined.    */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the SinCos function.                              */
+extern void
+tmpl_LDouble_SinCos(long double t, long double *sin_t, long double *cos_t);
 
 /*  Create a long double precision complex number from its polar coordinates. */
 TMPL_INLINE_DECL

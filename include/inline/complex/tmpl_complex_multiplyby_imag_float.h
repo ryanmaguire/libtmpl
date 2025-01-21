@@ -78,7 +78,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  In C99, since _Complex is a built-in data type, given float _Complex z    *
  *  and float x, you can just do z * x. Structs cannot be multiplied so we    *
