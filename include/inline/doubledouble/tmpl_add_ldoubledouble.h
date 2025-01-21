@@ -120,9 +120,9 @@
 /*  2Sum and Fast2Sum are small enough that they can be inlined.              */
 #if TMPL_USE_INLINE == 1
 
-/*  Both functions are provided in the include/two_sum/ directory.            */
-#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_ldouble.h>
+/*  Both functions are provided in the include/inline/two_sum/ directory.     */
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_ldouble.h>
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

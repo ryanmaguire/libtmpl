@@ -97,8 +97,8 @@
 
 #if TMPL_USE_INLINE == 1
 
-#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
 
 #else
 

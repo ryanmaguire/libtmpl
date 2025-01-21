@@ -6,7 +6,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_ldouble.h>
 #else
 extern void
 tmpl_LDouble_Two_Sum(long double x,

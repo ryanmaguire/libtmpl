@@ -27,8 +27,8 @@
 /*  2Prod and Fast2Sum are short enough that they can be inlined.             */
 #if TMPL_USE_INLINE == 1
 
-#include <libtmpl/include/two_prod/tmpl_two_prod_double.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
+#include <libtmpl/include/inline/two_prod/tmpl_two_prod_double.h>
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
