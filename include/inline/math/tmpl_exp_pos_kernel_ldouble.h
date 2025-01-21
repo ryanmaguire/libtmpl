@@ -86,7 +86,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Location of the TMPL_HAS_IEEE754_LDOUBLE macro and IEEE data type.        */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Lookup table for exp.                                                     */
 extern const long double tmpl_ldouble_exp_table[179];

@@ -83,7 +83,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Coefficients for the numerator of the Remez polynomial.                   */
 #define A0 (+9.9999999998109338754067767533573865627674687051644E-01F)

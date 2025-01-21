@@ -62,7 +62,7 @@
 #include <libtmpl/include/tmpl_bool.h>
 
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Check for IEEE-754 support. This is the easiest way to work with nan/inf. */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

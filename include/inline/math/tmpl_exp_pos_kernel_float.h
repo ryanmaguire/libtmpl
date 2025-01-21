@@ -83,7 +83,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Lookup table for exp.                                                     */
 extern const float tmpl_float_exp_table[179];

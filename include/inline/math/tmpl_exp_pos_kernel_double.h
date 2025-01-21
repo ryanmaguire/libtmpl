@@ -89,7 +89,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Location of the TMPL_HAS_IEEE754_DOUBLE macro and IEEE data type.         */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Coefficients for the Remez polynomial.                                    */
 #define A0 (+1.0000000000000000098676804486032581931971677454305E+00)
@@ -114,7 +114,7 @@
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  Function for converting from int to float.                                */
-#include <libtmpl/include/floatint/tmpl_uint64_to_double.h>
+#include <libtmpl/include/inline/floatint/tmpl_uint64_to_double.h>
 
 /*  Lookup table for the exponential function.                                */
 extern const tmpl_UInt64 tmpl_double_exp_table[256];

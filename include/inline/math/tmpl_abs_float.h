@@ -120,7 +120,7 @@
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Location of the TMPL_HAS_IEEE754_FLOAT macro and IEEE data type.          */
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_FLOAT == 1
