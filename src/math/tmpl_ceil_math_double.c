@@ -190,7 +190,7 @@ double tmpl_Double_Ceil(double x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_Double data type provided here.                              */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Function for computing the ceiling of a double (ceil equivalent).         */
 double tmpl_Double_Ceil(double x)
