@@ -86,7 +86,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_ldouble.h>
+#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  Computes the cross product of vectors at long double precision.           */
 TMPL_INLINE_DECL

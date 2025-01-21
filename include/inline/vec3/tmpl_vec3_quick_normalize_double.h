@@ -68,7 +68,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef given here.                                          */
-#include <libtmpl/include/tmpl_vec3_double.h>
+#include <libtmpl/include/types/tmpl_vec3_double.h>
 
 /*  Quick hypot3 function provided here.                                      */
 #include <libtmpl/include/tmpl_math.h>

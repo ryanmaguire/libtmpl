@@ -73,7 +73,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_float.h>
+#include <libtmpl/include/types/tmpl_vec3_float.h>
 
 /*  Function for computing the dot product of 2 three-vectors.                */
 TMPL_INLINE_DECL

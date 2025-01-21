@@ -61,7 +61,7 @@
 #define TMPL_VEC3_Y_FLOAT_H
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_float.h>
+#include <libtmpl/include/types/tmpl_vec3_float.h>
 
 /*  Function for returning the y component of a three dimensional vector.     */
 TMPL_INLINE_DECL

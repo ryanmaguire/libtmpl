@@ -49,10 +49,8 @@
  *          Location of the TMPL_INLINE_DECL macro.                           *
  *  2.) tmpl_vec3_ldouble.h:                                                  *
  *          Header containing ThreeVector typedef.                            *
- *  3.) tmpl_math.h:                                                          *
- *          Header file providing the absolute value function.                *
- *  4.) tmpl_minmax.h:                                                        *
- *          Provides helper macros for computing min and max.                 *
+ *  3.) tmpl_max.h:                                                           *
+ *          Provides a helper macro for computing the max of 3 real numbers.  *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       October 5, 2022                                               *
@@ -71,13 +69,25 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_ldouble.h>
-
-/*  Absolute value function found here.                                       */
-#include <libtmpl/include/tmpl_math.h>
+#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  TMPL_MAX3 helper macro found here.                                        */
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_max.h>
+
+/*  The absolute value function is small enough to inline. Check for this.    */
+#if TMPL_USE_INLINE == 1
+
+/*  The function is found in the math inline directory.                       */
+#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, just tell the compiler about the function.                     */
+extern long double tmpl_LDouble_Abs(long double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Function for computing the L-Infinity norm of a 3D vector.                */
 TMPL_INLINE_DECL

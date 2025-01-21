@@ -60,7 +60,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  ThreeVector typedef given here.                                           */
-#include <libtmpl/include/tmpl_vec3_double.h>
+#include <libtmpl/include/types/tmpl_vec3_double.h>
 
 /*  Function for computing the square of the Euclidean norm.                  */
 TMPL_INLINE_DECL

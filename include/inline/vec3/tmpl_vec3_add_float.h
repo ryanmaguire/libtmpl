@@ -83,7 +83,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_float.h>
+#include <libtmpl/include/types/tmpl_vec3_float.h>
 
 /*  Function for adding 2 three-dimensional vectors.                          */
 TMPL_INLINE_DECL

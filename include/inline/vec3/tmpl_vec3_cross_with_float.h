@@ -75,7 +75,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_float.h>
+#include <libtmpl/include/types/tmpl_vec3_float.h>
 
 /*  Function for computing the cross product of vectors at single precision.  */
 TMPL_INLINE_DECL

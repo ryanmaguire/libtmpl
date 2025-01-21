@@ -59,7 +59,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_ldouble.h>
+#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  Function for normalizing a three dimensional vector.                      */
 TMPL_INLINE_DECL

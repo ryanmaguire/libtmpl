@@ -70,7 +70,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Three-vector typedef found here.                                          */
-#include <libtmpl/include/tmpl_vec3_ldouble.h>
+#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  Function for returning the point (x, y, z) given three numbers x, y, z.   */
 TMPL_INLINE_DECL
