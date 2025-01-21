@@ -36,7 +36,7 @@
 #include <libtmpl/include/tmpl_optics.h>
 
 /*  Implemented in include/optics/tmpl_optical_transmittance_deg_ldouble.h.   */
-#include "../../include/optics/tmpl_optical_transmittance_deg_ldouble.h"
+#include "../../include/inline/optics/tmpl_optical_transmittance_deg_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

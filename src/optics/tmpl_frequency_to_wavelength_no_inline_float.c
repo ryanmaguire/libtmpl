@@ -36,7 +36,7 @@
 #include <libtmpl/include/tmpl_optics.h>
 
 /*  Implemented in include/optics/tmpl_frequency_to_wavelength_float.h.       */
-#include "../../include/optics/tmpl_frequency_to_wavelength_float.h"
+#include "../../include/inline/optics/tmpl_frequency_to_wavelength_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
