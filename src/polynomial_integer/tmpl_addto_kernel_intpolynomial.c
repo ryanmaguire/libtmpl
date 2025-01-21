@@ -77,13 +77,11 @@
  *          Standard library file with realloc and size_t.                    *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  3.) tmpl_minmax.h:                                                        *
- *          Provides the TMPL_MAX macro.                                      *
- *  4.) tmpl_string.h:                                                        *
+ *  3.) tmpl_string.h:                                                        *
  *          Header file where tmpl_String_Duplicate is declared.              *
- *  5.) tmpl_polynomial_integer.h:                                            *
+ *  4.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
- *  6.) string.h (optional):                                                  *
+ *  5.) string.h (optional):                                                  *
  *          Standard library file with the memcpy function.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -103,9 +101,6 @@
 
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
-
-/*  TMPL_MAX macro provided here.                                             */
-#include <libtmpl/include/tmpl_minmax.h>
 
 /*  tmpl_String_Duplicate function provided here.                             */
 #include <libtmpl/include/tmpl_string.h>

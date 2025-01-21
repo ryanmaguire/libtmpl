@@ -118,7 +118,7 @@ tmpl_IntPolynomial_Subtract(const tmpl_IntPolynomial *P,
     if (!P || !Q)
     {
         diff->error_occurred = tmpl_True;
-        diff->error_message = tmpl_strdup(
+        diff->error_message = tmpl_String_Duplicate(
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_Subtract\n\n"
             "Input polynomial is NULL. Aborting.\n\n"
@@ -130,7 +130,7 @@ tmpl_IntPolynomial_Subtract(const tmpl_IntPolynomial *P,
     if (P->error_occurred || Q->error_occurred)
     {
         diff->error_occurred = tmpl_True;
-        diff->error_message = tmpl_strdup(
+        diff->error_message = tmpl_String_Duplicate(
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_Subtract\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"

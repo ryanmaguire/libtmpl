@@ -89,7 +89,7 @@
 /*  realloc found here.                                                       */
 #include <stdlib.h>
 
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_max.h>
 
 /*  TMPL_USE_MEMCPY macro is here.                                            */
 #include <libtmpl/include/tmpl_config.h>
@@ -124,7 +124,7 @@ tmpl_IntPolynomial_Subtract_Kernel(const tmpl_IntPolynomial *P,
         if (!tmp)
         {
             diff->error_occurred = tmpl_True;
-            diff->error_message = tmpl_strdup(
+            diff->error_message = tmpl_String_Duplicate(
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Subtract_Kernel\n\n"
                 "realloc failed. Aborting.\n\n"
