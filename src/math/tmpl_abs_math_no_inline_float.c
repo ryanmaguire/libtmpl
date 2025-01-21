@@ -35,7 +35,7 @@
 extern float tmpl_Float_Abs(float x);
 
 /*  Implemented in include/math/tmpl_abs_float.h.                             */
-#include "../../include/math/tmpl_abs_float.h"
+#include "../../include/inline/math/tmpl_abs_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1.         */

@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Implemented in include/math/tmpl_clamp_double.h.                          */
-#include "../../include/math/tmpl_clamp_double.h"
+#include "../../include/inline/math/tmpl_clamp_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

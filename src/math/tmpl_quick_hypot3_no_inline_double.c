@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Implemented in include/math/tmpl_quick_hypot3_float.h.                    */
-#include "../../include/math/tmpl_quick_hypot3_float.h"
+#include "../../include/inline/math/tmpl_quick_hypot3_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

@@ -160,7 +160,7 @@
  *          Provides fixed-width integer data types.                          *
  *  3.) tmpl_ieee754_float.h:                                                 *
  *          Contains the tmpl_IEEE754_Float union used for type punning.      *
- *  4.) tmpl_floatint.h:                                                      *
+ *  4.) tmpl_floatint_float.h:                                                *
  *          Contains the tmpl_IEEE754_FloatInt32 union for type punning.      *
  *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
@@ -192,7 +192,7 @@
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatInt32 data type provided here.                          */
-#include <libtmpl/include/tmpl_floatint.h>
+#include <libtmpl/include/types/tmpl_floatint_float.h>
 
 /*  Function for computing the truncation of a float (truncf equivalent).     */
 float tmpl_Float_Truncate(float x)

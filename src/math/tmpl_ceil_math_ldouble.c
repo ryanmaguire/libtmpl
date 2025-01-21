@@ -84,7 +84,7 @@
  *          Provides fixed-width integer data types.                          *
  *  3.) tmpl_ieee754_ldouble.h:                                               *
  *          Contains the tmpl_IEEE754_LDouble union used for type punning.    *
- *  4.) tmpl_floatint.h:                                                      *
+ *  4.) tmpl_floatint_ldouble.h:                                              *
  *          Contains tmpl_IEEE754_FloatIntLongDouble for type punning.        *
  *  5.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
@@ -119,7 +119,7 @@
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatIntLongDouble data type provided here.                  */
-#include <libtmpl/include/tmpl_floatint.h>
+#include <libtmpl/include/types/tmpl_floatint_ldouble.h>
 
 /*  Function for computing the ceil of a double (ceill equivalent).           */
 long double tmpl_LDouble_Ceil(long double x)
@@ -320,7 +320,7 @@ TMPL_LDOUBLE_CEIL_FINISH:
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatIntLongDouble data type provided here.                  */
-#include <libtmpl/include/tmpl_floatint.h>
+#include <libtmpl/include/types/tmpl_floatint_ldouble.h>
 
 /*  Function for computing the ceil of a double (ceill equivalent).           */
 long double tmpl_LDouble_Ceil(long double x)
@@ -632,7 +632,7 @@ long double tmpl_LDouble_Ceil(long double x)
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatIntLongDouble data type provided here.                  */
-#include <libtmpl/include/tmpl_floatint.h>
+#include <libtmpl/include/types/tmpl_floatint_ldouble.h>
 
 /*  Function for computing the ceil of a long double (ceill equivalent).      */
 long double tmpl_LDouble_Ceil(long double x)

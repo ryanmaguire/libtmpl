@@ -36,7 +36,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Implemented in include/math/tmpl_exp_neg_kernel_float.h. Include this.    */
-#include "../../include/math/tmpl_exp_neg_kernel_float.h"
+#include "../../include/inline/math/tmpl_exp_neg_kernel_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

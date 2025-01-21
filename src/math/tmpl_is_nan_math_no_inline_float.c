@@ -36,7 +36,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Implemented in include/math/tmpl_is_nan_float.h.                          */
-#include "../../include/math/tmpl_is_nan_float.h"
+#include "../../include/inline/math/tmpl_is_nan_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1 && TMPL_USE_MATH_ALGORITHMS == 1.         */
