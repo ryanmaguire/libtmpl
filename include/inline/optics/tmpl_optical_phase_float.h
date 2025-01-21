@@ -63,7 +63,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Definition of complex numbers provided here.                              */
-#include <libtmpl/include/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
 /*  The complex argument is computed with the Arctan2 function.               */
 extern float tmpl_Float_Arctan2(float y, float x);

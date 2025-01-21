@@ -66,13 +66,13 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex numbers provided here.                                            */
-#include <libtmpl/include/tmpl_complex_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
 /*  The polar function is inlined. Check for inline support.                  */
 #if TMPL_USE_INLINE == 1
 
 /*  Routine is found here.                                                    */
-#include <libtmpl/include/complex/tmpl_complex_polar_ldouble.h>
+#include <libtmpl/include/inline/complex/tmpl_complex_polar_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

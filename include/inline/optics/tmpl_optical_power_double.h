@@ -63,13 +63,13 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Definition of complex numbers provided here.                              */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
 /*  The complex abs square function is inlined. Check for inline support.     */
 #if TMPL_USE_INLINE == 1
 
 /*  Routine is found here.                                                    */
-#include <libtmpl/include/complex/tmpl_complex_abs_squared_double.h>
+#include <libtmpl/include/inline/complex/tmpl_complex_abs_squared_double.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
