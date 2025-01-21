@@ -1,5 +1,4 @@
-
-#include <libtmpl/include/tmpl_real_function_types.h>
+#include <libtmpl/include/types/tmpl_function_double.h>
 #include <libtmpl/include/tmpl_void_pointer.h>
 #include <stddef.h>
 

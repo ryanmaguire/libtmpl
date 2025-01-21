@@ -1,6 +1,5 @@
-
-#include <libtmpl/include/tmpl_complex_float.h>
-#include <libtmpl/include/tmpl_complex_functional_types.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_functional_float.h>
 #include <libtmpl/include/tmpl_void_pointer.h>
 #include <stddef.h>
 
