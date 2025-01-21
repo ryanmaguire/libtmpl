@@ -84,7 +84,7 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_compat_cast.h:                                                   *
+ *  1.) tmpl_cast.h:                                                          *
  *          Header file providing helper macros for casting in C vs. C++.     *
  *  2.) tmpl_orthogonal_polynomial_real.h:                                    *
  *          Header file with the functions prototype.                         *
@@ -96,7 +96,7 @@
  ******************************************************************************/
 
 /*  Helper macro providing casting for C vs. C++ styles.                      */
-#include <libtmpl/include/tmpl_compat_cast.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Prototypes for these functions declared here.                             */
 #include <libtmpl/include/tmpl_orthogonal_polynomial_real.h>
