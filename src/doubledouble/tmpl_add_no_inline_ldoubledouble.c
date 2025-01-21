@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_doubledouble.h>
 
 /*  Implemented in include/doubledouble/tmpl_add_ldoubledouble.h.             */
-#include "../../include/doubledouble/tmpl_add_ldoubledouble.h"
+#include "../../include/inline/doubledouble/tmpl_add_ldoubledouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
