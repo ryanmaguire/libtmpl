@@ -131,7 +131,7 @@ double tmpl_Double_CosPi(double x)
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Computes cos(pi x) at double precision.                                   */
-double tmpl_Double_SCosPi(double x)
+double tmpl_Double_CosPi(double x)
 {
     double arg, sgn_x, cx, cdx, sx, sdx, dx;
     unsigned int ind;
