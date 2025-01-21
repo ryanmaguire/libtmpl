@@ -9,7 +9,8 @@
 #include <stdlib.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_ppm.h>
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_max.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 
 /*  Routine for plotting the absolute value function.                         */
 void tmpl_PPM_Plot(const char *filename,
