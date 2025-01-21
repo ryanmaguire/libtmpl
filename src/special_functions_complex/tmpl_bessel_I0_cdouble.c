@@ -1,4 +1,4 @@
-#include <libtmpl/include/tmpl_math_constants.h>
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_special_functions_real.h>
