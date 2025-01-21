@@ -66,8 +66,8 @@
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
- *  1.) tmpl_minmax.h:                                                        *
- *          Provides the TMPL_MAX3 macro.                                     *
+ *  1.) tmpl_max.h:                                                           *
+ *          Provides a helper macro for computing the max of 3 real numbers.  *
  *  2.) tmpl_math.h:                                                          *
  *          Provides the square root function.                                *
  *  3.) tmpl_vec3.h:                                                          *
@@ -98,7 +98,7 @@
  ******************************************************************************/
 
 /*  The TMPL_MAX3 macro is found here.                                        */
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_max.h>
 
 /*  The values 2^64 and 2^-64, to single precision, stored as macros.         */
 #define TMPL_BIG_SCALE (1.8446744073709552E+19F)
