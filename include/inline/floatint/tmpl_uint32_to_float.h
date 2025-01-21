@@ -49,7 +49,7 @@
  *          Header file with TMPL_HAS_FLOATINT32 macro.                       *
  *  2.) tmpl_inttype.h:                                                       *
  *          Header file containing fixed-width integer data types.            *
- *  3.) tmpl_floatint:                                                        *
+ *  3.) tmpl_floatint_float.h:                                                *
  *          Header file where the type-punning union is defined.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -70,17 +70,10 @@
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatInt32 union is typedef'd here.                          */
-#include <libtmpl/include/tmpl_floatint.h>
-
-/*  The TMPL_INLINE_DECL macro isn't quite what we want. Define the following.*/
-#if TMPL_USE_INLINE == 1
-#define TMPL_INLINE_FUNCTION static inline
-#else
-#define TMPL_INLINE_FUNCTION static
-#endif
+#include <libtmpl/include/types/tmpl_floatint_float.h>
 
 /*  Function for type-punning a 32-bit unsigned integer as a float.           */
-TMPL_INLINE_FUNCTION
+TMPL_STATIC_INLINE
 float tmpl_UInt32_To_Float(tmpl_UInt32 n)
 {
     /*  Union for type-punning a float with an integer.                       */
@@ -93,9 +86,6 @@ float tmpl_UInt32_To_Float(tmpl_UInt32 n)
     return u.f;
 }
 /*  End of tmpl_UInt32_To_Float.                                              */
-
-/*  Undefine the macro in case someone wants to #include this file.           */
-#undef TMPL_INLINE_FUNCTION
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT32 == 1.                                      */

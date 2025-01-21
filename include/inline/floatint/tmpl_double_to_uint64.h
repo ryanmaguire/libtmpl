@@ -49,7 +49,7 @@
  *          Header file with TMPL_HAS_FLOATINT64 macro.                       *
  *  2.) tmpl_inttype.h:                                                       *
  *          Header file containing fixed-width integer data types.            *
- *  3.) tmpl_floatint:                                                        *
+ *  3.) tmpl_floatint_double.h:                                               *
  *          Header file where the type-punning union is defined.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -70,17 +70,10 @@
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  tmpl_IEEE754_FloatInt64 union is typedef'd here.                          */
-#include <libtmpl/include/tmpl_floatint.h>
-
-/*  The TMPL_INLINE_DECL macro isn't quite what we want. Define the following.*/
-#if TMPL_USE_INLINE == 1
-#define TMPL_INLINE_FUNCTION static inline
-#else
-#define TMPL_INLINE_FUNCTION static
-#endif
+#include <libtmpl/include/types/tmpl_floatint_double.h>
 
 /*  Function for type-punning a double as a 64-bit unsigned integer.          */
-TMPL_INLINE_FUNCTION
+TMPL_STATIC_INLINE
 tmpl_UInt64 tmpl_Double_To_UInt64(double x)
 {
     /*  Union for type-punning a double with an integer.                      */
@@ -93,9 +86,6 @@ tmpl_UInt64 tmpl_Double_To_UInt64(double x)
     return u.n;
 }
 /*  End of tmpl_Double_To_UInt64.                                             */
-
-/*  Undefine the macro in case someone wants to #include this file.           */
-#undef TMPL_INLINE_FUNCTION
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
