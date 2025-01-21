@@ -22,7 +22,7 @@
  *  Date:   2022/05/12                                                        *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Binary GCD Algorithm for unsigned integers.                               */

@@ -141,7 +141,7 @@
  *      and then mixed-binary. The "by-hand" algorithm is the slowest.        *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 
 /*  Function prototype is found here.                                         */
 #include <libtmpl/include/tmpl_integer.h>

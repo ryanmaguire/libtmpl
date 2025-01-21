@@ -22,7 +22,7 @@
  *  Date:   2021/07/29                                                        *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Make sure this macro is available. It should be.                          */

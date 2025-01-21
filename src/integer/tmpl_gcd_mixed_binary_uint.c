@@ -2,7 +2,7 @@
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  TMPL_MIN macro is provided here.                                          */
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_min.h>
 
 /*  Function for computing the GCD of two unsigned integers.                  */
 unsigned int tmpl_UInt_GCD_Mixed_Binary(unsigned int m, unsigned int n)
