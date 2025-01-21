@@ -187,7 +187,7 @@ double tmpl_Double_SinPi(double x)
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
 /*  Helper macro for C vs. C++ compatibility with casting.                    */
-#include <libtmpl/include/tmpl_compat_cast.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Computes sin(pi x) at double precision.                                   */
 double tmpl_Double_SinPi(double x)

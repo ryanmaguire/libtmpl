@@ -34,7 +34,7 @@
 /*  All constants are declared in this header file.                           */
 #include <libtmpl/include/tmpl_math.h>
 
-#include <libtmpl/include/tmpl_math_constants.h>
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 #if TMPL_HAS_IEEE754_FLOAT == 0  || \
     TMPL_HAS_IEEE754_DOUBLE == 0 || \

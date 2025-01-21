@@ -65,8 +65,8 @@
  ******************************************************************************
  *  1.) tmpl_math.h:                                                          *
  *          Header file containing basic math functions.                      *
- *  2.) tmpl_minmax.h:                                                        *
- *          Header file with helper macros for min and max.                   *
+ *  2.) tmpl_max.h:                                                           *
+ *          Provides a helper macro for computing the max of 3 integers.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -105,7 +105,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  TMPL_MAX helper macro found here.                                         */
-#include <libtmpl/include/tmpl_minmax.h>
+#include <libtmpl/include/helper/tmpl_max.h>
 
 /*  We can get a significant speed boost if IEEE-754 support is available.    */
 #if TMPL_HAS_IEEE754_LDOUBLE == 1
