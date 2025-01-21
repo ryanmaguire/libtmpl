@@ -262,7 +262,7 @@ float tmpl_Float_Fractional_Part(float x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_Float data type provided here.                               */
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Function for computing the fractional part of a float.                    */
 float tmpl_Float_Fractional_Part(float x)

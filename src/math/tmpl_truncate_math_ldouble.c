@@ -294,7 +294,7 @@ long double tmpl_LDouble_Truncate(long double x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for truncating a long double (truncl equivalent).                */
 long double tmpl_LDouble_Truncate(long double x)
@@ -458,7 +458,7 @@ long double tmpl_LDouble_Truncate(long double x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for truncating a long double (truncl equivalent).                */
 long double tmpl_LDouble_Truncate(long double x)
@@ -553,7 +553,7 @@ TMPL_LDOUBLE_TRUNCATE_FINISH:
  ******************************************************************************/
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for truncating a long double (truncl equivalent).                */
 long double tmpl_LDouble_Truncate(long double x)
@@ -733,7 +733,7 @@ long double tmpl_LDouble_Truncate(long double x)
  *  time. This does not require 64-bit integers.                              */
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for truncating a long double (truncl equivalent).                */
 long double tmpl_LDouble_Truncate(long double x)

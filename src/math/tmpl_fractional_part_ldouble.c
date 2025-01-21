@@ -301,7 +301,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for computing the fractional part of a long double.              */
 long double tmpl_LDouble_Fractional_Part(long double x)
@@ -482,7 +482,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for computing the fractional part of a long double.              */
 long double tmpl_LDouble_Fractional_Part(long double x)
@@ -584,7 +584,7 @@ TMPL_LDOUBLE_FRACTIONAL_PART_FINISH:
  ******************************************************************************/
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for computing the fractional part of a long double.              */
 long double tmpl_LDouble_Fractional_Part(long double x)
@@ -771,7 +771,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
  *  time. This does not require 64-bit integers.                              */
 
 /*  tmpl_IEEE754_LDouble data type provided here.                             */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function for computing the fractional part of a long double.              */
 long double tmpl_LDouble_Fractional_Part(long double x)

@@ -255,7 +255,7 @@ double tmpl_Double_Truncate(double x)
  *  slower since we have to check the mantissa 16 bits at a time.             */
 
 /*  tmpl_IEEE754_Double data type provided here.                              */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Function for computing the truncation of a double (trunc equivalent).     */
 double tmpl_Double_Truncate(double x)
