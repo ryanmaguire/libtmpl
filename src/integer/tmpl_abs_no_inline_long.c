@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Implemented in include/integer/tmpl_abs_long.h.                           */
-#include "../../include/integer/tmpl_abs_long.h"
+#include "../../include/inline/integer/tmpl_abs_long.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE =! 1.                                          */

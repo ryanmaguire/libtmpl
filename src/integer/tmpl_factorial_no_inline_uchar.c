@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_integer.h>
 
 /*  Implemented in include/integer/tmpl_factorial_uchar.h.                    */
-#include "../../include/integer/tmpl_factorial_uchar.h"
+#include "../../include/inline/integer/tmpl_factorial_uchar.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE =! 1.                                          */
