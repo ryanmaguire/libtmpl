@@ -31,8 +31,11 @@
 /*  Only used if inline support is not requested.                             */
 #if TMPL_USE_INLINE != 1
 
+/*  Function prototype and complex numbers provided here.                     */
+#include <libtmpl/include/tmpl_complex.h>
+
 /*  Implemented in include/complex/tmpl_complex_polar_ldouble.h.              */
-#include "../../include/complex/tmpl_complex_polar_ldouble.h"
+#include "../../include/inline/complex/tmpl_complex_polar_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

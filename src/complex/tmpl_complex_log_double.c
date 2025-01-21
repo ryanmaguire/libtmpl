@@ -63,8 +63,8 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  Macros for computing the min and max of real numbers.                     */
-#include <libtmpl/include/tmpl_minmax.h>
+/*  Macros for computing the max of two real numbers.                         */
+#include <libtmpl/include/helper/tmpl_max.h>
 
 /*  The values 2^512 and 2^-512, to double precision, stored as macros.       */
 #define TMPL_BIG_SCALE (1.340780792994259709957402E+154)
