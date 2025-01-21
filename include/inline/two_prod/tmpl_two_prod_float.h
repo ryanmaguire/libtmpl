@@ -68,7 +68,7 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_INLINE_DECL macro.                    *
- *  2.) tmpl_compat_cast.h:                                                   *
+ *  2.) tmpl_cast.h:                                                          *
  *          Provides a helper macro for C vs. C++ compatibility with casting. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -83,7 +83,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Helper macros for C vs. C++ compatibility.                                */
-#include <libtmpl/include/tmpl_compat_cast.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Multiplication with rounding error at single precision.                   */
 TMPL_INLINE_DECL
