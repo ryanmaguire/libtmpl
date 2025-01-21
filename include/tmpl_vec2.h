@@ -211,8 +211,6 @@ extern long double
 tmpl_2x2LDouble_Component(const tmpl_TwoByTwoMatrixLongDouble *A,
                           size_t m, size_t n);
 
-#define tmpl_2x2_Component tmpl_2x2Double_Component
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2x2Double_Determinant                                            *
@@ -232,8 +230,6 @@ extern double tmpl_2x2Double_Determinant(const tmpl_TwoByTwoMatrixDouble *A);
 
 extern long double
 tmpl_2x2LDouble_Determinant(const tmpl_TwoByTwoMatrixLongDouble *A);
-
-#define tmpl_2x2_Determinant tmpl_2x2Double_Determinant
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -257,8 +253,6 @@ tmpl_2x2Double_Inverse(const tmpl_TwoByTwoMatrixDouble *A);
 
 extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_Inverse(const tmpl_TwoByTwoMatrixLongDouble *A);
-
-#define tmpl_2x2_Inverse tmpl_2x2Double_Inverse
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -306,8 +300,6 @@ extern tmpl_TwoByTwoMatrixDouble tmpl_2x2Double_Rotation(double theta);
 extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_Rotation(long double theta);
 
-#define tmpl_2x2_Rotation tmpl_2x2Double_Rotation
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2x2Double_Scale                                                  *
@@ -330,8 +322,6 @@ tmpl_2x2Double_Scale(double r, const tmpl_TwoByTwoMatrixDouble *P);
 
 extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_Scale(long double r, const tmpl_TwoByTwoMatrixLongDouble *P);
-
-#define tmpl_2x2_Scale tmpl_2x2Double_Scale
 
 /******************************************************************************
  *  Macro:                                                                    *
@@ -375,8 +365,6 @@ extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Add(const tmpl_TwoVectorLongDouble *P,
                    const tmpl_TwoVectorLongDouble *Q);
 
-#define tmpl_2D_Add tmpl_2DDouble_Add
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2D_Dot_Product                                                   *
@@ -402,8 +390,6 @@ tmpl_2DDouble_Dot_Product(const tmpl_TwoVectorDouble *P,
 extern long double
 tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble *P,
                            const tmpl_TwoVectorLongDouble *Q);
-
-#define tmpl_2D_Dot_Product tmpl_2DDouble_Dot_Product
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -509,8 +495,6 @@ extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Rect(long double x, long double y);
 
-#define tmpl_TwoVector_Rect tmpl_DoubleTwoVector_Rect
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2DDouble_X                                                       *
@@ -530,8 +514,6 @@ extern float tmpl_2DFloat_X(const tmpl_TwoVectorFloat *P);
 extern double tmpl_2DDouble_X(const tmpl_TwoVectorDouble *P);
 extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble *P);
 
-#define tmpl_2D_X tmpl_2DDouble_X
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2DDouble_Y                                                       *
@@ -550,8 +532,6 @@ extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble *P);
 extern float tmpl_2DFloat_Y(const tmpl_TwoVectorFloat *P);
 extern double tmpl_2DDouble_Y(const tmpl_TwoVectorDouble *P);
 extern long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble *P);
-
-#define tmpl_2D_Y tmpl_2DDouble_Y
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -631,9 +611,9 @@ tmpl_2DLDouble_Polar(long double r, long double theta);
  ******************************************************************************/
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_double.h>
-#include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_float.h>
-#include <libtmpl/include/vec2/tmpl_two_vector_l2_norm_ldouble.h>
+#include <libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_double.h>
+#include <libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_float.h>
+#include <libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_ldouble.h>
 #else
 extern float tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat *P);
 extern double tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble *P);

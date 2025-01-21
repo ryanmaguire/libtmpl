@@ -49,9 +49,9 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_float.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_fast_two_sum_ldouble.h>
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_float.h>
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -102,9 +102,9 @@ tmpl_LDouble_Fast_Two_Sum(long double x,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/two_sum/tmpl_two_sum_float.h>
-#include <libtmpl/include/two_sum/tmpl_two_sum_double.h>
-#include <libtmpl/include/two_sum/tmpl_two_sum_ldouble.h>
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_float.h>
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */

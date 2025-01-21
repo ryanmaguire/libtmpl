@@ -43,9 +43,9 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/split/tmpl_even_high_split_float.h>
-#include <libtmpl/include/split/tmpl_even_high_split_double.h>
-#include <libtmpl/include/split/tmpl_even_high_split_ldouble.h>
+#include <libtmpl/include/inline/split/tmpl_even_high_split_float.h>
+#include <libtmpl/include/inline/split/tmpl_even_high_split_double.h>
+#include <libtmpl/include/inline/split/tmpl_even_high_split_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
@@ -80,8 +80,8 @@ extern long double tmpl_LDouble_Even_High_Split(long double x);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/split/tmpl_high_split_float.h>
-#include <libtmpl/include/split/tmpl_high_split_double.h>
+#include <libtmpl/include/inline/split/tmpl_high_split_float.h>
+#include <libtmpl/include/inline/split/tmpl_high_split_double.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */

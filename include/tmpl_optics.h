@@ -29,10 +29,10 @@ extern long double tmpl_LDouble_Resolution_Inverse(long double x);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_frequency_to_wavelength_float.h>
-#include <libtmpl/include/optics/tmpl_frequency_to_wavelength_double.h>
-#include <libtmpl/include/optics/tmpl_frequency_to_wavelength_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_frequency_to_wavelength_float.h>
+#include <libtmpl/include/inline/optics/tmpl_frequency_to_wavelength_double.h>
+#include <libtmpl/include/inline/optics/tmpl_frequency_to_wavelength_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -61,10 +61,10 @@ extern long double tmpl_LDouble_Frequency_To_Wavelength(long double frequency);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_frequency_to_wavenumber_float.h>
-#include <libtmpl/include/optics/tmpl_frequency_to_wavenumber_double.h>
-#include <libtmpl/include/optics/tmpl_frequency_to_wavenumber_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_frequency_to_wavenumber_float.h>
+#include <libtmpl/include/inline/optics/tmpl_frequency_to_wavenumber_double.h>
+#include <libtmpl/include/inline/optics/tmpl_frequency_to_wavenumber_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -93,10 +93,10 @@ extern long double tmpl_LDouble_Frequency_To_Wavenumber(long double frequency);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_optical_phase_float.h>
-#include <libtmpl/include/optics/tmpl_optical_phase_double.h>
-#include <libtmpl/include/optics/tmpl_optical_phase_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_optical_phase_float.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_phase_double.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_phase_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -127,10 +127,10 @@ tmpl_CLDouble_Optical_Phase(tmpl_ComplexLongDouble frequency);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_optical_power_float.h>
-#include <libtmpl/include/optics/tmpl_optical_power_double.h>
-#include <libtmpl/include/optics/tmpl_optical_power_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_optical_power_float.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_power_double.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_power_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -161,10 +161,10 @@ tmpl_CLDouble_Optical_Power(tmpl_ComplexLongDouble frequency);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_wavelength_to_wavenumber_float.h>
-#include <libtmpl/include/optics/tmpl_wavelength_to_wavenumber_double.h>
-#include <libtmpl/include/optics/tmpl_wavelength_to_wavenumber_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_wavelength_to_wavenumber_float.h>
+#include <libtmpl/include/inline/optics/tmpl_wavelength_to_wavenumber_double.h>
+#include <libtmpl/include/inline/optics/tmpl_wavelength_to_wavenumber_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -195,10 +195,10 @@ extern long double tmpl_LDouble_Wavelength_To_Wavenumber(long double lambda);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_optical_transmittance_float.h>
-#include <libtmpl/include/optics/tmpl_optical_transmittance_double.h>
-#include <libtmpl/include/optics/tmpl_optical_transmittance_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_optical_transmittance_float.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_transmittance_double.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_transmittance_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -235,10 +235,10 @@ tmpl_CLDouble_Optical_Transmittance(long double power, long double phase);
 /*  These functions are small enough to inline.                               */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions are located in libtmpl/include/optics/                    */
-#include <libtmpl/include/optics/tmpl_optical_transmittance_deg_float.h>
-#include <libtmpl/include/optics/tmpl_optical_transmittance_deg_double.h>
-#include <libtmpl/include/optics/tmpl_optical_transmittance_deg_ldouble.h>
+/*  Inline versions are located in libtmpl/include/inline/optics/             */
+#include <libtmpl/include/inline/optics/tmpl_optical_transmittance_deg_float.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_transmittance_deg_double.h>
+#include <libtmpl/include/inline/optics/tmpl_optical_transmittance_deg_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

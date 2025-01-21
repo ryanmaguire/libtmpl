@@ -37,8 +37,8 @@
 #define TMPL_DOUBLEDOUBLE_H
 
 #include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_doubledouble_double.h>
-#include <libtmpl/include/tmpl_doubledouble_ldouble.h>
+#include <libtmpl/include/types/tmpl_doubledouble_double.h>
+#include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -58,8 +58,8 @@
  ******************************************************************************/
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/doubledouble/tmpl_add_doubledouble.h>
-#include <libtmpl/include/doubledouble/tmpl_add_ldoubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_add_doubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_add_ldoubledouble.h>
 #else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Add(const tmpl_DoubleDouble * const x,
@@ -89,8 +89,8 @@ tmpl_LDoubleDouble_Add(const tmpl_LongDoubleDouble * const x,
  ******************************************************************************/
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/doubledouble/tmpl_quick_add_doubledouble.h>
-#include <libtmpl/include/doubledouble/tmpl_quick_add_ldoubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_quick_add_doubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_quick_add_ldoubledouble.h>
 #else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Quick_Add(const tmpl_DoubleDouble * const x,
@@ -119,8 +119,8 @@ tmpl_LDoubleDouble_Quick_Add(const tmpl_LongDoubleDouble * const x,
  ******************************************************************************/
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/doubledouble/tmpl_multiply_doubledouble.h>
-#include <libtmpl/include/doubledouble/tmpl_multiply_ldoubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_multiply_doubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_multiply_ldoubledouble.h>
 #else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Multiply(const tmpl_DoubleDouble * const x,
@@ -149,8 +149,8 @@ tmpl_LDoubleDouble_Multiply(const tmpl_LongDoubleDouble * const x,
  ******************************************************************************/
 
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/doubledouble/tmpl_create_doubledouble.h>
-#include <libtmpl/include/doubledouble/tmpl_create_ldoubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_create_doubledouble.h>
+#include <libtmpl/include/inline/doubledouble/tmpl_create_ldoubledouble.h>
 #else
 extern tmpl_DoubleDouble
 tmpl_DoubleDouble_Create(double hi, double lo);

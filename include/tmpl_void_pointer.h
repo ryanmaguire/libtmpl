@@ -2,14 +2,23 @@
 #ifndef TMPL_VOID_POINTER_H
 #define TMPL_VOID_POINTER_H
 
-#include <libtmpl/include/tmpl_complex_double.h>
-#include <libtmpl/include/tmpl_complex_float.h>
-#include <libtmpl/include/tmpl_complex_ldouble.h>
-#include <libtmpl/include/tmpl_complex_function_types.h>
-#include <libtmpl/include/tmpl_complex_functional_types.h>
-#include <libtmpl/include/tmpl_complex_path_types.h>
-#include <libtmpl/include/tmpl_integer_function_types.h>
-#include <libtmpl/include/tmpl_real_function_types.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_function_double.h>
+#include <libtmpl/include/types/tmpl_complex_function_float.h>
+#include <libtmpl/include/types/tmpl_complex_function_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_functional_double.h>
+#include <libtmpl/include/types/tmpl_complex_functional_float.h>
+#include <libtmpl/include/types/tmpl_complex_functional_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_path_double.h>
+#include <libtmpl/include/types/tmpl_complex_path_float.h>
+#include <libtmpl/include/types/tmpl_complex_path_ldouble.h>
+#include <libtmpl/include/types/tmpl_function_double.h>
+#include <libtmpl/include/types/tmpl_function_float.h>
+#include <libtmpl/include/types/tmpl_function_ldouble.h>
+
+#include <libtmpl/include/types/tmpl_integer_function_types.h>
 #include <stddef.h>
 
 extern void

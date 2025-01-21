@@ -72,14 +72,14 @@ extern "C" {
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/integer/tmpl_abs_char.h>
-#include <libtmpl/include/integer/tmpl_abs_int.h>
-#include <libtmpl/include/integer/tmpl_abs_long.h>
-#include <libtmpl/include/integer/tmpl_abs_short.h>
+#include <libtmpl/include/inline/integer/tmpl_abs_char.h>
+#include <libtmpl/include/inline/integer/tmpl_abs_int.h>
+#include <libtmpl/include/inline/integer/tmpl_abs_long.h>
+#include <libtmpl/include/inline/integer/tmpl_abs_short.h>
 
 /*  Long long function if support is available.                               */
 #if TMPL_HAS_LONGLONG == 1
-#include <libtmpl/include/integer/tmpl_abs_llong.h>
+#include <libtmpl/include/inline/integer/tmpl_abs_llong.h>
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
@@ -124,11 +124,16 @@ extern signed long long int tmpl_LLong_Abs(signed long long int);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/integer/tmpl_factorial_uchar.h>
-#include <libtmpl/include/integer/tmpl_factorial_uint.h>
-#include <libtmpl/include/integer/tmpl_factorial_ullong.h>
-#include <libtmpl/include/integer/tmpl_factorial_ulong.h>
-#include <libtmpl/include/integer/tmpl_factorial_ushort.h>
+#include <libtmpl/include/inline/integer/tmpl_factorial_uchar.h>
+#include <libtmpl/include/inline/integer/tmpl_factorial_uint.h>
+#include <libtmpl/include/inline/integer/tmpl_factorial_ulong.h>
+#include <libtmpl/include/inline/integer/tmpl_factorial_ushort.h>
+
+/*  Long long function if support is available.                               */
+#if TMPL_HAS_LONGLONG == 1
+#include <libtmpl/include/inline/integer/tmpl_factorial_ullong.h>
+#endif
+/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

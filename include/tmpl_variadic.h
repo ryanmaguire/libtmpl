@@ -43,13 +43,13 @@
 #define TMPL_VARIADIC_H
 
 /*  TMPL_ARRAY_SIZE found here.                                               */
-#include <libtmpl/include/tmpl_helper.h>
+#include <libtmpl/include/helper/tmpl_array_size.h>
 
 /*  TMPL_CAST provided here (C/C++ compatibility with casting data types).    */
-#include <libtmpl/include/tmpl_compat_cast.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  TMPL_MALLOC / TMPL_FREE given here (provide C vs.C++ compatibility).      */
-#include <libtmpl/include/tmpl_compat_stdlib.h>
+#include <libtmpl/include/compat/tmpl_stdlib.h>
 
 /******************************************************************************
  *  Macro:                                                                    *

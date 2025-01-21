@@ -6,9 +6,9 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Typedefs for 3D vectors at various precisions.                            */
-#include <libtmpl/include/tmpl_vec3_double.h>
-#include <libtmpl/include/tmpl_vec3_float.h>
-#include <libtmpl/include/tmpl_vec3_ldouble.h>
+#include <libtmpl/include/types/tmpl_vec3_double.h>
+#include <libtmpl/include/types/tmpl_vec3_float.h>
+#include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  Functionals f:R^3 -> R at single, double, and long double precision.      */
 typedef float
@@ -76,9 +76,9 @@ extern const tmpl_ThreeVectorLongDouble tmpl_3DLDouble_Z_Hat;
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_add_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_add_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_add_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_add_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_add_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_add_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -127,9 +127,9 @@ tmpl_3DLDouble_Add(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_add_to_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_add_to_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_add_to_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_add_to_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_add_to_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_add_to_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -243,9 +243,9 @@ tmpl_3DLDouble_Component(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_cross_product_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_cross_product_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_cross_product_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_product_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_product_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_product_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -297,9 +297,9 @@ tmpl_3DLDouble_Cross_Product(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_cross_with_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_cross_with_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_cross_with_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_with_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_with_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_cross_with_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -347,9 +347,9 @@ tmpl_3DLDouble_CrossWith(tmpl_ThreeVectorLongDouble * const target,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_dist_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_dist_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_dist_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_dist_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_dist_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_dist_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -398,9 +398,9 @@ tmpl_3DLDouble_Dist(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_divide_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_divide_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_divide_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -448,9 +448,9 @@ tmpl_3DLDouble_Divide(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_divide_by_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_divide_by_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_divide_by_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_by_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_by_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_divide_by_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -500,9 +500,9 @@ tmpl_3DLDouble_DivideBy(tmpl_ThreeVectorLongDouble * const target,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_dot_product_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_dot_product_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_dot_product_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_dot_product_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_dot_product_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_dot_product_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -550,9 +550,9 @@ tmpl_3DLDouble_Dot_Product(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_l1_norm_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_l1_norm_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_l1_norm_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l1_norm_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l1_norm_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l1_norm_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -596,9 +596,9 @@ tmpl_3DLDouble_L1_Norm(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -643,9 +643,9 @@ tmpl_3DLDouble_L2_Norm(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_squared_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_squared_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_l2_norm_squared_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_squared_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_squared_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_l2_norm_squared_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -692,9 +692,9 @@ tmpl_3DLDouble_L2_Norm_Squared(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_linf_norm_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_linf_norm_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_linf_norm_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_linf_norm_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_linf_norm_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_linf_norm_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -737,9 +737,9 @@ tmpl_3DLDouble_LInf_Norm(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_midpoint_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_midpoint_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_midpoint_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_midpoint_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_midpoint_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_midpoint_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -787,9 +787,9 @@ tmpl_3DLDouble_Midpoint(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -838,9 +838,9 @@ tmpl_3DLDouble_Multiply(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_multiply_by_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_by_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_by_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_multiply_by_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -887,9 +887,9 @@ tmpl_3DLDouble_MultiplyBy(tmpl_ThreeVectorLongDouble * const target,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_negate_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_negate_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_negate_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_negate_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_negate_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_negate_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -932,9 +932,9 @@ tmpl_3DLDouble_Negate(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_negate_self_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_negate_self_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_negate_self_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_negate_self_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_negate_self_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_negate_self_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1001,9 +1001,9 @@ tmpl_3DLDouble_Normalize(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_normalize_self_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_normalize_self_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_normalize_self_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_normalize_self_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_normalize_self_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_normalize_self_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1066,9 +1066,9 @@ tmpl_3DLDouble_Orthogonal(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_projection_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_projection_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_projection_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_projection_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_projection_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_projection_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1149,9 +1149,9 @@ tmpl_3DLDouble_Quick_Angle(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_dist_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_dist_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_dist_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_dist_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1201,9 +1201,9 @@ tmpl_3DLDouble_Quick_Dist(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_l2_norm_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_l2_norm_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_l2_norm_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_l2_norm_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1247,9 +1247,9 @@ tmpl_3DLDouble_Quick_L2_Norm(const tmpl_ThreeVectorLongDouble *P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_normalize_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_normalize_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_normalize_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_normalize_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_normalize_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_normalize_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1297,9 +1297,9 @@ tmpl_3DLDouble_Quick_Normalize(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_rect_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_rect_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_rect_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_rect_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_rect_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_rect_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1345,9 +1345,9 @@ tmpl_3DLDouble_Rect(long double x, long double y, long double z);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_scale_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scale_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scale_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1392,9 +1392,9 @@ tmpl_3DLDouble_Scale(long double a, const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_scale_by_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scale_by_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scale_by_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_by_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_by_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scale_by_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1443,9 +1443,9 @@ tmpl_3DLDouble_ScaleBy(tmpl_ThreeVectorLongDouble * const target,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scaled_add_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scaled_add_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scaled_add_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1498,9 +1498,9 @@ tmpl_3DLDouble_Scaled_Add(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_to_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_to_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_scaled_add_to_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scaled_add_to_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scaled_add_to_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_scaled_add_to_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1553,9 +1553,9 @@ tmpl_3DLDouble_Scaled_AddTo(tmpl_ThreeVectorLongDouble * const target,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_subtract_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_subtract_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_subtract_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1604,9 +1604,9 @@ tmpl_3DLDouble_Subtract(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_subtract_from_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_subtract_from_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_subtract_from_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_subtract_from_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1653,9 +1653,9 @@ tmpl_3DLDouble_SubtractFrom(tmpl_ThreeVectorLongDouble * const target,
 #if TMPL_USE_INLINE == 1
 
 /*  Inlined versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_x_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_x_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_x_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_x_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_x_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_x_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1694,9 +1694,9 @@ extern long double tmpl_3DLDouble_X(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inlined versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_y_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_y_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_y_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_y_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_y_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_y_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1735,9 +1735,9 @@ extern long double tmpl_3DLDouble_Y(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Inlined versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_z_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_z_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_z_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_z_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_z_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_z_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1778,9 +1778,9 @@ extern long double tmpl_3DLDouble_Z(const tmpl_ThreeVectorLongDouble * const P);
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_component_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_component_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_component_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_component_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_component_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_component_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1825,9 +1825,9 @@ tmpl_3DLDouble_Quick_Component(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_projection_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_projection_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_projection_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_projection_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_projection_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_projection_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1872,9 +1872,9 @@ tmpl_3DLDouble_Quick_Projection(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_orthogonal_part_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_orthogonal_part_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_orthogonal_part_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_orthogonal_part_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_orthogonal_part_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_orthogonal_part_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1919,9 +1919,9 @@ tmpl_3DLDouble_Orthogonal_Part(const tmpl_ThreeVectorLongDouble * const P,
 #if TMPL_USE_INLINE == 1
 
 /*  Include versions found here.                                              */
-#include <libtmpl/include/vec3/tmpl_vec3_quick_orthogonal_part_float.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_orthogonal_part_double.h>
-#include <libtmpl/include/vec3/tmpl_vec3_quick_orthogonal_part_ldouble.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_orthogonal_part_float.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_orthogonal_part_double.h>
+#include <libtmpl/include/inline/vec3/tmpl_vec3_quick_orthogonal_part_ldouble.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */

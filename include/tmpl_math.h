@@ -431,6 +431,9 @@ extern const float tmpl_Min_Float_Base_E;
 extern const double tmpl_Min_Double_Base_E;
 extern const long double tmpl_Min_LDouble_Base_E;
 
+/*  Commonly used constants (pi, e, etc.) found here.                         */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
+
 /******************************************************************************
  *                              Tables and Data                               *
  ******************************************************************************/
@@ -1795,29 +1798,14 @@ extern long double tmpl_LDouble_Truncate(long double x);
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
  *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_abs_float.c                                     *
- *      libtmpl/src/math/tmpl_abs_double.c                                    *
- *      libtmpl/src/math/tmpl_abs_ldouble.c                                   *
- *      libtmpl/include/inline/math/tmpl_abs_double.h (inline version)        *
- *      libtmpl/include/inline/math/tmpl_abs_float.h (inline version)         *
- *      libtmpl/include/inline/math/tmpl_abs_ldouble.h (inline version)       *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_abs_float_example.c               *
- *      libtmpl/examples/math_examples/tmpl_abs_double_example.c              *
- *      libtmpl/examples/math_examples/tmpl_abs_ldouble_example.c             *
- *  Tests:                                                                    *
- *      libtmpl/tests/math_tests/unit_tests/                                  *
- *          tmpl_abs_float_unit_test_001.c                                    *
- *          tmpl_abs_double_unit_test_001.c                                   *
- *          tmpl_abs_ldouble_unit_test_001.c                                  *
- *      libtmpl/tests/math_tests/time_tests/                                  *
- *          tmpl_abs_float_time_test.c                                        *
- *          tmpl_abs_double_time_test.c                                       *
- *          tmpl_abs_ldouble_time_test.c                                      *
- *      libtmpl/tests/math_tests/accuracy_tests/                              *
- *          tmpl_abs_float_accuracy_test.c                                    *
- *          tmpl_abs_double_accuracy_test.c                                   *
- *          tmpl_abs_ldouble_accuracy_test.c                                  *
+ *      libtmpl/src/math/                                                     *
+ *          tmpl_abs_float.c                                                  *
+ *          tmpl_abs_double.c                                                 *
+ *          tmpl_abs_ldouble.c                                                *
+ *      libtmpl/include/inline/math/ (inline version)                         *
+ *          tmpl_abs_double.h                                                 *
+ *          tmpl_abs_float.h                                                  *
+ *          tmpl_abs_ldouble.h                                                *
  ******************************************************************************/
 
 /*  Alias functions to fabs from math.h if libtmpl algorithms not requested.  */

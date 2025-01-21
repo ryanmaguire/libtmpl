@@ -48,9 +48,9 @@
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions for each data type found here.                            */
-#include <libtmpl/include/two_prod/tmpl_two_prod_float.h>
-#include <libtmpl/include/two_prod/tmpl_two_prod_double.h>
-#include <libtmpl/include/two_prod/tmpl_two_prod_ldouble.h>
+#include <libtmpl/include/inline/two_prod/tmpl_two_prod_float.h>
+#include <libtmpl/include/inline/two_prod/tmpl_two_prod_double.h>
+#include <libtmpl/include/inline/two_prod/tmpl_two_prod_ldouble.h>
 
 #else
 /*  Else for #elif TMPL_USE_INLINE == 1.                                      */
