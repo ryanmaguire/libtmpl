@@ -61,7 +61,7 @@
  *          Header file containing TMPL_STATIC_INLINE macro.                  *
  *  2.) tmpl_ieee754_float.h:                                                 *
  *          Header file with the tmpl_IEEE754_Float data type.                *
- *  2.) tmpl_floatint.h:                                                      *
+ *  2.) tmpl_floatint_float.h:                                                *
  *          Header file with the tmpl_FloatInt32 data type.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -76,7 +76,7 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  TMPL_HAS_IEEE754_FLOAT macro found here.                                  */
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Lookup table with the coefficients for the Remez polynomials.             */
 extern const float tmpl_float_normalized_fresnel_sin_table[128];
@@ -95,7 +95,7 @@ tmpl_float_normalized_fresnel_sin_table[n]+z*(\
 #if TMPL_HAS_FLOATINT32 == 1
 
 /*  Union of 32-bit integers and IEEE-754 bit representation found here.      */
-#include <libtmpl/include/tmpl_floatint.h>
+#include <libtmpl/include/types/tmpl_floatint_float.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE

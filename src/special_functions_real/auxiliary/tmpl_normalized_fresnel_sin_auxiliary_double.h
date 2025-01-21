@@ -94,7 +94,7 @@
 
 /*  Splitting function for retreiving the high part of a double given here.   */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/split/tmpl_even_high_split_double.h>
+#include <libtmpl/include/inline/split/tmpl_even_high_split_double.h>
 #else
 extern double tmpl_Double_Even_High_Split(double x);
 #endif
