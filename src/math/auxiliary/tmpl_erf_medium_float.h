@@ -20,7 +20,7 @@
 #define TMPL_ERF_MEDIUM_FLOAT_H
 
 #include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 #if TMPL_HAS_IEEE754_FLOAT == 1
 

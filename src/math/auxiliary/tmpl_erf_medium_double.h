@@ -20,7 +20,7 @@
 #define TMPL_ERF_MEDIUM_DOUBLE_H
 
 #include <libtmpl/include/tmpl_config.h>
-#include <libtmpl/include/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
@@ -224,4 +224,3 @@ double tmpl_Double_Erf_Medium(double x)
 
 #endif
 /*  End of include guard.                                                     */
-

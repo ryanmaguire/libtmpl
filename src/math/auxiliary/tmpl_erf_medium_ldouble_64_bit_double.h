@@ -23,7 +23,7 @@
 
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 static long double tmpl_erfdm_coeffs[128] = {
     +8.5527181044291706341842573336570483782603345586101E-01L,

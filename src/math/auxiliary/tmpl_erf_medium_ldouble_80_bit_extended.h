@@ -5,7 +5,7 @@
 
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
 
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 static long double tmpl_erflm_coeffs[160] = {
     +8.5527181044291702615532011392059985315011643310179E-01L,
