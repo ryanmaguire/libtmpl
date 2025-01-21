@@ -45,7 +45,7 @@
 #include <libtmpl/include/tmpl_math.h>
 
 /*  Definition of tmpl_ComplexDouble found here.                              */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
 /*  The Fresnel integrals are found here.                                     */
 #include <libtmpl/include/tmpl_special_functions_complex.h>

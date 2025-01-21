@@ -42,10 +42,10 @@
  ******************************************************************************/
 
 /*  Helper macro for casting with C vs. C++ compatibility.                    */
-#include <libtmpl/include/tmpl_compat_cast.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  Definition of tmpl_ComplexDouble found here.                              */
-#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
 
 /*  Floor function declared here.                                             */
 #include <libtmpl/include/tmpl_math.h>
