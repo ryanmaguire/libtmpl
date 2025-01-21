@@ -36,7 +36,7 @@
 #include <libtmpl/include/tmpl_split.h>
 
 /*  Implemented in include/split/tmpl_even_high_split_ldouble.h.              */
-#include "../../include/split/tmpl_even_high_split_ldouble.h"
+#include "../../include/inline/split/tmpl_even_high_split_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
