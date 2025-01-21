@@ -129,7 +129,7 @@
  ******************************************************************************/
 
 /*  TMPL_HAS_IEEE754_FLOAT macro found here.                                  */
-#include <libtmpl/include/tmpl_ieee754_float.h>
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_special_functions_real.h>

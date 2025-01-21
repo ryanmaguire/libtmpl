@@ -127,7 +127,7 @@
  ******************************************************************************/
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
-#include <libtmpl/include/tmpl_ieee754_double.h>
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_special_functions_real.h>

@@ -127,14 +127,14 @@
  ******************************************************************************/
 
 /*  TMPL_HAS_IEEE754_DOUBLE macro found here.                                 */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 
 /*  Absolute value function needed.                                           */
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/math/tmpl_abs_ldouble.h>
+#include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
 #else
 extern long double tmpl_LDouble_Abs(long double x);
 #endif
