@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Implemented in include/vec3/tmpl_vec3_rect_double.h.                      */
-#include "../../include/vec3/tmpl_vec3_rect_double.h"
+#include "../../include/inline/vec3/tmpl_vec3_rect_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

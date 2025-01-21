@@ -36,7 +36,7 @@
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Implemented in include/vec3/tmpl_vec3_orthogonal_part_float.h.            */
-#include "../../include/vec3/tmpl_vec3_orthogonal_part_float.h"
+#include "../../include/inline/vec3/tmpl_vec3_orthogonal_part_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

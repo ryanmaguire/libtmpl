@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_vec3.h>
 
 /*  Implemented in include/vec3/tmpl_vec3_normalize_self_ldouble.h.           */
-#include "../../include/vec3/tmpl_vec3_normalize_self_ldouble.h"
+#include "../../include/inline/vec3/tmpl_vec3_normalize_self_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
