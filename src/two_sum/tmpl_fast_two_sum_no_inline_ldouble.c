@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_two_sum.h>
 
 /*  Implemented in include/two_sum/tmpl_fast_two_sum_ldouble.h.               */
-#include "../../include/two_sum/tmpl_fast_two_sum_ldouble.h"
+#include "../../include/inline/two_sum/tmpl_fast_two_sum_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

@@ -35,7 +35,7 @@
 #include <libtmpl/include/tmpl_two_prod.h>
 
 /*  Implemented in include/two_prod/tmpl_two_prod_double.h.                   */
-#include "../../include/two_prod/tmpl_two_prod_double.h"
+#include "../../include/inline/two_prod/tmpl_two_prod_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
