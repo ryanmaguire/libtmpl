@@ -109,7 +109,7 @@ tmpl_ldouble_normalized_fresnel_sin_table[n]+z*(\
 )
 
 /*  64-bit integers available for type punning. Fastest method.               */
-#if TMPL_HAS_FLOATINT64 == 1
+#if TMPL_HAS_FLOATINT_LONG_DOUBLE == 1
 
 /******************************************************************************
  *                        64-Bit Double with 64-Bit Int                       *
@@ -123,7 +123,7 @@ TMPL_STATIC_INLINE
 long double tmpl_LDouble_Normalized_Fresnel_Sin_Remez(tmpl_IEEE754_LDouble w)
 {
     /*  Union of a 64-bit integer and an IEEE-754 struct.                     */
-    tmpl_IEEE754_FloatInt64 u;
+    tmpl_IEEE754_FloatIntLongDouble u;
 
     /*  Integer for the index of the Remez polynomial.                        */
     unsigned int n;
