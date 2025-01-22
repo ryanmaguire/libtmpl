@@ -756,7 +756,7 @@ long double tmpl_LDouble_Fractional_Part(long double x)
     }
 
     /*  word now has the trunc of the input. Output the long double part.     */
-    return word.f;
+    return x - word.f;
 }
 /*  End of tmpl_LDouble_Fractional_Part.                                      */
 
