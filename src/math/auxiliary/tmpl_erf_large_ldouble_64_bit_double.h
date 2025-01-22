@@ -121,7 +121,7 @@
 /*  With IEEE-754 support we can use a switch-trick to double the performance.*/
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Coefficients for the Remez polynomial for Erf on [2, 2.5].                */
 #define A00 (+9.9853728341331885122917049163048561164071612143256E-01L)

@@ -28,7 +28,7 @@
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /*  tmpl_IEEE754_LDouble typedef found here.                                  */
-#include <libtmpl/include/tmpl_ieee754_ldouble.h>
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  Coefficients for the Remez polynomial on [1.99951171875, 2.50048828125].  */
 #define A00 (+9.9853728341331884830208920362701704702166641090250E-01L)
