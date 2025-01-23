@@ -128,7 +128,7 @@ IF %1 == gcc GOTO MakeGCC
     :: Arguments for the compiler.
     SET CMACR=/DTMPL_SET_USE_MATH_TRUE
     SET CWARN=/W4
-    SET CARGS= /I../ /O2 /c
+    SET CARGS=/I../ /O2 /c
 
     :: Create include\tmpl_endianness.h
     cl %CMACR% config.c /link /out:config.exe
