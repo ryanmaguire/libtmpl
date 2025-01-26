@@ -19,7 +19,7 @@
  *                               tmpl_abs_float                               *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x) = |x|. See include/math/tmpl_abs_float.h for details.   *
+ *      Computes |x|. Source: libtmpl/include/inline/math/tmpl_abs_float.h.   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -34,7 +34,7 @@
 /*  Function prototype / forward declaration.                                 */
 extern float tmpl_Float_Abs(float x);
 
-/*  Implemented in include/math/tmpl_abs_float.h.                             */
+/*  Implemented here.                                                         */
 #include "../../include/inline/math/tmpl_abs_float.h"
 
 #endif

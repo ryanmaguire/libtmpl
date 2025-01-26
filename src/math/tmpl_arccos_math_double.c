@@ -35,7 +35,7 @@
  *          The arc-cosine of x.                                              *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_math.h:                                                      *
+ *          src/math/auxiliary/                                               *
  *              tmpl_Double_Arccos_Maclaurin:                                 *
  *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
  *              tmpl_Double_Arccos_Rat_Remez:                                 *
@@ -43,34 +43,77 @@
  *              tmpl_Double_Arccos_Tail_End:                                  *
  *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
- *          For very small x, |x| < 2^-57, return pi / 2. For slightly larger *
- *          x, |x| < 0.125, use a Maclaurin series. For 0.125 <= |x| < 0.5    *
- *          use a minimax approximation. For 0.5 <= x < 1 use the             *
- *          reflection formula:                                               *
+ *          0 <= |x| < 2^-57:                                                 *
+ *              return pi / 2. The error is O(x). The avoids unnecessary      *
+ *              underflow in the computation.                                 *
+ *          2^-57 <= |x| < 2^-3:                                              *
+ *              Use a degree 15 Maclaurin series. Only 8 non-zero terms are   *
+ *              needed for the expansion. This is faster than the rational    *
+ *              Remez approximation since it requires fewer terms and avoids  *
+ *              using floating-point division.                                *
+ *          2^-3 <= |x| < 2^-1:                                               *
+ *              Use the degree (8, 8) rational Remez approximation for the    *
+ *              function R(x) = -(acos(x) - pi/2 + x)/x^3. This function is   *
+ *              is even, so the degree (8, 8) rational Remez approximation    *
+ *              requires 5 non-zero terms in the numerator and 5 non-zero     *
+ *              terms in the denominator, 10 non-zero terms total. acos(x)    *
+ *              is computed via:                                              *
  *                                                                            *
- *              acos(x) = 2*asin(sqrt((1-x)/2))                               *
+ *                  acos(x) = pi/2 - (x + x^3 * P(x) / Q(x))                  *
  *                                                                            *
- *          Compute this using a minimax approximation. For values            *
- *          -1 < x <= -0.5 use the negation formula:                          *
+ *              where P(x) is the numerator and Q(x) is the denominator for   *
+ *              the rational Remez approximation of R(x), respectively.       *
+ *          2^-1 <= x < 1:                                                    *
+ *              Compute using the reflection formula:                         *
  *                                                                            *
- *              acos(x) = pi - acos(-x)                                       *
+ *                  acos(x) = 2 * asin(sqrt((1 - x) / 2))                     *
  *                                                                            *
- *          Use this and compute acos(-x) via the tail-end function.          *
- *          For |x| > 1 return NaN, and lastly the special cases of x = +/- 1 *
- *          return acos(-1) = pi and acos(1) = 0.                             *
+ *              Note that as x tends to 1, sqrt((1 - x) / 2) tends to zero.   *
+ *              Since acos(1) = 0, using this trick allows us to maintain     *
+ *              excellent relative error as the argument approaches 1.        *
+ *                                                                            *
+ *              asin(z) is computed using a degree (8, 8) rational Remez      *
+ *              approximation for R(z) = (asin(z) - z) / z^3. This function   *
+ *              is even, meaning 5 non-zero terms are required for the        *
+ *              numerator, and 5 for the denominator, 10 non-zero terms are   *
+ *              needed in total. asin(z) is computed via:                     *
+ *                                                                            *
+ *                  asin(z) = z + z^3 * P(z) / Q(z)                           *
+ *                                                                            *
+ *              where P(z) is the numerator and Q(z) is the denominator of    *
+ *              the rational Remez approximation of R(z), respectively. The   *
+ *              value acos(x) is then computed by:                            *
+ *                                                                            *
+ *                  acos(x) = 2 * asin(z)                                     *
+ *                                                                            *
+ *              with z = sqrt((1 - x) / 2).                                   *
+ *          -1 < x <= -2^-1:                                                  *
+ *              Compute using the negation formula:                           *
+ *                                                                            *
+ *                  acos(x) = pi - acos(-x)                                   *
+ *                                                                            *
+ *              we then have 2^-1 <= -x < 1, and hence can use the reflection *
+ *              formula found in the previous case.                           *
+ *          x = -1:                                                           *
+ *              return pi.                                                    *
+ *          x = 1:                                                            *
+ *              return 0.                                                     *
+ *          |x| > 1 (including x = +/- infinity) or x is Not-a-Number:        *
+ *              return NaN.                                                   *
  *      Error:                                                                *
  *          Based on 788,968,857 samples with -1 < x < 1.                     *
- *              max relative error: 2.2204459059627917e-16                    *
- *              rms relative error: 8.3796804351081161e-17                    *
- *              max absolute error: 4.4408920985006262e-16                    *
- *              rms absolute error: 1.4737238548161158e-16                    *
+ *              max relative error: 2.2204459059627917E-16                    *
+ *              rms relative error: 8.3796804351081161E-17                    *
+ *              max absolute error: 4.4408920985006262E-16                    *
+ *              rms absolute error: 1.4737238548161158E-16                    *
  *          Values assume 100% accuracy of glibc. Actual error in glibc is    *
  *          less than 1 ULP (~2 x 10^-16).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_math.h:                                                      *
+ *          src/math/                                                         *
  *              tmpl_Double_Abs:                                              *
  *                  Computes the absolute value of a real number.             *
+ *          src/math/auxiliary/                                               *
  *              tmpl_Double_Arccos_Maclaurin:                                 *
  *                  Computes acos via a Maclaurin series for |x| < 0.125.     *
  *              tmpl_Double_Arccos_Rat_Remez:                                 *
@@ -80,7 +123,7 @@
  *      Method:                                                               *
  *          Similar to the IEEE-754 version, but determine the size of the    *
  *          input using the absolute value function and comparing the output  *
- *          to the numbers 0.5 and 1.0.                                       *
+ *          to the numbers 2^-57, 2^-3, 2^-1, and 1.0.                        *
  *      Error:                                                                *
  *          Based on 788,968,857 samples with -1 < x < 1.                     *
  *              max relative error: 2.2204459059627917e-16                    *
@@ -94,13 +137,37 @@
  *      is how the size of the input x is determined. The IEEE-754 method     *
  *      examines the exponent of the input, the portable method computes the  *
  *      absolute value and compares the size of x directly with the numbers   *
- *      0.5 and 1.0. The IEEE-754 method is hence slightly faster on most     *
- *      computers.                                                            *
+ *      2^-57, 2^-3, 2^-1, and 1. The IEEE-754 method is hence slightly       *
+ *      faster on most computers.                                             *
  *                                                                            *
  *      Both methods detect if the input is NaN or infinity. The IEEE-754     *
  *      detects NaN and Inf since the exponents of NaN and Inf are large, and *
  *      the portable method detects NaN since NaN should always evaluate      *
  *      false when a comparison is made (==, <, >, etc.).                     *
+ *  References:                                                               *
+ *      1.) Maguire, Ryan (2024)                                              *
+ *          tmpld                                                             *
+ *          https://github.com/ryanmaguire/libtmpl_data                       *
+ *                                                                            *
+ *          Python library providing an implementation of the rational        *
+ *          Remez exchange algorithm. The coefficients for the                *
+ *          approximations used by this function were computed using this.    *
+ *                                                                            *
+ *      2.) Tasissa, Abiy (2019)                                              *
+ *          Function Approximation and the Remez Exchange Algorithm.          *
+ *          https://sites.tufts.edu/atasissa/files/2019/09/remez.pdf          *
+ *                                                                            *
+ *          Survey of the Remez polynomial and Remez exchange algorithm,      *
+ *          including an excellent discussion on the rational Remez exchange  *
+ *          algorithm. The implementation in tmpld is based on these notes.   *
+ *                                                                            *
+ *      3.) Abramowitz, Milton and Stegun, Irene (1964)                       *
+ *          Handbook of Mathematical Functions                                *
+ *          Applied Mathematics Series Volume 55,                             *
+ *          National Bureau of Standards                                      *
+ *                                                                            *
+ *          Standard reference for formulas on mathematical functions. The    *
+ *          inverse trigonometric functions are found in chapter 4 section 4. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -108,6 +175,10 @@
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
  *  2.) tmpl_math.h:                                                          *
  *          Header file with the functions prototype.                         *
+ *  3.) tmpl_math_constants.h:                                                *
+ *          Header file providing pi and pi / 2.                              *
+ *  4.) tmpl_ieee754_double.h:                                                *
+ *          Header file where the tmpl_IEEE754_Double type is defined.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 03, 2023                                              *
@@ -120,6 +191,9 @@
  *      Added optimizations for small x, |x| < 0.125, and denormal values.    *
  *  2024/10/28: Ryan Maguire                                                  *
  *      Replacing use of const variables with macros for multiples of pi.     *
+ *  2025/01/25: Ryan Maguire                                                  *
+ *      Removed redundant "else", introduced tmpl_math_constants.h, improved  *
+ *      explanation of algorithm, added references.                           *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -130,6 +204,9 @@
 
 /*  Function prototype found here.                                            */
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Mathematical constants like pi and pi / 2 are found here.                 */
+#include <libtmpl/include/constants/tmpl_math_constants.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -144,20 +221,15 @@
 /*  Tail-end arccos function that uses the reflection formula with arcsin.    */
 #include "auxiliary/tmpl_arccos_tail_end_double.h"
 
-/******************************************************************************
- *                              Constant Values                               *
- ******************************************************************************/
-
-/*  The limit at zero is pi / 2, and the negation formula needs pi as well.   */
-#define TMPL_ONE_PI (+3.14159265358979323846264338327950288419716939937511E+00)
-#define TMPL_PI_BY_TWO (+1.57079632679489661923132169163975144209858469969E+00)
-
 /*  Check for IEEE-754 support.                                               */
 #if TMPL_HAS_IEEE754_DOUBLE == 1
 
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
+
+/*  tmpl_IEEE754_Double data type defined here.                               */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  On most computers it is faster to check the value of the exponent of a    *
  *  double rather than checking the entire double. This gives the IEEE-754    *
@@ -173,35 +245,37 @@ double tmpl_Double_Arccos(double x)
     w.r = x;
 
     /*  Small inputs, |x| < 0.5.                                              */
-    if (w.bits.expo < TMPL_DOUBLE_UBIAS - 1U)
+    if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 1U)
     {
         /*  For |x| < 2^-57, acos(x) = pi / 2 to double precision.            */
-        if (w.bits.expo < TMPL_DOUBLE_UBIAS - 57U)
-            return TMPL_PI_BY_TWO;
+        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 57U)
+            return tmpl_Double_Pi_By_Two;
 
         /*  For small x, |x| < 2^-3, the Maclaurin series is sufficient.      */
-        else if (w.bits.expo < TMPL_DOUBLE_UBIAS - 3U)
+        if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 3U)
             return tmpl_Double_Arccos_Maclaurin(x);
 
         /*  For 0.125 <= |x| < 0.5 use the minimax approximation.             */
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
-    /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
-    else if (w.bits.expo < TMPL_DOUBLE_UBIAS)
+    /*  For |x| < 1 use the formula acos(x) = 2 * asin(sqrt(1 - x) / 2).      */
+    if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
-        if (w.bits.sign)
-            return TMPL_ONE_PI - tmpl_Double_Arccos_Tail_End(-x);
+        if (TMPL_DOUBLE_IS_NEGATIVE(w))
+            return tmpl_Double_Pi - tmpl_Double_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Double_Arccos_Tail_End(x);
     }
 
-    /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
+    /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0)
-        return TMPL_ONE_PI;
-    else if (x == 1.0)
+        return tmpl_Double_Pi;
+
+    /*  Similarly, since cos(0) = 1 we have acos(1) = 0. Use this.            */
+    if (x == 1.0)
         return 0.0;
 
     /*  For a real input, acos(x) is undefined with |x| > 1. Return NaN. Note *
@@ -230,31 +304,33 @@ double tmpl_Double_Arccos(double x)
     {
         /*  For very small inputs return pi / 2.                              */
         if (abs_x < 6.938893903907228E-18)
-            return TMPL_PI_BY_TWO;
+            return tmpl_Double_Pi_By_Two;
 
         /*  Small inputs, |x| < 0.125, use the Maclaurin series.              */
-        else if (abs_x < 0.125)
+        if (abs_x < 0.125)
             return tmpl_Double_Arccos_Maclaurin(x);
 
         /*  Otherwise use the Remez rational minimax function.                */
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
-    /*  For |x| < 1 use the tail end formula acos(x) = 2asin(sqrt(1-x)/2).    */
-    else if (abs_x < 1.0)
+    /*  For |x| < 1 use the formula acos(x) = 2 * asin(sqrt(1 - x) / 2).      */
+    if (abs_x < 1.0)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (x < 0.0)
-            return TMPL_ONE_PI - tmpl_Double_Arccos_Tail_End(abs_x);
+            return tmpl_Double_Pi - tmpl_Double_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Double_Arccos_Tail_End(abs_x);
     }
 
-    /*  acos(-1) = pi and acos(1) = 0. Use this.                              */
+    /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0)
-        return TMPL_ONE_PI;
-    else if (x == 1.0)
+        return tmpl_Double_Pi;
+
+    /*  Similarly, since cos(0) = 1 we have acos(1) = 0. Use this.            */
+    if (x == 1.0)
         return 0.0;
 
     /*  For |x| > 1 the function is undefined. Return NaN.                    */

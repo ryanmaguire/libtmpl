@@ -19,7 +19,7 @@
  *                              tmpl_abs_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes f(x) = |x|. See include/math/tmpl_abs_ldouble.h for details. *
+ *      Computes |x|. Source: libtmpl/include/inline/math/tmpl_abs_ldouble.h. *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -34,7 +34,7 @@
 /*  Function prototype / forward declaration.                                 */
 extern long double tmpl_LDouble_Abs(long double x);
 
-/*  Implemented in include/math/tmpl_abs_ldouble.h.                           */
+/*  Implemented here.                                                         */
 #include "../../include/inline/math/tmpl_abs_ldouble.h"
 
 #endif
