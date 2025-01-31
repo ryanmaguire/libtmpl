@@ -20,6 +20,9 @@
 /*  TMPL_HAS_FLOATINT64 macro provided here.                                  */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  These tables are only needed if libtmpl math algorithms are used.         */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
 /*  Declaration given here.                                                   */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -348,3 +351,6 @@ const double tmpl_double_exp_table[179] = {
 
 #endif
 /*  End of #if TMPL_HAS_FLOATINT64 == 1.                                      */
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */

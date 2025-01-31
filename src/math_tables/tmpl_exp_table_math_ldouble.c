@@ -17,6 +17,12 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 
+/*  TMPL_USE_MATH_ALGORITHMS macro provided here.                             */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  These tables are only needed if libtmpl math algorithms are used.         */
+#if TMPL_USE_MATH_ALGORITHMS == 1
+
 /*  Declaration given here.                                                   */
 #include <libtmpl/include/tmpl_math.h>
 
@@ -202,3 +208,6 @@ const long double tmpl_ldouble_exp_table[179] = {
     1.9887374695822918311174773496469253668482551764106E+00L,
     2.0043353308743311241896996041635187235500791639992E+00L
 };
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
