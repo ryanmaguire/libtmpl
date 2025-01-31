@@ -79,10 +79,9 @@
  *          Mathematical Methods for Scientists and Engineers                 *
  *          University Science Books, ISBN 1-891389-29-7                      *
  *                                                                            *
- *          Excellent (but hard to find) introductory text on mathematical    *
- *          physics. A detailed discussion of orthogonal polynomials can be   *
- *          found in Chapter 14: Orthogonal Polynomials and Sturm-Liouville   *
- *          Problems.                                                         *
+ *          Excellent introductory text on mathematical physics. A detailed   *
+ *          discussion of orthogonal polynomials can be found in Chapter 14:  *
+ *          Orthogonal Polynomials and Sturm-Liouville Problems.              *
  *                                                                            *
  *      2.) Arfken, G., Weber, H., Harris, F. (2013)                          *
  *          Mathematical Methods for Physicists, Seventh Edition              *
