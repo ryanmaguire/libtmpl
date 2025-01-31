@@ -65,10 +65,6 @@
  *          Err = O(epsilon * n * U_n(x))                                     *
  *                                                                            *
  *      For extremely large n, one may obtain a meaningless result.           *
- *      Since long double usually has at least 52-bits of precision, you      *
- *      should be able to safely compute with n >= 1,000, and any |x| <= 1.   *
- *      Machines using extended, double-double, or quadruple precision can go *
- *      much higher.                                                          *
  *  Notes:                                                                    *
  *      1.) This functions checks for NULL pointers, and checks if length is  *
  *          zero. If length is non-zero, and if evals is not NULL, then the   *
