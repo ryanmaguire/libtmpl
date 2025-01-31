@@ -154,7 +154,7 @@ tmpl_LDouble_Chebyshev_T(long double * const evals,
     /*  length >= 2, use the next Chebyshev polynomial. T_1(x) = x.           */
     evals[1] = x;
 
-    /*  U_{n}(x) = 2*x*U_{n-1}(x) - U_{n-2}(x). Compute.                      */
+    /*  T_{n}(x) = 2*x*T_{n-1}(x) - T_{n-2}(x). Compute.                      */
     for (n = two; n < length; ++n)
         evals[n] = 2.0L * x * evals[n - 1] - evals[n - 2];
 }
