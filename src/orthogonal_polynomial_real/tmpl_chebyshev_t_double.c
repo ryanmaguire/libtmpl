@@ -80,14 +80,21 @@
  *      3.) No checks for NaN or Infinity are made.                           *
  *  References:                                                               *
  *      1.) McQuarrie, Donald (2003),                                         *
- *          "Mathematical Methods for Scientists and Engineers",              *
- *          University Science Books, ISBN 1-891389-29-7,                     *
- *          Chapter 14 "Orthogonal Polynomials and Sturm-Liouville Problems"  *
+ *          Mathematical Methods for Scientists and Engineers                 *
+ *          University Science Books, ISBN 1-891389-29-7                      *
+ *                                                                            *
+ *          Excellent (but hard to find) introductory text on mathematical    *
+ *          physics. A detailed discussion of orthogonal polynomials can be   *
+ *          found in Chapter 14: Orthogonal Polynomials and Sturm-Liouville   *
+ *          Problems.                                                         *
+ *                                                                            *
  *      2.) Arfken, G., Weber, H., Harris, F. (2013)                          *
- *          "Mathematical Methods for Physicists, Seventh Edition"            *
+ *          Mathematical Methods for Physicists, Seventh Edition              *
  *          Academic Press, Elsevier                                          *
- *          Chapter 18 "More Special Functions"                               *
- *          Section 4 "Chebyshev Polynomials"                                 *
+ *                                                                            *
+ *          Standard textbook on mathematical physics, often used in          *
+ *          introductory graduate courses. See Chapter 18: More Special       *
+ *          Functions, Section 4: Chebyshev Polynomials                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -145,7 +152,7 @@ void tmpl_Double_Chebyshev_T(double * const evals, double x, size_t length)
     /*  length >= 2, use the next Chebyshev polynomial. T_1(x) = x.           */
     evals[1] = x;
 
-    /*  U_{n}(x) = 2*x*U_{n-1}(x) - U_{n}(x). Compute.                        */
+    /*  U_{n}(x) = 2*x*U_{n-1}(x) - U_{n-2}(x). Compute.                      */
     for (n = two; n < length; ++n)
         evals[n] = 2.0 * x * evals[n - 1] - evals[n - 2];
 }
