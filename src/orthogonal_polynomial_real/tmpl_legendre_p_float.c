@@ -78,20 +78,28 @@
  *      3.) No checks for NaN or Infinity are made.                           *
  *  References:                                                               *
  *      1.) McQuarrie, Donald (2003),                                         *
- *          "Mathematical Methods for Scientists and Engineers",              *
- *          University Science Books, ISBN 1-891389-29-7,                     *
- *          Chapter 14 "Orthogonal Polynomials and Sturm-Liouville Problems"  *
+ *          Mathematical Methods for Scientists and Engineers                 *
+ *          University Science Books, ISBN 1-891389-29-7                      *
+ *                                                                            *
+ *          Excellent introductory text on mathematical physics. A detailed   *
+ *          discussion of orthogonal polynomials can be found in Chapter 14:  *
+ *          Orthogonal Polynomials and Sturm-Liouville Problems.              *
+ *                                                                            *
  *      2.) Bonnet, Ossian (1852),                                            *
- *          "These de Mecanique. Sur le Developpement des Fonctions en        *
- *              Series Ordonnees Suivant le Fonctions Xn et Yn"               *
- *          Journal de Mathematiques Pures et Appliquees,                     *
+ *          These de Mecanique. Sur le Developpement des Fonctions en         *
+ *              Series Ordonnees Suivant le Fonctions Xn et Yn                *
+ *          Journal de Mathematiques Pures et Appliquees                      *
  *          1st Series, Vol. 17., Pages 265-300,                              *
- *          See Theorem V on page 267 for the original proof of Bonnet's      *
- *          Recursion Formula.                                                *
+ *                                                                            *
+ *          The original paper containing Bonnet's formula. See Theorem V on  *
+ *          page 267 for a proof of the recursion relation.                   *
+ *                                                                            *
  *      3.) Arfken, G., Weber, H., Harris, F. (2013)                          *
- *          "Mathematical Methods for Physicists, Seventh Edition"            *
+ *          Mathematical Methods for Physicists, Seventh Edition              *
  *          Academic Press, Elsevier                                          *
- *          Chapter 15 "Legendre Functions"                                   *
+ *                                                                            *
+ *          Standard textbook on mathematical physics, often used in          *
+ *          introductory graduate courses. See Chapter 15: Legendre Functions.*
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
