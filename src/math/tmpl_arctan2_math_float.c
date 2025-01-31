@@ -313,8 +313,8 @@ float tmpl_Float_Arctan2(float y, float x)
         ind = (w.bits.expo + 4U) - TMPL_FLOAT_UBIAS;
 
         /*  Get the corresponding values from the lookup tables.              */
-        v = tmpl_atan_float_v[ind];
-        atan_v = tmpl_atan_float_atan_of_v[ind];
+        v = tmpl_float_atan_v[ind];
+        atan_v = tmpl_float_atan_of_v[ind];
 
         /*  Use 4.4.34 from Abramowitz and Stegun to compute the new argument.*/
         arg = (w.r - v) / (1.0F + w.r*v);
@@ -444,8 +444,8 @@ float tmpl_Float_Arctan2(float y, float x)
     }
 
     /*  Use the lookup table for arctan. Get the pre-computed values.         */
-    v = tmpl_atan_float_v[ind];
-    atan_v = tmpl_atan_float_atan_of_v[ind];
+    v = tmpl_float_atan_v[ind];
+    atan_v = tmpl_float_atan_of_v[ind];
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (z - v) / (1.0F + z*v);

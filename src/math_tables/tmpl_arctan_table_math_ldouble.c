@@ -29,20 +29,24 @@
 /*  The long double version of these tables depends on how long double is     *
  *  implemented. 80-bit extended and 64-bit double implementations, as well   *
  *  as the "portable" version, use the same idea as double and float. 128-bit *
- *  quadruple and double-double use a much larger table to speed up           *
- *  computations while still achieving 10^-34 peak relative error.            */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN           || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN              || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_UNKNOWN
-const long double tmpl_atan_ldouble_v[8] = {
+ *  quadruple and double-double use a much larger table to speed up the       *
+ *  computation while still achieving 10^-32 or 10^-34 peak relative error.   */
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT || \
+    TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT || \
+    TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_UNKNOWN
+
+/*  Formula 4.4.34 from Abramowitz and Stegun states:                         *
+ *                                                                            *
+ *                                     u - v                                  *
+ *          atan(u) = atan(v) + atan( -------- )                              *
+ *                                     1 + uv                                 *
+ *                                                                            *
+ *  The values v and atan(v) are pre-computed below for the calculation.      */
+const long double tmpl_ldouble_atan_v[8] = {
     0.05L, 0.18L, 0.35L, 0.72L, 1.35L, 2.5L, 4.0L, 8.0L
 };
 
-const long double tmpl_atan_ldouble_atan_of_v[8] = {
+const long double tmpl_ldouble_atan_of_v[8] = {
     4.99583957219427614100063E-02L,
     1.78092938231197549667920E-01L,
     3.36674819386727181396699E-01L,

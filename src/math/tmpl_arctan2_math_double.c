@@ -340,8 +340,8 @@ double tmpl_Double_Arctan2(double y, double x)
         const unsigned int ind = (wz.bits.expo + 4U) - TMPL_DOUBLE_UBIAS;
 
         /*  Get the corresponding values from the lookup tables.              */
-        const double v = tmpl_atan_double_v[ind];
-        const double atan_v = tmpl_atan_double_atan_of_v[ind];
+        const double v = tmpl_double_atan_v[ind];
+        const double atan_v = tmpl_double_atan_of_v[ind];
 
         /*  Use 4.4.34 from Abramowitz and Stegun to compute the new argument.*/
         const double arg = (wz.r - v) / (1.0 + wz.r*v);
@@ -473,8 +473,8 @@ double tmpl_Double_Arctan2(double y, double x)
     }
 
     /*  Use the lookup table for arctan. Get the pre-computed values.         */
-    v = tmpl_atan_double_v[ind];
-    atan_v = tmpl_atan_double_atan_of_v[ind];
+    v = tmpl_double_atan_v[ind];
+    atan_v = tmpl_double_atan_of_v[ind];
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (z - v) / (1.0 + z*v);

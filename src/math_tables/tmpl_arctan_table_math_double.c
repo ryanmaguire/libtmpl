@@ -33,12 +33,11 @@
  *                                     1 + uv                                 *
  *                                                                            *
  *  The values v and atan(v) are pre-computed below for the calculation.      */
-
-const double tmpl_atan_double_v[8] = {
+const double tmpl_double_atan_v[8] = {
     0.05, 0.18, 0.35, 0.72, 1.35, 2.5, 4.0, 8.0
 };
 
-const double tmpl_atan_double_atan_of_v[8] = {
+const double tmpl_double_atan_of_v[8] = {
     4.99583957219427614100063E-02,
     1.78092938231197549667920E-01,
     3.36674819386727181396699E-01,

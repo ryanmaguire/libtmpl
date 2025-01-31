@@ -442,39 +442,26 @@ extern const long double tmpl_Min_LDouble_Base_E;
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  The values v and atan(v) used in atan and atan2 routines.                 */
-extern const float tmpl_atan_float_v[8];
-extern const float tmpl_atan_float_atan_of_v[8];
-extern const double tmpl_atan_double_v[8];
-extern const double tmpl_atan_double_atan_of_v[8];
+extern const float tmpl_float_atan_v[8];
+extern const float tmpl_float_atan_of_v[8];
+extern const double tmpl_double_atan_v[8];
+extern const double tmpl_double_atan_of_v[8];
 
 /*  The long double version of these tables depends on how long double is     *
  *  implemented. 80-bit extended and 64-bit double implementations, as well   *
  *  as the "portable" version, use the same idea as double and float. 128-bit *
- *  quadruple and double-double use a much larger table to speed up           *
- *  computations while still achieving 10^-34 peak relative error.            */
+ *  quadruple and double-double use a much larger table to speed up the       *
+ *  computation while still achieving 10^-32 or 10^-34 peak relative error.   */
 #if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE  || \
     TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 extern const long double tmpl_ldouble_atan_n_by_8[129];
 #else
-extern const long double tmpl_atan_ldouble_v[8];
-extern const long double tmpl_atan_ldouble_atan_of_v[8];
+extern const long double tmpl_ldouble_atan_v[8];
+extern const long double tmpl_ldouble_atan_of_v[8];
 #endif
 
 extern const double tmpl_Double_SinCos_Table[440];
 extern const float tmpl_Float_SinCos_Table[440];
-
-#endif
-/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
-
-/*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_cosd_table[180];
-extern const float tmpl_float_cosd_table[180];
-extern const long double tmpl_ldouble_cosd_table[180];
-
-/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_cospi_table[128];
-extern const float tmpl_float_cospi_table[128];
-extern const long double tmpl_ldouble_cospi_table[128];
 
 /*  If type-punning is available, use a table of 64-bit ints representing     *
  *  various values of exp(x). This speeds up the computation considerably.    */
@@ -492,6 +479,24 @@ extern const double tmpl_double_exp_table[179];
 /*  The values exp(k/128) for k = -89, -88, ..., 0, 1, ..., 88, 89.           */
 extern const float tmpl_float_exp_table[179];
 extern const long double tmpl_ldouble_exp_table[179];
+
+/*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
+extern const double tmpl_double_log_table[128];
+extern const float tmpl_float_log_table[128];
+extern const long double tmpl_ldouble_log_table[128];
+
+#endif
+/*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
+
+/*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
+extern const double tmpl_double_cosd_table[180];
+extern const float tmpl_float_cosd_table[180];
+extern const long double tmpl_ldouble_cosd_table[180];
+
+/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
+extern const double tmpl_double_cospi_table[128];
+extern const float tmpl_float_cospi_table[128];
+extern const long double tmpl_ldouble_cospi_table[128];
 
 /*  Factorial tables.                                                         */
 extern const float tmpl_float_factorial_table[34];
@@ -512,11 +517,6 @@ extern const long double tmpl_ldouble_factorial_table[1755];
 extern const long double tmpl_ldouble_factorial_table[34];
 #endif
 
-/*  The values log(1 + k/128) for k = 0, 1, ..., 126, 127.                    */
-extern const double tmpl_double_log_table[128];
-extern const float tmpl_float_log_table[128];
-extern const long double tmpl_ldouble_log_table[128];
-
 /*  The values 1 / (1 + k/128) = 128 / (128 + k) for k = 0, 1, .., 126, 127.  */
 extern const double tmpl_double_rcpr_table[128];
 extern const float tmpl_float_rcpr_table[128];
@@ -532,17 +532,10 @@ extern const double tmpl_double_sinpi_table[128];
 extern const float tmpl_float_sinpi_table[128];
 extern const long double tmpl_ldouble_sinpi_table[128];
 
-#if TMPL_HAS_IEEE754_DOUBLE != 1
+/*  The powers 2^n for n = 0, 1, ..., 64, at different precisions.            */
 extern const double tmpl_double_pow_2_table[65];
-#endif
-
-#if TMPL_HAS_IEEE754_FLOAT != 1
 extern const float tmpl_float_pow_2_table[65];
-#endif
-
-#if TMPL_HAS_IEEE754_LDOUBLE != 1
 extern const long double tmpl_ldouble_pow_2_table[65];
-#endif
 
 /******************************************************************************
  *                           Non-Inlined Functions                            *

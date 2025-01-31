@@ -287,14 +287,14 @@ long double tmpl_LDouble_Arctan(long double x)
         return out;
     }
 
-    /*  The exponent tells us the index for the tables tmpl_atan_ldouble_v and*
-     *  tmpl_atan_ldouble_atan_of_v that correspond to x. The index is simply *
+    /*  The exponent tells us the index for the tables tmpl_ldouble_atan_v    *
+     *  and tmpl_ldouble_atan_of_v that correspond to x. The index is simply  *
      *  the exponent plus four (since the lowest value is 1/16 = 2^-4, we     *
      *  need to shift up by 4). The exponent has a bias, per the IEEE-754     *
      *  format, so we must subtract this off to get the correct index.        */
     ind = (TMPL_LDOUBLE_EXPO_BITS(w) + 4U) - TMPL_LDOUBLE_UBIAS;
-    v = tmpl_atan_ldouble_v[ind];
-    atan_v = tmpl_atan_ldouble_atan_of_v[ind];
+    v = tmpl_ldouble_atan_v[ind];
+    atan_v = tmpl_ldouble_atan_of_v[ind];
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (w.r - v) / (1.0L + w.r*v);
@@ -438,8 +438,8 @@ long double tmpl_LDouble_Arctan(long double x)
     }
 
     /*  Get the nearby values from the lookup tables.                         */
-    v = tmpl_atan_ldouble_v[ind];
-    atan_v = tmpl_atan_ldouble_atan_of_v[ind];
+    v = tmpl_ldouble_atan_v[ind];
+    atan_v = tmpl_ldouble_atan_of_v[ind];
 
     /*  Compute the argument via formula 4.4.34 from Abramowitz and Stegun.   */
     arg = (abs_x - v) / (1.0L + abs_x*v);
