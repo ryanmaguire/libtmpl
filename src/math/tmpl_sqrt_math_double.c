@@ -36,16 +36,21 @@
  *          The square root of x at double precision.                         *
  *  IEEE-754 Version:                                                         *
  *      Called Functions:                                                     *
- *          tmpl_math.h:                                                      *
+ *          src/math/auxiliary/                                               *
  *              tmpl_Double_Sqrt_Remez:                                       *
  *                  Computes sqrt(x) near x = 1 using a Remez polynomial.     *
  *      Method:                                                               *
  *          Use a combination of square root rules, Remez polynomials, and    *
  *          Newton's method. That is, sqrt(x) is computed as follows:         *
  *                                                                            *
- *              If x < 0, return Not-A-Number.                                *
- *              If x = +/- NaN, +Inf, or +0, return x.                        *
- *              If x is subnormal (denormal), normalize by 2^52.              *
+ *              If x < 0:                                                     *
+ *                  return Not-a-Number.                                      *
+ *              If x = +/- NaN, +Inf, or 0:                                   *
+ *                  return x.                                                 *
+ *              If x is subnormal (denormal):                                 *
+ *                  normalize by 2^52 and proceed to the next part.           *
+ *                                                                            *
+ *          Put x into (binary) scientific form, x = 1.m * 2^b. We then do:   *
  *                                                                            *
  *              sqrt(x) = sqrt(1.m * 2^b)                                     *
  *                      = sqrt(1.m) * sqrt(2^b)                               *
@@ -119,7 +124,7 @@
  *  Notes:                                                                    *
  *      libtmpl implements sqrt using assembly code for architectures that    *
  *      support built-in sqrt. This includes x86, x86_64, and arm64 devices.  *
- *      This is about twice as fast as the C code provided, so it is advised  *
+ *      This is much faster than the C code provided, so it is advised        *
  *      that you not use this code unless you need to. This file will not be  *
  *      compiled unless NO_ASM=1 is passed to the Makefile, or if your        *
  *      machine uses an architecture that lacks built-in sqrt.                *
@@ -177,11 +182,19 @@ double tmpl_Double_Sqrt(double x)
 
     /*  Special cases. sqrt(negative) is undefined. sqrt(0) = 0,              *
      *  sqrt(inf) = inf, and sqrt(Not-A-Number) = Not-A-Number.               */
-    if (w.bits.sign)
+    if (TMPL_DOUBLE_IS_NEGATIVE(w))
+    {
+        /*  Minus zero (-0) should be treated the same as zero. In this case, *
+         *  return sqrt(-0) = -0. To preserve the sign, return the input.     */
+        if (x == 0.0)
+            return x;
+
+        /*  For all x < 0, return Not-A-Number.                               */
         return TMPL_NAN;
+    }
 
     /*  Subnormal number or zero.                                             */
-    else if (w.bits.expo == 0x00U)
+    if (TMPL_DOUBLE_EXPO_BITS(w) == 0x00U)
     {
         /*  sqrt(0) = 0.0.                                                    */
         if (w.r == 0.0)
@@ -194,7 +207,7 @@ double tmpl_Double_Sqrt(double x)
         /*  Compute the exponent. Since we normalized by a power of two we    *
          *  need to subtract this from the value. To compute the correctly    *
          *  rounded exponent after division by 2, subtract 1 more before      *
-         *  dividing. The total is 53. Finally, shift by the bias.            */
+         *  dividing, so subtract by 52 + 1 = 53. Finally, shift by the bias. */
         exponent = TMPL_DOUBLE_UBIAS - ((TMPL_DOUBLE_UBIAS-w.bits.expo)+53U)/2U;
     }
 
@@ -228,11 +241,18 @@ double tmpl_Double_Sqrt(double x)
      *                                                                        *
      *  Note that we've already checked that E != 0, so E - 1 will not        *
      *  wrap around. That is, E - 1 >= 0. The number 512 is 0x200 in hex.     */
-    exponent = ((w.bits.expo - 1U) >> 1U) + 0x200U;
+    exponent = ((TMPL_DOUBLE_EXPO_BITS(w) - 1U) >> 1U) + 0x200U;
+
+    /*  The parity determines if we scale the final result by sqrt(2) or not. *
+     *  This can be determined by the whether or not the exponent is odd.     *
+     *  Note that the bias is odd, so exponent - bias changes the parity of   *
+     *  the true exponent. That is, if the exponent is 1, which is odd, then  *
+     *  the number stored in w.bits.expo is 1024 since 1024 - 1023 = 1. To    *
+     *  determine if the exponent is odd, we check if 1 + w.bits.expo is odd. */
+    parity = (TMPL_DOUBLE_EXPO_BITS(w) + 1U) & 1U;
 
     /*  Reset the exponent to the bias. Since x = 1.m * 2^(expo - bias), by   *
      *  setting expo = bias we have x = 1.m, so 1 <= x < 2.                   */
-    parity = (w.bits.expo + 1U) & 1U;
     w.bits.expo = TMPL_DOUBLE_BIAS;
 
     /*  We compute sqrt(x) via:                                               *
@@ -250,7 +270,7 @@ double tmpl_Double_Sqrt(double x)
      *              = sqrt(u/t) * sqrt(t) * 2^(b/2)                           *
      *                                                                        *
      *  The value u/t is between 1 and 1 + 1/128. We compute sqrt(u/t) via a  *
-     *  power series in the variable 1 + (u/t - 1).                           *
+     *  Remez polynomial in the variable 1 + (u/t - 1).                       *
      *                                                                        *
      *  We compute the value t = 1 + k/128 by computing k. The value k can be *
      *  obtained from the mantissa of the input. We have:                     *
@@ -260,7 +280,7 @@ double tmpl_Double_Sqrt(double x)
      *            V   V    V     V      V       V        V                    *
      *      u = 1.a   b    c     d      e       f        g        ....        *
      *                                                                        *
-     *  If we treat the abcdefg as an integer in binary, this is the number k *
+     *  If we treat abcdefg as an integer in binary, this is the number k     *
      *  such that t = 1 + k/128. So we simply need to read off this value     *
      *  from the mantissa. The value 1 / (1 + k/128) is stored in the rcpr    *
      *  array. man0 is 4 bits wide, so we need this and the first 3 bits of   *
@@ -272,7 +292,7 @@ double tmpl_Double_Sqrt(double x)
     ind = (ind << 3U) + (w.bits.man1 >> 13U);
 
     /*  Compute s = u/t via s = u * (1/t) using the array rcpr.               */
-    w.r = w.r*tmpl_double_rcpr_table[ind];
+    w.r *= tmpl_double_rcpr_table[ind];
 
     /*  Compute the Remez minimax approximation for sqrt. Peak error 10^-9.   */
     w.r = tmpl_Double_Sqrt_Remez(w.r);
