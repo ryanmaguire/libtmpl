@@ -16,6 +16,24 @@ extern "C" {
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Airy_J1                                                   *
+ *  Purpose:                                                                  *
+ *      Compute the Airy disk function, 2 J1(x) / x, with limit 1 at x = 0.   *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for AJ1(x).                           *
+ *  Output:                                                                   *
+ *      double AJ1_x:                                                         *
+ *          The Bessel AJ1 function evaluated at x.                           *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern float tmpl_Float_Airy_J1(float x);
+extern double tmpl_Double_Airy_J1(double x);
+extern long double tmpl_LDouble_Airy_J1(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_Bessel_I0                                                 *
  *  Purpose:                                                                  *
  *      Compute the Bessel I0 function.                                       *
