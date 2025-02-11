@@ -52,6 +52,24 @@ extern long double tmpl_LDouble_Bessel_J0(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_Double_Bessel_J1                                                 *
+ *  Purpose:                                                                  *
+ *      Compute the Bessel J1 function.                                       *
+ *  Arguments:                                                                *
+ *      double x:                                                             *
+ *          A real number, the argument for J1(x).                            *
+ *  Output:                                                                   *
+ *      double J1_x:                                                          *
+ *          The Bessel J1 function evaluated at x.                            *
+ *  Notes:                                                                    *
+ *      Float and long double equivalents are provided as well.               *
+ ******************************************************************************/
+extern float tmpl_Float_Bessel_J1(float x);
+extern double tmpl_Double_Bessel_J1(double x);
+extern long double tmpl_LDouble_Bessel_J1(long double x);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Double_LambertW                                                  *
  *  Purpose:                                                                  *
  *      Compute the Lambert W function of x.                                  *
