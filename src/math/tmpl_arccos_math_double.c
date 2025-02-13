@@ -341,8 +341,5 @@ double tmpl_Double_Arccos(double x)
 #endif
 /*  End of #if TMPL_HAS_IEEE754_DOUBLE == 1.                                  */
 
-/*  Undefine everything in case someone wants to #include this file.          */
-#include "auxiliary/tmpl_math_undef.h"
-
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
