@@ -220,7 +220,7 @@ float tmpl_Float_Mod_2(float x)
 
 /*  The mantissa is split into 2 components. The highest component has 7 bits *
  *  and the lowest component has 16 bits, 23 bits total.                      */
-#define A0 8U
+#define TMPL_EXPO_SHIFT (0x07U + TMPL_FLOAT_UBIAS)
 
 /*  Function for computing the remainder after division by 2.                 */
 float tmpl_Float_Mod_2(float x)
@@ -283,13 +283,13 @@ float tmpl_Float_Mod_2(float x)
 
     /*  Compute the floor of x/2 by bit-twiddling, checking each part of the  *
      *  mantissa.                                                             */
-    if (w.bits.expo < TMPL_FLOAT_BIAS + A0)
+    if (w.bits.expo < TMPL_EXPO_SHIFT)
     {
         w.bits.man1 = 0x00U;
-        w.bits.man0 &= ~(0x7F >> (w.bits.expo - TMPL_FLOAT_BIAS));
+        w.bits.man0 &= 0x7F << (0x07U - (w.bits.expo - TMPL_FLOAT_UBIAS));
     }
     else
-        w.bits.man1 &= ~(0xFFFF >> (w.bits.expo - TMPL_FLOAT_BIAS - A0));
+        w.bits.man1 &= 0xFFFFU << (0x10U - (w.bits.expo - TMPL_EXPO_SHIFT));
 
     /*  We want to compute 2 * floor(x/2). So far we have floor(x/2).         *
      *  Multiply by 2 by adjusting the exponent by 1.                         */
@@ -299,9 +299,7 @@ float tmpl_Float_Mod_2(float x)
 /*  End of tmpl_Float_Floor.                                                  */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
+#undef TMPL_EXPO_SHIFT
 
 #endif
 /*  End of #if TMPL_HAS_32_BIT_INT == 1.                                      */
@@ -312,11 +310,7 @@ float tmpl_Float_Mod_2(float x)
 /*  Portable algorithm for mod 2 based on the floor function.                 */
 float tmpl_Float_Mod_2(float x)
 {
-    /*  x mod 2 is odd. We can use this to reduce the argument to positive.   */
-    if (x < 0.0F)
-        return x + 2.0F * tmpl_Float_Floor(-0.5F * x);
-    else
-        return x - 2.0F * tmpl_Float_Floor(0.5F * x);
+    return x - 2.0F * tmpl_Float_Truncate(0.5F * x);
 }
 /*  End of tmpl_Float_Mod_2.                                                  */
 
