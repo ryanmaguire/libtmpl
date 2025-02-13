@@ -60,7 +60,7 @@
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Use an if-then statement to check if the input is positive,       *
+ *          Use an if-then statement to check if the input is negative,       *
  *          returning x for non-negative and -x otherwise.                    *
  *      Error:                                                                *
  *          Based on 1,051,958,476 samples with -10^6 < x < 10^6.             *
@@ -169,8 +169,8 @@ double tmpl_Double_Abs(double x)
     if (x < 0.0)
         return -x;
 
-    /*  Otherwise return the input. Note, "negative" zeros are still negative.*
-     *  The portable method is unable to detect signed zeros.                 */
+    /*  Otherwise return the input. Note, "negative" zero will still be       *
+     *  negative. The portable method is unable to detect signed zeros.       */
     return x;
 }
 /*  End of tmpl_Double_Abs.                                                   */
