@@ -44,7 +44,7 @@
  *                  Computes acos(x) for 0.5 <= x < 1.0.                      *
  *      Method:                                                               *
  *          0 <= |x| < 2^-57:                                                 *
- *              return pi / 2. The error is O(x). The avoids unnecessary      *
+ *              return pi / 2. The error is O(x). This avoids unnecessary     *
  *              underflow in the computation.                                 *
  *          2^-57 <= |x| < 2^-3:                                              *
  *              Use a degree 15 Maclaurin series. Only 8 non-zero terms are   *
@@ -259,7 +259,7 @@ double tmpl_Double_Arccos(double x)
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
-    /*  For |x| < 1 use the formula acos(x) = 2 * asin(sqrt(1 - x) / 2).      */
+    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
     if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
@@ -314,7 +314,7 @@ double tmpl_Double_Arccos(double x)
         return tmpl_Double_Arccos_Rat_Remez(x);
     }
 
-    /*  For |x| < 1 use the formula acos(x) = 2 * asin(sqrt(1 - x) / 2).      */
+    /*  For 0.5 <= |x| < 1 use the formula acos(x) = 2*asin(sqrt(1 - x) / 2). */
     if (abs_x < 1.0)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
