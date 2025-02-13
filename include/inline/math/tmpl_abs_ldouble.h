@@ -55,14 +55,22 @@
  *          None.                                                             *
  *      Method:                                                               *
  *          Given:                                                            *
+ *                                                                            *
  *              x = x_hi + x_lo                                               *
+ *                                                                            *
  *          we compute:                                                       *
+ *                                                                            *
  *              abs_x = abs_hi + abs_lo                                       *
+ *                                                                            *
  *          as follows. If x_hi and x_lo have the same sign, then:            *
+ *                                                                            *
  *              |x_hi + x_lo| = |x_hi| + |x_lo|                               *
+ *                                                                            *
  *          so abs_hi = |x_hi| and abs_lo = |x_lo|. If x_hi and x_lo have     *
  *          different signs, then:                                            *
+ *                                                                            *
  *              |x_hi + x_lo| = |x_hi| - |x_lo|                               *
+ *                                                                            *
  *          So abs_hi = |x_hi| and abs_lo = -|x_lo|. In both cases,           *
  *          abs_hi = |x_hi|. To compute this we just set the sign bit of x_hi *
  *          to zero. abs_lo depends on whether x_hi and x_lo have the same    *
@@ -78,7 +86,7 @@
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Use an if-then statement to check if the input is positive,       *
+ *          Use an if-then statement to check if the input is negative,       *
  *          returning x for non-negative and -x otherwise.                    *
  *      Error:                                                                *
  *          Based on 525,979,238 samples with -10^6 < x < 10^6.               *
@@ -225,8 +233,8 @@ long double tmpl_LDouble_Abs(long double x)
     if (x < 0.0L)
         return -x;
 
-    /*  Otherwise return the input. Note, "negative" zeros are still negative.*
-     *  The portable method is unable to detect signed zeros.                 */
+    /*  Otherwise return the input. Note, "negative" zero will still be       *
+     *  negative. The portable method is unable to detect signed zeros.       */
     return x;
 }
 /*  End of tmpl_LDouble_Abs.                                                  */
