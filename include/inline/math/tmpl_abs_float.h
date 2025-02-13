@@ -60,7 +60,7 @@
  *      Called Functions:                                                     *
  *          None.                                                             *
  *      Method:                                                               *
- *          Use an if-then statement to check if the input is positive,       *
+ *          Use an if-then statement to check if the input is negative,       *
  *          returning x for non-negative and -x otherwise.                    *
  *      Error:                                                                *
  *          Based on 2,103,916,953 samples with -10^6 < x < 10^6.             *
@@ -164,8 +164,8 @@ float tmpl_Float_Abs(float x)
     if (x < 0.0F)
         return -x;
 
-    /*  Otherwise return the input. Note, "negative" zeros are still negative.*
-     *  The portable method is unable to detect signed zeros.                 */
+    /*  Otherwise return the input. Note, "negative" zero will still be       *
+     *  negative. The portable method is unable to detect signed zeros.       */
     return x;
 }
 /*  End of tmpl_Float_Abs.                                                    */
