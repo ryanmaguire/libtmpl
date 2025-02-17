@@ -51,90 +51,6 @@
 #include <libtmpl/include/types/tmpl_rgba30.h>
 #include <libtmpl/include/types/tmpl_rgba48.h>
 
-/******************************************************************************
- *                             Predefined Colors                              *
- ******************************************************************************/
-
-/*  Commonly used colors in 24-bit RGB format.                                */
-extern const tmpl_RGB24 tmpl_RGB24_Black;
-extern const tmpl_RGB24 tmpl_RGB24_White;
-extern const tmpl_RGB24 tmpl_RGB24_Red;
-extern const tmpl_RGB24 tmpl_RGB24_Green;
-extern const tmpl_RGB24 tmpl_RGB24_Blue;
-extern const tmpl_RGB24 tmpl_RGB24_Cyan;
-extern const tmpl_RGB24 tmpl_RGB24_Magenta;
-extern const tmpl_RGB24 tmpl_RGB24_Yellow;
-
-/*  Same colors with alpha compositing, alpha parameter set to 1.             */
-extern const tmpl_RGBA24 tmpl_RGBA24_Black;
-extern const tmpl_RGBA24 tmpl_RGBA24_White;
-extern const tmpl_RGBA24 tmpl_RGBA24_Red;
-extern const tmpl_RGBA24 tmpl_RGBA24_Green;
-extern const tmpl_RGBA24 tmpl_RGBA24_Blue;
-extern const tmpl_RGBA24 tmpl_RGBA24_Cyan;
-extern const tmpl_RGBA24 tmpl_RGBA24_Magenta;
-extern const tmpl_RGBA24 tmpl_RGBA24_Yellow;
-
-/*  Commonly used colors in 30-bit RGB format.                                */
-extern const tmpl_RGB30 tmpl_RGB30_Black;
-extern const tmpl_RGB30 tmpl_RGB30_White;
-extern const tmpl_RGB30 tmpl_RGB30_Red;
-extern const tmpl_RGB30 tmpl_RGB30_Green;
-extern const tmpl_RGB30 tmpl_RGB30_Blue;
-extern const tmpl_RGB30 tmpl_RGB30_Cyan;
-extern const tmpl_RGB30 tmpl_RGB30_Magenta;
-extern const tmpl_RGB30 tmpl_RGB30_Yellow;
-
-/*  Same colors with alpha compositing, alpha parameter set to 1.             */
-extern const tmpl_RGBA30 tmpl_RGBA30_Black;
-extern const tmpl_RGBA30 tmpl_RGBA30_White;
-extern const tmpl_RGBA30 tmpl_RGBA30_Red;
-extern const tmpl_RGBA30 tmpl_RGBA30_Green;
-extern const tmpl_RGBA30 tmpl_RGBA30_Blue;
-extern const tmpl_RGBA30 tmpl_RGBA30_Cyan;
-extern const tmpl_RGBA30 tmpl_RGBA30_Magenta;
-extern const tmpl_RGBA30 tmpl_RGBA30_Yellow;
-
-/*  Commonly used colors in 48-bit RGB format.                                */
-extern const tmpl_RGB48 tmpl_RGB48_Black;
-extern const tmpl_RGB48 tmpl_RGB48_White;
-extern const tmpl_RGB48 tmpl_RGB48_Red;
-extern const tmpl_RGB48 tmpl_RGB48_Green;
-extern const tmpl_RGB48 tmpl_RGB48_Blue;
-extern const tmpl_RGB48 tmpl_RGB48_Cyan;
-extern const tmpl_RGB48 tmpl_RGB48_Magenta;
-extern const tmpl_RGB48 tmpl_RGB48_Yellow;
-
-/*  Same colors with alpha compositing, alpha parameter set to 1.             */
-extern const tmpl_RGBA48 tmpl_RGBA48_Black;
-extern const tmpl_RGBA48 tmpl_RGBA48_White;
-extern const tmpl_RGBA48 tmpl_RGBA48_Red;
-extern const tmpl_RGBA48 tmpl_RGBA48_Green;
-extern const tmpl_RGBA48 tmpl_RGBA48_Blue;
-extern const tmpl_RGBA48 tmpl_RGBA48_Cyan;
-extern const tmpl_RGBA48 tmpl_RGBA48_Magenta;
-extern const tmpl_RGBA48 tmpl_RGBA48_Yellow;
-
-/*  Commonly used colors in real RGB format.                                  */
-extern const tmpl_RGB tmpl_RGB_Black;
-extern const tmpl_RGB tmpl_RGB_White;
-extern const tmpl_RGB tmpl_RGB_Red;
-extern const tmpl_RGB tmpl_RGB_Green;
-extern const tmpl_RGB tmpl_RGB_Blue;
-extern const tmpl_RGB tmpl_RGB_Cyan;
-extern const tmpl_RGB tmpl_RGB_Magenta;
-extern const tmpl_RGB tmpl_RGB_Yellow;
-
-/*  Same colors with alpha compositing, alpha parameter set to 1.             */
-extern const tmpl_RGBA tmpl_RGBA_Black;
-extern const tmpl_RGBA tmpl_RGBA_White;
-extern const tmpl_RGBA tmpl_RGBA_Red;
-extern const tmpl_RGBA tmpl_RGBA_Green;
-extern const tmpl_RGBA tmpl_RGBA_Blue;
-extern const tmpl_RGBA tmpl_RGBA_Cyan;
-extern const tmpl_RGBA tmpl_RGBA_Magenta;
-extern const tmpl_RGBA tmpl_RGBA_Yellow;
-
 /*
  *  nbh_color_write_to_file(const struct nbh_color *c, FILE *fp)
  *  nbh_color_write_to_ppm(const struct nbh_color *c, struct nbh_ppm *PPM)
@@ -149,7 +65,6 @@ extern const tmpl_RGBA tmpl_RGBA_Yellow;
  *  nf_negate_channel(unsigned char *channel)
  *  nf_color_negate(struct nf_color *c)
  */
-
 
 /******************************************************************************
  *                                 Functions                                  *
