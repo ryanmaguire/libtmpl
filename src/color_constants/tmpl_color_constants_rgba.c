@@ -16,28 +16,30 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_color_constants_rgba                          *
+ *                          tmpl_color_constants_rgba                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides commonly used colors in real RGBA format.                    *
- *  Notes:                                                                    *
- *      The alpha parameter is set to 1 for all colors. That is, color        *
- *      constants in RGBA format are given full opacity.                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_color.h:                                                         *
- *          Header file where the colors are declared.                        *
+ *  1.) tmpl_rgba.h:                                                          *
+ *          Header file providing the tmpl_RGBA struct.                       *
+ *  2.) tmpl_rgba_constants.h:                                                *
+ *          Header file where the constants are declared.                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 18, 2023                                             *
  ******************************************************************************/
 
-/*  Header file where color structs are typedef'd and colors declared.        */
-#include <libtmpl/include/tmpl_color.h>
+/*  tmpl_RGBA data type defined here.                                         */
+#include <libtmpl/include/types/tmpl_rgba.h>
+
+/*  Header file where the color constants are declared.                       */
+#include <libtmpl/include/constants/tmpl_rgba_constants.h>
 
 /*  Black and white, set to the minimum and maximum possible values in each   *
- *  color channel. For real-valued RGBA this is 0 and 1, respectively.        */
+ *  color channel. For real-valued RGB this is 0 and 1, respectively.         */
 const tmpl_RGBA tmpl_RGBA_Black = {{0.0, 0.0, 0.0, 1.0}};
 const tmpl_RGBA tmpl_RGBA_White = {{1.0, 1.0, 1.0, 1.0}};
 
@@ -50,3 +52,38 @@ const tmpl_RGBA tmpl_RGBA_Blue = {{0.0, 0.0, 1.0, 1.0}};
 const tmpl_RGBA tmpl_RGBA_Cyan = {{0.0, 1.0, 1.0, 1.0}};
 const tmpl_RGBA tmpl_RGBA_Yellow = {{1.0, 1.0, 0.0, 1.0}};
 const tmpl_RGBA tmpl_RGBA_Magenta = {{1.0, 0.0, 1.0, 1.0}};
+
+/*  Various types of gray, equal amounts in each color channel.               */
+const tmpl_RGBA tmpl_RGBA_Dark_Gray = {{0.25, 0.25, 0.25, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Gray = {{0.50, 0.50, 0.50, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Light_Gray = {{0.75, 0.75, 0.75, 1.0}};
+
+/*  Different types of blue.                                                  */
+const tmpl_RGBA tmpl_RGBA_Royal_Blue = {{0.0, 0.2, 1.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Dark_Blue = {{0.0, 0.0, 0.6, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Light_Blue = {{0.6, 0.8, 1.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Marine = {{0.3, 0.3, 1.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Azure = {{0.0, 0.5, 1.0, 1.0}};
+
+/*  Red / Blue blends resulting in different types of purple and pink.        */
+const tmpl_RGBA tmpl_RGBA_Purple = {{0.7, 0.0, 1.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Violet = {{0.5, 0.0, 1.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Lavender = {{0.8, 0.8, 1.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Hot_Pink = {{1.0, 0.1, 0.8, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Deep_Pink = {{1.0, 0.1, 0.6, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Pink = {{1.0, 0.4, 1.0, 1.0}};
+
+/*  Orange and other shades of red.                                           */
+const tmpl_RGBA tmpl_RGBA_Crimson = {{0.8, 0.0, 0.1, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Orange = {{1.0, 0.4, 0.1, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Carrot = {{1.0, 0.6, 0.3, 1.0}};
+
+/*  Various types of green.                                                   */
+const tmpl_RGBA tmpl_RGBA_Dark_Green = {{0.25, 0.50, 0.00, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Teal = {{0.00, 0.50, 0.50, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Lime = {{0.75, 0.90, 0.00, 1.0}};
+
+/*  A few more colors.                                                        */
+const tmpl_RGBA tmpl_RGBA_Brown = {{0.3, 0.2, 0.0, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Sand = {{0.9, 0.8, 0.5, 1.0}};
+const tmpl_RGBA tmpl_RGBA_Mustard = {{0.9, 0.8, 0.3, 1.0}};
