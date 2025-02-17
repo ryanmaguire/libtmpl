@@ -53,7 +53,7 @@
 
 /*  Macro for creating a pen from a given RGBA24 color constant.              */
 #define TMPL_DEFINE_PEN(Name) \
-const tmpl_Pen tmpl_Pen_Default_##Name = {&tmpl_RGBA24_##Name, LINEWIDTH, NULL}
+const tmpl_Pen tmpl_Pen_##Name = {&tmpl_RGBA24_##Name, LINEWIDTH, NULL}
 
 /*  Create all of the constant pens.                                          */
 TMPL_DEFINE_PEN(Black);
