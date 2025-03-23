@@ -176,6 +176,8 @@ To uninstall, run:
 ```
 sudo make uninstall
 ```
+To install into a directory tree other than `/usr/local`, set the `prefix` variable
+when running `make`, e.g. `make prefix=/opt install` will install into `/opt/lib` etc.
 
 ## Installation: Bash Script
 A `bash` script is available, but results in a larger and less performant build.
