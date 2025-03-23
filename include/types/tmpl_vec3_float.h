@@ -26,8 +26,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_FLOAT_H
-#define TMPL_VEC3_FLOAT_H
+#ifndef TMPL_TYPES_VEC3_FLOAT_H
+#define TMPL_TYPES_VEC3_FLOAT_H
 
 /*  3D Vectors with single precision components.                              */
 typedef struct tmpl_ThreeVectorFloat_Type {

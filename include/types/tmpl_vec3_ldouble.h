@@ -26,8 +26,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_VEC3_LDOUBLE_H
-#define TMPL_VEC3_LDOUBLE_H
+#ifndef TMPL_TYPES_VEC3_LDOUBLE_H
+#define TMPL_TYPES_VEC3_LDOUBLE_H
 
 /*  3D Vectors with long double precision components.                         */
 typedef struct tmpl_ThreeVectorLongDouble_Def {

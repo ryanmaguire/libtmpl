@@ -26,8 +26,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MAT3X3_FLOAT_H
-#define TMPL_MAT3X3_FLOAT_H
+#ifndef TMPL_TYPES_MAT3X3_FLOAT_H
+#define TMPL_TYPES_MAT3X3_FLOAT_H
 
 /*  Single precision 3x3 matrix for linear transformations in R^3.            */
 typedef struct tmpl_ThreeByThreeMatrixFloat_Type {

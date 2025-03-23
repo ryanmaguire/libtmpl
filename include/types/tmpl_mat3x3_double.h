@@ -26,8 +26,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_MAT3X3_DOUBLE_H
-#define TMPL_MAT3X3_DOUBLE_H
+#ifndef TMPL_TYPES_MAT3X3_DOUBLE_H
+#define TMPL_TYPES_MAT3X3_DOUBLE_H
 
 /*  Double precision 3x3 matrix for linear transformations in R^3.            */
 typedef struct tmpl_ThreeByThreeMatrixDouble_Type {
