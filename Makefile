@@ -177,6 +177,9 @@ TARGET_LIB_STATIC = libtmpl.a
 # Directory all of the .o files will be placed in.
 BUILD_DIR = build
 
+# installation prefix
+prefix = /usr/local
+
 # Location of all .c and .S files.
 SRC_DIRS = src
 
@@ -425,10 +428,10 @@ clean:
 	rm -f $(TARGET_LIB)
 
 install:
-	mkdir -p /usr/local/lib/
-	mkdir -p /usr/local/include/libtmpl/
-	cp -r ./include /usr/local/include/libtmpl/
-	cp $(TARGET_LIB) /usr/local/lib/$(TARGET_LIB)
+	mkdir -p $(prefix)/lib/
+	mkdir -p $(prefix)/include/libtmpl/
+	cp -r ./include $(prefix)/include/libtmpl/
+	cp $(TARGET_LIB) $(prefix)/lib/$(TARGET_LIB)
 
 uninstall:
 	rm -f *.o
@@ -438,8 +441,8 @@ uninstall:
 	rm -f include/tmpl_limits.h
 	rm -f include/tmpl_float.h
 	rm -f $(TARGET_LIB)
-	rm -rf /usr/local/include/libtmpl/
-	rm -f /usr/local/lib/$(TARGET_LIB)
+	rm -rf $(prefix)/include/libtmpl/
+	rm -f $(prefix)/lib/$(TARGET_LIB)
 
 install-local:
 	mkdir -p $(HOME)/.local/include/libtmpl/
