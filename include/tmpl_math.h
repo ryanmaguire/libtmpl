@@ -434,6 +434,9 @@ extern const long double tmpl_Min_LDouble_Base_E;
 /*  Commonly used constants (pi, e, etc.) found here.                         */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
+/*  Float, double, and long double precision NaN found here.                  */
+#include <libtmpl/include/tmpl_nan.h>
+
 /******************************************************************************
  *                              Tables and Data                               *
  ******************************************************************************/
@@ -1374,30 +1377,6 @@ extern long double tmpl_LDouble_Mod_360(long double x);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Float_NaN                                                        *
- *  Purpose:                                                                  *
- *      Returns Not-A-Number.                                                 *
- *  Arguments:                                                                *
- *      None (void).                                                          *
- *  Output:                                                                   *
- *      nan (float):                                                          *
- *          Not-a-Number.                                                     *
- *  NOTE:                                                                     *
- *      Double and long double equivalents are also provided.                 *
- *      If IEEE-754 support is available, this code creates NaN using         *
- *      the format. If not, the function mimics glibc's method, returning     *
- *      the number 0.0 / 0.0 which should be NaN.                             *
- *  Source Code:                                                              *
- *      libtmpl/src/math/tmpl_nan.c                                           *
- *  Examples:                                                                 *
- *      libtmpl/examples/math_examples/tmpl_nan_example.c                     *
- ******************************************************************************/
-extern float tmpl_Float_NaN(void);
-extern double tmpl_Double_NaN(void);
-extern long double tmpl_LDouble_NaN(void);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_Double_Poly_Eval                                                 *
  *  Purpose:                                                                  *
  *      Given an array of coefficients and a real number, evaluates the       *
@@ -1763,12 +1742,6 @@ extern long double tmpl_LDouble_Truncate(long double x);
 #define TMPL_INFINITYF (tmpl_Float_Infinity())
 #define TMPL_INFINITY (tmpl_Double_Infinity())
 #define TMPL_INFINITYL (tmpl_LDouble_Infinity())
-
-/*  Macro for Not-A-Number.                                                   */
-#define TMPL_NANF (tmpl_Float_NaN())
-#define TMPL_NAN (tmpl_Double_NaN())
-#define TMPL_NANL (tmpl_LDouble_NaN())
-
 
 /******************************************************************************
  *                       Independent Inlined Functions                        *
