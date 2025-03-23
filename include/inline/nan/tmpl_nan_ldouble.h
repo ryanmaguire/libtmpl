@@ -16,10 +16,10 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                 tmpl_nan                                   *
+ *                              tmpl_nan_ldouble                              *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide Not-A-Number for libtmpl.                                     *
+ *      Provide Not-a-Number for long double precision numbers.               *
  ******************************************************************************
  *                               DEPENDENCIES                                 *
  ******************************************************************************
@@ -30,24 +30,28 @@
  *  Date:       May 7, 2021                                                   *
  ******************************************************************************/
 
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_INLINE_NAN_LDOUBLE_H
+#define TMPL_INLINE_NAN_LDOUBLE_H
+
 /*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototype and IEEE-754 data types here.                          */
-#include <libtmpl/include/tmpl_math.h>
-
 /*  With IEEE-754 support we can set the value of NaN bit-by-bit.             */
-#if TMPL_HAS_IEEE754_LDOUBLE == 1
+#if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN
+
+/*  tmpl_IEEE754_LDouble type provided here.                                  */
+#include <libtmpl/include/types/tmpl_ieee754_ldouble.h>
 
 /*  64-bit long double is implemented the same as 64-bit double.              */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
  *                           64-Bit Double Version                            *
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
     /*  This is the same as 64-bit double precision. IEEE-754 declares double *
@@ -67,17 +71,14 @@ long double tmpl_LDouble_NaN(void)
 
 /*  Extended precision. This is the only precision with a bit for the integer *
  *  part of the number. Long doubles are written x = s * n.m * 2^e.           */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN   || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN      || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN  || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
 
 /******************************************************************************
  *                          80-Bit Extended Version                           *
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
     /*  80-bit extended. Similar to double but need to set the integer bit to *
@@ -95,15 +96,14 @@ long double tmpl_LDouble_NaN(void)
 /*  End of tmpl_LDouble_NaN.                                                  */
 
 /*  Quadruple precision. Similar to 64-bit double, but with more bits.        */
-#elif \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN    || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
  *                         128-Bit Quadruple Version                          *
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
     /*  128-bit quadruple. Similar to double but with more mantissa parts.    */
@@ -129,6 +129,7 @@ long double tmpl_LDouble_NaN(void)
  ******************************************************************************/
 
 /*  Long double precision real positive NaN.                                  */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
     /*  Declare necessary variables.                                          */
@@ -152,13 +153,14 @@ long double tmpl_LDouble_NaN(void)
 /*  End of double-double version.                                             */
 
 #else
-/*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
+/*  Else for #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN.             */
 
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
 
 /*  Long double precision Not-A-Number.                                       */
+TMPL_INLINE_DECL
 long double tmpl_LDouble_NaN(void)
 {
     /*  Simply cast the double version and return.                            */
@@ -168,4 +170,7 @@ long double tmpl_LDouble_NaN(void)
 /*  End of tmpl_LDouble_NaN.                                                  */
 
 #endif
-/*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */
+/*  End of #if TMPL_LDOUBLE_ENDIANNESS != TMPL_LDOUBLE_UNKNOWN.               */
+
+#endif
+/*  End of include guard.                                                     */
