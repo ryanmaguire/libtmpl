@@ -61,18 +61,15 @@
 
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Data types for two dimensional points at various precisions.              */
-typedef struct tmpl_TwoVectorFloat_Def {
-    float dat[2];
-} tmpl_TwoVectorFloat;
+/*  Typedefs for 2D vectors at various precisions.                            */
+#include <libtmpl/include/types/tmpl_vec2_double.h>
+#include <libtmpl/include/types/tmpl_vec2_float.h>
+#include <libtmpl/include/types/tmpl_vec2_ldouble.h>
 
-typedef struct tmpl_TwoVectorDouble_Def {
-    double dat[2];
-} tmpl_TwoVectorDouble;
-
-typedef struct tmpl_TwoVectorLongDouble_Def {
-    long double dat[2];
-} tmpl_TwoVectorLongDouble;
+/*  Typedefs for 2D lines at various precisions.                              */
+#include <libtmpl/include/types/tmpl_line2_double.h>
+#include <libtmpl/include/types/tmpl_line2_float.h>
+#include <libtmpl/include/types/tmpl_line2_ldouble.h>
 
 /*  For simplicity, TwoVector is typedef'd to double precision.               */
 typedef tmpl_TwoVectorDouble tmpl_TwoVector;
@@ -93,38 +90,17 @@ typedef struct tmpl_TwoByTwoMatrixLongDouble_Def {
 typedef tmpl_TwoByTwoMatrixDouble tmpl_TwoByTwoMatrix;
 
 /*  A line segment is given by the start and end points.                      */
-typedef struct tmpl_2DLineSegmentFloat_Def {
+typedef struct tmpl_TwoLineSegmentFloat_Def {
     tmpl_TwoVectorFloat dat[2];
-} tmpl_2DLineSegmentFloat;
+} tmpl_TwoLineSegmentFloat;
 
-typedef struct tmpl_2DLineSegmentDouble_Def {
+typedef struct tmpl_TwoLineSegmentDouble_Def {
     tmpl_TwoVectorDouble dat[2];
-} tmpl_2DLineSegmentDouble;
+} tmpl_TwoLineSegmentDouble;
 
-typedef struct tmpl_2DLineSegmentLongDouble_Def {
+typedef struct tmpl_TwoLineSegmentLongDouble_Def {
     tmpl_TwoVectorLongDouble dat[2];
-} tmpl_2DLineSegmentLongDouble;
-
-typedef tmpl_2DLineSegmentDouble tmpl_2DLineSegment;
-
-/*  A line is given by a point on the line, and the direction. That is, we    *
- *  can write a(t) = P + tV.                                                  */
-typedef struct tmpl_2DLineFloat_Def {
-    tmpl_TwoVectorFloat P;
-    tmpl_TwoVectorFloat V;
-} tmpl_2DLineFloat;
-
-typedef struct tmpl_2DLineDouble_Def {
-    tmpl_TwoVectorDouble P;
-    tmpl_TwoVectorDouble V;
-} tmpl_2DLineDouble;
-
-typedef struct tmpl_2DLineLongDouble_Def {
-    tmpl_TwoVectorLongDouble P;
-    tmpl_TwoVectorLongDouble V;
-} tmpl_2DLineLongDouble;
-
-typedef tmpl_2DLineDouble tmpl_2DLine;
+} tmpl_TwoLineSegmentLongDouble;
 
 /*  Planar circles are represented by a point and a radius. Many functions    *
  *  allow circles to degenerate to straight lines. In this case the radius is *
@@ -133,7 +109,7 @@ typedef tmpl_2DLineDouble tmpl_2DLine;
 typedef struct tmpl_2DCircleFloat_Def {
     union tmpl_2DCircleFloat_Data {
         tmpl_TwoVectorFloat center;
-        tmpl_TwoVectorFloat line;
+        tmpl_TwoLineFloat line;
     } data;
     float radius;
 
@@ -144,7 +120,7 @@ typedef struct tmpl_2DCircleFloat_Def {
 typedef struct tmpl_2DCircleDouble_Def {
     union tmpl_2DCircleDouble_Data {
         tmpl_TwoVectorDouble center;
-        tmpl_2DLineDouble line;
+        tmpl_TwoLineDouble line;
     } data;
     double radius;
     tmpl_Bool is_line;
@@ -153,7 +129,7 @@ typedef struct tmpl_2DCircleDouble_Def {
 typedef struct tmpl_2DCircleLongDouble_Def {
     union tmpl_2DCircleLongDouble_Data {
         tmpl_TwoVectorLongDouble center;
-        tmpl_2DLineLongDouble line;
+        tmpl_TwoLineLongDouble line;
     } data;
     long double radius;
     tmpl_Bool is_line;
@@ -755,7 +731,8 @@ tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble *P,
                        const tmpl_TwoVectorLongDouble *Q);
 
 extern tmpl_Bool
-tmpl_LineSegment2D_Intersect(tmpl_2DLineSegment L0, tmpl_2DLineSegment L1);
+tmpl_LineSegment2D_Intersect(tmpl_TwoLineDouble L0,
+                             tmpl_TwoLineDouble L1);
 
 extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Point_Inverse(const tmpl_2DCircleDouble *C,
@@ -767,7 +744,7 @@ tmpl_2DDouble_Circle_Inverse(const tmpl_2DCircleDouble *C0,
 
 extern tmpl_2DCircleDouble
 tmpl_2DDouble_Line_Inverse(const tmpl_2DCircleDouble *C,
-                           const tmpl_2DLineDouble *L);
+                           const tmpl_TwoLineDouble *L);
 
 extern void
 tmpl_2DDouble_Circle_As_Line(tmpl_2DCircleDouble *circle,
