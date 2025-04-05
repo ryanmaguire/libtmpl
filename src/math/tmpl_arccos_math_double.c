@@ -173,8 +173,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  2.) tmpl_nan_double.h:                                                    *
+ *          Header file providing double precision NaN (Not-a-Number).        *
  *  3.) tmpl_math_constants.h:                                                *
  *          Header file providing pi and pi / 2.                              *
  *  4.) tmpl_ieee754_double.h:                                                *
@@ -194,6 +194,9 @@
  *  2025/01/25: Ryan Maguire                                                  *
  *      Removed redundant "else", introduced tmpl_math_constants.h, improved  *
  *      explanation of algorithm, added references.                           *
+ *  2025/04/05: Ryan Maguire                                                  *
+ *      Removed tmpl_math.h as a dependency. A forward declaration is now     *
+ *      provided for the function in this file and NAN is included directly.  *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -202,11 +205,17 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration for the function, also found in tmpl_math.h.          */
+extern double tmpl_Double_Arccos(double x);
 
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
+
+/*  TMPL_NAN macro found here which provides double precision NaN.            */
+#include <libtmpl/include/nan/tmpl_nan_double.h>
+
+/*  TMPL_HAS_IEEE754_DOUBLE macro and tmpl_IEEE754_Double type given here.    */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -227,9 +236,6 @@
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
-
-/*  tmpl_IEEE754_Double data type defined here.                               */
-#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  On most computers it is faster to check the value of the exponent of a    *
  *  double rather than checking the entire double. This gives the IEEE-754    *
@@ -292,6 +298,14 @@ double tmpl_Double_Arccos(double x)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
+
+/*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
+ *  on the size of the input. We compute this via the absolute value function.*/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/inline/math/tmpl_abs_double.h>
+#else
+extern double tmpl_Double_Abs(double x);
+#endif
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(double x)
