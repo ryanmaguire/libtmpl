@@ -171,8 +171,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file containing TMPL_USE_MATH_ALGORITHMS macro.            *
- *  2.) tmpl_math.h:                                                          *
- *          Header file with the functions prototype.                         *
+ *  2.) tmpl_nan_float.h:                                                     *
+ *          Header file providing single precision NaN (Not-a-Number).        *
  *  3.) tmpl_math_constants.h:                                                *
  *          Header file providing pi and pi / 2.                              *
  *  4.) tmpl_ieee754_float.h:                                                 *
@@ -192,6 +192,9 @@
  *  2025/02/13: Ryan Maguire                                                  *
  *      Removed redundant "else", introduced tmpl_math_constants.h, improved  *
  *      explanation of algorithm, added references.                           *
+ *  2025/04/05: Ryan Maguire                                                  *
+ *      Removed tmpl_math.h as a dependency. A forward declaration is now     *
+ *      provided for the function in this file and NAN is included directly.  *
  ******************************************************************************/
 
 /*  TMPL_USE_MATH_ALGORITHMS found here.                                      */
@@ -200,11 +203,17 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
-/*  Function prototype found here.                                            */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration for the function, also found in tmpl_math.h.          */
+extern float tmpl_Float_Arccos(float x);
 
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
+
+/*  TMPL_NANF macro found here which provides single precision NaN.           */
+#include <libtmpl/include/nan/tmpl_nan_float.h>
+
+/*  TMPL_HAS_IEEE754_FLOAT macro and tmpl_IEEE754_Float type given here.      */
+#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /******************************************************************************
  *                         Static / Inlined Functions                         *
@@ -225,9 +234,6 @@
 /******************************************************************************
  *                              IEEE-754 Version                              *
  ******************************************************************************/
-
-/*  tmpl_IEEE754_Float data type defined here.                                */
-#include <libtmpl/include/types/tmpl_ieee754_float.h>
 
 /*  On most computers it is faster to check the value of the exponent of a    *
  *  float rather than checking the entire float. This gives the IEEE-754      *
@@ -290,6 +296,14 @@ float tmpl_Float_Arccos(float x)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
+
+/*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
+ *  on the size of the input. We compute this via the absolute value function.*/
+#if TMPL_USE_INLINE == 1
+#include <libtmpl/include/inline/math/tmpl_abs_float.h>
+#else
+extern float tmpl_Float_Abs(float x);
+#endif
 
 /*  Single precision inverse cosine (acosf equivalent).                       */
 float tmpl_Float_Arccos(float x)
