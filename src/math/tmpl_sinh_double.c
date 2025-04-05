@@ -116,12 +116,10 @@ double tmpl_Double_Sinh(double x)
     /*  For |x| > log(DBL_MAX) ~= 709, exp will overflow. Return infinity.    */
     if (w.r > 709.0895657128241)
     {
-        const double infinity = TMPL_INFINITY;
-
         if (TMPL_DOUBLE_IS_NEGATIVE(w))
-            return -infinity;
+            return -TMPL_INFINITY;
 
-        return infinity;
+        return TMPL_INFINITY;
     }
 
     /*  For small x, |x| < 1/32, the Maclaurin series is sufficient.          */

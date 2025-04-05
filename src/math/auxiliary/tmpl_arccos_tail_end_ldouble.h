@@ -41,12 +41,14 @@
  *      Use the following trig identity:                                      *
  *          acos(x) = 2*asin(sqrt((1-x)/2))                                   *
  *      Compute this using a Remez rational minimax approximation.            *
- *          64-bit double:                                                    *
- *              Order (10, 8) approximant.                                    *
- *          80-bit extended / portable:                                       *
- *              Order (12, 10) approximant.                                   *
- *          128-bit quadruple / 128-bit double-double:                        *
- *              Order (18, 18) approximant.                                   *
+ *      64-bit double:                                                        *
+ *          Order (8, 8) approximation.                                       *
+ *      80-bit extended / portable:                                           *
+ *          Order (10, 10) approximation.                                     *
+ *      128-bit double-double:                                                *
+ *          Order (18, 16) approximation.                                     *
+ *      128-bit quadruple:                                                    *
+ *          Order (18, 18) approximation.                                     *
  *  Notes:                                                                    *
  *      Accurate for 0.5 <= x < 1.0.                                          *
  ******************************************************************************
