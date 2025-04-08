@@ -125,7 +125,7 @@ static long double tmpl_do_sqrt(long double x)
      *      80-bit extended       | 1.08E-19 |         36                     *
      *      128-bit double-double | 4.93E-32 |         58                     *
      *      128-bit quadruple     | 1.93E-34 |         62                     *
-     *      256-bit octuple       | 3.71E-68 |        119                     *
+     *      256-bit octuple       | 9.06E-72 |        127                     *
      *                                                                        *
      *  I know of no hardware that implements 256-bit octuple, let alone a    *
      *  compiler that sets long double equal to 256-bit precision. Regardless *
