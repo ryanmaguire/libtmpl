@@ -85,105 +85,29 @@
 /*  Needed for FILE data type and fprintf.                                    */
 #include <stdio.h>
 
-/*  Used for testing if the compiling uses ascii for characters.              */
-static const char ASCII_ARRAY[94] = {
-    '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.',
-    '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<',
-    '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-    'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f',
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-    'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'
-};
-
-static long double do_sqrt(long double x)
-{
-    long double y = 1.0L;
-    unsigned int n;
-    const unsigned int toler = 100U;
-
-    for (n = 0U; n < toler; ++n)
-        y = 0.5L * (y + x / y);
-
-    return y;
-}
-
-static long double flt_eps(void)
-{
-    const float x = 1.0F;
-    float dx = 0.5F;
-    float y = x + dx;
-    const unsigned int toler = 100U;
-    unsigned int n;
-
-    for (n = 0U; n < toler; ++n)
-    {
-        if (x == y)
-            return (long double)(2.0F * dx);
-
-        dx = 0.5F * dx;
-        y = x + dx;
-    }
-
-    /*  Could not find epsilon after 100 iterations. Return 32-bit epsilon.   */
-    return 1.1920928955078125E-07L;
-}
-
-static long double dbl_eps(void)
-{
-    const double x = 1.0;
-    double dx = 0.5;
-    double y = x + dx;
-    const unsigned int toler = 100U;
-    unsigned int n;
-
-    for (n = 0U; n < toler; ++n)
-    {
-        if (x == y)
-            return (long double)(2.0 * dx);
-
-        dx = 0.5 * dx;
-        y = x + dx;
-    }
-
-    /*  Could not find epsilon after 100 iterations. Return 64-bit epsilon.   */
-    return 2.220446049250313080847263336181640625E-16L;
-}
-
-static long double ldbl_eps(void)
-{
-    const long double x = 1.0L;
-    long double dx = 0.5L;
-    long double y = x + dx;
-    const unsigned int toler = 100U;
-    unsigned int n;
-
-    for (n = 0U; n < toler; ++n)
-    {
-        if (x == y)
-            return 2.0L * dx;
-
-        dx = 0.5L * dx;
-        y = x + dx;
-    }
-
-    /*  Could not find epsilon after 100 iterations. Return 64-bit epsilon.   */
-    return 2.220446049250313080847263336181640625E-16L;
-}
+#include "config/tmpl_config_do_sqrt.h"
+#include "config/tmpl_config_epsilon_float.h"
+#include "config/tmpl_config_epsilon_double.h"
+#include "config/tmpl_config_epsilon_ldouble.h"
+#include "config/tmpl_config_has_ascii.h"
+#include "config/tmpl_config_det_signed_int.h"
+#include "config/tmpl_config_det_widths.h"
+#include "config/tmpl_config_det_int_endianness.h"
+#include "config/tmpl_config_det_float_type.h"
 
 static int make_float_h(void)
 {
-    const long double feps = flt_eps();
-    const long double deps = dbl_eps();
-    const long double leps = ldbl_eps();
+    const long double feps = tmpl_float_epsilon();
+    const long double deps = tmpl_double_epsilon();
+    const long double leps = tmpl_ldouble_epsilon();
 
-    const long double sqrt_feps = do_sqrt(feps);
-    const long double sqrt_deps = do_sqrt(deps);
-    const long double sqrt_leps = do_sqrt(leps);
+    const long double sqrt_feps = tmpl_do_sqrt(feps);
+    const long double sqrt_deps = tmpl_do_sqrt(deps);
+    const long double sqrt_leps = tmpl_do_sqrt(leps);
 
-    const long double qurt_feps = do_sqrt(sqrt_feps);
-    const long double qurt_deps = do_sqrt(sqrt_deps);
-    const long double qurt_leps = do_sqrt(sqrt_leps);
+    const long double qurt_feps = tmpl_do_sqrt(sqrt_feps);
+    const long double qurt_deps = tmpl_do_sqrt(sqrt_deps);
+    const long double qurt_leps = tmpl_do_sqrt(sqrt_leps);
 
     FILE *fp = fopen("include/tmpl_float.h", "w");
 
@@ -236,183 +160,21 @@ static int make_float_h(void)
     return 0;
 }
 
-/*  Determines if the compiler uses the ASCII character set.                  */
-static int tmpl_has_ascii(void)
-{
-#ifdef TMPL_NO_ASCII
-    return 0;
-#else
-    int n;
-    const int start = 0x21;
-    const int end = 0x7E;
-
-    for (n = start; n <= end; ++n)
-    {
-        const char c = (char)n;
-
-        if (ASCII_ARRAY[n - start] != c)
-            return 0;
-    }
-
-    return 1;
-#endif
-}
-/*  End of tmpl_has_ascii.                                                    */
-
-/*  Number of bits in char. char is not allowed to have padding, so all bits  *
- *  are used. This fact can be used to determine this value.                  */
-static unsigned int TMPL_CHAR_BIT;
-
-/*  The other integer data types are allowed to have padding. These numbers   *
- *  represent the number of unpadded bits.                                    */
-static unsigned int TMPL_SHORT_BIT;
-static unsigned int TMPL_INT_BIT;
-static unsigned int TMPL_LONG_BIT;
-#ifdef TMPL_LONG_LONG_IS_AVAILABLE
-static unsigned int TMPL_LLONG_BIT;
-#endif
-static int TMPL_BITS_HAVE_BEEN_SET = 0;
-static int TMPL_HAS_64_BIT_INT;
-static int TMPL_HAS_32_BIT_INT;
-
-/*  Function for determining the number of bits in char, and others.          */
-static void tmpl_det_widths(void)
-{
-    unsigned char c = 0x01U;
-    unsigned short int s = 1U;
-    unsigned int i = 1U;
-    unsigned long int l = 1UL;
-#ifdef TMPL_LONG_LONG_IS_AVAILABLE
-    unsigned long long int ll = 1ULL;
-    TMPL_LLONG_BIT = 0U;
-#endif
-    TMPL_CHAR_BIT = 0U;
-    TMPL_SHORT_BIT = 0U;
-    TMPL_INT_BIT = 0U;
-    TMPL_LONG_BIT = 0U;
-
-    /*  Unsigned integer types can not overflow since the result is computed  *
-     *  mod 2^N where N is the number of bits. By started with 1 and          *
-     *  repeatedly multiplying by 2 we will eventually get 2^N, which will    *
-     *  be computed as 0 mod 2^N. By counting the number of times we need to  *
-     *  to multiply by 2 in order to get zero we can compute the number of    *
-     *  bits in a char.                                                       */
-    while (c != 0x00U)
-    {
-        c = c * 0x02U;
-        TMPL_CHAR_BIT++;
-    }
-
-    /*  Similar idea for short, int, and long. These integer data types can   *
-     *  have padding. The number computed is not necessarily the number of    *
-     *  bits in a short, int, or long, just the number of used, or unpadded,  *
-     *  bits. For most compilers this is the same as the size of the type and *
-     *  no padding is actually used.                                          */
-    while (s != 0U)
-    {
-        s = s * 2U;
-        TMPL_SHORT_BIT++;
-    }
-
-    while (i != 0U)
-    {
-        i = i * 2U;
-        TMPL_INT_BIT++;
-    }
-
-    while (l != 0UL)
-    {
-        l = l * 2UL;
-        TMPL_LONG_BIT++;
-    }
-
-#ifdef TMPL_LONG_LONG_IS_AVAILABLE
-    while (ll != 0ULL)
-    {
-        ll = ll * 2ULL;
-        TMPL_LLONG_BIT++;
-    }
-#endif
-
-    TMPL_BITS_HAVE_BEEN_SET = 1;
-
-    if (TMPL_CHAR_BIT == 32)
-        TMPL_HAS_32_BIT_INT = 1;
-    else if (TMPL_SHORT_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 32)
-        TMPL_HAS_32_BIT_INT = 1;
-    else if (TMPL_INT_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 32)
-        TMPL_HAS_32_BIT_INT = 1;
-    else if (TMPL_LONG_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned long int)) == 32)
-        TMPL_HAS_32_BIT_INT = 1;
-#ifdef TMPL_LONG_LONG_IS_AVAILABLE
-    else if (TMPL_LLONG_BIT == 32 && (TMPL_CHAR_BIT * sizeof(unsigned long long int)) == 32)
-        TMPL_HAS_32_BIT_INT = 1;
-#endif
-    else
-        TMPL_HAS_32_BIT_INT = 0;
-
-    if (TMPL_CHAR_BIT == 64)
-        TMPL_HAS_64_BIT_INT = 1;
-    else if (TMPL_SHORT_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned short int)) == 64)
-        TMPL_HAS_64_BIT_INT = 1;
-    else if (TMPL_INT_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned int)) == 64)
-        TMPL_HAS_64_BIT_INT = 1;
-    else if (TMPL_LONG_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned long int)) == 64)
-        TMPL_HAS_64_BIT_INT = 1;
-#ifdef TMPL_LONG_LONG_IS_AVAILABLE
-    else if (TMPL_LLONG_BIT == 64 && (TMPL_CHAR_BIT * sizeof(unsigned long long int)) == 64)
-        TMPL_HAS_64_BIT_INT = 1;
-#endif
-    else
-        TMPL_HAS_64_BIT_INT = 0;
-}
-/*  End of tmpl_det_widths.                                                   */
-
-/*  There are 4 possibilities for endianness. Little endian is the most       *
- *  common, big endian is rare, mixed endian is essentially non-existent, and *
- *  unknown means the function could not determine anything.                  */
-typedef enum tmpl_integer_endianness_def {
-    tmpl_integer_little_endian,
-    tmpl_integer_big_endian,
-    tmpl_integer_mixed_endian,
-    tmpl_integer_unknown_endian
-} tmpl_integer_endianness;
-
-/*  The three representations of signed integers. In the modern world, most   *
- *  computers use 2's complement. As of this writing, the C2x (likely to be   *
- *  voted on in 2023) will require 2's complement for compliant               *
- *  implementations of the C programming language.                            */
-typedef enum tmpl_signed_integer_rep_def {
-    tmpl_ones_complement,
-    tmpl_twos_complement,
-    tmpl_sign_and_magnitude,
-    tmpl_unknown_signed_rep
-} tmpl_signed_integer_rep;
-
 /*  If the user does not want IEEE support, these enum's are not needed.      */
 #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
 
-/*  IEEE-754 does not specify the endianness of float. It is usually the      *
- *  same as the endianness of integers, but this is not required. Unknown     *
- *  is returned if the function could not determine how float is implemented. */
-typedef enum tmpl_float_type_def {
-    tmpl_float_little_endian,
-    tmpl_float_big_endian,
-    tmpl_float_unknown_endian
-} tmpl_float_type;
-
 /*  Similarly, IEEE-754 does not specify endianness for double precision.     */
-typedef enum tmpl_double_type_def {
+enum tmpl_double_type {
     tmpl_double_little_endian,
     tmpl_double_big_endian,
     tmpl_double_unknown_endian
-} tmpl_double_type;
+};
 
 /*  Long double is less standardized. There are many possible implementations.*
  *  This includes 64-bit, 80-bit, 96-bit, and 128-bit. The long double        *
  *  function below will attempt to determine which of these, if any, is       *
  *  implemented. Unknown is returned if this can't be determined.             */
-typedef enum tmpl_ldouble_type_def {
+enum tmpl_ldouble_type {
     tmpl_ldouble_64_bit_little_endian,
     tmpl_ldouble_64_bit_big_endian,
     tmpl_ldouble_96_bit_extended_little_endian,
@@ -424,234 +186,16 @@ typedef enum tmpl_ldouble_type_def {
     tmpl_ldouble_128_bit_doubledouble_little_endian,
     tmpl_ldouble_128_bit_doubledouble_big_endian,
     tmpl_ldouble_unknown
-} tmpl_ldouble_type;
+};
 
 #endif
 /*  End of #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                              */
 
-/*  Function for determining the endianness of integer data types.            */
-static tmpl_integer_endianness tmpl_det_int_end(void)
-{
-    /*  We'll use a union between an unsigned long int and an unsigned char   *
-     *  array with as many elements as there are bytes in an unsigned long    *
-     *  int. This is usually either 8 (unix-based, i.e. GNU, Linux, FreeBSD,  *
-     *  macOS), or 4 (Microsoft Windows), but the value is not specified in   *
-     *  the C standard.                                                       */
-    union {
-        unsigned long int n;
-        unsigned char arr[sizeof(unsigned long int)];
-    } e;
-
-    /*  n is for indexing and power keeps track of the power of an integer.   */
-    unsigned long int n, power;
-
-    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
-     *  computed already. If not, compute it.                                 */
-    if (!TMPL_BITS_HAVE_BEEN_SET)
-        tmpl_det_widths();
-
-    /*  The idea is as follows. Create the integer 76543210, store this in the*
-     *  unsigned long int part of our union, and then check the array part to *
-     *  see which element is 0. This would work if computers are base 10, but *
-     *  they usually use base 2, base 8, or base 16. Letting N be the base,   *
-     *  we'll store the number 7*N^7 + 6*N^6 + ... + 2*N^2 + 1*N + 0. The     *
-     *  array will then be:                                                   *
-     *      ---------------------------------                                 *
-     *      | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |                                 *
-     *      ---------------------------------                                 *
-     *  This is assuming sizeof(unsigned long int) = 8. If it is some other   *
-     *  value, the array will be 0 up to that number. We'll start by          *
-     *  initializing the unsigned long int part of the union to 0.            */
-    e.n = 0UL;
-
-    /*  We need to set power to 2^(number of bits in a byte). This number is  *
-     *  found in TMPL_CHAR_BIT. We're going to write out the number as        *
-     *  7 * power^7 + 6 * power^6 + ... + 2 * power^2 + power + 0. If we      *
-     *  somehow had a base-10 computer, this would be                         *
-     *  7*10^7 + 6*10^6 + ... + 2*10^2 + 1*10 + 0 = 76543210. We want this in *
-     *  base 2^TMPL_CHAR_BIT. We can compute 2^TMPL_CHAR_BIT quickly using    *
-     *  bitwise operators. 1 << N is the number 1000...000 in binary with N   *
-     *  0's. This would be the number 2^N in decimal, which is what we want.  *
-     *  We compute 2^TMPL_CHAR_BIT via 1UL << TMPL_CHAR_BIT. UL means         *
-     *  unsigned long, which is the data type of power.                       */
-    power = 1UL << TMPL_CHAR_BIT;
-
-    /*  Write out 76543210 in base 2^TMPL_CHAR_BIT by adding.                 */
-    for (n = 1UL; n < sizeof(unsigned long int); ++n)
-    {
-        e.n += n * power;
-
-        /*  From power^k we can get power^(k+1) by shifting the "decimal"     *
-         *  TMPL_CHAR_BIT to the right. If we have 100 and want 1000, we'd    *
-         *  write 100.00, shift the decimal to the right, and get 1000.0.     *
-         *  Writing pow = pow << TMPL_CHAR_BIT is the base                    *
-         *  2^TMPL_CHAR_BIT equivalent.                                       */
-        power = power << TMPL_CHAR_BIT;
-    }
-
-    /*  We now have 76543210 in the array part of the union (or n-1...210 if  *
-     *  sizeof(unsigned long int) = n). If the zeroth entry of the array is   *
-     *  0, we have little endian. If it is n-1, we have big endian. Anything  *
-     *  between 0 and n-1 is mixed endian, and any other result is unknown.   *
-     *  There is one, extremely rare, exceptional case that needs to be       *
-     *  handled separately. If sizeof(unsigned long int) = 1, then the char   *
-     *  array will have one element, which is the same number as the unsigned *
-     *  long int value. Because of this we would be unable to determine the   *
-     *  endianness. If this is true, return unknown endian. I know of no      *
-     *  systems where sizeof(unsigned long int) = 1, but the ISO C90 standard *
-     *  does not specify that this is impossible, so we do this for the sake  *
-     *  of portability.                                                       */
-    if (sizeof(unsigned long int) == 1)
-    {
-        /*  If your compiler supports C99 or higher, we can try this scheme   *
-         *  with unsigned long long int, which should definitely have sizeof  *
-         *  greater than 1 (but again, is not required to). Check this.       */
-#ifdef TMPL_LONG_LONG_IS_AVAILABLE
-
-        /*  Omitting comments since this is the exact same as before.         */
-        union {
-            unsigned long long int x;
-            unsigned char arr[sizeof(unsigned long long int)];
-        } ell;
-
-        unsigned long long int powerll, kll;
-
-        /*  The ULL suffix means unsigned long long.                          */
-        ell.x = 0ULL;
-        powerll = 1ULL << TMPL_CHAR_BIT;
-
-        for (kll = 1ULL; kll < sizeof(unsigned long long int); ++kll)
-        {
-            ell.x += kll * powerll;
-            powerll = powerll << TMPL_CHAR_BIT;
-        }
-
-        if (sizeof(unsigned long long int) == 1)
-            return tmpl_integer_unknown_endian;
-        else if (ell.arr[0] == 0)
-            return tmpl_integer_little_endian;
-        else if (ell.arr[0] == (sizeof(unsigned long long int) - 1))
-            return tmpl_integer_big_endian;
-        else if (ell.arr[0] < (sizeof(unsigned long long int) - 1))
-            return tmpl_integer_mixed_endian;
-        else
-            return tmpl_integer_unknown_endian;
-
-#else
-/*  Else for #ifdef TMPL_LONG_LONG_IS_AVAILABLE.                              */
-
-        /*  If we get here, sizeof(unsigned long int) = 1 and your compiler   *
-         *  does not support the C99, or higher, standard so unsigned long    *
-         *  long int may not be defined. Return unknown.                      */
-        return tmpl_integer_unknown_endian;
-#endif
-/*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
-
-    }
-    /* End of if (sizeof(unsigned long int) == 1).                            */
-
-    else if (e.arr[0] == 0)
-        return tmpl_integer_little_endian;
-    else if (e.arr[0] == (sizeof(unsigned long int) - 1))
-        return tmpl_integer_big_endian;
-    else if (e.arr[0] < (sizeof(unsigned long int) - 1))
-        return tmpl_integer_mixed_endian;
-    else
-        return tmpl_integer_unknown_endian;
-}
-/*  End of tmpl_det_int_end.                                                  */
-
-/*  Function for detecting what type of signed integer representation is used.*/
-static tmpl_signed_integer_rep tmpl_det_signed_int(void)
-{
-    /*  We need to check the lower bits of the constant negative 1. This will *
-     *  uniquely determine which of the three representations we have.        */
-    signed int n = -1;
-    signed int n_and_3 = n & 3;
-
-    if (n_and_3 == 1)
-        return tmpl_sign_and_magnitude;
-    else if (n_and_3 == 2)
-        return tmpl_ones_complement;
-    else if (n_and_3 == 3)
-        return tmpl_twos_complement;
-    else
-        return tmpl_unknown_signed_rep;
-}
-/*  End of tmpl_det_signed_int.                                               */
-
 /*  If the user does not want IEEE support, these functions are not used.     */
 #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
 
-/*  Function for determining how float is implemented.                        */
-static tmpl_float_type tmpl_det_float_type(void)
-{
-    /*  IEEE-754 uses 32-bit single precision, but does not specify the       *
-     *  endianness. This function will attempt to determine if IEEE-754 is    *
-     *  used, and also determine the endianness of float.                     */
-    union {
-        /*  A float has 1 bit for the sign, 8 bits for the exponent, and 23   *
-         *  bits for the mantissa.                                            */
-        struct _big_bitsf {
-            unsigned int sign : 1;
-            unsigned int expo : 8;
-            unsigned int man0 : 7;
-            unsigned int man1 : 16;
-        } big_bits;
-
-        /*  Same thing for little endianness.                                 */
-        struct _little_bitsf {
-            unsigned int man1 : 16;
-            unsigned int man0 : 7;
-            unsigned int expo : 8;
-            unsigned int sign : 1;
-        } little_bits;
-
-        /*  And a float that the above structs represent.                     */
-        float r;
-    } f;
-
-    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
-     *  computed already. If not, compute it.                                 */
-    if (!TMPL_BITS_HAVE_BEEN_SET)
-        tmpl_det_widths();
-
-    /*  float should have 32 bits. Check for this.                            */
-    if ((sizeof(float) * TMPL_CHAR_BIT) != 32)
-        return tmpl_float_unknown_endian;
-
-    /*  Set the bits in the struct to represent the number 1.0 using the      *
-     *  IEEE-754 format. If the endianness is flipped, we should get          *
-     *  gibberish, whereas if its correct we should get 1.0.                  */
-    f.big_bits.sign = 0x0U;
-    f.big_bits.expo = 0x7FU;
-    f.big_bits.man0 = 0x0U;
-    f.big_bits.man1 = 0x0U;
-
-    /*  If the float in the union is actually 1 we have IEEE-754 support and  *
-     *  we have big endianness for float.                                     */
-    if (f.r == 1.0F)
-        return tmpl_float_big_endian;
-
-    /*  Otherwise, try little endianness.                                     */
-    f.little_bits.sign = 0x0U;
-    f.little_bits.expo = 0x7FU;
-    f.little_bits.man0 = 0x0U;
-    f.little_bits.man1 = 0x0U;
-
-    /*  If we have little endian IEEE-754 implementation for float, the float *
-     *  part of the union should now be 1. Check this.                        */
-    if (f.r == 1.0F)
-        return tmpl_float_little_endian;
-
-    /*  Otherwise, IEEE-754 is likely not implemented. Return unknown.        */
-    else
-        return tmpl_float_unknown_endian;
-}
-/*  End of tmpl_det_float_type.                                               */
-
 /*  Function for determining the type of double implemented.                  */
-static tmpl_double_type tmpl_det_double_type(void)
+static enum tmpl_double_type tmpl_det_double_type(void)
 {
     /*  libtmpl has many tools that can take advantage of the IEEE-754        *
      *  floating point format, if your compiler supports it. The format does  *
@@ -743,7 +287,7 @@ static tmpl_double_type tmpl_det_double_type(void)
 /*  End of tmpl_det_double_type.                                              */
 
 /*  Function for determining the type of long double implemented.             */
-static tmpl_ldouble_type tmpl_det_ldouble_type(void)
+static enum tmpl_ldouble_type tmpl_det_ldouble_type(void)
 {
     /*  The most common type of long double for personal computers is the     *
      *  little endian amd64 format (also the x86_64 format). This uses        *
@@ -1096,13 +640,13 @@ static tmpl_ldouble_type tmpl_det_ldouble_type(void)
 static int make_config_h(void)
 {
     /*  Compute the various endian types from the above functions.            */
-    tmpl_integer_endianness int_type = tmpl_det_int_end();
-    tmpl_signed_integer_rep signed_type = tmpl_det_signed_int();
+    const enum tmpl_integer_endianness int_type = tmpl_det_int_endianness();
+    const enum tmpl_signed_integer_rep signed_type = tmpl_det_signed_int();
 
 #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
-    tmpl_float_type float_type = tmpl_det_float_type();
-    tmpl_double_type double_type = tmpl_det_double_type();
-    tmpl_ldouble_type ldouble_type = tmpl_det_ldouble_type();
+    const enum tmpl_float_type float_type = tmpl_det_float_type();
+    const enum tmpl_double_type double_type = tmpl_det_double_type();
+    const enum tmpl_ldouble_type ldouble_type = tmpl_det_ldouble_type();
 #endif
 
     /*  Open the file include/tmpl_config.h using fopen and give the file     *
@@ -1415,7 +959,9 @@ static int make_config_h(void)
     fprintf(fp, "#define TMPL_VOLATILE\n");
 #endif
 
-#if __STDC_VERSION__ >= 199901L && !defined(TMPL_NO_RESTRICT)
+#if defined(__STDC_VERSION__) &&   \
+    __STDC_VERSION__ >= 199901L && \
+    !defined(TMPL_NO_RESTRICT)
     fprintf(fp, "#define TMPL_RESTRICT restrict\n");
 #else
     fprintf(fp, "#define TMPL_RESTRICT\n");
