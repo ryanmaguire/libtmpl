@@ -16,32 +16,34 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                                 tmpl_stdlib                                *
+ *                                  tmpl_free                                 *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides macros for stdlib functions with C vs. C++ compatibility.    *
+ *      Provides a macro for free with C vs. C++ compatibility.               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) stdlib.h:                                                             *
- *          Standard library header file providing malloc and free.           *
+ *          Standard library header file providing free.                      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 21, 2024                                            *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/04/10: Ryan Maguire                                                  *
+ *      Moved macro to its own file.                                          *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_COMPAT_STDLIB_H
-#define TMPL_COMPAT_STDLIB_H
+#ifndef TMPL_COMPAT_FREE_H
+#define TMPL_COMPAT_FREE_H
 
 /*  Standard macro for C++ usage. Check for this.                             */
 #ifdef __cplusplus
 
-/*  malloc provided here. As is free.                                         */
+/*  free is provided here in the std namespace.                               */
 #include <cstdlib>
-
-/*  Macro for allocating memory. In C++ one must cast the result of malloc.   */
-#define TMPL_MALLOC(type, N) static_cast<type *>(std::malloc(sizeof(type) * N))
 
 /*  Free's a pointer and sets it to NULL to avoid double free's.              */
 #define TMPL_FREE(var) if (var){std::free(var); var = NULL;}
@@ -49,11 +51,8 @@
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
 
-/*  malloc provided here. As is free.                                         */
+/*  Standard library header file providing the free function.                 */
 #include <stdlib.h>
-
-/*  Macro for malloc. In C one should not cast the result of malloc.          */
-#define TMPL_MALLOC(type, N) malloc(sizeof(type) * N)
 
 /*  Free's a pointer and sets it to NULL to avoid double free's.              */
 #define TMPL_FREE(var) if (var){free(var); var = NULL;}

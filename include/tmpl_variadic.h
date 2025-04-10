@@ -49,7 +49,8 @@
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  TMPL_MALLOC / TMPL_FREE given here (provide C vs.C++ compatibility).      */
-#include <libtmpl/include/compat/tmpl_stdlib.h>
+#include <libtmpl/include/compat/tmpl_free.h>
+#include <libtmpl/include/compat/tmpl_malloc.h>
 
 /******************************************************************************
  *  Macro:                                                                    *
