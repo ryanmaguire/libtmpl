@@ -46,7 +46,7 @@
 #include <cstdlib>
 
 /*  Free's a pointer and sets it to NULL to avoid double free's.              */
-#define TMPL_FREE(var) if (var){std::free(var); var = NULL;}
+#define TMPL_FREE(var) if (var) std::free(var); var = NULL
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
@@ -55,7 +55,7 @@
 #include <stdlib.h>
 
 /*  Free's a pointer and sets it to NULL to avoid double free's.              */
-#define TMPL_FREE(var) if (var){free(var); var = NULL;}
+#define TMPL_FREE(var) if (var) free(var); var = NULL
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
