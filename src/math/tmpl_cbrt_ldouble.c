@@ -623,15 +623,19 @@ long double tmpl_LDouble_Cbrt(long double x)
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
 
-    /*  Halley's method causes underflow for very small inputs. Check.        */
-    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x066DU)
+    /*  The quicker Halley's method used for normal numbers has the fault of  *
+     *  causing underflow for very small inputs and overflow for very large   *
+     *  ones. We need to be able to compute w^4 as an intermediate step,      *
+     *  which may cause problems. Newton's method only requires w^2 in the    *
+     *  intermediate steps, but the convergence is slower, quadratic instead  *
+     *  of cubic. For very small and very large numbers use Newton's method.  */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x1000U ||
+        TMPL_LDOUBLE_EXPO_BITS(w) > TMPL_LDOUBLE_UBIAS + 0x1000U)
     {
-        /*  The quicker Halley's method used for normal numbers has the fault *
-         *  of causing underflow win w.r^3 is needed as an intermediate step. *
-         *  The result is cbrt(x) = 0, which is inaccurate. To correct for    *
-         *  this we use Newton's method for very small non-zero numbers. This *
-         *  has worse convergence (quadratic), and hence needs two iterations *
-         *  instead of one, but avoids underflow since only w.r^2 is needed.  */
+        /*  As mentioned, the convergence is slower for Newton's method. We   *
+         *  need two iterations to achieve quadruple precision, whereas       *
+         *  Halley's method only needs one. Nevertheless, we avoid overflow   *
+         *  and underflow.                                                    */
         w.r = ONE_THIRD * (2.0L*w.r + x/(w.r*w.r));
         return ONE_THIRD * (2.0L*w.r + x/(w.r*w.r));
     }
