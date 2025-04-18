@@ -174,9 +174,11 @@
 /*  Only implement this if the user requested libtmpl algorithms.             */
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
+/*  Newton's method has a divide-by-three in the expression.                  */
+#define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)
+
 /*  128-bit double-double stores the data table with doubles.                 */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_BIG_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_DOUBLEDOUBLE_LITTLE_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_DOUBLEDOUBLE
 
 /*  The values 2^{0/3}, 2^{1/3}, and 2^{2/3}.                                 */
 static const double tmpl_ldouble_cbrt_data[3] = {
@@ -208,15 +210,11 @@ static const long double tmpl_ldouble_cbrt_data[3] = {
 #include "auxiliary/tmpl_cbrt_table_ldouble.h"
 
 /*  64-bit long double uses the same idea as 64-bit double.                   */
-#if TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_LITTLE_ENDIAN || \
-    TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_64_BIT_BIG_ENDIAN
+#if TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_64_BIT
 
 /******************************************************************************
  *                           64-Bit Double Version                            *
  ******************************************************************************/
-
-/*  Newton's method has a divide-by-three in the expression.                  */
-#define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)
 
 /*  Function for computing cube roots at long double precision.               */
 long double tmpl_LDouble_Cbrt(long double x)
@@ -355,18 +353,11 @@ long double tmpl_LDouble_Cbrt(long double x)
 /*  End of tmpl_LDouble_Cbrt.                                                 */
 
 /*  80-bit extended is similar, but extracts the index differently.           */
-#elif \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_LITTLE_ENDIAN  || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_96_BIT_EXTENDED_BIG_ENDIAN     || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_LITTLE_ENDIAN || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_EXTENDED_BIG_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_80_BIT
 
 /******************************************************************************
  *                          80-Bit Extended Version                           *
  ******************************************************************************/
-
-/*  Newton's method has a divide-by-three in the expression.                  */
-#define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)
 
 /*  Function for computing cube roots at long double precision.               */
 long double tmpl_LDouble_Cbrt(long double x)
@@ -496,9 +487,7 @@ long double tmpl_LDouble_Cbrt(long double x)
 /*  End of tmpl_LDouble_Cbrt.                                                 */
 
 /*  128-bit quadruple precision uses Halley's method instead of Newton's.     */
-#elif \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_LITTLE_ENDIAN || \
-  TMPL_LDOUBLE_ENDIANNESS == TMPL_LDOUBLE_128_BIT_QUADRUPLE_BIG_ENDIAN
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
 
 /******************************************************************************
  *                         128-Bit Quadruple Version                          *
@@ -634,9 +623,23 @@ long double tmpl_LDouble_Cbrt(long double x)
     /*  tmp still has the original sign of x. Copy this to the output.        */
     w.bits.sign = tmp.bits.sign;
 
+    /*  Halley's method causes underflow for very small inputs. Check.        */
+    if (TMPL_LDOUBLE_EXPO_BITS(w) < TMPL_LDOUBLE_UBIAS - 0x066DU)
+    {
+        /*  The quicker Halley's method used for normal numbers has the fault *
+         *  of causing underflow win w.r^3 is needed as an intermediate step. *
+         *  The result is cbrt(x) = 0, which is inaccurate. To correct for    *
+         *  this we use Newton's method for very small non-zero numbers. This *
+         *  has worse convergence (quadratic), and hence needs two iterations *
+         *  instead of one, but avoids underflow since only w.r^2 is needed.  */
+        w.r = ONE_THIRD * (2.0L*w.r + x/(w.r*w.r));
+        return ONE_THIRD * (2.0L*w.r + x/(w.r*w.r));
+    }
+
     /*  Apply 1 iteration of Halley's method and return.                      */
     w3 = w.r*w.r*w.r;
     return w.r*(2.0L*x + w3) / (x + 2.0L*w3);
+
 }
 /*  End of tmpl_LDouble_Cbrt.                                                 */
 
@@ -816,9 +819,6 @@ long double tmpl_LDouble_Cbrt(long double x)
 /******************************************************************************
  *                              Portable Version                              *
  ******************************************************************************/
-
-/*  Newton's method has a divide-by-three in the expression.                  */
-#define ONE_THIRD (3.333333333333333333333333333333333333333E-01L)
 
 /*  Pade approximant provided here.                                           */
 #include "auxiliary/tmpl_cbrt_pade_ldouble.h"
