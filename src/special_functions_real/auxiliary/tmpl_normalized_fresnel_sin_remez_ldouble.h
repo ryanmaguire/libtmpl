@@ -235,7 +235,7 @@ tmpl_ldouble_normalized_fresnel_sin_table[n]+z*(\
  ******************************************************************************/
 
 /*  Union of 64-bit integers and IEEE-754 bit representation found here.      */
-#include <libtmpl/include/types/tmpl_floatint_ldouble.h>
+#include <libtmpl/include/types/tmpl_floatint_double.h>
 
 /*  Computes C(x) using Remez polynomials and a lookup table.                 */
 TMPL_STATIC_INLINE
