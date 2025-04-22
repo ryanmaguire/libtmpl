@@ -47,4 +47,3 @@ tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble *P,
     return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1];
 }
 /*  End of tmpl_2DLDouble_Dot_Product.                                        */
-

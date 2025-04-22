@@ -42,4 +42,3 @@ tmpl_ComplexFloat tmpl_CFloat_Log(tmpl_ComplexFloat z)
     return ln_z;
 }
 /*  End of tmpl_CFloat_Log.                                                   */
-

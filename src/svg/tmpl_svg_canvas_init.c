@@ -29,4 +29,3 @@ tmpl_SVGCanvas_Init(tmpl_SVGCanvas *canvas,
     canvas->background = background;
     canvas->outline = outline;
 }
-

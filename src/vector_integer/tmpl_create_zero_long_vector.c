@@ -168,4 +168,3 @@ tmpl_ULongVector *tmpl_Create_Zero_ULongVector(size_t length)
     return vec;
 }
 /*  End of tmpl_Create_Zero_ULongVector.                                      */
-

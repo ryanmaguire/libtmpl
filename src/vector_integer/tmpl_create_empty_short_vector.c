@@ -167,4 +167,3 @@ tmpl_UShortVector *tmpl_Create_Empty_UShortVector(size_t length)
     return vec;
 }
 /*  End of tmpl_Create_Empty_UShortVector.                                    */
-

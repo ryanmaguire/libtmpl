@@ -44,4 +44,3 @@ double tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble *P)
     return P->dat[0]*P->dat[0] + P->dat[1]*P->dat[1];
 }
 /*  End of tmpl_2DDouble_L2_Norm_Squared.                                     */
-

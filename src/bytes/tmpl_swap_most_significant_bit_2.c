@@ -109,4 +109,3 @@ void tmpl_Swap_Most_Significant_Bit_2(char *ptr)
     return;
 }
 /*  End of tmpl_Swap_Most_Significant_Bit_2.                                  */
-

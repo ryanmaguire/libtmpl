@@ -208,4 +208,3 @@ tmpl_Destroy_LongDoubleVector(tmpl_LongDoubleVector **vec_ptr)
     vec = NULL;
 }
 /*  End of tmpl_Destroy_UIntVector.                                           */
-

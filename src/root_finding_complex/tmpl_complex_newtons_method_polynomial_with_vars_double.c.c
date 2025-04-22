@@ -82,4 +82,3 @@ tmpl_CDouble_Newtons_Method_Polynomial_With_Vars(
 
     return z;
 }
-

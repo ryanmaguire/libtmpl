@@ -156,4 +156,3 @@ void tmpl_Destroy_UCharVector(tmpl_UCharVector **vec_ptr)
     vec = NULL;
 }
 /*  End of tmpl_Destroy_UIntVector.                                           */
-

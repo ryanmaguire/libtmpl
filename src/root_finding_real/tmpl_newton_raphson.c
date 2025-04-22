@@ -90,4 +90,3 @@ double tmpl_Newton_Raphson_Double(double x, double (*f)(double),
 
     return x;
 }
-

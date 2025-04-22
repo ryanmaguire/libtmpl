@@ -156,4 +156,3 @@ void tmpl_Destroy_UShortVector(tmpl_UShortVector **vec_ptr)
     vec = NULL;
 }
 /*  End of tmpl_Destroy_UShortVector.                                         */
-

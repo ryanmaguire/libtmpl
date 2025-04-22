@@ -167,4 +167,3 @@ tmpl_ULongVector *tmpl_Create_Empty_ULongVector(size_t length)
     return vec;
 }
 /*  End of tmpl_Create_Empty_ULongVector.                                     */
-

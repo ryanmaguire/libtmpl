@@ -50,4 +50,3 @@ tmpl_TwoVectorFloat tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat *P)
     return P_hat;
 }
 /*  End of tmpl_2DFloat_Normalize.                                            */
-

@@ -445,4 +445,3 @@ tmpl_LDoubleVector_Add(tmpl_LongDoubleVector *v, tmpl_LongDoubleVector *u,
     for (n = 0UL; n < sum->length; ++n)
         (sum->data)[n] = (v->data)[n] + (u->data)[n];
 }
-

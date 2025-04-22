@@ -51,4 +51,3 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble *P)
     return P_hat;
 }
 /*  End of tmpl_2DLDouble_Normalize.                                          */
-

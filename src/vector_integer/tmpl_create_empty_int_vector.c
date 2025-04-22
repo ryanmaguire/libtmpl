@@ -167,4 +167,3 @@ tmpl_UIntVector *tmpl_Create_Empty_UIntVector(size_t length)
     return vec;
 }
 /*  End of tmpl_Create_Empty_UIntVector.                                      */
-

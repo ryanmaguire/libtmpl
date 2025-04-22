@@ -41,4 +41,3 @@ tmpl_2DFloat_Matrix_Product(const tmpl_TwoByTwoMatrixFloat *A,
     return out;
 }
 /*  End of tmpl_2DFloat_Matrix_Product.                                       */
-

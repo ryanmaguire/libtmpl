@@ -41,4 +41,3 @@ tmpl_2DLDouble_Matrix_Product(const tmpl_TwoByTwoMatrixLongDouble *A,
     return out;
 }
 /*  End of tmpl_2DLDouble_Matrix_Product.                                     */
-

@@ -168,4 +168,3 @@ tmpl_UShortVector *tmpl_Create_Zero_UShortVector(size_t length)
     return vec;
 }
 /*  End of tmpl_Create_Zero_UShortVector.                                     */
-

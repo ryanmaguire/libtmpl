@@ -170,4 +170,3 @@ tmpl_UCharVector *tmpl_Create_Empty_UCharVector(size_t length)
     return vec;
 }
 /*  End of tmpl_Create_Empty_UCharVector.                                     */
-

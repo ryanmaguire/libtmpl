@@ -103,4 +103,3 @@ void tmpl_Swap_Bytes(char *ptr1, char *ptr2)
     return;
 }
 /*  End of tmpl_Swap_Bytes.                                                   */
-

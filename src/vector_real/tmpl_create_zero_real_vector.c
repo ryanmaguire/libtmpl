@@ -220,4 +220,3 @@ tmpl_Create_Zero_LongDoubleVector(unsigned long int length)
     return vec;
 }
 /*  End of tmpl_Create_Empty_LongDoubleVector.                                */
-
