@@ -57,7 +57,7 @@
  *
  * Copyright:
  *   (C) 2012 Massachusetts Institute of Technology
- *   (C) 2013 Forschungszentrum Jülich GmbH
+ *   (C) 2013 Forschungszentrum Julich GmbH
  *
  * Licence:
  *   Permission is hereby granted, free of charge, to any person obtaining
@@ -81,7 +81,7 @@
  *
  * Authors:
  *   Steven G. Johnson, Massachusetts Institute of Technology, 2012, core author
- *   Joachim Wuttke, Forschungszentrum Jülich, 2013, package maintainer
+ *   Joachim Wuttke, Forschungszentrum Julich, 2013, package maintainer
  *
  * Website:
  *   http://apps.jcns.fz-juelich.de/libcerf

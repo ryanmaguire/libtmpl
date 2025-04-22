@@ -50,7 +50,7 @@
  *          P (x) = x                                                         *
  *           1                                                                *
  *                                                                            *
- *      For length > 2, use Bonnet’s recursion formula (see [2], in French):  *
+ *      For length > 2, use Bonnet's recursion formula (see [2], in French):  *
  *                                                                            *
  *                  (2n - 1) x P   (x) - (n - 1) P   (x)                      *
  *          P (x) =             n-1               n-2                         *

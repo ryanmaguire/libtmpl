@@ -58,7 +58,7 @@
  *      altered to be C89/C90 compliant and uses the rest of the libtmpl      *
  *      complex routines to perform the computation. The original authors are:*
  *          Steven G. Johnson, Massachusetts Institute of Technology          *
- *          Joachim Wuttke, Forschungszentrum Jülich, 2013                    *
+ *          Joachim Wuttke, Forschungszentrum Julich, 2013                    *
  *      Original license and copyright notice found below. Most of the        *
  *      original code has been rewritten so that complex.h/C99 features are   *
  *      NOT required. This file compiles with gcc using the -std=c89 -ansi    *
@@ -108,7 +108,7 @@
  *
  * Copyright:
  *   (C) 2012 Massachusetts Institute of Technology
- *   (C) 2013 Forschungszentrum Jülich GmbH
+ *   (C) 2013 Forschungszentrum Julich GmbH
  *
  * Licence:
  *   Permission is hereby granted, free of charge, to any person obtaining
@@ -132,7 +132,7 @@
  *
  * Authors:
  *   Steven G. Johnson, Massachusetts Institute of Technology, 2012, core author
- *   Joachim Wuttke, Forschungszentrum Jülich, 2013, package maintainer
+ *   Joachim Wuttke, Forschungszentrum Julich, 2013, package maintainer
  *
  * Website:
  *   http://apps.jcns.fz-juelich.de/libcerf
