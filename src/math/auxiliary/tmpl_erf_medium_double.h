@@ -183,7 +183,6 @@ double tmpl_Double_Erf_Medium(tmpl_IEEE754_Double w)
 #else
 /*  Else for #if TMPL_HAS_IEEE754_DOUBLE == 1.                                */
 
-
 /*  Coefficients for the numerator of the Remez rational approximation.       */
 #define A00 (+1.1283791670955126365607040611486440894548731064430E+00)
 #define A01 (+6.1856680806948109220677660264677907003149751444417E-02)

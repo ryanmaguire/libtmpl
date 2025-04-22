@@ -499,7 +499,6 @@ D00 + z*(\
   )\
 )
 
-
 /*  Evaluates the fifth Remez polynomial using Horner's method.               */
 #define TMPL_POLYE_EVAL(z) \
 E00 + z*(\
@@ -589,7 +588,6 @@ F00 + z*(\
     )\
   )\
 )
-
 
 /*  Evaluates the seventh Remez polynomial using Horner's method.             */
 #define TMPL_POLYG_EVAL(z) \

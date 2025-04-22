@@ -5,7 +5,6 @@
 #include <libtmpl/include/tmpl_vec2.h>
 #include <libtmpl/include/tmpl_vec3.h>
 
-
 extern tmpl_ThreeVectorDouble
 tmpl_Inverse_Orthographic_Projection(tmpl_TwoVector P,
                                      tmpl_ThreeVectorDouble u);

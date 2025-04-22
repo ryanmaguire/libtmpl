@@ -76,11 +76,9 @@
 /*  Function prototype given here.                                            */
 #include <libtmpl/include/tmpl_array_integer.h>
 
-
 /*  It is common for long to be 64-bits wide, which is larger than the        *
  *  mantissa of a double allows for. To avoid precision loss we'll use a      *
  *  double-double trick for the intermediate computations.                    */
-
 
 /*  Computes the root-mean-square of a signed long array.                     */
 double tmpl_Long_Array_Double_RMS(const signed long int * const arr, size_t len)

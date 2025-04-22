@@ -162,7 +162,6 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
                        const tmpl_IntPolynomial *Q,
                        tmpl_IntPolynomial *sum);
 
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_IntPolynomial_Add_Kernel                                         *

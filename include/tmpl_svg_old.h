@@ -299,7 +299,6 @@ tmpl_Create_SVG_Canvas(unsigned int width, unsigned int height,
                        double x_min, double x_max, double y_min, double y_max,
                        tmpl_SVG_Color background, tmpl_SVG_Pen outline);
 
-
 extern tmpl_SVG *
 tmpl_Create_SVG(const char *filename, tmpl_SVG_Canvas *canvas);
 
@@ -333,7 +332,6 @@ tmpl_Create_SVG_Line_From_Point_And_Tangent(tmpl_TwoVector P,
 
 extern void
 tmpl_Destroy_SVG_Line(tmpl_SVG_Line **line_pointer);
-
 
 extern tmpl_SVG_Palette *
 tmpl_SVG_Create_Palette(tmpl_SVG_Pen *line_pen, tmpl_SVG_Canvas *canvas);
@@ -386,7 +384,6 @@ tmpl_Set_SVG_Label_Shift(tmpl_SVG_Label *label, tmpl_TwoVector shift);
 
 extern void
 tmpl_Set_SVG_Label_FontSize(tmpl_SVG_Label *label, unsigned int font_size);
-
 
 extern void
 tmpl_Draw_SVG_Label(tmpl_SVG *svg, tmpl_SVG_Label *label);

@@ -1,6 +1,3 @@
-
-
-
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
 void

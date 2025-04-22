@@ -22,7 +22,6 @@
  *  Date:       February 11, 2025                                             *
  ******************************************************************************/
 
-
 /*  Prototype for the function given here.                                    */
 #include <libtmpl/include/tmpl_special_functions_real.h>
 

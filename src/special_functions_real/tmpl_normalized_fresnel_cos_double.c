@@ -265,7 +265,6 @@ double tmpl_Double_Normalized_Fresnel_Cos(double x)
     /*  C(x) is odd. Compute |x| and work with that.                          */
     const double abs_x = tmpl_Double_Abs(x);
 
-
     /*  Special case, NaN or Infinity.                                        */
     if (tmpl_Double_Is_NaN_Or_Inf(x))
     {

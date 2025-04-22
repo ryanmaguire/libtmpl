@@ -164,7 +164,6 @@ char *tmpl_IntPolynomial_As_String(const tmpl_IntPolynomial *poly)
 
     string_length_bound = (poly->degree - n)*pad;
 
-
     /*  If all terms are zero, simply return zero.                            */
     if (poly->coeffs[n] == 0)
     {

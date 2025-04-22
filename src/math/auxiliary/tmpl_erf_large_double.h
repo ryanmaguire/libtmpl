@@ -267,7 +267,6 @@ B00 + z*(\
     )\
 )
 
-
 /*  Helper macro for evaluating the second polynomial via Horner's method.    */
 #define TMPL_POLYC_EVAL(z) \
 C00 + z*(\

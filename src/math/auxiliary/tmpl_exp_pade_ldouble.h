@@ -267,7 +267,6 @@ P00 + z*(\
     )\
 )
 
-
 /*  Helper macro for evaluating the denominator via Horner's method.          */
 #define TMPL_DEN_EVAL(z) \
 Q00 + z*(\

@@ -21,7 +21,6 @@ extern tmpl_TwoVectorDouble
 tmpl_SVGCanvas_Transform(const tmpl_SVGCanvas * const canvas,
                          const tmpl_TwoVectorDouble point);
 
-
 extern void
 tmpl_SVG_Init_Default(tmpl_SVG *svg, const char * const filename);
 

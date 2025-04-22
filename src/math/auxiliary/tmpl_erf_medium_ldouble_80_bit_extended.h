@@ -227,7 +227,6 @@ A00+z*(A01+z*(A02+z*(A03+z*(A04+z*(A05+z*(A06+z*(A07+z*A08)))))))
 #define TMPL_DEN_EVAL(z) \
 B00+z*(B01+z*(B02+z*(B03+z*(B04+z*(B05+z*(B06+z*B07))))))
 
-
 TMPL_STATIC_INLINE
 long double tmpl_LDouble_Erf_Medium(long double x)
 {
@@ -236,7 +235,6 @@ long double tmpl_LDouble_Erf_Medium(long double x)
     const long double q = TMPL_DEN_EVAL(x2);
     return x * p / q;
 }
-
 
 #endif
 

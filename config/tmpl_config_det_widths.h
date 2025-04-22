@@ -111,6 +111,5 @@ static void tmpl_det_widths(void)
 }
 /*  End of tmpl_det_widths.                                                   */
 
-
 #endif
 /*  End of include guard.                                                     */

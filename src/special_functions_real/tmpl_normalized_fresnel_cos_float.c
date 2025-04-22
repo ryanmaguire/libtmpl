@@ -163,7 +163,6 @@
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-
 /*  Computes the normalized Fresnel cosine of a real number.                  */
 float tmpl_Float_Normalized_Fresnel_Cos(float x)
 {

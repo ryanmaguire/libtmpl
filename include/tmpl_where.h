@@ -30,7 +30,6 @@ extern unsigned long **
 tmpl_Where_Lesser_ULong(unsigned long *data, unsigned long dim,
                         double threshold);
 
-
 extern unsigned long **
 tmpl_Where_Lesser_Float(float *data, unsigned long dim, float threshold);
 
@@ -41,7 +40,6 @@ tmpl_Where_Lesser_Double(double *data, unsigned long dim,
 extern unsigned long **
 tmpl_Where_Lesser_LDouble(long double *data, unsigned long dim,
                           long double threshold);
-
 
 extern unsigned long **
 tmpl_Where_Greater_Char(char *data, unsigned long dim, double threshold);
@@ -81,8 +79,6 @@ tmpl_Where_Greater_Double(double *data, unsigned long dim,
 extern unsigned long **
 tmpl_Where_Greater_LDouble(long double *data, unsigned long dim,
                           long double threshold);
-
-
 
 extern unsigned long **
 tmpl_Where_LesserGreater_Char(char *data, unsigned long dim,

@@ -57,7 +57,6 @@
 
 #include <libtmpl/include/tmpl_math.h>
 
-
 #define PEAK (0xFFFFU)
 
 /*  Function for adding together two colors in 24-bit RGB format.             */

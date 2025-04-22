@@ -68,7 +68,6 @@ A00 + z*(\
   )\
 )
 
-
 TMPL_STATIC_INLINE
 double tmpl_Double_Bessel_I0_Medium(double x)
 {

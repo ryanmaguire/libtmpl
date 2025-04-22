@@ -1,6 +1,3 @@
-
-
-
 /*  Booleans found here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 

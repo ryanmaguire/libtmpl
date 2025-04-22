@@ -56,7 +56,6 @@ tmpl_Double_Kaiser_Bessel_2_5(double x, double W);
 extern long double
 tmpl_LDouble_Kaiser_Bessel_2_5(long double x, long double W);
 
-
 extern float
 tmpl_Float_Kaiser_Bessel_3_5(float x, float W);
 
@@ -147,7 +146,6 @@ tmpl_Normeq_Int(int *w_func, long n_elements);
 
 extern double
 tmpl_Normeq_Long(long *w_func, long n_elements);
-
 
 /*  Window Normalization Functions                                            */
 extern float
