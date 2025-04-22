@@ -42,15 +42,15 @@
 #include "tmpl_x86_64_asm.h"
 
 ASM_BEGIN(tmpl_LDouble_Fractional_Part)
-	fnstcw	-10(%rsp)
-	fldt	8(%rsp)
-	movzwl	-10(%rsp), %eax
-	fld     %st(0)
-	orb	    $12, %ah
-	movw	%ax, -12(%rsp)
-	fldcw	-12(%rsp)
-	frndint
-	fldcw	-10(%rsp)
-	fsubrp	%st, %st(1)
-	ret
+    fnstcw  -10(%rsp)
+    fldt    8(%rsp)
+    movzwl  -10(%rsp), %eax
+    fld     %st(0)
+    orb     $12, %ah
+    movw    %ax, -12(%rsp)
+    fldcw   -12(%rsp)
+    frndint
+    fldcw   -10(%rsp)
+    fsubrp  %st, %st(1)
+    ret
 ASM_END(tmpl_LDouble_Fractional_Part)
