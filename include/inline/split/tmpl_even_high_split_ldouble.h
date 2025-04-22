@@ -54,7 +54,7 @@
  *      2.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
- *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

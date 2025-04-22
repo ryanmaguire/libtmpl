@@ -89,17 +89,17 @@
  *              Tung, T., Yoo, D. (2002).                                     *
  *          "Design, implementation and testing of extended                   *
  *              and mixed precision BLAS."                                    *
- *          ACM Trans. Math. Software Vol. 28, No. 2: Pages 152–205           *
+ *          ACM Trans. Math. Software Vol. 28, No. 2: Pages 152-205           *
  *      3.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic."           *
  *      4.) Dekker, T.J. (June 1971).                                         *
  *          "A floating-point technique for                                   *
  *              extending the available precision."                           *
- *          Numerische Mathematik. Vol. 18, No. 3: Pages 224–242.             *
+ *          Numerische Mathematik. Vol. 18, No. 3: Pages 224-242.             *
  *      5.) Shewchuk, J. (October 1997).                                      *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
- *          Discrete & Computational Geometry Vol. 18, No. 3: Pages 305–363   *
+ *          Discrete & Computational Geometry Vol. 18, No. 3: Pages 305-363   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************

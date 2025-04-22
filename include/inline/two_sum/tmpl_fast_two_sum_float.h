@@ -73,13 +73,13 @@
  *      3.) Dekker, T.J. (June 1971).                                         *
  *          "A floating-point technique for                                   *
  *              extending the available precision."                           *
- *          Numerische Mathematik. Volume 18, Number 3: Pages 224–242.        *
+ *          Numerische Mathematik. Volume 18, Number 3: Pages 224-242.        *
  *      4.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
  *          "Library for Double-Double and Quad-Double Arithmetic."           *
  *      5.) Schewchuk, J. (October 1997).                                     *
  *          "Adaptive Precision Floating-Point Arithmetic                     *
  *              and Fast Robust Geometric Predicates."                        *
- *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305–363 *
+ *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
