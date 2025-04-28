@@ -82,8 +82,8 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(double k,
         sin_phi_phi0 = sin_phi*cos_phi0 - cos_phi*sin_phi0;
 
         /*  Compute the Cartesian coordinates of the ring point.              */
-        x = r0 * cos_phi;
-        y = r0 * sin_phi;
+        x = r0 * cos_phi0;
+        y = r0 * sin_phi0;
 
         /*  Compute the distances in the individual components.               */
         dx = x - rx;
@@ -106,25 +106,27 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(double k,
         xi_factor = cos_B * rcpr_D;
         eta_factor = 2.0 * r * r0 * rcpr_D_squared;
 
+        /*  The derivatives of eta can be computed from the eta factor and    *
+         *  the sine and cosine of the angle difference.                      */
+        deta = eta_factor * sin_phi_phi0;
+        deta2 = eta_factor * cos_phi_phi0;
+
+        /*  Similarly, we can compute the derivatives of xi.                  */
+        dxi = -xi_factor * r * sin_phi;
+        dxi2 = -xi_factor * r * cos_phi;
+
         /*  Compute xi variable (MTR86 Equation 4b) and eta (Equation 4c).    */
         xi = xi_factor * (r * cos_phi - r0 * cos_phi0);
-        eta = (r0*r0 + r*r)*rcpr_D_squared - eta_factor*cos_phi_phi0;
+        eta = (r0*r0 + r*r)*rcpr_D_squared - deta2;
         psi0 = tmpl_Double_Sqrt(1.0 + eta - 2.0*xi);
         rcpr_psi0 = 1.0 / psi0;
         rcpr_psi0_cubed = rcpr_psi0 * rcpr_psi0 * rcpr_psi0;
 
-        /*  Compute derivatives (Use calculus before hand).                   */
-        dxi = -xi_factor * (r * sin_phi);
-        dxi2 = -xi_factor * (r * cos_phi);
-        deta = eta_factor * sin_phi_phi0;
-        deta2 = eta_factor * cos_phi_phi0;
-
-        dpsi = (0.5 * rcpr_psi0) * (deta - 2.0*dxi) + dxi;
-
         num_factor = deta - 2.0*dxi;
+        dpsi = 0.5 * rcpr_psi0 * num_factor + dxi;
 
         d2psi = -0.25 * rcpr_psi0_cubed * num_factor * num_factor;
-        d2psi += (0.5 * rcpr_psi0) * (deta2 - 2.0*dxi2) + dxi2;
+        d2psi += 0.5 * rcpr_psi0 * (deta2 - 2.0*dxi2) + dxi2;
 
         /*  Perform the Newton iteration, and increment n.                    */
         phi = phi - tmpl_Double_Rad_To_Deg * dpsi / d2psi;
