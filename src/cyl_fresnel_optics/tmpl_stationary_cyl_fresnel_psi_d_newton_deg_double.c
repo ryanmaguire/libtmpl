@@ -63,6 +63,27 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(double k,
     /*  Simultaneously compute sine and cosine of phi.                        */
     tmpl_Double_SinCosd(phi0, &sin_phi0, &cos_phi0);
 
+    /*  Compute the Cartesian coordinates of the ring point.                  */
+    x = r0 * cos_phi0;
+    y = r0 * sin_phi0;
+
+    /*  Compute the distances in the individual components.                   */
+    dx = x - rx;
+    dy = y - ry;
+
+    /*  No physical system could possibly have dx, dy, or rz so large         *
+     *  that the sum of the squares may overflow. The system would need       *
+     *  to have distances that are roughly 10^125 times the radius of the     *
+     *  observable universe for the sum of the squares to exceed              *
+     *  2^(2^10 - 1), the max exponent of double. Because of this, we can     *
+     *  safely pass to sqrt.                                                  */
+    D = tmpl_Double_Sqrt(dx*dx + dy*dy + rz*rz);
+
+    /*  Compute 1/D and it's square to save the number of divisions we        *
+     *  need to compute. Multiplication is usually ~10 times faster.          */
+    rcpr_D = 1.0 / D;
+    rcpr_D_squared = rcpr_D * rcpr_D;
+
     /*  Normalize the requested error by the wavenumber and distance.         */
     eps /= k;
 
@@ -80,27 +101,6 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi_D_Newton_Deg(double k,
          *  phi-phi0 can be computed without the need to call cos and sin.    */
         cos_phi_phi0 = cos_phi*cos_phi0 + sin_phi*sin_phi0;
         sin_phi_phi0 = sin_phi*cos_phi0 - cos_phi*sin_phi0;
-
-        /*  Compute the Cartesian coordinates of the ring point.              */
-        x = r0 * cos_phi0;
-        y = r0 * sin_phi0;
-
-        /*  Compute the distances in the individual components.               */
-        dx = x - rx;
-        dy = y - ry;
-
-        /*  No physical system could possibly have dx, dy, or rz so large     *
-         *  that the sum of the squares may overflow. The system would need   *
-         *  to have distances that are roughly 10^125 times the radius of the *
-         *  observable universe for the sum of the squares to exceed          *
-         *  2^(2^10 - 1), the max exponent of double. Because of this, we can *
-         *  safely pass to sqrt.                                              */
-        D = tmpl_Double_Sqrt(dx*dx + dy*dy + rz*rz);
-
-        /*  Compute 1/D and it's square to save the number of divisions we    *
-         *  need to compute. Multiplication is usually ~10 times faster.      */
-        rcpr_D = 1.0 / D;
-        rcpr_D_squared = rcpr_D * rcpr_D;
 
         /*  These terms occur frequently.                                     */
         xi_factor = cos_B * rcpr_D;
