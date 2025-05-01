@@ -19,42 +19,28 @@
  *                      tmpl_two_vector_l2_norm_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the Euclidean norm (length) of the point (x, y) using the     *
- *      Pythagorean formula:                                                  *
- *          ||(x, y)|| = sqrt(x^2 + y^2)                                      *
+ *      2D Euclidean norm.                                                    *
+ *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_ldouble.h.*
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/09/20: Ryan Maguire                                                  *
- *      Created file (KissVG).                                                *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *  2022/12/30: Ryan Maguire                                                  *
- *      Changed function to pass vector by address. Function now passes the   *
- *      x and y components to tmpl_LDouble_Hypot.                             *
  ******************************************************************************/
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  This file is only compiled if inline support is not requested.            */
+/*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Header file containing basic math functions.                              */
-#include <libtmpl/include/tmpl_math.h>
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_ldouble.h>
 
-/*  Where the prototypes are given and where vector types are defined.        */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Function prototype / forward declaration.                                 */
+extern long double
+tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble * const P);
 
-/*  Function for computing the magnitude, or L2 norm, of a vector.            */
-long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P)
-{
-    return tmpl_LDouble_Hypot(P->dat[0], P->dat[1]);
-}
-/*  End of tmpl_2DLDouble_L2_Norm.                                            */
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_two_vector_l2_norm_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

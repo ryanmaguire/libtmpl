@@ -19,9 +19,43 @@
  *                      tmpl_two_vector_l2_norm_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the Euclidean norm (length) of the point (x, y) using the     *
- *      Pythagorean formula:                                                  *
- *          ||(x, y)|| = sqrt(x^2 + y^2)                                      *
+ *      Provides the L2 (Euclidean) norm function in the Euclidean plane.     *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_2DLDouble_L2_Norm                                                *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean norm of a point in the plane.                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorLongDouble * const):                           *
+ *          A pointer to a point in the Euclidean plane.                      *
+ *  Output:                                                                   *
+ *      norm (long double):                                                   *
+ *          The Euclidean norm of the point P.                                *
+ *  Called Functions:                                                         *
+ *      src/math/                                                             *
+ *          tmpl_LDouble_Hypot:                                               *
+ *              Computes the length of the line from (0, 0) to (x, y).        *
+ *  Method:                                                                   *
+ *      The Euclidean norm of a point is given by the Pythagorean formula.    *
+ *      That is, if P = (a, b), then the norm is:                             *
+ *                                                                            *
+ *          norm(P) = || P ||                                                 *
+ *                  = || (a, b) ||                                            *
+ *                  = sqrt(a^2 + b^2)                                         *
+ *                                                                            *
+ *      This is computed using the tmpl_LDouble_Hypot function.               *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for NULL pointers. It is assumed P is a valid *
+ *          pointer to a 2D vector.                                           *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec2_ldouble.h:                                                  *
+ *          The tmpl_TwoVectorLongDouble typedef is provided here.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
@@ -37,34 +71,30 @@
  *      x and y components to tmpl_LDouble_Hypot.                             *
  *  2023/01/19: Ryan Maguire                                                  *
  *      Added inline version into include/vec2/.                              *
+ *  2025/05/01: Ryan Maguire                                                  *
+ *      Removed tmpl_math.h include, added detailed docstring.                *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TWO_VECTOR_L2_NORM_LDOUBLE_H
-#define TMPL_TWO_VECTOR_L2_NORM_LDOUBLE_H
+#ifndef TMPL_VEC2_L2_NORM_LDOUBLE_H
+#define TMPL_VEC2_L2_NORM_LDOUBLE_H
 
-/*  The TMPL_USE_INLINE macro is found here.                                  */
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only use this if inline support is requested.                             */
-#if TMPL_USE_INLINE == 1
+/*  Two-vector typedef found here.                                            */
+#include <libtmpl/include/types/tmpl_vec2_ldouble.h>
 
-/*  Header file containing basic math functions.                              */
-#include <libtmpl/include/tmpl_math.h>
-
-/*  Where the prototypes are given and where vector types are defined.        */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Tell the compiler about the hypotenuse function.                          */
+extern long double tmpl_LDouble_Hypot(long double x, long double y);
 
 /*  Function for computing the magnitude, or L2 norm, of a vector.            */
 TMPL_INLINE_DECL
-long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P)
+long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble * const P)
 {
     return tmpl_LDouble_Hypot(P->dat[0], P->dat[1]);
 }
 /*  End of tmpl_2DLDouble_L2_Norm.                                            */
-
-#endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 #endif
 /*  End of include guard.                                                     */
