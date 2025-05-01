@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D Euclidean distance.                                                *
- *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_l2_dist_float.h.  *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_l2_dist_float.h.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 20, 2020                                            *
@@ -41,7 +41,7 @@ tmpl_2DFloat_L2_Dist(const tmpl_TwoVectorFloat * const P,
                      const tmpl_TwoVectorFloat * const Q);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/vec2/tmpl_two_vector_l2_dist_float.h"
+#include "../../include/inline/vec2/tmpl_vec2_l2_dist_float.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D vector addition.                                                   *
- *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_add_ldouble.h.    *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_add_ldouble.h.          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
@@ -41,7 +41,7 @@ tmpl_2DLDouble_Add(const tmpl_TwoVectorLongDouble * const P,
                    const tmpl_TwoVectorLongDouble * const Q);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/vec2/tmpl_two_vector_add_ldouble.h"
+#include "../../include/inline/vec2/tmpl_vec2_add_ldouble.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

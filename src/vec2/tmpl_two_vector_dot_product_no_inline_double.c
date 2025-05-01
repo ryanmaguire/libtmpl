@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D Euclidean dot product. Source:                                     *
- *      libtmpl/include/inline/vec2/tmpl_two_vector_dot_product_double.h.     *
+ *      libtmpl/include/inline/vec2/tmpl_vec2_dot_product_double.h.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
@@ -41,7 +41,7 @@ tmpl_2DDouble_Dot_Product(const tmpl_TwoVectorDouble * const P,
                           const tmpl_TwoVectorDouble * const Q);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/vec2/tmpl_two_vector_dot_product_double.h"
+#include "../../include/inline/vec2/tmpl_vec2_dot_product_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

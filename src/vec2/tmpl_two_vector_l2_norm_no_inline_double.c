@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D Euclidean norm.                                                    *
- *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_double.h. *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_l2_norm_double.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
@@ -40,7 +40,7 @@ extern double
 tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble * const P);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/vec2/tmpl_two_vector_l2_norm_double.h"
+#include "../../include/inline/vec2/tmpl_vec2_l2_norm_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D Euclidean distance.                                                *
- *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_l2_dist_double.h. *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_l2_dist_double.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       September 20, 2020                                            *
@@ -41,7 +41,7 @@ tmpl_2DDouble_L2_Dist(const tmpl_TwoVectorDouble * const P,
                       const tmpl_TwoVectorDouble * const Q);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/vec2/tmpl_two_vector_l2_dist_double.h"
+#include "../../include/inline/vec2/tmpl_vec2_l2_dist_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */

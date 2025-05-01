@@ -20,7 +20,7 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D vector addition in-place, += operator.                             *
- *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_addto_double.h.   *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_addto_double.h.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 1, 2025                                                   *
@@ -41,7 +41,7 @@ tmpl_2DDouble_AddTo(tmpl_TwoVectorDouble * const P,
                     const tmpl_TwoVectorDouble * const Q);
 
 /*  Implemented here.                                                         */
-#include "../../include/inline/vec2/tmpl_two_vector_addto_double.h"
+#include "../../include/inline/vec2/tmpl_vec2_addto_double.h"
 
 #endif
 /*  End of #if TMPL_USE_INLINE != 1.                                          */
