@@ -26,10 +26,10 @@
  *  Date:       March 3, 2021                                                 *
  ******************************************************************************/
 
-/*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
+/*  Location of the TMPL_USE_INLINE macro.                                    */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Only used if libtmpl algorithms are requested and inline support is not.  */
+/*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
 /*  2D Vector type found here.                                                */
