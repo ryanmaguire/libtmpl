@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_two_vector_l2_dist_double                       *
+ *                          tmpl_vec2_l2_dist_double                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides the L2 (Euclidean) distance function in the Euclidean plane. *

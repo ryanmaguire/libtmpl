@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_two_vector_addto_ldouble                       *
+ *                           tmpl_vec2_addto_ldouble                          *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      In-place vector addition for long double precision 2D vectors.        *

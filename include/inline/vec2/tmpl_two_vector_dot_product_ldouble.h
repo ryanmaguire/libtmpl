@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_two_vector_dot_product_ldouble                    *
+ *                        tmpl_vec2_dot_product_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the Euclidean dot product in the plane.                      *

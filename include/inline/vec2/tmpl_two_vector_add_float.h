@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_two_vector_add_float                          *
+ *                            tmpl_vec2_add_float                             *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides vector addition for single precision 2D vectors.             *
