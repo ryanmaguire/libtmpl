@@ -23,7 +23,7 @@
  *      Source: libtmpl/include/inline/vec2/tmpl_two_vector_add_double.h.     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       February 16, 2021                                             *
+ *  Date:       March 3, 2021                                                 *
  ******************************************************************************/
 
 /*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
