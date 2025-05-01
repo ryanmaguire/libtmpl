@@ -19,7 +19,7 @@
  *                      tmpl_two_vector_l2_dist_ldouble                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provides the L2 (Euclidean distance) function in the Euclidean plane. *
+ *      Provides the L2 (Euclidean) distance function in the Euclidean plane. *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
