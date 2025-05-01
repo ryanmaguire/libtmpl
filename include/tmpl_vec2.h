@@ -66,6 +66,210 @@
 #include <libtmpl/include/types/tmpl_vec2_float.h>
 #include <libtmpl/include/types/tmpl_vec2_ldouble.h>
 
+#if TMPL_USE_INLINE == 1
+
+#ifdef TMPL_ADD_INLINE
+#undef TMPL_ADD_INLINE
+#endif
+
+#define TMPL_INLINE_FILE(file) <libtmpl/include/inline/vec2/file>
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Add                                                     *
+ *  Purpose:                                                                  *
+ *      Computes the sum of two vectors in the plane.                         *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      sum (tmpl_TwoVectorDouble):                                           *
+ *          The vector sum P + Q.                                             *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_add_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_add_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_add_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Add(const tmpl_TwoVectorFloat * const P,
+                 const tmpl_TwoVectorFloat * const Q);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Add(const tmpl_TwoVectorDouble * const P,
+                  const tmpl_TwoVectorDouble * const Q);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Add(const tmpl_TwoVectorLongDouble * const P,
+                   const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_AddTo                                                   *
+ *  Purpose:                                                                  *
+ *      Performs vector addition in-place, providing "+=" for 2D vectors.     *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A pointer to a vector in the plane. The sum is stored here.       *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_addto_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_addto_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_addto_ldouble.h)
+
+#else
+
+extern void
+tmpl_2DFloat_AddTo(tmpl_TwoVectorFloat * const P,
+                   const tmpl_TwoVectorFloat * const Q);
+
+extern void
+tmpl_2DDouble_AddTo(tmpl_TwoVectorDouble * const P,
+                    const tmpl_TwoVectorDouble * const Q);
+
+extern void
+tmpl_2DLDouble_AddTo(tmpl_TwoVectorLongDouble * const P,
+                     const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Dot_Product                                             *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean dot product of two 2D vectors.                 *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      dot (double):                                                         *
+ *          The dot product of P and Q.                                       *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_dot_product_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_dot_product_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_dot_product_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_Dot_Product(const tmpl_TwoVectorFloat * const P,
+                         const tmpl_TwoVectorFloat * const Q);
+
+extern double
+tmpl_2DDouble_Dot_Product(const tmpl_TwoVectorDouble * const P,
+                          const tmpl_TwoVectorDouble * const Q);
+
+extern long double
+tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble * const P,
+                           const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_L2_Dist                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean distance between two points in the plane.      *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      dist (double):                                                        *
+ *          The distance between P and Q.                                     *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_dist_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_dist_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_dist_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_L2_Dist(const tmpl_TwoVectorFloat * const P,
+                     const tmpl_TwoVectorFloat * const Q);
+
+extern double
+tmpl_2DDouble_L2_Dist(const tmpl_TwoVectorDouble * const P,
+                      const tmpl_TwoVectorDouble * const Q);
+
+extern long double
+tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble * const P,
+                       const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_L2_Norm                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean distance between two points in the plane.      *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      dist (double):                                                        *
+ *          The distance between P and Q.                                     *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_norm_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_norm_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_norm_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat * const P);
+
+extern double
+tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble * const P);
+
+extern long double
+tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_L2_Norm_Squared                                         *
+ *  Purpose:                                                                  *
+ *      Computes the square of the Euclidean norm of a tmpl_TwoVectorDouble.  *
+ *  Arguments:                                                                *
+ *      const tmpl_TwoVectorDouble *P:                                        *
+ *          An arbitrary tmpl_TwoVector.                                      *
+ *  Outputs:                                                                  *
+ *      double norm_sq:                                                       *
+ *          The value ||P||_2^2 = x^2 + y^2.                                  *
+ ******************************************************************************/
+extern float tmpl_2DFloat_L2_Norm_Squared(const tmpl_TwoVectorFloat *P);
+extern double tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble *P);
+
+extern long double
+tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble *P);
+
 /*  Typedefs for 2D lines at various precisions.                              */
 #include <libtmpl/include/types/tmpl_line2_double.h>
 #include <libtmpl/include/types/tmpl_line2_float.h>
@@ -319,56 +523,6 @@ tmpl_2x2LDouble_Scale(long double r, const tmpl_TwoByTwoMatrixLongDouble *P);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_2DDouble_Add                                                     *
- *  Purpose:                                                                  *
- *      Given two tmpl_TwoVector's, compute the vector sum of them.           *
- *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          A pointer to an arbitrary vector.                                 *
- *      const tmpl_TwoVectorDouble *Q:                                        *
- *          Another pointer to an arbitrary vector.                           *
- *  Outputs:                                                                  *
- *      tmpl_TwoVectorDouble sum:                                             *
- *          The vector sum P+Q.                                               *
- ******************************************************************************/
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Add(const tmpl_TwoVectorFloat *P, const tmpl_TwoVectorFloat *Q);
-
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Add(const tmpl_TwoVectorDouble *P, const tmpl_TwoVectorDouble *Q);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Add(const tmpl_TwoVectorLongDouble *P,
-                   const tmpl_TwoVectorLongDouble *Q);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_2D_Dot_Product                                                   *
- *  Purpose:                                                                  *
- *      Compute the Euclidean dot product of two 2D vectors.                  *
- *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          A pointer to an arbitrary vector.                                 *
- *      const tmpl_TwoVectorDouble *Q:                                        *
- *          Another pointer to an arbitrary vector.                           *
- *  Outputs:                                                                  *
- *      double dot_prod:                                                      *
- *          The dot product of P and Q.                                       *
- ******************************************************************************/
-extern float
-tmpl_2DFloat_Dot_Product(const tmpl_TwoVectorFloat *P,
-                         const tmpl_TwoVectorFloat *Q);
-
-extern double
-tmpl_2DDouble_Dot_Product(const tmpl_TwoVectorDouble *P,
-                          const tmpl_TwoVectorDouble *Q);
-
-extern long double
-tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble *P,
-                           const tmpl_TwoVectorLongDouble *Q);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_TwoVector_Euclidean_Orthogonal                                   *
  *  Purpose:                                                                  *
  *      Compute a vector which is orthogonal to the input.                    *
@@ -574,48 +728,6 @@ tmpl_2DLDouble_Polar(long double r, long double theta);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_2DDouble_L2_Norm                                                 *
- *  Purpose:                                                                  *
- *      Computes the Euclidean norm of a tmpl_TwoVectorDouble.                *
- *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          An arbitrary tmpl_TwoVector.                                      *
- *  Outputs:                                                                  *
- *      double norm:                                                          *
- *          The Euclidean norm of P. If we represent P by (x, y), norm is     *
- *          defined by norm = sqrt(x^2 + y^2).                                *
- ******************************************************************************/
-
-#if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_double.h>
-#include <libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_float.h>
-#include <libtmpl/include/inline/vec2/tmpl_two_vector_l2_norm_ldouble.h>
-#else
-extern float tmpl_2DFloat_L2_Norm(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_L2_Norm(const tmpl_TwoVectorDouble *P);
-extern long double tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble *P);
-#endif
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_2DDouble_L2_Norm_Squared                                         *
- *  Purpose:                                                                  *
- *      Computes the square of the Euclidean norm of a tmpl_TwoVectorDouble.  *
- *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          An arbitrary tmpl_TwoVector.                                      *
- *  Outputs:                                                                  *
- *      double norm_sq:                                                       *
- *          The value ||P||_2^2 = x^2 + y^2.                                  *
- ******************************************************************************/
-extern float tmpl_2DFloat_L2_Norm_Squared(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble *P);
-
-extern long double
-tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble *P);
-
-/******************************************************************************
- *  Function:                                                                 *
  *      tmpl_2DDouble_Normalize                                               *
  *  Purpose:                                                                  *
  *      Compute the Euclidean dot product of two 2D vectors.                  *
@@ -718,17 +830,7 @@ tmpl_2DLDouble_Are_Collinear(const tmpl_TwoVectorLongDouble *A,
                              const tmpl_TwoVectorLongDouble *B,
                              const tmpl_TwoVectorLongDouble *C);
 
-extern float
-tmpl_2DFloat_L2_Dist(const tmpl_TwoVectorFloat *P,
-                     const tmpl_TwoVectorFloat *Q);
 
-extern double
-tmpl_2DDouble_L2_Dist(const tmpl_TwoVectorDouble *P,
-                      const tmpl_TwoVectorDouble *Q);
-
-extern long double
-tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble *P,
-                       const tmpl_TwoVectorLongDouble *Q);
 
 extern tmpl_Bool
 tmpl_LineSegment2D_Intersect(tmpl_TwoLineDouble L0,
