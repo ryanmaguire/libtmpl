@@ -19,31 +19,29 @@
  *                     tmpl_two_vector_dot_product_float                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Compute the Euclidean dot product (a,b) . (c,d) = ac + bd.            *
+ *      2D Euclidean dot product. Source:                                     *
+ *      libtmpl/include/inline/vec2/tmpl_two_vector_dot_product_float.h.      *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/12/21: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *  2022/12/30: Ryan Maguire                                                  *
- *      Moved float and long double versions to their own files. Also changed *
- *      function to pass the vector struct by address, rather than value.     *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Location of the TMPL_USE_MATH_ALGORITHMS macro.                           */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function for computing the Euclidean dot product of two 2D vectors.       */
-float
-tmpl_2DFloat_Dot_Product(const tmpl_TwoVectorFloat *P,
-                         const tmpl_TwoVectorFloat *Q)
-{
-    /*  Use the Euclidean dot product formula and return.                     */
-    return P->dat[0]*Q->dat[0] + P->dat[1]*Q->dat[1];
-}
-/*  End of tmpl_2DFloat_Dot_Product.                                          */
+/*  Only used if libtmpl algorithms are requested and inline support is not.  */
+#if TMPL_USE_INLINE != 1
+
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_float.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern float
+tmpl_2DFloat_Dot_Product(const tmpl_TwoVectorFloat * const P,
+                         const tmpl_TwoVectorFloat * const Q);
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_two_vector_dot_product_float.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
