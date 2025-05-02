@@ -52,6 +52,9 @@
  *  Notes:                                                                    *
  *      1.) There are no checks for NULL pointers. It is assumed P and Q are  *
  *          valid pointers to 2D vectors.                                     *
+ *      2.) For vectors with very large components, the square of the         *
+ *          distance may overflow. This will occur if ||P - Q|| >= sqrt(MAX), *
+ *          where MAX is the largest representable float.                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
