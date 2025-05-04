@@ -221,17 +221,51 @@ tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_2DDouble_L2_Norm                                                 *
+ *      tmpl_2DDouble_L2_Dist_Squared                                         *
  *  Purpose:                                                                  *
- *      Computes the Euclidean distance between two points in the plane.      *
+ *      Computes the square of the Euclidean distance between two points.     *
  *  Arguments:                                                                *
  *      P (const tmpl_TwoVectorDouble * const):                               *
  *          A pointer to a vector in the plane.                               *
  *      Q (const tmpl_TwoVectorDouble * const):                               *
  *          Another pointer to a vector in the plane.                         *
  *  Outputs:                                                                  *
- *      dist (double):                                                        *
- *          The distance between P and Q.                                     *
+ *      dist_squared (double):                                                *
+ *          The square of the distance between P and Q.                       *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_dist_squared_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_dist_squared_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_dist_squared_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_L2_Dist_Squared(const tmpl_TwoVectorFloat * const P,
+                            const tmpl_TwoVectorFloat * const Q);
+
+extern double
+tmpl_2DDouble_L2_Dist_Squared(const tmpl_TwoVectorDouble * const P,
+                             const tmpl_TwoVectorDouble * const Q);
+
+extern long double
+tmpl_2DLDouble_L2_Dist_Squared(const tmpl_TwoVectorLongDouble * const P,
+                               const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_L2_Norm                                                 *
+ *  Purpose:                                                                  *
+ *      Computes the Euclidean norm of a point in the plane.                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      norm (double):                                                        *
+ *          The Euclidean norm of P.                                          *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
 
@@ -256,19 +290,32 @@ tmpl_2DLDouble_L2_Norm(const tmpl_TwoVectorLongDouble * const P);
  *  Function:                                                                 *
  *      tmpl_2DDouble_L2_Norm_Squared                                         *
  *  Purpose:                                                                  *
- *      Computes the square of the Euclidean norm of a tmpl_TwoVectorDouble.  *
+ *      Computes the square of the Euclidean norm of a point in the plane.    *
  *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          An arbitrary tmpl_TwoVector.                                      *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
  *  Outputs:                                                                  *
- *      double norm_sq:                                                       *
- *          The value ||P||_2^2 = x^2 + y^2.                                  *
+ *      norm_squared (double):                                                *
+ *          The square of the Euclidean norm of P.                            *
  ******************************************************************************/
-extern float tmpl_2DFloat_L2_Norm_Squared(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble *P);
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_norm_squared_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_norm_squared_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_l2_norm_squared_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_L2_Norm_Squared(const tmpl_TwoVectorFloat * const P);
+
+extern double
+tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble * const P);
 
 extern long double
-tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble *P);
+tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
 
 /*  Typedefs for 2D lines at various precisions.                              */
 #include <libtmpl/include/types/tmpl_line2_double.h>
