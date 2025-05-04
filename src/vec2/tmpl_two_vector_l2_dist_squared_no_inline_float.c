@@ -16,31 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                   tmpl_two_vector_l2_dist_squared_float                    *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the square of the Euclidean norm of a vector (x, y) using the *
- *      Pythagorean formula:                                                  *
- *          ||(x, y)||^2 = x^2 + y^2                                          *
+ *      Square of the 2D Euclidean distance. Source:                          *
+ *      libtmpl/include/inline/vec2/tmpl_vec2_l2_dist_squared_float.h.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/12/21: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *  2022/12/30: Ryan Maguire                                                  *
- *      Moved float and long double versions to their own files. Also changed *
- *      function to pass the vector struct by address, rather than value.     *
+ *  Date:       May 4, 2025                                                   *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function for computing the length of the vector (x, y) in the plane.      */
-long double tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble *P)
-{
-    return P->dat[0]*P->dat[0] + P->dat[1]*P->dat[1];
-}
-/*  End of tmpl_2DLDouble_L2_Norm_Squared.                                    */
+/*  Only used if inline support is not available.                             */
+#if TMPL_USE_INLINE != 1
+
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_float.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern float
+tmpl_2DFloat_L2_Dist_Squared(const tmpl_TwoVectorFloat * const P,
+                             const tmpl_TwoVectorFloat * const Q);
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_vec2_l2_dist_squared_float.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
