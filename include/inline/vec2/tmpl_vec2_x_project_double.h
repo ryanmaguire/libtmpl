@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_vec2_midpoint_double                          *
+ *                         tmpl_vec2_x_project_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Projects a point in the plane onto the x axis.                        *
