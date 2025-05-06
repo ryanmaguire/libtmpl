@@ -73,7 +73,7 @@ TMPL_INLINE_DECL
 tmpl_TwoVectorDouble
 tmpl_2DDouble_X_Project(const tmpl_TwoVectorDouble * const P)
 {
-    /*  Output variable for the projection of P onto the X axis.              */
+    /*  Output variable for the projection of P onto the x axis.              */
     tmpl_TwoVectorDouble x_projection;
 
     /*  The projection copies the x component and zeroes out the y value.     */
