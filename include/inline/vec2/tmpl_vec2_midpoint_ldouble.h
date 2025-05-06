@@ -104,8 +104,8 @@ tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble * const P,
     tmpl_TwoVectorLongDouble mid;
 
     /*  The midpoint is computed by averaging the components.                 */
-    mid.dat[0] = 0.5F * (P->dat[0] + Q->dat[0]);
-    mid.dat[1] = 0.5F * (P->dat[1] + Q->dat[1]);
+    mid.dat[0] = 0.5L * (P->dat[0] + Q->dat[0]);
+    mid.dat[1] = 0.5L * (P->dat[1] + Q->dat[1]);
     return mid;
 }
 /*  End of tmpl_2DLDouble_Midpoint.                                           */
