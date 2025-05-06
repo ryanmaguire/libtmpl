@@ -243,11 +243,11 @@ tmpl_2DLDouble_L2_Dist(const tmpl_TwoVectorLongDouble * const P,
 
 extern float
 tmpl_2DFloat_L2_Dist_Squared(const tmpl_TwoVectorFloat * const P,
-                            const tmpl_TwoVectorFloat * const Q);
+                             const tmpl_TwoVectorFloat * const Q);
 
 extern double
 tmpl_2DDouble_L2_Dist_Squared(const tmpl_TwoVectorDouble * const P,
-                             const tmpl_TwoVectorDouble * const Q);
+                              const tmpl_TwoVectorDouble * const Q);
 
 extern long double
 tmpl_2DLDouble_L2_Dist_Squared(const tmpl_TwoVectorLongDouble * const P,
@@ -314,6 +314,104 @@ tmpl_2DDouble_L2_Norm_Squared(const tmpl_TwoVectorDouble * const P);
 
 extern long double
 tmpl_2DLDouble_L2_Norm_Squared(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Midpoint                                                *
+ *  Purpose:                                                                  *
+ *      Computes the midpoint of two points in the plane.                     *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      mid (tmpl_TwoVector):                                                 *
+ *          The midpoint of P and Q.                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_midpoint_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_midpoint_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_midpoint_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Midpoint(const tmpl_TwoVectorFloat * const P,
+                      const tmpl_TwoVectorFloat * const Q);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Midpoint(const tmpl_TwoVectorDouble * const P,
+                       const tmpl_TwoVectorDouble * const Q);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble * const P,
+                        const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_X_Project                                               *
+ *  Purpose:                                                                  *
+ *      Projects a vector onto the x axis.                                    *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      x_projection (tmpl_TwoVectorDouble):                                  *
+ *          The projection of P onto the x axis.                              *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_x_project_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_project_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_project_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_X_Project(const tmpl_TwoVectorFloat * const P);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_X_Project(const tmpl_TwoVectorDouble * const P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_X_Project(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Y_Project                                               *
+ *  Purpose:                                                                  *
+ *      Projects a vector onto the y axis.                                    *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      y_projection (tmpl_TwoVectorDouble):                                  *
+ *          The projection of P onto the y axis.                              *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_y_project_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_y_project_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_y_project_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Y_Project(const tmpl_TwoVectorFloat * const P);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Y_Project(const tmpl_TwoVectorDouble * const P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Y_Project(const tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
@@ -620,32 +718,6 @@ tmpl_2DDouble_Matrix_Product(const tmpl_TwoByTwoMatrixDouble *A,
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Matrix_Product(const tmpl_TwoByTwoMatrixLongDouble *A,
                               const tmpl_TwoVectorLongDouble *P);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_2DDouble_Midpoint                                                *
- *  Purpose:                                                                  *
- *      Compute the midpoint of two tmpl_TwoVectorDouble's.                   *
- *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          A pointer to an arbitrary tmpl_TwoVectorDouble.                   *
- *      const tmpl_TwoVectorDouble *Q:                                        *
- *          Another pointer to an arbitrary tmpl_TwoVectorDouble.             *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector mid:                                                   *
- *          The midpoint of P and Q, defined to be (P + Q) / 2.               *
- ******************************************************************************/
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Midpoint(const tmpl_TwoVectorFloat *P,
-                      const tmpl_TwoVectorFloat *Q);
-
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Midpoint(const tmpl_TwoVectorDouble *P,
-                       const tmpl_TwoVectorDouble *Q);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble *P,
-                        const tmpl_TwoVectorLongDouble *Q);
 
 /******************************************************************************
  *  Function:                                                                 *
