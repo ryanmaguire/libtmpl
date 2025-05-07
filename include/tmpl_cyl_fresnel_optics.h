@@ -46,6 +46,12 @@
  *      Fixed the stationary Psi function. Add float and long double support.
  */
 
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2                                   *
@@ -1124,6 +1130,11 @@ tmpl_Double_Stationary_Elliptical_Fresnel_Psi_Newton(double k, double r,
                                                      double rx, double ry,
                                                      double rz, double EPS,
                                                      unsigned int toler);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */

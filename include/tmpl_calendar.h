@@ -3,6 +3,12 @@
 
 #include <libtmpl/include/tmpl_bool.h>
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     tmpl_January = 1,
     tmpl_February,
@@ -50,5 +56,10 @@ extern const char *tmpl_Local_Calendar_Date_And_Time(void);
 extern tmpl_Bool tmpl_Year_Is_Leap(int year);
 
 extern int tmpl_Day_Of_Year(int year, int month, int day);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif

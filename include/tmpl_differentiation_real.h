@@ -39,6 +39,12 @@
 #ifndef TMPL_DIFFERENTIATION_REAL_H
 #define TMPL_DIFFERENTIATION_REAL_H
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_Double_Derivative                                                *
@@ -316,6 +322,11 @@ tmpl_Double_Symmetric_Second_Derivative(double (*f)(double),
 extern long double
 tmpl_LDouble_Symmetric_Second_Derivative(long double (*f)(long double),
                                          long double x, long double h);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */

@@ -1,6 +1,12 @@
 #ifndef TMPL_ASTRO_H
 #define TMPL_ASTRO_H
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern float
 tmpl_Float_Effecting_Ring_Opening_Angle(const float opening,
                                         const float azimuth);
@@ -33,5 +39,10 @@ tmpl_Double_Optical_Depth_Enhancement_Factor(const double opening,
 extern long double
 tmpl_LDouble_Optical_Depth_Enhancement_Factor(const long double opening,
                                               const long double azimuth);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif

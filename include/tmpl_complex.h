@@ -58,12 +58,6 @@
 #ifndef TMPL_COMPLEX_H
 #define TMPL_COMPLEX_H
 
-/*  If using with C++ (and not C) we need to wrap the entire header file in   *
- *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -76,6 +70,12 @@ extern "C" {
 #include <libtmpl/include/types/tmpl_complex_double.h>
 #include <libtmpl/include/types/tmpl_complex_float.h>
 #include <libtmpl/include/types/tmpl_complex_ldouble.h>
+
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*  For the sake of ease, tmpl_Complex is an alternative alias for double     *
  *  precision complex. You can use this for cleaner declarations.             */

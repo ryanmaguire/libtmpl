@@ -51,6 +51,12 @@
 #include <libtmpl/include/types/tmpl_rgba30.h>
 #include <libtmpl/include/types/tmpl_rgba48.h>
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  *  nbh_color_write_to_file(const struct nbh_color *c, FILE *fp)
  *  nbh_color_write_to_ppm(const struct nbh_color *c, struct nbh_ppm *PPM)
@@ -331,6 +337,11 @@ extern tmpl_RGBA24 tmpl_RGBA24_Quick_Add(tmpl_RGBA24 c0, const tmpl_RGBA24 c1);
 extern tmpl_RGBA30 tmpl_RGBA30_Quick_Add(tmpl_RGBA30 c0, const tmpl_RGBA30 c1);
 extern tmpl_RGBA48 tmpl_RGBA48_Quick_Add(tmpl_RGBA48 c0, const tmpl_RGBA48 c1);
 extern tmpl_RGBA tmpl_RGBA_Quick_Add(const tmpl_RGBA *c0, const tmpl_RGBA *c1);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */

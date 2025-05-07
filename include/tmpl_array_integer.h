@@ -36,17 +36,17 @@
 #ifndef TMPL_ARRAY_INTEGER_H
 #define TMPL_ARRAY_INTEGER_H
 
-/*  If using with C++ (and not C), wrap the entire header file in an extern   *
- *  "C" statement. Check if C++ is being used with __cplusplus.               */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*  TMPL_HAS_LONGLONG macro provided here indicating long long support.       */
 #include <libtmpl/include/tmpl_inttype.h>
 
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
+
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *

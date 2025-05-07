@@ -40,6 +40,12 @@
 #include <libtmpl/include/types/tmpl_doubledouble_double.h>
 #include <libtmpl/include/types/tmpl_doubledouble_ldouble.h>
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_DoubleDouble_Add                                                 *
@@ -157,6 +163,11 @@ tmpl_DoubleDouble_Create(double hi, double lo);
 
 extern tmpl_LongDoubleDouble
 tmpl_LDoubleDouble_Create(long double hi, long double lo);
+#endif
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
 #endif
 
 #endif
