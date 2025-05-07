@@ -41,6 +41,12 @@
 
 #include <libtmpl/include/tmpl_bool.h>
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*  An edge is represented by an unordered pair of unsigned integers v0 and   *
  *  v1. We can represent the direction of an edge by whether or not we want   *
  *  to write (v0,v1) or (v1,v0). (v0,v1) represents forward and (v1,v0)       *
@@ -157,6 +163,11 @@ tmpl_Is_Graph_Simple(tmpl_Graph *G);
 
 extern unsigned long int
 tmpl_Degree_of_Vertex(unsigned long int);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */

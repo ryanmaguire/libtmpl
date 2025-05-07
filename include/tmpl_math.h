@@ -139,6 +139,12 @@
 #endif
 /*  End of #if !defined(TMPL_USE_MATH_ALGORITHMS).                            */
 
+/*  If using with C++ (and not C), wrap the entire header file in an extern   *
+ *  "C" statement. Check if C++ is being used with __cplusplus.               */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*  The following comment block explains the IEEE-754 format. Those who know  *
  *  the format can skip it.                                                   */
 
@@ -2223,6 +2229,11 @@ extern float tmpl_Float_Quick_Hypot3(float x, float y, float z);
 
 extern long double
 tmpl_LDouble_Quick_Hypot3(long double x, long double y, long double z);
+#endif
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
 #endif
 
 #endif

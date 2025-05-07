@@ -5,6 +5,12 @@
 /*  Complex numbers defined here.                                             */
 #include <libtmpl/include/tmpl_complex.h>
 
+/*  If using with C++ (and not C) we need to wrap the entire header file in   *
+ *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_CDouble_Fresnel_Diffraction_Well                                 *
@@ -253,6 +259,11 @@ tmpl_CLDouble_Fresnel_Diffraction_Square_Wave(long double x,
                                               long double well_width,
                                               long double fresnel_scale,
                                               unsigned int number_of_wells);
+
+/*  End of extern "C" statement allowing C++ compatibility.                   */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /*  End of include guard.                                                     */
