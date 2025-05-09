@@ -564,6 +564,37 @@ tmpl_2DLDouble_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Positive_Polar_Angle                                    *
+ *  Purpose:                                                                  *
+ *      Computes the positive angle a point makes with the x axis in radians. *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      angle (double):                                                       *
+ *          The positive angle made by P and the x axis.                      *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_positive_polar_angle_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_positive_polar_angle_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_positive_polar_angle_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_Positive_Polar_Angle(const tmpl_TwoVectorFloat * const P);
+
+extern double
+tmpl_2DDouble_Positive_Polar_Angle(const tmpl_TwoVectorDouble * const P);
+
+extern long double
+tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_X_Project                                               *
  *  Purpose:                                                                  *
  *      Projects a vector onto the x axis.                                    *
