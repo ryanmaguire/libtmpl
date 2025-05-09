@@ -185,6 +185,42 @@ tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Hadamard_Product                                        *
+ *  Purpose:                                                                  *
+ *      Computes the component-wise product of two vectors in the plane.      *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      product (tmpl_TwoVectorDouble):                                       *
+ *          The component-wise vector sum P * Q.                              *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_product_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_product_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_product_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Hadamard_Product(const tmpl_TwoVectorFloat * const P,
+                              const tmpl_TwoVectorFloat * const Q);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Hadamard_Product(const tmpl_TwoVectorDouble * const P,
+                               const tmpl_TwoVectorDouble * const Q);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Hadamard_Product(const tmpl_TwoVectorLongDouble * const P,
+                                const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_L2_Dist                                                 *
  *  Purpose:                                                                  *
  *      Computes the Euclidean distance between two points in the plane.      *
@@ -350,6 +386,37 @@ tmpl_2DDouble_Midpoint(const tmpl_TwoVectorDouble * const P,
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble * const P,
                         const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Polar_Angle                                             *
+ *  Purpose:                                                                  *
+ *      Computes the angle a vector makes with the positive x axis, radians.  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      angle (double):                                                       *
+ *          The angle made by P and the x axis.                               *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_polar_angle_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_polar_angle_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_polar_angle_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_Polar_Angle(const tmpl_TwoVectorFloat * const P);
+
+extern double
+tmpl_2DDouble_Polar_Angle(const tmpl_TwoVectorDouble * const P);
+
+extern long double
+tmpl_2DLDouble_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
