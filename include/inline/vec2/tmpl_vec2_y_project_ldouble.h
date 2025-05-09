@@ -77,7 +77,7 @@ tmpl_2DLDouble_Y_Project(const tmpl_TwoVectorLongDouble * const P)
     tmpl_TwoVectorLongDouble y_projection;
 
     /*  The projection copies the y component and zeroes out the x value.     */
-    y_projection.dat[0] = 0.0F;
+    y_projection.dat[0] = 0.0L;
     y_projection.dat[1] = P->dat[1];
     return y_projection;
 }
