@@ -533,6 +533,37 @@ tmpl_2DLDouble_Midpoint(const tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Orthogonal                                              *
+ *  Purpose:                                                                  *
+ *      Computes a vector orthogonal to the input.                            *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      orth (tmpl_TwoVectorDouble):                                          *
+ *          A vector orthogonal to P with the same magnitude.                 *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_orthogonal_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_orthogonal_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_orthogonal_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Orthogonal(const tmpl_TwoVectorFloat * const P);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Orthogonal(const tmpl_TwoVectorDouble * const P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Orthogonal(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_Polar_Angle                                             *
  *  Purpose:                                                                  *
  *      Computes the angle a vector makes with the positive x axis, radians.  *
@@ -905,31 +936,6 @@ tmpl_2x2LDouble_Scale(long double r, const tmpl_TwoByTwoMatrixLongDouble *P);
  *          The (m, n) component of the tmpl_TwoByTwoMatrix                   *
  ******************************************************************************/
 #define TMPL_GET_2x2_MATRIX_COMPONENT(A, m, n) ((A).dat[(m)][(n)])
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_TwoVector_Euclidean_Orthogonal                                   *
- *  Purpose:                                                                  *
- *      Compute a vector which is orthogonal to the input.                    *
- *  Arguments:                                                                *
- *      tmpl_TwoVector v:                                                     *
- *          A 2D vector.                                                      *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector orth:                                                  *
- *          A vector orthogonal to v.                                         *
- *  NOTE:                                                                     *
- *      Float and Long Double precisions are also provided.                   *
- ******************************************************************************/
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Orthogonal(const tmpl_TwoVectorFloat *V);
-
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Orthogonal(const tmpl_TwoVectorDouble *V);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Orthogonal(const tmpl_TwoVectorLongDouble *V);
-
-#define tmpl_2D_Orthogonal tmpl_2DDouble_Orthogonal
 
 /******************************************************************************
  *  Function:                                                                 *
