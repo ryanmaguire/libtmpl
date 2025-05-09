@@ -149,6 +149,42 @@ tmpl_2DLDouble_AddTo(tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Cross_Product                                           *
+ *  Purpose:                                                                  *
+ *      Computes the cross product of two vectors in the plane.               *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      cross (double):                                                       *
+ *          The cross product P x Q.                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_cross_product_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_cross_product_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_cross_product_ldouble.h)
+
+#else
+
+extern float
+tmpl_2DFloat_Cross_Product(const tmpl_TwoVectorFloat * const P,
+                           const tmpl_TwoVectorFloat * const Q);
+
+extern double
+tmpl_2DDouble_Cross_Product(const tmpl_TwoVectorDouble * const P,
+                            const tmpl_TwoVectorDouble * const Q);
+
+extern long double
+tmpl_2DLDouble_Cross_Product(const tmpl_TwoVectorLongDouble * const P,
+                             const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_Dot_Product                                             *
  *  Purpose:                                                                  *
  *      Computes the Euclidean dot product of two 2D vectors.                 *
