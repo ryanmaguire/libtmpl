@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                  tmpl_two_vector_hadamard_product_double                   *
+ *                tmpl_two_vector_hadamard_productwith_double                 *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      2D Hadamard component-wise product, in-place. Source:                 *
