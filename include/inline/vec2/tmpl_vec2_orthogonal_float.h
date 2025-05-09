@@ -16,35 +16,39 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                     tmpl_two_vector_orthogonal_double                      *
+ *                         tmpl_vec2_orthogonal_float                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a vector orthogonal to a given input.                        *
+ *      Computes a point orthogonal to the input and of the same magnitude.   *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_2DDouble_Orthogonal                                              *
+ *      tmpl_2DFloat_Orthogonal                                               *
  *  Purpose:                                                                  *
- *      Given a point in the plane (x, y), computes a point orthogonal to     *
- *      this with respect to the origin. In particular, it returns (-y, x)    *
- *      since <(x, y) | (-y, x)> = x(-y) + yx = 0, where < | > is the usual   *
- *      Euclidean dot product.                                                *
+ *      Computes a vector orthogonal to the input with the same magnitude.    *
  *  Arguments:                                                                *
- *      V (const tmpl_TwoVectorDouble *):                                     *
- *          A pointer to a point in the plane.                                *
+ *      P (const tmpl_TwoVectorFloat * const):                                *
+ *          A pointer to a point in the Euclidean plane.                      *
  *  Output:                                                                   *
- *      perpV (tmpl_TwoVectorDouble):                                         *
- *          A point orthogonal to V.                                          *
+ *      orth (tmpl_TwoVectorFloat):                                           *
+ *          A point orthogonal to P, meaning the dot product is zero.         *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Given (x, y), return the vector (-y, x).                              *
+ *      Given P = (a, b), the vector Q = (-b, a) is orthogonal.               *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for NULL pointers. It is assumed P is a valid *
+ *          pointer to a 2D vector.                                           *
+ *      2.) The convention (a, b) |-> (-b, a) follows a right-handed          *
+ *          orientation. That is: x |-> y |-> -x |-> -y |-> x.                *
  ******************************************************************************
- *                               DEPENDENCIES                                 *
+ *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_vec2.h:                                                          *
- *          Header file containing the function prototype.                    *
+ *  1.) tmpl_config.h:                                                        *
+ *          Location of the TMPL_INLINE_DECL macro.                           *
+ *  2.) tmpl_vec2_float.h:                                                    *
+ *          The tmpl_TwoVectorFloat typedef is provided here.                 *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 29, 2021                                                 *
@@ -54,21 +58,35 @@
  *  2022/12/30: Ryan Maguire                                                  *
  *      Moved float and long double versions to their own files. Changed      *
  *      function to pass by address instead of by value.                      *
+ *  2025/05/09: Ryan Maguire                                                  *
+ *      Inlined function. Added detailed docstring.                           *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Include guard to prevent including this file twice.                       */
+#ifndef TMPL_VEC2_ORTHOGONAL_FLOAT_H
+#define TMPL_VEC2_ORTHOGONAL_FLOAT_H
 
-/*  Given a vector V, returns an orthogonal vector U with respect to the      *
- *  standard Euclidean dot product. That is, a vector U with <V|U> = 0        *
- *  (using bra-ket notation).                                                 */
-tmpl_TwoVectorDouble
-tmpl_2DDouble_Orthogonal(const tmpl_TwoVectorDouble *V)
+/*  The TMPL_INLINE_DECL macro is provided here.                              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  Two-vector typedef found here.                                            */
+#include <libtmpl/include/types/tmpl_vec2_float.h>
+
+/*  Function for computing a vector that is orthogonal to the input.          */
+TMPL_INLINE_DECL
+tmpl_TwoVectorFloat
+tmpl_2DFloat_Orthogonal(const tmpl_TwoVectorFloat * const P)
 {
-    tmpl_TwoVectorDouble perpV;
+    /*  Output variable for a vector orthogonal to the input.                 */
+    tmpl_TwoVectorFloat orth;
 
-    perpV.dat[0] = -V->dat[1];
-    perpV.dat[1] = V->dat[0];
-    return perpV;
+    /*  Given P = (a, b), we have Q = (-b, a) is orthogonal to P. That is,    *
+     *  P . Q = (a, b) . (-b, a) = -a*b + a*b = 0. Return (-b, a).            */
+    orth.dat[0] = -P->dat[1];
+    orth.dat[1] = +P->dat[0];
+    return orth;
 }
-/*  End of tmpl_2DDouble_Orthogonal.                                          */
+/*  End of tmpl_2DFloat_Orthogonal.                                           */
+
+#endif
+/*  End of include guard.                                                     */
