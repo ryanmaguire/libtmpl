@@ -68,8 +68,8 @@
 
 #if TMPL_USE_INLINE == 1
 
-#ifdef TMPL_ADD_INLINE
-#undef TMPL_ADD_INLINE
+#ifdef TMPL_INLINE_FILE
+#undef TMPL_INLINE_FILE
 #endif
 
 #define TMPL_INLINE_FILE(file) <libtmpl/include/inline/vec2/file>
@@ -221,6 +221,77 @@ tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Hadamard_Divide                                         *
+ *  Purpose:                                                                  *
+ *      Computes the component-wise division of two vectors in the plane.     *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      quot (tmpl_TwoVectorDouble):                                          *
+ *          The component-wise vector quotient P / Q.                         *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_divide_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_divide_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_divide_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Hadamard_Divide(const tmpl_TwoVectorFloat * const P,
+                             const tmpl_TwoVectorFloat * const Q);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Hadamard_Divide(const tmpl_TwoVectorDouble * const P,
+                              const tmpl_TwoVectorDouble * const Q);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Hadamard_Divide(const tmpl_TwoVectorLongDouble * const P,
+                               const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Hadamard_DivideBy                                       *
+ *  Purpose:                                                                  *
+ *      Computes the component-wise quotient of two vectors in-place.         *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A pointer to a vector in the plane, the quotient is stored here.  *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_divideby_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_divideby_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_divideby_ldouble.h)
+
+#else
+
+extern void
+tmpl_2DFloat_Hadamard_DivideBy(tmpl_TwoVectorFloat * const P,
+                               const tmpl_TwoVectorFloat * const Q);
+
+extern void
+tmpl_2DDouble_Hadamard_DivideBy(tmpl_TwoVectorDouble * const P,
+                                const tmpl_TwoVectorDouble * const Q);
+
+extern void
+tmpl_2DLDouble_Hadamard_DivideBy(tmpl_TwoVectorLongDouble * const P,
+                                 const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_Hadamard_Product                                        *
  *  Purpose:                                                                  *
  *      Computes the component-wise product of two vectors in the plane.      *
@@ -231,7 +302,7 @@ tmpl_2DLDouble_Dot_Product(const tmpl_TwoVectorLongDouble * const P,
  *          Another pointer to a vector in the plane.                         *
  *  Outputs:                                                                  *
  *      product (tmpl_TwoVectorDouble):                                       *
- *          The component-wise vector sum P * Q.                              *
+ *          The component-wise vector product P * Q.                          *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
 
@@ -1113,6 +1184,10 @@ tmpl_2DDouble_Circle_As_Line(tmpl_2DCircleDouble *circle,
 extern void
 tmpl_2DDouble_Reset_Circle(const tmpl_2DCircleDouble *circle,
                            const tmpl_TwoVector *P, double r);
+
+#ifdef TMPL_INLINE_FILE
+#undef TMPL_INLINE_FILE
+#endif
 
 #endif
 /*  End of include guard.                                                     */
