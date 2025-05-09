@@ -221,6 +221,41 @@ tmpl_2DLDouble_Hadamard_Product(const tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Hadamard_ProductWith                                    *
+ *  Purpose:                                                                  *
+ *      Computes the component-wise product of two vectors in-place.          *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A pointer to a vector in the plane, the product is stored here.   *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_productwith_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_productwith_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_hadamard_productwith_ldouble.h)
+
+#else
+
+extern void
+tmpl_2DFloat_Hadamard_ProductWith(tmpl_TwoVectorFloat * const P,
+                                  const tmpl_TwoVectorFloat * const Q);
+
+extern void
+tmpl_2DDouble_Hadamard_ProductWith(tmpl_TwoVectorDouble * const P,
+                                   const tmpl_TwoVectorDouble * const Q);
+
+extern void
+tmpl_2DLDouble_Hadamard_ProductWith(tmpl_TwoVectorLongDouble * const P,
+                                    const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_L2_Dist                                                 *
  *  Purpose:                                                                  *
  *      Computes the Euclidean distance between two points in the plane.      *
