@@ -80,13 +80,13 @@
 /*  Two-vector typedef found here.                                            */
 #include <libtmpl/include/types/tmpl_vec2_float.h>
 
-/*  Function for returning the x component of a two dimensional vector.       */
+/*  Function for returning the x coordinate of a two dimensional vector.      */
 TMPL_INLINE_DECL
 float tmpl_2DFloat_X(const tmpl_TwoVectorFloat * const P)
 {
     /*  The tmpl_TwoVectorFloat mimics the method used by GSL for complex     *
      *  numbers, using a struct containing a float array with 2 elements.     *
-     *  The x component is the zeroth element. Return this.                   */
+     *  The x coordinate is the zeroth element. Return this.                  */
     return P->dat[0];
 }
 /*  End of tmpl_2DFloat_X.                                                    */
