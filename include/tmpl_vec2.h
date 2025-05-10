@@ -626,6 +626,32 @@ tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_X                                                       *
+ *  Purpose:                                                                  *
+ *      Returns the x coordinate of a 2D vector.                              *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      x_val (double):                                                       *
+ *          The x coordinate of P.                                            *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_x_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_ldouble.h)
+
+#else
+
+extern float tmpl_2DFloat_X(const tmpl_TwoVectorFloat * const P);
+extern double tmpl_2DDouble_X(const tmpl_TwoVectorDouble * const P);
+extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_X_Project                                               *
  *  Purpose:                                                                  *
  *      Projects a vector onto the x axis.                                    *
@@ -652,6 +678,32 @@ tmpl_2DDouble_X_Project(const tmpl_TwoVectorDouble * const P);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_X_Project(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Y                                                       *
+ *  Purpose:                                                                  *
+ *      Returns the y coordinate of a 2D vector.                              *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      y_val (double):                                                       *
+ *          The y coordinate of P.                                            *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_y_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_y_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_y_ldouble.h)
+
+#else
+
+extern float tmpl_2DFloat_Y(const tmpl_TwoVectorFloat * const P);
+extern double tmpl_2DDouble_Y(const tmpl_TwoVectorDouble * const P);
+extern long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
@@ -876,8 +928,6 @@ tmpl_2x2Double_New(double a, double b, double c, double d);
 extern tmpl_TwoByTwoMatrixLongDouble
 tmpl_2x2LDouble_New(long double a, long double b, long double c, long double d);
 
-#define tmpl_2x2_New tmpl_2x2Double_New
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2x2Double_Rotation                                               *
@@ -989,44 +1039,6 @@ extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Rect(long double x, long double y);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_2DDouble_X                                                       *
- *  Purpose:                                                                  *
- *      Returns the x component of a tmpl_TwoVector. This is equivalent to    *
- *      the mathematical concept of projecting a vector along the y-axis.     *
- *  Arguments:                                                                *
- *      tmpl_TwoVector P:                                                     *
- *  Outputs:                                                                  *
- *      double x:                                                             *
- *          The x component of the tmpl_TwoVector P. If we represent P by     *
- *          (x, y), this is equivalent to returning x.                        *
- *  Note:                                                                     *
- *      This is not a function, but rather a preprocessor macro.              *
- ******************************************************************************/
-extern float tmpl_2DFloat_X(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_X(const tmpl_TwoVectorDouble *P);
-extern long double tmpl_2DLDouble_X(const tmpl_TwoVectorLongDouble *P);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_2DDouble_Y                                                       *
- *  Purpose:                                                                  *
- *      Returns the y component of a tmpl_TwoVector. This is equivalent to    *
- *      the mathematical concept of projecting a vector along the x-axis.     *
- *  Arguments:                                                                *
- *      tmpl_TwoVector P:                                                     *
- *  Outputs:                                                                  *
- *      double y:                                                             *
- *          The y component of the tmpl_TwoVector P. If we represent P by     *
- *          (x, y), this is equivalent to returning y.                        *
- *  Note:                                                                     *
- *      This is not a function, but rather a preprocessor macro.              *
- ******************************************************************************/
-extern float tmpl_2DFloat_Y(const tmpl_TwoVectorFloat *P);
-extern double tmpl_2DDouble_Y(const tmpl_TwoVectorDouble *P);
-extern long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble *P);
 
 /******************************************************************************
  *  Function:                                                                 *

@@ -16,33 +16,30 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                          tmpl_two_vector_y_float                           *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Returns the y component of a two dimensional vector/planar point.     *
- *      That is, given (x, y), return y.                                      *
+ *      Projection onto the y axis.                                           *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_y_float.h.              *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/12/21: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *  2023/01/01: Ryan Maguire                                                  *
- *      Changed function to pass by addres. Moved float and long double to    *
- *      their own files.                                                      *
+ *  Date:       May 10, 2025                                                  *
  ******************************************************************************/
 
-/*  Function prototypes and two-vector typedef's found here.                  */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function for returning the y component of a two dimensional vector.       */
-long double tmpl_2DLDouble_Y(const tmpl_TwoVectorLongDouble *P)
-{
-    /*  tmpl_TwoVectorLongDouble mimics the method used by GSL for complex    *
-     *  numbers, using a struct containing a long double array with 2         *
-     *  elements. The y component is the first element. Return this.          */
-    return P->dat[1];
-}
-/*  End of tmpl_2DDouble_Y.                                                   */
+/*  Only used if inline support is not available.                             */
+#if TMPL_USE_INLINE != 1
+
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_float.h>
+
+/*  Function prototype / forward declaration.                                 */
+extern float tmpl_2DFloat_Y(const tmpl_TwoVectorFloat * const P);
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_vec2_y_float.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
