@@ -624,6 +624,33 @@ tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Subtract                                                *
+ *  Purpose:                                                                  *
+ *      Computes the difference of two vectors in the plane.                  *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      diff (tmpl_TwoVectorDouble):                                          *
+ *          The vector difference P - Q.                                      *
+ ******************************************************************************/
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Subtract(const tmpl_TwoVectorFloat * const P,
+                      const tmpl_TwoVectorFloat * const Q);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Subtract(const tmpl_TwoVectorDouble * const P,
+                       const tmpl_TwoVectorDouble * const Q);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Subtract(const tmpl_TwoVectorLongDouble *const P,
+                        const tmpl_TwoVectorLongDouble *const Q);
+
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2DDouble_X                                                       *
@@ -1039,38 +1066,6 @@ extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Rect(long double x, long double y);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_TwoVector_Subtract                                               *
- *  Purpose:                                                                  *
- *      Given two tmpl_TwoVector's P and Q, compute P-Q.                      *
- *  Arguments:                                                                *
- *      tmpl_TwoVector P:                                                     *
- *          An arbitrary tmpl_TwoVector.                                      *
- *      tmpl_TwoVector Q:                                                     *
- *          The vector we wish to subtract from P.                            *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector sum:                                                   *
- *          The vector subtraction P-Q.                                       *
- *  NOTE:                                                                     *
- *      Unlike tmpl_TwoVectorAdd, the order of the inputs for                 *
- *      tmpl_TwoVectorSubtract matters. This routine compute P - Q, and not   *
- *      Q - P. That is, we subtract the second argument from the first one.   *
- *  Location:                                                                 *
- *      The source code is contained in src/kissvg.c                          *
- ******************************************************************************/
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Subtract(const tmpl_TwoVectorFloat *P,
-                      const tmpl_TwoVectorFloat *Q);
-
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Subtract(const tmpl_TwoVectorDouble *P,
-                       const tmpl_TwoVectorDouble *Q);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Subtract(const tmpl_TwoVectorLongDouble *P,
-                        const tmpl_TwoVectorLongDouble *Q);
 
 /******************************************************************************
  *  Function:                                                                 *
