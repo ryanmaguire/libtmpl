@@ -624,7 +624,6 @@ tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
-
 /******************************************************************************
  *  Function:                                                                 *
  *      tmpl_2DDouble_Subtract                                                *
@@ -639,6 +638,14 @@ tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
  *      diff (tmpl_TwoVectorDouble):                                          *
  *          The vector difference P - Q.                                      *
  ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_subtract_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_subtract_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_subtract_ldouble.h)
+
+#else
+
 extern tmpl_TwoVectorFloat
 tmpl_2DFloat_Subtract(const tmpl_TwoVectorFloat * const P,
                       const tmpl_TwoVectorFloat * const Q);
@@ -648,8 +655,45 @@ tmpl_2DDouble_Subtract(const tmpl_TwoVectorDouble * const P,
                        const tmpl_TwoVectorDouble * const Q);
 
 extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Subtract(const tmpl_TwoVectorLongDouble *const P,
-                        const tmpl_TwoVectorLongDouble *const Q);
+tmpl_2DLDouble_Subtract(const tmpl_TwoVectorLongDouble * const P,
+                        const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_SubtractFrom                                            *
+ *  Purpose:                                                                  *
+ *      Performs vector subtraction in-place, providing "-=" for 2D vectors.  *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A pointer to a vector in the plane. The difference is stored here.*
+ *      Q (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_subtractfrom_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_subtractfrom_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_subtractfrom_ldouble.h)
+
+#else
+
+extern void
+tmpl_2DFloat_SubtractFrom(tmpl_TwoVectorFloat * const P,
+                          const tmpl_TwoVectorFloat * const Q);
+
+extern void
+tmpl_2DDouble_SubtractFrom(tmpl_TwoVectorDouble * const P,
+                           const tmpl_TwoVectorDouble * const Q);
+
+extern void
+tmpl_2DLDouble_SubtractFrom(tmpl_TwoVectorLongDouble * const P,
+                            const tmpl_TwoVectorLongDouble * const Q);
+
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
