@@ -762,6 +762,27 @@ tmpl_2DLDouble_SubtractFrom(tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Unit_Normal                                             *
+ *  Purpose:                                                                  *
+ *      Computes the unit vector in the direction of P.                       *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      u (tmpl_TwoVectorDouble):                                             *
+ *          A unit vector parallel to P.                                      *
+ ******************************************************************************/
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Unit_Normal(const tmpl_TwoVectorFloat * const P);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Unit_Normal(const tmpl_TwoVectorDouble * const P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_X                                                       *
  *  Purpose:                                                                  *
  *      Returns the x coordinate of a 2D vector.                              *
@@ -1231,29 +1252,6 @@ extern tmpl_TwoVectorDouble tmpl_2DDouble_Polar(double r, double theta);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Polar(long double r, long double theta);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_2DDouble_Normalize                                               *
- *  Purpose:                                                                  *
- *      Compute the Euclidean dot product of two 2D vectors.                  *
- *  Arguments:                                                                *
- *      const tmpl_TwoVectorDouble *P:                                        *
- *          A 2D vector.                                                      *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector P_hat:                                                 *
- *          A vector of length 1 in the same direction of P.                  *
- *  NOTES:                                                                    *
- *      If P is the zero vector P = (0, 0), this function returns (NaN, NaN). *
- ******************************************************************************/
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat *P);
-
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble *P);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble *P);
 
 /******************************************************************************
  *  Function:                                                                 *
