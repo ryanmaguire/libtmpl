@@ -754,6 +754,31 @@ tmpl_2DLDouble_X_Project(const tmpl_TwoVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_X_ProjectSelf                                           *
+ *  Purpose:                                                                  *
+ *      Projects a vector onto the x axis.                                    *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A vector in the plane. The projection is stored here.             *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_x_projectself_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_projectself_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_projectself_ldouble.h)
+
+#else
+
+extern void tmpl_2DFloat_X_ProjectSelf(tmpl_TwoVectorFloat * const P);
+extern void tmpl_2DDouble_X_ProjectSelf(tmpl_TwoVectorDouble * const P);
+extern void tmpl_2DLDouble_X_ProjectSelf(tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_Y                                                       *
  *  Purpose:                                                                  *
  *      Returns the y coordinate of a 2D vector.                              *
@@ -806,6 +831,31 @@ tmpl_2DDouble_Y_Project(const tmpl_TwoVectorDouble * const P);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Y_Project(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Y_ProjectSelf                                           *
+ *  Purpose:                                                                  *
+ *      Projects a vector onto the y axis.                                    *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A vector in the plane. The projection is stored here.             *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_y_projectself_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_y_projectself_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_y_projectself_ldouble.h)
+
+#else
+
+extern void tmpl_2DFloat_Y_ProjectSelf(tmpl_TwoVectorFloat * const P);
+extern void tmpl_2DDouble_Y_ProjectSelf(tmpl_TwoVectorDouble * const P);
+extern void tmpl_2DLDouble_Y_ProjectSelf(tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
