@@ -130,7 +130,7 @@ tmpl_2DDouble_Unit_Normal(const tmpl_TwoVectorDouble * const P)
     /*  Variable for 1 / || P ||, scaling P by this creates a unit vector.    */
     double rcpr_norm;
 
-    /*  Said the double part of the word to the norm of P, || P ||.           */
+    /*  Set the double part of the word to the norm of P, || P ||.            */
     wnorm.r = tmpl_Double_Hypot(P->dat[0], P->dat[1]);
 
     /*  Make sure we can divide by wnorm. If the exponent bits are zero, then *
