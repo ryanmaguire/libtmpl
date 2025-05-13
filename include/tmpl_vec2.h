@@ -626,6 +626,71 @@ tmpl_2DLDouble_Positive_Polar_Angle(const tmpl_TwoVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Scale                                                   *
+ *  Purpose:                                                                  *
+ *      Computes the scalar product of a vector and a real number.            *
+ *  Arguments:                                                                *
+ *      r (double):                                                           *
+ *          A real number, the scalar multiplier.                             *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          Another pointer to a vector in the plane.                         *
+ *  Outputs:                                                                  *
+ *      prod (tmpl_TwoVectorDouble):                                          *
+ *          The scalar product r * P.                                         *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_scale_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_scale_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_scale_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Scale(float r, const tmpl_TwoVectorFloat * const P);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Scale(double r, const tmpl_TwoVectorDouble * const P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Scale(long double r, const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_ScaleBy                                                 *
+ *  Purpose:                                                                  *
+ *      Performs scalar multiplication in-place providing "*=" for 2D vectors.*
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A pointer to a vector in the plane. The product is stored here.   *
+ *      r (double):                                                           *
+ *          A real number, the scalar multiplier.                             *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_scaleby_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_scaleby_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_scaleby_ldouble.h)
+
+#else
+
+extern void
+tmpl_2DFloat_ScaleBy(tmpl_TwoVectorFloat * const P, float r);
+
+extern void
+tmpl_2DDouble_ScaleBy(tmpl_TwoVectorDouble * const P, double r);
+
+extern void
+tmpl_2DLDouble_ScaleBy(tmpl_TwoVectorLongDouble * const P, long double r);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_Subtract                                                *
  *  Purpose:                                                                  *
  *      Computes the difference of two vectors in the plane.                  *
@@ -1160,31 +1225,6 @@ extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Rect(long double x, long double y);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_TwoVector_Scale                                                  *
- *  Purpose:                                                                  *
- *      Scale a vector P by a scalar (real number) r.                         *
- *  Arguments:                                                                *
- *      double r:                                                             *
- *          An arbitrary real number.                                         *
- *      tmpl_TwoVector P:                                                     *
- *          The vector we wish to scale by r.                                 *
- *  Outputs:                                                                  *
- *      tmpl_TwoVector rP:                                                    *
- *          The vector P multiplied by r.                                     *
- *  Location:                                                                 *
- *      The source code is contained in src/kissvg.c                          *
- ******************************************************************************/
-extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Scale(float r, const tmpl_TwoVectorFloat *P);
-
-extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Scale(double r, const tmpl_TwoVectorDouble *P);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Scale(long double r, const tmpl_TwoVectorLongDouble *P);
 
 extern tmpl_TwoVectorFloat tmpl_2DFloat_Polar(float r, float theta);
 extern tmpl_TwoVectorDouble tmpl_2DDouble_Polar(double r, double theta);
