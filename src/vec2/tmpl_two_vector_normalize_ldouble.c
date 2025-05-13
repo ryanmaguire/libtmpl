@@ -16,13 +16,13 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                    tmpl_two_vector_unit_normal_ldouble                     *
+ *                     tmpl_two_vector_normalize_ldouble                      *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Normalize a non-zero vector to have length 1.                         *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_2DLDouble_Unit_Normal                                            *
+ *      tmpl_2DLDouble_Normalize                                              *
  *  Purpose:                                                                  *
  *      Computes a unit vector parallel to the input.                         *
  *  Arguments:                                                                *
@@ -77,8 +77,8 @@
  *      Moved float and long double versions to own files. Changed function   *
  *      to pass by address install of by value.                               *
  *  2025/05/13: Ryan Maguire                                                  *
- *      Added docstring, renamed function to "Unit_Normal", added protections *
- *      for denormal / subnormal numbers and checks for overflow / underflow. *
+ *      Added docstring and comments, added checks for denormal / subnormal   *
+ *      numbers and checks for overflow / underflow.                          *
  ******************************************************************************/
 
 /*  The TMPL_USE_INLINE macro is provided here.                               */
@@ -95,7 +95,7 @@
 
 /*  Prototype / forward declaration for the function.                         */
 extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P);
+tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P);
 
 /*  Tell the compiler about the hypotenuse function.                          */
 extern long double tmpl_LDouble_Hypot(long double x, long double y);
@@ -137,7 +137,7 @@ extern long double tmpl_LDouble_Sqrt(long double x);
 
 /*  Function for normalizing a non-zero vector to length 1.                   */
 tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P)
+tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
 {
     /*  Variable for the output, the unit vector in the direction of P.       */
     tmpl_TwoVectorLongDouble u;
@@ -252,7 +252,7 @@ tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P)
     u.dat[1] = P->dat[1] * rcpr_norm;
     return u;
 }
-/*  End of tmpl_2DLDouble_Unit_Normal.                                        */
+/*  End of tmpl_2DLDouble_Normalize.                                          */
 
 #else
 /*  Else for #if TMPL_HAS_IEEE754_LDOUBLE == 1.                               */
@@ -290,7 +290,7 @@ extern tmpl_Bool tmpl_LDouble_Is_NaN_Or_Inf(long double x);
 
 /*  Function for normalizing a non-zero vector to length 1.                   */
 tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P)
+tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
 {
     /*  Variable for the output, the unit vector in the direction of P.       */
     tmpl_TwoVectorLongDouble u;
@@ -364,7 +364,7 @@ tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P)
     u.dat[1] = P->dat[1] * rcpr_norm;
     return u;
 }
-/*  End of tmpl_2DLDouble_Unit_Normal.                                        */
+/*  End of tmpl_2DLDouble_Normalize.                                          */
 
 #endif
 /*  End of #if TMPL_HAS_IEEE754_LDOUBLE == 1.                                 */

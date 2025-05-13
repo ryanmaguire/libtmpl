@@ -762,7 +762,7 @@ tmpl_2DLDouble_SubtractFrom(tmpl_TwoVectorLongDouble * const P,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_2DDouble_Unit_Normal                                             *
+ *      tmpl_2DDouble_Normalize                                               *
  *  Purpose:                                                                  *
  *      Computes the unit vector in the direction of P.                       *
  *  Arguments:                                                                *
@@ -773,13 +773,13 @@ tmpl_2DLDouble_SubtractFrom(tmpl_TwoVectorLongDouble * const P,
  *          A unit vector parallel to P.                                      *
  ******************************************************************************/
 extern tmpl_TwoVectorFloat
-tmpl_2DFloat_Unit_Normal(const tmpl_TwoVectorFloat * const P);
+tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P);
 
 extern tmpl_TwoVectorDouble
-tmpl_2DDouble_Unit_Normal(const tmpl_TwoVectorDouble * const P);
+tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P);
 
 extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Unit_Normal(const tmpl_TwoVectorLongDouble * const P);
+tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
