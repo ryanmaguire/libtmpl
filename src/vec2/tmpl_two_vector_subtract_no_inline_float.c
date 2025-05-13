@@ -16,34 +16,32 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_two_vector_subtract                          *
+ *                       tmpl_two_vector_subtract_float                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Provide the main tools for working with vectors, both two and three   *
- *      dimensional. The typedef's are provided in kissvg.h.                  *
+ *      2D vector subtraction.                                                *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_subtract_float.h.       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/09/20: Ryan Maguire                                                  *
- *      Created file (KissVG).                                                *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
  ******************************************************************************/
 
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function for computing vector subtraction.                                */
-tmpl_TwoVectorFloat
-tmpl_2DFloat_Subtract(const tmpl_TwoVectorFloat *P,
-                      const tmpl_TwoVectorFloat *Q)
-{
-    tmpl_TwoVectorFloat diff;
+/*  Only used if inline support is not available.                             */
+#if TMPL_USE_INLINE != 1
 
-    diff.dat[0] = P->dat[0] - Q->dat[0];
-    diff.dat[1] = P->dat[1] - Q->dat[1];
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_float.h>
 
-    return diff;
-}
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Subtract(const tmpl_TwoVectorFloat * const P,
+                      const tmpl_TwoVectorFloat * const Q);
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_vec2_subtract_float.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
