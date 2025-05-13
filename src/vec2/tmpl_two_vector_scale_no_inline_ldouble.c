@@ -16,37 +16,31 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                       tmpl_two_vector_scale_ldouble                        *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Source code for multiplying a two dimensional vector by a real number.*
+ *      2D scalar multiplication.                                             *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_scale_ldouble.h.        *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/12/21: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
- *  2023/01/01: Ryan Maguire                                                  *
- *      Changed function to pass by address instead of by value.              *
  ******************************************************************************/
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function for multipyling a two-vector by a real number.                   */
-tmpl_TwoVectorDouble
-tmpl_2DDouble_Scale(double a, const tmpl_TwoVectorDouble *P)
-{
-    /*  Declare necessary variables. C89 requires this at the top.            */
-    tmpl_TwoVectorDouble aP;
+/*  Only used if inline support is not available.                             */
+#if TMPL_USE_INLINE != 1
 
-    /*  Multiplying a vector by a scalar simply multiplies the entries        *
-     *  component-wise. Compute this.                                         */
-    aP.dat[0] = a*P->dat[0];
-    aP.dat[1] = a*P->dat[1];
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_ldouble.h>
 
-    return aP;
-}
-/*  End of tmpl_2DDouble_Scale.                                               */
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Scale(long double, const tmpl_TwoVectorLongDouble * const P);
+
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_vec2_scale_ldouble.h"
+
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */
