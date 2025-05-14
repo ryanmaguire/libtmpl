@@ -71,8 +71,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#define TMPL_VEC2_X_LDOUBLE_H
 #ifndef TMPL_VEC2_X_LDOUBLE_H
+#define TMPL_VEC2_X_LDOUBLE_H
 
 /*  The TMPL_INLINE_DECL macro is provided here.                              */
 #include <libtmpl/include/tmpl_config.h>
