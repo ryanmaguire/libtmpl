@@ -107,9 +107,17 @@ extern float tmpl_Float_Hypot(float x, float y);
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  The values 2^64 and 2^-64, to single precision, stored as macros.         */
-#define TMPL_BIG_SCALE (1.8446744073709552E+19F)
-#define TMPL_RCPR_BIG_SCALE (5.4210108624275222E-20F)
+/*  The values 2^86 and 2^-66, to double precision, stored as macros.         *
+ *  2^86 is chosen since 86 = 64 + 23. The 2^23 factor will "normalize" a     *
+ *  denormal / subnormal number, and the 2^64 part will make sure that the    *
+ *  square of the value does not underflow, or become a denormal number. Thus *
+ *  multiplying a non-zero denormal / subnormal number by 2^86 is guaranteed  *
+ *  to produce a number that will square to a normal number. 2^-66 is chosen  *
+ *  since 66 = 64 + 2, hence scaling a large number by 2^-66 guarantees       *
+ *  the square of the product is less than FLT_MAX / 4, which means twice     *
+ *  this value is less than FLT_MAX / 2, so no overflow will occur.           */
+#define TMPL_BIG_SCALE (+1.54742504910672534362390528E+26F)
+#define TMPL_SMALL_SCALE (+1.3552527156068805425093160010874271392822E-20F)
 
 /*  Tell the compiler about the sqrt function. If we need to scale the input  *
  *  components because they are too large, then after the scaling we may      *
@@ -154,9 +162,22 @@ tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P)
         u.dat[0] = P->dat[0] * TMPL_BIG_SCALE;
         u.dat[1] = P->dat[1] * TMPL_BIG_SCALE;
 
-        /*  Since we have scaled P by a number, we must scale the norm by the *
-         *  same number. This is because || r * P || = |r| * || P ||.         */
-        wnorm.r *= TMPL_BIG_SCALE;
+        /*  Recompute the norm. Since the x and y values are now large enough *
+         *  that their squares will not underflow, we may compute the norm    *
+         *  via sqrt(x^2 + y^2). Note, since the largest component of the     *
+         *  input is denormal, if the first n bits of its mantissa are zero,  *
+         *  then sqrt(2) times this number will only be accurate to roughly   *
+         *  2^-(23-n) relative error. For example, if the components of P are *
+         *  2^-149, the smallest single precision denormal number, then       *
+         *  the calculation sqrt(2) * 2^-149 will produce 2^-149. That is,    *
+         *  multiplying by sqrt(2) does not change the result, and this will  *
+         *  result in horrible precision loss. This is because sqrt(2) is     *
+         *  less than 1.5, and hence the calculation sqrt(2) * 2^-149 will    *
+         *  will round down to 2^-149, since all of the mantissa bits of      *
+         *  2^-149 are being used as the "denormal exponent" part of the      *
+         *  word. To avoid this we assume that the wnorm calculation above is *
+         *  mostly junk, and recompute it using the scaled components in u.   */
+        wnorm.r = tmpl_Float_Sqrt(u.dat[0] * u.dat[0] + u.dat[1] * u.dat[1]);
 
         /*  The norm is now large enough that the reciprocal can be computed. *
          *  That is, wnorm.r is no longer a denormal number.                  */
@@ -206,8 +227,8 @@ tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P)
 
         /*  Neither of the components are infinity, we can scale them to be   *
          *  much smaller. This will prevent the norm from overflowing.        */
-        u.dat[0] = P->dat[0] * TMPL_RCPR_BIG_SCALE;
-        u.dat[1] = P->dat[1] * TMPL_RCPR_BIG_SCALE;
+        u.dat[0] = P->dat[0] * TMPL_SMALL_SCALE;
+        u.dat[1] = P->dat[1] * TMPL_SMALL_SCALE;
 
         /*  Recompute the norm. Since we have scaled the components (and      *
          *  we checked for NaNs and infinities), this will be finite. We have *
@@ -244,7 +265,7 @@ tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P)
  ******************************************************************************/
 
 /*  The value 2^-64, used for scaling vectors with large components.          */
-#define TMPL_RCPR_BIG_SCALE (5.4210108624275222E-20F)
+#define TMPL_SMALL_SCALE (5.4210108624275222E-20F)
 
 /*  Without IEEE-754 support we can still check for NaN and infinity using    *
  *  the following functions. These functions are small enough to inline,      *
@@ -320,8 +341,8 @@ tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P)
 
         /*  Neither of the components are infinity, we can scale them to be   *
          *  much smaller. This will prevent the norm from overflowing.        */
-        u.dat[0] = P->dat[0] * TMPL_RCPR_BIG_SCALE;
-        u.dat[1] = P->dat[1] * TMPL_RCPR_BIG_SCALE;
+        u.dat[0] = P->dat[0] * TMPL_SMALL_SCALE;
+        u.dat[1] = P->dat[1] * TMPL_SMALL_SCALE;
 
         /*  Recompute the norm. Since we have scaled the components (and      *
          *  we checked for NaNs and infinities), this will be finite.         */
@@ -353,4 +374,4 @@ tmpl_2DFloat_Normalize(const tmpl_TwoVectorFloat * const P)
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef TMPL_BIG_SCALE
-#undef TMPL_RCPR_BIG_SCALE
+#undef TMPL_SMALL_SCALE
