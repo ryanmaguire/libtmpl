@@ -114,17 +114,46 @@ extern long double tmpl_LDouble_Hypot(long double x, long double y);
  *                   64-Bit Double / 128-Bit Double-Double                    *
  ******************************************************************************/
 
-#define TMPL_BIG_SCALE (1.34078079299425970995740249982058461274793658205E+154L)
-#define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965315462933837376471E-155L)
+/*  The values 2^564 and 2^-514, to double-double precision, stored as macros.*
+ *  2^564 is chosen since 564 = 512 + 52. The 2^52 factor will "normalize" a  *
+ *  denormal / subnormal number, and the 2^512 part will make sure that the   *
+ *  square of the value does not underflow, or become a denormal number. Thus *
+ *  multiplying a non-zero denormal / subnormal number by 2^564 is guaranteed *
+ *  to produce a number that will square to a normal number. 2^-514 is chosen *
+ *  since 514 = 512 + 2, hence scaling a large number by 2^-512 guarantees    *
+ *  the square of the product is less than DBL_MAX / 4, which means twice     *
+ *  this value is less than DBL_MAX / 2, so no overflow will occur.           */
+#define TMPL_BIG_SCALE (+6.0383398797144661635864873295812302254671E+169)
+#define TMPL_SMALL_SCALE (+1.8645851828000516858227413288657334593441E-155)
+
+#elif TMPL_LDOUBLE_TYPE == TMPL_LDOUBLE_128_BIT
+
+/******************************************************************************
+ *                              128-Bit Quadruple                             *
+ ******************************************************************************/
+
+/*  For 128-bit quadruple, the exponent has 15 bits, meaning the max value is *
+ *  2^(2^14 - 1), so our scale factor should be the square root of this, or   *
+ *  2^2^13 = 2^8192. As was the case about with 64-bit double, we need a      *
+ *  larger value to account for normalizing a denormal number. 128-bit        *
+ *  quadruples have a 112-bit mantissa, so we choose 2^(8192 + 112) = 2^8304. *
+ *  For the small scale we choose 2^-(2^13 - 2) = 2^-8190. Doing this means   *
+ *  the product of a large number with this number will square to something   *
+ *  bounded by LDBL_MAX / 4, preventing overflow.                             */
+#define TMPL_BIG_SCALE (5.6634881180294134530431951355845905739182358273E+2499L)
+#define TMPL_SMALL_SCALE (2.29200483444355895702676549006060395744545621E-2467L)
 
 #else
 
 /******************************************************************************
- *                     80-Bit Extended / 128-Bit Quadruple                    *
+ *                               80-Bit Extended                              *
  ******************************************************************************/
 
-#define TMPL_BIG_SCALE (1.0907481356194159294629842447337828624482641619E+2466L)
-#define TMPL_RCPR_BIG_SCALE (9.16801933777423582810706196024241582978182E-2467L)
+/*  80-bit extended also has a 15-bit exponent, so the small scale is the     *
+ *  same as the one for 128-bit quadruple: 2^-8190 = 2^-(2^13 - 2). The       *
+ *  mantissa is 63-bits, not 112, so the big scale is 2^(2^13 + 63) = 2^8255. */
+#define TMPL_BIG_SCALE (2.0120751706647203082820834423161892963769886319E+2485L)
+#define TMPL_SMALL_SCALE (2.29200483444355895702676549006060395744545621E-2467L)
 
 #endif
 /*  End of double / double-double vs. extended vs. quadrule.                  */
@@ -172,9 +201,24 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
         u.dat[0] = P->dat[0] * TMPL_BIG_SCALE;
         u.dat[1] = P->dat[1] * TMPL_BIG_SCALE;
 
-        /*  Since we have scaled P by a number, we must scale the norm by the *
-         *  same number. This is because || r * P || = |r| * || P ||.         */
-        wnorm.r *= TMPL_BIG_SCALE;
+        /*  Recompute the norm. Since the x and y values are now large enough *
+         *  that their squares will not underflow, we may compute the norm    *
+         *  via sqrt(x^2 + y^2). Note, since the largest component of the     *
+         *  input is denormal, if the first n bits of its mantissa are zero,  *
+         *  then sqrt(2) times this number will only be accurate to roughly   *
+         *  2^-(N-n) relative error, where N is the number of bits in the     *
+         *  mantissa. Using 80-bit extended as an example, where N = 63, if   *
+         *  if the components of P are 2^-16445, which is the smallest        *
+         *  possible non-zero extended precision denormal number, then the    *
+         *  calculation sqrt(2) * 2^-16445 will produce 2^-16445. That is,    *
+         *  multiplying by sqrt(2) does not change the result, and this will  *
+         *  result in horrible precision loss. This is because sqrt(2) is     *
+         *  less than 1.5, and hence the calculation sqrt(2) * 2^-16445 will  *
+         *  will round down to 2^-16445, since all of the mantissa bits of    *
+         *  2^-16445 are being used as the "denormal exponent" part of the    *
+         *  word. To avoid this we assume that the wnorm calculation above is *
+         *  mostly junk, and recompute it using the scaled components in u.   */
+        wnorm.r = tmpl_LDouble_Sqrt(u.dat[0] * u.dat[0] + u.dat[1] * u.dat[1]);
 
         /*  The norm is now large enough that the reciprocal can be computed. *
          *  That is, wnorm.r is no longer a denormal number.                  */
@@ -224,8 +268,8 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
 
         /*  Neither of the components are infinity, we can scale them to be   *
          *  much smaller. This will prevent the norm from overflowing.        */
-        u.dat[0] = P->dat[0] * TMPL_RCPR_BIG_SCALE;
-        u.dat[1] = P->dat[1] * TMPL_RCPR_BIG_SCALE;
+        u.dat[0] = P->dat[0] * TMPL_SMALL_SCALE;
+        u.dat[1] = P->dat[1] * TMPL_SMALL_SCALE;
 
         /*  Recompute the norm. Since we have scaled the components (and      *
          *  we checked for NaNs and infinities), this will be finite. We have *
@@ -262,7 +306,7 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
  ******************************************************************************/
 
 /*  The value 2^-128, used for scaling vectors with large components.         */
-#define TMPL_RCPR_BIG_SCALE (+2.9387358770557187699218413430556141945467E-39L)
+#define TMPL_SMALL_SCALE (+2.9387358770557187699218413430556141945467E-39L)
 
 /*  Without IEEE-754 support we can still check for NaN and infinity using    *
  *  the following functions. These functions are small enough to inline,      *
@@ -338,8 +382,8 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
 
         /*  Neither of the components are infinity, we can scale them to be   *
          *  much smaller. This will prevent the norm from overflowing.        */
-        u.dat[0] = P->dat[0] * TMPL_RCPR_BIG_SCALE;
-        u.dat[1] = P->dat[1] * TMPL_RCPR_BIG_SCALE;
+        u.dat[0] = P->dat[0] * TMPL_SMALL_SCALE;
+        u.dat[1] = P->dat[1] * TMPL_SMALL_SCALE;
 
         /*  Recompute the norm. Since we have scaled the components (and      *
          *  we checked for NaNs and infinities), this will be finite.         */
@@ -371,4 +415,4 @@ tmpl_2DLDouble_Normalize(const tmpl_TwoVectorLongDouble * const P)
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef TMPL_BIG_SCALE
-#undef TMPL_RCPR_BIG_SCALE
+#undef TMPL_SMALL_SCALE
