@@ -107,9 +107,17 @@ extern double tmpl_Double_Hypot(double x, double y);
  *                              IEEE-754 Version                              *
  ******************************************************************************/
 
-/*  The values 2^512 and 2^-512, to double precision, stored as macros.       */
-#define TMPL_BIG_SCALE (+1.3407807929942597099574024998205846127479E+154)
-#define TMPL_RCPR_BIG_SCALE (+7.4583407312002067432909653154629338373765E-155)
+/*  The values 2^564 and 2^-514, to double precision, stored as macros.       *
+ *  2^564 is chosen since 564 = 512 + 52. The 2^52 factor will "normalize" a  *
+ *  denormal / subnormal number, and the 2^512 part will make sure that the   *
+ *  square of the value does not underflow, or become a denormal number. Thus *
+ *  multiplying a non-zero denormal / subnormal number by 2^564 is guaranteed *
+ *  to produce a number that will square to a normal number. 2^-514 is chosen *
+ *  since 514 = 512 + 2, hence scaling a large number by 2^-512 guarantees    *
+ *  the square of the product is less than DBL_MAX / 4, which means twice     *
+ *  this value is less than DBL_MAX / 2, so no overflow will occur.           */
+#define TMPL_BIG_SCALE (+6.0383398797144661635864873295812302254671E+169)
+#define TMPL_RCPR_BIG_SCALE (+1.8645851828000516858227413288657334593441E-155)
 
 /*  Tell the compiler about the sqrt function. If we need to scale the input  *
  *  components because they are too large, then after the scaling we may      *
@@ -154,9 +162,22 @@ tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P)
         u.dat[0] = P->dat[0] * TMPL_BIG_SCALE;
         u.dat[1] = P->dat[1] * TMPL_BIG_SCALE;
 
-        /*  Since we have scaled P by a number, we must scale the norm by the *
-         *  same number. This is because || r * P || = |r| * || P ||.         */
-        wnorm.r *= TMPL_BIG_SCALE;
+        /*  Recompute the norm. Since the x and y values are now large enough *
+         *  that their squares will not underflow, we may compute the norm    *
+         *  via sqrt(x^2 + y^2). Note, since the largest component of the     *
+         *  input is denormal, if the first n bits of its mantissa are zero,  *
+         *  then sqrt(2) times this number will only be accurate to roughly   *
+         *  2^-(52-n) relative error. For example, if the components of P are *
+         *  2^-1074, the smallest double precision denormal number, then      *
+         *  the calculation sqrt(2) * 2^-1074 will produce 2^-1074. That is,  *
+         *  multiplying by sqrt(2) does not change the result, and this will  *
+         *  result in horrible precision loss. This is because sqrt(2) is     *
+         *  less than 1.5, and hence the calculation sqrt(2) * 2^-1074 will   *
+         *  will round down to 2^-1074, since all of the mantissa bits of     *
+         *  2^-1074 are being used as the "denormal exponent" part of the     *
+         *  word. To avoid this we assume that the wnorm calculation above is *
+         *  mostly junk, and recompute it using the scaled components in u.   */
+        wnorm.r = tmpl_Double_Sqrt(u.dat[0] * u.dat[0] + u.dat[1] * u.dat[1]);
 
         /*  The norm is now large enough that the reciprocal can be computed. *
          *  That is, wnorm.r is no longer a denormal number.                  */
