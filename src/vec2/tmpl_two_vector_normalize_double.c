@@ -117,7 +117,7 @@ extern double tmpl_Double_Hypot(double x, double y);
  *  the square of the product is less than DBL_MAX / 4, which means twice     *
  *  this value is less than DBL_MAX / 2, so no overflow will occur.           */
 #define TMPL_BIG_SCALE (+6.0383398797144661635864873295812302254671E+169)
-#define TMPL_RCPR_BIG_SCALE (+1.8645851828000516858227413288657334593441E-155)
+#define TMPL_SMALL_SCALE (+1.8645851828000516858227413288657334593441E-155)
 
 /*  Tell the compiler about the sqrt function. If we need to scale the input  *
  *  components because they are too large, then after the scaling we may      *
@@ -227,8 +227,8 @@ tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P)
 
         /*  Neither of the components are infinity, we can scale them to be   *
          *  much smaller. This will prevent the norm from overflowing.        */
-        u.dat[0] = P->dat[0] * TMPL_RCPR_BIG_SCALE;
-        u.dat[1] = P->dat[1] * TMPL_RCPR_BIG_SCALE;
+        u.dat[0] = P->dat[0] * TMPL_SMALL_SCALE;
+        u.dat[1] = P->dat[1] * TMPL_SMALL_SCALE;
 
         /*  Recompute the norm. Since we have scaled the components (and      *
          *  we checked for NaNs and infinities), this will be finite. We have *
@@ -265,7 +265,7 @@ tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P)
  ******************************************************************************/
 
 /*  The value 2^-128, used for scaling vectors with large components.         */
-#define TMPL_RCPR_BIG_SCALE (+2.9387358770557187699218413430556141945467E-39)
+#define TMPL_SMALL_SCALE (+2.9387358770557187699218413430556141945467E-39)
 
 /*  Without IEEE-754 support we can still check for NaN and infinity using    *
  *  the following functions. These functions are small enough to inline,      *
@@ -341,8 +341,8 @@ tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P)
 
         /*  Neither of the components are infinity, we can scale them to be   *
          *  much smaller. This will prevent the norm from overflowing.        */
-        u.dat[0] = P->dat[0] * TMPL_RCPR_BIG_SCALE;
-        u.dat[1] = P->dat[1] * TMPL_RCPR_BIG_SCALE;
+        u.dat[0] = P->dat[0] * TMPL_SMALL_SCALE;
+        u.dat[1] = P->dat[1] * TMPL_SMALL_SCALE;
 
         /*  Recompute the norm. Since we have scaled the components (and      *
          *  we checked for NaNs and infinities), this will be finite.         */
@@ -374,4 +374,4 @@ tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P)
 
 /*  Undefine everything in case someone wants to #include this file.          */
 #undef TMPL_BIG_SCALE
-#undef TMPL_RCPR_BIG_SCALE
+#undef TMPL_SMALL_SCALE
