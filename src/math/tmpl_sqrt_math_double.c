@@ -193,6 +193,10 @@ double tmpl_Double_Sqrt(double x)
         return TMPL_NAN;
     }
 
+    /*  NaN or positive infinity. Simply return the input.                    */
+    if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
+        return x;
+
     /*  Subnormal number or zero.                                             */
     if (TMPL_DOUBLE_EXPO_BITS(w) == 0x00U)
     {
@@ -210,10 +214,6 @@ double tmpl_Double_Sqrt(double x)
          *  dividing, so subtract by 52 + 1 = 53. Finally, shift by the bias. */
         exponent = TMPL_DOUBLE_UBIAS - ((TMPL_DOUBLE_UBIAS-w.bits.expo)+53U)/2U;
     }
-
-    /*  NaN or positive infinity. Simply return the input.                    */
-    else if (TMPL_DOUBLE_IS_NAN_OR_INF(w))
-        return x;
 
     /*  Normal number. Compute the exponent. This is the exponent of the      *
      *  original number divided by 2 since we are taking the square root. A   *
@@ -241,7 +241,8 @@ double tmpl_Double_Sqrt(double x)
      *                                                                        *
      *  Note that we've already checked that E != 0, so E - 1 will not        *
      *  wrap around. That is, E - 1 >= 0. The number 512 is 0x200 in hex.     */
-    exponent = ((TMPL_DOUBLE_EXPO_BITS(w) - 1U) >> 1U) + 0x200U;
+    else
+        exponent = ((TMPL_DOUBLE_EXPO_BITS(w) - 1U) >> 1U) + 0x200U;
 
     /*  The parity determines if we scale the final result by sqrt(2) or not. *
      *  This can be determined by the whether or not the exponent is odd.     *
