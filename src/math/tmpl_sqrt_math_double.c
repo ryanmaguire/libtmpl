@@ -321,7 +321,7 @@ double tmpl_Double_Sqrt(double x)
  ******************************************************************************/
 
 /*  Pade approximant for sqrt(x) for x near 1.                                */
-#include "auxiliary/tmpl_sqrt_pade_double.h"
+#include "auxiliary/tmpl_sqrt_rat_remez_double.h"
 
 /*  Function for computing square roots at double precision.                  */
 double tmpl_Double_Sqrt(double x)
@@ -335,7 +335,7 @@ double tmpl_Double_Sqrt(double x)
         return TMPL_NAN;
 
     /*  Special case, NaN or inf, simply return the input.                    */
-    else if (tmpl_Double_Is_NaN_Or_Inf(x))
+    if (tmpl_Double_Is_NaN_Or_Inf(x) || (x == 0.0))
         return x;
 
     /*  Get x into scientific form, x = mant * 2^expo.                        */
@@ -363,17 +363,13 @@ double tmpl_Double_Sqrt(double x)
     }
 
     /*  Since 1 <= mant < 2, the Pade approximant can accurately compute sqrt.*/
-    out = tmpl_Double_Sqrt_Pade(mant);
+    out = tmpl_Double_Sqrt_Rat_Remez(mant);
 
     /*  Since sqrt(m * 2^b) = sqrt(m) * 2^{b/3}, multiply by 2^{b/3}.         */
-    out = out*tmpl_Double_Pow2(expo)*tmpl_double_sqrt_data[parity];
-
-    /*  sqrt is an odd function. If the input was negative, negate the output.*/
-    if (x < 0.0)
-        out = -out;
+    out *= tmpl_Double_Pow2(expo) * tmpl_double_sqrt_data[parity];
 
     /*  Apply 1 iteration of Newton's method and return.                      */
-    return 0.5*(out + x/out);
+    return 0.5 * (out + x / out);
 }
 /*  End of tmpl_Double_Sqrt.                                                  */
 
