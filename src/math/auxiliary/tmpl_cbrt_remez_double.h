@@ -61,12 +61,12 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the Remez minimax polynomial at x = 1.                   */
-#define A0 (+1.000000000909414432420604780739805683220058751649040157764717E+00)
-#define A1 (+3.333312337128901899438791242710004591007975419381606149309224E-01)
-#define A2 (-1.103924930854689350877233791895646403286896731306260302904416E-01)
+#define A00 (+1.00000000090941443242060478073980568322005875164904015776472E+00)
+#define A01 (+3.33331233712890189943879124271000459100797541938160614930922E-01)
+#define A02 (-1.10392493085468935087723379189564640328689673130626030290442E-01)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
-#define TMPL_POLY_EVAL(z) A0 + z*(A1 + z*A2)
+#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*A02)
 
 /*  Function for computing the Remez polynomial of cbrt on [1, 1 + 1/128].    */
 TMPL_STATIC_INLINE
@@ -81,10 +81,7 @@ double tmpl_Double_Cbrt_Remez(double x)
 /*  End of tmpl_Double_Cbrt_Remez.                                            */
 
 /*  Undefine all macros in case someone wants to #include this file.          */
-#undef A0
-#undef A1
-#undef A2
-#undef TMPL_POLY_EVAL
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */
