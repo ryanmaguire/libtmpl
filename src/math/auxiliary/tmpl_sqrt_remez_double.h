@@ -48,6 +48,21 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 27, 2024                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/05/19: Ryan Maguire                                                  *
+ *      Changed coefficients so that sqrt(1) = 1, exact. The Remez polynomial *
+ *      is now computed for (sqrt(x + 1) - 1) / x on the interval [0, 1/128]. *
+ *      Labeling this P(x), the output is 1 + (x - 1) * P(x - 1), and hence   *
+ *      sqrt(1) = 1, exact. Previously the Remez polynomial was computed for  *
+ *      sqrt(x + 1), the constant term being 1.00000000092137931324220803332, *
+ *      about 10^-10 off from 1. The resulting polynomial, combined with      *
+ *      Newton's method in the main sqrt routine, produced a value that did   *
+ *      indeed round to 1 (meaning tmpl_Double_Sqrt(1.0) = 1.0 previously),   *
+ *      but by modifying the coefficients slightly we can very easily verify  *
+ *      that sqrt(1.0) = 1.0 will occur without relying on the rouding mode,  *
+ *      and no penalty to the accuracy or performance of the function occurs. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -58,9 +73,9 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the Remez polynomial.                                    */
-#define A00 (+1.0000000009213793132422080333230191911611046603122E+00)
-#define A01 (+4.9999787298570402278901738280028337776415357546897E-01)
-#define A02 (-1.2427211443985097757833168706757977964507907886005E-01)
+#define A00 (+1.0000000000000000000000000000000000000000000000000E+00)
+#define A01 (+4.9999952710402341176619144737945297154350813287950E-01)
+#define A02 (-1.2451433174963825931999964469903198888523489420988E-01)
 
 /*  Helper macro for evaluating a polynomial via Horner's method.             */
 #define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*A02)
