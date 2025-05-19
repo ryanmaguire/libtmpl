@@ -16,30 +16,41 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_arccos_maclaurin_double                        *
+ *                           tmpl_sqrt_remez_double                           *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes a Maclaurin series for acos(x) at double precision.          *
+ *      Computes a Remez minimax polynomial for sqrt(x) on [1, 1 + 1/128].    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Sqrt_Remez                                                *
  *  Purpose:                                                                  *
- *      Computes the degree 2 Remez polynomial for sqrt(x) on [1, 1 + 1/128]. *
+ *      Computes a degree 2 Remez polynomial for sqrt(x) on [1, 1 + 1/128].   *
  *  Arguments:                                                                *
  *      x (double):                                                           *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      sqrt_x (double):                                                      *
- *          The degree 2 Remez polynomial for sqrt(x).                        *
+ *          sqrt(x), accurate on [1, 1 + 1/128] to about 8 decimals.          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Use Horner's method to evaluate the polynomial.                       *
+ *      To ensure that sqrt(1) = 1, exact, we use the Remez polynomial for    *
+ *      the function:                                                         *
+ *                                                                            *
+ *                 sqrt(x + 1) - 1                                            *
+ *          f(x) = ---------------                                            *
+ *                        x                                                   *
+ *                                                                            *
+ *      We compute this on the interval [0, 1 / 128], meaning sqrt(x) is      *
+ *      computed on the interval [1, 1 + 1/128]. Labeling the minimax         *
+ *      polynomial P, we compute 1 + (x - 1) * P(x - 1). This ensures that    *
+ *      sqrt(1) returns 1, exact, without rounding.                           *
  *  Notes:                                                                    *
- *      For 1 <= x <= 1 + 1/128, this return sqrt(x) to 9 decimals. To obtain *
- *      double precision, we apply Newton's method after the Remez polynomial.*
+ *      For 1 <= x <= 1 + 1/128 this returns sqrt(x) to 8 decimals. To obtain *
+ *      double precision we apply Newton's method after the Remez polynomial. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
