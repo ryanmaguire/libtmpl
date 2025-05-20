@@ -223,7 +223,7 @@ double tmpl_Double_Sqrt(double x)
          *      exponent = 0x1E5 + ((n + 1) >> 1)                             *
          *                                                                    *
          *  where 0x1E5 is 485 in hexidecimal. Compute this.                  */
-        exponent = 0x1E5U + ((w.bits.expo + 1U) >> 1U);
+        exponent = 0x1E5U + ((w.bits.expo + 0x01U) >> 1U);
     }
 
     /*  Normal number. Compute the exponent. This is the exponent of the      *
