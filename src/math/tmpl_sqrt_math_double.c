@@ -211,8 +211,19 @@ double tmpl_Double_Sqrt(double x)
         /*  Compute the exponent. Since we normalized by a power of two we    *
          *  need to subtract this from the value. To compute the correctly    *
          *  rounded exponent after division by 2, subtract 1 more before      *
-         *  dividing, so subtract by 52 + 1 = 53. Finally, shift by the bias. */
-        exponent = TMPL_DOUBLE_UBIAS - ((TMPL_DOUBLE_UBIAS-w.bits.expo)+53U)/2U;
+         *  dividing, so subtract by 52 + 1 = 53. Finally, shift by the bias. *
+         *  In total, we have:                                                *
+         *                                                                    *
+         *      exponent = 1023 - ((1023 - expo) + 53) / 2                    *
+         *               = 485 + (n + 1) / 2                                  *
+         *                                                                    *
+         *  Where division, "/", means integer division. Using bit-wise shift *
+         *  this is equivalent to:                                            *
+         *                                                                    *
+         *      exponent = 0x1E5 + ((n + 1) >> 1)                             *
+         *                                                                    *
+         *  where 0x1E5 is 485 in hexidecimal. Compute this.                  */
+        exponent = 0x1E5U + ((w.bits.expo + 1U) >> 1U);
     }
 
     /*  Normal number. Compute the exponent. This is the exponent of the      *
