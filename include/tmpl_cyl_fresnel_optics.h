@@ -107,12 +107,13 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_d2Psi_dPhi2(long double k,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg                               *
+ *      tmpl_Double_Ideal_Cyl_Fresnel_d2Psi_dPhi2_Deg                         *
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the cylindrical Fresnel     *
  *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
- *      Similar to tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2 but all angles are in  *
- *      degrees instead of radians.                                           *
+ *      This assumes the ideal geometry described in the Marouf-Tyler-Rosen   *
+ *      paper. In particular, the vector from the observer to the point in    *
+ *      the plane (rho0, phi0) must be orthogonal to the y axis.              *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
@@ -133,28 +134,32 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_d2Psi_dPhi2(long double k,
  *      d2psi_dphi2 (double):                                                 *
  *          The second partial derivative of Psi with respect to phi.         *
  *  Notes:                                                                    *
- *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
- *    accurate for Uranus. Float and long double precisions are provided.     *
- *                                                                            *
- *    All angles are assumed to be in degrees.                                *
- *    All lengths are assumed to be in the same units.                        *
- *                                                                            *
- *    This function assumes B and D are independent of phi.                   *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All angles are assumed to be in degrees.                          *
+ *      3.) All lengths are assumed to be in the same units.                  *
+ *      4.) This function assumes B, D, rho, rho0, and phi0 are independent   *
+ *          of phi.                                                           *
  ******************************************************************************/
 extern double
-tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2_Deg(double k, double rho, double rho0,
-                                        double phi, double phi0,
-                                        double B, double D);
+tmpl_Double_Ideal_Cyl_Fresnel_d2Psi_dPhi2_Deg(double k,
+                                              double rho, double rho0,
+                                              double phi, double phi0,
+                                              double B, double D);
 
 extern float
-tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2_Deg(float k, float rho, float rho0,
-                                       float phi, float phi0,
-                                       float B, float D);
+tmpl_Float_Ideal_Cyl_Fresnel_d2Psi_dPhi2_Deg(float k,
+                                             float rho, float rho0,
+                                             float phi, float phi0,
+                                             float B, float D);
+
 extern long double
-tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k, long double rho,
-                                         long double rho0, long double phi,
-                                         long double phi0, long double B,
-                                         long double D);
+tmpl_LDouble_Ideal_Cyl_Fresnel_d2Psi_dPhi2_Deg(long double k,
+                                               long double rho,
+                                               long double rho0,
+                                               long double phi,
+                                               long double phi0,
+                                               long double B,
+                                               long double D);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -376,9 +381,9 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_Psi(long double k,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Cyl_Fresnel_Psi_Deg                                       *
+ *      tmpl_Double_Ideal_Cyl_Fresnel_Psi_Deg                                 *
  *  Purpose:                                                                  *
- *      Computes the cylinder Fresnel kernel with units in degrees.           *
+ *      Computes the cylindrical Fresnel kernel.                              *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -399,24 +404,27 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_Psi(long double k,
  *      psi (double):                                                         *
  *          The cylindrical Fresnel kernel as a function of the inputs.       *
  *  Notes:                                                                    *
- *    Assumes perfect cylindrical symmetry. Accurate for Saturn. Mostly       *
- *    accurate for Uranus. Float and long double precisions are provided.     *
- *                                                                            *
- *    All angles are assumed to be in degrees.                                *
- *    All lengths are assumed to be in the same units.                        *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All angles are assumed to be in degrees.                          *
+ *      3.) All lengths are assumed to be in the same units.                  *
  ******************************************************************************/
 extern float
-tmpl_Float_Cyl_Fresnel_Psi_Deg(float k, float r, float r0, float phi,
-                               float phi0, float B, float D);
+tmpl_Float_Ideal_Cyl_Fresnel_Psi_Deg(float k,
+                                     float r, float r0,
+                                     float phi, float phi0,
+                                     float B, float D);
 
 extern double
-tmpl_Double_Cyl_Fresnel_Psi_Deg(double k, double r, double r0, double phi,
-                                double phi0, double B, double D);
+tmpl_Double_Ideal_Cyl_Fresnel_Psi_Deg(double k,
+                                      double r, double r0,
+                                      double phi, double phi0,
+                                      double B, double D);
 
 extern long double
-tmpl_LDouble_Cyl_Fresnel_Psi_Deg(long double k, long double r, long double r0,
-                                 long double phi, long double phi0,
-                                 long double B, long double D);
+tmpl_LDouble_Ideal_Cyl_Fresnel_Psi_Deg(long double k,
+                                       long double r, long double r0,
+                                       long double phi, long double phi0,
+                                       long double B, long double D);
 
 /******************************************************************************
  *  Function:                                                                 *
