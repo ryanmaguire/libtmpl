@@ -61,7 +61,7 @@ tmpl_Double_Stationary_Elliptical_Fresnel_Psi_Newton(double k, double r,
         dpsi = tmpl_Double_Elliptical_Fresnel_dPsi_dPhi(
             k, rho, r0, phi, phi0, B, D, ecc, peri
         );
-        d2psi = tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(
+        d2psi = tmpl_Double_Ideal_Cyl_Fresnel_d2Psi_dPhi2(
             k, rho, r0, phi, phi0, B, D
         );
 
