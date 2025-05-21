@@ -116,6 +116,11 @@
  *      1.) Angles must be in radians.                                        *
  *      2.) Lengths can be in whatever units, but they must be the same units.*
  *      3.) It is assumed B, D, rho, rho0, and phi0 are independent of phi.   *
+ *      4.) It is also assumed that the vector from the ring intercept point  *
+ *          to the observer is perpendicular to the y axis. This is why this  *
+ *          function is called "ideal". For real geometry this may be         *
+ *          slightly off. For accurate computations in these scenarios, use   *
+ *          the non-ideal version (tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2).     *
  *  References:                                                               *
  *      1.) Marouf, E., Tyler, G., Rosen, P. (June 1986)                      *
  *          Profiling Saturn's Rings by Radio Occultation                     *
