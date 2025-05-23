@@ -46,6 +46,9 @@
  *      Fixed the stationary Psi function. Add float and long double support.
  */
 
+/*  TMPL_RESTRICT macro found here.                                           */
+#include <libtmpl/include/tmpl_config.h>
+
 #include <libtmpl/include/types/tmpl_vec2_double.h>
 #include <libtmpl/include/types/tmpl_vec2_float.h>
 #include <libtmpl/include/types/tmpl_vec2_ldouble.h>
@@ -59,6 +62,152 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi                                     *
+ *  Purpose:                                                                  *
+ *      Computes the derivative of the cylindrical Fresnel kernel with        *
+ *      respect to the azimuth angle, phi.                                    *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (const tmpl_TwoVectorDouble * const):                             *
+ *          The dummy variable of integration, a point in the ring plane.     *
+ *          This vector is expressed in terms of its Cartesian coordinates.   *
+ *      rho0 (const tmpl_TwoVectorDouble * const):                            *
+ *          The point of interest in the plane, in the same units as rho.     *
+ *          This vector is given in terms of its Cartesian coordinates.       *
+ *      R (cnst tmpl_ThreeVectorDouble * TMPL_RESTRICT const):                *
+ *          The position vector for the observer. Same units as rho and rho0, *
+ *          and also given in terms of its Cartesian coordinates.             *
+ *  Outputs:                                                                  *
+ *      dpsi (double):                                                        *
+ *          The derivative of psi with respect to phi.                        *
+ *  Notes:                                                                    *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ ******************************************************************************/
+extern float
+tmpl_Float_Cyl_Fresnel_dPsi_dPhi(
+    float k,
+    const tmpl_TwoVectorFloat * const rho,
+    const tmpl_TwoVectorFloat * const rho0,
+    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+);
+
+extern double
+tmpl_Double_Cyl_Fresnel_dPsi_dPhi(
+    double k,
+    const tmpl_TwoVectorDouble * const rho,
+    const tmpl_TwoVectorDouble * const rho0,
+    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R
+);
+
+extern long double
+tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(
+    long double k,
+    const tmpl_TwoVectorLongDouble * const rho,
+    const tmpl_TwoVectorLongDouble * const rho0,
+    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2                                   *
+ *  Purpose:                                                                  *
+ *      Computes the second derivative of the cylindrical Fresnel kernel with *
+ *      respect to the azimuth angle, phi.                                    *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (const tmpl_TwoVectorDouble * const):                             *
+ *          The dummy variable of integration, a point in the ring plane.     *
+ *          This vector is expressed in terms of its Cartesian coordinates.   *
+ *      rho0 (const tmpl_TwoVectorDouble * const):                            *
+ *          The point of interest in the plane, in the same units as rho.     *
+ *          This vector is given in terms of its Cartesian coordinates.       *
+ *      R (cnst tmpl_ThreeVectorDouble * TMPL_RESTRICT const):                *
+ *          The position vector for the observer. Same units as rho and rho0, *
+ *          and also given in terms of its Cartesian coordinates.             *
+ *  Outputs:                                                                  *
+ *      d2psi (double):                                                       *
+ *          The second derivative of psi with respect to phi.                 *
+ *  Notes:                                                                    *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ ******************************************************************************/
+extern float
+tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(
+    float k,
+    const tmpl_TwoVectorFloat * const rho,
+    const tmpl_TwoVectorFloat * const rho0,
+    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+);
+
+extern double
+tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(
+    double k,
+    const tmpl_TwoVectorDouble * const rho,
+    const tmpl_TwoVectorDouble * const rho0,
+    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R
+);
+
+extern long double
+tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(
+    long double k,
+    const tmpl_TwoVectorLongDouble * const rho,
+    const tmpl_TwoVectorLongDouble * const rho0,
+    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Cyl_Fresnel_Psi                                           *
+ *  Purpose:                                                                  *
+ *      Computes the cylindrical Fresnel kernel.                              *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (const tmpl_TwoVectorDouble * const):                             *
+ *          The dummy variable of integration, a point in the ring plane.     *
+ *          This vector is expressed in terms of its Cartesian coordinates.   *
+ *      rho0 (const tmpl_TwoVectorDouble * const):                            *
+ *          The point of interest in the plane, in the same units as rho.     *
+ *          This vector is given in terms of its Cartesian coordinates.       *
+ *      R (cnst tmpl_ThreeVectorDouble * TMPL_RESTRICT const):                *
+ *          The position vector for the observer. Same units as rho and rho0, *
+ *          and also given in terms of its Cartesian coordinates.             *
+ *  Outputs:                                                                  *
+ *      psi (double):                                                         *
+ *          The cylindrical Fresnel kernel as a function of the inputs.       *
+ *  Notes:                                                                    *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ ******************************************************************************/
+extern float
+tmpl_Float_Cyl_Fresnel_Psi(
+    float k,
+    const tmpl_TwoVectorFloat * const rho,
+    const tmpl_TwoVectorFloat * const rho0,
+    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+);
+
+extern double
+tmpl_Double_Cyl_Fresnel_Psi(
+    double k,
+    const tmpl_TwoVectorDouble * const rho,
+    const tmpl_TwoVectorDouble * const rho0,
+    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R
+);
+
+extern long double
+tmpl_LDouble_Cyl_Fresnel_Psi(
+    long double k,
+    const tmpl_TwoVectorLongDouble * const rho,
+    const tmpl_TwoVectorLongDouble * const rho0,
+    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R
+);
 
 /******************************************************************************
  *  Function:                                                                 *
