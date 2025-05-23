@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *               tmpl_stationary_cyl_fresnel_psi_newton_double                *
+ *          tmpl_ideal_stationary_cyl_fresnel_phi_newton_deg_double           *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the stationary value phi of the cylindrical Fresnel kernel.  *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton                         *
+ *      tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg               *
  *  Purpose:                                                                  *
  *      Computes the value phi such that dpsi / dphi = 0. This is the         *
  *      stationary value of the cylindrical Fresnel kernel, and is used in    *
@@ -55,12 +55,12 @@
  *          The tolerance in the computation, the maximum number of           *
  *          iterations allowed in Newton's method before the algorithm is     *
  *          halted and the current value of phi is returned. For most         *
- *          practical application, toler = 4 or toler = 5 is sufficient.      *
+ *          practical applications, toler = 4 or toler = 5 is sufficient.     *
  *  Outputs:                                                                  *
  *      phi_s (double):                                                       *
  *          The stationary value of phi.                                      *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_Cosd:                                                 *
  *              Computes cosine, in degrees.                                  *
  *          tmpl_Double_SinCosd:                                              *
@@ -76,11 +76,27 @@
  *      and repeat until either the value |psi'| is small, or we have done    *
  *      "toler" number of iterations.                                         *
  *  Notes:                                                                    *
- *      Angles must be in radians. Lengths can be in whatever units, but they *
- *      must be the same units.                                               *
+ *      1.) Angles must be in degrees.                                        *
+ *      2.) Lengths can be in whatever units, but they must be the same units.*
+ *      3.) It is assumed B, D, rho, rho0, and phi0 are independent of phi.   *
+ *      4.) It is also assumed that the vector from the ring intercept point  *
+ *          to the observer is perpendicular to the y axis. This is why this  *
+ *          function is called "ideal". For real geometry this may be off.    *
  *  References:                                                               *
- *      1.) Profiling Saturn's Rings, Marouf, Tyler, Rosen 1986, Icarus 68.   *
- *      2.) Introduction to Fourier Optics, Joseph Goodman, 2005.             *
+ *      1.) Marouf, E., Tyler, G., Rosen, P. (June 1986)                      *
+ *          Profiling Saturn's Rings by Radio Occultation                     *
+ *          Icarus Vol. 68, Pages 120-166.                                    *
+ *                                                                            *
+ *          This paper describes the theory of diffraction as applied to      *
+ *          planetary ring systems. The Fresnel kernel is described here.     *
+ *                                                                            *
+ *      2.) Goodman, J. (2005)                                                *
+ *          Introduction to Fourier Optics                                    *
+ *          McGraw-Hill Series in Electrical and Computer Engineering.        *
+ *                                                                            *
+ *          Covers most of the theory behind diffraction and the application  *
+ *          of Fourier analysis to optics. The Fresnel transform is given an  *
+ *          in-depth treatise in this book.                                   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -96,6 +112,10 @@
  ******************************************************************************
  *  2023/03/22: Ryan Maguire                                                  *
  *      Migrated from rss_ringoccs. Cleaned up code.                          *
+ *  2025/05/23: Ryan Maguire                                                  *
+ *      Changed name to "ideal" since this uses the ideal scenario where      *
+ *      u . y = 0, where u is the vector from the ring intercept point to the *
+ *      observer. Cleaned up some comments as well.                           *
  ******************************************************************************/
 
 /*  Trig functions and square root found here.                                */
@@ -106,15 +126,15 @@
 
 /*  Computes the stationary value of phi for the cylindrical Fresnel kernel.  */
 double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton_Deg(double k,
-                                                  double r,
-                                                  double r0,
-                                                  double phi,
-                                                  double phi0,
-                                                  double B,
-                                                  double D,
-                                                  double eps,
-                                                  unsigned int toler)
+tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
+                                                        double r,
+                                                        double r0,
+                                                        double phi,
+                                                        double phi0,
+                                                        double B,
+                                                        double D,
+                                                        double eps,
+                                                        unsigned int toler)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     double xi, eta, psi0, dxi, deta, deta2, dxi2, rcpr_psi0, rcpr_psi0_cubed;

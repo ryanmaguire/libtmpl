@@ -805,7 +805,7 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton_Deg                     *
+ *      tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg               *
  *  Purpose:                                                                  *
  *      Computes the value phi_s that makes the cylindrical Fresnel kernel    *
  *      stationary. That is, the value phi such that dpsi / dphi = 0, as a    *
@@ -850,37 +850,37 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton(long double k,
  *    All lengths are assumed to be in the same units.                        *
  ******************************************************************************/
 extern double
-tmpl_Double_Stationary_Cyl_Fresnel_Psi_Newton_Deg(double k,
-                                                  double r,
-                                                  double r0,
-                                                  double phi,
-                                                  double phi0,
-                                                  double B,
-                                                  double D,
-                                                  double eps,
-                                                  unsigned int toler);
+tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
+                                                        double r,
+                                                        double r0,
+                                                        double phi,
+                                                        double phi0,
+                                                        double B,
+                                                        double D,
+                                                        double eps,
+                                                        unsigned int toler);
 
 extern float
-tmpl_Float_Stationary_Cyl_Fresnel_Psi_Newton_Deg(float k,
-                                                 float r,
-                                                 float r0,
-                                                 float phi,
-                                                 float phi0,
-                                                 float B,
-                                                 float D,
-                                                 float eps,
-                                                 unsigned int toler);
+tmpl_Float_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(float k,
+                                                       float r,
+                                                       float r0,
+                                                       float phi,
+                                                       float phi0,
+                                                       float B,
+                                                       float D,
+                                                       float eps,
+                                                       unsigned int toler);
 
 extern long double
-tmpl_LDouble_Stationary_Cyl_Fresnel_Psi_Newton_Deg(long double k,
-                                                   long double r,
-                                                   long double r0,
-                                                   long double phi,
-                                                   long double phi0,
-                                                   long double B,
-                                                   long double D,
-                                                   long double eps,
-                                                   unsigned int toler);
+tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(long double k,
+                                                         long double r,
+                                                         long double r0,
+                                                         long double phi,
+                                                         long double phi0,
+                                                         long double B,
+                                                         long double D,
+                                                         long double eps,
+                                                         unsigned int toler);
 
 extern double
 tmpl_Double_Stationary_Elliptical_Fresnel_Psi_Newton(double k, double r,
