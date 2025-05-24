@@ -50,11 +50,11 @@
  *          The "epsilon" factor, the allowed error in the computation of the *
  *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
  *          stop and the resulting phi will be returned.                      *
- *      toler (unsigned int):                                                 *
- *          The tolerance in the computation, the maximum number of           *
- *          iterations allowed in Newton's method before the algorithm is     *
- *          halted and the current value of phi is returned. For most         *
- *          practical applications, toler = 4 or toler = 5 is sufficient.     *
+ *      max_iters (unsigned int):                                             *
+ *          The maximum number of iterations allowed in Newton's method       *
+ *          before the algorithm is halted and the current value of phi is    *
+ *          returned. For most practical applications, toler = 4 or toler = 5 *
+ *          is sufficient.                                                    *
  *  Outputs:                                                                  *
  *      phi_s (double):                                                       *
  *          The stationary value of phi.                                      *
@@ -73,7 +73,7 @@
  *          phi_s = phi - psi' / psi''                                        *
  *          phi = phi_s                                                       *
  *      and repeat until either the value |psi'| is small, or we have done    *
- *      "toler" number of iterations.                                         *
+ *      "max_iters" number of iterations.                                     *
  *  Notes:                                                                    *
  *      1.) Angles must be in degrees.                                        *
  *      2.) Lengths can be in whatever units, but they must be the same units.*
@@ -133,7 +133,7 @@ tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
                                                         double B,
                                                         double D,
                                                         double eps,
-                                                        unsigned int toler)
+                                                        unsigned int max_iters)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     double xi, eta, psi0, dxi, deta, deta2, dxi2, rcpr_psi0, rcpr_psi0_cubed;
@@ -143,14 +143,14 @@ tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
     /*  Index for keeping track of the number of iterations.                  */
     unsigned int n = 0U;
 
-    /*  The functions tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2 and                 *
-     *  tmpl_Double_Cyl_Fresnel_dPsi_dPhi make a lot of the same computations.*
-     *  Calculations involving cos, sin, and sqrt, and it is redundant to     *
+    /*  The functions tmpl_Double_Ideal_Cyl_Fresnel_d2Psi_dPhi2 and           *
+     *  tmpl_Double_Ideal_Cyl_Fresnel_dPsi_dPhi do a lot of the same          *
+     *  calculations involving cos, sin, and sqrt, and it is redundant to     *
      *  do this twice for the same variables. Instead of calling these two    *
      *  functions, precompute the needed variables and calculate a simplified *
      *  version of dpsi / d2psi.                                              */
 
-    /*  Compute 1/D and its square to save the number of divisions we need    *
+    /*  Compute 1 / D and its square to save the number of divisions we need  *
      *  to compute. Multiplication is usually ~10 times faster.               */
     const double rcpr_D = 1.0 / D;
     const double rcpr_D_squared = rcpr_D * rcpr_D;
@@ -164,7 +164,7 @@ tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
     /*  And this term appears in eta, deta, and deta2.                        */
     const double eta_factor = 2.0 * rho * rho0 * rcpr_D_squared;
 
-    /*  Compute sine and cosine simultaneously using SinCos.                  */
+    /*  Compute sine and cosine simultaneously using SinCosd.                 */
     tmpl_Double_SinCosd(phi0, &sin_phi0, &cos_phi0);
 
     /*  Normalize the requested error by the wavenumber and distance.         */
@@ -174,7 +174,7 @@ tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
     do {
 
         /*  If we've performed enough iterations, stop Newton's method.       */
-        if (n > toler)
+        if (n > max_iters)
             break;
 
         /*  Compute sine and cosine simultaneously using SinCosd.             */
@@ -204,8 +204,8 @@ tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
         xi = xi_factor * (rho * cos_phi - rho0 * cos_phi0);
         eta = (rho0*rho0 + rho*rho)*rcpr_D_squared - eta_factor*cos_phi_phi0;
 
-    /*  Applying the quotient rule to psi, the final result will contain the  *
-     *  factor sqrt(1 + eta - 2xi), and also the cube of this expression.     */
+        /*  Applying the quotient rule to psi, the final result will contain  *
+         *  the factor sqrt(1 + eta - 2xi), and the cube of this expression.  */
         psi0 = tmpl_Double_Sqrt(1.0 + eta - 2.0 * xi);
         rcpr_psi0 = 1.0 / psi0;
         rcpr_psi0_cubed = rcpr_psi0 * rcpr_psi0 * rcpr_psi0;
@@ -258,7 +258,9 @@ tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(double k,
         d2psi = -0.25 * rcpr_psi0_cubed * num_factor * num_factor;
         d2psi += 0.5 * rcpr_psi0 * (deta2 - 2.0 * dxi2) + dxi2;
 
-        /*  Perform the Newton iteration, and increment n.                    */
+        /*  Perform the Newton iteration, and increment n. Note, the output   *
+         *  of dpsi / d2psi will be in radians, but phi is in degrees. Scale  *
+         *  dpsi / d2psi by 180 / pi to avoid incorrectly mixing units.       */
         phi = phi - tmpl_Double_Rad_To_Deg * dpsi / d2psi;
         ++n;
 
