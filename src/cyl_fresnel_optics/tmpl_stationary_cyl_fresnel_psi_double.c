@@ -84,20 +84,28 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi(
 
     /*  Compute the distance between rho0 and R. This is "D" in MTR86.        */
     const double rho0_dist = tmpl_Double_Hypot3(ux, uy, uz);
+    const double rcpr_rho0_dist = 1.0 / rho0_dist;
+
+    const double uxn = ux * rcpr_rho0_dist;
+    const double uyn = uy * rcpr_rho0_dist;
+    const double uzn = uz * rcpr_rho0_dist;
 
     unsigned int iters = 0U;
     const double r_s = tmpl_2DDouble_L2_Norm(rho);
     double phi_s = tmpl_2DDouble_Polar_Angle(rho);
-    tmpl_TwoVectorDouble rhos = *rho;
+    tmpl_TwoVectorDouble rho_s = *rho;
     double err;
+
+    double dx_s, dy_s, dot, mag;
+
     eps /= k;
 
     do {
         /*  The difference between the "dummy" point in the plane, rho, that  *
          *  is integrated over, and the orthogonal projection of the position *
          *  vector for the observer, R, onto the ring plane.                  */
-        const double dx = R->dat[0] - rhos.dat[0];
-        const double dy = R->dat[1] - rhos.dat[1];
+        const double dx = R->dat[0] - rho_s.dat[0];
+        const double dy = R->dat[1] - rho_s.dat[1];
 
         /*  We need the distances from R to rho and R to rho0. These can be   *
          *  computed with the Hypot3 function.                                */
@@ -117,8 +125,9 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi(
          *               -                                                 -  *
          *                                                                    *
          *  Call the left expression "left" and the right one "right."        */
-        const double left1 = (dx * rhos.dat[1] - dy * rhos.dat[0]) / rho_dist;
-        const double right1 = (uy * rhos.dat[0] - ux * rhos.dat[1]) / rho0_dist;
+        const double left1 = (dx * rho_s.dat[1] - dy * rho_s.dat[0]) / rho_dist;
+        const double right1 = uyn * rho_s.dat[0] - uxn * rho_s.dat[1];
+        const double dpsi = left1 + right1;
 
         /*  The second derivative is given by:                                *
          *                                                                    *
@@ -135,22 +144,20 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi(
          *                                                                    *
          *  The first expression simplifies to -(x rho_x + y rho_y) and the   *
          *  central piece is (rho_x y - rho_y x)^2. Compute both of these.    */
-        const double diff = rhos.dat[0] * R->dat[1] - rhos.dat[1] * R->dat[0];
-        const double sum = R->dat[0] * rhos.dat[0] + R->dat[1] * rhos.dat[1];
+        const double diff = rho_s.dat[0] * R->dat[1] - rho_s.dat[1] * R->dat[0];
+        const double sum = R->dat[0] * rho_s.dat[0] + R->dat[1] * rho_s.dat[1];
 
         /*  Call the combination of the left and center parts "left". Compute.*/
         const double left2 = (diff*diff*rcpr_rho_dist_sq - sum) * rcpr_rho_dist;
 
         /*  The expression u . rho'' is -(ux * rho_x + uy * rho_y). The right *
          *  expression is this factor divided by the distance from R to rho0. */
-        const double right2 = (ux * rhos.dat[0] + uy * rhos.dat[1]) / rho0_dist;
-
-        const double dpsi = left1 + right1;
+        const double right2 = uxn * rho_s.dat[0] + uyn * rho_s.dat[1];
         const double d2psi = left2 + right2;
 
         err = tmpl_Double_Abs(dpsi);
         phi_s = phi_s + dpsi / d2psi;
-        rhos = tmpl_2DDouble_Polar(r_s, phi_s);
+        rho_s = tmpl_2DDouble_Polar(r_s, phi_s);
         ++iters;
 
         if (iters > max_iters)
@@ -159,7 +166,12 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi(
     } while (err > eps);
 
     /*  The output is the sum scaled by the wavenumber, k.                    */
-    return tmpl_Double_Cyl_Fresnel_Psi(k, &rhos, rho0, R);
+    dx_s = R->dat[0] - rho_s.dat[0];
+    dy_s = R->dat[1] - rho_s.dat[1];
+    dot = uxn * dx_s + uyn * dy_s + uzn * uz;
+    mag = tmpl_Double_Hypot3(dx_s, dy_s, uz);
+
+    return k * (mag - dot);
 }
 
 #endif
