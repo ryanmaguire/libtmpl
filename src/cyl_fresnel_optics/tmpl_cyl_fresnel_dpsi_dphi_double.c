@@ -190,14 +190,14 @@ tmpl_Double_Cyl_Fresnel_dPsi_dPhi(
     /*  The derivative is given by:                                           *
      *                                                                        *
      *                -                                                   -   *
-     *               | -dx * rho_y + dy * rho_x   -ux * rho_y + uy * rho_x |  *
+     *               |  dx * rho_y - dy * rho_x   -ux * rho_y + uy * rho_x |  *
      *      psi' = k | ------------------------ + ------------------------ |  *
      *               |      || R - rho ||              || R - rho0 ||      |  *
      *                -                                                   -   *
      *                                                                        *
      *  Call the left expression "left" and the right one "right." Compute.   */
-    const double left = (-dx * rho->dat[1] + dy * rho->dat[0]) / rho_dist;
-    const double right = (-ux * rho->dat[1] + uy * rho->dat[0]) / rho0_dist;
+    const double left = (dx * rho->dat[1] - dy * rho->dat[0]) / rho_dist;
+    const double right = (uy * rho->dat[0] - ux * rho->dat[1]) / rho0_dist;
 
     /*  The output is the sum scaled by the wavenumber, k.                    */
     return k * (left + right);

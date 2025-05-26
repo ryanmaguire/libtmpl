@@ -239,7 +239,7 @@ tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(
     const float sum = R->dat[0] * rho->dat[0] + R->dat[1] * rho->dat[1];
 
     /*  Call the combination of the left and center parts "left". Compute.    */
-    const float left = (diff * diff * rcpr_rho_dist_sq + sum) * rcpr_rho_dist;
+    const float left = (diff * diff * rcpr_rho_dist_sq - sum) * rcpr_rho_dist;
 
     /*  The expression u . rho'' is -(ux * rho_x + uy * rho_y). The right     *
      *  expression is this factor divided by the distance from R to rho0.     */
