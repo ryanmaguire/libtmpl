@@ -982,6 +982,75 @@ tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(
     unsigned int max_iters
 );
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Stationary_Cyl_Fresnel_Psi                                *
+ *  Purpose:                                                                  *
+ *      Computes the stationary value of the cylindrical Fresnel kernel. This *
+ *      is psi evaluated at phi = phi_s, where phi_s is the stationary        *
+ *      azimuth angle, the angle where dpsi / dphi = 0.                       *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (const tmpl_TwoVectorDouble * const):                             *
+ *          The dummy variable of integration, a point in the ring plane.     *
+ *          This vector is expressed in terms of its Cartesian coordinates.   *
+ *      rho0 (const tmpl_TwoVectorDouble * const):                            *
+ *          The point of interest in the plane, in the same units as rho.     *
+ *          This vector is given in terms of its Cartesian coordinates.       *
+ *      R (const tmpl_ThreeVectorDouble * TMPL_RESTRICT const):               *
+ *          The position vector for the observer. Same units as rho and rho0, *
+ *          and also given in terms of its Cartesian coordinates.             *
+ *      eps (double):                                                         *
+ *          The "epsilon" factor, the allowed error in the computation of the *
+ *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
+ *          stop and the resulting phi will be returned.                      *
+ *      max_iters (unsigned int):                                             *
+ *          The maximum number of iterations allowed in Newton's method       *
+ *          before the algorithm is halted and the current value of phi is    *
+ *          returned. For most practical applications, toler = 4 or toler = 5 *
+ *          is sufficient.                                                    *
+ *  Outputs:                                                                  *
+ *      psi_s (double):                                                       *
+ *          The Fresnel kernel evaluated at phi_s, the stationary angle.      *
+ *  Notes:                                                                    *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ *      3.) This function assumes B, D, rho, rho0, and phi0 are independent   *
+ *          of phi.                                                           *
+ *      4.) Since R is the only three-vector, we may safely add the restrict  *
+ *          qualifier to it.                                                  *
+ ******************************************************************************/
+extern float
+tmpl_Float_Stationary_Cyl_Fresnel_Psi(
+    float k,
+    const tmpl_TwoVectorFloat * const rho,
+    const tmpl_TwoVectorFloat * const rho0,
+    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R,
+    float eps,
+    unsigned int max_iters
+);
+
+extern double
+tmpl_Double_Stationary_Cyl_Fresnel_Psi(
+    double k,
+    const tmpl_TwoVectorDouble * const rho,
+    const tmpl_TwoVectorDouble * const rho0,
+    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R,
+    double eps,
+    unsigned int max_iters
+);
+
+extern long double
+tmpl_LDouble_Stationary_Cyl_Fresnel_Psi(
+    long double k,
+    const tmpl_TwoVectorLongDouble * const rho,
+    const tmpl_TwoVectorLongDouble * const rho0,
+    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R,
+    long double eps,
+    unsigned int max_iters
+);
+
 extern double
 tmpl_Double_Stationary_Elliptical_Fresnel_Psi_Newton(double k, double r,
                                                      double r0, double phi,
