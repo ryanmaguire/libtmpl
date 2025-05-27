@@ -39,7 +39,7 @@
  *      dist (float):                                                         *
  *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Float_Hypot:                                                 *
  *              Computes the magnitude of the vector (x, y).                  *
  *  Method:                                                                   *
@@ -50,10 +50,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -82,11 +80,11 @@
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing the hypot function.                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the hypot function.                               */
+extern float tmpl_Float_Hypot(float x, float y);
 
 /*  Single precision distance function for complex variables.                 */
 TMPL_INLINE_DECL

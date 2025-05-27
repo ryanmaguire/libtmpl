@@ -39,7 +39,7 @@
  *      dist (double):                                                        *
  *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_Hypot:                                                *
  *              Computes the magnitude of the vector (x, y).                  *
  *  Method:                                                                   *
