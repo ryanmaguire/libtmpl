@@ -34,7 +34,7 @@
  *  Arguments:                                                                *
  *      z (tmpl_ComplexLongDouble * const):                                   *
  *          A pointer to a complex number. The sum is stored here.            *
- *      x (lnog double):                                                      *
+ *      x (long double):                                                      *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
