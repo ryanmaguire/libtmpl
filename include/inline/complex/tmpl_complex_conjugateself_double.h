@@ -31,7 +31,7 @@
  *          conj(z) = conj(x + iy) = x - iy                                   *
  *                                                                            *
  *  Arguments:                                                                *
- *      z (tmpl_ComplexDouble *):                                             *
+ *      z (tmpl_ComplexDouble * const):                                       *
  *          A pointer to a complex number.                                    *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -68,12 +68,12 @@
 
 /*  Double precision complex conjugate function.                              */
 TMPL_INLINE_DECL
-void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble *z)
+void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble * const z)
 {
     /*  The complex conjugate of x + iy is x - iy. Negate the imagary part.   */
     z->dat[1] = -z->dat[1];
 }
-/*  End of tmpl_CDouble_Conjugate.                                            */
+/*  End of tmpl_CDouble_ConjugateSelf.                                        */
 
 #endif
 /*  End of include guard.                                                     */
