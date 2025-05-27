@@ -37,7 +37,7 @@
  *      abs_z (long double):                                                  *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_LDouble_Hypot:                                               *
  *              Function for computing the magnitude of the vector (x, y).    *
  *  Method:                                                                   *

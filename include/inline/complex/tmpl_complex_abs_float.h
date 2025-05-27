@@ -37,7 +37,7 @@
  *      abs_z (float):                                                        *
  *          The absolute value of z.                                          *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Float_Hypot:                                                 *
  *              Function for computing the magnitude of the vector (x, y).    *
  *  Method:                                                                   *
