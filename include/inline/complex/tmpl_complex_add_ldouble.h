@@ -99,10 +99,10 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
-/*  In C99, since _Complex is a built-in data type, given double _Complex z0  *
- *  and double _Complex z1, you can just do z0 + z1. With C89 we use structs  *
- *  to define complex numbers. Structs cannot be added, so we need a function *
- *  for computing the sum of two complex values.                              */
+/*  In C99, since _Complex is a built-in data type, long double _Complex z0   *
+ *  and long double _Complex z1 may be added via z0 + z1. With C89 we use     *
+ *  structs to define complex numbers. Structs cannot be added, so we need a  *
+ *  function for computing the sum of two complex values.                     */
 
 /*  Long double precision complex addition.                                   */
 TMPL_INLINE_DECL
