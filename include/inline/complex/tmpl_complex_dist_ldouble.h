@@ -39,7 +39,7 @@
  *      dist (long double):                                                   *
  *          The distance between z and w.                                     *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_LDouble_Hypot:                                               *
  *              Computes the magnitude of the vector (x, y).                  *
  *  Method:                                                                   *
@@ -50,10 +50,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_ldouble.h:                                               *
+ *          Header providing long double precision complex numbers.           *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 16, 2021                                             *
@@ -72,7 +70,7 @@
  *      Moved float and long double versions to their own files.              *
  *      Added inline support.                                                 *
  *  2023/07/13: Ryan Maguire                                                  *
- *      Changed src/complex/tmpl_complex_dist_double.c to include this file.  *
+ *      Changed src/complex/tmpl_complex_dist_ldouble.c to include this file. *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -82,11 +80,11 @@
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing the hypot function.                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the hypot function.                               */
+extern long double tmpl_LDouble_Hypot(long double x, long double y);
 
 /*  Long double precision distance function for complex variables.            */
 TMPL_INLINE_DECL
