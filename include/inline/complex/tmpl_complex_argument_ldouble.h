@@ -40,15 +40,21 @@
  *  Output:                                                                   *
  *      arg (long double):                                                    *
  *          The argument of z.                                                *
+ *  Called Functions:                                                         *
+ *      src/math/                                                             *
+ *          tmpl_LDouble_Arctan2:                                             *
+ *              Computes the angle the point (x, y) makes with the x axis.    *
  *  Method:                                                                   *
  *      Extract the real and imaginary parts and return atan2(y, x).          *
  *  Notes:                                                                    *
- *      Because the atan2 function is used, there is a discontinuity along    *
- *      the negative real axis. That is, the argument returns a real value    *
- *      in the interval (-pi, pi] (+pi is inclusive).                         *
- *                                                                            *
- *      This file is a fork of the code I wrote for rss_rinoccs.              *
- *      librssringoccs is also released under GPL3.                           *
+ *      1.) Because the atan2 function is used, there is a discontinuity      *
+ *          along the negative real axis. That is, the argument returns a     *
+ *          real value in the interval (-pi, pi] (+pi is inclusive).          *
+ *      2.) No checks for NaN or infinity are performed explicitly. The       *
+ *          tmpl_LDouble_Arctan2 function handles NaN and infinity as         *
+ *          special cases.                                                    *
+ *      3.) This file is a fork of code I wrote for rss_rinoccs.              *
+ *          librssringoccs is also released under GPL3.                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
