@@ -16,40 +16,30 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *                        tmpl_two_vector_polard_float                        *
+ ******************************************************************************
  *  Purpose:                                                                  *
- *      Given two real numbers r and theta, return the vector (x, y) where    *
- *      x = r cos(theta) and y = r sin(theta). That is, return the polar      *
- *      representation of (r, theta) in the plane.                            *
+ *      Creates a vector from its polar coordinates in degrees.               *
+ *      Source: libtmpl/include/inline/vec2/tmpl_vec2_polard_float.h.         *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       March 3, 2021                                                 *
- ******************************************************************************
- *                             Revision History                               *
- ******************************************************************************
- *  2020/12/21: Ryan Maguire                                                  *
- *      Created file (Wellesley College for librssringoccs).                  *
- *  2021/03/03: Ryan Maguire                                                  *
- *      Edited file for use in libtmpl.                                       *
+ *  Date:       May 28, 2025                                                  *
  ******************************************************************************/
 
-/*  Trig functions found here.                                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Location of the TMPL_USE_INLINE macro.                                    */
+#include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototype and two-vector typedef found here.                     */
-#include <libtmpl/include/tmpl_vec2.h>
+/*  Only used if inline support is not available.                             */
+#if TMPL_USE_INLINE != 1
 
-/*  TODO: Replace Sin and Cos calls with a single SinCos call.                */
+/*  2D Vector type found here.                                                */
+#include <libtmpl/include/types/tmpl_vec2_float.h>
 
-/*  Function for returning the the polar representation of (r, theta).        */
-tmpl_TwoVectorDouble tmpl_2DDouble_Polar(double r, double theta)
-{
-    /*  Declare necessary variables. C89 requires declarations at the top.    */
-    tmpl_TwoVectorDouble P;
+/*  Function prototype / forward declaration.                                 */
+extern tmpl_TwoVectorFloat tmpl_2DFloat_Polard(float r, float theta);
 
-    /*  Compute the Cartesian coordinates of (r, theta) using cosine and sine.*/
-    P.dat[0] = r * tmpl_Double_Cos(theta);
-    P.dat[1] = r * tmpl_Double_Sin(theta);
+/*  Implemented here.                                                         */
+#include "../../include/inline/vec2/tmpl_vec2_polard_float.h"
 
-    return P;
-}
-/*  End of tmpl_2DDouble_Polar.                                               */
+#endif
+/*  End of #if TMPL_USE_INLINE != 1.                                          */

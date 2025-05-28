@@ -564,6 +564,72 @@ tmpl_2DLDouble_Orthogonal(const tmpl_TwoVectorLongDouble * const P);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_2DDouble_Polar                                                   *
+ *  Purpose:                                                                  *
+ *      Creates a vector from its polar coordinates.                          *
+ *  Arguments:                                                                *
+ *      r (double):                                                           *
+ *          The radius of the point.                                          *
+ *      theta (double):                                                       *
+ *          The angle the point makes with the x axis, in radians.            *
+ *  Outputs:                                                                  *
+ *      point (tmpl_TwoVectorDouble):                                         *
+ *          The point (r cos(theta), r sin(theta)).                           *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_polar_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_polar_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_polar_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Polar(float r, float theta);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Polar(double r, double theta);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Polar(long double r, long double theta);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_Polard                                                  *
+ *  Purpose:                                                                  *
+ *      Creates a vector from its polar coordinates.                          *
+ *  Arguments:                                                                *
+ *      r (double):                                                           *
+ *          The radius of the point.                                          *
+ *      theta (double):                                                       *
+ *          The angle the point makes with the x axis, in degrees.            *
+ *  Outputs:                                                                  *
+ *      point (tmpl_TwoVectorDouble):                                         *
+ *          The point (r cos(theta), r sin(theta)).                           *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_polard_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_polard_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_polard_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_Polard(float r, float theta);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_Polard(double r, double theta);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_Polard(long double r, long double theta);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_2DDouble_Polar_Angle                                             *
  *  Purpose:                                                                  *
  *      Computes the angle a vector makes with the positive x axis, radians.  *
@@ -1246,12 +1312,6 @@ extern tmpl_TwoVectorDouble tmpl_2DDouble_Rect(double x, double y);
 
 extern tmpl_TwoVectorLongDouble
 tmpl_2DLDouble_Rect(long double x, long double y);
-
-extern tmpl_TwoVectorFloat tmpl_2DFloat_Polar(float r, float theta);
-extern tmpl_TwoVectorDouble tmpl_2DDouble_Polar(double r, double theta);
-
-extern tmpl_TwoVectorLongDouble
-tmpl_2DLDouble_Polar(long double r, long double theta);
 
 /******************************************************************************
  *  Function:                                                                 *
