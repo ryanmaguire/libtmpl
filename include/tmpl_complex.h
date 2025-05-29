@@ -30,11 +30,6 @@
  *  1.) tmpl_bool.h:                                                          *
  *      Header file containing Booleans.                                      *
  ******************************************************************************
- *                                EXAMPLES                                    *
- ******************************************************************************
- *  Examples of all of the functions can be found in:                         *
- *      libtmpl/examples/complex_examples/                                    *
- ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 2, 2021                                              *
  ******************************************************************************
@@ -70,6 +65,16 @@
 #include <libtmpl/include/types/tmpl_complex_double.h>
 #include <libtmpl/include/types/tmpl_complex_float.h>
 #include <libtmpl/include/types/tmpl_complex_ldouble.h>
+
+#if TMPL_USE_INLINE == 1
+
+#ifdef TMPL_INLINE_FILE
+#undef TMPL_INLINE_FILE
+#endif
+
+#define TMPL_INLINE_FILE(file) <libtmpl/include/inline/complex/file>
+
+#endif
 
 /*  If using with C++ (and not C) we need to wrap the entire header file in   *
  *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
@@ -137,36 +142,20 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_NaN(void);
  *          tmpl_complex_abs_double.c                                         *
  *          tmpl_complex_abs_float.c                                          *
  *          tmpl_complex_abs_ldouble.c                                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/complex_examples/                                    *
- *          tmpl_complex_abs_double_example.c                                 *
- *          tmpl_complex_abs_float_example.c                                  *
- *          tmpl_complex_abs_ldouble_example.c                                *
- *  Tests:                                                                    *
- *      libtmpl/tests/complex_tests/time_tests/                               *
- *          tmpl_complex_abs_double_time_test.c                               *
- *          tmpl_complex_abs_float_time_test.c                                *
- *          tmpl_complex_abs_ldouble_time_test.c                              *
  ******************************************************************************/
-
-/*  These functions simply call hypot from tmpl_math.h. They can be inlined.  */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_abs_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_abs_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_abs_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_abs_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_abs_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_abs_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  If inline support is not available, use the code in src/complex/.         */
 extern float tmpl_CFloat_Abs(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_Abs(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -187,37 +176,20 @@ extern long double tmpl_CLDouble_Abs(tmpl_ComplexLongDouble z);
  *          tmpl_complex_abs_squared_double.c                                 *
  *          tmpl_complex_abs_squared_float.c                                  *
  *          tmpl_complex_abs_squared_ldouble.c                                *
- *  Examples:                                                                 *
- *      libtmpl/examples/complex_examples/                                    *
- *          tmpl_complex_abs_squared_double_example.c                         *
- *          tmpl_complex_abs_squared_float_example.c                          *
- *          tmpl_complex_abs_squared_ldouble_example.c                        *
- *  Tests:                                                                    *
- *      libtmpl/tests/complex_tests/time_tests/                               *
- *          tmpl_complex_abs_squared_double_time_test.c                       *
- *          tmpl_complex_abs_squared_float_time_test.c                        *
- *          tmpl_complex_abs_squared_ldouble_time_test.c                      *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it. This        *
- *  results in about a 1.5x speed boost.                                      */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_abs_squared_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_abs_squared_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_abs_squared_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_abs_squared_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_abs_squared_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_abs_squared_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the external functions in src/complex/        */
 extern float tmpl_CFloat_Abs_Squared(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_Abs_Squared(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -242,31 +214,15 @@ extern long double tmpl_CLDouble_Abs_Squared(tmpl_ComplexLongDouble z);
  *          tmpl_complex_add_double.c                                         *
  *          tmpl_complex_add_float.c                                          *
  *          tmpl_complex_add_ldouble.c                                        *
- *  Examples:                                                                 *
- *      libtmpl/examples/complex_examples/                                    *
- *          tmpl_complex_add_double_example.c                                 *
- *          tmpl_complex_add_float_example.c                                  *
- *          tmpl_complex_add_ldouble_example.c                                *
- *  Tests:                                                                    *
- *      libtmpl/tests/complex_tests/                                          *
- *          tmpl_complex_add_double_time_test.c                               *
- *          tmpl_complex_add_float_time_test.c                                *
- *          tmpl_complex_add_ldouble_time_test.c                              *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it. This        *
- *  results in about a 2x speed boost.                                        */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_add_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_add_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_add_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_add_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_add_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_add_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Add(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
@@ -277,7 +233,6 @@ extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -297,38 +252,25 @@ tmpl_CLDouble_Add(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *          tmpl_complex_add_imag_double.c                                    *
  *          tmpl_complex_add_imag_float.c                                     *
  *          tmpl_complex_add_imag_ldouble.c                                   *
- *  Examples:                                                                 *
- *      libtmpl/examples/complex_examples/                                    *
- *          tmpl_complex_add_imag_double_example.c                            *
- *          tmpl_complex_add_imag_float_example.c                             *
- *          tmpl_complex_add_imag_ldouble_example.c                           *
- *  Tests:                                                                    *
- *      libtmpl/tests/complex_tests/                                          *
- *          tmpl_complex_add_imag_double_time_test.c                          *
- *          tmpl_complex_add_imag_float_time_test.c                           *
- *          tmpl_complex_add_imag_ldouble_time_test.c                         *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_add_imag_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_add_imag_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_add_imag_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_add_imag_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_add_imag_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_add_imag_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
-extern tmpl_ComplexFloat tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
-extern tmpl_ComplexDouble tmpl_CDouble_Add_Imag(double y, tmpl_ComplexDouble z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Add_Imag(float y, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Add_Imag(double y, tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -353,38 +295,25 @@ tmpl_CLDouble_Add_Imag(long double y, tmpl_ComplexLongDouble z);
  *          tmpl_complex_add_real_double.c                                    *
  *          tmpl_complex_add_real_float.c                                     *
  *          tmpl_complex_add_real_ldouble.c                                   *
- *  Examples:                                                                 *
- *      libtmpl/examples/complex_examples/                                    *
- *          tmpl_complex_add_real_double_example.c                            *
- *          tmpl_complex_add_real_float_example.c                             *
- *          tmpl_complex_add_real_ldouble_example.c                           *
- *  Tests:                                                                    *
- *      libtmpl/tests/complex_tests/                                          *
- *          tmpl_complex_add_real_double_time_test.c                          *
- *          tmpl_complex_add_real_float_time_test.c                           *
- *          tmpl_complex_add_real_ldouble_time_test.c                         *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_add_real_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_add_real_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_add_real_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_add_real_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_add_real_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_add_real_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
-extern tmpl_ComplexFloat tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z);
-extern tmpl_ComplexDouble tmpl_CDouble_Add_Real(double x, tmpl_ComplexDouble z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Add_Real(float x, tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Add_Real(double x, tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -399,19 +328,14 @@ tmpl_CLDouble_Add_Real(long double x, tmpl_ComplexLongDouble z);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline version of the function found here.                                */
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_addto_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_addto_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_addto_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
 extern void
 tmpl_CFloat_AddTo(tmpl_ComplexFloat * const z,
                   const tmpl_ComplexFloat * const w);
@@ -425,7 +349,6 @@ tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble * const z,
                     const tmpl_ComplexLongDouble * const w);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -440,27 +363,24 @@ tmpl_CLDouble_AddTo(tmpl_ComplexLongDouble * const z,
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline version of the function found here.                                */
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_imag_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_imag_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_imag_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_addto_imag_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_addto_imag_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_addto_imag_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
-extern void tmpl_CFloat_AddTo_Imag(tmpl_ComplexFloat * const z, float y);
-extern void tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble * const z, double y);
+extern void
+tmpl_CFloat_AddTo_Imag(tmpl_ComplexFloat * const z, float y);
+
+extern void
+tmpl_CDouble_AddTo_Imag(tmpl_ComplexDouble * const z, double y);
 
 extern void
 tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble * const z, long double y);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -475,27 +395,24 @@ tmpl_CLDouble_AddTo_Imag(tmpl_ComplexLongDouble * const z, long double y);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline version of the function found here.                                */
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_real_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_real_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_addto_real_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_addto_real_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_addto_real_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_addto_real_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
-extern void tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat * const z, float x);
-extern void tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble * const z, double x);
+extern void
+tmpl_CFloat_AddTo_Real(tmpl_ComplexFloat * const z, float x);
+
+extern void
+tmpl_CDouble_AddTo_Real(tmpl_ComplexDouble * const z, double x);
 
 extern void
 tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble * const z, long double x);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -517,25 +434,19 @@ tmpl_CLDouble_AddTo_Real(tmpl_ComplexLongDouble * const z, long double x);
  *                                                                            *
  *      Using the function on the complex zero (0, 0) returns 0.              *
  ******************************************************************************/
-
-/*  These functions simply call Arctan2, and can be inlined.                  */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_argument_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_argument_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_argument_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_argument_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_argument_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_argument_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions found in src/complex/.          */
 extern float tmpl_CFloat_Argument(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_Argument(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -553,19 +464,14 @@ extern long double tmpl_CLDouble_Argument(tmpl_ComplexLongDouble z);
  *      tmpl_Bool comp:                                                       *
  *          A Boolean indicating whether or not z0 and z1 are the same.       *
  ******************************************************************************/
-
-/*  These functions use quick comparisons and are small enough to inline.     */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_are_equal_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_are_equal_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_are_equal_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_are_equal_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_are_equal_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_are_equal_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions found in src/complex/.          */
 extern tmpl_Bool
 tmpl_CFloat_Are_Equal(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
@@ -576,7 +482,6 @@ extern tmpl_Bool
 tmpl_CLDouble_Are_Equal(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -592,25 +497,19 @@ tmpl_CLDouble_Are_Equal(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      tmpl_ComplexDouble conj_z:                                            *
  *          The complex conjugate of z.                                       *
  ******************************************************************************/
-
-/*  The conjugate functions are very small and can be inlined.                */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_conjugate_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_conjugate_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_conjugate_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_conjugate_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_conjugate_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_conjugate_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat tmpl_CFloat_Conjugate(tmpl_ComplexFloat z);
 extern tmpl_ComplexDouble tmpl_CDouble_Conjugate(tmpl_ComplexDouble z);
 extern tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z);
 
 #endif
-/*  End if #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -623,25 +522,19 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Conjugate(tmpl_ComplexLongDouble z);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-
-/*  The conjugate functions are very small and can be inlined.                */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_conjugateself_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_conjugateself_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_conjugateself_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_conjugateself_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_conjugateself_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_conjugateself_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
-extern void tmpl_CFloat_ConjugateSelf(tmpl_ComplexFloat *z);
-extern void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble *z);
-extern void tmpl_CLDouble_ConjugateSelf(tmpl_ComplexLongDouble *z);
+extern void tmpl_CFloat_ConjugateSelf(tmpl_ComplexFloat * const z);
+extern void tmpl_CDouble_ConjugateSelf(tmpl_ComplexDouble * const z);
+extern void tmpl_CLDouble_ConjugateSelf(tmpl_ComplexLongDouble * const z);
 
 #endif
-/*  End if #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -697,27 +590,24 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Cosh(tmpl_ComplexLongDouble z);
  *      tmpl_CDouble_Subtract followed by tmpl_CDouble_Abs. This saves a      *
  *      redundant function call and makes code look cleaner.                  *
  ******************************************************************************/
-
-/*  The dist functions simply call hypot and can be inlined.                  */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_dist_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_dist_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_dist_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_dist_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_dist_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_dist_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
-extern float tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
-extern double tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+extern float
+tmpl_CFloat_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+
+extern double
+tmpl_CDouble_Dist(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
 
 extern long double
 tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
-/*  End if #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -738,12 +628,11 @@ tmpl_CLDouble_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      to the square root function that would be required by using the       *
  *      tmpl_CDouble_Dist function.                                           *
  ******************************************************************************/
-
 #if TMPL_USE_INLINE == 1
 
-#include <libtmpl/include/inline/complex/tmpl_complex_dist_squared_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_dist_squared_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_dist_squared_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_dist_squared_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_dist_squared_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_dist_squared_ldouble.h)
 
 #else
 
@@ -924,13 +813,17 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Exp(tmpl_ComplexLongDouble z);
  *          The value on the circle exp(i t).                                 *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/complex/tmpl_complex_expi_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_expi_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_expi_ldouble.h>
+
+#include TMPL_INLINE_FILE(tmpl_complex_expi_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_expi_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_expi_ldouble.h)
+
 #else
+
 extern tmpl_ComplexFloat tmpl_CFloat_Expi(float t);
 extern tmpl_ComplexDouble tmpl_CDouble_Expi(double z);
 extern tmpl_ComplexLongDouble tmpl_CLDouble_Expi(long double t);
+
 #endif
 
 /******************************************************************************
@@ -946,13 +839,17 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Expi(long double t);
  *          The value on the circle exp(i pi t).                              *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/complex/tmpl_complex_expid_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_expid_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_expid_ldouble.h>
+
+#include TMPL_INLINE_FILE(tmpl_complex_expid_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_expid_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_expid_ldouble.h)
+
 #else
+
 extern tmpl_ComplexFloat tmpl_CFloat_Expid(float t);
 extern tmpl_ComplexDouble tmpl_CDouble_Expid(double z);
 extern tmpl_ComplexLongDouble tmpl_CLDouble_Expid(long double t);
+
 #endif
 
 /******************************************************************************
@@ -968,13 +865,17 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Expid(long double t);
  *          The value on the circle exp(i pi t).                              *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/complex/tmpl_complex_expipi_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_expipi_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_expipi_ldouble.h>
+
+#include TMPL_INLINE_FILE(tmpl_complex_expipi_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_expipi_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_expipi_ldouble.h)
+
 #else
+
 extern tmpl_ComplexFloat tmpl_CFloat_ExpiPi(float t);
 extern tmpl_ComplexDouble tmpl_CDouble_ExpiPi(double z);
 extern tmpl_ComplexLongDouble tmpl_CLDouble_ExpiPi(long double t);
+
 #endif
 
 /******************************************************************************
@@ -1071,19 +972,14 @@ extern long double tmpl_CLDouble_Log_Abs(tmpl_ComplexLongDouble z);
  *      structs to define complex numbers. Structs cannot be multiplied, so   *
  *      we need a function for computing the product of two complex values.   *
  ******************************************************************************/
-
-/*  Simple arithmetic function that is small enough to inline.                */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
 
@@ -1094,7 +990,6 @@ extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1110,19 +1005,14 @@ tmpl_CLDouble_Multiply(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *      tmpl_ComplexDouble prod:                                              *
  *          The product y * z.                                                *
  ******************************************************************************/
-
-/*  Simple arithmetic function that is small enough to inline.                */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_imag_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_imag_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_imag_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_imag_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_imag_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_imag_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply_Imag(float y, tmpl_ComplexFloat z);
 
@@ -1133,7 +1023,6 @@ extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1149,19 +1038,14 @@ tmpl_CLDouble_Multiply_Imag(long double y, tmpl_ComplexLongDouble z);
  *      tmpl_ComplexDouble prod:                                              *
  *          The product x * z.                                                *
  ******************************************************************************/
-
-/*  Simple arithmetic function that is small enough to inline.                */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_real_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_real_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiply_real_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_real_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_real_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiply_real_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
-/*  Lacking inline support, use the functions in src/complex/.                */
 extern tmpl_ComplexFloat
 tmpl_CFloat_Multiply_Real(float x, tmpl_ComplexFloat z);
 
@@ -1172,7 +1056,6 @@ extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1182,7 +1065,7 @@ tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
  *  Arguments:                                                                *
  *      z0 (tmpl_ComplexDouble * const):                                      *
  *          A pointer to a complex number. The product is stored here.        *
- *      z1 (tmpl_ComplexDouble * const):                                      *
+ *      z1 (const tmpl_ComplexDouble * const):                                *
  *          Another pointer to a complex number.                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -1192,9 +1075,9 @@ tmpl_CLDouble_Multiply_Real(long double x, tmpl_ComplexLongDouble z);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1233,9 +1116,9 @@ tmpl_CLDouble_MultiplyBy(tmpl_ComplexLongDouble * const z0,
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_imag_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_imag_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_imag_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_imag_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_imag_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_imag_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1271,9 +1154,9 @@ tmpl_CLDouble_MultiplyBy_Imag(tmpl_ComplexLongDouble * const z, long double y);
 #if TMPL_USE_INLINE == 1
 
 /*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_real_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_real_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_multiplyby_real_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_real_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_real_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_multiplyby_real_ldouble.h)
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
@@ -1324,15 +1207,22 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Negate(tmpl_ComplexLongDouble z);
  *          The complex number r exp(i theta).                                *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/complex/tmpl_complex_polar_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_polar_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_polar_ldouble.h>
+
+#include TMPL_INLINE_FILE(tmpl_complex_polar_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_polar_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_polar_ldouble.h)
+
 #else
-extern tmpl_ComplexFloat tmpl_CFloat_Polar(float r, float theta);
-extern tmpl_ComplexDouble tmpl_CDouble_Polar(double r, double theta);
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Polar(float r, float theta);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Polar(double r, double theta);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Polar(long double r, long double theta);
+
 #endif
 
 /******************************************************************************
@@ -1351,15 +1241,22 @@ tmpl_CLDouble_Polar(long double r, long double theta);
  *          The complex number r exp(i theta).                                *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/complex/tmpl_complex_polard_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_polard_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_polard_ldouble.h>
+
+#include TMPL_INLINE_FILE(tmpl_complex_polard_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_polard_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_polard_ldouble.h)
+
 #else
-extern tmpl_ComplexFloat tmpl_CFloat_Polard(float r, float theta);
-extern tmpl_ComplexDouble tmpl_CDouble_Polard(double r, double theta);
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Polard(float r, float theta);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Polard(double r, double theta);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Polard(long double r, long double theta);
+
 #endif
 
 /******************************************************************************
@@ -1378,15 +1275,22 @@ tmpl_CLDouble_Polard(long double r, long double theta);
  *          The complex number r exp(i pi theta).                             *
  ******************************************************************************/
 #if TMPL_USE_INLINE == 1
-#include <libtmpl/include/inline/complex/tmpl_complex_polarpi_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_polarpi_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_polarpi_ldouble.h>
+
+#include TMPL_INLINE_FILE(tmpl_complex_polarpi_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_polarpi_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_polarpi_ldouble.h)
+
 #else
-extern tmpl_ComplexFloat tmpl_CFloat_PolarPi(float r, float theta);
-extern tmpl_ComplexDouble tmpl_CDouble_PolarPi(double r, double theta);
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_PolarPi(float r, float theta);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_PolarPi(double r, double theta);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_PolarPi(long double r, long double theta);
+
 #endif
 
 /******************************************************************************
@@ -1624,24 +1528,19 @@ tmpl_CLDouble_Pow_Real(tmpl_ComplexLongDouble z, long double x);
  *      libtmpl/tests/complex_tests/                                          *
  *          tmpl_complex_quick_abs_double_time_test.c                         *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_quick_abs_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_quick_abs_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_quick_abs_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_quick_abs_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_quick_abs_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_quick_abs_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 extern float tmpl_CFloat_Quick_Abs(tmpl_ComplexFloat z);
 extern double tmpl_CDouble_Quick_Abs(tmpl_ComplexDouble z);
 extern long double tmpl_CLDouble_Quick_Abs(tmpl_ComplexLongDouble z);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -1661,17 +1560,13 @@ extern long double tmpl_CLDouble_Quick_Abs(tmpl_ComplexLongDouble z);
  *          The absolute value of z, computed by the Pythagorean formula. If  *
  *          z = x + iy, then abs_z = sqrt(x^2 + y^2)                          *
  ******************************************************************************/
-
-/*  This function is small enough that one may wish to inline it.             */
 #if TMPL_USE_INLINE == 1
 
-/*  Inline versions found here.                                               */
-#include <libtmpl/include/inline/complex/tmpl_complex_quick_dist_double.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_quick_dist_float.h>
-#include <libtmpl/include/inline/complex/tmpl_complex_quick_dist_ldouble.h>
+#include TMPL_INLINE_FILE(tmpl_complex_quick_dist_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_quick_dist_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_quick_dist_ldouble.h)
 
 #else
-/*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 extern float
 tmpl_CFloat_Quick_Dist(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
@@ -1683,7 +1578,6 @@ extern long double
 tmpl_CLDouble_Quick_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
-/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 extern double tmpl_CDouble_Quick_Log(tmpl_ComplexDouble z);
 extern float tmpl_CFloat_Quick_Log(tmpl_ComplexFloat z);
@@ -1723,8 +1617,11 @@ extern long double tmpl_CLDouble_Real_Part(tmpl_ComplexLongDouble z);
  *      real and imaginary parts, or an error will occur. On MacOS and        *
  *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
  ******************************************************************************/
-extern tmpl_ComplexFloat tmpl_CFloat_Reciprocal(tmpl_ComplexFloat z);
-extern tmpl_ComplexDouble tmpl_CDouble_Reciprocal(tmpl_ComplexDouble z);
+extern tmpl_ComplexFloat
+tmpl_CFloat_Reciprocal(tmpl_ComplexFloat z);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Reciprocal(tmpl_ComplexDouble z);
 
 extern tmpl_ComplexLongDouble
 tmpl_CLDouble_Reciprocal(tmpl_ComplexLongDouble z);
@@ -1966,6 +1863,10 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef TMPL_INLINE_FILE
+#undef TMPL_INLINE_FILE
 #endif
 
 #endif
