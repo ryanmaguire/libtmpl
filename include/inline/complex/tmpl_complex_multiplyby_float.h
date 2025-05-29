@@ -115,7 +115,7 @@ tmpl_CFloat_MultiplyBy(tmpl_ComplexFloat * const z,
     if (z == w)
     {
         z->dat[0] = z->dat[0] * z->dat[0] - z->dat[1] * z->dat[1];
-        z->dat[1] = 2.0 * z_real * z->dat[1];
+        z->dat[1] = 2.0F * z_real * z->dat[1];
     }
 
     /*  z and w point to different complex numbers. Use the standard formula. */
