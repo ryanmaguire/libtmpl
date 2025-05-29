@@ -52,6 +52,12 @@
  *          instead of writing:                                               *
  *              z = tmpl_CLDouble_Multiply(z, w).                             *
  *          The improvement varies depending on compiler and architecture.    *
+ *      4.) This function checks if z and w are the same pointer. In this     *
+ *          case we use the square formula instead of the product formula.    *
+ *          Using the product formula in this scenario would lead to the real *
+ *          part of w being overwritten, resulting in the wrong computation.  *
+ *          This incurs a 0-2% penalty in performance, depending on compiler, *
+ *          which is small, but produces the correct result.                  *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/complex_number                      *
  *      2.) Ahfors, L. (1979)                                                 *
@@ -69,6 +75,9 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       December 16, 2024                                             *
+ ******************************************************************************
+ *  2025/05/29: Ryan Maguire                                                  *
+ *      Added check for z = w, in which case we use the square formula.       *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -94,9 +103,28 @@ tmpl_CLDouble_MultiplyBy(tmpl_ComplexLongDouble * const z,
     /*  Avoid overwriting data, save the real part of z.                      */
     const long double z_real = z->dat[0];
 
-    /*  Multiplication is done using the distributive law and i^2 = -1.       */
-    z->dat[0] = z->dat[0] * w->dat[0] - z->dat[1] * w->dat[1];
-    z->dat[1] = z_real * w->dat[1] + z->dat[1] * w->dat[0];
+    /*  If z and w point to the same complex number, we need to be careful    *
+     *  not to overwrite the data in w. In this case z *= w is the same thing *
+     *  as z *= z, we can use the square formula for z:                       *
+     *                                                                        *
+     *      z^2 = (a + ib)^2                                                  *
+     *          = (a^2 - b^2) + 2iab                                          *
+     *                                                                        *
+     *  Since we have already saved z_real, by using this formula we avoid    *
+     *  needing to use the w pointer at all.                                  */
+    if (z == w)
+    {
+        z->dat[0] = z->dat[0] * z->dat[0] - z->dat[1] * z->dat[1];
+        z->dat[1] = 2.0 * z_real * z->dat[1];
+    }
+
+    /*  z and w point to different complex numbers. Use the standard formula. */
+    else
+    {
+        /*  Multiplication is done using the distributive law and i^2 = -1.   */
+        z->dat[0] = z->dat[0] * w->dat[0] - z->dat[1] * w->dat[1];
+        z->dat[1] = z_real * w->dat[1] + z->dat[1] * w->dat[0];
+    }
 }
 /*  End of tmpl_CLDouble_MultiplyBy.                                          */
 
