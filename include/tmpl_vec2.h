@@ -1011,6 +1011,62 @@ extern void tmpl_2DLDouble_Y_ProjectSelf(tmpl_TwoVectorLongDouble * const P);
 
 #endif
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_X_Reflect                                               *
+ *  Purpose:                                                                  *
+ *      Reflect a vector across the x axis.                                   *
+ *  Arguments:                                                                *
+ *      P (const tmpl_TwoVectorDouble * const):                               *
+ *          A pointer to a vector in the plane.                               *
+ *  Outputs:                                                                  *
+ *      x_reflection (tmpl_TwoVectorDouble):                                  *
+ *          The reflection of P across the x axis.                            *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_x_reflect_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_reflect_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_reflect_ldouble.h)
+
+#else
+
+extern tmpl_TwoVectorFloat
+tmpl_2DFloat_X_Reflect(const tmpl_TwoVectorFloat * const P);
+
+extern tmpl_TwoVectorDouble
+tmpl_2DDouble_X_Reflect(const tmpl_TwoVectorDouble * const P);
+
+extern tmpl_TwoVectorLongDouble
+tmpl_2DLDouble_X_Reflect(const tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_2DDouble_X_ReflectSelf                                           *
+ *  Purpose:                                                                  *
+ *      Reflect a vector across the x axis.                                   *
+ *  Arguments:                                                                *
+ *      P (tmpl_TwoVectorDouble * const):                                     *
+ *          A vector in the plane. The reflection is stored here.             *
+ *  Outputs:                                                                  *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_vec2_x_reflectself_double.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_reflectself_float.h)
+#include TMPL_INLINE_FILE(tmpl_vec2_x_reflectself_ldouble.h)
+
+#else
+
+extern void tmpl_2DFloat_X_ReflectSelf(tmpl_TwoVectorFloat * const P);
+extern void tmpl_2DDouble_X_ReflectSelf(tmpl_TwoVectorDouble * const P);
+extern void tmpl_2DLDouble_X_ReflectSelf(tmpl_TwoVectorLongDouble * const P);
+
+#endif
+
 /*  Typedefs for 2D lines at various precisions.                              */
 #include <libtmpl/include/types/tmpl_line2_double.h>
 #include <libtmpl/include/types/tmpl_line2_float.h>
