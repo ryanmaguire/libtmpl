@@ -40,7 +40,7 @@
  *          Another complex number.                                           *
  *  Output:                                                                   *
  *      dist (float):                                                         *
- *          The distance between z and w.                                     *
+ *          The square of the distance between z and w.                       *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
