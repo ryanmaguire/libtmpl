@@ -34,12 +34,12 @@
  *                                                                            *
  *  Arguments:                                                                *
  *      t (float):                                                            *
- *          The angle of the point.                                           *
+ *          The angle of the point, in radians.                               *
  *  Output:                                                                   *
  *      exp_i_t (tmpl_ComplexFloat):                                          *
  *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Float_SinCos:                                                *
  *              Computes sin(t) and cos(t) simultaneously.                    *
  *  Method:                                                                   *
@@ -49,13 +49,17 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 13, 2023                                                 *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2023/07/10: Ryan Maguire                                                  *
+ *      Replaced tmpl_math.h include with forward declaration. Removed        *
+ *      include for tmpl_complex.h, replaced with tmpl_complex_float.h.       *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -65,11 +69,11 @@
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing math functions.                                    */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the SinCos function.                              */
+extern void tmpl_Float_SinCos(float t, float *sin_t, float *cos_t);
 
 /*  Computes the point on the unit circle with angle t from the real axis.    */
 TMPL_INLINE_DECL
