@@ -34,12 +34,12 @@
  *                                                                            *
  *  Arguments:                                                                *
  *      t (double):                                                           *
- *          The angle of the point.                                           *
+ *          The angle of the point, in radians.                               *
  *  Output:                                                                   *
  *      exp_i_t (tmpl_ComplexDouble):                                         *
  *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_SinCos:                                               *
  *              Computes sin(t) and cos(t) simultaneously.                    *
  *  Method:                                                                   *
