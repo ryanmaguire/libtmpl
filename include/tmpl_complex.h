@@ -1592,6 +1592,48 @@ tmpl_CLDouble_Quick_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
 
 #endif
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_CDouble_Quick_Divide                                             *
+ *  Purpose:                                                                  *
+ *     Compute the quotient of a complex number z0 by z1.                     *
+ *  Arguments:                                                                *
+ *      z (tmpl_ComplexDouble):                                               *
+ *          A complex number.                                                 *
+ *      w (tmpl_ComplexDouble):                                               *
+ *          Another complex number.                                           *
+ *  Output:                                                                   *
+ *      quot (tmpl_ComplexDouble):                                            *
+ *          The complex number z / w.                                         *
+ *  Notes:                                                                    *
+ *      1.) No error check is performed on the inputs. In particular, there   *
+ *          are no checks for zero in the denominator, or NaNs or infinities. *
+ *      2.) Division is not commutative. tmpl_CDouble_Quick_Divide(z, w)      *
+ *          returns z / w, and not w / z. That is, the first entry is divided *
+ *          by the second one.                                                *
+ *      3.) This function is much faster than tmpl_CDouble_Divide, but it is  *
+ *          susceptible to underflow and overflow. Do not use this with       *
+ *          complex numbers that have very small or very large components.    *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_complex_quick_divide_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_quick_divide_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_quick_divide_ldouble.h)
+
+#else
+
+extern tmpl_ComplexFloat
+tmpl_CFloat_Quick_Divide(tmpl_ComplexFloat z, tmpl_ComplexFloat w);
+
+extern tmpl_ComplexDouble
+tmpl_CDouble_Quick_Divide(tmpl_ComplexDouble z, tmpl_ComplexDouble w);
+
+extern tmpl_ComplexLongDouble
+tmpl_CLDouble_Quick_Divide(tmpl_ComplexLongDouble z, tmpl_ComplexLongDouble w);
+
+#endif
+
 extern double tmpl_CDouble_Quick_Log(tmpl_ComplexDouble z);
 extern float tmpl_CFloat_Quick_Log(tmpl_ComplexFloat z);
 extern long double tmpl_CLDouble_Quick_Log(tmpl_ComplexLongDouble z);
