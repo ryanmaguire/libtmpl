@@ -40,7 +40,7 @@
  *      exp_i_pi_t (tmpl_ComplexDouble):                                      *
  *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_SinCosPi:                                             *
  *              Computes sin(pi t) and cos(pi t) simultaneously.              *
  *  Method:                                                                   *
