@@ -654,30 +654,43 @@ tmpl_CLDouble_Dist_Squared(tmpl_ComplexLongDouble z0,
  *  Purpose:                                                                  *
  *     Compute the quotient of a complex number z0 by z1.                     *
  *  Arguments:                                                                *
- *      tmpl_ComplexDouble z0:                                                *
+ *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
- *      tmpl_ComplexDouble z1:                                                *
+ *      w (tmpl_ComplexDouble):                                               *
  *          Another complex number.                                           *
  *  Output:                                                                   *
- *      tmpl_ComplexDouble quotient:                                          *
- *          The complex number z0 / z1.                                       *
- *  NOTE:                                                                     *
- *      No error check is performed on whether or not z1 = 0+0i. If this is   *
- *      true, depending on your system, you will either get +infinity for both*
- *      real and imaginary parts, or an error will occur. On macOS and        *
- *      GNU/Linux the result is NaN+iNaN (using clang and GCC, respectively). *
- *                                                                            *
- *      Division is not commutative, so given (z0, z1), this returns z0/z1 and*
- *      not z1/z0. That is, we divide the first entry by the second.          *
+ *      quot (tmpl_ComplexDouble):                                            *
+ *          The complex number z / w.                                         *
+ *  Notes:                                                                    *
+ *      1.) No error check is performed on the inputs. In particular, there   *
+ *          are no checks for zero in the denominator, or NaNs or infinities. *
+ *      2.) Division is not commutative. tmpl_CDouble_Divide(z, w) returns    *
+ *          z / w, and not w / z. That is, the first entry is divided by the  *
+ *          second one.                                                       *
+ *      3.) In most realistic applications the precautions taken to prevent   *
+ *          underflow and overflow are unnecessary since you would need to    *
+ *          work with very small or very large numbers. Use the function      *
+ *          tmpl_CDouble_Quick_Divide instead to get a performance boost if   *
+ *          you are not working with such complex numbers.                    *
  ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_complex_divide_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_divide_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_divide_ldouble.h)
+
+#else
+
 extern tmpl_ComplexFloat
-tmpl_CFloat_Divide(tmpl_ComplexFloat z0, tmpl_ComplexFloat z1);
+tmpl_CFloat_Divide(tmpl_ComplexFloat z, tmpl_ComplexFloat w);
 
 extern tmpl_ComplexDouble
-tmpl_CDouble_Divide(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1);
+tmpl_CDouble_Divide(tmpl_ComplexDouble z, tmpl_ComplexDouble w);
 
 extern tmpl_ComplexLongDouble
-tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
+tmpl_CLDouble_Divide(tmpl_ComplexLongDouble z, tmpl_ComplexLongDouble w);
+
+#endif
 
 /******************************************************************************
  *  Function:                                                                 *
