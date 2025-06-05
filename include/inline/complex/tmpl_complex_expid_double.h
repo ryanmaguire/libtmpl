@@ -39,7 +39,7 @@
  *      exp_i_t (tmpl_ComplexDouble):                                         *
  *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Double_SinCosd:                                              *
  *              Computes sind(t) and cosd(t) simultaneously.                  *
  *  Method:                                                                   *

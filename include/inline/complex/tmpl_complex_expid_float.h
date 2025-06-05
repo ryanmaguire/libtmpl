@@ -39,7 +39,7 @@
  *      exp_i_t (tmpl_ComplexFloat):                                          *
  *          The point on the unit circle corresponding to t.                  *
  *  Called Functions:                                                         *
- *      tmpl_math.h:                                                          *
+ *      src/math/                                                             *
  *          tmpl_Float_SinCosd:                                               *
  *              Computes sind(t) and cosd(t) simultaneously.                  *
  *  Method:                                                                   *
@@ -49,10 +49,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_INLINE_DECL is found.                      *
- *  2.) tmpl_complex.h:                                                       *
- *          Header where complex types and function prototypes are defined.   *
- *  3.) tmpl_math.h:                                                          *
- *          Header containing various math functions.                         *
+ *  2.) tmpl_complex_float.h:                                                 *
+ *          Header providing single precision complex numbers.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       July 22, 2023                                                 *
@@ -65,11 +63,11 @@
 /*  TMPL_INLINE_DECL found here.                                              */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Header file containing math functions.                                    */
-#include <libtmpl/include/tmpl_math.h>
+/*  Complex numbers provided here.                                            */
+#include <libtmpl/include/types/tmpl_complex_float.h>
 
-/*  Complex routines and data types defined here.                             */
-#include <libtmpl/include/tmpl_complex.h>
+/*  Tell the compiler about the SinCosd function.                             */
+extern void tmpl_Float_SinCosd(float t, float *sind_t, float *cosd_t);
 
 /*  Computes the point on the unit circle with angle t from the real axis.    */
 TMPL_INLINE_DECL
