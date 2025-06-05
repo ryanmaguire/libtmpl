@@ -46,43 +46,41 @@
  *          w   = (c + id)   = --------- = -------                            *
  *                             c^2 + d^2     |w|                              *
  *                                                                            *
- *      The intermediate computation c^2 + d^2 may underflow or underflow. To *
- *      avoid this we first normalize w by its magnitude |w|, the reciprocal  *
- *      is then given by:                                                     *
+ *      The intermediate computation c^2 + d^2 may underflow or overflow. To  *
+ *      avoid this we first divide w by the larger of the real and imaginary  *
+ *      parts of w. If |c| >= |d|, we have:                                   *
  *                                                                            *
- *           -1    c / |w| - i d / |w|                                        *
- *          w   = --------------------                                        *
- *                        |w|                                                 *
+ *           -1    c - i d                                                    *
+ *          w   = ---------                                                   *
+ *                c^2 + d^2                                                   *
  *                                                                            *
- *      The final quotient is:                                                *
+ *                 c - i d  1 / c                                             *
+ *              = --------- -----                                             *
+ *                c^2 + d^2 1 / c                                             *
  *                                                                            *
- *           z    a + ib                                                      *
- *          --- = ------                                                      *
- *           w    c + id                                                      *
+ *                1 - i (d / c)                                               *
+ *              = -------------                                               *
+ *                 c + d^2 / c                                                *
  *                                                                            *
- *                         c - i d                                            *
- *                (a + ib) -------                                            *
- *                           |w|                                              *
- *              = ----------------                                            *
- *                      |w|                                                   *
+ *      The product with z = a + ib is given by:                              *
  *                                                                            *
- *                 -             -       -             -                      *
- *                |    c       d  |     |    c       d  |                     *
- *                | a --- + b --- | + i | b --- - a --- |                     *
- *                |   |w|     |w| |     |   |w|     |w| |                     *
- *                 -             -       -             -                      *
- *              = ---------------------------------------                     *
- *                                  |w|                                       *
+ *           z         -1                                                     *
+ *          --- = z * w                                                       *
+ *           w                                                                *
  *                                                                            *
- *      That is, the real and imaginary parts are given by:                   *
+ *                         1 - i (d / c)                                      *
+ *              = (a + ib) -------------                                      *
+ *                          c + d^2 / c                                       *
  *                                                                            *
- *               ac / |w| + bd / |w|                                          *
- *          re = -------------------                                          *
- *                       |w|                                                  *
+ *                a + b d / c     b - a d / c                                 *
+ *              = ----------- + i -----------                                 *
+ *                c + d^2 / c     c + d^2 / c                                 *
  *                                                                            *
- *               bc / |w| - ad / |w|                                          *
- *          im = -------------------                                          *
- *                       |w|                                                  *
+ *      If |c| < |d|, we do a similar trick and obtain:                       *
+ *                                                                            *
+ *           -1   a c / d + b     b c / d - a                                 *
+ *          w   = ----------- + i -----------                                 *
+ *                c^2 / d + d     c^2 / d + d                                 *
  *                                                                            *
  *      We compute these and store them in the output complex number.         *
  *  Notes:                                                                    *
@@ -96,6 +94,25 @@
  *          work with very small or very large numbers. Use the function      *
  *          tmpl_CDouble_Quick_Divide instead to get a performance boost if   *
  *          you are not working with such complex numbers.                    *
+ *  References:                                                               *
+ *      1.) https://en.wikipedia.org/wiki/complex_number                      *
+ *                                                                            *
+ *          Fair introduction to complex numbers provided here.               *
+ *                                                                            *
+ *      2.) Ahfors, L. (1979)                                                 *
+ *          "Complex Analysis, Third Edition"                                 *
+ *          McGraw-Hill, International Series in Pure and Applied Mathematics *
+ *          Chapter 1 "The Algebra of Complex Numbers"                        *
+ *          Section 1 "Arithmetic Operations"                                 *
+ *                                                                            *
+ *          Standard undergraduate textbook on complex analysis.              *
+ *                                                                            *
+ *      3.) Smith, Robert (1962)                                              *
+ *          "Algorithm 116: Complex division"                                 *
+ *          Communications of the ACM                                         *
+ *          Volume 5, Number 8, Page 435.                                     *
+ *                                                                            *
+ *          The algorithm implemented is described here.                      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -115,9 +132,7 @@
  *      Copied from rss_ringoccs.                                             *
  *  2025/06/05: Ryan Maguire                                                  *
  *      Inlined functions, moved float and long double versions to their own  *
- *      file, made the algorithm safely handle extreme denominators by using  *
- *      the hypot function (tmpl_CDouble_Quick_Divide now provides the faster *
- *      algorithm that is susceptible to overflow and underflow).             *
+ *      file, made the algorithm safely handle extreme denominators.          *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
@@ -130,8 +145,20 @@
 /*  Complex numbers provided here.                                            */
 #include <libtmpl/include/types/tmpl_complex_double.h>
 
-/*  The hypot function allows us to normalize the denominator.                */
-extern double tmpl_Double_Hypot(double x, double y);
+/*  We need the absolute value function. This is small enough to inline.      */
+#if TMPL_USE_INLINE == 1
+
+/*  Inline version found here.                                                */
+#include <libtmpl/include/inline/math/tmpl_abs_double.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, provide the forward declaration for the compiler. */
+extern double tmpl_Double_Abs(double x);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  In C99, since _Complex is a built-in data type, given double _Complex z   *
  *  and double _Complex w, you can just do z / w. Structs cannot be           *
@@ -142,43 +169,66 @@ TMPL_INLINE_DECL
 tmpl_ComplexDouble
 tmpl_CDouble_Divide(tmpl_ComplexDouble z, tmpl_ComplexDouble w)
 {
-    /*  Declare a variable for the output, the quotient z / w.                */
+    /*  Variable for the output, the quotient z / w.                          */
     tmpl_ComplexDouble quot;
 
-    /*  The standard division formula is given by:                            *
-     *                                                                        *
-     *       z    a + ib   (a + ib) (c - id)                                  *
-     *      --- = ------ = -----------------                                  *
-     *       w    c + id       c^2 + d^2                                      *
-     *                                                                        *
-     *  This is susceptible to both underflow and overflow when the           *
-     *  denominator is either very small or very large, respectively. We can  *
-     *  compensate for this by normalizing the denominator first and then     *
-     *  using the division formula with the unit-length complex number. We    *
-     *  compute the length of the denominator using the hypot function.       */
-    const double norm_w = tmpl_Double_Hypot(w.dat[0], w.dat[1]);
+    /*  We divide w by the component with the larger magnitude.               *
+     *  Compute the absolute value of both the real and imaginary parts.      */
+    const double abs_w_real = tmpl_Double_Abs(w.dat[0]);
+    const double abs_w_imag = tmpl_Double_Abs(w.dat[1]);
 
-    /*  Multiplication is faster than division. Pre-compute the reciprocal.   */
-    const double rcpr_norm_w = 1.0 / norm_w;
+    /*  Writing w = c + id, if |c| > |d|, we scale the numerator and          *
+     *  denominator of z / w by 1 / c. Check for this.                        */
+    if (abs_w_real > abs_w_imag)
+    {
+        /*  We have:                                                          *
+         *                                                                    *
+         *       -1    c - i d    1 - i (d / c)                               *
+         *      w   = --------- = -------------                               *
+         *            c^2 + d^2    c + d^2 / c                                *
+         *                                                                    *
+         *  Save the expressions d / c and c + d^2 / c.                       */
+        const double ratio = w.dat[1] / w.dat[0];
+        const double denom = w.dat[0] + w.dat[1] * ratio;
 
-    /*  Compute the normalized components of the denominator. The complex     *
-     *  number wx_n + i wn_y has unit magnitude, allowing us to avoid         *
-     *  underflow or overflow in the intermediate computations.               */
-    const double wn_x = w.dat[0] * rcpr_norm_w;
-    const double wn_y = w.dat[1] * rcpr_norm_w;
+        /*  The quotient z / w is given by:                                   *
+         *                                                                    *
+         *       z             1 - i (d / c)   a + b d / c     b - a d / c    *
+         *      --- = (a + ib) ------------- = ----------- + i -----------    *
+         *       w              c + d^2 / c    c + d^2 / c     c + d^2 / c    *
+         *                                                                    *
+         *  That is, the real part is (a + b d / c) / (c + d^2 / c) and the   *
+         *  imaginary part is (b - a d / c) / (c + d^2 / c). Compute this.    */
+        quot.dat[0] = (z.dat[0] + z.dat[1] * ratio) / denom;
+        quot.dat[1] = (z.dat[1] - z.dat[0] * ratio) / denom;
+    }
 
-    /*  The normalized denominator can be used to compute the quotient via:   *
-     *                                                                        *
-     *                               c - i d                                  *
-     *                               -------                                  *
-     *       z    a + ib   (a + ib)    |w|     (a + ib) (c / |w| - i d / |w|) *
-     *      --- = ------ = ----------------- = ------------------------------ *
-     *       w    c + id          |w|                        |w|              *
-     *                                                                        *
-     *  Expanding out this last product using the standard product formula    *
-     *  for complex numbers gives us the following.                           */
-    quot.dat[0] = (z.dat[0] * wn_x + z.dat[1] * wn_y) * rcpr_norm_w;
-    quot.dat[1] = (z.dat[1] * wn_x - z.dat[0] * wn_y) * rcpr_norm_w;
+    /*  Here we have |d| >= |c|, or the input contains a NaN.                 */
+    else
+    {
+        /*  Since |d| >= |c|, we scale the numerator and denominator by 1 / d.*
+         *  Our expression becomes:                                           *
+         *                                                                    *
+         *       -1    c - i d     c / d - i                                  *
+         *      w   = --------- = -----------                                 *
+         *            c^2 + d^2   c^2 / d + d                                 *
+         *                                                                    *
+         *  Save the expressions c / d and c^2 / d + d.                       */
+        const double ratio = w.dat[0] / w.dat[1];
+        const double denom = w.dat[0] * ratio + w.dat[1];
+
+        /*  The quotient z / w is given by:                                   *
+         *                                                                    *
+         *       z              c / d - i    a c / d + b     b c / d - a      *
+         *      --- = (a + ib) ----------- = ----------- + i -----------      *
+         *       w             c^2 / d + d   c^2 / d + d     c^2 / d + d      *
+         *                                                                    *
+         *  That is, the real part is (a c / d + b) / (c^2 / d + d) and the   *
+         *  imaginary part is (b c / d - a) / (c^2 / d + d). Compute this.    */
+        quot.dat[0] = (z.dat[0] * ratio + z.dat[1]) / denom;
+        quot.dat[1] = (z.dat[1] * ratio - z.dat[0]) / denom;
+    }
+
     return quot;
 }
 /*  End of tmpl_CDouble_Divide.                                               */
