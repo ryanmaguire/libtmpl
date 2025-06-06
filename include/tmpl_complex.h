@@ -1596,7 +1596,7 @@ tmpl_CLDouble_Quick_Dist(tmpl_ComplexLongDouble z0, tmpl_ComplexLongDouble z1);
  *  Function:                                                                 *
  *      tmpl_CDouble_Quick_Divide                                             *
  *  Purpose:                                                                  *
- *     Compute the quotient of a complex number z0 by z1.                     *
+ *     Compute the quotient of a complex number z by w.                       *
  *  Arguments:                                                                *
  *      z (tmpl_ComplexDouble):                                               *
  *          A complex number.                                                 *
