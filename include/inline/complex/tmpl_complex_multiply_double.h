@@ -125,5 +125,36 @@ tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 }
 /*  End of tmpl_CDouble_Multiply.                                             */
 
+
+/*  The following implements the Kahan determinant method described in:       *
+ *      More accurate complex multiplication for embedded processors.         *
+ *      Claude-Pierre Jeannerod, Christophe Monat, Laurent Thevenoux          *
+ *      12th IEEE International Symposium on Industrial Embedded Systems      *
+ *      (SIES 2017), Jun 2017, Toulouse, France.                              *
+ *  see algorithm D. Without a hardware FMA, this is about 4x slower. With a  *
+ *  hardware FMA it runs at roughly the same speed, only slightly slower. But *
+ *  it handles extreme cases, such as the examples outlined in the paper.     */
+#if 0
+extern double fma(double a, double b, double c);
+
+TMPL_INLINE_DECL
+tmpl_ComplexDouble
+tmpl_CDouble_Multiply(tmpl_ComplexDouble z, tmpl_ComplexDouble w)
+{
+    tmpl_ComplexDouble prod;
+
+    double p1 = z.dat[0] * w.dat[0];
+    double r1 = fma(-z.dat[1], w.dat[1], p1);
+    double r2 = fma(z.dat[0], w.dat[0], -p1);
+
+    double p2 = z.dat[0] * w.dat[1];
+    double i1 = fma(z.dat[1], w.dat[0], p2);
+    double i2 = fma(z.dat[0], w.dat[1], -p2);
+    prod.dat[0] = r1 + r2;
+    prod.dat[1] = i1 + i2;
+    return prod;
+}
+#endif
+
 #endif
 /*  End of include guard.                                                     */
