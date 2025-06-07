@@ -68,8 +68,20 @@
 /*  Two-vector typedef found here.                                            */
 #include <libtmpl/include/types/tmpl_vec2_ldouble.h>
 
-/*  Tell the compiler about the atan2 function.                               */
+/*  The positive arctan2 is inlined by default. Check if inline is available. */
+#if TMPL_USE_INLINE == 1
+
+/*  Implemented here.                                                         */
+#include <libtmpl/include/inline/math/tmpl_positive_arctan2_ldouble.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Otherwise, the compiler about the positive atan2 function.                */
 extern long double tmpl_LDouble_Positive_Arctan2(long double y, long double x);
+
+#endif
+/*  End for #if TMPL_USE_INLINE == 1.                                         */
 
 /*  Function for computing the positive angle a vector makes with the x axis. */
 TMPL_INLINE_DECL
