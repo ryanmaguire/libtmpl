@@ -108,6 +108,7 @@
 /*  In C99, since _Complex is a built-in data type, given double _Complex z1  *
  *  and double _Complex z2, you can just do z1 * z2. Structs cannot be        *
  *  multiplied so we need a function for computing this.                      */
+#if 1
 
 /*  Double precision complex multiplication.                                  */
 TMPL_INLINE_DECL
@@ -125,6 +126,7 @@ tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
 }
 /*  End of tmpl_CDouble_Multiply.                                             */
 
+#else
 
 /*  The following implements the Kahan determinant method described in:       *
  *      More accurate complex multiplication for embedded processors.         *
@@ -134,26 +136,75 @@ tmpl_CDouble_Multiply(tmpl_ComplexDouble z0, tmpl_ComplexDouble z1)
  *  see algorithm D. Without a hardware FMA, this is about 4x slower. With a  *
  *  hardware FMA it runs at roughly the same speed, only slightly slower. But *
  *  it handles extreme cases, such as the examples outlined in the paper.     */
-#if 0
 extern double fma(double a, double b, double c);
 
+/*  Double precision complex multiplication.                                  */
 TMPL_INLINE_DECL
 tmpl_ComplexDouble
 tmpl_CDouble_Multiply(tmpl_ComplexDouble z, tmpl_ComplexDouble w)
 {
+    /*  Variable for the output, the product z * w.                           */
     tmpl_ComplexDouble prod;
 
-    double p1 = z.dat[0] * w.dat[0];
-    double r1 = fma(-z.dat[1], w.dat[1], p1);
-    double r2 = fma(z.dat[0], w.dat[0], -p1);
+    /*  The real part of the product is given by the determinant formula of a *
+     *  2x2 matrix where we reflect w across the line y = x. That is:         *
+     *                                                                        *
+     *      Re(z * w) = Re((a + ib) * (c + id))                               *
+     *                                                                        *
+     *                       -     -                                          *
+     *                      | a   b |                                         *
+     *                = det |       |                                         *
+     *                      | d   c |                                         *
+     *                       -     -                                          *
+     *                                                                        *
+     *                = ac - bd                                               *
+     *                                                                        *
+     *  We compute this accurately using Kahan's determinant formula, which   *
+     *  uses the FMA instruction (or fma function if FMA is unavailable). Let *
+     *  ROUND denote the rounding operation that occurs with floating point   *
+     *  arithmetic. We compute:                                               *
+     *                                                                        *
+     *      ROUND(ROUND(ac) - bd) + ROUND(ac - ROUND(ac))                     *
+     *                                                                        *
+     *  If floating point arithmetic were exact, meaning ROUND(ac) = ac, then *
+     *  this would simplify to ac - bd, which is the real part of z * w. In   *
+     *  the presence of rounding, this final term ROUND(ac - ROUND(ac)) acts  *
+     *  as the error term in the computation of a*c. Adding it allows us to   *
+     *  compensate for rounding errors.                                       */
+    const double ac = z.dat[0] * w.dat[0];
+    const double ac_minus_bd = fma(-z.dat[1], w.dat[1], ac);
+    const double ac_error = fma(z.dat[0], w.dat[0], -ac);
 
-    double p2 = z.dat[0] * w.dat[1];
-    double i1 = fma(z.dat[1], w.dat[0], p2);
-    double i2 = fma(z.dat[0], w.dat[1], -p2);
-    prod.dat[0] = r1 + r2;
-    prod.dat[1] = i1 + i2;
+    /*  For the imaginary part we use a similar trick using the conjugate of  *
+     *  z and the compute the determinant of the resulting matrix. That is:   *
+     *                                                                        *
+     *      Im(z * w) = Im((a + ib) * (c + id))                               *
+     *                                                                        *
+     *                       -     -                                          *
+     *                      | a  -b |                                         *
+     *                = det |       |                                         *
+     *                      | c   d |                                         *
+     *                       -     -                                          *
+     *                                                                        *
+     *                = ad + bc                                               *
+     *                                                                        *
+     *  We again use Kahan's determinant algorithm. We have:                  *
+     *                                                                        *
+     *      ROUND(ROUND(ad) + bc) + ROUND(ad - ROUND(ad))                     *
+     *                                                                        *
+     *  The expression ROUND(ad - ROUND(ad) compensates for the rounding      *
+     *  error that occurs the computation of a*d.                             */
+    const double ad = z.dat[0] * w.dat[1];
+    const double bc_plus_ad = fma(z.dat[1], w.dat[0], ad);
+    const double ad_error = fma(z.dat[0], w.dat[1], -ad);
+
+    /*  The real part is ac - bd, the imaginary part is bc + ad. Compute.     */
+    prod.dat[0] = ac_minus_bd + ac_error;
+    prod.dat[1] = bc_plus_ad + ad_error;
     return prod;
 }
+/*  End of tmpl_CDouble_Multiply.                                             */
+
 #endif
 
 #endif
