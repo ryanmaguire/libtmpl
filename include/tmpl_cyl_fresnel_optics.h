@@ -58,9 +58,9 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Complex number types. The Fresnel kernel and diffracted data are complex. */
-#include <libtmpl/include/tmpl_complex_double.h>
-#include <libtmpl/include/tmpl_complex_float.h>
-#include <libtmpl/include/tmpl_complex_ldouble.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
 
 /*  2D vector types, used for the vectors rho and rho0 in the plane.          */
 #include <libtmpl/include/types/tmpl_vec2_double.h>
