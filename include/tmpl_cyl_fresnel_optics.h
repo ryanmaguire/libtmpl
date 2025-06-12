@@ -57,6 +57,11 @@
 /*  TMPL_RESTRICT macro found here.                                           */
 #include <libtmpl/include/tmpl_config.h>
 
+/*  Complex number types. The Fresnel kernel and diffracted data are complex. */
+#include <libtmpl/include/tmpl_complex_double.h>
+#include <libtmpl/include/tmpl_complex_float.h>
+#include <libtmpl/include/tmpl_complex_ldouble.h>
+
 /*  2D vector types, used for the vectors rho and rho0 in the plane.          */
 #include <libtmpl/include/types/tmpl_vec2_double.h>
 #include <libtmpl/include/types/tmpl_vec2_float.h>
@@ -77,7 +82,7 @@ extern "C" {
  *  Function:                                                                 *
  *      tmpl_Double_Cyl_Fresnel_Psi                                           *
  *  Purpose:                                                                  *
- *      Computes the cylindrical Fresnel kernel.                              *
+ *      Computes the cylindrical Fresnel phase.                               *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
@@ -92,7 +97,7 @@ extern "C" {
  *          and also given in terms of its Cartesian coordinates.             *
  *  Outputs:                                                                  *
  *      psi (double):                                                         *
- *          The cylindrical Fresnel kernel as a function of the inputs.       *
+ *          The cylindrical Fresnel phase as a function of the inputs.        *
  *  Notes:                                                                    *
  *      1.) Float and long double precisions also provided.                   *
  *      2.) All lengths are assumed to be in the same units.                  *
@@ -127,7 +132,7 @@ tmpl_LDouble_Cyl_Fresnel_Psi(
  *  Function:                                                                 *
  *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi                                     *
  *  Purpose:                                                                  *
- *      Computes the derivative of the cylindrical Fresnel kernel with        *
+ *      Computes the derivative of the cylindrical Fresnel phase with         *
  *      respect to the azimuth angle, phi.                                    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
@@ -178,7 +183,7 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(
  *  Function:                                                                 *
  *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2                                   *
  *  Purpose:                                                                  *
- *      Computes the second derivative of the cylindrical Fresnel kernel with *
+ *      Computes the second derivative of the cylindrical Fresnel phase with  *
  *      respect to the azimuth angle, phi.                                    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
@@ -229,7 +234,7 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(
  *  Function:                                                                 *
  *      tmpl_Double_Ideal_Cyl_Fresnel_Psi                                     *
  *  Purpose:                                                                  *
- *      Computes the cylindrical Fresnel kernel.                              *
+ *      Computes the cylindrical Fresnel phase.                               *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -248,7 +253,7 @@ tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(
  *          Distance from the observer to the point (rho0, phi0) in the plane.*
  *  Outputs:                                                                  *
  *      psi (double):                                                         *
- *          The cylindrical Fresnel kernel as a function of the inputs.       *
+ *          The cylindrical Fresnel phase as a function of the inputs.        *
  *  Notes:                                                                    *
  *      1.) Float and long double precisions also provided.                   *
  *      2.) All angles are assumed to be in radians.                          *
@@ -277,7 +282,7 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_Psi(long double k,
  *      tmpl_Double_Ideal_Cyl_Fresnel_dPsi_dPhi                               *
  *  Purpose:                                                                  *
  *      Computes the first partial derivative of the cylindrical Fresnel      *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      phase "Psi" with respect to the azimuthal angle "Phi" (see below).    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
@@ -327,7 +332,7 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_dPsi_dPhi(long double k,
  *      tmpl_Double_Ideal_Cyl_Fresnel_d2Psi_dPhi2                             *
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the cylindrical Fresnel     *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      phase "Psi" with respect to the azimuthal angle "Phi" (see below).    *
  *      This assumes the ideal geometry described in the Marouf-Tyler-Rosen   *
  *      paper. In particular, the vector from the observer to the point in    *
  *      the plane (rho0, phi0) must be orthogonal to the y axis.              *
@@ -379,7 +384,7 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_d2Psi_dPhi2(long double k,
  *  Function:                                                                 *
  *      tmpl_Double_Ideal_Cyl_Fresnel_Psi_Deg                                 *
  *  Purpose:                                                                  *
- *      Computes the cylindrical Fresnel kernel.                              *
+ *      Computes the cylindrical Fresnel phase.                               *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -398,7 +403,7 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_d2Psi_dPhi2(long double k,
  *          Distance from the observer to the point (rho0, phi0) in the plane.*
  *  Outputs:                                                                  *
  *      psi (double):                                                         *
- *          The cylindrical Fresnel kernel as a function of the inputs.       *
+ *          The cylindrical Fresnel phase as a function of the inputs.        *
  *  Notes:                                                                    *
  *      1.) Float and long double precisions also provided.                   *
  *      2.) All angles are assumed to be in degrees.                          *
@@ -427,7 +432,7 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_Psi_Deg(long double k,
  *      tmpl_Double_Ideal_Cyl_Fresnel_dPsi_dPhi_Deg                           *
  *  Purpose:                                                                  *
  *      Computes the first partial derivative of the cylindrical Fresnel      *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      phase "Psi" with respect to the azimuthal angle "Phi" (see below).    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
@@ -477,7 +482,7 @@ tmpl_LDouble_Ideal_Cyl_Fresnel_dPsi_dPhi_Deg(long double k,
  *      tmpl_Double_Ideal_Cyl_Fresnel_d2Psi_dPhi2_Deg                         *
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the cylindrical Fresnel     *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      phase "Psi" with respect to the azimuthal angle "Phi" (see below).    *
  *      This assumes the ideal geometry described in the Marouf-Tyler-Rosen   *
  *      paper. In particular, the vector from the observer to the point in    *
  *      the plane (rho0, phi0) must be orthogonal to the y axis.              *
@@ -685,7 +690,7 @@ tmpl_LDouble_Cyl_Fresnel_Scale_Deg(long double lambda, long double D,
  *      tmpl_Double_Elliptical_Fresnel_dPsi_dPhi                              *
  *  Purpose:                                                                  *
  *      Computes the first partial derivative of the elliptical Fresnel       *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      phase "Psi" with respect to the azimuthal angle "Phi" (see below).    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -754,7 +759,7 @@ tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi(long double k,
  *      tmpl_Double_Elliptical_Fresnel_dPsi_dPhi_Deg                          *
  *  Purpose:                                                                  *
  *      Computes the first partial derivative of the elliptical Fresnel       *
- *      kernel "Psi" with respect to the azimuthal angle "Phi" (see below).   *
+ *      phase "Psi" with respect to the azimuthal angle "Phi" (see below).    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of r.              *
@@ -822,7 +827,7 @@ tmpl_LDouble_Elliptical_Fresnel_dPsi_dPhi_Deg(long double k,
  *  Function:                                                                 *
  *      tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton                   *
  *  Purpose:                                                                  *
- *      Computes the value phi_s that makes the cylindrical Fresnel kernel    *
+ *      Computes the value phi_s that makes the cylindrical Fresnel phase     *
  *      stationary. That is, the value phi such that dpsi / dphi = 0, as a    *
  *      function of the other inputs. This is done using Newton's method.     *
  *      This function is used when the stationary phase approximation is      *
@@ -901,7 +906,7 @@ tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Psi_Newton(long double k,
  *  Function:                                                                 *
  *      tmpl_Double_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg               *
  *  Purpose:                                                                  *
- *      Computes the value phi_s that makes the cylindrical Fresnel kernel    *
+ *      Computes the value phi_s that makes the cylindrical Fresnel phase     *
  *      stationary. That is, the value phi such that dpsi / dphi = 0, as a    *
  *      function of the other inputs. This is done using Newton's method.     *
  *      This function is used when the stationary phase approximation is      *
@@ -986,7 +991,7 @@ tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(
  *  Function:                                                                 *
  *      tmpl_Double_Stationary_Cyl_Fresnel_Psi                                *
  *  Purpose:                                                                  *
- *      Computes the stationary value of the cylindrical Fresnel kernel. This *
+ *      Computes the stationary value of the cylindrical Fresnel phase. This  *
  *      is psi evaluated at phi = phi_s, where phi_s is the stationary        *
  *      azimuth angle, the angle where dpsi / dphi = 0.                       *
  *  Arguments:                                                                *
@@ -1012,7 +1017,7 @@ tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(
  *          is sufficient.                                                    *
  *  Outputs:                                                                  *
  *      psi_s (double):                                                       *
- *          The Fresnel kernel evaluated at phi_s, the stationary angle.      *
+ *          The Fresnel phase evaluated at phi_s, the stationary angle.       *
  *  Notes:                                                                    *
  *      1.) Float and long double precisions also provided.                   *
  *      2.) All lengths are assumed to be in the same units.                  *
@@ -1043,6 +1048,73 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi(
 
 extern long double
 tmpl_LDouble_Stationary_Cyl_Fresnel_Psi(
+    long double k,
+    const tmpl_TwoVectorLongDouble * const rho,
+    const tmpl_TwoVectorLongDouble * const rho0,
+    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R,
+    long double eps,
+    unsigned int max_iters
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_Double_Stationary_Cyl_Fresnel_Kernel                             *
+ *  Purpose:                                                                  *
+ *      Computes the stationary cylindrical Fresnel kernel.                   *
+ *  Arguments:                                                                *
+ *      k (double):                                                           *
+ *          The wavenumber, in the reciprocal of the units of rho.            *
+ *      rho (const tmpl_TwoVectorDouble * const):                             *
+ *          The dummy variable of integration, a point in the ring plane.     *
+ *          This vector is expressed in terms of its Cartesian coordinates.   *
+ *      rho0 (const tmpl_TwoVectorDouble * const):                            *
+ *          The point of interest in the plane, in the same units as rho.     *
+ *          This vector is given in terms of its Cartesian coordinates.       *
+ *      R (const tmpl_ThreeVectorDouble * TMPL_RESTRICT const):               *
+ *          The position vector for the observer. Same units as rho and rho0, *
+ *          and also given in terms of its Cartesian coordinates.             *
+ *      eps (double):                                                         *
+ *          The "epsilon" factor, the allowed error in the computation of the *
+ *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
+ *          stop and the resulting phi will be returned.                      *
+ *      max_iters (unsigned int):                                             *
+ *          The maximum number of iterations allowed in Newton's method       *
+ *          before the algorithm is halted and the current value of phi is    *
+ *          returned. For most practical applications, toler = 4 or toler = 5 *
+ *          is sufficient.                                                    *
+ *  Outputs:                                                                  *
+ *      ker (tmpl_ComplexDouble):                                             *
+ *          The stationary cylindrical Fresnel kernel.                        *
+ *  Notes:                                                                    *
+ *      1.) Float and long double precisions also provided.                   *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ *      3.) This function assumes B, D, rho, rho0, and phi0 are independent   *
+ *          of phi.                                                           *
+ *      4.) Since R is the only three-vector, we may safely add the restrict  *
+ *          qualifier to it.                                                  *
+ ******************************************************************************/
+extern tmpl_ComplexFloat
+tmpl_Float_Stationary_Cyl_Fresnel_Kernel(
+    float k,
+    const tmpl_TwoVectorFloat * const rho,
+    const tmpl_TwoVectorFloat * const rho0,
+    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R,
+    float eps,
+    unsigned int max_iters
+);
+
+extern tmpl_ComplexDouble
+tmpl_Double_Stationary_Cyl_Fresnel_Kernel(
+    double k,
+    const tmpl_TwoVectorDouble * const rho,
+    const tmpl_TwoVectorDouble * const rho0,
+    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R,
+    double eps,
+    unsigned int max_iters
+);
+
+extern tmpl_ComplexLongDouble
+tmpl_LDouble_Stationary_Cyl_Fresnel_Kernel(
     long double k,
     const tmpl_TwoVectorLongDouble * const rho,
     const tmpl_TwoVectorLongDouble * const rho0,
