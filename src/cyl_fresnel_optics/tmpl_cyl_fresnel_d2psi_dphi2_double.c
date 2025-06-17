@@ -20,14 +20,14 @@
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the second partial derivative of the cylindrical Fresnel     *
- *      kernel with respect to the azimuthal angle, phi.                      *
+ *      phase with respect to the azimuthal angle, phi.                       *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2                                   *
  *  Purpose:                                                                  *
- *      Computes the second partial derivative of psi, the Fresnel kernel,    *
+ *      Computes the second partial derivative of psi, the Fresnel phase,     *
  *      with respect to phi, the azimuth angle.                               *
  *  Arguments:                                                                *
  *      k (double):                                                           *
@@ -43,14 +43,14 @@
  *          and also given in terms of its Cartesian coordinates.             *
  *  Outputs:                                                                  *
  *      dpsi (double):                                                        *
- *          The second partial derivative of the Fresnel kernel with          *
+ *          The second partial derivative of the Fresnel phase, psi, with     *
  *          respect to phi, the azimuth angle.                                *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Hypot3:                                               *
  *              Computes the magnitude of the vector (x, y, z).               *
  *  Method:                                                                   *
- *      Use the formula for the Fresnel kernel. The Fresnel transform is:     *
+ *      Use the formula for the Fresnel phase. The Fresnel transform is:      *
  *                                                                            *
  *                              -    -                                        *
  *          ^         sin(B)   | |  | |          exp(i psi)                   *
@@ -63,7 +63,7 @@
  *      vector for the point of interest, rho is the dummy variable (vector)  *
  *      of integration, L is the wavelength, and B is the opening angle (the  *
  *      angle made by the vector going from the observer, R, to the point     *
- *      rho0, and the xy plane). The Fresnel kernel is the psi quantity, it   *
+ *      rho0, and the xy plane). The Fresnel phase is the psi quantity, it    *
  *      is purely geometric and given by:                                     *
  *                                                                            *
  *                   -                                          -             *
@@ -73,7 +73,7 @@
  *                   -                                          -             *
  *                                                                            *
  *      Where k is the wavenumber, in reciprocal units of the wavelength, L.  *
- *      By labeling u = R - rho0, and un = u / || u ||, the unit normal in    *
+ *      By labeling u = R - rho0, and un = u / || u ||, the unit vector in    *
  *      the direction of u, this becomes:                                     *
  *                                                                            *
  *          psi = k (|| R - rho || - un . (R - rho))                          *
@@ -85,7 +85,7 @@
  *          psi' = k(|| R - rho ||' - un . (R - rho)')                        *
  *               = k(|| R - rho ||' + un . rho')                              *
  *                    -                           -                           *
- *                   | (R - rho) . rho'            |                          *
+ *                   | (rho - R) . rho'            |                          *
  *               = k | --------------- + un . rho' |                          *
  *                   |  || R - rho ||              |                          *
  *                    -                           -                           *
@@ -93,12 +93,12 @@
  *      The second derivative is then:                                        *
  *                                                                            *
  *                     -                                                      *
- *                    | (R - rho) . rho'' - rho' . rho'                       *
+ *                    | (rho - R) . rho'' + rho' . rho'                       *
  *          psi'' = k | ------------------------------ -                      *
  *                    |          || R - rho ||                                *
  *                     -                                                      *
  *                                                       -                    *
- *                      ((R - rho) . rho')^2              |                   *
+ *                      ((rho - R) . rho')^2              |                   *
  *                      -------------------- + un . rho'' |                   *
  *                        || R - rho ||^3/2               |                   *
  *                                                       -                    *
@@ -115,16 +115,16 @@
  *                                                                            *
  *      This first expression becomes:                                        *
  *                                                                            *
- *          (R - rho) . rho'' - rho' . rho' = -(x r cos(phi) + y r sin(phi))  *
+ *          (rho - R) . rho'' + rho' . rho' = x r cos(phi) + y r sin(phi)     *
  *                                                                            *
  *      Since r cos(phi) is the x-coordinate of rho, rho_x, and r sin(phi) is *
  *      the y-coordinate of rho, rho_y, we may rewrite this:                  *
  *                                                                            *
- *          (R - rho) . rho'' - rho' . rho' = -(x rho_x + y rho_y)            *
+ *          (rho - R) . rho'' + rho' . rho' = x rho_x + y rho_y               *
  *                                                                            *
  *      The middle expression becomes equally simple:                         *
  *                                                                            *
- *          ((R - rho) . rho')^2 = (-rho_x y + rho_y x)^2                     *
+ *          ((rho - R) . rho')^2 = (rho_x y - rho_y x)^2                      *
  *                                                                            *
  *      The final expression, un . rho'', has a nice formula as well. If we   *
  *      define u = R - rho0 = (ux, uy, uz), we get:                           *
@@ -189,7 +189,7 @@ tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(
 /*  Tell the compiler about the L2 norm function, Hypot3.                     */
 extern double tmpl_Double_Hypot3(double x, double y, double z);
 
-/*  Second partial derivative of the Fresnel kernel with respect to phi.      */
+/*  Second partial derivative of the Fresnel phase with respect to phi.       */
 double
 tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(
     double k,
@@ -223,31 +223,30 @@ tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(
     /*  The second derivative is given by:                                    *
      *                                                                        *
      *                 -                                                      *
-     *                | (R - rho) . rho'' - rho' . rho'                       *
+     *                | (rho - R) . rho'' + rho' . rho'                       *
      *      psi'' = k | ------------------------------ -                      *
      *                |          || R - rho ||                                *
      *                 -                                                      *
      *                                                   -                    *
-     *                  ((R - rho) . rho')^2              |                   *
+     *                  ((rho - R) . rho')^2              |                   *
      *                  -------------------- + un . rho'' |                   *
      *                    || R - rho ||^3/2               |                   *
      *                                                   -                    *
      *                                                                        *
-     *  The first expression simplifies to -(x rho_x + y rho_y) and the       *
+     *  The first expression simplifies to x rho_x + y rho_y and the          *
      *  central piece is (rho_x y - rho_y x)^2. Compute both of these.        */
     const double diff = rho->dat[0] * R->dat[1] - rho->dat[1] * R->dat[0];
     const double sum = R->dat[0] * rho->dat[0] + R->dat[1] * rho->dat[1];
 
     /*  Call the combination of the left and center parts "left". Compute.    */
-    const double left = (diff * diff * rcpr_rho_dist_sq - sum) * rcpr_rho_dist;
+    const double left = (sum - diff * diff * rcpr_rho_dist_sq) * rcpr_rho_dist;
 
     /*  The expression u . rho'' is -(ux * rho_x + uy * rho_y). The right     *
      *  expression is this factor divided by the distance from R to rho0.     */
-    const double right = (ux * rho->dat[0] + uy * rho->dat[1]) / rho0_dist;
+    const double right = -(ux * rho->dat[0] + uy * rho->dat[1]) / rho0_dist;
 
-    /*  All of the expressions above have a minus sign that we've factored    *
-     *  out. The output is hence negative the sum of "left" and "right", all  *
-     *  scaled by the wavenumber, k.                                          */
-    return -k * (left + right);
+    /*  The Fresnel phase is scaled by the wavenumber, k, and hence so is the *
+     *  second derivative with respect to the azimuth angle, phi.             */
+    return k * (left + right);
 }
 /*  End of tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2.                               */
