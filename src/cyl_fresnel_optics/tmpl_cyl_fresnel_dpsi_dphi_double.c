@@ -19,7 +19,7 @@
  *                     tmpl_cyl_fresnel_dpsi_dphi_double                      *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the partial derivative of the cylindrical Fresnel kernel     *
+ *      Computes the partial derivative of the cylindrical Fresnel phase      *
  *      with respect to the azimuthal angle, phi.                             *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
@@ -27,7 +27,7 @@
  *  Function Name:                                                            *
  *      tmpl_Double_Cyl_Fresnel_dPsi_dPhi                                     *
  *  Purpose:                                                                  *
- *      Computes the partial derivative of psi, the Fresnel kernel, with      *
+ *      Computes the partial derivative of psi, the Fresnel phase, with       *
  *      respect to phi, the azimuth angle.                                    *
  *  Arguments:                                                                *
  *      k (double):                                                           *
@@ -43,13 +43,13 @@
  *          and also given in terms of its Cartesian coordinates.             *
  *  Outputs:                                                                  *
  *      dpsi (double):                                                        *
- *          The partial derivative of the Fresnel kernel with respect to phi. *
+ *          The partial derivative of the Fresnel phase with respect to phi.  *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Hypot3:                                               *
  *              Computes the magnitude of the vector (x, y, z).               *
  *  Method:                                                                   *
- *      Use the formula for the Fresnel kernel. The Fresnel transform is:     *
+ *      Use the formula for the Fresnel phase. The Fresnel transform is:      *
  *                                                                            *
  *                              -    -                                        *
  *          ^         sin(B)   | |  | |          exp(i psi)                   *
@@ -62,7 +62,7 @@
  *      vector for the point of interest, rho is the dummy variable (vector)  *
  *      of integration, L is the wavelength, and B is the opening angle (the  *
  *      angle made by the vector going from the observer, R, to the point     *
- *      rho0, and the xy plane). The Fresnel kernel is the psi quantity, it   *
+ *      rho0, and the xy plane). The Fresnel phase is the psi quantity, it    *
  *      is purely geometric and given by:                                     *
  *                                                                            *
  *                   -                                          -             *
@@ -72,7 +72,7 @@
  *                   -                                          -             *
  *                                                                            *
  *      Where k is the wavenumber, in reciprocal units of the wavelength, L.  *
- *      By labeling u = R - rho0, and un = u / || u ||, the unit normal in    *
+ *      By labeling u = R - rho0, and un = u / || u ||, the unit vector in    *
  *      the direction of u, this becomes:                                     *
  *                                                                            *
  *          psi = k (|| R - rho || - un . (R - rho))                          *
@@ -84,7 +84,7 @@
  *          psi' = k(|| R - rho ||' - un . (R - rho)')                        *
  *               = k(|| R - rho ||' + un . rho')                              *
  *                    -                           -                           *
- *                   | (R - rho) . rho'            |                          *
+ *                   | (rho - R) . rho'            |                          *
  *               = k | --------------- + un . rho' |                          *
  *                   |  || R - rho ||              |                          *
  *                    -                           -                           *
@@ -99,11 +99,11 @@
  *                                                                            *
  *      We may rewrite this as follows:                                       *
  *                                                                            *
- *                    -                                                   -   *
- *                   | -dx * rho_y + dy * rho_x   -ux * rho_y + uy * rho_x |  *
- *          psi' = k | ------------------------ + ------------------------ |  *
- *                   |      || R - rho ||              || R - rho0 ||      |  *
- *                    -                                                   -   *
+ *                    -                                                  -    *
+ *                   | dx * rho_y - dy * rho_x   -ux * rho_y + uy * rho_x |   *
+ *          psi' = k | ----------------------- + ------------------------ |   *
+ *                   |      || R - rho ||             || R - rho0 ||      |   *
+ *                    -                                                  -    *
  *                                                                            *
  *      This final expression is computed.                                    *
  *  Notes:                                                                    *
@@ -161,7 +161,7 @@ tmpl_Double_Cyl_Fresnel_dPsi_dPhi(
 /*  Tell the compiler about the L2 norm function, Hypot3.                     */
 extern double tmpl_Double_Hypot3(double x, double y, double z);
 
-/*  Computes the partial derivative of the Fresnel kernel with respect to phi.*/
+/*  Computes the partial derivative of the Fresnel phase with respect to phi. */
 double
 tmpl_Double_Cyl_Fresnel_dPsi_dPhi(
     double k,
