@@ -45,10 +45,11 @@
  *      dist (float):                                                         *
  *          The distance from the point to the observer.                      *
  *  Called Functions:                                                         *
- *      tmpl_Float_SinCosd (tmpl_math.h):                                     *
- *          Computes sine and cosine, in degrees.                             *
- *      tmpl_Float_Sqrt (tmpl_math.h):                                        *
- *          Computes the square root of a positive number.                    *
+ *      src/math/                                                             *
+ *          tmpl_Float_SinCosd:                                               *
+ *              Computes sine and cosine, in degrees.                         *
+ *          tmpl_Float_Hypot3:                                                *
+ *              Computes the length of the vector (x, y, z).                  *
  *  Method:                                                                   *
  *      Use basic Euclidean geometry and invoke Pythagoras. We have:          *
  *                                                                            *
@@ -61,16 +62,14 @@
  *                                                                            *
  *          dist = sqrt(dx^2 + dy^2 + dz^2)                                   *
  *                                                                            *
+ *      This distance is computed using the Hypot3 function.                  *
  *  Notes:                                                                    *
  *      Angles must be in degrees. Lengths can be in whatever units, but they *
  *      must be the same units.                                               *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file with cosine and sqrt.                                 *
- *  2.) tmpl_cyl_fresnel_optics.h:                                            *
- *          Header file where the prototype is given.                         *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 22, 2023                                                *
@@ -79,13 +78,18 @@
  ******************************************************************************
  *  2023/03/23: Ryan Maguire                                                  *
  *      Created file.                                                         *
+ *  2025/06/17: Ryan Maguire                                                  *
+ *      Removed explicit includes, replaced with forward declarations.        *
  ******************************************************************************/
 
-/*  Trig functions and square root found here.                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration / function prototype.                                 */
+extern float
+tmpl_Float_Cyl_Fresnel_Observer_Distance_Deg(float r, float phi,
+                                             float rx, float ry, float rz);
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
+/*  Tell the compiler about the SinCosd and Hypot3 functions.                 */
+extern void tmpl_Float_SinCosd(float t, float *sin_t, float *cos_t);
+extern float tmpl_Float_Hypot3(float x, float y, float z);
 
 /*  Function for computing the distance from an observer to a plane point.    */
 float
@@ -95,7 +99,7 @@ tmpl_Float_Cyl_Fresnel_Observer_Distance_Deg(float r, float phi,
     /*  Declare necessary variables. C89 requires this at the top.            */
     float sin_phi, cos_phi, x, y, dx, dy;
 
-    /*  Simultaneously compute sine and cosine of phi.                        */
+    /*  Simultaneously compute sine and cosine of phi, in degrees.            */
     tmpl_Float_SinCosd(phi, &sin_phi, &cos_phi);
 
     /*  Compute the Cartesian coordinates of the ring point.                  */
@@ -106,12 +110,19 @@ tmpl_Float_Cyl_Fresnel_Observer_Distance_Deg(float r, float phi,
     dx = x - rx;
     dy = y - ry;
 
-    /*  The largest a float can be before the square overflows is roughly     *
-     *  10^19. 10^19 kilometers is about 10 times the diameter of the Milky   *
-     *  way galaxy. While such large scales are possible in astronomical      *
-     *  study, it is highly unlikely that an observer to the ring plane would *
-     *  be that far away. Because of this we can just use the standard        *
-     *  Pythagorean formula without worrying about overflow.                  */
-    return tmpl_Float_Sqrt(dx*dx + dy*dy + rz*rz);
+    /*  Now that everything is in Cartesian coordinates, we may compute the   *
+     *  distance between (x, y, z) and (r cos(phi), r sin(phi), 0) using the  *
+     *  Hypot3 function, which uses the Pythagorean formula.                  *
+     *                                                                        *
+     *  Note:                                                                 *
+     *      The largest a float can be before the square overflows is roughly *
+     *      10^19. 10^19 kilometers is about 10 times the diameter of the     *
+     *      Milky way galaxy. While such large scales are possible in         *
+     *      astronomical study, it is highly unlikely that an observer to the *
+     *      ring plane would be that far away. Because of this one might      *
+     *      prefer to use the sqrt function directly. We use the safer Hypot3 *
+     *      function, but inlining sqrt(dx^2 + dy^2 + rz^2) can give a small  *
+     *      speed boost (a few percent).                                      */
+    return tmpl_Float_Hypot3(dx, dy, rz);
 }
 /*  End of tmpl_Float_Cyl_Fresnel_Observer_Distance.                          */
