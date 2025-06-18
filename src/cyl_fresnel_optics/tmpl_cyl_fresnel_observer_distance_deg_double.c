@@ -132,4 +132,4 @@ tmpl_Double_Cyl_Fresnel_Observer_Distance_Deg(double r, double phi,
      *      by inlining the square root call directly.                        */
     return tmpl_Double_Hypot3(dx, dy, rz);
 }
-/*  End of tmpl_Double_Cyl_Fresnel_Observer_Distance.                         */
+/*  End of tmpl_Double_Cyl_Fresnel_Observer_Distance_Deg.                     */

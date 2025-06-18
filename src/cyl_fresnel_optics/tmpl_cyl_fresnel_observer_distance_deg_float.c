@@ -131,4 +131,4 @@ tmpl_Float_Cyl_Fresnel_Observer_Distance_Deg(float r, float phi,
      *      speed boost (a few percent).                                      */
     return tmpl_Float_Hypot3(dx, dy, rz);
 }
-/*  End of tmpl_Float_Cyl_Fresnel_Observer_Distance.                          */
+/*  End of tmpl_Float_Cyl_Fresnel_Observer_Distance_Deg.                      */
