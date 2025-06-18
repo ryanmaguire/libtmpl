@@ -64,8 +64,14 @@
  *                                                                            *
  *      This distance is computed using the Hypot3 function.                  *
  *  Notes:                                                                    *
- *      Angles must be in degrees. Lengths can be in whatever units, but they *
- *      must be the same units.                                               *
+ *      1.) Angles must be in degrees.                                        *
+ *      2.) Lengths can be in whatever units, but they must be the same units.*
+ *      3.) There are no checks for NaN or infinity.                          *
+ *      4.) This function computes the distance using the Hypot3 function,    *
+ *          which safely handles both small and large inputs to avoid         *
+ *          underflow and overflow, respectively. This is likely not needed   *
+ *          for physically realistic inputs, and a small speed boost can be   *
+ *          gained by replacing Hypot3 with Sqrt.                             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
