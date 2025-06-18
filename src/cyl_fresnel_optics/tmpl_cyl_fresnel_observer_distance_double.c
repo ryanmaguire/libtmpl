@@ -45,10 +45,11 @@
  *      dist (double):                                                        *
  *          The distance from the point to the observer.                      *
  *  Called Functions:                                                         *
- *      tmpl_Double_SinCos (tmpl_math.h):                                     *
- *          Computes sine and cosine, in radians.                             *
- *      tmpl_Double_Sqrt (tmpl_math.h):                                       *
- *          Computes the square root of a positive number.                    *
+ *      src/math/                                                             *
+ *          tmpl_Double_SinCos:                                               *
+ *              Computes sine and cosine, in radians.                         *
+ *          tmpl_Double_Hypot3:                                               *
+ *              Computes the length of the vector (x, y, z).                  *
  *  Method:                                                                   *
  *      Use basic Euclidean geometry and invoke Pythagoras. We have:          *
  *                                                                            *
@@ -61,16 +62,20 @@
  *                                                                            *
  *          dist = sqrt(dx^2 + dy^2 + dz^2)                                   *
  *                                                                            *
+ *      This distance is computed using the Hypot3 function.                  *
  *  Notes:                                                                    *
- *      Angles must be in radians. Lengths can be in whatever units, but they *
- *      must be the same units.                                               *
+ *      1.) Angles must be in radians.                                        *
+ *      2.) Lengths can be in whatever units, but they must be the same units.*
+ *      3.) There are no checks for NaN or infinity.                          *
+ *      4.) This function computes the distance using the Hypot3 function,    *
+ *          which safely handles both small and large inputs to avoid         *
+ *          underflow and overflow, respectively. This is likely not needed   *
+ *          for physically realistic inputs, and a small speed boost can be   *
+ *          gained by replacing Hypot3 with Sqrt.                             *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_math.h:                                                          *
- *          Header file with cosine and sqrt.                                 *
- *  2.) tmpl_cyl_fresnel_optics.h:                                            *
- *          Header file where the prototype is given.                         *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 22, 2023                                                *
@@ -79,13 +84,18 @@
  ******************************************************************************
  *  2023/03/23: Ryan Maguire                                                  *
  *      Created file.                                                         *
+ *  2025/06/18: Ryan Maguire                                                  *
+ *      Removed explicit includes, replaced with forward declarations.        *
  ******************************************************************************/
 
-/*  Trig functions and square root found here.                                */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration / function prototype.                                 */
+extern double
+tmpl_Double_Cyl_Fresnel_Observer_Distance(double r, double phi,
+                                          double rx, double ry, double rz);
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
+/*  Tell the compiler about the SinCos and Hypot3 functions.                  */
+extern void tmpl_Double_SinCos(double t, double *sin_t, double *cos_t);
+extern double tmpl_Double_Hypot3(double x, double y, double z);
 
 /*  Function for computing the distance from an observer to a plane point.    */
 double
@@ -95,7 +105,7 @@ tmpl_Double_Cyl_Fresnel_Observer_Distance(double r, double phi,
     /*  Declare necessary variables. C89 requires this at the top.            */
     double sin_phi, cos_phi, x, y, dx, dy;
 
-    /*  Simultaneously compute sine and cosine of phi.                        */
+    /*  Simultaneously compute sine and cosine of phi, in radians.            */
     tmpl_Double_SinCos(phi, &sin_phi, &cos_phi);
 
     /*  Compute the Cartesian coordinates of the ring point.                  */
@@ -106,11 +116,20 @@ tmpl_Double_Cyl_Fresnel_Observer_Distance(double r, double phi,
     dx = x - rx;
     dy = y - ry;
 
-    /*  No physical system could possibly have dx, dy, or rz so large that    *
-     *  the sum of the squares may overflow. The system would need to have    *
-     *  distances that are roughly 10^125 times the radius of the observable  *
-     *  universe for the sum of the squares to exceed 2^(2^10 - 1), the max   *
-     *  exponent of double. Because of this, we can safely pass to sqrt.      */
-    return tmpl_Double_Sqrt(dx*dx + dy*dy + rz*rz);
+    /*  Now that everything is in Cartesian coordinates, we may compute the   *
+     *  distance between (x, y, z) and (r cos(phi), r sin(phi), 0) using the  *
+     *  Hypot3 function, which uses the Pythagorean formula.                  *
+     *                                                                        *
+     *  Note:                                                                 *
+     *      No physical system could possibly have dx, dy, or rz so large     *
+     *      that the sum of the squares may overflow. The system would need   *
+     *      to have distances that are roughly 10^125 times the radius of the *
+     *      observable universe for the sum of the squares to exceed          *
+     *      2^(2^10 - 1), the maximum value for double precision. Because of  *
+     *      this, one may safely compute the distance directly by using       *
+     *      sqrt(dx^2 + dy^2 + rz^2). This routine uses the safer Hypot3      *
+     *      function, but a small speed boost (about 2% or so) may be gained  *
+     *      by inlining the square root call directly.                        */
+    return tmpl_Double_Hypot3(dx, dy, rz);
 }
 /*  End of tmpl_Double_Cyl_Fresnel_Observer_Distance.                         */
