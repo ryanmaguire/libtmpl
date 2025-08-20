@@ -86,7 +86,7 @@
 /*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
-/*  Checks if a Cayley table corresponds to a valid binary operation.         */
+/*  Solves the equation x * a = b using a Cayley table.                       */
 unsigned int
 tmpl_UIntCayleyTable_Left_Solve(const tmpl_UIntCayleyTable * const table,
                                 const unsigned int a, const unsigned int b)
