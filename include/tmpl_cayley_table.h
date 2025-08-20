@@ -128,6 +128,55 @@ tmpl_UIntCayleyTable_Is_Associative_Kernel(
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Is_Commutative                                   *
+ *  Purpose:                                                                  *
+ *      Checks if a Cayley table corresponds to a commutative operation.      *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *  Output:                                                                   *
+ *      is_commutative (tmpl_Bool):                                           *
+ *          Boolean indicating if the table is commutative.                   *
+ *  Notes:                                                                    *
+ *      1.) This function assumes the table input is indeed a valid Cayley    *
+ *          table. This means table->data[n] < table->size for all entries    *
+ *          of the table (for all 0 <= n < table-size * table-size).          *
+ *      2.) This routine checks for NULL pointers for both table and          *
+ *          table->data, and it checks if table->size = 0.                    *
+ *      3.) If table is the empty table (table->data = NULL, table->size = 0),*
+ *          then this routine returns true. The empty binary operations is    *
+ *          vacuously commutative since there are no x, y in the set with     *
+ *          x * y != y * x.                                                   *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_UIntCayleyTable_Is_Commutative(const tmpl_UIntCayleyTable * const table);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Is_Commutative_Kernel                            *
+ *  Purpose:                                                                  *
+ *      Main part of the commutativity checker, this loops over ordered       *
+ *      pairs (x, y) and checks if x * y = y * x.                             *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *  Output:                                                                   *
+ *      is_commutative (tmpl_Bool):                                           *
+ *          Boolean indicating if the table is commutative.                   *
+ *  Notes:                                                                    *
+ *      1.) This function does not check for NULL pointers (either for table  *
+ *          or for table->data), and it does not check if table->size is zero.*
+ *      2.) This function assumes the table input is indeed a valid Cayley    *
+ *          table. This means table->data[n] < table->size for all entries    *
+ *          of the table (for all 0 <= n < table-size * table-size).          *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_UIntCayleyTable_Is_Commutative_Kernel(
+    const tmpl_UIntCayleyTable * const table
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_UIntCayleyTable_Is_Valid                                         *
  *  Purpose:                                                                  *
  *      Checks if a Cayley table corresponds to a valid binary operation.     *
