@@ -115,7 +115,7 @@ tmpl_UIntCayleyTable_Left_Solve(const tmpl_UIntCayleyTable * const table,
         return invalid;
 
     /*  The main computation is done with the kernel function. This searches  *
-     *  for an index "x" with table[a, x] = b.                                */
+     *  for an index "x" with table[x, a] = b.                                */
     return tmpl_UIntCayleyTable_Left_Solve_Kernel(table, a, b);
 }
 /*  End of tmpl_UIntCayleyTable_Left_Solve.                                   */
