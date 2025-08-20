@@ -63,7 +63,7 @@
 /*  NULL is found here.                                                       */
 #include <stddef.h>
 
-/*  Checks if a Cayley table corresponds to a valid binary operation.         */
+/*  Initializes a Cayley table to the empty binary operation.                 */
 void tmpl_UIntCayleyTable_Init(tmpl_UIntCayleyTable * const table)
 {
     /*  Safety check, make sure the pointer isn't NULL.                       */
