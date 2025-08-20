@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UIntCayleyTable_Left_Solve                                       *
+ *      tmpl_UIntCayleyTable_Left_Inverse                                     *
  *  Purpose:                                                                  *
  *      Given a Cayley table, attempts to solve x * element = 0.              *
  *  Arguments:                                                                *
@@ -96,7 +96,7 @@ tmpl_UIntCayleyTable_Left_Inverse(const tmpl_UIntCayleyTable * const table,
      *  table for a set with UINT_MAX number of elements. Since unsigned int  *
      *  is usually 32-bits, this would require a Cayley table with roughly    *
      *  (2^32)^2 = 2^64 entries. It is very unlikely someone will ever need   *
-     *  to work with such things.                                          */
+     *  to work with such things.                                             */
     const unsigned int invalid = TMPL_CAST(-1, unsigned int);
 
     /*  Safety check, make sure the pointer isn't NULL.                       */

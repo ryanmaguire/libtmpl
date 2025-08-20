@@ -83,7 +83,7 @@ tmpl_UIntCayleyTable_Left_Solve_Kernel(
      *  table for a set with UINT_MAX number of elements. Since unsigned int  *
      *  is usually 32-bits, this would require a Cayley table with roughly    *
      *  (2^32)^2 = 2^64 entries. It is very unlikely someone will ever need   *
-     *  to work with such things.                                          */
+     *  to work with such things.                                             */
     const unsigned int invalid = TMPL_CAST(-1, unsigned int);
 
     /*  The table->size member is of type size_t. To avoid repeatedly casting *
