@@ -88,15 +88,15 @@ tmpl_UIntCayleyTable_Left_Inverse_Kernel(
     const unsigned int invalid = TMPL_CAST(-1, unsigned int);
 
     /*  The table->size member is of type size_t. To avoid repeatedly casting *
-     *  between data types while indexing through the table, convert a to     *
-     *  type size_t as well and compute with that.                            */
+     *  between data types while indexing through the table, convert element  *
+     *  to type size_t as well and compute with that.                         */
     const size_t element_ind = TMPL_CAST(element, size_t);
 
     /*  Variable for indexing over the row in the table. We use this to       *
      *  search for solutions to x * element = 0.                              */
     size_t x;
 
-    /*  Loop through the "a" row, searching for an "x" with x * element = 0.  */
+    /*  Loop through the element row, searching for an x with x * element = 0.*/
     for (x = 0; x < table->size; ++x)
     {
         /*  Solving for x * element = 0 means we are looking for an index x   *
