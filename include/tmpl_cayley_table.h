@@ -331,6 +331,66 @@ tmpl_UIntCayleyTable_Left_Solve_Kernel(
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Right_Inverse                                    *
+ *  Purpose:                                                                  *
+ *      Finds a right-inverse (if it exists) for "element". That is, given    *
+ *      a, finds an element b such that a * b = 0 (0 acts as the identity).   *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *      element (const unsigned int):                                         *
+ *          The element of the table we are working with.                     *
+ *  Output:                                                                   *
+ *      right_inverse (unsigned int):                                         *
+ *          A right-inverse for the given element.                            *
+ *  Notes:                                                                    *
+ *      1.) This checks if table is NULL. UINT_MAX is returned in this case.  *
+ *      2.) If the table is empty, UINT_MAX is returned.                      *
+ *      3.) If "element" is larger than table->size, then it is not a         *
+ *          member of the underlying set. We return UINT_MAX in this case.    *
+ *      4.) It is possible for element * x = 0 to have multiple solutions.    *
+ *          This function returns the smallest possible solution.             *
+ *      5.) It is possible for element * x = 0 to have no solutions. UINT_MAX *
+ *          is returned in this case.                                         *
+ *      6.) This function assumes the Cayley table has an identity, and that  *
+ *          it is represented by "0". The output is meaningless if either of  *
+ *          these two conditions are not met.                                 *
+ ******************************************************************************/
+extern unsigned int
+tmpl_UIntCayleyTable_Right_Inverse(const tmpl_UIntCayleyTable * const table,
+                                   const unsigned int element);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Right_Inverse_Kernel                             *
+ *  Purpose:                                                                  *
+ *      Main for-loop for finding a right inverse in a Cayley table.          *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *      element (const unsigned int):                                         *
+ *          The element of the table we are working with.                     *
+ *  Output:                                                                   *
+ *      right_inverse (unsigned int):                                         *
+ *          A right-inverse for the given element.                            *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for NULL pointers or table->size = 0.         *
+ *      2.) It is possible for element * x = 0 to have multiple solutions.    *
+ *          This function returns the smallest possible solution.             *
+ *      3.) It is possible for element * x = 0 to have no solutions. UINT_MAX *
+ *          is returned in this case.                                         *
+ *      4.) This function assumes the Cayley table has an identity, and that  *
+ *          it is represented by "0". The output is meaningless if either of  *
+ *          these two conditions are not met.                                 *
+ ******************************************************************************/
+extern unsigned int
+tmpl_UIntCayleyTable_Right_Inverse_Kernel(
+    const tmpl_UIntCayleyTable * const table,
+    const unsigned int element
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_UIntCayleyTable_Right_Solve                                      *
  *  Purpose:                                                                  *
  *      Solves the equation a * x = b for a given Cayley table.               *
