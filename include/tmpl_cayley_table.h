@@ -212,5 +212,62 @@ tmpl_UIntCayleyTable_Is_Valid(const tmpl_UIntCayleyTable * const table);
 extern tmpl_Bool
 tmpl_UIntCayleyTable_Is_Valid_Kernel(const tmpl_UIntCayleyTable * const table);
 
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Right_Solve                                      *
+ *  Purpose:                                                                  *
+ *      Solves the equation a * x = b for a given Cayley table.               *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *      a (const unsigned int):                                               *
+ *          The left-multipler for "x" in the equation a * x = b.             *
+ *      b (const unsigned int):                                               *
+ *          The right-hand side of the equation.                              *
+ *  Output:                                                                   *
+ *      x (unsigned int):                                                     *
+ *          A solution to a * x = b (if it exists).                           *
+ *  Notes:                                                                    *
+ *      1.) This checks if table is NULL. UINT_MAX is returned in this case.  *
+ *      2.) If the table is empty, UINT_MAX is returned.                      *
+ *      3.) If "a" or "b" are larger than table->size, then they are not      *
+ *          elements of the underlying set. We return UINT_MAX in this case.  *
+ *      4.) It is possible for a * x = b to have multiple solutions. This     *
+ *          function returns the smallest possible solution.                  *
+ *      5.) It is possible for a * x = b to have no solutions. UINT_MAX is    *
+ *          returned in this case.                                            *
+ ******************************************************************************/
+extern unsigned int
+tmpl_UIntCayleyTable_Right_Solve(const tmpl_UIntCayleyTable * const table,
+                                 const unsigned int a, const unsigned int b);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Right_Solve_Kernel                               *
+ *  Purpose:                                                                  *
+ *      Performs the inner for-loop that searches for a solution to a * x = b.*
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *      a (const unsigned int):                                               *
+ *          The left-multipler for "x" in the equation a * x = b.             *
+ *      b (const unsigned int):                                               *
+ *          The right-hand side of the equation.                              *
+ *  Output:                                                                   *
+ *      x (unsigned int):                                                     *
+ *          A solution to a * x = b (if it exists).                           *
+ *  Notes:                                                                    *
+ *      1.) There are no checks for NULL pointers or table->size = 0.         *
+ *      2.) It is possible for a * x = b to have multiple solutions. This     *
+ *          function returns the smallest possible solution.                  *
+ *      3.) It is possible for a * x = b to have no solutions. UINT_MAX is    *
+ *          returned in this case.                                            *
+ ******************************************************************************/
+extern unsigned int
+tmpl_UIntCayleyTable_Right_Solve_Kernel(
+    const tmpl_UIntCayleyTable * const table,
+    const unsigned int a, const unsigned int b
+);
+
 #endif
 /*  End of include guard.                                                     */
