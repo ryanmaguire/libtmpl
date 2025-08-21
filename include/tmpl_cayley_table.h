@@ -237,6 +237,58 @@ tmpl_UIntCayleyTable_Is_Commutative_Kernel(
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Is_Idempotent                                    *
+ *  Purpose:                                                                  *
+ *      Checks if a Cayley table is right idempotent, meaning:                *
+ *                                                                            *
+ *          x * x = x                                                         *
+ *                                                                            *
+ *      for all x in the underlying set.                                      *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *  Output:                                                                   *
+ *      is_idempotent (tmpl_Bool):                                            *
+ *          Boolean indicating if the table is idempotent.                    *
+ *  Notes:                                                                    *
+ *      1.) This function assumes the table input is indeed a valid Cayley    *
+ *          table. This means table->data[n] < table->size for all entries    *
+ *          of the table (for all 0 <= n < table-size * table-size).          *
+ *      2.) This routine checks for NULL pointers for both table and          *
+ *          table->data, and it checks if table->size = 0.                    *
+ *      3.) If table is the empty table (table->data = NULL, table->size = 0),*
+ *          then this routine returns true. The empty binary operations is    *
+ *          vacuously idempotent.                                             *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_UIntCayleyTable_Is_Idempotent(const tmpl_UIntCayleyTable * const table);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Is_Idempotent_Kernel                             *
+ *  Purpose:                                                                  *
+ *      Main part of the idempotent checker, this loops over each x in the    *
+ *      underlying set and checks x * x = x.                                  *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *  Output:                                                                   *
+ *      is_idempotent (tmpl_Bool):                                            *
+ *          Boolean indicating if the table is idempotent.                    *
+ *  Notes:                                                                    *
+ *      1.) This function does not check for NULL pointers (either for table  *
+ *          or for table->data), and it does not check if table->size is zero.*
+ *      2.) This function assumes the table input is indeed a valid Cayley    *
+ *          table. This means table->data[n] < table->size for all entries    *
+ *          of the table (for all 0 <= n < table-size * table-size).          *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_UIntCayleyTable_Is_Idempotent_Kernel(
+    const tmpl_UIntCayleyTable * const table
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_UIntCayleyTable_Is_Left_Self_Distributive                        *
  *  Purpose:                                                                  *
  *      Checks if a Cayley table is left self-distributive, meaning:          *
