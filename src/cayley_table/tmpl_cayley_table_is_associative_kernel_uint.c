@@ -103,10 +103,12 @@ tmpl_UIntCayleyTable_Is_Associative_Kernel(
     {
         for (y = 0; y < table->size; ++y)
         {
+            /*  Compute the product x * y.                                    */
+            xy = TMPL_CAYLEY_TABLE_ENTRY(table, x, y);
+
             for (z = 0; z < table->size; ++z)
             {
-                /*  Compute x*y, y*z, (x*y)*z, and x*(y*z).                   */
-                xy = TMPL_CAYLEY_TABLE_ENTRY(table, x, y);
+                /*  Compute y*z, (x*y)*z, and x*(y*z).                        */
                 yz = TMPL_CAYLEY_TABLE_ENTRY(table, y, z);
                 left = TMPL_CAYLEY_TABLE_ENTRY(table, xy, z);
                 right = TMPL_CAYLEY_TABLE_ENTRY(table, x, yz);
