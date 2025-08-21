@@ -291,6 +291,61 @@ tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Is_Right_Self_Distributive                       *
+ *  Purpose:                                                                  *
+ *      Checks if a Cayley table is right self-distributive, meaning:         *
+ *                                                                            *
+ *          (x * y) * z = (x * z) * (y * z)                                   *
+ *                                                                            *
+ *      for all x, y, z in the underlying set.                                *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *  Output:                                                                   *
+ *      is_right_self_distributive (tmpl_Bool):                               *
+ *          Boolean indicating if the table is right self-distributive.       *
+ *  Notes:                                                                    *
+ *      1.) This function assumes the table input is indeed a valid Cayley    *
+ *          table. This means table->data[n] < table->size for all entries    *
+ *          of the table (for all 0 <= n < table-size * table-size).          *
+ *      2.) This routine checks for NULL pointers for both table and          *
+ *          table->data, and it checks if table->size = 0.                    *
+ *      3.) If table is the empty table (table->data = NULL, table->size = 0),*
+ *          then this routine returns true. The empty binary operations is    *
+ *          vacuously right self-distributive.                                *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_UIntCayleyTable_Is_Right_Self_Distributive(
+    const tmpl_UIntCayleyTable * const table
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_UIntCayleyTable_Is_Right_Self_Distributive_Kernel                *
+ *  Purpose:                                                                  *
+ *      Main part of the right self-distributivity checker, this loops over   *
+ *      ordered triples (x, y, z) and checks (x*y)*z = (x*z)*(y*z).           *
+ *  Arguments:                                                                *
+ *      table (const tmpl_UIntCayleyTable * const):                           *
+ *          The input Cayley table.                                           *
+ *  Output:                                                                   *
+ *      is_right_self_distributive (tmpl_Bool):                               *
+ *          Boolean indicating if the table is right self-distributive.       *
+ *  Notes:                                                                    *
+ *      1.) This function does not check for NULL pointers (either for table  *
+ *          or for table->data), and it does not check if table->size is zero.*
+ *      2.) This function assumes the table input is indeed a valid Cayley    *
+ *          table. This means table->data[n] < table->size for all entries    *
+ *          of the table (for all 0 <= n < table-size * table-size).          *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_UIntCayleyTable_Is_Right_Self_Distributive_Kernel(
+    const tmpl_UIntCayleyTable * const table
+);
+
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_UIntCayleyTable_Is_Valid                                         *
  *  Purpose:                                                                  *
  *      Checks if a Cayley table corresponds to a valid binary operation.     *

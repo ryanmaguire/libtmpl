@@ -16,28 +16,28 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *           tmpl_cayley_table_is_left_self_distributive_kernel_uint          *
+ *          tmpl_cayley_table_is_right_self_distributive_kernel_uint          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Checks if a Cayley table is for a left self-distributive operation.   *
+ *      Checks if a Cayley table is for a right self-distributive operation.  *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel                 *
+ *      tmpl_UIntCayleyTable_Is_Right_Self_Distributive_Kernel                *
  *  Purpose:                                                                  *
- *      Checks if a Cayley table represents a left self-distributive binary   *
+ *      Checks if a Cayley table represents a right self-distributive binary  *
  *      operation, meaning:                                                   *
  *                                                                            *
- *          x * (y * z) = (x * y) * (x * z)                                   *
+ *          (x * y) * z = (x * z) * (y * z)                                   *
  *                                                                            *
  *      for all x, y, z in the underlying set.                                *
  *  Arguments:                                                                *
  *      table (const tmpl_UIntCayleyTable * const):                           *
  *          The input Cayley table.                                           *
  *  Output:                                                                   *
- *      is_left_self_distributive (tmpl_Bool):                                *
- *          Boolean indicating if the table is left self-distributive.        *
+ *      is_right_self_distributive (tmpl_Bool):                               *
+ *          Boolean indicating if the table is right self-distributive.       *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -85,9 +85,9 @@
 /*  size_t typedef is provided here.                                          */
 #include <stddef.h>
 
-/*  Checks if a Cayley table is for a left self-distributive operation.       */
+/*  Checks if a Cayley table is for a right self-distributive operation.      */
 tmpl_Bool
-tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(
+tmpl_UIntCayleyTable_Is_Right_Self_Distributive_Kernel(
     const tmpl_UIntCayleyTable * const table
 )
 {
@@ -98,11 +98,11 @@ tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(
     /*  Variables for x*y, x*z, and y*z respectively.                         */
     unsigned int xy, xz, yz;
 
-    /*  Variable for (x*y)*z and (x*z)*(y*z), respectively.                   */
+    /*  Variable for x*(y*z) and (x*y)*(x*z), respectively.                   */
     unsigned int left, right;
 
     /*  Loop through the ordered triples from the algebraic structure and     *
-     *  check for left self-distributivity.                                   */
+     *  check for right self-distributivity.                                  */
     for (x = 0; x < table->size; ++x)
     {
         for (y = 0; y < table->size; ++y)
@@ -117,19 +117,19 @@ tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(
                 yz = TMPL_CAYLEY_TABLE_ENTRY(table, y, z);
 
                 /*  Compute x * (y * z) and (x * y) * (x * z).                */
-                left = TMPL_CAYLEY_TABLE_ENTRY(table, x, yz);
-                right = TMPL_CAYLEY_TABLE_ENTRY(table, xy, xz);
+                left = TMPL_CAYLEY_TABLE_ENTRY(table, xy, z);
+                right = TMPL_CAYLEY_TABLE_ENTRY(table, xz, yz);
 
-                /*  If x*(y*z) != (x*y)*(x*z), the table does not have the    *
-                 *  left self-distributive property. Return false.            */
+                /*  If (x*y)*z != (x*z)*(y*z), the table does not have the    *
+                 *  right self-distributive property. Return false.           */
                 if (left != right)
                     return tmpl_False;
             }
         }
     }
 
-    /*  We have x*(y*z) = (x*y)*(x*z) for all possible triples, so the table  *
-     *  is indeed left self-distributive. Return true.                        */
+    /*  We have (x*y)*z = (x*z)*(y*z) for all possible triples, so the table  *
+     *  is indeed right self-distributive. Return true.                       */
     return tmpl_True;
 }
-/*  End of tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel.             */
+/*  End of tmpl_UIntCayleyTable_Is_Right_Self_Distributive_Kernel.            */
