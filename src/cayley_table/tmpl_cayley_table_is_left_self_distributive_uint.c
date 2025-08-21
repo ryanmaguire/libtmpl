@@ -125,7 +125,7 @@ tmpl_UIntCayleyTable_Is_Left_Self_Distributive(
         return tmpl_False;
 
     /*  Perform the main check, looping through triples (x, y, z) and         *
-     *  checking for (x*y)*z = x*(y*z).                                       */
+     *  checking for x*(y*z) = (x*y)*(x*z).                                   */
     return tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(table);
 }
 /*  End of tmpl_UIntCayleyTable_Is_Left_Self_Distributive.                    */
