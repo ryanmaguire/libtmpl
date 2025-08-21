@@ -95,7 +95,7 @@ tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(
      *  for each ordered triple (x, y, z) of elements from the structure.     */
     size_t x, y, z;
 
-    /*  Variables for x*y, y*z, (x*y)*z, and x*(y*z), respectively.           */
+    /*  Variables for x*y, x*z, and y*z respectively.                         */
     unsigned int xy, xz, yz;
 
     /*  Variable for x*(y*z) and (x*y)*(x*z), respectively.                   */
@@ -128,7 +128,7 @@ tmpl_UIntCayleyTable_Is_Left_Self_Distributive_Kernel(
         }
     }
 
-    /*  We have x*(y*z) != (x*y)*(x*z) for all possible triples, so the table *
+    /*  We have x*(y*z) = (x*y)*(x*z) for all possible triples, so the table  *
      *  is indeed left self-distributive. Return true.                        */
     return tmpl_True;
 }
