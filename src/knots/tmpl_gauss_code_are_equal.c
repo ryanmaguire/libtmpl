@@ -142,12 +142,12 @@ tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
     if (first->error_occurred || second->error_occurred)
         return tmpl_False;
 
-    /*  If the pointers have different crossing numbers, then we know the     *
-     *  knots have different Gauss codes. This does not tell us the knots are *
-     *  not isomorphic to each other. It is possible two knots with different *
+    /*  If the arrays have different lengths, then we know the Gauss codes    *
+     *  are different as well. This does not tell us the knots are not        *
+     *  topologically equivalent. It is possible two knots with different     *
      *  Gauss codes, and a different number of crossings, are the same with   *
      *  the application of the right sequence of (virtual) Reidemeister moves.*/
-    if (first->number_of_crossings != second->number_of_crossings)
+    if (first->length != second->length)
         return tmpl_False;
 
     /*  Lastly, before performing the actual comparison, check to make sure   *
@@ -168,7 +168,7 @@ tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
     }
 
     /*  Loop through the Gauss tuples and see if they're all equal.           */
-    for (ind = 0; ind < first->number_of_crossings; ++ind)
+    for (ind = 0; ind < first->length; ++ind)
     {
         /*  The function tmpl_GaussTuple_Are_Equal wants pointers to Gauss    *
          *  tuples. The value first->gauss_code[ind] is the nth Gauss tuple   *
