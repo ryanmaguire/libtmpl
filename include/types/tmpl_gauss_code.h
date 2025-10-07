@@ -47,6 +47,11 @@ typedef struct tmpl_GaussCode_Def {
      *  sequence. This is twice the number of crossings in the knot diagram.  */
     unsigned long int length;
 
+    /*  The number of crossings in the knot diagram. This is half the length  *
+     *  of the tuples array. It is commonly needed so the functions that      *
+     *  create a tmpl_GaussCode struct will initialize this member too.       */
+    unsigned long int number_of_crossings;
+
     /*  A pointer to an array of Gauss tuples, representing the Gauss code of *
      *  the knot diagram. This array has "length" number of elements.         */
     tmpl_GaussTuple *gauss_code;
