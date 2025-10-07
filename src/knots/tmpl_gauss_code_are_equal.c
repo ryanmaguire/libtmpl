@@ -16,35 +16,36 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                         tmpl_gauss_tuple_are_equal                         *
+ *                         tmpl_gauss_code_are_equal                          *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Checks if two Gauss tuples represent the same ordered triple.         *
+ *      Checks if two Gauss codes represent the same sequences.               *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_GaussTuple_Are_Equal                                             *
+ *      tmpl_GaussCode_Are_Equal                                              *
  *  Purpose:                                                                  *
- *      Determines if two Gauss tuples represent the same ordered triples.    *
+ *      Determines if two Gauss codes represent the same sequence.            *
  *  Arguments:                                                                *
- *      first (const tmpl_GaussTuple * const):                                *
- *          A Gauss tuple.                                                    *
- *      second (const tmpl_GaussTuple * const):                               *
- *          A Gauss tuple, the one being compared to the first for equality.  *
+ *      first (const tmpl_GaussCode * const):                                 *
+ *          A Gauss code.                                                     *
+ *      second (const tmpl_GaussCode * const):                                *
+ *          A Gauss code, the one being compared to the first for equality.   *
  *  Output:                                                                   *
  *      are_equal (tmpl_Bool):                                                *
- *          Boolean indicating if the first and second tuples are equal.      *
+ *          Boolean indicating if the first and second codes are equal.       *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      src/knots/                                                            *
+ *          tmpl_GaussTuple_Are_Equal:                                        *
+ *              Determines if two Gauss tuples are the same.                  *
  *  Method:                                                                   *
  *      If both pointers are NULL, return true. If only one is NULL, return   *
- *      false. Otherwise, check the entries of the tuple and return true if   *
- *      and only if all three (crossing number, crossing type, and crossing   *
- *      sign) are equal.                                                      *
+ *      false. Otherwise, check each tuple in the two Gauss codes, returning  *
+ *      true if all of them are the same, and false otherwise.                *
  *  Notes:                                                                    *
- *      These Gauss tuples include the crossing sign, meaning we are          *
- *      implicitly working with signed / extended Gauss code.                 *
+ *      The input Gauss code is signed, not unsigned. That is, the signs of   *
+ *      the crossings are included in the Gauss tuples.                       *
  *  References:                                                               *
  *      1.) Livingston, Charles and Moore, Allison                            *
  *          LinkInfo / KnotInfo                                               *
@@ -70,14 +71,14 @@
  *          Header file providing Booleans.                                   *
  *  2.) tmpl_gauss_tuple.h:                                                   *
  *          Header file providing the typedef for Gauss tuples.               *
+ *  3.) tmpl_gauss_code.h:                                                    *
+ *          Header file with the definition for Gauss code.                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 15, 2021                                                *
  ******************************************************************************
  *                              Revision History                              *
  ******************************************************************************
- *  2022/01/15: Ryan Maguire                                                  *
- *      Update formatting and comments.                                       *
  *  2025/10/07: Ryan Maguire                                                  *
  *      Changed name, added license and doc-string, general cleanup.          *
  ******************************************************************************/
@@ -88,18 +89,29 @@
 /*  Typedef for the Gauss tuple struct provided here.                         */
 #include <libtmpl/include/types/tmpl_gauss_tuple.h>
 
-/*  Forward declaration for the function, also found in tmpl_knots.h.         */
+/*  Gauss code data type defined here.                                        */
+#include <libtmpl/include/types/tmpl_gauss_code.h>
+
+/*  Function used for comparing two Gauss tuples, found in tmpl_knots.h.      */
 extern tmpl_Bool
 tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
                           const tmpl_GaussTuple * const second);
 
-/*  Function for comparing two Gauss tuples for equality.                     */
+/*  Forward declaration for the function, also found in tmpl_knots.h.         */
+extern tmpl_Bool
+tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
+                         const tmpl_GaussCode * const second);
+
+/*  Function for comparing two Gauss codes for equality.                      */
 tmpl_Bool
-tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
-                          const tmpl_GaussTuple * const second)
+tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
+                         const tmpl_GaussCode * const second)
 {
+    /*  Variable for indexing over all of the Gauss tuples in the knots.      */
+    unsigned long int ind;
+
     /*  Simple check first, if the pointers are pointing to the same data,    *
-     *  then the Gauss tuples are indeed identical. Return true.              */
+     *  then the Gauss codes are indeed identical. Return true.               */
     if (first == second)
         return tmpl_True;
 
@@ -108,12 +120,12 @@ tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
     if (!first)
     {
         /*  The first tuple is simply NULL. If the second input is NULL, then *
-         *  we'll treat these as equal tuples. They are both the NULL tuple.  */
+         *  we'll treat these as equal Gauss codes. They are both NULL code.  */
         if (!second)
             return tmpl_True;
 
-        /*  Otherwise the first tuple is NULL but the second one isn't. Treat *
-         *  these as different tuples, return false.                          */
+        /*  Otherwise the first sequence is NULL but the second one isn't.    *
+         *  Treat these as different tuples, return false.                    */
         return tmpl_False;
     }
 
@@ -124,30 +136,56 @@ tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
     if (!second)
         return tmpl_False;
 
-    /*  We now have two Gauss tuples to work with. A Gauss tuples is an       *
-     *  ordered triple of the form (n, s, t) where n is the crossing number,  *
-     *  which is the integer used to label the given crossing in the knot     *
-     *  diagram, t is the type, meaning over or under, and s is the sign,     *
-     *  which is positive or negative. This assumes we are working with       *
-     *  oriented knot diagrams (either virtual or classical). Two Gauss       *
-     *  tuples are equal if and only if all three of these components are the *
-     *  same. First, check the crossing number.                               */
-    if (first->crossing_number != second->crossing_number)
+    /*  It either Gauss code contains an error, return false. It is possible  *
+     *  that one of the sequences contains corrupted data and should not be   *
+     *  dereferenced. The user should handle the error before calling this.   */
+    if (first->error_occurred || second->error_occurred)
         return tmpl_False;
 
-    /*  Next, check the crossing type. This may be over or under.             */
-    if (first->crossing_type != second->crossing_type)
+    /*  If the pointers have different crossing numbers, then we know the     *
+     *  knots have different Gauss codes. This does not tell us the knots are *
+     *  not isomorphic to each other. It is possible two knots with different *
+     *  Gauss codes, and a different number of crossings, are the same with   *
+     *  the application of the right sequence of (virtual) Reidemeister moves.*/
+    if (first->number_of_crossings != second->number_of_crossings)
         return tmpl_False;
 
-    /*  Lastly, the crossing sign. Note, since we are checking the sign we    *
-     *  are implicitly working with signed Gauss codes, also called extended  *
-     *  Gauss codes. Unsigned Gauss codes do not keep track of signs, but     *
-     *  they are also unable to distinguish a knot from its mirror.           */
-    if (first->crossing_sign != second->crossing_sign)
-        return tmpl_False;
+    /*  Lastly, before performing the actual comparison, check to make sure   *
+     *  the data for the Gauss tuples have been initialized.                  */
+    if (!first->gauss_code)
+    {
+        /*  If we get here, then the data for the first Gauss code is NULL.   *
+         *  Like the previous check, if the data for the second Gauss code is *
+         *  also NULL, then we will treat these as equal. A NULL pointer for  *
+         *  the Gauss tuples is valid, it represents a knot with no crossings.*
+         *  This is the unknot, which is the simplest knot.                   */
+        if (!second->gauss_code)
+            return tmpl_True;
 
-    /*  The crossing number, sign, and type are all the same. The tuples are  *
-     *  identical, return true.                                               */
+        /*  Otherwise the first code is empty but the second one is not.      *
+         *  The Gauss codes are not identical, return false.                  */
+        return tmpl_False;
+    }
+
+    /*  Loop through the Gauss tuples and see if they're all equal.           */
+    for (ind = 0; ind < first->number_of_crossings; ++ind)
+    {
+        /*  The function tmpl_GaussTuple_Are_Equal wants pointers to Gauss    *
+         *  tuples. The value first->gauss_code[ind] is the nth Gauss tuple   *
+         *  for the knot, but is an actual Gauss tuple struct, not a pointer. *
+         *  Get the address with an ampersand &.                              */
+        const tmpl_GaussTuple * const first_tuple = &(first->gauss_code[ind]);
+
+        /*  Do the same thing for the second Gauss code.                      */
+        const tmpl_GaussTuple * const second_tuple = &(second->gauss_code[ind]);
+
+        /*  If the two Gauss tuples are different, the Gauss codes are        *
+         *  different so return false. Otherwise, proceed.                    */
+        if (!tmpl_GaussTuple_Are_Equal(first_tuple, second_tuple))
+            return tmpl_False;
+    }
+
+    /*  If we get here, all tuples in the two codes are equal. Return true.   */
     return tmpl_True;
 }
-/*  End of tmpl_GaussTuple_Are_Equal.                                         */
+/*  End of tmpl_GaussCode_Are_Equal.                                          */
