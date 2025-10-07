@@ -34,11 +34,14 @@
 #ifndef TMPL_TYPES_GAUSS_TUPLE_H
 #define TMPL_TYPES_GAUSS_TUPLE_H
 
+/*  tmpl_CrossingSign typedef provided here, used to sign the crossings.      */
 #include <libtmpl/include/types/tmpl_crossing_sign.h>
+
+/*  tmpl_CrossingType given here, used to represent over and under crossings. */
 #include <libtmpl/include/types/tmpl_crossing_type.h>
 
 /*  Extended Gauss code is a finite sequence of ordered triples, which are    *
- *  the "Gauss tuples." These triples are of the form (n, t, s) where n is    *
+ *  the "Gauss tuples." These triples are of the form (n, t, s), where n is   *
  *  the crossing number, which is the index for the crossing, t is the type,  *
  *  over or under, and s is the sign, positive or negative.                   */
 typedef struct tmpl_GaussTuple_Def {
