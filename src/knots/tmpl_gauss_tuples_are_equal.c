@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_gauss_tuples_are_equal                         *
+ *                         tmpl_gauss_tuple_are_equal                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Checks if two Gauss tuples represent the same ordered triple.         *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_GaussTuples_Are_Equal                                            *
+ *      tmpl_GaussTuple_Are_Equal                                             *
  *  Purpose:                                                                  *
  *      Determines if two Gauss tuples represent the same ordered triples.    *
  *  Arguments:                                                                *
@@ -90,13 +90,13 @@
 
 /*  Forward declaration for the function, also found in tmpl_knots.h.         */
 extern tmpl_Bool
-tmpl_GaussTuples_Are_Equal(const tmpl_GaussTuple * const first,
-                           const tmpl_GaussTuple * const second);
+tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
+                          const tmpl_GaussTuple * const second);
 
 /*  Function for comparing two Gauss tuples for equality.                     */
 tmpl_Bool
-tmpl_GaussTuples_Are_Equal(const tmpl_GaussTuple * const first,
-                           const tmpl_GaussTuple * const second)
+tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
+                          const tmpl_GaussTuple * const second)
 {
     /*  Simple check first, if the pointers are pointing to the same data,    *
      *  then the Gauss tuples are indeed identical. Return true.              */
@@ -150,4 +150,4 @@ tmpl_GaussTuples_Are_Equal(const tmpl_GaussTuple * const first,
      *  identical, return true.                                               */
     return tmpl_True;
 }
-/*  End of tmpl_GaussTuples_Are_Equal.                                        */
+/*  End of tmpl_GaussTuple_Are_Equal.                                         */
