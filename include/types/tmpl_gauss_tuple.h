@@ -46,9 +46,9 @@
  *  over or under, and s is the sign, positive or negative.                   */
 typedef struct tmpl_GaussTuple_Def {
 
-    /*  The crossing number of the crossing. Note, a virtual knot's crossings *
-     *  need to first be labelled 0 to n - 1, where n is the number of        *
-     *  crossings.                                                            */
+    /*  The crossing number of the crossing. That is, the index used to label *
+     *  the given crossing. Note, we label the crossings in an N crossing     *
+     *  knot diagram from 0 to N - 1, and not 1 to N.                         */
     unsigned long int crossing_number;
 
     /*  The crossing type (over or under) of this crossing.                   */
