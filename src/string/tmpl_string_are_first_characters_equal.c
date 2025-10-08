@@ -19,7 +19,7 @@
  *                    tmpl_string_are_first_character_equal                   *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Checks if two strings are equal up to their null terminators.         *
+ *      Checks if two strings are equal up to a selected length.              *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -40,10 +40,11 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Examine each character of the two strings and check if they are the   *
- *      same. Also check for the position of the first null terminator in the *
- *      strings. If all of these agree, return true. If both pointers are     *
- *      NULL, this function also returns true. Return false otherwise.        *
+ *      Examine each character of the two strings up to the specified length  *
+ *      and check if they are the same. Also check for the position of the    *
+ *      first null terminator in the strings. If all of these agree, return   *
+ *      true. If both pointers are NULL, this function also returns true.     *
+ *      Return false otherwise.                                               *
  *  Notes:                                                                    *
  *      If the input pointers are not NULL, it is assumed that the strings    *
  *      end with their null terminators.                                      *
@@ -52,8 +53,10 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  2.) tmpl_string.h:                                                        *
- *          Header file containing the function prototype.                    *
+ *  2.) tmpl_cast.h:                                                          *
+ *          Provides a macro for casting with C vs. C++ compatibility.        *
+ *  3.) stddef.h:                                                             *
+ *          Standard header file providing the size_t typedef.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 29, 2023                                             *
@@ -62,8 +65,17 @@
 /*  Booleans provided here.                                                   */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_string.h>
+/*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  size_t typedef found here.                                                */
+#include <stddef.h>
+
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern tmpl_Bool
+tmpl_String_Are_First_Characters_Equal(const char *str0,
+                                       const char *str1,
+                                       size_t len);
 
 /*  Function for checking if two strings have the first starting characters.  */
 tmpl_Bool
@@ -71,13 +83,13 @@ tmpl_String_Are_First_Characters_Equal(const char *str0,
                                        const char *str1,
                                        size_t len)
 {
-    /*  Counter to keeping track of the index of the strings.                 */
-    size_t index = (size_t)0;
+    /*  Counter for keeping track of the index of the strings.                */
+    size_t index = TMPL_CAST(0, size_t);
 
     /*  First, check for NULL pointers before trying to access.               */
     if (!str0)
     {
-        /*  If both pointers are NULL, we'll treat this as equal strings.     */
+        /*  If both pointers are NULL, we'll treat these as equal strings.    */
         if (!str1)
             return tmpl_True;
 
@@ -91,7 +103,7 @@ tmpl_String_Are_First_Characters_Equal(const char *str0,
         return tmpl_False;
 
     /*  Loop through all of the elements of the string until we hit the       *
-     *  null terminator.                                                      */
+     *  null terminator, or read more than "len" characters.                  */
     while (index < len)
     {
         /*  Check if the zeroth string is at its null terminator.             */
@@ -114,11 +126,11 @@ tmpl_String_Are_First_Characters_Equal(const char *str0,
             return tmpl_False;
 
         /*  Move to the next entries in the strings.                          */
-        str0++;
-        str1++;
+        ++str0;
+        ++str1;
 
         /*  And lastly, increment the counter.                                */
-        index++;
+        ++index;
     }
 
     /*  We've exited the while loop since index == len is now true. So the    *
