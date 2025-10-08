@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_lower_case                               *
+ *                            tmpl_char_lower_case                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Convert upper case letters to lower case.                             *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Lower_Case                                                       *
+ *      tmpl_Char_Lower_Case                                                  *
  *  Purpose:                                                                  *
  *      Given a char c, convert it to lower case (if applicable).             *
  *  Arguments:                                                                *
@@ -50,8 +50,8 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_HAS_ASCII is defined.                      *
- *  2.) tmpl_string.h:                                                        *
- *          Header file containing the function prototype.                    *
+ *  2.) tmpl_bool.h:                                                          *
+ *          Header file providing Booleans.                                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 12, 2021                                               *
@@ -65,8 +65,11 @@
 /*  TMPL_HAS_ASCII macro found here.                                          */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototype is here.                                               */
-#include <libtmpl/include/tmpl_string.h>
+/*  Booleans (true and false) are provided here.                              */
+#include <libtmpl/include/tmpl_bool.h>
+
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern char tmpl_Char_Lower_Case(char c);
 
 /*  The ASCII version is much more efficient.                                 */
 #if TMPL_HAS_ASCII == 1
