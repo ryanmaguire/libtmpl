@@ -75,11 +75,11 @@ extern "C" {
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_character_to_uchar.c                          *
  ******************************************************************************/
-extern unsigned char tmpl_Character_To_UChar(char c);
+extern unsigned char tmpl_Char_To_UChar(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Is_Digit                                                         *
+ *      tmpl_Char_Is_Digit                                                    *
  *  Purpose:                                                                  *
  *      Determines if a character represents a number.                        *
  *  Arguments:                                                                *
@@ -91,7 +91,7 @@ extern unsigned char tmpl_Character_To_UChar(char c);
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_is_digit.c                                    *
  ******************************************************************************/
-extern tmpl_Bool tmpl_Is_Digit(char c);
+extern tmpl_Bool tmpl_Char_Is_Digit(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -107,7 +107,7 @@ extern tmpl_Bool tmpl_Is_Digit(char c);
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_lower_case.c                                  *
  ******************************************************************************/
-extern char tmpl_Lower_Case(char c);
+extern char tmpl_Char_Lower_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -285,7 +285,7 @@ extern void tmpl_String_Remove_Whitespace(char * str);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Upper_Case                                                       *
+ *      tmpl_Char_Upper_Case                                                  *
  *  Purpose:                                                                  *
  *      Converts a character to upper case, if applicable.                    *
  *  Arguments:                                                                *
@@ -297,7 +297,7 @@ extern void tmpl_String_Remove_Whitespace(char * str);
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_upper_case.c                                  *
  ******************************************************************************/
-extern char tmpl_Upper_Case(char c);
+extern char tmpl_Char_Upper_Case(char c);
 
 /******************************************************************************
  *  Function:                                                                 *

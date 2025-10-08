@@ -62,7 +62,7 @@ void tmpl_String_Make_Upper_Case(char *str)
     /*  Loop over the elements of the string and convert them to upper case.  */
     while (*str)
     {
-        *str = tmpl_Upper_Case(*str);
+        *str = tmpl_Char_Upper_Case(*str);
         ++str;
     }
 }

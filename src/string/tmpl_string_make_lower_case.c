@@ -62,7 +62,7 @@ void tmpl_String_Make_Lower_Case(char *str)
     /*  Loop over the elements of the string and convert them to lower case.  */
     while (*str)
     {
-        *str = tmpl_Lower_Case(*str);
+        *str = tmpl_Char_Lower_Case(*str);
         ++str;
     }
 }

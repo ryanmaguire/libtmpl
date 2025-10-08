@@ -1,8 +1,7 @@
 
+
 /*  TMPL_HAS_ASCII macro found here.                                          */
 #include <libtmpl/include/tmpl_config.h>
-
-#include <libtmpl/include/tmpl_bool.h>
 
 /*  Function prototype is here.                                               */
 #include <libtmpl/include/tmpl_string.h>
@@ -14,18 +13,15 @@
  *                               ASCII Version                                *
  ******************************************************************************/
 
-/*  Function for determining if a character represents a number.              */
-tmpl_Bool tmpl_Is_Digit(char c)
+/*  Function for converting a character to a number.                          */
+unsigned char tmpl_Char_To_UChar(char c)
 {
-    /*  All numeric characters fall between '0' = 0x30 = 48 and               *
-     *  '9' = 0x39 = 57. All character outside of this range are not numbers. */
     if (c > '9' || c < '0')
-        return tmpl_False;
+        return 0x00U;
 
-    /*  If 0x30 <= c <= 0x39 we have a digit. Return true.                    */
-    return tmpl_True;
+    return c & 0x0F;
 }
-/*  End of tmpl_Is_Digit.                                                     */
+/*  End of tmpl_Char_To_UChar.                                                */
 
 #else
 /*  Else for #if TMPL_HAS_ASCII == 1.                                         */
@@ -34,36 +30,34 @@ tmpl_Bool tmpl_Is_Digit(char c)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Function for determining if a character represents a number.              */
-tmpl_Bool tmpl_Is_Digit(char c)
+/*  Function for converting a character to a number.                          */
+unsigned char tmpl_Char_To_UChar(char c)
 {
     switch (c)
     {
-        case '0':
-            return tmpl_True;
         case '1':
-            return tmpl_True;
+            return 0x01U;
         case '2':
-            return tmpl_True;
+            return 0x02U;
         case '3':
-            return tmpl_True;
+            return 0x03U;
         case '4':
-            return tmpl_True;
+            return 0x04U;
         case '5':
-            return tmpl_True;
+            return 0x05U;
         case '6':
-            return tmpl_True;
+            return 0x06U;
         case '7':
-            return tmpl_True;
+            return 0x07U;
         case '8':
-            return tmpl_True;
+            return 0x08U;
         case '9':
-            return tmpl_True;
+            return 0x09U;
         default:
-            return tmpl_False;
+            return 0x00U;
     }
 }
-/*  End of tmpl_Is_Digit.                                                     */
+/*  End of tmpl_Char_To_UChar.                                                */
 
 #endif
 /*  End of #if TMPL_HAS_ASCII == 1.                                           */
