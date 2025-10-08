@@ -41,7 +41,7 @@
  *      stdlib.h:                                                             *
  *          malloc:                                                           *
  *              Allocates memory for a pointer.                               *
- *      tmpl_string.h:                                                        *
+ *      src/string/                                                           *
  *          tmpl_String_Length:                                               *
  *              Computes the length of a string.                              *
  *  Method:                                                                   *
@@ -54,10 +54,12 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stdlib.h:                                                             *
- *          Standard library header file containing malloc.                   *
- *  2.) tmpl_string.h:                                                        *
- *          Header where tmpl_String_Duplicate is declared.                   *
+ *  1.) tmpl_cast.h:                                                          *
+ *          Provides a macro for casting with C vs. C++ compatibility.        *
+ *  2.) tmpl_malloc.h:                                                        *
+ *          Provides a malloc macro with C vs. C++ compatibility.             *
+ *  3.) stddef.h:                                                             *
+ *          Standard library header providing the size_t typedef and NULL.    *
  ******************************************************************************
  *  Author: Ryan Maguire                                                      *
  *  Date:   April 8, 2021                                                     *
@@ -68,13 +70,24 @@
  *      Added docstring style comments.                                       *
  *  2023/08/08: Ryan Maguire                                                  *
  *      Changed function name, adding call to tmpl_String_Length.             *
+ *  2025/10/08: Ryan Maguire                                                  *
+ *      Added use of TMPL_CAST and TMPL_MALLOC.                               *
  ******************************************************************************/
 
-/*  Needed for malloc.                                                        */
-#include <stdlib.h>
+/*  TMPL_CAST given here, provides casting with C vs. C++ compatibility.      */
+#include <libtmpl/include/compat/tmpl_cast.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_string.h>
+/*  TMPL_MALLOC found here. Provides C vs. C++ compatibility.                 */
+#include <libtmpl/include/compat/tmpl_malloc.h>
+
+/*  size_t typedef and the NULL macro are found here.                         */
+#include <stddef.h>
+
+/*  Function used for computing the length of the input string.               */
+extern size_t tmpl_String_Length(const char * const str);
+
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern char *tmpl_String_Duplicate(const char * const str);
 
 /*  Function for duplicating a string into a char pointer.                    */
 char *tmpl_String_Duplicate(const char *str)
@@ -84,8 +97,8 @@ char *tmpl_String_Duplicate(const char *str)
     size_t n, string_length;
 
     /*  Useful constants, cast to type "size_t".                              */
-    const size_t zero = (size_t)0;
-    const size_t one = (size_t)1;
+    const size_t zero = TMPL_CAST(0, size_t);
+    const size_t one = TMPL_CAST(1, size_t);
 
     /*  Check if the input string is a NULL pointer. A segfault may occur if  *
      *  we try to dereference a NULL pointer.                                 */
@@ -97,7 +110,7 @@ char *tmpl_String_Duplicate(const char *str)
 
     /*  Allocate memory for the output string. The +1 is for the NULL         *
      *  terminator at the end of the string.                                  */
-    out = malloc(sizeof(*out) * (string_length + one));
+    out = TMPL_MALLOC(char, string_length + one);
 
     /*  Check if malloc failed.                                               */
     if (!out)
@@ -108,7 +121,7 @@ char *tmpl_String_Duplicate(const char *str)
         out[n] = str[n];
 
     /*  Lastly, set the NULL terminator and return.                           */
-    out[string_length] = str[string_length];
+    out[string_length] = '\0';
     return out;
 }
 /*  End of tmpl_String_Duplicate.                                             */
