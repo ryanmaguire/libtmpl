@@ -60,6 +60,8 @@
  ******************************************************************************
  *  2023/08/07: Ryan Maguire                                                  *
  *      Added check for ASCII support. Combined portable and ascii versions.  *
+ *  2025/10/08: Ryan Maguire                                                  *
+ *      Changed function and file name to be consistent with other routines.  *
  ******************************************************************************/
 
 /*  TMPL_HAS_ASCII macro found here.                                          */
