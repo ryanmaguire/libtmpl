@@ -34,23 +34,25 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_string.h:                                                        *
- *          tmpl_Upper_Case:                                                  *
- *              Converts a single character char c to upper case.             *
+ *      src/string/                                                           *
+ *          tmpl_Char_Upper_Case:                                             *
+ *              Converts a single character char c to upper-case.             *
  *  Method:                                                                   *
- *      Loop over the characters of the string and call tmpl_Upper_Case.      *
+ *      Loop over the characters of the string and call tmpl_Char_Upper_Case. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_string.h:                                                        *
- *          Header file where the function prototype is defined.              *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 8, 2023                                                *
  ******************************************************************************/
 
-/*  Function prototype here.                                                  */
-#include <libtmpl/include/tmpl_string.h>
+/*  Function for converting a character to its upper-case equivalent.         */
+extern char tmpl_Char_Upper_Case(char c);
+
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern void tmpl_String_Make_Upper_Case(char *str);
 
 /*  Function for converting a string to it's upper-case equivalent.           */
 void tmpl_String_Make_Upper_Case(char *str)
@@ -59,7 +61,7 @@ void tmpl_String_Make_Upper_Case(char *str)
     if (!str)
         return;
 
-    /*  Loop over the elements of the string and convert them to upper case.  */
+    /*  Loop over the elements of the string and convert them to upper-case.  */
     while (*str)
     {
         *str = tmpl_Char_Upper_Case(*str);
