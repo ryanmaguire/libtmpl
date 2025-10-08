@@ -64,10 +64,10 @@
 #include <stddef.h>
 
 /*  Forward declaration / function prototype, found in tmpl_string.h as well. */
-extern size_t tmpl_String_Length(const char *str);
+extern size_t tmpl_String_Length(const char * const str);
 
 /*  Counts the number of characters in a string.                              */
-size_t tmpl_String_Length(const char *str)
+size_t tmpl_String_Length(const char * const str)
 {
     /*  Initialize the count to zero.                                         */
     size_t string_length = TMPL_CAST(0, size_t);
@@ -78,7 +78,7 @@ size_t tmpl_String_Length(const char *str)
 
     /*  Loop through the characters in str and find the null terminator.      */
     while (str[string_length])
-        string_length++;
+        ++string_length;
 
     return string_length;
 }
