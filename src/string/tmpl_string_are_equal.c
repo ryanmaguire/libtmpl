@@ -34,7 +34,7 @@
  *          Another string.                                                   *
  *  Output:                                                                   *
  *      are_equal (tmpl_Bool):                                                *
- *          Boolean for if the two strings are equal.                         *
+ *          Boolean indicating if the two strings are equal.                  *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
@@ -50,8 +50,6 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  2.) tmpl_string.h:                                                        *
- *          Header file containing the function prototype.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 29, 2023                                             *
@@ -60,8 +58,8 @@
 /*  Booleans provided here.                                                   */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_string.h>
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern tmpl_Bool tmpl_String_Are_Equal(const char *str0, const char *str1);
 
 /*  Function for checking if two strings are equal.                           */
 tmpl_Bool tmpl_String_Are_Equal(const char *str0, const char *str1)
@@ -69,7 +67,7 @@ tmpl_Bool tmpl_String_Are_Equal(const char *str0, const char *str1)
     /*  First, check for NULL pointers before trying to access.               */
     if (!str0)
     {
-        /*  If both pointers are NULL, we'll treat this as equal strings.     */
+        /*  If both pointers are NULL, we'll treat these as equal strings.    */
         if (!str1)
             return tmpl_True;
 
@@ -94,8 +92,8 @@ tmpl_Bool tmpl_String_Are_Equal(const char *str0, const char *str1)
             return tmpl_False;
 
         /*  Move to the next entries in the strings.                          */
-        str0++;
-        str1++;
+        ++str0;
+        ++str1;
     }
 
     /*  str0 is now at it's null terminator. If str1 is not at its null       *
