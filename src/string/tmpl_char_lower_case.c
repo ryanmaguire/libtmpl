@@ -50,8 +50,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_HAS_ASCII is defined.                      *
- *  2.) tmpl_bool.h:                                                          *
- *          Header file providing Booleans.                                   *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       August 12, 2021                                               *
@@ -66,9 +64,6 @@
 
 /*  TMPL_HAS_ASCII macro found here.                                          */
 #include <libtmpl/include/tmpl_config.h>
-
-/*  Booleans (true and false) are provided here.                              */
-#include <libtmpl/include/tmpl_bool.h>
 
 /*  Forward declaration / function prototype, found in tmpl_string.h as well. */
 extern char tmpl_Char_Lower_Case(char c);
@@ -111,7 +106,7 @@ char tmpl_Char_Lower_Case(char c)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Function for converting upper case character to lower case.               */
+/*  Function for converting an upper case character to lower case.            */
 char tmpl_Char_Lower_Case(char c)
 {
     /*  Use a switch to check the value of c and return the lower-case.       */

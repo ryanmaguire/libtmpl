@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                              tmpl_upper_case                               *
+ *                            tmpl_char_upper_case                            *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Convert lower case letters to upper case.                             *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Upper_Case                                                       *
+ *      tmpl_Char_Upper_Case                                                  *
  *  Purpose:                                                                  *
  *      Given a char c, convert it to upper case (if applicable).             *
  *  Arguments:                                                                *
@@ -50,8 +50,6 @@
  ******************************************************************************
  *  1.) tmpl_config.h:                                                        *
  *          Header file where TMPL_HAS_ASCII is defined.                      *
- *  2.) tmpl_string.h:                                                        *
- *          Header file containing the function prototype.                    *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       January 26, 2022                                              *
@@ -60,13 +58,15 @@
  ******************************************************************************
  *  2023/08/07: Ryan Maguire                                                  *
  *      Added check for ASCII support. Combined portable and ascii versions.  *
+ *  2025/10/08: Ryan Maguire                                                  *
+ *      Changed function and file name to be consistent with other routines.  *
  ******************************************************************************/
 
 /*  TMPL_HAS_ASCII macro found here.                                          */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  Function prototype is here.                                               */
-#include <libtmpl/include/tmpl_string.h>
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern char tmpl_Char_Upper_Case(char c);
 
 /*  The ASCII version is much more efficient.                                 */
 #if TMPL_HAS_ASCII == 1
@@ -102,10 +102,10 @@ char tmpl_Char_Upper_Case(char c)
  *                              Portable Version                              *
  ******************************************************************************/
 
-/*  Function for converting lower case character to upper case.               */
+/*  Function for converting a lower case character to upper case.             */
 char tmpl_Char_Upper_Case(char c)
 {
-    /*  Use a switch to check the value of c and return the lower-case.       */
+    /*  Use a switch to check the value of c and return the upper-case.       */
     switch(c)
     {
         case 'a':
