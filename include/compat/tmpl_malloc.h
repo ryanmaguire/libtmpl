@@ -44,7 +44,7 @@
 #include <cstdlib>
 
 /*  Macro for allocating memory. In C++ one must cast the result of malloc.   */
-#define TMPL_MALLOC(type, N) static_cast<type *>(std::malloc(sizeof(type) * N))
+#define TMPL_MALLOC(type, N) static_cast<type *>(std::malloc(sizeof(type)*(N)))
 
 #else
 /*  Else for #ifdef __cplusplus. Below is C code.                             */
@@ -53,7 +53,7 @@
 #include <stdlib.h>
 
 /*  Macro for malloc. In C one should not cast the result of malloc.          */
-#define TMPL_MALLOC(type, N) malloc(sizeof(type) * N)
+#define TMPL_MALLOC(type, N) malloc(sizeof(type) * (N))
 
 #endif
 /*  End of #ifdef __cplusplus.                                                */
