@@ -37,12 +37,13 @@
  *  Method:                                                                   *
  *      Loop through the string and remove all whitespace characters.         *
  *  Notes:                                                                    *
- *      If the input string is NULL, nothing is done.                         *
+ *      1.) If the input string is NULL, nothing is done.                     *
+ *      2.) If the input is not NULL, then it is assumed that the string ends *
+ *          with its null terminator.                                         *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_string.h:                                                        *
- *          Header where tmpl_String_Remove_Whitespace is declared.           *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author: Ryan Maguire                                                      *
  *  Date:   April 8, 2021                                                     *
@@ -53,29 +54,34 @@
  *      Added comments, simplified code.                                      *
  ******************************************************************************/
 
-/*  Function prototype is given here.                                         */
-#include <libtmpl/include/tmpl_string.h>
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern void tmpl_String_Remove_Whitespace(char * str);
 
 /*  Function for removing all whitespace from a string.                       */
 void tmpl_String_Remove_Whitespace(char *str)
 {
+    /*  We use two pointers. One is used for writing (str), so that every     *
+     *  character behind it is a non-whitespace, and the other (ptr) is used  *
+     *  for scanning ahead through any whitespace characters. Both pointers   *
+     *  start at the same location.                                           */
     const char *ptr = str;
 
-    /*  If the input is NULL, the following will cause a segfault. Check.     */
+    /*  If the input is NULL, the following would cause a segfault. Check.    */
     if (!str)
         return;
 
     do {
         /*  Keep incremementing the pointer until we find a non-space.        */
         while (*ptr == ' ')
-            ptr++;
+            ++ptr;
 
         /*  Set the value of the string to the non-space character in ptr.    */
         *str = *ptr;
 
         /*  Increment both pointers and start all over again.                 */
-        str++;
-        ptr++;
+        ++str;
+        ++ptr;
+
     } while (*str);
 }
 /*  End of tmpl_String_Remove_Whitespace.                                     */
