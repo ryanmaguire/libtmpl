@@ -34,23 +34,25 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_string.h:                                                        *
- *          tmpl_Lower_Case:                                                  *
- *              Converts a single character char c to lower case.             *
+ *      src/string/                                                           *
+ *          tmpl_Char_Lower_Case:                                             *
+ *              Converts a single character char c to lower-case.             *
  *  Method:                                                                   *
- *      Loop over the characters of the string and call tmpl_Lower_Case.      *
+ *      Loop over the characters of the string and call tmpl_Char_Lower_Case. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_string.h:                                                        *
- *          Header file where the function prototype is defined.              *
+ *  None.                                                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       June 19, 2021                                                 *
  ******************************************************************************/
 
-/*  Function prototype here.                                                  */
-#include <libtmpl/include/tmpl_string.h>
+/*  Function for converting a character to its lower-case equivalent.         */
+extern char tmpl_Char_Lower_Case(char c);
+
+/*  Forward declaration / function prototype, found in tmpl_string.h as well. */
+extern void tmpl_String_Make_Lower_Case(char *str);
 
 /*  Function for converting a string to it's lower-case equivalent.           */
 void tmpl_String_Make_Lower_Case(char *str)
