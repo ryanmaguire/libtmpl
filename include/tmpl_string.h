@@ -236,7 +236,7 @@ extern char *tmpl_String_Duplicate(const char *str);
  *  TODO:                                                                     *
  *      Explore implementing the glibc algorithm.                             *
  ******************************************************************************/
-size_t tmpl_String_Length(const char *str);
+extern size_t tmpl_String_Length(const char * const str);
 
 /******************************************************************************
  *  Function:                                                                 *
