@@ -114,7 +114,8 @@ unsigned char tmpl_Char_To_UChar(char c)
 {
     /*  Lacking ASCII support, a switch works and is portable. GCC 15.2 with  *
      *  -O3 enabled optimizes this to the same number of instructions as the  *
-     *  previous version (albeit, slightly different instructions).           */
+     *  previous version (albeit, slightly different instructions). The       *
+     *  outputs of the two methods are the same.                              */
     switch (c)
     {
         case '1':
