@@ -152,14 +152,14 @@ tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
 
     /*  Lastly, before performing the actual comparison, check to make sure   *
      *  the data for the Gauss tuples have been initialized.                  */
-    if (!first->gauss_code)
+    if (!first->tuples)
     {
         /*  If we get here, then the data for the first Gauss code is NULL.   *
          *  Like the previous check, if the data for the second Gauss code is *
          *  also NULL, then we will treat these as equal. A NULL pointer for  *
          *  the Gauss tuples is valid, it represents a knot with no crossings.*
          *  This is the unknot, which is the simplest knot.                   */
-        if (!second->gauss_code)
+        if (!second->tuples)
             return tmpl_True;
 
         /*  Otherwise the first code is empty but the second one is not.      *
@@ -171,13 +171,13 @@ tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
     for (ind = 0; ind < first->length; ++ind)
     {
         /*  The function tmpl_GaussTuple_Are_Equal wants pointers to Gauss    *
-         *  tuples. The value first->gauss_code[ind] is the nth Gauss tuple   *
-         *  for the knot, but is an actual Gauss tuple struct, not a pointer. *
+         *  tuples. The value first->tuples[n] is the nth Gauss tuple for the *
+         *  knot diagram, but is an actual Gauss tuple struct, not a pointer. *
          *  Get the address with an ampersand &.                              */
-        const tmpl_GaussTuple * const first_tuple = &(first->gauss_code[ind]);
+        const tmpl_GaussTuple * const first_tuple = &(first->tuples[ind]);
 
         /*  Do the same thing for the second Gauss code.                      */
-        const tmpl_GaussTuple * const second_tuple = &(second->gauss_code[ind]);
+        const tmpl_GaussTuple * const second_tuple = &(second->tuples[ind]);
 
         /*  If the two Gauss tuples are different, the Gauss codes are        *
          *  different so return false. Otherwise, proceed.                    */
