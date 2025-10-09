@@ -190,7 +190,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
 
     /*  Initialize the output to zero. This serves two purposes. Firstly, it  *
      *  allows us to loop through the string and convert it to a number by    *
-     *  performing out = 10*k + out, where k is the current digit. Secondly   *
+     *  performing out = 10*out + k, where k is the current digit. Secondly   *
      *  it allows us to satisfy the standard library requirement of returning *
      *  zero for invalid strings. If the first characters of the string are   *
      *  not whitespace or digits, the while loops below will be skipped and   *
