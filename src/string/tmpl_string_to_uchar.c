@@ -1,3 +1,83 @@
+/******************************************************************************
+ *                                  LICENSE                                   *
+ ******************************************************************************
+ *  This file is part of libtmpl.                                             *
+ *                                                                            *
+ *  libtmpl is free software: you can redistribute it and/or modify           *
+ *  it under the terms of the GNU General Public License as published by      *
+ *  the Free Software Foundation, either version 3 of the License, or         *
+ *  (at your option) any later version.                                       *
+ *                                                                            *
+ *  libtmpl is distributed in the hope that it will be useful,                *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *  GNU General Public License for more details.                              *
+ *                                                                            *
+ *  You should have received a copy of the GNU General Public License         *
+ *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
+ ******************************************************************************
+ *                            tmpl_string_to_uchar                            *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Converts a string to an unsigned char.                                *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_String_To_UChar                                                  *
+ *  Purpose:                                                                  *
+ *      Converts a string (like "+123") to a number (123).                    *
+ *  Arguments:                                                                *
+ *      str (const char *):                                                   *
+ *          A string.                                                         *
+ *  Output:                                                                   *
+ *      val (unsigned char):                                                  *
+ *          The numerical value of the string.                                *
+ *  Called Functions:                                                         *
+ *      None.                                                                 *
+ *  Method:                                                                   *
+ *      If the input string is NULL or empty, return zero. Next, remove all   *
+ *      leading whitespace and zeros. Examine the next character and check if *
+ *      it is a "+" or "-", we'll negate the output if it is a minus sign.    *
+ *      After that, loop through the characters until the first non-numerical *
+ *      char is found, and convert this leading continuous sequence of        *
+ *      numerical characters into a number (read in base 10). We do this by   *
+ *      performing out = 10 * out + k, where k is the current digit.          *
+ *  Notes:                                                                    *
+ *      1.) The input is base 10, "123" represents one hundred twenty three.  *
+ *      2.) If the input starts with a non-numerical character other than     *
+ *          whitespace or the "+" or "-" symbols, then zero is returned.      *
+ *      3.) All characters after the first continuous sequence of numerical   *
+ *          characters are ignored. "  +123_blah_blah_45" will output 123.    *
+ *      4.) The minus sign is allowed as a leading character. Since the       *
+ *          output is unsigned, the returned value is 2^N - |out| where N is  *
+ *          the number of bits in unsigned char (which is usually 8).         *
+ *      5.) It is assumed the string ends with a null terminator.             *
+ *      6.) If the input is NULL, then zero will be returned.                 *
+ *      7.) If the input is larger than the width of unsigned char, then the  *
+ *          output will be reduced mod 2^N where N is the width of unsigned   *
+ *          char (which is usually 8 bits).                                   *
+ *      8.) unsigned short, unsigned int, and unsigned long equivalents are   *
+ *          provided. unsigned long long is provided on platforms supporting  *
+ *          it (and if long long support was requested at compile time).      *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) tmpl_config.h:                                                        *
+ *          Header file where TMPL_HAS_ASCII is defined.                      *
+ *  2.) tmpl_cast.h:                                                          *
+ *          Provides a macro for casting with C vs. C++ compatibility.        *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       November 29, 2023                                             *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/10/08: Ryan Maguire                                                  *
+ *      Added doc-string and license, made function compliant with atoi.      *
+ ******************************************************************************/
+
+/*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
 #include <libtmpl/include/compat/tmpl_cast.h>
 
 /*  TMPL_HAS_ASCII macro found here.                                          */
