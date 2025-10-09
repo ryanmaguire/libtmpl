@@ -57,9 +57,6 @@
  *      7.) If the input is larger than the width of unsigned char, then the  *
  *          output will be reduced mod 2^N where N is the width of unsigned   *
  *          char (which is usually 8 bits).                                   *
- *      8.) unsigned short, unsigned int, and unsigned long equivalents are   *
- *          provided. unsigned long long is provided on platforms supporting  *
- *          it (and if long long support was requested at compile time).      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -103,7 +100,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
 
     /*  Initialize the output to zero. This serves two purposes. Firstly, it  *
      *  allows us to loop through the string and convert it to a number by    *
-     *  performing out = 10*k + out, where k is the current digit. Secondly   *
+     *  performing out = 10*out + k, where k is the current digit. Secondly   *
      *  it allows us to satisfy the standard library requirement of returning *
      *  zero for invalid strings. If the first characters of the string are   *
      *  not whitespace or digits, the while loops below will be skipped and   *
