@@ -132,7 +132,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
-    else if (sign == '+')
+    else if (*str == '+')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */
@@ -225,7 +225,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
-    else if (sign == '+')
+    else if (*str == '+')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */
