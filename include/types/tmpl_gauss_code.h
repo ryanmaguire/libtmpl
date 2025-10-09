@@ -54,7 +54,7 @@ typedef struct tmpl_GaussCode_Def {
 
     /*  A pointer to an array of Gauss tuples, representing the Gauss code of *
      *  the knot diagram. This array has "length" number of elements.         */
-    tmpl_GaussTuple *gauss_code;
+    tmpl_GaussTuple *tuples;
 
     /*  A string with an error message that can be set if something goes      *
      *  wrong. This is set to NULL by default, meaning no error has occurred. */
