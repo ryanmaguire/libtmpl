@@ -1,158 +1,136 @@
 
-
+#include <libtmpl/include/compat/tmpl_free.h>
+#include <libtmpl/include/compat/tmpl_malloc.h>
 #include <libtmpl/include/tmpl_knots.h>
 #include <libtmpl/include/tmpl_string.h>
-#include <stdlib.h>
+
 #include <ctype.h>
 
 /*  Function for creating a tmpl_VirtualKnot from a string representing the   *
  *  Gauss code of the knot.                                                   */
-tmpl_VirtualKnot *tmpl_Gauss_Code_From_String(char *str)
+void
+tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
 {
     unsigned long int i, ind;
-    tmpl_VirtualKnot *K;
+    size_t word_length;
 
-    /*  Allocate memory for our virtual knot pointer.                         */
-    K = malloc(sizeof(*K));
+    if (!code)
+        return;
 
-    /*  Check that malloc didn't fail. If it did, it returns NULL. Abort and  *
-     *  return a NULL pointer.                                                */
-    if (K == NULL)
-        return NULL;
+    tmpl_GaussCode_Init(code);
 
-    /*  Set the error_occured and error_message False and NULL, respectively, *
-     *  indicating no error has occured. If everything executes smoothly,     *
-     *  this will remain unchanged.                                           */
-    K->error_occured = tmpl_False;
-    K->error_message = NULL;
-
-    /*  If the string is NULL, set the error_occured variable to true and     *
+    /*  If the string is NULL, set the error_occurred variable to true and    *
      *  store an error message in the virtual knot.                           */
-    if (str == NULL)
+    if (!str)
     {
-        K->number_of_crossings = 0;
-        K->gauss_code = NULL;
-        K->error_occured = tmpl_True;
-        K->error_message = tmpl_strdup(
+        code->error_occurred = tmpl_True;
+        code->error_message =
             "Error Encountered: libtmpl\n"
-            "    tmpl_Gauss_Code_From_String\n"
-            "Input string is NULL. Cannot create virtual knot. Aborting.\n"
-        );
-        return K;
+            "    tmpl_GaussCode_From_String\n\n"
+            "Input string is NULL.\n";
+
+        return;
     }
 
-    K->gauss_code = malloc(sizeof(*K->gauss_code));
+    word_length = tmpl_String_Length(str);
+    code->tuples = TMPL_MALLOC(tmpl_GaussTuple, word_length / 3);
 
-    if (K->gauss_code == NULL)
+    if (!code->tuples)
     {
-        K->number_of_crossings = 0;
-        K->error_occured = tmpl_True;
-        K->error_message = tmpl_strdup(
+        code->error_occurred = tmpl_True;
+        code->error_message =
             "Error Encountered: libtmpl\n"
-            "    tmpl_Gauss_Code_From_String\n"
-            "Malloc returned NULL for gauss_code pointer. Aborting.\n"
-        );
-        return K;
+            "    tmpl_GaussCode_From_String\n\n"
+            "malloc returned NULL for tuples pointer.\n";
+
+        return;
     }
 
     i = 0U;
     ind = 0U;
+
     while (str[i])
     {
+        while (str[i] == ' ')
+            ++i;
+
         switch(str[i])
         {
             case 'o':
             case 'O':
-                (K->gauss_code[ind]).crossing_type = tmpl_OverCrossing;
+                code->tuples[ind].crossing_type = TMPL_OVER_CROSSING;
                 break;
             case 'u':
             case 'U':
-                (K->gauss_code[ind]).crossing_type = tmpl_UnderCrossing;
+                code->tuples[ind].crossing_type = TMPL_UNDER_CROSSING;
                 break;
             default:
-                free(K->gauss_code);
-                K->gauss_code = NULL;
-                K->error_occured = tmpl_True;
-                K->error_message = tmpl_strdup(
-                    "Error Encountered: libtmpl\n"
-                    "    tmpl_Gauss_Code_From_String\n"
-                    "Could not parse input string. String must be of the\n"
-                    "form TNSTNSTNS...TNS where T is type, N is an integer,\n"
-                    "and S is the sign. EX: O1+U2+O3+U1+O2+U3+\n"
-                );
-
-                return K;
+                goto PARSING_ERROR;
         }
+
         ++i;
 
-        if (isdigit(str[i]))
+        while (str[i] == ' ')
+            ++i;
+
+        if (tmpl_Char_Is_Digit(str[i]))
         {
             size_t k = i;
-            while (isdigit(str[k]))
-            {
+            while (tmpl_Char_Is_Digit(str[k]))
                 ++k;
-            }
 
-            (K->gauss_code[ind]).crossing_number =
-                (unsigned long int)atoi(str + i);
+            code->tuples[ind].crossing_number = tmpl_String_To_ULong(&str[i]);
             i = k;
         }
         else
-        {
-            free(K->gauss_code);
-            K->gauss_code = NULL;
-            K->error_occured = tmpl_True;
-            K->error_message = tmpl_strdup(
-                "Error Encountered: libtmpl\n"
-                "    tmpl_Gauss_Code_From_String\n"
-                "Could not parse input string. String must be of the\n"
-                "form TNSTNSTNS...TNS where T is type, N is an integer, and\n"
-                "S is the sign. EX: O1+U2+O3+U1+O2+U3+\n"
-            );
-            return K;
-        }
+            goto PARSING_ERROR;
+
+        while (str[i] == ' ')
+            ++i;
 
         switch(str[i])
         {
             case '+':
-                (K->gauss_code[ind]).crossing_sign = tmpl_PositiveCrossing;
+                code->tuples[ind].crossing_sign = TMPL_POSITIVE_CROSSING;
                 break;
             case '-':
-                (K->gauss_code[ind]).crossing_sign = tmpl_NegativeCrossing;
+                code->tuples[ind].crossing_sign = TMPL_NEGATIVE_CROSSING;
                 break;
             default:
-                free(K->gauss_code);
-                K->gauss_code = NULL;
-                K->error_occured = tmpl_True;
-                K->error_message = tmpl_strdup(
-                    "Error Encountered: libtmpl\n"
-                    "    tmpl_Gauss_Code_From_String\n"
-                    "Could not parse input string. String must be of the\n"
-                    "form TNSTNSTNS...TNS where T is type, N is an integer,\n"
-                    "and S is the sign. EX: O1+U2+O3+U1+O2+U3+\n"
-                );
-
-                return K;
+                goto PARSING_ERROR;
         }
+
         ++i;
         ++ind;
-        K->gauss_code = realloc(K->gauss_code, sizeof(*K->gauss_code)*(ind+1));
     }
-
-    K->gauss_code = realloc(K->gauss_code, sizeof(*K->gauss_code)*ind);
-    K->number_of_crossings = (unsigned long int) (ind / 2);
 
     if ((ind % 2) != 0)
     {
-        K->error_occured = tmpl_True;
-        K->error_message = tmpl_strdup(
+        TMPL_FREE(code->tuples);
+        code->error_occurred = tmpl_True;
+        code->error_message =
             "Error Encountered: libtmpl\n"
-            "    tmpl_Gauss_Code_From_String\n"
+            "    tmpl_GaussCode_From_String\n\n"
             "Input string does not have an even number of Gauss tuples.\n"
             "A Gauss code corresponding to an actual virtual knot should\n"
-            "Have an even number of elements in the  sequence.\n"
-        );
+            "Have an even number of elements in the sequence.\n";
+
+        return;
     }
 
-    return K;
+    code->tuples = realloc(code->tuples, sizeof(*code->tuples) * ind);
+    code->length = ind;
+    code->number_of_crossings = ind << 1;
+
+PARSING_ERROR:
+
+    TMPL_FREE(code->tuples);
+
+    code->error_occurred = tmpl_True;
+    code->error_message =
+        "Error Encountered: libtmpl\n"
+        "    tmpl_Gauss_Code_From_String\n\n"
+        "Could not parse input string. String must be of the\n"
+        "form TNSTNSTNS...TNS where T is type, N is an integer,\n"
+        "and S is the sign. EX: O1+U2+O3+U1+O2+U3+\n";
 }
