@@ -1,7 +1,8 @@
-#include <stdlib.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_fft.h>
+#include <libtmpl/include/compat/tmpl_cast.h>
+#include <libtmpl/include/compat/tmpl_malloc.h>
 
 void
 tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
@@ -12,7 +13,7 @@ tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
     size_t k, m, n, skip;
 
     /*  Boolean for determining if we're on an even iteration.                */
-    tmpl_Bool evenIteration = N & 0x55555555;
+    tmpl_Bool evenIteration = TMPL_CAST(N & 0x55555555, tmpl_Bool);
 
     /*  Declare several pointers for performing the Cooley-Tukey algorithm.   */
     tmpl_ComplexDouble *E, *D;
@@ -38,8 +39,8 @@ tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
     /*  The "twiddle" factors are just the complex exponentials that occur    *
      *  inside the discrete Fourier transform. Allocate memory for this and   *
      *  the "scratch" factor. Per C99 recommendations we do not cast malloc.  */
-    twiddles = malloc(sizeof(*twiddles) * N);
-    scratch  = malloc(sizeof(*scratch)  * N);
+    twiddles = TMPL_MALLOC(tmpl_ComplexDouble, N);
+    scratch = TMPL_MALLOC(tmpl_ComplexDouble, N);
 
     /*  Compute the "twiddle" factors. No idea why it's called this.          */
     for (k = 0; k<N; ++k)
@@ -86,7 +87,7 @@ tmpl_CDouble_IFFT_Cooley_Tukey(tmpl_ComplexDouble *in,
         E = Xstart;
 
         /*  The next iteration is the opposite of what evenIteration is now.  */
-        evenIteration = !evenIteration;
+        evenIteration = TMPL_NOT(evenIteration);
     }
 
     /*  Free your allocated memory!                                           */

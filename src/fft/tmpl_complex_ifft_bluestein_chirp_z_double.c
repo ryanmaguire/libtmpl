@@ -1,7 +1,7 @@
-#include <stdlib.h>
 #include <libtmpl/include/tmpl_math.h>
 #include <libtmpl/include/tmpl_complex.h>
 #include <libtmpl/include/tmpl_fft.h>
+#include <libtmpl/include/compat/tmpl_malloc.h>
 
 void
 tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
@@ -48,10 +48,10 @@ tmpl_CDouble_IFFT_Bluestein_Chirp_Z(tmpl_ComplexDouble *in,
     /*  Allocate memory for x_in and chirp, which will be a power of two in   *
      *  size. Per C90 guidelines, we do not cast malloc since void pointers   *
      *  safely promoted without the need for type casting.                    */
-    chirp      = malloc(sizeof(*chirp)      * chirp_size);
-    rcpr_chirp = malloc(sizeof(*rcpr_chirp) * N_pow_2);
-    x_in       = malloc(sizeof(*x_in)       * N_pow_2);
-    temp       = malloc(sizeof(*temp)       * N_pow_2);
+    chirp = TMPL_MALLOC(tmpl_ComplexDouble, chirp_size);
+    rcpr_chirp = TMPL_MALLOC(tmpl_ComplexDouble, N_pow_2);
+    x_in = TMPL_MALLOC(tmpl_ComplexDouble, N_pow_2);
+    temp = TMPL_MALLOC(tmpl_ComplexDouble, N_pow_2);
 
     /*  Set the values for the "chirp" factor, which is simply the complex    *
      *  exponential of (k^2 / 2) * (+/- 2 pi i / N). The +/- depends on       *
