@@ -311,7 +311,7 @@ extern void tmpl_String_Make_Upper_Case(char *str);
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_string_remove_whitespace.c                    *
  ******************************************************************************/
-extern void tmpl_String_Remove_Whitespace(char * str);
+extern void tmpl_String_Remove_Whitespace(char *str);
 
 /******************************************************************************
  *  Function:                                                                 *
