@@ -238,11 +238,11 @@ unsigned short int tmpl_String_To_UShort(const char *str)
             break;
 
         /*  Convert this character to a number.                               */
-        digit = tmpl_String_To_UShort(*str);
+        digit = tmpl_Char_To_UShort(*str);
 
         /*  The string is interpreted to be a base 10 integer. Add the        *
          *  current digit to the output.                                      */
-        out = ten * out + digit;
+        out = TMPL_CAST(ten * out + digit, unsigned short int);
 
         /*  Move on to the next character in the string.                      */
         ++str;
