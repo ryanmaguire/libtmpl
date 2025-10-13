@@ -1,6 +1,6 @@
 
 #include <libtmpl/include/tmpl_graph_theory.h>
-#include <stdlib.h>
+#include <libtmpl/include/compat/tmpl_malloc.h>
 
 tmpl_Graph *tmpl_Create_Complete_Graph(unsigned long int N)
 {
@@ -9,11 +9,11 @@ tmpl_Graph *tmpl_Create_Complete_Graph(unsigned long int N)
     unsigned long int current_edge;
     tmpl_GraphEdge *E;
 
-    G = malloc(sizeof(*G));
+    G = TMPL_MALLOC(tmpl_Graph, 1);
     G->vertex_number = N;
-    G->edge_number   = N * (N + 1U) / 2U;
+    G->edge_number = N * (N + 1U) / 2U;
 
-    G->edges = malloc(sizeof(*(G->edges)) * G->edge_number);
+    G->edges = TMPL_MALLOC(tmpl_GraphEdge, G->edge_number);
     E = G->edges;
 
     current_edge = 0UL;
