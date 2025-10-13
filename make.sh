@@ -37,6 +37,9 @@ CC=cc
 # Version of C to be used. Change this with -std=cxx.
 STDVER="-std=c89"
 
+# Whether or not to check for ASCII support.
+USEASCII=1
+
 # Use of OpenMP, the multiprocessing API. Enable this with -omp.
 USEOMP=0
 
@@ -106,6 +109,10 @@ for arg in "$@"; do
     # Check if the user wants to inline small functions.
     elif [ "$arg" == "-inline" ]; then
         USEINLINE=1
+
+    # Check if the user does not want to use ASCII-specific functions.
+    elif [ "$arg" == "-noascii" ]; then
+        USEASCII=0
 
     elif [ "$arg" == "-nomath" ]; then
         USEMATH=0
@@ -228,6 +235,10 @@ else
     Exclude="$Exclude $(find . -name '*_math_*.c')"
 fi
 
+if [ $USEASCII == 0 ]; then
+    ExtraArgs="$ExtraArgs -DTMPL_NO_ASCII"
+fi
+
 if [ $USEIEEE == 0 ]; then
     ExtraArgs="$ExtraArgs -DTMPL_SET_TMPL_USE_IEEE_FALSE"
 fi
@@ -256,7 +267,18 @@ CArgs2="-Wconversion -Wmissing-prototypes -Wmissing-declarations"
 CArgs3="-Winit-self -Wnull-dereference -Wwrite-strings -Wdouble-promotion"
 CArgs4="-Wfloat-conversion -Wstrict-prototypes -Wold-style-definition"
 CArgs5="-I../ -DNDEBUG -g -fPIC -O3 -flto -c"
-CompilerArgs="$STDVER $ExtraArgs $CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5"
+
+# Compiler arguments if using a C++ compiler.
+CPPArgs1="-pedantic -Wall -Wextra -Wpedantic -Wmissing-field-initializers"
+CPPArgs2="-Wconversion -Wmissing-declarations -Wfloat-conversion"
+CPPArgs3="-Winit-self -Wnull-dereference -Wwrite-strings -Wdouble-promotion"
+CPPArgs4="-I../ -DNDEBUG -g -fPIC -O3 -flto -c"
+
+if [[ "$CC" == *"++"* ]]; then
+    CompilerArgs="$STDVER $ExtraArgs $CPPArgs1 $CPPArgs2 $CPPArgs3 $CPPArgs4"
+else
+    CompilerArgs="$STDVER $ExtraArgs $CArgs1 $CArgs2 $CArgs3 $CArgs4 $CArgs5"
+fi
 
 # Linking arguments.
 # -O3 is optimization level 3.
