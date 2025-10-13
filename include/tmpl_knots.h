@@ -107,8 +107,7 @@ tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
  *      are_equal (tmpl_Bool):                                                *
  *          Boolean indicating if the first and second codes are equal.       *
  ******************************************************************************/
-extern tmpl_Bool
-tmpl_GaussCode_Init(const tmpl_GaussCode * const code);
+extern void tmpl_GaussCode_Init(tmpl_GaussCode * const code);
 
 /******************************************************************************
  *  Function:                                                                 *

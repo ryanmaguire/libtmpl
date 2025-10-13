@@ -388,14 +388,21 @@ extern unsigned long long int tmpl_String_To_ULLong(const char *str);
  *  Source Code:                                                              *
  *      libtmpl/src/string/tmpl_string_to_uchar.c                             *
  ******************************************************************************/
-extern unsigned char tmpl_String_To_UChar_And_Increment(const char **str);
-extern unsigned short int tmpl_String_To_UShort_And_Increment(const char **str);
-extern unsigned int tmpl_String_To_UInt_And_Increment(const char **str);
-extern unsigned long int tmpl_String_To_ULong_And_Increment(const char **str);
+extern unsigned char
+tmpl_String_To_UChar_And_Increment(const char ** const str_ptr);
+
+extern unsigned short int
+tmpl_String_To_UShort_And_Increment(const char ** const str_ptr);
+
+extern unsigned int
+tmpl_String_To_UInt_And_Increment(const char ** const str_ptr);
+
+extern unsigned long int
+tmpl_String_To_ULong_And_Increment(const char ** const str_ptr);
 
 #if TMPL_HAS_LONGLONG == 1
 extern unsigned long long int
-tmpl_String_To_ULLong_And_Increment(const char **str);
+tmpl_String_To_ULLong_And_Increment(const char ** const str_ptr);
 #endif
 
 #define tmpl_strdup tmpl_String_Duplicate
