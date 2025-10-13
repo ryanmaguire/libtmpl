@@ -148,7 +148,7 @@ unsigned char tmpl_String_To_UChar(const char *str)
          *  We may break out of the while loop and return the output. Since   *
          *  we cast digit to unsigned char, this is equivalent to checking    *
          *  if digit is greater than 9, which is 0x09 in hexidecimal.         */
-        if (digit > 0x09)
+        if (digit > 0x09U)
             break;
 
         /*  The string is interpreted to be a base 10 integer. Add the        *
