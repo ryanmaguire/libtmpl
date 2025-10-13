@@ -64,6 +64,22 @@ extern "C" {
 /*  We prepend tmpl onto False, True, and Bool to avoid name conflicts.       */
 typedef enum tmpl_Bool_Def {tmpl_False, tmpl_True} tmpl_Bool;
 
+/*  The ! symbol doesn't work with tmpl_Bool when using a C++ compiler. We    *
+ *  provide this macro to allow for C++ compatibility.                        */
+#ifdef __cplusplus
+
+/*  1 - val sends 0 to 1 and 1 to 0, which is the same effect as negation.    */
+#define TMPL_NOT(val) (static_cast<tmpl_Bool>(1 - static_cast<int>(val)))
+
+#else
+/*  Else for #ifdef __cplusplus. Below is C code.                             */
+
+/*  With a C compiler we can simply use the ! symbol.                         */
+#define TMPL_NOT(val) (!(val))
+
+#endif
+/*  End of #ifdef __cplusplus.                                                */
+
 /*  End of extern "C" statement allowing C++ compatibility.                   */
 #ifdef __cplusplus
 }
