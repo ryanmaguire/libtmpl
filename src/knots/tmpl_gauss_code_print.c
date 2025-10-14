@@ -54,22 +54,7 @@
  *  4.) stdlib.h:                                                             *
  *          Standard C library header file containing the NULL macro.         *
  ******************************************************************************
- *                            A NOTE ON COMMENTS                              *
- ******************************************************************************
- *  It is anticipated that many users of this code will have experience in    *
- *  either Python or IDL, but not C. Many comments are left to explain as     *
- *  much as possible. Vagueness or unclear code should be reported to:        *
- *  https://github.com/ryanmaguire/libtmpl/issues                             *
- ******************************************************************************
- *                            A FRIENDLY WARNING                              *
- ******************************************************************************
- *  This code is compatible with the C89/C90 standard. The setup script that  *
- *  is used to compile this in make.sh uses gcc and has the                   *
- *  -pedantic and -std=c89 flags to check for compliance. If you edit this to *
- *  use C99 features (built-in complex, built-in booleans, C++ style comments *
- *  and etc.), or GCC extensions, you will need to edit the config script.    *
- ******************************************************************************
- *  Author:     Ryan Maguire, Dartmouth College                               *
+ *  Author:     Ryan Maguire                                                  *
  *  Date:       April 15, 2021                                                *
  ******************************************************************************
  *                             Revision History                               *
@@ -88,25 +73,17 @@
 #include <stdlib.h>
 
 /*  Function for printing the Gauss code of a virtual knot.                   */
-void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
+void tmpl_GaussCode_Print(const tmpl_GaussCode * const code)
 {
     /*  Declare a variable for looping through the indices of the Gauss code. */
     unsigned long int ind;
-
-    /*  The Gauss code length is twice the number of crossings. We'll store   *
-     *  that value in this variable.                                          */
-    unsigned long int gauss_code_length;
-
-    /*  And to improve readability, we'll extract a pointer to the nth        *
-     *  element of the Gauss sequence and then parse the pointers values.     */
-    tmpl_GaussTuple *T_ptr;
 
     /*  Check that the virtual knot is not NULL. Trying to access a NULL      *
      *  pointer may result in a segmentation fault as you will attempt to     *
      *  access memory you do not own. More importantly, the NULL virtual knot *
      *  corresponds to the empty knot. That is, the lack of a knot in S^3,    *
      *  which is just the manifold S^3. We'll print "Empty Knot" here.        */
-    if (K == NULL)
+    if (!code)
     {
         puts("Empty Knot");
         return;
@@ -114,9 +91,9 @@ void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
 
     /*  If the pointer is not NULL, check that it is not corrupted. That is,  *
      *  check that the error_occured Boolean is not True.                     */
-    if (K->error_occured)
+    if (code->error_occurred)
     {
-        if (K->error_message == NULL)
+        if (code->error_message == NULL)
             puts("Error Encountered: libtmpl\n"
                  "    tmpl_Print_Gauss_Code\n\n"
                  "Input virtual knot has error_occured Boolean set to True.\n"
@@ -125,48 +102,44 @@ void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
             printf("Error Encountered: libtmpl\n"
                    "    tmpl_Print_Gauss_Code\n\n"
                    "Input virtual knot has error_occured Boolean set to True.\n"
-                   "Original Error Message:\n\n%s", K->error_message);
+                   "Original Error Message:\n\n%s", code->error_message);
         return;
     }
 
     /*  If the Gauss code inside the virtual knot is empty, then there are    *
      *  no crossings. This is the unknot.                                     */
-    else if (K->gauss_code == NULL)
+    else if (!code->tuples)
     {
         printf("Unknot");
         return;
     }
 
-    /*  If we get here, we have an actual "knot". That is, there are actual   *
-     *  crossings (though it may be a virtual knot, and not a classical one). */
-    gauss_code_length = 2*K->number_of_crossings;
-
     /*  Loop through the Gauss sequence and parse the Gauss tuples.           */
-    for (ind = 0; ind < gauss_code_length; ++ind)
+    for (ind = 0UL; ind < code->length; ++ind)
     {
-        /*  Get a pointer to the current Gauss tuple. K->gauss_code is a      *
-         *  pointer to a Gauss tuple array. K->gauss_code[ind] is a Gauss     *
+        /*  Get a pointer to the current Gauss tuple. code->gauss_code is a   *
+         *  pointer to a Gauss tuple array. code->gauss_code[ind] is a Gauss  *
          *  tuple struct. It is a waste of stack memory to reserve a local    *
          *  variable for this struct, so instead we simply have a pointer     *
-         *  point to it. We get the address of the struct K->gauss_code[ind]  *
-         *  with an ampersand &. So we have the following pointer:            */
-        T_ptr = &(K->gauss_code[ind]);
+         *  point to it. We get the address of code->gauss_code[ind] with an  *
+         *  ampersand, &.                                                     */
+        const tmpl_GaussTuple * const tuple = &(code->tuples[ind]);
 
         /*  A Gauss tuple has the crossing sign, crossing number, and         *
          *  crossing type. Parse these values and print out the Gauss code.   */
-        if (T_ptr->crossing_sign == tmpl_PositiveCrossing)
+        if (tuple->crossing_sign == TMPL_POSITIVE_CROSSING)
         {
-            if (T_ptr->crossing_type == tmpl_UnderCrossing)
-                printf("U%lu+", (K->gauss_code[ind]).crossing_number);
+            if (tuple->crossing_type == TMPL_UNDER_CROSSING)
+                printf("U%lu+", tuple->crossing_number);
             else
-                printf("O%lu+", (K->gauss_code[ind]).crossing_number);
+                printf("O%lu+", tuple->crossing_number);
         }
         else
         {
-            if (T_ptr->crossing_type == tmpl_UnderCrossing)
-                printf("U%lu-", (K->gauss_code[ind]).crossing_number);
+            if (tuple->crossing_type == TMPL_UNDER_CROSSING)
+                printf("U%lu-", tuple->crossing_number);
             else
-                printf("O%lu-", (K->gauss_code[ind]).crossing_number);
+                printf("O%lu-", tuple->crossing_number);
         }
     }
 
@@ -174,4 +147,4 @@ void tmpl_Print_Gauss_Code(tmpl_VirtualKnot *K)
     printf("\n");
     return;
 }
-/*  End of tmpl_Print_Gauss_Code.                                             */
+/*  End of tmpl_GaussCode_Print.                                              */
