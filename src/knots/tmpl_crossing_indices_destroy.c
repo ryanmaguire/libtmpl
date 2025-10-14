@@ -63,7 +63,7 @@
 /*  Location of the TMPL_FREE macro.                                          */
 #include <libtmpl/include/compat/tmpl_free.h>
 
-/*  Forward declaration / function prototype, found in tmpl_knot.h as well.   */
+/*  Forward declaration / function prototype, found in tmpl_knots.h as well.  */
 extern void tmpl_CrossingIndices_Destroy(tmpl_CrossingIndices ** const ind_ptr);
 
 /*  Function for freeing memory in a dynamically allocated Gauss tuple.       */
