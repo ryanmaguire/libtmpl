@@ -16,20 +16,20 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                          tmpl_gauss_tuple_destroy                          *
+ *                        tmpl_crossing_indices_destroy                       *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Free's a dynamically allocated Gauss tuple and sets it to NULL.       *
+ *      Free's a dynamically allocated crossing table and sets it to NULL.    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_GaussTuple_Destroy                                               *
+ *      tmpl_CrossingIndices_Destroy                                          *
  *  Purpose:                                                                  *
- *      Safely free's the memory in a dynamically allocated Gauss tuple.      *
+ *      Safely free's the memory in a dynamically allocated crossing table.   *
  *  Arguments:                                                                *
- *      tuple_ptr (tmpl_CrossingIndices ** const):                            *
- *          A pointer to a Gauss tuple.                                       *
+ *      ind_ptr (tmpl_CrossingIndices ** const):                              *
+ *          A pointer to a crossing index table.                              *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
@@ -37,10 +37,10 @@
  *          free:                                                             *
  *              Free's dynamically allocated memory.                          *
  *  Method:                                                                   *
- *      Use the TMPL_FREE macro to check if the tuple is NULL, freeing it if  *
- *      is not, and then setting the tuple to NULL to avoid double frees.     *
+ *      Use the TMPL_FREE macro to check if the table is NULL, freeing it if  *
+ *      is not, and then setting the table to NULL to avoid double frees.     *
  *  Notes:                                                                    *
- *      This function checks if either tuple_ptr or *tuple_ptr are NULL.      *
+ *      This function checks if either ind_ptr or *ind_ptr are NULL.          *
  *      Nothing is done in these cases.                                       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
@@ -66,14 +66,14 @@
 /*  Forward declaration / function prototype, found in tmpl_knots.h as well.  */
 extern void tmpl_CrossingIndices_Destroy(tmpl_CrossingIndices ** const ind_ptr);
 
-/*  Function for freeing memory in a dynamically allocated Gauss tuple.       */
+/*  Function for freeing memory in a dynamically allocated crossing table.    */
 void tmpl_CrossingIndices_Destroy(tmpl_CrossingIndices ** const ind_ptr)
 {
     /*  If the input pointer is NULL, there's nothing to be done. Return.     */
     if (!ind_ptr)
         return;
 
-    /*  TMPL_FREE will free the tuple if it is not NULL, and then set the     *
+    /*  TMPL_FREE will free the table if it is not NULL, and then set the     *
      *  pointer to be NULL after freeing. Use this.                           */
     TMPL_FREE(*ind_ptr);
 }
