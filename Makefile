@@ -394,9 +394,13 @@ OBJS = $(C_OBJS) $(ASM_OBJS) $(FASM_OBJS)
 all: $(TARGET_LIB)
 
 include/tmpl_config.h: ./config.c
+ifeq ($(CC), emcc)
+	bash emscripten.sh $(CONFIG_FLAGS)
+else
 	$(CC) $(CONFIG_FLAGS) config.c -o config.out
 	./config.out
 	rm -f config.out
+endif
 
 $(TARGET_LIB_SHARED): $(OBJS) include/tmpl_config.h
 	@echo "Building libtmpl.so ..."
