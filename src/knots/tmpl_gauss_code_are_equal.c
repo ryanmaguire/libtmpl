@@ -136,7 +136,7 @@ tmpl_GaussCode_Are_Equal(const tmpl_GaussCode * const first,
     if (!second)
         return tmpl_False;
 
-    /*  It either Gauss code contains an error, return false. It is possible  *
+    /*  If either Gauss code contains an error, return false. It is possible  *
      *  that one of the sequences contains corrupted data and should not be   *
      *  dereferenced. The user should handle the error before calling this.   */
     if (first->error_occurred || second->error_occurred)
