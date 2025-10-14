@@ -25,7 +25,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_String_To_UInt                                                   *
+ *      tmpl_String_To_UInt_And_Increment                                     *
  *  Purpose:                                                                  *
  *      Converts a string (like " +123abc") to a number (123) and sets the    *
  *      pointer to point to the first non-numerical character that appears    *
@@ -94,7 +94,7 @@ tmpl_String_To_UInt_And_Increment(const char ** const str_ptr);
  *                               ASCII Version                                *
  ******************************************************************************/
 
-/*  Converts a string to an unsigned int.                                     */
+/*  Converts a string to an unsigned int and increments the pointer.          */
 unsigned int tmpl_String_To_UInt_And_Increment(const char ** const str_ptr)
 {
     /*  Constant for the number 10. The string is assumed to represent a      *
