@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Safely free's the memory in a dynamically allocated Gauss tuple.      *
  *  Arguments:                                                                *
- *      tuple_ptr (tmpl_CrossingIndices ** const):                            *
+ *      tuple_ptr (tmpl_GaussTuple ** const):                                 *
  *          A pointer to a Gauss tuple.                                       *
  *  Output:                                                                   *
  *      None (void).                                                          *
@@ -58,24 +58,24 @@
  *      be consistent with other routines.                                    *
  ******************************************************************************/
 
-/*  Typedef to the crossing indices struct provided here.                     */
-#include <libtmpl/include/types/tmpl_crossing_indices.h>
+/*  Typedef to the Gauss tuples struct provided here.                         */
+#include <libtmpl/include/types/tmpl_gauss_tuple.h>
 
 /*  Location of the TMPL_FREE macro.                                          */
 #include <libtmpl/include/compat/tmpl_free.h>
 
-/*  Forward declaration / function prototype, found in tmpl_knot.h as well.   */
-extern void tmpl_GaussTuple_Destroy(tmpl_CrossingIndices ** const tuple_ptr);
+/*  Forward declaration / function prototype, found in tmpl_knots.h as well.  */
+extern void tmpl_GaussTuple_Destroy(tmpl_GaussTuple ** const tuples_ptr);
 
 /*  Function for freeing memory in a dynamically allocated Gauss tuple.       */
-void tmpl_GaussTuple_Destroy(tmpl_CrossingIndices ** const tuple_ptr)
+void tmpl_GaussTuple_Destroy(tmpl_GaussTuple ** const tuples_ptr)
 {
     /*  If the input pointer is NULL, there's nothing to be done. Return.     */
-    if (!tuple_ptr)
+    if (!tuples_ptr)
         return;
 
     /*  TMPL_FREE will free the tuple if it is not NULL, and then set the     *
      *  pointer to be NULL after freeing. Use this.                           */
-    TMPL_FREE(*tuple_ptr);
+    TMPL_FREE(*tuples_ptr);
 }
 /*  End of tmpl_GaussTuple_Destroy.                                           */
