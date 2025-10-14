@@ -1,10 +1,9 @@
-
+#include <libtmpl/include/compat/tmpl_cast.h>
 #include <libtmpl/include/compat/tmpl_free.h>
 #include <libtmpl/include/compat/tmpl_malloc.h>
+#include <libtmpl/include/compat/tmpl_realloc.h>
 #include <libtmpl/include/tmpl_knots.h>
 #include <libtmpl/include/tmpl_string.h>
-
-#include <ctype.h>
 
 /*  Function for creating a tmpl_VirtualKnot from a string representing the   *
  *  Gauss code of the knot.                                                   */
@@ -13,6 +12,7 @@ tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
 {
     unsigned long int i, ind;
     size_t word_length;
+    void *tmp;
 
     if (!code)
         return;
@@ -118,9 +118,15 @@ tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
         return;
     }
 
-    code->tuples = realloc(code->tuples, sizeof(*code->tuples) * ind);
     code->length = ind;
     code->number_of_crossings = ind << 1;
+
+    tmp = TMPL_REALLOC(code->tuples, code->length);
+
+    if (tmp)
+        code->tuples = TMPL_CAST(tmp, tmpl_GaussTuple *);
+
+    return;
 
 PARSING_ERROR:
 
@@ -129,7 +135,7 @@ PARSING_ERROR:
     code->error_occurred = tmpl_True;
     code->error_message =
         "Error Encountered: libtmpl\n"
-        "    tmpl_Gauss_Code_From_String\n\n"
+        "    tmpl_GaussCode_From_String\n\n"
         "Could not parse input string. String must be of the\n"
         "form TNSTNSTNS...TNS where T is type, N is an integer,\n"
         "and S is the sign. EX: O1+U2+O3+U1+O2+U3+\n";

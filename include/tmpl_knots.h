@@ -77,6 +77,19 @@ typedef struct tmpl_KnotArcs_Def {
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CrossingIndices_Destroy                                          *
+ *  Purpose:                                                                  *
+ *      Free's the memory allocated to a Gauss tuple.                         *
+ *  Arguments:                                                                *
+ *      tuple_ptr (tmpl_CrossingIndices ** const):                            *
+ *          A pointer to the (pointer to the) Gauss tuple that is to be freed.*
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void tmpl_CrossingIndices_Destroy(tmpl_CrossingIndices ** const ind_ptr);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_GaussCode_Are_Equal                                              *
  *  Purpose:                                                                  *
  *      Determines if two Gauss codes represent the same sequence.            *
@@ -111,63 +124,36 @@ extern void tmpl_GaussCode_Init(tmpl_GaussCode * const code);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_GaussTuple_Are_Equal                                             *
+ *      tmpl_GaussCode_Delete_Crossing                                        *
  *  Purpose:                                                                  *
- *      Determines if two Gauss tuples represent the same ordered triples.    *
- *  Arguments:                                                                *
- *      first (const tmpl_GaussTuple * const first):                          *
- *          A Gauss tuple.                                                    *
- *      second (const tmpl_GaussTuple * const first):                         *
- *          A Gauss tuple, the one being compared to the first for equality.  *
- *  Output:                                                                   *
- *      are_equal (tmpl_Bool):                                                *
- *          Boolean indicating if the first and second tuples are equal.      *
- ******************************************************************************/
-extern tmpl_Bool
-tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
-                          const tmpl_GaussTuple * const second);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Delete_Virtual_Knot_Crossing                                     *
- *  Purpose:                                                                  *
- *      Deletes a crossing in a virtual knot and shifts the crossing numbers  *
+ *      Deletes a crossing in a Gauss code and shifts the crossing numbers    *
  *      of all of the crossings accordingly.                                  *
- *  NOTES:                                                                    *
+ *  Notes:                                                                    *
  *      If the crossing that is to be deleted is greater than the number of   *
  *      crossings, nothing is done. If there is only one crossing in the knot *
  *      and you are trying to delete this, the Gauss tuple pointer is set to  *
  *      NULL, representing the unknot.                                        *
  *  Arguments:                                                                *
- *      tmpl_GaussCode *K:                                                    *
- *          A pointer to a virtual knot.                                      *
- *      tmpl_uint64 crossing:                                                 *
- *          The crossing that is to be deleted.                               *
+ *      code (tmpl_GaussCode * const):                                        *
+ *          The Gauss code for the virtual knot.                              *
+ *      crossing (unsigned long int):                                         *
+ *          The index for the crossing that is to be deleted.                 *
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
 extern void
-tmpl_Delete_Virtual_Knot_Crossing(tmpl_GaussCode *K,
-                                  unsigned long int crossing);
+tmpl_GaussCode_Delete_Crossing(tmpl_GaussCode * const code,
+                               unsigned long int crossing);
+
+extern void
+tmpl_GaussCode_Find_Crossing_Indices(tmpl_GaussCode * const code,
+                                     tmpl_CrossingIndices * const indices);
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_CrossingIndices_Destroy                                          *
+ *      tmpl_GaussCode_Destroy                                                *
  *  Purpose:                                                                  *
- *      Free's the memory allocated to a Gauss tuple.                         *
- *  Arguments:                                                                *
- *      tuple_ptr (tmpl_CrossingIndices ** const):                            *
- *          A pointer to the (pointer to the) Gauss tuple that is to be freed.*
- *  Output:                                                                   *
- *      None (void).                                                          *
- ******************************************************************************/
-extern void tmpl_CrossingIndices_Destroy(tmpl_CrossingIndices ** const ind_ptr);
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Destroy_Virtual_Knot_Pointer                                     *
- *  Purpose:                                                                  *
- *      Free's the memory allocated to a pointer to a virtual knot.           *
+ *      Free's the memory allocated to a Gauss code.                          *
  *  NOTES:                                                                    *
  *      This takes a pointer to a pointer to a virtual knot. This is so we    *
  *      can set the virtual knot pointer to NULL so we don't accidentally try *
@@ -178,7 +164,7 @@ extern void tmpl_CrossingIndices_Destroy(tmpl_CrossingIndices ** const ind_ptr);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Destroy_Virtual_Knot_Pointer(tmpl_GaussCode **K_ptr);
+extern void tmpl_GaussCode_Destroy(tmpl_GaussCode ** const code_ptr);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -202,6 +188,41 @@ tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_GaussTuple_Are_Equal                                             *
+ *  Purpose:                                                                  *
+ *      Determines if two Gauss tuples represent the same ordered triples.    *
+ *  Arguments:                                                                *
+ *      first (const tmpl_GaussTuple * const first):                          *
+ *          A Gauss tuple.                                                    *
+ *      second (const tmpl_GaussTuple * const first):                         *
+ *          A Gauss tuple, the one being compared to the first for equality.  *
+ *  Output:                                                                   *
+ *      are_equal (tmpl_Bool):                                                *
+ *          Boolean indicating if the first and second tuples are equal.      *
+ ******************************************************************************/
+extern tmpl_Bool
+tmpl_GaussTuple_Are_Equal(const tmpl_GaussTuple * const first,
+                          const tmpl_GaussTuple * const second);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_GaussTuple_Destroy                                               *
+ *  Purpose:                                                                  *
+ *      Free's the memory allocated to an array of Gauss tuples.              *
+ *  Arguments:                                                                *
+ *      tuples_ptr (tmpl_GaussCode ** const):                                 *
+ *          A pointer to the (pointer to) the array of Gauss tuples.          *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Notes:                                                                    *
+ *      1.) This function assumes the Gauss tuples were dynamically allocated *
+ *          using something like malloc, calloc, or realloc.                  *
+ *      2.) tuples is set to NULL after freeing to prevent double frees.      *
+ ******************************************************************************/
+extern void tmpl_GaussTuples_Destroy(tmpl_GaussTuple ** const tuples_ptr);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_Print_Gauss_Code                                                 *
  *  Purpose:                                                                  *
  *      Prints the Gauss code of a knot.                                      *
@@ -219,8 +240,7 @@ extern void tmpl_Print_Gauss_Code(tmpl_GaussCode *K);
 extern tmpl_Bool
 tmpl_Is_Gauss_Code_Valid(tmpl_GaussCode *K);
 
-extern tmpl_CrossingIndices *
-tmpl_Find_Crossing_Indices(tmpl_GaussCode *K);
+
 
 extern void
 tmpl_Reidemeister_One_Reduction(tmpl_GaussCode *K);
@@ -233,9 +253,6 @@ tmpl_Alexander_Polynomial(tmpl_GaussCode *K);
 
 extern tmpl_KnotArcs *
 tmpl_Compute_Knot_Arcs(tmpl_GaussCode *K);
-
-extern void
-tmpl_Destroy_Crossing_Indices(tmpl_CrossingIndices **Indices);
 
 #endif
 /*  End of include guard.                                                     */
