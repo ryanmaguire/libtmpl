@@ -118,21 +118,25 @@ unsigned char tmpl_String_To_UChar(const char *str)
     if (!str)
         return out;
 
-    /*  Skip all leading whitespace and all leading zeros.                    */
-    while (*str == ' ' || *str == '0')
+    /*  Skip all leading whitespace.                                          */
+    while (*str == ' ')
         ++str;
 
     /*  The first character of the number is allowed to be a plus or a minus  *
      *  sign. If it is a minus we need to set the sign Boolean to true.       */
     if (*str == '-')
     {
-        sign = 0x01;
+        sign = 0x01U;
         ++str;
     }
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
     else if (*str == '+')
+        ++str;
+
+    /*  Trim all leading zeros.                                               */
+    while (*str == '0')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */
@@ -211,21 +215,25 @@ unsigned char tmpl_String_To_UChar(const char *str)
     if (!str)
         return out;
 
-    /*  Skip all leading whitespace and all leading zeros.                    */
-    while (*str == ' ' || *str == '0')
+    /*  Skip all leading whitespace.                                          */
+    while (*str == ' ')
         ++str;
 
     /*  The first character of the number is allowed to be a plus or a minus  *
      *  sign. If it is a minus we need to set the sign Boolean to true.       */
     if (*str == '-')
     {
-        sign = 0x01;
+        sign = 0x01U;
         ++str;
     }
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
     else if (*str == '+')
+        ++str;
+
+    /*  Trim all leading zeros.                                               */
+    while (*str == '0')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */

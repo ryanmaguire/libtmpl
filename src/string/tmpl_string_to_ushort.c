@@ -112,27 +112,31 @@ unsigned short int tmpl_String_To_UShort(const char *str)
      *  is the number of bits in unsigned short int (usually 16). We          *
      *  initialize the sign to positive, but we'll check later for a          *
      *  minus sign.                                                           */
-    unsigned short int sign = 0U;
+    unsigned char sign = 0x00U;
 
     /*  NULL strings are treated as invalid. Return zero.                     */
     if (!str)
         return out;
 
-    /*  Skip all leading whitespace and all leading zeros.                    */
-    while (*str == ' ' || *str == '0')
+    /*  Skip all leading whitespace.                                          */
+    while (*str == ' ')
         ++str;
 
     /*  The first character of the number is allowed to be a plus or a minus  *
      *  sign. If it is a minus we need to set the sign Boolean to true.       */
     if (*str == '-')
     {
-        sign = 1U;
+        sign = 0x01U;
         ++str;
     }
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
     else if (*str == '+')
+        ++str;
+
+    /*  Trim all leading zeros.                                               */
+    while (*str == '0')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */
@@ -212,21 +216,25 @@ unsigned short int tmpl_String_To_UShort(const char *str)
     if (!str)
         return out;
 
-    /*  Skip all leading whitespace and all leading zeros.                    */
-    while (*str == ' ' || *str == '0')
+    /*  Skip all leading whitespace.                                          */
+    while (*str == ' ')
         ++str;
 
     /*  The first character of the number is allowed to be a plus or a minus  *
      *  sign. If it is a minus we need to set the sign Boolean to true.       */
     if (*str == '-')
     {
-        sign = 1U;
+        sign = 0x01U;
         ++str;
     }
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
     else if (*str == '+')
+        ++str;
+
+    /*  Trim all leading zeros.                                               */
+    while (*str == '0')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */

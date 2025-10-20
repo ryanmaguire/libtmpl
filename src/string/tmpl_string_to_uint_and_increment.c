@@ -115,7 +115,7 @@ unsigned int tmpl_String_To_UInt_And_Increment(const char ** const str_ptr)
      *  the leading character is '-' then the output is 2^N - |out| where N   *
      *  is the number of bits in unsigned int (usually 32). We initialize the *
      *  sign to positive, but we'll check later for a minus sign.             */
-    unsigned int sign = 0U;
+    unsigned char sign = 0x00U;
 
     /*  Pointer for the actual string. We'll set this if str_ptr is not NULL. */
     const char *str;
@@ -134,21 +134,25 @@ unsigned int tmpl_String_To_UInt_And_Increment(const char ** const str_ptr)
     if (!str)
         return out;
 
-    /*  Skip all leading whitespace and all leading zeros.                    */
-    while (*str == ' ' || *str == '0')
+    /*  Skip all leading whitespace.                                          */
+    while (*str == ' ')
         ++str;
 
     /*  The first character of the number is allowed to be a plus or a minus  *
      *  sign. If it is a minus we need to set the sign Boolean to true.       */
     if (*str == '-')
     {
-        sign = 1U;
+        sign = 0x01U;
         ++str;
     }
 
     /*  If the sign is positive, simply increment the pointer. The sign       *
      *  variable was initialized to positive at the start.                    */
     else if (*str == '+')
+        ++str;
+
+    /*  Trim all leading zeros.                                               */
+    while (*str == '0')
         ++str;
 
     /*  Loop through the digits of the string and convert it to a number.     */
@@ -221,7 +225,7 @@ unsigned int tmpl_String_To_UInt_And_Increment(const char ** const str_ptr)
      *  the leading character is '-' then the output is 2^N - |out| where N   *
      *  is the number of bits in unsigned int (usually 32). We initialize the *
      *  sign to positive, but we'll check later for a minus sign.             */
-    unsigned int sign = 0U;
+    unsigned char sign = 0x00U;
 
     /*  Variable for storing the individual digits of the string.             */
     unsigned int digit;
@@ -251,7 +255,7 @@ unsigned int tmpl_String_To_UInt_And_Increment(const char ** const str_ptr)
      *  sign. If it is a minus we need to set the sign Boolean to true.       */
     if (*str == '-')
     {
-        sign = 1U;
+        sign = 0x01U;
         ++str;
     }
 
