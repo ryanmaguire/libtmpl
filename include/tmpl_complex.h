@@ -53,6 +53,20 @@
 #ifndef TMPL_COMPLEX_H
 #define TMPL_COMPLEX_H
 
+/*  If complex.h was included, then the complex macro has been defined.       *
+ *  libtmpl does not use the expression "complex" directly, to avoid conflict *
+ *  with the C99 standard. However, the TMPL_INLINE_FILE macro will not work  *
+ *  correctly if "complex" expands to "_Complex", since the file paths        *
+ *  contain "complex" in them. Undefine complex if necessary.                 */
+#ifdef complex
+#undef complex
+
+/*  We'll need to restore complex to _Complex at the end of this header file. *
+ *  Create a temporary macro for keeping track of whether or not we needed to *
+ *  #undef the complex macro.                                                 */
+#define TMPL_COMPLEX_TMP
+#endif
+
 /*  Booleans defined here. Needed for the compare routines.                   */
 #include <libtmpl/include/tmpl_bool.h>
 
@@ -1922,6 +1936,16 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Tanh(tmpl_ComplexLongDouble z);
 
 #ifdef TMPL_INLINE_FILE
 #undef TMPL_INLINE_FILE
+#endif
+
+/*  If we needed to #undef the complex macro, we now need to restore it.      */
+#ifdef TMPL_COMPLEX_TMP
+
+/*  The C99 standard requires complex to expand to _Complex.                  */
+#define complex _Complex
+
+/*  We no longer need the tmp macro either. We may undefine it.               */
+#undef TMPL_COMPLEX_TMP
 #endif
 
 #endif
