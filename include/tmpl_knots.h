@@ -235,12 +235,10 @@ extern void tmpl_GaussTuples_Destroy(tmpl_GaussTuple ** const tuples_ptr);
  *  Output:                                                                   *
  *      None (void).                                                          *
  ******************************************************************************/
-extern void tmpl_Print_Gauss_Code(tmpl_GaussCode *K);
+extern void tmpl_GaussCode_Print(const tmpl_GaussCode * const code);
 
 extern tmpl_Bool
 tmpl_Is_Gauss_Code_Valid(tmpl_GaussCode *K);
-
-
 
 extern void
 tmpl_Reidemeister_One_Reduction(tmpl_GaussCode *K);
