@@ -110,7 +110,8 @@ tmpl_GaussCode_Delete_Crossing(tmpl_GaussCode * const code,
 
     /*  Variables for the location of the first and second occurrences of the *
      *  crossing in the Gauss code.                                           */
-    unsigned long int pos0, pos1;
+    unsigned long int pos0 = 0UL;
+    unsigned long int pos1 = 0UL;
 
     /*  Booleans for tracking which positions have been found.                */
     tmpl_Bool found_pos0 = tmpl_False;
@@ -211,6 +212,21 @@ tmpl_GaussCode_Delete_Crossing(tmpl_GaussCode * const code,
             "No crossing with this crossing index, but the crossing\n"
             "index is less than the number of crossings. The input\n"
             "Gauss code is not valid.\n";
+
+        return;
+    }
+
+    /*  If the found_pos1 Boolean is still false, then we never found the     *
+     *  second entry for this crossing in the Gauss code. This means the code *
+     *  is invalid. Treat this as an error.                                   */
+    if (!found_pos1)
+    {
+        code->error_occurred = tmpl_True;
+        code->error_message =
+            "Error Encountered: libtmpl\n"
+            "    tmpl_GaussCode_Delete_Crossing\n\n"
+            "Only one entry in the Gauss code has this crossing index.\n"
+            "This is an invalid Gauss code.\n";
 
         return;
     }
