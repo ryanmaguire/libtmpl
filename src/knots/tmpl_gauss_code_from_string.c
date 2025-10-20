@@ -5,22 +5,22 @@
 #include <libtmpl/include/tmpl_knots.h>
 #include <libtmpl/include/tmpl_string.h>
 
-/*  Function for creating a tmpl_VirtualKnot from a string representing the   *
- *  Gauss code of the knot.                                                   */
+#include <stdio.h>
+
+/*  Function for creating a Gauss code from a string.                         */
 void
-tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
+tmpl_GaussCode_From_String(const char *str, tmpl_GaussCode * const code)
 {
-    unsigned long int i, ind;
+    unsigned long int ind;
     size_t word_length;
     void *tmp;
+    tmpl_GaussTuple *tuples;
 
     if (!code)
         return;
 
     tmpl_GaussCode_Init(code);
 
-    /*  If the string is NULL, set the error_occurred variable to true and    *
-     *  store an error message in the virtual knot.                           */
     if (!str)
     {
         code->error_occurred = tmpl_True;
@@ -33,9 +33,9 @@ tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
     }
 
     word_length = tmpl_String_Length(str);
-    code->tuples = TMPL_MALLOC(tmpl_GaussTuple, word_length / 3);
+    tuples = TMPL_MALLOC(tmpl_GaussTuple, word_length / 3);
 
-    if (!code->tuples)
+    if (!tuples)
     {
         code->error_occurred = tmpl_True;
         code->error_message =
@@ -46,67 +46,59 @@ tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
         return;
     }
 
-    i = 0U;
     ind = 0U;
 
-    while (str[i])
+    while (*str)
     {
-        while (str[i] == ' ')
-            ++i;
+        while (*str == ' ')
+            ++str;
 
-        switch(str[i])
+        switch (*str)
         {
             case 'o':
             case 'O':
-                code->tuples[ind].crossing_type = TMPL_OVER_CROSSING;
+                tuples[ind].crossing_type = TMPL_OVER_CROSSING;
                 break;
             case 'u':
             case 'U':
-                code->tuples[ind].crossing_type = TMPL_UNDER_CROSSING;
+                tuples[ind].crossing_type = TMPL_UNDER_CROSSING;
                 break;
             default:
                 goto PARSING_ERROR;
         }
 
-        ++i;
+        ++str;
 
-        while (str[i] == ' ')
-            ++i;
+        while (*str == ' ')
+            ++str;
 
-        if (tmpl_Char_Is_Digit(str[i]))
-        {
-            size_t k = i;
-            while (tmpl_Char_Is_Digit(str[k]))
-                ++k;
-
-            code->tuples[ind].crossing_number = tmpl_String_To_ULong(&str[i]);
-            i = k;
-        }
-        else
+        if (!tmpl_Char_Is_Digit(*str))
             goto PARSING_ERROR;
 
-        while (str[i] == ' ')
-            ++i;
+        tuples[ind].crossing_number = tmpl_String_To_ULong_And_Increment(&str);
 
-        switch(str[i])
+        while (*str == ' ')
+            ++str;
+
+        switch (*str)
         {
             case '+':
-                code->tuples[ind].crossing_sign = TMPL_POSITIVE_CROSSING;
+                tuples[ind].crossing_sign = TMPL_POSITIVE_CROSSING;
                 break;
             case '-':
-                code->tuples[ind].crossing_sign = TMPL_NEGATIVE_CROSSING;
+                tuples[ind].crossing_sign = TMPL_NEGATIVE_CROSSING;
                 break;
             default:
                 goto PARSING_ERROR;
         }
 
-        ++i;
+        ++str;
         ++ind;
     }
 
     if ((ind % 2) != 0)
     {
-        TMPL_FREE(code->tuples);
+        TMPL_FREE(tuples);
         code->error_occurred = tmpl_True;
         code->error_message =
             "Error Encountered: libtmpl\n"
@@ -120,6 +112,7 @@ tmpl_GaussCode_From_String(const char * const str, tmpl_GaussCode * const code)
 
     code->length = ind;
     code->number_of_crossings = ind << 1;
+    code->tuples = tuples;
 
     tmp = TMPL_REALLOC(code->tuples, code->length);
 
