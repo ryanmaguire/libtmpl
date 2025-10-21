@@ -36,7 +36,9 @@
  *      sum (double):                                                         *
  *          The sum of the array.                                             *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      include/inline/two_sum/                                               *
+ *          tmpl_Double_Two_Sum:                                              *
+ *              Performs the 2Sum algorithm. Only used on exotic platforms.   *
  *  Method:                                                                   *
  *      If double is 64 bits and char is bounded by 32 bits (very likely),    *
  *      simply loop through the array and add. Otherwise, use the Kahan       *
@@ -58,8 +60,8 @@
  *          Header file providing the TMPL_UCHAR_BIT macro.                   *
  *  4.) tmpl_ieee754_double.h:                                                *
  *          Provides TMPL_HAS_IEEE754_DOUBLE indicating 64-bit double support.*
- *  5.) tmpl_fast_two_sum_double.h:                                           *
- *          Provides an inlined Fast2Sum (if inline support is available).    *
+ *  5.) tmpl_two_sum_double.h:                                                *
+ *          Provides an inlined 2Sum (if inline support is available).        *
  *  6.) stddef.h:                                                             *
  *          Standard header file containing the size_t typedef.               *
  ******************************************************************************
@@ -96,21 +98,21 @@ tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len);
  *  use the Kahan summation algorithm to prevent precision loss.              */
 #if (TMPL_UCHAR_BIT > 32) || (TMPL_HAS_IEEE754_DOUBLE == 0)
 
-/*  Check for inline support for Fast2Sum. Fast2Sum is a short routine.       */
+/*  Check for inline support for 2Sum. 2Sum is a short routine.               */
 #if TMPL_USE_INLINE == 1
 
-/*  Fast2Sum found here.                                                      */
-#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
+/*  2Sum found here.                                                          */
+#include <libtmpl/include/inline/two_sum/tmpl_two_sum_double.h>
 
 #else
 /*  Else for #if TMPL_USE_INLINE == 1.                                        */
 
 /*  Lacking inline support, tell the compiler about the function.             */
 extern void
-tmpl_Double_Fast_Two_Sum(double x,
-                         double y,
-                         double * TMPL_RESTRICT const out,
-                         double * TMPL_RESTRICT const err);
+tmpl_Double_Two_Sum(double x,
+                    double y,
+                    double * TMPL_RESTRICT const out,
+                    double * TMPL_RESTRICT const err);
 
 #endif
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
@@ -133,7 +135,7 @@ double tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len)
     /*  Loop through the remaining elements and add.                          */
     for (n = 1; n < len; ++n)
     {
-        /*  Fast2Sum does the following:                                      *
+        /*  2Sum does the following:                                          *
          *                                                                    *
          *      s = sum + (arr[n] + err)                                      *
          *      e = err - (s - sum)                                           *
@@ -145,8 +147,8 @@ double tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len)
         const double val = TMPL_CAST(arr[n], double);
         const double tmp = val + err;
 
-        /*  Perform Fast2Sum and update the summation and the error.          */
-        tmpl_Double_Fast_Two_Sum(sum, tmp, &sum, &err);
+        /*  Perform 2Sum and update the summation and the error.              */
+        tmpl_Double_Two_Sum(sum, tmp, &sum, &err);
     }
 
     return sum;
