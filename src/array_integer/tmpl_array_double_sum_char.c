@@ -59,7 +59,16 @@
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 13, 2024                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/10/21: Ryan Maguire                                                  *
+ *      Changed name to Sum. Implemented Kahan summation algorithm for        *
+ *      exotic architectures with large char or small double.                 *
  ******************************************************************************/
+
+/*  TMPL_USE_INLINE macro found here, indicating inline support.              */
+#include <libtmpl/include/tmpl_config.h>
 
 /*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
 #include <libtmpl/include/compat/tmpl_cast.h>
@@ -144,7 +153,7 @@ double tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len)
 /*  What is more likely is that signed char is 8 bits, and double is 64.      *
  *  There is no need for the Kahan algorithm, double has plenty of precision. */
 
-/*  Function for averaging the elements of a signed char array.               */
+/*  Function for summing the elements of a signed char array.                 */
 double tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
