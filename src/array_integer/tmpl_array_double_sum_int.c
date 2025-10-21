@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_array_double_total_int                         *
+ *                          tmpl_array_double_sum_int                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the sum of a signed int array.                               *
@@ -24,9 +24,9 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Int_Array_Double_Total                                           *
+ *      tmpl_Int_Array_Double_Sum                                             *
  *  Purpose:                                                                  *
- *      Computes the sum of a signed int array.                               *
+ *      Computes the sum of a signed int array, as a double.                  *
  *  Arguments:                                                                *
  *      arr (const signed int * const):                                       *
  *          An int array.                                                     *
@@ -38,43 +38,148 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      Loop through the elements of the array and add.                       *
+ *      If double is 64 bits and int is not larger than 32 bits (very likely),*
+ *      simply loop through the array and add. Otherwise, use the Kahan       *
+ *      summation algorithm to avoid precision loss.                          *
+ *  References:                                                               *
+ *      1.) Kahan, William (January 1965),                                    *
+ *          "Further remarks on reducing truncation errors",                  *
+ *          Communications of the ACM, volume 8, number 1: 40                 *
+ *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
+ *      3.) https://en.wikipedia.org/wiki/2Sum                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stddef.h:                                                             *
+ *  1.) tmpl_config.h:                                                        *
+ *          Provides the TMPL_USE_INLINE macro.                               *
+ *  2.) tmpl_cast.h:                                                          *
+ *          Header providing TMPL_CAST with C vs. C++ compatibility.          *
+ *  3.) tmpl_limits.h:                                                        *
+ *          Header file providing the TMPL_UINT_BIT macro.                    *
+ *  4.) tmpl_ieee754_double.h:                                                *
+ *          Provides TMPL_HAS_IEEE754_DOUBLE indicating 64-bit double support.*
+ *  5.) tmpl_fast_two_sum_double.h:                                           *
+ *          Provides an inlined Fast2Sum (if inline support is available).    *
+ *  6.) stddef.h:                                                             *
  *          Standard header file containing the size_t typedef.               *
- *  2.) tmpl_array_integer.h:                                                 *
- *          Header file with the function prototype.                          *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 13, 2024                                                *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/10/21: Ryan Maguire                                                  *
+ *      Changed name to Sum. Implemented Kahan summation algorithm for        *
+ *      exotic architectures with large int or small double.                  *
  ******************************************************************************/
+
+/*  TMPL_USE_INLINE macro found here, indicating inline support.              */
+#include <libtmpl/include/tmpl_config.h>
+
+/*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
+/*  TMPL_UINT_BIT found here, with the number of numerical bits in uint.      */
+#include <libtmpl/include/tmpl_limits.h>
+
+/*  TMPL_HAS_IEEE754_DOUBLE found here, indicating if we have 64-bit doubles. */
+#include <libtmpl/include/types/tmpl_ieee754_double.h>
 
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_array_integer.h>
+/*  Forward declaration / function prototype, found in tmpl_array_integer.h.  */
+extern double
+tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len);
 
-/*  Function for summing the elements of an int array.                        */
-double tmpl_Int_Array_Double_Total(const signed int * const arr, size_t len)
+/*  If int is very big (unlikely) or double is not 64-bits (also unlikely),   *
+ *  use the Kahan summation algorithm to prevent precision loss.              */
+#if (TMPL_UINT_BIT > 32) || (TMPL_HAS_IEEE754_DOUBLE == 0)
+
+/*  Check for inline support for Fast2Sum. Fast2Sum is a short routine.       */
+#if TMPL_USE_INLINE == 1
+
+/*  Fast2Sum found here.                                                      */
+#include <libtmpl/include/inline/two_sum/tmpl_fast_two_sum_double.h>
+
+#else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the function.             */
+extern void
+tmpl_Double_Fast_Two_Sum(double x,
+                         double y,
+                         double * TMPL_RESTRICT const out,
+                         double * TMPL_RESTRICT const err);
+
+#endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
+
+/*  Function for summing the elements of a signed int array.                  */
+double tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len)
+{
+    /*  Declare necessary variables. C89 requires this at the top.            */
+    size_t n;
+    double sum, err;
+
+    /*  For empty / NULL arrays we follow the numpy convention, return 0.     */
+    if (!arr || !len)
+        return 0.0;
+
+    /*  Initialize the sum variable to the zeroth element. Error starts at 0. */
+    sum = TMPL_CAST(arr[0], double);
+    err = 0.0;
+
+    /*  Loop through the remaining elements and add.                          */
+    for (n = 1; n < len; ++n)
+    {
+        /*  Fast2Sum does the following:                                      *
+         *                                                                    *
+         *      s = sum + (arr[n] + err)                                      *
+         *      e = err - (s - sum)                                           *
+         *      sum = s                                                       *
+         *      err = e                                                       *
+         *                                                                    *
+         *  We need the current element of the array as a double, and the sum *
+         *  of this entry with the current error.                             */
+        const double val = TMPL_CAST(arr[n], double);
+        const double tmp = val + err;
+
+        /*  Perform Fast2Sum and update the summation and the error.          */
+        tmpl_Double_Fast_Two_Sum(sum, tmp, &sum, &err);
+    }
+
+    return sum;
+}
+/*  End of tmpl_Int_Array_Double_Sum.                                         */
+
+#else
+/*  Else for #if (TMPL_UINT_BIT > 32) || (TMPL_HAS_IEEE754_DOUBLE == 0).      */
+
+/*  What is more likely is that signed int is 32 bits and double is 64.       *
+ *  There is no need for the Kahan algorithm, double has plenty of precision. */
+
+/*  Function for summing the elements of a signed int array.                  */
+double tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
     double sum;
 
-    /*  If the array is NULL or empty, the result is undefined.               */
+    /*  For empty / NULL arrays we follow the numpy convention, return 0.     */
     if (!arr || !len)
         return 0.0;
 
     /*  Initialize the sum variable to the zeroth element.                    */
-    sum = (double)arr[0];
+    sum = TMPL_CAST(arr[0], double);
 
     /*  Loop through the remaining elements and add.                          */
     for (n = 1; n < len; ++n)
-        sum += (double)arr[n];
+        sum += TMPL_CAST(arr[n], double);
 
     return sum;
 }
-/*  End of tmpl_Int_Array_Double_Total.                                       */
+/*  End of tmpl_Int_Array_Double_Sum.                                         */
+
+#endif
+/*  End of #if (TMPL_UINT_BIT > 32) || (TMPL_HAS_IEEE754_DOUBLE == 0).        */
