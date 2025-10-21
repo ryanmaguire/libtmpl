@@ -41,6 +41,12 @@
  *      If double is 64 bits and char is less than 32 bits (very likely),     *
  *      simply loop through the array and add. Otherwise, use the Kahan       *
  *      summation algorithm to avoid precision loss.                          *
+ *  References:                                                               *
+ *      1.) Kahan, William (January 1965),                                    *
+ *          "Further remarks on reducing truncation errors",                  *
+ *          Communications of the ACM, volume 8, number 1: 40                 *
+ *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
+ *      3.) https://en.wikipedia.org/wiki/2Sum                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
