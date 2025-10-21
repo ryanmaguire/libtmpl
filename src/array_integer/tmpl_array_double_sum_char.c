@@ -38,7 +38,7 @@
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
- *      If double is 64 bits and char is less than 32 bits (very likely),     *
+ *      If double is 64 bits and char is bounded by 32 bits (very likely),    *
  *      simply loop through the array and add. Otherwise, use the Kahan       *
  *      summation algorithm to avoid precision loss.                          *
  *  References:                                                               *
