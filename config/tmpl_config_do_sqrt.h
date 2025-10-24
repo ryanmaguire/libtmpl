@@ -63,7 +63,7 @@
  *      1.) Using 128 iterations of Heron's method is overkill. For normal    *
  *          IEEE-754 float and double we need 16 and 31 iterations,           *
  *          respectively, to compute sqrt(epsilon). For 128-bit quadruple we  *
- *          need 62 iterations. 256-bit octuple requires 119 iterations, but  *
+ *          need 62 iterations. 256-bit octuple requires 127 iterations, but  *
  *          at the time of this writing there are no 256-bit octuple long     *
  *          doubles in existence. Choosing 128 iterations is solely for the   *
  *          sake of future proofing the config file.                          *
