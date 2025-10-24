@@ -58,7 +58,7 @@
  *          error may be massive (greater than or equal to one). In this case *
  *          you should use tmpl_DoubleDouble_Add.                             *
  *  References:                                                               *
- *      1.) Joldas, M., Muller, J., Popescu, V. (October 2017).               *
+ *      1.) Joldes, M., Muller, J., Popescu, V. (October 2017).               *
  *          "Tight and rigorous error bounds for basic                        *
  *              building blocks of double-word arithmetic."                   *
  *          ACM Transactions on Mathematical Software, Vol. 44, No. 2.        *

@@ -52,7 +52,7 @@ extern "C" {
  *  Function:                                                                 *
  *      tmpl_Int_Array_Double_Average                                         *
  *  Purpose:                                                                  *
- *      Computes the average of an array of ints outputting a double.         *
+ *      Computes the average of an array of ints, outputting a double.        *
  *  Arguments:                                                                *
  *      arr (const signed int * const):                                       *
  *          An array of ints.                                                 *
@@ -62,8 +62,13 @@ extern "C" {
  *      avg (double):                                                         *
  *          The average of arr.                                               *
  *  Notes:                                                                    *
- *      char, short, and long versions are provided as well. Long long is     *
- *      provided if support is available and requested by the Makefile.       *
+ *      1.) char, short, and long versions are provided as well. Long long is *
+ *          provided if support is available and requested by the Makefile.   *
+ *      2.) For types with a width greater than 32, the Kahan summation       *
+ *          algorithm is used to reduce precision loss for large arrays.      *
+ *          This may needlessly slow down the computation. The function       *
+ *          tmpl_Int_Array_Double_Quick_Average uses the naive summation      *
+ *          algorithm, but it is susceptible to precision loss and overflow.  *
  ******************************************************************************/
 extern double
 tmpl_Char_Array_Double_Average(const signed char * const arr, size_t len);
@@ -221,72 +226,7 @@ tmpl_ULLong_Array_Double_Quick_RMS(const unsigned long long int * const arr,
 
 /******************************************************************************
  *  Function:                                                                 *
- *      tmpl_Int_Array_Double_Very_Quick_RMS                                  *
- *  Purpose:                                                                  *
- *      Computes the root-mean-square of an array of ints outputting a double.*
- *  Arguments:                                                                *
- *      arr (const signed int * const):                                       *
- *          An array of ints.                                                 *
- *      len (size_t):                                                         *
- *          The number of elements in the array.                              *
- *  Output:                                                                   *
- *      rms (double):                                                         *
- *          The root-mean-square of arr.                                      *
- *  Notes:                                                                    *
- *      This method does not convert ints to doubles in the intermediate      *
- *      steps and is hence "quicker" but is vulnerable to overflows. Use if   *
- *      speed is a necessity and the elements of the array aren't too big.    *
- *      char, short, and long versions are provided as well. Long long is     *
- *      provided if support is available and requested by the Makefile.       *
- ******************************************************************************/
-extern double
-tmpl_Char_Array_Double_Very_Quick_RMS(const signed char * const arr,
-                                      size_t len);
-
-extern double
-tmpl_UChar_Array_Double_Very_Quick_RMS(const unsigned char * const arr,
-                                       size_t len);
-
-extern double
-tmpl_Short_Array_Double_Very_Quick_RMS(const signed short int * const arr,
-                                       size_t len);
-
-extern double
-tmpl_UShort_Array_Double_Very_Quick_RMS(const unsigned short * const arr,
-                                        size_t len);
-
-extern double
-tmpl_Int_Array_Double_Very_Quick_RMS(const signed int * const arr, size_t len);
-
-extern double
-tmpl_UInt_Array_Double_Very_Quick_RMS(const unsigned int * const arr,
-                                      size_t len);
-
-extern double
-tmpl_Long_Array_Double_Very_Quick_RMS(const signed long int * const arr,
-                                      size_t len);
-
-extern double
-tmpl_ULong_Array_Double_Very_Quick_RMS(const unsigned long int * const arr,
-                                       size_t len);
-
-/*  Long long functions if support is available.                              */
-#if TMPL_HAS_LONGLONG == 1
-
-extern double
-tmpl_LLong_Array_Double_Very_Quick_RMS(const signed long long int * const arr,
-                                       size_t len);
-
-extern double
-tmpl_ULLong_Array_Double_Very_Quick_RMS(const unsigned long long int *const arr,
-                                        size_t len);
-
-#endif
-/*  End of #if TMPL_HAS_LONGLONG == 1.                                        */
-
-/******************************************************************************
- *  Function:                                                                 *
- *      tmpl_Int_Array_Double_Total                                           *
+ *      tmpl_Int_Array_Double_Sum                                             *
  *  Purpose:                                                                  *
  *      Computes the sum of an array of ints outputting a double.             *
  *  Arguments:                                                                *
@@ -302,39 +242,39 @@ tmpl_ULLong_Array_Double_Very_Quick_RMS(const unsigned long long int *const arr,
  *      provided if support is available and requested by the Makefile.       *
  ******************************************************************************/
 extern double
-tmpl_Char_Array_Double_Total(const signed char * const arr, size_t len);
+tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len);
 
 extern double
-tmpl_UChar_Array_Double_Total(const unsigned char * const arr, size_t len);
+tmpl_UChar_Array_Double_Sum(const unsigned char * const arr, size_t len);
 
 extern double
-tmpl_Short_Array_Double_Total(const signed short int * const arr, size_t len);
+tmpl_Short_Array_Double_Sum(const signed short int * const arr, size_t len);
 
 extern double
-tmpl_UShort_Array_Double_Total(const unsigned short * const arr, size_t len);
+tmpl_UShort_Array_Double_Sum(const unsigned short * const arr, size_t len);
 
 extern double
-tmpl_Int_Array_Double_Total(const signed int * const arr, size_t len);
+tmpl_Int_Array_Double_Sum(const signed int * const arr, size_t len);
 
 extern double
-tmpl_UInt_Array_Double_Total(const unsigned int * const arr, size_t len);
+tmpl_UInt_Array_Double_Sum(const unsigned int * const arr, size_t len);
 
 extern double
-tmpl_Long_Array_Double_Total(const signed long int * const arr, size_t len);
+tmpl_Long_Array_Double_Sum(const signed long int * const arr, size_t len);
 
 extern double
-tmpl_ULong_Array_Double_Total(const unsigned long int * const arr, size_t len);
+tmpl_ULong_Array_Double_Sum(const unsigned long int * const arr, size_t len);
 
 /*  Long long functions if support is available.                              */
 #if TMPL_HAS_LONGLONG == 1
 
 extern double
-tmpl_LLong_Array_Double_Total(const signed long long int * const arr,
-                              size_t len);
+tmpl_LLong_Array_Double_Sum(const signed long long int * const arr,
+                            size_t len);
 
 extern double
-tmpl_ULLong_Array_Double_Total(const unsigned long long int * const arr,
-                               size_t len);
+tmpl_ULLong_Array_Double_Sum(const unsigned long long int * const arr,
+                             size_t len);
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */

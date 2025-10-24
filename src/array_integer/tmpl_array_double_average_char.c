@@ -48,53 +48,68 @@
  *               N   -----   n                                                *
  *                   n = 0                                                    *
  *                                                                            *
- *      We compute the sum iteratively.                                       *
+ *      If signed char is small and double is 64-bits (very likely), we use   *
+ *      this sum directly. Otherwise, we use the Kahan summation algorithm to *
+ *      avoid precision loss.                                                 *
  *  Notes:                                                                    *
  *      1.) If the array is NULL, or if len is zero, NaN will return.         *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/Arithmetic_mean                     *
+ *      2.) Kahan, William (January 1965),                                    *
+ *          "Further remarks on reducing truncation errors",                  *
+ *          Communications of the ACM, volume 8, number 1: 40                 *
+ *      3.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
+ *      4.) https://en.wikipedia.org/wiki/2Sum                                *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stddef.h:                                                             *
- *          Standard header file containing the size_t typedef.               *
- *  2.) tmpl_math.h:                                                          *
+ *  1.) tmpl_config.h:                                                        *
+ *          Provides the TMPL_USE_INLINE macro.                               *
+ *  2.) tmpl_nan_double.h:                                                    *
  *          Header providing the TMPL_NAN macro for "not-a-number."           *
- *  3.) tmpl_array_integer.h:                                                 *
- *          Header file with the function prototype.                          *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Header providing TMPL_CAST with C vs. C++ compatibility.          *
+ *  4.) tmpl_limits.h:                                                        *
+ *          Header file providing the TMPL_UCHAR_BIT macro.                   *
+ *  5.) tmpl_ieee754_double.h:                                                *
+ *          Provides TMPL_HAS_IEEE754_DOUBLE indicating 64-bit double support.*
+ *  6.) tmpl_fast_two_sum_double.h:                                           *
+ *          Provides an inlined Fast2Sum (if inline support is available).    *
+ *  7.) stddef.h:                                                             *
+ *          Standard header file containing the size_t typedef.               *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 16, 2024                                                *
  ******************************************************************************/
 
+/*  TMPL_NAN macro provided here.                                             */
+#include <libtmpl/include/nan/tmpl_nan_double.h>
+
+/*  TMPL_CAST macro found here, providing C vs. C++ compatibility.            */
+#include <libtmpl/include/compat/tmpl_cast.h>
+
 /*  size_t typedef found here.                                                */
 #include <stddef.h>
 
-/*  TMPL_NAN macro provided here.                                             */
-#include <libtmpl/include/tmpl_math.h>
+/*  Forward declaration / function prototype, found in tmpl_array_integer.h.  */
+extern double
+tmpl_Char_Array_Double_Average(const signed char * const arr, size_t len);
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_array_integer.h>
+extern double
+tmpl_Char_Array_Double_Sum(const signed char * const arr, size_t len);
 
 /*  Function for averaging the elements of a signed char array.               */
 double tmpl_Char_Array_Double_Average(const signed char * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    size_t n;
     double sum;
 
     /*  If the array is NULL or empty we have a divide-by-zero. Return NaN.   */
     if (!arr || !len)
         return TMPL_NAN;
 
-    /*  Initialize the sum variable to the zeroth element.                    */
-    sum = (double)arr[0];
-
-    /*  Loop through the remaining elements and add.                          */
-    for (n = 1; n < len; ++n)
-        sum += (double)arr[n];
-
     /*  The average is the sum divided by the number of terms.                */
-    return sum / (double)len;
+    sum = tmpl_Char_Array_Double_Sum(arr, len);
+    return sum / TMPL_CAST(len, double);
 }
 /*  End of tmpl_Char_Array_Double_Average.                                    */
