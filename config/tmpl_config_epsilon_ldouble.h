@@ -101,4 +101,4 @@ static long double tmpl_ldouble_epsilon(void)
 /*  End of tmpl_ldouble_epsilon.                                              */
 
 #endif
-/*  ENd of include guard.                                                     */
+/*  End of include guard.                                                     */

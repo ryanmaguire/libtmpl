@@ -98,4 +98,4 @@ static long double tmpl_float_epsilon(void)
 /*  End of tmpl_float_epsilon.                                                */
 
 #endif
-/*  ENd of include guard.                                                     */
+/*  End of include guard.                                                     */
