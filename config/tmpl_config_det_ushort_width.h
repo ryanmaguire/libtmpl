@@ -101,7 +101,7 @@
 #include "tmpl_config_globals.h"
 
 /*  The width of unsigned char can be used to compute the size of short.      */
-#include "tmpl_det_uchar_width.h"
+#include "tmpl_config_det_uchar_width.h"
 
 /*  Function for determining the number of bits in unsigned short int.        */
 static void tmpl_det_ushort_width(void)
