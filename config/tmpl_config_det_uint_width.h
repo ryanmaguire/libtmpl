@@ -32,7 +32,10 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      config/                                                               *
+ *          tmpl_config_det_uchar_width.h:                                    *
+ *              tmpl_det_uchar_width:                                         *
+ *                  Computes the number of bits in unsigned char.             *
  *  Method:                                                                   *
  *      Start with 1 and iteratively multiply by two. Since unsigned          *
  *      arithmetic is performed mod 2^N, where N is the number of numerical   *
@@ -69,7 +72,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  None.                                                                     *
+ *  1.) tmpl_config_globals.h:                                                *
+ *          Header file with all of the globals used by config.c.             *
+ *  2.) tmpl_config_det_uchar_width.h:                                        *
+ *          Provides the tmpl_det_uchar_width function.                       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2021                                                *
@@ -89,6 +95,9 @@
 /*  Globals for the config file are all found here.                           */
 #include "tmpl_config_globals.h"
 
+/*  The width of unsigned char can be used to compute the size of int.        */
+#include "tmpl_det_uchar_width.h"
+
 /*  Function for determining the number of bits in unsigned int.              */
 static void tmpl_det_uint_width(void)
 {
@@ -103,7 +112,7 @@ static void tmpl_det_uint_width(void)
 
     /*  Lastly, set the count to zero. Each time we need to multiply by two   *
      *  corresponds to one bit, and we will increment this counter.           */
-    tmpl_number_of_bits_in_uint = 0U;
+    tmpl_uint_width = 0U;
 
     /*  Unsigned integer types can not overflow since the result is computed  *
      *  mod 2^N where N is the number of bits. By starting with 1 and         *
@@ -114,15 +123,26 @@ static void tmpl_det_uint_width(void)
     while (value)
     {
         value = two * value;
-        ++tmpl_number_of_bits_in_uint;
+        ++tmpl_uint_width;
     }
 
     /*  The C89, C99, C11, and C23 standards all require unsigned arithmetic  *
-     *  to be performed mod 2^N. Becuase of this, any standard's compliant    *
+     *  to be performed mod 2^N. Because of this, any standard's compliant    *
      *  implementation of the C programming language will correctly produce   *
      *  the number of bits in unsigned int using the code above. Set the      *
      *  Boolean to true.                                                      */
     tmpl_uint_width_is_known = 1U;
+
+    /*  The number of bits in unsigned int can be obtained from the number of *
+     *  bits in unsigned char (which does not allow padding) and using the    *
+     *  sizeof operator. The C standard allows unsigned int to have padding,  *
+     *  hence it is possible for width != number_of_bits, but this is rare.   */
+    if (!tmpl_uchar_width_is_known)
+        tmpl_det_uchar_width();
+
+    /*  Total number of bits used for storage is the number of bytes used     *
+     *  times the number of bits in a byte. Compute this.                     */
+    tmpl_number_of_bits_in_uint = sizeof(unsigned int) * tmpl_uchar_width;
 }
 /*  End of tmpl_det_uint_width.                                               */
 
