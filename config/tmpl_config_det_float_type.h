@@ -33,10 +33,10 @@
  *      float_type (enum tmpl_float_type):                                    *
  *          enum representing how float is implemented.                       *
  *  Called Functions:                                                         *
- *      config/tmpl_config_det_widths.h:                                      *
- *          tmpl_det_widths:                                                  *
- *              Determines the number of bits in all of the standard unsigned *
- *              integer data types.                                           *
+ *      config/                                                               *
+ *          tmpl_config_det_uchar_width.h:                                    *
+ *              tmpl_det_uchar_width:                                         *
+ *                  Computes the number of bits in unsigned char.             *
  *  Method:                                                                   *
  *      Use type punning to set the bits of a float to the bit pattern that   *
  *      represents 1 for an IEEE-754 32-bit float. Try this for both big      *
@@ -52,8 +52,10 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config_det_widths.h:                                             *
- *          Provides a few global variables used for integer sizes.           *
+ *  1.) tmpl_config_globals.h:                                                *
+ *          Header file with all of the globals used by config.c.             *
+ *  2.) tmpl_config_det_uchar_width.h:                                        *
+ *          Provides the tmpl_det_uchar_width function.                       *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2021                                                *
@@ -71,8 +73,11 @@
 /*  If the user does not want IEEE support, these functions are not used.     */
 #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
 
-/*  tmpl_det_widths function provided here, as are the global variables used. */
-#include "tmpl_config_det_widths.h"
+/*  Globals for the config file are all found here.                           */
+#include "tmpl_config_globals.h"
+
+/*  tmpl_det_uchar_width function provided here.                              */
+#include "tmpl_config_det_uchar_width.h"
 
 /*  IEEE-754 does not specify the endianness of float. It is usually the      *
  *  same as the endianness of integers, but this is not required. Unknown     *
@@ -111,13 +116,13 @@ static enum tmpl_float_type tmpl_det_float_type(void)
         float r;
     } f;
 
-    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
-     *  computed already. If not, compute it.                                 */
-    if (!TMPL_BITS_HAVE_BEEN_SET)
-        tmpl_det_widths();
+    /*  We need to use the global value tmpl_number_of_bits_in_uchar. Check   *
+     *  that it has been computed already. If not, compute it.                */
+    if (!tmpl_uchar_width_is_known)
+        tmpl_det_uchar_width();
 
     /*  float should have 32 bits. Check for this.                            */
-    if ((sizeof(float) * TMPL_CHAR_BIT) != 32)
+    if ((sizeof(float) * tmpl_number_of_bits_in_uchar) != 32)
         return tmpl_float_unknown_endian;
 
     /*  Set the bits in the struct to represent the number 1.0 using the      *
