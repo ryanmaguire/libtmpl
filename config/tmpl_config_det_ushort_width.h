@@ -67,8 +67,8 @@
  *          C11 drafts, as well as 6.2.5 paragraph 11 of the C23 draft.       *
  *                                                                            *
  *      2.) The C standard allows unsigned integer types (other than          *
- *          unsigned char) are allowed to have padding bits. This function    *
- *          computes the number of numerical bits only.                       *
+ *          unsigned char) to have padding bits. This function computes both  *
+ *          the number of numerical bits and the total number of bits.        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
