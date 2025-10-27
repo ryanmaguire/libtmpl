@@ -131,7 +131,7 @@ static void tmpl_det_ulong_width(void)
      *  implementation of the C programming language will correctly produce   *
      *  the number of bits in unsigned long int using the code above. Set the *
      *  Boolean to true.                                                      */
-    tmpl_uint_width_is_known = 1U;
+    tmpl_ulong_width_is_known = 1U;
 
     /*  The number of bits in unsigned long can be obtained from the number   *
      *  of bits in unsigned char (which does not allow padding) and using the *
@@ -144,7 +144,7 @@ static void tmpl_det_ulong_width(void)
      *  times the number of bits in a byte. Compute this.                     */
     tmpl_number_of_bits_in_ulong = sizeof(unsigned long int) * tmpl_uchar_width;
 }
-/*  End of tmpl_det_uint_width.                                               */
+/*  End of tmpl_det_ulong_width.                                              */
 
 #endif
 /*  End of include guard.                                                     */
