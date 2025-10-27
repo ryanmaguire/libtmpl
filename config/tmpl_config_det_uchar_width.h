@@ -121,7 +121,7 @@ static void tmpl_det_uchar_width(void)
 
     /*  Lastly, set the count to zero. Each time we need to multiply by two   *
      *  corresponds to one bit, and we will increment this counter.           */
-    tmpl_number_of_bits_in_uchar = 0U;
+    tmpl_uchar_width = 0U;
 
     /*  Unsigned integer types can not overflow since the result is computed  *
      *  mod 2^N where N is the number of bits. By starting with 1 and         *
@@ -132,15 +132,19 @@ static void tmpl_det_uchar_width(void)
     while (value)
     {
         value = two * value;
-        ++tmpl_number_of_bits_in_uchar;
+        ++tmpl_uchar_width;
     }
 
     /*  The C89, C99, C11, and C23 standards all require unsigned arithmetic  *
-     *  to be performed mod 2^N. Becuase of this, any standard's compliant    *
+     *  to be performed mod 2^N. Because of this, any standard's compliant    *
      *  implementation of the C programming language will correctly produce   *
      *  the number of bits in unsigned char using the code above. Set the     *
      *  Boolean to true.                                                      */
     tmpl_uchar_width_is_known = 1U;
+
+    /*  The C99 and higher standards do not allow padding for unsigned char.  *
+     *  The width is equal to the number of bits used for storage.            */
+    tmpl_number_of_bits_in_uchar = tmpl_uchar_width;
 }
 /*  End of tmpl_det_uchar_width.                                              */
 
