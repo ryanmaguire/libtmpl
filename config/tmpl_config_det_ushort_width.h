@@ -32,7 +32,10 @@
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      None.                                                                 *
+ *      config/                                                               *
+ *          tmpl_config_det_uchar_width.h:                                    *
+ *              tmpl_det_uchar_width:                                         *
+ *                  Computes the number of bits in unsigned char.             *
  *  Method:                                                                   *
  *      Start with 1 and iteratively multiply by two. Since unsigned          *
  *      arithmetic is performed mod 2^N, where N is the number of numerical   *
@@ -69,7 +72,12 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  None.                                                                     *
+ *  1.) tmpl_config_globals.h:                                                *
+ *          Header file with all of the globals used by config.c.             *
+ *  2.) tmpl_config_det_uchar_width.h:                                        *
+ *          Provides the tmpl_det_uchar_width function.                       *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Provides the TMPL_CAST macro.                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2021                                                *
@@ -86,27 +94,31 @@
 #ifndef TMPL_CONFIG_DET_USHORT_WIDTH_H
 #define TMPL_CONFIG_DET_USHORT_WIDTH_H
 
-/*  TMPL_CAST macro found here, used for casting with C vs C++ compatibility. */
+/*  TMPL_CAST macro found here, used for casting with C vs. C++ compatibility.*/
 #include "../include/compat/tmpl_cast.h"
 
 /*  Globals for the config file are all found here.                           */
 #include "tmpl_config_globals.h"
+
+/*  The width of unsigned char can be used to compute the size of short.      */
+#include "tmpl_det_uchar_width.h"
 
 /*  Function for determining the number of bits in unsigned short int.        */
 static void tmpl_det_ushort_width(void)
 {
     /*  We repeatedly multiply by two until we obtain zero. This happens      *
      *  since unsigned arithmetic is performed mod 2^N, where N is the number *
-     *  of bits in the given type.                                            */
+     *  of bits in the given type. There is no literal for unsigned short, so *
+     *  we simply use a cast.                                                 */
     const unsigned short int two = TMPL_CAST(2, unsigned short int);
 
     /*  Initialize to 1. Repeated multiplication by two will eventually       *
      *  eventually produce zero.                                              */
-    unsigned short value = TMPL_CAST(1, unsigned short int);
+    unsigned short int value = TMPL_CAST(1, unsigned short int);
 
     /*  Lastly, set the count to zero. Each time we need to multiply by two   *
      *  corresponds to one bit, and we will increment this counter.           */
-    tmpl_number_of_bits_in_ushort = 0U;
+    tmpl_ushort_width = 0U;
 
     /*  Unsigned integer types can not overflow since the result is computed  *
      *  mod 2^N where N is the number of bits. By starting with 1 and         *
@@ -117,15 +129,27 @@ static void tmpl_det_ushort_width(void)
     while (value)
     {
         value = two * value;
-        ++tmpl_number_of_bits_in_ushort;
+        ++tmpl_ushort_width;
     }
 
     /*  The C89, C99, C11, and C23 standards all require unsigned arithmetic  *
-     *  to be performed mod 2^N. Becuase of this, any standard's compliant    *
+     *  to be performed mod 2^N. Because of this, any standard's compliant    *
      *  implementation of the C programming language will correctly produce   *
      *  the number of bits in unsigned short using the code above. Set the    *
      *  Boolean to true.                                                      */
     tmpl_ushort_width_is_known = 1U;
+
+    /*  The number of bits in unsigned short can be obtained from the number  *
+     *  of bits in unsigned char (which does not allow padding) and using the *
+     *  sizeof operator. The C standard allows unsigned short to have padding,*
+     *  hence it is possible for width != number_of_bits, but this is rare.   */
+    if (!tmpl_uchar_width_is_known)
+        tmpl_det_uchar_width();
+
+    /*  Total number of bits used for storage is the number of bytes used     *
+     *  times the number of bits in a byte. Compute this.                     */
+    tmpl_number_of_bits_in_ushort =
+        sizeof(unsigned short int) * tmpl_uchar_width;
 }
 /*  End of tmpl_det_ushort_width.                                             */
 
