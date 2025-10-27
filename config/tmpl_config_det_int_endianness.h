@@ -33,27 +33,31 @@
  *      endianness (enum tmpl_integer_endianness):                            *
  *          enum representing integer endianness.                             *
  *  Called Functions:                                                         *
- *      config/tmpl_config_det_widths.h:                                      *
- *          tmpl_det_widths:                                                  *
- *              Determines the number of bits in all of the standard unsigned *
- *              integer data types.                                           *
+ *      config/                                                               *
+ *          tmpl_config_det_uchar_width.h:                                    *
+ *              tmpl_det_uchar_width:                                         *
+ *                  Computes the number of bits in unsigned char.             *
  *  Method:                                                                   *
- *      Use type punning to set the bits of a float to the bit pattern that   *
- *      represents 1 for an IEEE-754 32-bit float. Try this for both big      *
- *      endianness and little endianness. If neither endianness produces      *
- *      1.0 as a float, return unknown.                                       *
+ *      Create the number 76543210 (or n-1 ... 0 where n is the number of     *
+ *      bytes in either unsigned long or unsigned long long) and type-pun     *
+ *      this with a char array. Reading the zeroth element will tell us the   *
+ *      endianness of the system.                                             *
  *  Notes:                                                                    *
- *      1.) This function only attempts to check if float is a 32-bit         *
- *          IEEE-754 single precision floating point number. It will not      *
- *          attempt to check any of the other possible representations and    *
- *          will instead simply return unknown.                               *
- *      2.) This function checks for both big endianness and little           *
- *          endianness.                                                       *
+ *      1.) The C99 standard (and higher) explicitly allow type punning via   *
+ *          unions. See section 6.5.2.3 of the C99, C11, and C18 drafts, and  *
+ *          section 6.5.2.4 of the C23 draft.                                 *
+ *      2.) The C89 standard states that type punning is implementation       *
+ *          defined. It is not undefined behavior. See section 6.2.3.2 of the *
+ *          C89 draft.                                                        *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config_det_widths.h:                                             *
- *          Provides a few global variables used for integer sizes.           *
+ *  1.) tmpl_config_globals.h:                                                *
+ *          Header file with all of the globals used by config.c.             *
+ *  2.) tmpl_config_det_uchar_width.h:                                        *
+ *          Provides the tmpl_det_uchar_width function.                       *
+ *  3.) tmpl_cast.h:                                                          *
+ *          Provides the TMPL_CAST macro.                                     *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2021                                                *
@@ -68,10 +72,14 @@
 #ifndef TMPL_CONFIG_DET_INT_ENDIANNESS_H
 #define TMPL_CONFIG_DET_INT_ENDIANNESS_H
 
-/*  tmpl_det_widths function provided here, as are the global variables used. */
-#include "tmpl_config_det_widths.h"
-
+/*  TMPL_CAST macro found here, used for casting with C vs. C++ compatibility.*/
 #include "../include/compat/tmpl_cast.h"
+
+/*  Globals for the config file are all found here.                           */
+#include "tmpl_config_globals.h"
+
+/*  Function for computing the number of bits in unsigned char found here.    */
+#include "tmpl_config_det_uchar_width.h"
 
 /*  There are 4 possibilities for endianness. Little endian is the most       *
  *  common, big endian is a bit rarer, mixed endian is almost non-existent,   *
@@ -124,14 +132,14 @@ static enum tmpl_integer_endianness tmpl_det_int_endianness(void)
     if (sizeof(tmpl_uint) == 1)
         return tmpl_integer_unknown_endian;
 
-    /*  We need to use the global value TMPL_CHAR_BIT. Check that it has been *
-     *  computed already. If not, compute it.                                 */
-    if (!TMPL_BITS_HAVE_BEEN_SET)
-        tmpl_det_widths();
+    /*  We need to use the global value tmpl_uchar_width. Check that it has   *
+     *  been computed already. If not, compute it.                            */
+    if (!tmpl_uchar_width_is_known)
+        tmpl_det_uchar_width();
 
-    /*  The idea is as follows. Create the integer 76543210, store this in the*
-     *  unsigned long int part of our union, and then check the array part to *
-     *  see which element is 0. This would work if computers are base 10, but *
+    /*  The idea is as follows. Create the integer 76543210, store this in    *
+     *  the tmpl_uint part of our union, and then check the array part to see *
+     *  which element is 0. This would work if computers are base 10, but     *
      *  they usually use base 2, base 8, or base 16. Letting N be the base,   *
      *  we'll store the number 7*N^7 + 6*N^6 + ... + 2*N^2 + 1*N + 0. The     *
      *  array will then be:                                                   *
@@ -140,38 +148,38 @@ static enum tmpl_integer_endianness tmpl_det_int_endianness(void)
      *      | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |                                 *
      *      ---------------------------------                                 *
      *                                                                        *
-     *  This is assuming sizeof(unsigned long int) = 8. If it is some other   *
-     *  value, the array will be 0 up to that number. We'll start by          *
-     *  initializing the unsigned long int part of the union to 0.            */
+     *  This is assuming sizeof(tmpl_uint) = 8. If it is some other value,    *
+     *  the array will be 0 up to that number. We'll start by initializing    *
+     *  the tmpl_uint part of the union to 0.                                 */
     e.n = zero;
 
     /*  We need to set power to 2^(number of bits in a byte). This number is  *
-     *  found in TMPL_CHAR_BIT. We're going to write out the number as        *
+     *  found in tmpl_uchar_width. We're going to write out the number as     *
      *  7 * power^7 + 6 * power^6 + ... + 2 * power^2 + power + 0. If we      *
      *  somehow had a base-10 computer, this would be                         *
      *  7*10^7 + 6*10^6 + ... + 2*10^2 + 1*10 + 0 = 76543210. We want this in *
-     *  base 2^TMPL_CHAR_BIT. We can compute 2^TMPL_CHAR_BIT quickly using    *
+     *  base 2^tmpl_uchar_width. We compute 2^tmpl_uchar_width quickly using  *
      *  bitwise operators. 1 << N is the number 1000...000 in binary with N   *
      *  0's. This would be the number 2^N in decimal, which is what we want.  *
-     *  We compute 2^TMPL_CHAR_BIT via 1 << TMPL_CHAR_BIT.                    */
-    power = one << TMPL_CHAR_BIT;
+     *  We compute 2^tmpl_uchar_width via 1 << tmpl_uchar_width.              */
+    power = one << tmpl_uchar_width;
 
-    /*  Write out 76543210 in base 2^TMPL_CHAR_BIT by adding.                 */
+    /*  Write out 76543210 in base 2^tmpl_uchar_width by adding.              */
     for (n = one; n < sizeof(tmpl_uint); ++n)
     {
         e.n += n * power;
 
         /*  From power^k we can get power^(k+1) by shifting the "decimal"     *
-         *  TMPL_CHAR_BIT to the right. If we have 100 and want 1000, we'd    *
+         *  tmpl_uchar_width to the right. If we have 100 and want 1000, we'd *
          *  write 100.00, shift the decimal to the right, and get 1000.0.     *
-         *  Writing pow = pow << TMPL_CHAR_BIT is the base                    *
-         *  2^TMPL_CHAR_BIT equivalent.                                       */
-        power = power << TMPL_CHAR_BIT;
+         *  Writing pow = pow << tmpl_uchar_width is the base                 *
+         *  2^tmpl_uchar_width equivalent.                                    */
+        power = power << tmpl_uchar_width;
     }
 
     /*  We now have 76543210 in the array part of the union (or n-1...210 if  *
-     *  sizeof(unsigned long int) = n). If the zeroth entry of the array is   *
-     *  0, we have little endian. If it is n-1, we have big endian. Anything  *
+     *  sizeof(tmpl_uint) = n). If the zeroth entry of the array is 0, we     *
+     *  have little endian. If it is n-1, we have big endian. Anything        *
      *  between 0 and n-1 is mixed endian, and any other result is unknown.   */
     if (e.arr[0] == 0)
         return tmpl_integer_little_endian;
@@ -184,7 +192,7 @@ static enum tmpl_integer_endianness tmpl_det_int_endianness(void)
 
     return tmpl_integer_unknown_endian;
 }
-/*  End of tmpl_det_int_end.                                                  */
+/*  End of tmpl_det_int_endianness.                                           */
 
 #endif
 /*  End of include guard.                                                     */
