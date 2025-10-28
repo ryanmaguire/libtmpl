@@ -104,5 +104,8 @@ static void tmpl_write_has_inline(FILE *fp)
 }
 /*  End of tmpl_write_has_inline.                                             */
 
+/*  Undefine everything to avoid conflicts.                                   */
+#undef TMPL_HAS_INLINE
+
 #endif
 /*  End of include guard.                                                     */
