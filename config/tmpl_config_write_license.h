@@ -58,7 +58,7 @@
 #include <stdio.h>
 
 /*  Forward declaration for the string. This is provided after the function.  */
-static const char tmpl_license[];
+static const char tmpl_license[1441];
 
 /*  Function for writing the GPLv3 license to a file.                         */
 static void tmpl_write_license(FILE *fp)
@@ -81,7 +81,7 @@ static void tmpl_write_license(FILE *fp)
 /*  End of tmpl_write_license.                                                */
 
 /*  The GPLv3 license for libtmpl as a char array with a null terminator.     */
-static const char tmpl_license[] = {
+static const char tmpl_license[1441] = {
     '/', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*',
     '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*',
     '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*',
