@@ -28,6 +28,13 @@
 #ifndef TMPL_CONFIG_LIBTMPL_LICENSE_H
 #define TMPL_CONFIG_LIBTMPL_LICENSE_H
 
+static const char tmpl_license[];
+
+static void tmpl_write_license(FILE *fp)
+{
+    fputs(tmpl_license, fp);
+}
+
 /*  The GPLv3 license for libtmpl as a char array with a null terminator.     */
 static const char tmpl_license[] = {
     '/', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*',
