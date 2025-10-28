@@ -49,8 +49,8 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_CONFIG_WRITE_HAS_INLINE_H
-#define TMPL_CONFIG_WRITE_HAS_INLINE_H
+#ifndef TMPL_CONFIG_WRITE_USE_INLINE_H
+#define TMPL_CONFIG_WRITE_USE_INLINE_H
 
 /*  By default we assume inline is not allowed. We'll reset this later.       */
 #define TMPL_HAS_INLINE 0
@@ -72,14 +72,14 @@
 /*  End of #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L.      */
 
 /*  Function for writing the TMPL_USE_INLINE and related macros to a file.    */
-static void tmpl_write_has_inline(FILE *fp)
+static void tmpl_write_use_inline(FILE *fp)
 {
     /*  Avoid writing to a NULL file. Check first.                            */
     if (!fp)
     {
         puts(
             "Error Encountered: libtmpl\n"
-            "    tmpl_write_has_inline\n\n"
+            "    tmpl_write_use_inline\n\n"
             "Input FILE pointer is NULL.\n"
         );
 
@@ -102,7 +102,7 @@ static void tmpl_write_has_inline(FILE *fp)
     );
 #endif
 }
-/*  End of tmpl_write_has_inline.                                             */
+/*  End of tmpl_write_use_inline.                                             */
 
 /*  Undefine everything to avoid conflicts.                                   */
 #undef TMPL_HAS_INLINE
