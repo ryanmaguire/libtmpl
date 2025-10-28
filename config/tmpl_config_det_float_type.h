@@ -64,14 +64,13 @@
  ******************************************************************************
  *  2025/04/08: Ryan Maguire                                                  *
  *      Moved function to its own file.                                       *
+ *  2025/10/27: Ryan Maguire                                                  *
+ *      Moved enum definition to the config globals file.                     *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
 #ifndef TMPL_CONFIG_DET_FLOAT_TYPE_H
 #define TMPL_CONFIG_DET_FLOAT_TYPE_H
-
-/*  If the user does not want IEEE support, these functions are not used.     */
-#ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
 
 /*  Globals for the config file are all found here.                           */
 #include "tmpl_config_globals.h"
@@ -79,18 +78,12 @@
 /*  tmpl_det_uchar_width function provided here.                              */
 #include "tmpl_config_det_uchar_width.h"
 
-/*  IEEE-754 does not specify the endianness of float. It is usually the      *
- *  same as the endianness of integers, but this is not required. Unknown     *
- *  is returned if the function could not determine how float is implemented. */
-enum tmpl_float_type {
-    tmpl_float_little_endian,
-    tmpl_float_big_endian,
-    tmpl_float_unknown_endian
-};
-
 /*  Function for determining how float is implemented.                        */
 static enum tmpl_float_type tmpl_det_float_type(void)
 {
+    /*  If the user does not want IEEE support, this function returns unknown.*/
+#ifndef TMPL_SET_TMPL_USE_IEEE_FALSE
+
     /*  IEEE-754 uses 32-bit single precision, but does not specify the       *
      *  endianness. This function will attempt to determine if IEEE-754 is    *
      *  used, and also determine the endianness of float.                     */
@@ -149,13 +142,13 @@ static enum tmpl_float_type tmpl_det_float_type(void)
     if (f.r == 1.0F)
         return tmpl_float_little_endian;
 
+#endif
+/*  End of #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                              */
+
     /*  Otherwise, IEEE-754 is likely not implemented. Return unknown.        */
     return tmpl_float_unknown_endian;
 }
 /*  End of tmpl_det_float_type.                                               */
-
-#endif
-/*  Else for #ifndef TMPL_SET_TMPL_USE_IEEE_FALSE.                            */
 
 #endif
 /*  End of include guard.                                                     */
