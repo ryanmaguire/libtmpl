@@ -81,16 +81,6 @@
 /*  Function for computing the number of bits in unsigned char found here.    */
 #include "tmpl_config_det_uchar_width.h"
 
-/*  There are 4 possibilities for endianness. Little endian is the most       *
- *  common, big endian is a bit rarer, mixed endian is almost non-existent,   *
- *  and unknown means the function could not determine anything.              */
-enum tmpl_integer_endianness {
-    tmpl_integer_little_endian,
-    tmpl_integer_big_endian,
-    tmpl_integer_mixed_endian,
-    tmpl_integer_unknown_endian
-};
-
 /*  We want to use the largest integer data type available. If long long      *
  *  support is available, use this. Otherwise create a typedef for long.      */
 #ifdef TMPL_LONG_LONG_IS_AVAILABLE
