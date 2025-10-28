@@ -22,18 +22,63 @@
  *      Provides the libtmpl license (GPLv3) as a char array. The license     *
  *      itself is much larger than the ~500 character limit imposed by the    *
  *      C89 standard for string literals, so we store it as a char array.     *
+ ******************************************************************************
+ *                             DEFINED FUNCTIONS                              *
+ ******************************************************************************
+ *  Function Name:                                                            *
+ *      tmpl_write_license                                                    *
+ *  Purpose:                                                                  *
+ *      Writes the GPLv3 license to a file.                                   *
+ *  Arguments:                                                                *
+ *      fp (FILE *):                                                          *
+ *          File pointer for the file being written to.                       *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ *  Called Functions:                                                         *
+ *      stdio.h:                                                              *
+ *          fputs:                                                            *
+ *              Writes a string to a file.                                    *
+ *  Method:                                                                   *
+ *      Calls fputs on the char array for the license.                        *
+ ******************************************************************************
+ *                                DEPENDENCIES                                *
+ ******************************************************************************
+ *  1.) stdio.h:                                                              *
+ *          Standard library header file providing FILE and fputs.            *
+ ******************************************************************************
+ *  Author:     Ryan Maguire                                                  *
+ *  Date:       October 27, 2025                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_CONFIG_LIBTMPL_LICENSE_H
-#define TMPL_CONFIG_LIBTMPL_LICENSE_H
+#ifndef TMPL_CONFIG_WRITE_LICENSE_H
+#define TMPL_CONFIG_WRITE_LICENSE_H
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
+/*  Forward declaration for the string. This is provided after the function.  */
 static const char tmpl_license[];
 
+/*  Function for writing the GPLv3 license to a file.                         */
 static void tmpl_write_license(FILE *fp)
 {
+    /*  Avoid writing to a NULL file. Check first.                            */
+    if (!fp)
+    {
+        puts(
+            "Error Encountered: libtmpl\n"
+            "    tmpl_write_license\n\n"
+            "Input FILE pointer is NULL.\n"
+        );
+
+        return;
+    }
+
+    /*  Write the license to the given file.                                  */
     fputs(tmpl_license, fp);
 }
+/*  End of tmpl_write_license.                                                */
 
 /*  The GPLv3 license for libtmpl as a char array with a null terminator.     */
 static const char tmpl_license[] = {
