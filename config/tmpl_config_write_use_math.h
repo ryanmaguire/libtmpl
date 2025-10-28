@@ -58,6 +58,18 @@
 /*  Function for writing the TMPL_USE_MATH_ALGORITHMS macro to a file.        */
 static void tmpl_write_use_math(FILE *fp)
 {
+    /*  Avoid writing to a NULL file. Check first.                            */
+    if (!fp)
+    {
+        puts(
+            "Error Encountered: libtmpl\n"
+            "    tmpl_write_use_math\n\n"
+            "Input FILE pointer is NULL.\n"
+        );
+
+        return;
+    }
+
 #ifdef TMPL_SET_USE_MATH_TRUE
     fputs("#define TMPL_USE_MATH_ALGORITHMS 1\n\n", fp);
 #else
