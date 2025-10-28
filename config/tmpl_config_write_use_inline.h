@@ -88,14 +88,14 @@ static void tmpl_write_use_inline(FILE *fp)
 
 #if TMPL_HAS_INLINE == 1
     fputs(
-        "\n#define TMPL_USE_INLINE 1\n"
+        "#define TMPL_USE_INLINE 1\n"
         "#define TMPL_INLINE_DECL static inline\n"
         "#define TMPL_STATIC_INLINE static inline\n\n",
         fp
     );
 #else
     fputs(
-        "\n#define TMPL_USE_INLINE 0\n"
+        "#define TMPL_USE_INLINE 0\n"
         "#define TMPL_INLINE_DECL\n"
         "#define TMPL_STATIC_INLINE static\n\n",
         fp
