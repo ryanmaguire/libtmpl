@@ -96,21 +96,21 @@ static void tmpl_write_signed_int_representation(FILE * fp)
     switch (signed_type)
     {
         case tmpl_ones_complement:
-            fputs("#define TMPL_SIGNED_REP TMPL_ONES_COMPLEMENT\n", fp);
+            fputs("#define TMPL_SIGNED_REP TMPL_ONES_COMPLEMENT\n\n", fp);
             return;
 
         case tmpl_twos_complement:
-            fputs("#define TMPL_SIGNED_REP TMPL_TWOS_COMPLEMENT\n", fp);
+            fputs("#define TMPL_SIGNED_REP TMPL_TWOS_COMPLEMENT\n\n", fp);
             return;
 
         case tmpl_sign_and_magnitude:
-            fputs("#define TMPL_SIGNED_REP TMPL_SIGN_AND_MAGNITUDE\n", fp);
+            fputs("#define TMPL_SIGNED_REP TMPL_SIGN_AND_MAGNITUDE\n\n", fp);
             return;
 
         /*  This case is not allowed with C99, C11, C18, and C23. C89 does    *
          *  not restrict the ways signed int may be implemented.              */
         default:
-            fputs("#define TMPL_SIGNED_REP TMPL_UNKNOWN_SIGNED_REP\n", fp);
+            fputs("#define TMPL_SIGNED_REP TMPL_UNKNOWN_SIGNED_REP\n\n", fp);
     }
 }
 /*  End of tmpl_write_signed_int_representation.                              */
