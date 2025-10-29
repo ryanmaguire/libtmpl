@@ -63,6 +63,9 @@
 /*  The tmpl_check_float_type function is provided here.                      */
 #include "tmpl_config_check_float_type.h"
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  Function for writing the TMPL_FLOAT_ENDIANNESS macro to a file.           */
 static void tmpl_write_float_type(FILE *fp)
 {

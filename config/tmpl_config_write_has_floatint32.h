@@ -70,6 +70,9 @@
 /*  Function for checking if float is IEEE-754 32-bit single precision.       */
 #include "tmpl_config_check_float_type.h"
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  Function for determining if type punning is available for float.          */
 static void tmpl_write_has_floatint32(FILE *fp)
 {

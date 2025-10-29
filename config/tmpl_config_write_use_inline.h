@@ -52,6 +52,9 @@
 #ifndef TMPL_CONFIG_WRITE_USE_INLINE_H
 #define TMPL_CONFIG_WRITE_USE_INLINE_H
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  By default we assume inline is not allowed. We'll reset this later.       */
 #define TMPL_HAS_INLINE 0
 

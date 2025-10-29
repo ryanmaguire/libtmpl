@@ -63,6 +63,9 @@
 /*  The tmpl_check_ldouble_type function is provided here.                    */
 #include "tmpl_config_check_ldouble_type.h"
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  Function for writing the TMPL_LDOUBLE_ENDIANNESS macro to a file.         */
 static void tmpl_write_ldouble_type(FILE *fp)
 {

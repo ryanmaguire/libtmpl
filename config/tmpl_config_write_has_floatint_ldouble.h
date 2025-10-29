@@ -72,6 +72,9 @@
 /*  Function for checking how long double is implemented.                     */
 #include "tmpl_config_check_ldouble_type.h"
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  Function for writing the TMPL_HAS_FLOATINT_LDOUBLE macro to a file.       */
 static void tmpl_write_has_floatint_ldouble(FILE *fp)
 {

@@ -42,7 +42,8 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  None.                                                                     *
+ *  1.) stdio.h:                                                              *
+ *          Standard library header file providing FILE and fputs.            *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       March 10, 2021                                                *
@@ -62,6 +63,9 @@
 
 /*  The tmpl_check_double_type function is provided here.                     */
 #include "tmpl_config_check_double_type.h"
+
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
 
 /*  Function for writing the TMPL_DOUBLE_ENDIANNESS macro to a file.          */
 static void tmpl_write_double_type(FILE *fp)

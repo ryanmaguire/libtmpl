@@ -70,6 +70,9 @@
 /*  Function for checking if double is IEEE-754 64-bit double precision.      */
 #include "tmpl_config_check_double_type.h"
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  Function for determining if type punning is available for double.         */
 static void tmpl_write_has_floatint64(FILE *fp)
 {

@@ -54,6 +54,9 @@
 #ifndef TMPL_CONFIG_WRITE_END_OF_FILE_H
 #define TMPL_CONFIG_WRITE_END_OF_FILE_H
 
+/*  FILE type and fputs provided here.                                        */
+#include <stdio.h>
+
 /*  Function for writing the end of a header file and then closing the file.  */
 static void tmpl_write_end_of_file(FILE *fp)
 {
