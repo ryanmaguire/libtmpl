@@ -209,7 +209,8 @@ fi
 # warning. Padding warning's are unnecessary, as are warnings about comparing
 # floats for equality. All other warnings should be enabled.
 if [ "$CC" == "clang" ]; then
-    ExtraArgs="$ExtraArgs -Weverything -Wno-padded -Wno-float-equal"
+    ExtraArgs="$ExtraArgs -Weverything"
+    ExtraArgs="$ExtraArgs -Wno-padded -Wno-float-equal -Wno-switch-enum"
 fi
 
 # If we're inlining small functions, we must not also compile the files
