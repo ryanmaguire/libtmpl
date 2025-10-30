@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_array_double_total_uint                        *
+ *                         tmpl_array_double_sum_uint                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned int array.                            *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_UInt_Array_Double_Total                                          *
+ *      tmpl_UInt_Array_Double_Sum                                            *
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned int array.                            *
  *  Arguments:                                                                *
@@ -58,7 +58,7 @@
 #include <libtmpl/include/tmpl_array_integer.h>
 
 /*  Function for summing the elements of an unsigned int array.               */
-double tmpl_UInt_Array_Double_Total(const unsigned int * const arr, size_t len)
+double tmpl_UInt_Array_Double_Sum(const unsigned int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -77,4 +77,4 @@ double tmpl_UInt_Array_Double_Total(const unsigned int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_UInt_Array_Double_Total.                                      */
+/*  End of tmpl_UInt_Array_Double_Sum.                                        */

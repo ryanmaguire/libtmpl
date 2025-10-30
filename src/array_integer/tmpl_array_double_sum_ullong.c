@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_array_double_total_ullong                       *
+ *                        tmpl_array_double_sum_ullong                        *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned long long array.                      *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_ULLong_Array_Double_Total                                        *
+ *      tmpl_ULLong_Array_Double_Sum                                          *
  *  Purpose:                                                                  *
  *      Computes the sum of an unsigned long long array.                      *
  *  Arguments:                                                                *
@@ -69,8 +69,8 @@
 
 /*  Function for summing the elements of an unsigned long long array.         */
 double
-tmpl_ULLong_Array_Double_Total(const unsigned long long int * const arr,
-                               size_t len)
+tmpl_ULLong_Array_Double_Sum(const unsigned long long int * const arr,
+                             size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -89,7 +89,7 @@ tmpl_ULLong_Array_Double_Total(const unsigned long long int * const arr,
 
     return sum;
 }
-/*  End of tmpl_ULLong_Array_Double_Total.                                    */
+/*  End of tmpl_ULLong_Array_Double_Sum.                                      */
 
 #endif
 /*  End of #if TMPL_HAS_LONGLONG == 1.                                        */

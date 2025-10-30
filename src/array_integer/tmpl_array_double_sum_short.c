@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                       tmpl_array_double_total_short                        *
+ *                        tmpl_array_double_sum_short                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the sum of a signed short array.                             *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Short_Array_Double_Total                                         *
+ *      tmpl_Short_Array_Double_Sum                                           *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed short array.                             *
  *  Arguments:                                                                *
@@ -59,7 +59,7 @@
 
 /*  Function for summing the elements of a short array.                       */
 double
-tmpl_Short_Array_Double_Total(const signed short int * const arr, size_t len)
+tmpl_Short_Array_Double_Sum(const signed short int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -78,4 +78,4 @@ tmpl_Short_Array_Double_Total(const signed short int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_Short_Array_Double_Total.                                     */
+/*  End of tmpl_Short_Array_Double_Sum.                                       */

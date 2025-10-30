@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                        tmpl_array_double_total_long                        *
+ *                         tmpl_array_double_sum_long                         *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Computes the sum of a signed long array.                              *
@@ -24,7 +24,7 @@
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
- *      tmpl_Long_Array_Double_Total                                          *
+ *      tmpl_Long_Array_Double_Sum                                            *
  *  Purpose:                                                                  *
  *      Computes the sum of a signed long array.                              *
  *  Arguments:                                                                *
@@ -58,8 +58,7 @@
 #include <libtmpl/include/tmpl_array_integer.h>
 
 /*  Function for summing the elements of a long array.                        */
-double
-tmpl_Long_Array_Double_Total(const signed long int * const arr, size_t len)
+double tmpl_Long_Array_Double_Sum(const signed long int * const arr, size_t len)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
@@ -78,4 +77,4 @@ tmpl_Long_Array_Double_Total(const signed long int * const arr, size_t len)
 
     return sum;
 }
-/*  End of tmpl_Long_Array_Double_Total.                                      */
+/*  End of tmpl_Long_Array_Double_Sum.                                        */
