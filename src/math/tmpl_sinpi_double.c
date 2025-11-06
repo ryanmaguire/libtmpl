@@ -69,7 +69,7 @@ double tmpl_Double_SinPi(double x)
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 27U)
             return tmpl_Double_Pi * x;
 
-        /*  For |x| < 2^-4 we can use a Remez polynomial that is quite fast.  */
+        /*  For |x| < 2^-4 we may use a Remez polynomial that is quite fast.  */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 4U)
             return tmpl_Double_SinPi_Remez(x);
 
@@ -88,7 +88,7 @@ double tmpl_Double_SinPi(double x)
     w.r = tmpl_Double_Mod_2(w.r);
 
     /*  Shift |x| up by 2^45. The most significant 8 bits of |x| are now the  *
-     *  least significant 8 bits of shifted.                                  */
+     *  least significant 8 bits of shifted, with possible rounding.          */
     shifted.r = w.r + shifter;
 
     /*  Extract the lowest 8 bits. man3 is a 16-bit word, so we need a bit    *
@@ -141,7 +141,7 @@ double tmpl_Double_SinPi(double x)
      *                = sin(pi r + pi dr)                                     *
      *                = cos(pi r) sin(pi dr) + sin(pi r) cos(pi dr)           *
      *                                                                        *
-     *  cos(pi r) and sin(pi r) and computed by a lookup table. The index for *
+     *  cos(pi r) and sin(pi r) are computed by a lookup table. The index for *
      *  this lookup table is the integer n such that r = n / 128. This is     *
      *  the lower 7 bits of the "shifted" word. That is, shifted is equal to  *
      *  y + 2^45. Since floating point arithmetic truncates, the lowest       *
