@@ -17,6 +17,8 @@
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************/
 #include <libtmpl/include/tmpl_math.h>
+
+/*  Maclaurin series for sin(pi x) and cos(pi x), accurate for |x| < 2^-7.    */
 #include "auxiliary/tmpl_cospi_maclaurin_double.h"
 #include "auxiliary/tmpl_sinpi_maclaurin_double.h"
 #include "auxiliary/tmpl_sinpi_remez_double.h"

@@ -45,7 +45,7 @@
  *                        -----         (2n+1)!                               *
  *                        n = 0                                               *
  *                                                                            *
- *      Use the first 5 terms (0 <= n <= 4) and compute.                      *
+ *      Use the first 4 terms (0 <= n <= 3) and compute.                      *
  *  Notes:                                                                    *
  *      Only accurate for values near 0.                                      *
  ******************************************************************************
@@ -68,30 +68,27 @@
 #include <libtmpl/include/tmpl_config.h>
 
 /*  Coefficients for the Maclaurin series at double precision.                */
-#define A0 (+3.1415926535897932384626433832795028841972E+00)
-#define A1 (-5.1677127800499700292460525111835658670375E+00)
-#define A2 (+2.5501640398773454438561775836952967206692E+00)
-#define A3 (-5.9926452932079207688773938354604004601536E-01)
-#define A4 (+8.2145886611128228798802365523698344807837E-02)
+#define A00 (+3.1415926535897932384626433832795028841972E+00)
+#define A01 (-5.1677127800499700292460525111835658670375E+00)
+#define A02 (+2.5501640398773454438561775836952967206692E+00)
+#define A03 (-5.9926452932079207688773938354604004601536E-01)
 
-/*  Maclaurin series for sin(pi x), double precision, to 5 terms.             */
+/*  Helper macro for evaluating the polynomial via Horner's method.           */
+#define TMPL_POLY_EVAL(z) A00 + z*(A01 + z*(A02 + z*A03))
+
+/*  Maclaurin series for sin(pi x), double precision, to 4 terms.             */
 TMPL_STATIC_INLINE
 double tmpl_Double_SinPi_Maclaurin(double x)
 {
-    /*  Declare necessary variables.                                          */
-    const double x2 = x*x;
-
-    /*  Use Horner's method to compute the polynomial.                        */
-    return x*(A0 + x2*(A1 + x2*(A2 + x2*(A3 + x2*A4))));
+    /*  sin(pi x) is odd, the polynomial is in terms of x^{2n+1}.             */
+    const double x2 = x * x;
+    const double poly = TMPL_POLY_EVAL(x2);
+    return x * poly;
 }
 /*  End of tmpl_Double_SinPi_Maclaurin.                                       */
 
-/*  Undefine the coefficients in case someone wants to #include this file.    */
-#undef A0
-#undef A1
-#undef A2
-#undef A3
-#undef A4
+/*  Undefine everything in case someone wants to #include this file.          */
+#include "tmpl_math_undef.h"
 
 #endif
 /*  End of include guard.                                                     */
