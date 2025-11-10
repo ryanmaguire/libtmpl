@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                 tmpl_cyl_fresnel_observer_geometry_double                  *
+ *                  tmpl_cyl_fresnel_observer_geometry_float                  *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides a struct for the geometry of cylindrical Fresnel diffraction.*
@@ -26,29 +26,29 @@
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TYPES_CYL_FRESNEL_OBSERVER_GEOMETRY_DOUBLE_H
-#define TMPL_TYPES_CYL_FRESNEL_OBSERVER_GEOMETRY_DOUBLE_H
+#ifndef TMPL_TYPES_CYL_FRESNEL_OBSERVER_GEOMETRY_FLOAT_H
+#define TMPL_TYPES_CYL_FRESNEL_OBSERVER_GEOMETRY_FLOAT_H
 
 /*  2D vector type found here.                                                */
-#include <libtmpl/include/types/tmpl_vec2_double.h>
+#include <libtmpl/include/types/tmpl_vec2_float.h>
 
 /*  3D vector type found here.                                                */
-#include <libtmpl/include/types/tmpl_vec3_double.h>
+#include <libtmpl/include/types/tmpl_vec3_float.h>
 
 /*  The geometry for cylindrical Fresnel diffraction.                         */
-typedef struct tmpl_CylFresnelObserverGeometryDouble_Def {
+typedef struct tmpl_CylFresnelObserverGeometryFloat_Def {
 
     /*  Location of the observer, a point in 3D space (not in the xy plane).  */
-    tmpl_ThreeVectorDouble position;
+    tmpl_ThreeVectorFloat position;
 
     /*  The point in the xy plane where the line of sight from the observer   *
      *  intercepts the plane. This is known as the ring-intercept point when  *
      *  working with ring occultations.                                       */
-    tmpl_TwoVectorDouble intercept;
+    tmpl_TwoVectorFloat intercept;
 
     /*  The dummy variable of integration, which varies over the xy plane.    */
-    tmpl_TwoVectorDouble dummy;
-} tmpl_CylFresnelObserverGeometryDouble;
+    tmpl_TwoVectorFloat dummy;
+} tmpl_CylFresnelObserverGeometryFloat;
 
 #endif
 /*  End of include guard.                                                     */
