@@ -962,15 +962,11 @@ tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
- *      rho (const tmpl_TwoVectorDouble * const):                             *
- *          The dummy variable of integration, a point in the ring plane.     *
- *          This vector is expressed in terms of its Cartesian coordinates.   *
- *      rho0 (const tmpl_TwoVectorDouble * const):                            *
- *          The point of interest in the plane, in the same units as rho.     *
- *          This vector is given in terms of its Cartesian coordinates.       *
- *      R (const tmpl_ThreeVectorDouble * TMPL_RESTRICT const):               *
- *          The position vector for the observer. Same units as rho and rho0, *
- *          and also given in terms of its Cartesian coordinates.             *
+ *      geo (const tmpl_CylFresnelGeometryDouble * const):                    *
+ *          The geometry of the observation. This contains the position       *
+ *          vector for the observer, and the vectors in the xy plane for the  *
+ *          intercept point (where the line of sight for the observer crosses *
+ *          the xy plane), and the dummy variable of integration.             *
  *      eps (double):                                                         *
  *          The "epsilon" factor, the allowed error in the computation of the *
  *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
@@ -994,9 +990,7 @@ tmpl_LDouble_Ideal_Stationary_Cyl_Fresnel_Phi_Newton_Deg(
 extern float
 tmpl_Float_Stationary_Cyl_Fresnel_Psi(
     float k,
-    const tmpl_TwoVectorFloat * const rho,
-    const tmpl_TwoVectorFloat * const rho0,
-    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R,
+    const tmpl_CylFresnelGeometryFloat * const geo,
     float eps,
     unsigned int max_iters
 );
@@ -1004,9 +998,7 @@ tmpl_Float_Stationary_Cyl_Fresnel_Psi(
 extern double
 tmpl_Double_Stationary_Cyl_Fresnel_Psi(
     double k,
-    const tmpl_TwoVectorDouble * const rho,
-    const tmpl_TwoVectorDouble * const rho0,
-    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R,
+    const tmpl_CylFresnelGeometryDouble * const geo,
     double eps,
     unsigned int max_iters
 );
@@ -1014,9 +1006,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Psi(
 extern long double
 tmpl_LDouble_Stationary_Cyl_Fresnel_Psi(
     long double k,
-    const tmpl_TwoVectorLongDouble * const rho,
-    const tmpl_TwoVectorLongDouble * const rho0,
-    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R,
+    const tmpl_CylFresnelGeometryLongDouble * const geo,
     long double eps,
     unsigned int max_iters
 );
@@ -1029,15 +1019,11 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi(
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
- *      rho (const tmpl_TwoVectorDouble * const):                             *
- *          The dummy variable of integration, a point in the ring plane.     *
- *          This vector is expressed in terms of its Cartesian coordinates.   *
- *      rho0 (const tmpl_TwoVectorDouble * const):                            *
- *          The point of interest in the plane, in the same units as rho.     *
- *          This vector is given in terms of its Cartesian coordinates.       *
- *      R (const tmpl_ThreeVectorDouble * TMPL_RESTRICT const):               *
- *          The position vector for the observer. Same units as rho and rho0, *
- *          and also given in terms of its Cartesian coordinates.             *
+ *      geo (const tmpl_CylFresnelGeometryDouble * const):                    *
+ *          The geometry of the observation. This contains the position       *
+ *          vector for the observer, and the vectors in the xy plane for the  *
+ *          intercept point (where the line of sight for the observer crosses *
+ *          the xy plane), and the dummy variable of integration.             *
  *      eps (double):                                                         *
  *          The "epsilon" factor, the allowed error in the computation of the *
  *          stationary phase. Once |dpsi / dphi| < eps, the computation will  *
@@ -1061,9 +1047,7 @@ tmpl_LDouble_Stationary_Cyl_Fresnel_Psi(
 extern tmpl_ComplexFloat
 tmpl_Float_Stationary_Cyl_Fresnel_Kernel(
     float k,
-    const tmpl_TwoVectorFloat * const rho,
-    const tmpl_TwoVectorFloat * const rho0,
-    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R,
+    const tmpl_CylFresnelGeometryFloat * const geo,
     float eps,
     unsigned int max_iters
 );
@@ -1071,9 +1055,7 @@ tmpl_Float_Stationary_Cyl_Fresnel_Kernel(
 extern tmpl_ComplexDouble
 tmpl_Double_Stationary_Cyl_Fresnel_Kernel(
     double k,
-    const tmpl_TwoVectorDouble * const rho,
-    const tmpl_TwoVectorDouble * const rho0,
-    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R,
+    const tmpl_CylFresnelGeometryDouble * const geo,
     double eps,
     unsigned int max_iters
 );
@@ -1081,9 +1063,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Kernel(
 extern tmpl_ComplexLongDouble
 tmpl_LDouble_Stationary_Cyl_Fresnel_Kernel(
     long double k,
-    const tmpl_TwoVectorLongDouble * const rho,
-    const tmpl_TwoVectorLongDouble * const rho0,
-    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R,
+    const tmpl_CylFresnelGeometryLongDouble * const geo,
     long double eps,
     unsigned int max_iters
 );
