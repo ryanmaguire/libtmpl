@@ -122,7 +122,7 @@ tmpl_LDouble_Cyl_Fresnel_Psi(
 extern long double
 tmpl_LDouble_Hypot3(long double x, long double y, long double z);
 
-/*  Computes the Fresnel phase, psi, with vectors in Cartesian coordinates.  */
+/*  Computes the Fresnel phase, psi, with vectors in Cartesian coordinates.   */
 long double
 tmpl_LDouble_Cyl_Fresnel_Psi(
     long double k, const tmpl_CylFresnelGeometryLongDouble * const geo
