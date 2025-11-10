@@ -131,8 +131,9 @@
  *                                                                            *
  *      We combine these three expressions to compute psi''.                  *
  *  Notes:                                                                    *
- *      1.) All vectors are given in Cartesian coordinates.                   *
- *      2.) There are no checks for NULL pointers. It is assumed geo is valid.*
+ *      1.) All vectors in geo are given in Cartesian coordinates.            *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ *      3.) There are no checks for NULL pointers. It is assumed geo is valid.*
  *  References:                                                               *
  *      1.) Marouf, E., Tyler, G., Rosen, P. (June 1986)                      *
  *          Profiling Saturn's Rings by Radio Occultation                     *
