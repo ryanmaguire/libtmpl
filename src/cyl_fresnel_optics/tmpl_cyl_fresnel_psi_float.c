@@ -31,16 +31,12 @@
  *      integration.                                                          *
  *  Arguments:                                                                *
  *      k (float):                                                            *
- *          The wavenumber, in the reciprocal of the units of rho.            *
- *      rho (const tmpl_TwoVectorFloat * const):                              *
- *          The dummy variable of integration, a point in the ring plane.     *
- *          This vector is expressed in terms of its Cartesian coordinates.   *
- *      rho0 (const tmpl_TwoVectorFloat * const):                             *
- *          The point of interest in the plane, in the same units as rho.     *
- *          This vector is given in terms of its Cartesian coordinates.       *
- *      R (cnst tmpl_ThreeVectorFloat * TMPL_RESTRICT const):                 *
- *          The position vector for the observer. Same units as rho and rho0, *
- *          and also given in terms of its Cartesian coordinates.             *
+ *          The wavenumber, in the reciprocal of the units of geo->intercept. *
+ *      geo (const tmpl_CylFresnelGeometryFloat * const):                     *
+ *          The geometry of the observation. This contains the position       *
+ *          vector for the observer, and the vectors in the xy plane for the  *
+ *          intercept point (where the line of sight for the observer crosses *
+ *          the xy plane), and the dummy variable of integration.             *
  *  Outputs:                                                                  *
  *      psi (float):                                                          *
  *          The Fresnel kernel.                                               *
@@ -80,12 +76,9 @@
  *      We compute this final expression using the hypot3 function and the    *
  *      standard formula for the dot product in three dimensions.             *
  *  Notes:                                                                    *
- *      1.) All vectors are given in Cartesian coordinates.                   *
- *      2.) There are no checks for NULL pointers. It is assumed that rho,    *
- *          rho0, and R are valid pointers to 2D and 3D vectors, respectively.*
- *      3.) Since R is the only pointer to a 3D vector, it is declared with   *
- *          the "restrict" qualifier. On compilers lacking restrict support,  *
- *          the TMPL_RESTRICT macro expands to an empty expression.           *
+ *      1.) All vectors in geo are given in Cartesian coordinates.            *
+ *      2.) All lengths are assumed to be in the same units.                  *
+ *      3.) There are no checks for NULL pointers. It is assumed geo is valid.*
  *  References:                                                               *
  *      1.) Marouf, E., Tyler, G., Rosen, P. (June 1986)                      *
  *          Profiling Saturn's Rings by Radio Occultation                     *
@@ -104,31 +97,25 @@
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_config.h:                                                        *
- *          Header file with TMPL_RESTRICT.                                   *
- *  2.) tmpl_vec2_float.h:                                                    *
- *          Location of the tmpl_TwoVectorFloat typedef.                      *
- *  2.) tmpl_vec3_float.h:                                                    *
- *          Location of the tmpl_ThreeVectorFloat typedef.                    *
+ *  1.) tmpl_cyl_fresnel_geometry_float.h:                                    *
+ *          Location of the tmpl_CylFresnelGeometryFloat typedef.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 23, 2025                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/11/10: Ryan Maguire                                                  *
+ *      Rewrote to use tmpl_CylFresnelGeometryFloat struct.                   *
  ******************************************************************************/
 
-/*  TMPL_RESTRICT found here.                                                 */
-#include <libtmpl/include/tmpl_config.h>
-
-/*  vec2 and vec3 typedefs provided here.                                     */
-#include <libtmpl/include/types/tmpl_vec2_float.h>
-#include <libtmpl/include/types/tmpl_vec3_float.h>
+/*  The cylindrical Fresnel geometry struct.                                  */
+#include <libtmpl/include/types/tmpl_cyl_fresnel_geometry_float.h>
 
 /*  Forward declaration / function prototype.                                 */
 extern float
 tmpl_Float_Cyl_Fresnel_Psi(
-    float k,
-    const tmpl_TwoVectorFloat * const rho,
-    const tmpl_TwoVectorFloat * const rho0,
-    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+    float k, const tmpl_CylFresnelGeometryFloat * const geo
 );
 
 /*  Tell the compiler about the L2 norm function, Hypot3.                     */
@@ -137,23 +124,20 @@ extern float tmpl_Float_Hypot3(float x, float y, float z);
 /*  Computes the Fresnel kernel, psi, with vectors in Cartesian coordinates.  */
 float
 tmpl_Float_Cyl_Fresnel_Psi(
-    float k,
-    const tmpl_TwoVectorFloat * const rho,
-    const tmpl_TwoVectorFloat * const rho0,
-    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+    float k, const tmpl_CylFresnelGeometryFloat * const geo
 )
 {
     /*  The relative position vector, u, of the observer from the ring        *
      *  intercept point. Since rho0 lies in the plane, there is no z part.    */
-    const float ux = R->dat[0] - rho0->dat[0];
-    const float uy = R->dat[1] - rho0->dat[1];
-    const float uz = R->dat[2];
+    const float ux = geo->position.dat[0] - geo->intercept.dat[0];
+    const float uy = geo->position.dat[1] - geo->intercept.dat[1];
+    const float uz = geo->position.dat[2];
 
     /*  The difference between the "dummy" point in the plane, rho, that is   *
      *  integrated over, and the orthogonal projection of the position vector *
      *  for the observer, R, onto the ring plane.                             */
-    const float dx = R->dat[0] - rho->dat[0];
-    const float dy = R->dat[1] - rho->dat[1];
+    const float dx = geo->position.dat[0] - geo->dummy.dat[0];
+    const float dy = geo->position.dat[1] - geo->dummy.dat[1];
 
     /*  If we let un denote the unit normal vector in the direction of u, the *
      *  Fresnel kernel is given by:                                           *
