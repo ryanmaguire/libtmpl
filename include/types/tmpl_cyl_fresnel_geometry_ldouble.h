@@ -16,18 +16,18 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
- *                 tmpl_cyl_fresnel_observer_geometry_ldouble                 *
+ *                      tmpl_cyl_fresnel_geometry_ldouble                     *
  ******************************************************************************
  *  Purpose:                                                                  *
  *      Provides a struct for the geometry of cylindrical Fresnel diffraction.*
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
- *  Date:       November 10, 2025                                             *
+ *  Date:       October 20, 2025                                              *
  ******************************************************************************/
 
 /*  Include guard to prevent including this file twice.                       */
-#ifndef TMPL_TYPES_CYL_FRESNEL_OBSERVER_GEOMETRY_LDOUBLE_H
-#define TMPL_TYPES_CYL_FRESNEL_OBSERVER_GEOMETRY_LDOUBLE_H
+#ifndef TMPL_TYPES_CYL_FRESNEL_GEOMETRY_LDOUBLE_H
+#define TMPL_TYPES_CYL_FRESNEL_GEOMETRY_LDOUBLE_H
 
 /*  2D vector type found here.                                                */
 #include <libtmpl/include/types/tmpl_vec2_ldouble.h>
@@ -36,7 +36,7 @@
 #include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
 /*  The geometry for cylindrical Fresnel diffraction.                         */
-typedef struct tmpl_CylFresnelObserverGeometryLongDouble_Def {
+typedef struct tmpl_CylFresnelGeometryLongDouble_Def {
 
     /*  Location of the observer, a point in 3D space (not in the xy plane).  */
     tmpl_ThreeVectorLongDouble position;
@@ -48,7 +48,7 @@ typedef struct tmpl_CylFresnelObserverGeometryLongDouble_Def {
 
     /*  The dummy variable of integration, which varies over the xy plane.    */
     tmpl_TwoVectorLongDouble dummy;
-} tmpl_CylFresnelObserverGeometryLongDouble;
+} tmpl_CylFresnelGeometryLongDouble;
 
 #endif
 /*  End of include guard.                                                     */
