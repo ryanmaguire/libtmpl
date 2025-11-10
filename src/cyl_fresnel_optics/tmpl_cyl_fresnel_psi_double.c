@@ -19,14 +19,14 @@
  *                        tmpl_cyl_fresnel_psi_double                         *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Computes the cylindrical Fresnel kernel.                              *
+ *      Computes the cylindrical Fresnel phase.                               *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
  *  Function Name:                                                            *
  *      tmpl_Double_Cyl_Fresnel_Psi                                           *
  *  Purpose:                                                                  *
- *      Computes the Cylindrical Fresnel kernel from the position vectors of  *
+ *      Computes the Cylindrical Fresnel phase from the position vectors of   *
  *      the observer, the ring intercept point, and the dummy varible of      *
  *      integration.                                                          *
  *  Arguments:                                                                *
@@ -39,13 +39,13 @@
  *          the xy plane), and the dummy variable of integration.             *
  *  Outputs:                                                                  *
  *      psi (double):                                                         *
- *          The Fresnel kernel.                                               *
+ *          The Fresnel phase.                                                *
  *  Called Functions:                                                         *
  *      src/math/                                                             *
  *          tmpl_Double_Hypot3:                                               *
  *              Computes the magnitude of the vector (x, y, z).               *
  *  Method:                                                                   *
- *      Use the formula for the Fresnel kernel. The Fresnel transform is:     *
+ *      Use the formula for the Fresnel phase. The Fresnel transform is:      *
  *                                                                            *
  *                              -    -                                        *
  *          ^         sin(B)   | |  | |          exp(i psi)                   *
@@ -58,7 +58,7 @@
  *      vector for the point of interest, rho is the dummy variable (vector)  *
  *      of integration, L is the wavelength, and B is the opening angle (the  *
  *      angle made by the vector going from the observer, R, to the point     *
- *      rho0, and the xy plane). The Fresnel kernel is the psi quantity, it   *
+ *      rho0, and the xy plane). The Fresnel phase is the psi quantity, it    *
  *      is purely geometric and given by:                                     *
  *                                                                            *
  *                   -                                          -             *
@@ -121,7 +121,7 @@ tmpl_Double_Cyl_Fresnel_Psi(
 /*  Tell the compiler about the L2 norm function, Hypot3.                     */
 extern double tmpl_Double_Hypot3(double x, double y, double z);
 
-/*  Computes the Fresnel kernel, psi, with vectors in Cartesian coordinates.  */
+/*  Computes the Fresnel phase, psi, with vectors in Cartesian coordinates.   */
 double
 tmpl_Double_Cyl_Fresnel_Psi(
     double k, const tmpl_CylFresnelGeometryDouble * const geo
@@ -140,7 +140,7 @@ tmpl_Double_Cyl_Fresnel_Psi(
     const double dy = geo->position.dat[1] - geo->dummy.dat[1];
 
     /*  If we let un denote the unit normal vector in the direction of u, the *
-     *  Fresnel kernel is given by:                                           *
+     *  Fresnel phase is given by:                                            *
      *                                                                        *
      *      psi = k (|| R - rho || - un . (R - rho))                          *
      *                                                                        *
