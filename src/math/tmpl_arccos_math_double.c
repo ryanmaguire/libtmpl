@@ -302,10 +302,18 @@ double tmpl_Double_Arccos(double x)
 /*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
  *  on the size of the input. We compute this via the absolute value function.*/
 #if TMPL_USE_INLINE == 1
+
+/*  The absolute value function is small and should be inlined.               */
 #include <libtmpl/include/inline/math/tmpl_abs_double.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the function.             */
 extern double tmpl_Double_Abs(double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Double precision inverse cosine (acos equivalent).                        */
 double tmpl_Double_Arccos(double x)

@@ -173,9 +173,10 @@
  *          less than 1 ULP (~5 x 10^-32).                                    *
  *  Portable Version:                                                         *
  *      Called Functions:                                                     *
- *          src/math/auxiliary/                                               *
+ *          src/math/                                                         *
  *              tmpl_LDouble_Abs:                                             *
  *                  Computes the absolute value of a real number.             *
+ *          src/math/auxiliary/                                               *
  *              tmpl_LDouble_Arccos_Maclaurin:                                *
  *                  Computes acos via a Maclaurin series for small x.         *
  *              tmpl_LDouble_Arccos_Rat_Remez:                                *
@@ -413,10 +414,18 @@ long double tmpl_LDouble_Arccos(long double x)
 /*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
  *  on the size of the input. We compute this via the absolute value function.*/
 #if TMPL_USE_INLINE == 1
+
+/*  The absolute value function is small and should be inlined.               */
 #include <libtmpl/include/inline/math/tmpl_abs_ldouble.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the function.             */
 extern long double tmpl_LDouble_Abs(long double x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Long double precision inverse cosine (acosl equivalent).                  */
 long double tmpl_LDouble_Arccos(long double x)

@@ -300,10 +300,18 @@ float tmpl_Float_Arccos(float x)
 /*  The approximation used (Maclaurin, Remez, or reflection formula) depends  *
  *  on the size of the input. We compute this via the absolute value function.*/
 #if TMPL_USE_INLINE == 1
+
+/*  The absolute value function is small and should be inlined.               */
 #include <libtmpl/include/inline/math/tmpl_abs_float.h>
+
 #else
+/*  Else for #if TMPL_USE_INLINE == 1.                                        */
+
+/*  Lacking inline support, tell the compiler about the function.             */
 extern float tmpl_Float_Abs(float x);
+
 #endif
+/*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Single precision inverse cosine (acosf equivalent).                       */
 float tmpl_Float_Arccos(float x)
