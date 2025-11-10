@@ -72,6 +72,11 @@
 #include <libtmpl/include/types/tmpl_vec3_float.h>
 #include <libtmpl/include/types/tmpl_vec3_ldouble.h>
 
+/*  Geometry types for Fresnel observation. Useful for ring occultations.     */
+#include <libtmpl/include/types/tmpl_cyl_fresnel_geometry_double.h>
+#include <libtmpl/include/types/tmpl_cyl_fresnel_geometry_float.h>
+#include <libtmpl/include/types/tmpl_cyl_fresnel_geometry_ldouble.h>
+
 /*  If using with C++ (and not C) we need to wrap the entire header file in   *
  *  an extern "C" statement. Check if C++ is being used with __cplusplus.     */
 #ifdef __cplusplus
@@ -208,26 +213,17 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(
  ******************************************************************************/
 extern float
 tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(
-    float k,
-    const tmpl_TwoVectorFloat * const rho,
-    const tmpl_TwoVectorFloat * const rho0,
-    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+    float k, const tmpl_CylFresnelGeometryFloat * const geo
 );
 
 extern double
 tmpl_Double_Cyl_Fresnel_d2Psi_dPhi2(
-    double k,
-    const tmpl_TwoVectorDouble * const rho,
-    const tmpl_TwoVectorDouble * const rho0,
-    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R
+    double k, const tmpl_CylFresnelGeometryDouble * const geo
 );
 
 extern long double
 tmpl_LDouble_Cyl_Fresnel_d2Psi_dPhi2(
-    long double k,
-    const tmpl_TwoVectorLongDouble * const rho,
-    const tmpl_TwoVectorLongDouble * const rho0,
-    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R
+    long double k, const tmpl_CylFresnelGeometryLongDouble * const geo
 );
 
 /******************************************************************************
