@@ -162,26 +162,17 @@ tmpl_LDouble_Cyl_Fresnel_Psi(
  ******************************************************************************/
 extern float
 tmpl_Float_Cyl_Fresnel_dPsi_dPhi(
-    float k,
-    const tmpl_TwoVectorFloat * const rho,
-    const tmpl_TwoVectorFloat * const rho0,
-    const tmpl_ThreeVectorFloat * TMPL_RESTRICT const R
+    float k, const tmpl_CylFresnelGeometryFloat * const geo
 );
 
 extern double
 tmpl_Double_Cyl_Fresnel_dPsi_dPhi(
-    double k,
-    const tmpl_TwoVectorDouble * const rho,
-    const tmpl_TwoVectorDouble * const rho0,
-    const tmpl_ThreeVectorDouble * TMPL_RESTRICT const R
+    double k, const tmpl_CylFresnelGeometryDouble * const geo
 );
 
 extern long double
 tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(
-    long double k,
-    const tmpl_TwoVectorLongDouble * const rho,
-    const tmpl_TwoVectorLongDouble * const rho0,
-    const tmpl_ThreeVectorLongDouble * TMPL_RESTRICT const R
+    long double k, const tmpl_CylFresnelGeometryLongDouble * const geo
 );
 
 /******************************************************************************
@@ -193,23 +184,18 @@ tmpl_LDouble_Cyl_Fresnel_dPsi_dPhi(
  *  Arguments:                                                                *
  *      k (double):                                                           *
  *          The wavenumber, in the reciprocal of the units of rho.            *
- *      rho (const tmpl_TwoVectorDouble * const):                             *
- *          The dummy variable of integration, a point in the ring plane.     *
- *          This vector is expressed in terms of its Cartesian coordinates.   *
- *      rho0 (const tmpl_TwoVectorDouble * const):                            *
- *          The point of interest in the plane, in the same units as rho.     *
- *          This vector is given in terms of its Cartesian coordinates.       *
- *      R (const tmpl_ThreeVectorDouble * TMPL_RESTRICT const):               *
- *          The position vector for the observer. Same units as rho and rho0, *
- *          and also given in terms of its Cartesian coordinates.             *
+ *      geo (const tmpl_CylFresnelGeometryDouble * const):                    *
+ *          The geometry of the observation. This contains the position       *
+ *          vector for the observer, and the vectors in the xy plane for the  *
+ *          intercept point (where the line of sight for the observer crosses *
+ *          the xy plane), and the dummy variable of integration.             *
  *  Outputs:                                                                  *
  *      d2psi (double):                                                       *
  *          The second derivative of psi with respect to phi.                 *
  *  Notes:                                                                    *
  *      1.) Float and long double precisions also provided.                   *
  *      2.) All lengths are assumed to be in the same units.                  *
- *      3.) Since R is the only three-vector, we may safely add the restrict  *
- *          qualifier to it.                                                  *
+ *      3.) There are no checks for NULL pointers. It is assumed geo is valid.*
  ******************************************************************************/
 extern float
 tmpl_Float_Cyl_Fresnel_d2Psi_dPhi2(
