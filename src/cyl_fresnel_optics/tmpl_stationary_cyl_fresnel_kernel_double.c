@@ -170,13 +170,13 @@ tmpl_Double_Stationary_Cyl_Fresnel_Kernel(
          *  The first expression simplifies to x rho_x + y rho_y and the      *
          *  central piece is (rho_x y - rho_y x)^2. Compute the sum portion.  */
         const double sum =
-            geo->position.dat[0] * geo->dummy.dat[0] +
-            geo->position.dat[1] * geo->dummy.dat[1];
+            geo->position.dat[0] * rho_s.dat[0] +
+            geo->position.dat[1] * rho_s.dat[1];
 
         /*  Compute the difference part, rho_x y - rho_y x.                   */
         const double diff =
-            geo->dummy.dat[0] * geo->position.dat[1] -
-            geo->dummy.dat[1] * geo->position.dat[0];
+            rho_s.dat[0] * geo->position.dat[1] -
+            rho_s.dat[1] * geo->position.dat[0];
 
         /*  Call the combination of the left and center parts "left". Compute.*/
         const double left2 = (diff*diff*rcpr_rho_dist_sq - sum) * rcpr_rho_dist;
