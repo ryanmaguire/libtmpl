@@ -91,7 +91,9 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  2.) tmpl_polynomial_integer.h:                                            *
+ *  2.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
+ *  3.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -111,7 +113,10 @@
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Polynomial typedefs and function prototype.                               */
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
+
+/*  Polynomial functions provided here, as is the function prototype.         */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
 /*  Function for adding two polynomials over Z[x].                            */
