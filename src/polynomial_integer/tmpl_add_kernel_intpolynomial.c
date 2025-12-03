@@ -29,25 +29,18 @@
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
  *      That is, given polynomials P, Q in Z[x], computes P + Q.              *
  *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
- *      sum (tmpl_IntPolynomial *):                                           *
+ *      sum (tmpl_IntPolynomial * const):                                     *
  *          A pointer to a polynomial. The sum is stored here.                *
+ *      p (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being added.                               *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      stdlib.h:                                                             *
  *          realloc:                                                          *
  *              Resizes an array.                                             *
- *      tmpl_string.h:                                                        *
- *          tmpl_String_Duplicate:                                            *
- *              Duplicates a string. Equivalent to the POSIX function strdup. *
- *      string.h:                                                             *
- *          memcpy:                                                           *
- *              Copies data from one chunk of memory to another. Only used if *
- *              TMPL_USE_MEMCPY is set to 1.                                  *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
  *      O(max(deg(P), deg(Q)). That is, if we have:                           *
@@ -73,9 +66,19 @@
  *      0 <= k <= min(N, M) and then copy the coefficients of the larger      *
  *      degree polynomial for min(N, M) < k <= max(N, M).                     *
  *  Notes:                                                                    *
- *      This function does not check for NULL pointers nor shrinks the end    *
- *      result. Use tmpl_IntPolynomial_Add for a safer alternative. That      *
- *      function checks the inputs and then calls this function.              *
+ *      1.) This function does not check for NULL pointers nor shrinks the    *
+ *          end result. Use tmpl_IntPolynomial_Add for a safer alternative.   *
+ *          That function checks the inputs and then calls this function.     *
+ *      2.) The option to use memcpy, instead of a for-loop call, used to be  *
+ *          available by setting USE_MEMCPY at compile time. For this         *
+ *          function this may produce undefined behavior if sum and p point   *
+ *          to the same polynomial, or if sum and q point to the same struct. *
+ *          Benchmarks show that the for-loop method is just as fast (faster, *
+ *          actually) than the memcpy method when a compiler with decent      *
+ *          optimizations is used. Because of this the memcpy method has been *
+ *          removed. It is valid to do tmpl_IntPolynomial_Add(p, p, q) or     *
+ *          tmpl_IntPolynomial(q, p, q), but note that it is faster to use    *
+ *          tmpl_IntPolynomial_AddTo instead.                                 *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -101,111 +104,61 @@
  *      Added doc-string and comments.                                        *
  ******************************************************************************/
 
-/*  realloc found here.                                                       */
-#include <stdlib.h>
-
-/*  TMPL_USE_MEMCPY macro is here.                                            */
-#include <libtmpl/include/tmpl_config.h>
-
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_String_Duplicate function provided here.                             */
-#include <libtmpl/include/tmpl_string.h>
+/*  realloc and casting with C vs. C++ compatibility provided here.           */
+#include <libtmpl/include/compat/tmpl_cast.h>
+#include <libtmpl/include/compat/tmpl_realloc.h>
 
 /*  Polynomial typedefs and function prototype.                               */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  It may be faster, pending computer, to use memcpy to copy the larger      *
- *  polynomial into the output, rather than using a for-loop. On computers    *
- *  tested the for-loop is slightly faster. Nevertheless, to use this version *
- *  build libtmpl with USE_MEMCPY=1 set.                                      *
- *                                                                            *
- *  WARNING:                                                                  *
- *      If you use memcpy instead of a for-loop, calling this function with   *
- *      P == sum or Q == sum may result in undefined behavior. For this       *
- *      reason, and since the for-loop seems to be slightly faster, default   *
- *      behavior is to avoid memcpy.                                          */
-#if TMPL_USE_MEMCPY == 1
-#include <string.h>
-#endif
-
 /*  Function for adding two polynomials over Z[x].                            */
 void
-tmpl_IntPolynomial_Add_Kernel(const tmpl_IntPolynomial *P,
-                              const tmpl_IntPolynomial *Q,
-                              tmpl_IntPolynomial *sum)
+tmpl_IntPolynomial_Add_Kernel(tmpl_IntPolynomial * const sum,
+                              const tmpl_IntPolynomial * const p,
+                              const tmpl_IntPolynomial * const q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
-    size_t n, len;
-    const tmpl_IntPolynomial *first, *second;
+    size_t n;
 
-    /*  Useful constants cast to type "size_t".                               */
-    const size_t zero = (size_t)0;
-    const size_t one = (size_t)1;
-
-    /*  Get the polynomial with the larger degree and set to "first".         */
-    if (P->degree < Q->degree)
-    {
-        first = Q;
-        second = P;
-    }
-    else
-    {
-        first = P;
-        second = Q;
-    }
+    /*  Get the polynomial with the larger degree and set ot to "first".      */
+    const tmpl_IntPolynomial * const first = (p->degree < q->degree ? q : p);
+    const tmpl_IntPolynomial * const second = (p->degree < q->degree ? p : q);
 
     /*  The length of the array of coefficients for the sum.                  */
-    len = first->degree + one;
+    const size_t length = first->degree + 1;
 
     /*  Check if sum needs to be resized.                                     */
     if (sum->degree != first->degree)
     {
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
-        void *tmp = realloc(sum->coeffs, sizeof(*sum->coeffs)*len);
+        void * const tmp = TMPL_REALLOC(sum->coeffs, length);
 
         /*  Check if realloc failed.                                          */
         if (!tmp)
         {
             sum->error_occurred = tmpl_True;
-            sum->error_message = tmpl_String_Duplicate(
+            sum->error_message =
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Add_Kernel\n\n"
-                "realloc failed. Aborting.\n\n"
-            );
+                "realloc failed. Aborting.\n\n";
 
             return;
         }
 
         /*  Otherwise reset the degree and the coefficients pointer.          */
-        sum->coeffs = tmp;
+        sum->coeffs = TMPL_CAST(tmp, int *);
         sum->degree = first->degree;
     }
 
-    /*  If the user requested memcpy, use this to copy the data.              */
-#if TMPL_USE_MEMCPY == 1
-
-    /*  memcpy syntax is (void *dest, const void *src, size_t num).           */
-    memcpy(sum->coeffs, first->coeffs, len*sizeof(*sum->coeffs));
-
-    /*  Now add the coefficients from the smaller polynomial to conclude.     */
-    for (n = zero; n <= second->degree; ++n)
-        sum->coeffs[n] += second->coeffs[n];
-
-#else
-/*  Else for #if TMPL_USE_MEMCPY == 1.                                        */
-
     /*  Compute the sum term by term.                                         */
-    for (n = zero; n <= second->degree; ++n)
+    for (n = 0; n <= second->degree; ++n)
         sum->coeffs[n] = first->coeffs[n] + second->coeffs[n];
 
     /*  Add the coefficients of the larger polynomial.                        */
-    for (n = second->degree + one; n < len; ++n)
+    for (n = second->degree + 1; n < length; ++n)
         sum->coeffs[n] = first->coeffs[n];
-
-#endif
-/*  End of #if TMPL_USE_MEMCPY == 1.                                          */
-
 }
 /*  End of tmpl_IntPolynomial_Add_Kernel.                                     */
