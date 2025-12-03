@@ -193,12 +193,12 @@ tmpl_IntPolynomial_Add_Kernel(tmpl_IntPolynomial * const sum,
  *  Purpose:                                                                  *
  *      Adds two elements of Z[x] with the same degree.                       *
  *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial, with the same degree as P.       *
- *      sum (tmpl_IntPolynomial *):                                           *
- *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *      sum (tmpl_IntPolynomial * const):                                     *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      p (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being added.                               *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
@@ -206,9 +206,9 @@ tmpl_IntPolynomial_Add_Kernel(tmpl_IntPolynomial * const sum,
  *      intermediate computations.                                            *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_Add_Same_Degree(const tmpl_IntPolynomial *P,
-                                   const tmpl_IntPolynomial *Q,
-                                   tmpl_IntPolynomial *sum);
+tmpl_IntPolynomial_Add_Same_Degree(tmpl_IntPolynomial * const sum,
+                                   const tmpl_IntPolynomial * const p,
+                                   const tmpl_IntPolynomial * const q);
 
 /******************************************************************************
  *  Function:                                                                 *
@@ -217,12 +217,12 @@ tmpl_IntPolynomial_Add_Same_Degree(const tmpl_IntPolynomial *P,
  *      Adds two elements of Z[x] with the same degree without error checking *
  *      or shrinking the final result.                                        *
  *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial, with the same degree as P.       *
- *      sum (tmpl_IntPolynomial *):                                           *
- *          A pointer to a polynomial, the value P + Q will be stored in it.  *
+ *      sum (tmpl_IntPolynomial * const):                                     *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      p (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being added.                               *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Notes:                                                                    *
@@ -232,9 +232,9 @@ tmpl_IntPolynomial_Add_Same_Degree(const tmpl_IntPolynomial *P,
  *      This is another utility function used by other routines.              *
  ******************************************************************************/
 extern void
-tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
-                                          const tmpl_IntPolynomial *Q,
-                                          tmpl_IntPolynomial *sum);
+tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
+                                          const tmpl_IntPolynomial * const p,
+                                          const tmpl_IntPolynomial * const q);
 
 /******************************************************************************
  *  Function:                                                                 *
