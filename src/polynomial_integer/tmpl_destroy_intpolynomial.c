@@ -28,25 +28,26 @@
  *  Purpose:                                                                  *
  *      Free all memory in a tmpl_IntPolynomial and set pointers to NULL.     *
  *  Arguments:                                                                *
- *      poly (tmpl_IntPolynomial *):                                          *
+ *      poly (tmpl_IntPolynomial * const):                                    *
  *          A pointer to the polynomial that is to be destroyed.              *
  *  Outputs:                                                                  *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      free (stdlib.h):                                                      *
- *          Free's data allocated by malloc, calloc, or realloc.              *
+ *      stdlib.h:                                                             *
+ *          free:                                                             *
+ *              Free's data allocated by malloc, calloc, or realloc.          *
  *  Method:                                                                   *
  *      Check for non-NULL pointers and free them. Then set these pointers to *
  *      NULL to prevent the possibility of double-free's.                     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stdlib.h:                                                             *
- *          Standard library file where free is provided.                     *
+ *  1.) tmpl_free.h:                                                          *
+ *          Header file with the TMPL_FREE macro for safely freeing data.     *
  *  2.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  3.) tmpl_polynomial_integer.h:                                            *
- *          Header file where the function prototype is given.                *
+ *  3.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 8, 2023                                              *
@@ -55,40 +56,40 @@
  ******************************************************************************
  *  2023/04/25: Ryan Maguire                                                  *
  *      Added doc-string and comments.                                        *
+ *  2025/12/03: Ryan Maguire                                                  *
+ *      Removed free for error_message, variable is now declared const.       *
+ *      Replaced free with TMPL_FREE macro.                                   *
  ******************************************************************************/
 
-/*  free is declared here.                                                    */
-#include <stdlib.h>
+/*  TMPL_FREE macro for safely freeing and nullifying a pointer found here.   */
+#include <libtmpl/include/compat/tmpl_free.h>
 
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  Function prototype and polynomial typedefs are here.                      */
-#include <libtmpl/include/tmpl_polynomial_integer.h>
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
+
+/*  Forward declaration / function prototype.                                 */
+extern void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *const poly);
 
 /*  Function for freeing all memory in a polynomial.                          */
-void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *poly)
+void tmpl_IntPolynomial_Destroy(tmpl_IntPolynomial *const poly)
 {
     /*  If the input is NULL there is nothing to be done.                     */
     if (!poly)
         return;
 
-    /*  If the coefficients are also NULL there is nothing to be done.        */
-    if (poly->coeffs)
-        free(poly->coeffs);
+    /*  Safely free the data and then set it to NULL to avoid double free's.  */
+    TMPL_FREE(poly->coeffs);
 
-    /*  If an error occurred, the error_message variable may have been set.   *
-     *  Check if this data also needs to be freed.                            */
-    if (poly->error_message)
-        free(poly->error_message);
-
-    /*  Set the pointers to NULL to avoid trying to free them twice.          */
-    poly->coeffs = NULL;
+    /*  The error_message variable is a const pointer, we do not need to free *
+     *  it, simply set it to NULL. Since we are destroying the polynomial,    *
+     *  any previous error message is now irrelevant.                         */
     poly->error_message = NULL;
 
     /*  Set the remaining variables to their default zero values.             */
-    poly->degree = (size_t)0;
+    poly->degree = 0;
     poly->error_occurred = tmpl_False;
-    return;
 }
 /*  End of tmpl_IntPolynomial_Destroy.                                        */
