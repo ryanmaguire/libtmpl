@@ -138,7 +138,7 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
         }
 
         /*  Otherwise reset the degree and the coefficients pointer.          */
-        sum->coeffs = tmp;
+        sum->coeffs = TMPL_CAST(tmp, signed int *);
         sum->degree = p->degree;
     }
 

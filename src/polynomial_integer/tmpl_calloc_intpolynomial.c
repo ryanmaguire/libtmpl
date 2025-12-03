@@ -62,8 +62,8 @@
  *      Added doc-string and comments.                                        *
  ******************************************************************************/
 
-/*  calloc is here.                                                           */
-#include <stdlib.h>
+/*  TMPL_CALLOC macro found here.                                             */
+#include <libtmpl/include/compat/tmpl_calloc.h>
 
 /*  tmpl_Bool, tmpl_False, and tmpl_True are given here.                      */
 #include <libtmpl/include/tmpl_bool.h>
@@ -81,9 +81,9 @@ tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(size_t length)
     tmpl_IntPolynomial poly;
 
     /*  Special case. If length = 0 the output is the empty polynomial.       */
-    if (length == (size_t)0)
+    if (length == 0)
     {
-        poly.degree = (size_t)0;
+        poly.degree = 0;
         poly.coeffs = NULL;
         poly.error_occurred = tmpl_False;
         poly.error_message = NULL;
@@ -91,28 +91,27 @@ tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(size_t length)
     }
 
     /*  length is positive so try to allocate and set to zero this many terms.*/
-    poly.coeffs = calloc(sizeof(*poly.coeffs), length);
+    poly.coeffs = TMPL_CALLOC(signed int, length);
 
     /*  calloc returns NULL on failure. Check for this.                       */
     if (!poly.coeffs)
     {
         /*  Set the degree to zero and create an error message.               */
-        poly.degree = (size_t)0;
+        poly.degree = 0;
         poly.coeffs = NULL;
         poly.error_occurred = tmpl_True;
-        poly.error_message = tmpl_strdup(
+        poly.error_message =
             "\nError Encountered: libtmpl\n"
             "    tmpl_IntPolynomial_Calloc\n\n"
-            "calloc failed and returned NULL. Aborting.\n\n"
-        );
+            "calloc failed and returned NULL. Aborting.\n\n";
     }
 
-    /*  Otherwise initialize all error variables to zero and set degree.      */
+    /*  Otherwise initialize all error variables to zero and set the degree.  */
     else
     {
         poly.error_occurred = tmpl_False;
         poly.error_message = NULL;
-        poly.degree = length - (size_t)1;
+        poly.degree = length - 1;
     }
 
     return poly;
