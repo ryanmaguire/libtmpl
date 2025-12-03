@@ -27,36 +27,33 @@
  *      tmpl_IntPolynomial_Add                                                *
  *  Purpose:                                                                  *
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
- *      That is, given polynomials P, Q in Z[x], computes P + Q.              *
+ *      That is, given polynomials p, q in Z[x], computes p + q.              *
  *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
- *      sum (tmpl_IntPolynomial *):                                           *
+ *      sum (tmpl_IntPolynomial * const):                                     *
  *          A pointer to a polynomial. The sum is stored here.                *
+ *      p (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being added.                               *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_polynomial_integer.h:                                            *
+ *      src/polynomial_integer/                                               *
  *          tmpl_IntPolynomial_Add_Kernel:                                    *
  *              Adds two polynomials without error checking or shrinking.     *
  *          tmpl_IntPolynomial_Copy:                                          *
- *              Copies the data in a polynomial to another.                   *
+ *              Copies the data in one polynomial to another.                 *
  *          tmpl_IntPolynomial_Shrink:                                        *
  *              Shrinks a polynomial by removing all terms past the largest   *
  *              non-zero coefficient.                                         *
- *      tmpl_string.h:                                                        *
- *          tmpl_String_Duplicate:                                            *
- *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
- *      O(max(deg(P), deg(Q)). That is, if we have:                           *
+ *      O(max(deg(p), deg(q)). That is, if we have:                           *
  *                                                                            *
  *                   N                       M                                *
  *                 -----                   -----                              *
  *                 \          n            \          m                       *
- *          P(x) = /      a  x      Q(x) = /      b  x                        *
+ *          p(x) = /      a  x      q(x) = /      b  x                        *
  *                 -----   n               -----   m                          *
  *                 n = 0                   m = 0                              *
  *                                                                            *
@@ -65,7 +62,7 @@
  *                          K                                                 *
  *                        -----                                               *
  *                        \                 k                                 *
- *          P(x) + Q(x) = /      (a  + b ) x                                  *
+ *          p(x) + q(x) = /      (a  + b ) x                                  *
  *                        -----    k    k                                     *
  *                        k = 0                                               *
  *                                                                            *
@@ -76,27 +73,25 @@
  *  Notes:                                                                    *
  *      There are several possible ways for an error to occur.                *
  *          1.) The "sum" variable is NULL, or has error_occurred = true.     *
- *          2.) An input polynomial (P or Q) has error_occurred = true.       *
+ *          2.) An input polynomial (p or q) has error_occurred = true.       *
  *          3.) realloc fails to resize the coefficient array.                *
  *      One can safely handle all cases by inspecting "sum" after using this  *
  *      function. First check if it is NULL, then if error_occurred = true.   *
  *                                                                            *
- *      It does not matter if P = Q, P = sum, or if Q = sum. realloc does not *
+ *      It does not matter if p = q, p = sum, or if q = sum. realloc does not *
  *      overwrite data when enlarging an array. However it is faster to call  *
- *      tmpl_IntPolynomial_Scale when P = Q or tmpl_IntPolynomial_AddTo when  *
- *      P = sum or Q = sum.                                                   *
+ *      tmpl_IntPolynomial_Scale when p = q or tmpl_IntPolynomial_AddTo when  *
+ *      p = sum or q = sum.                                                   *
  *                                                                            *
- *      If P or Q are the empty polynomial, tmpl_IntPolynomial_Copy is called *
- *      instead. That is, if P is the empty polynomial, Q is copied to sum.   *
- *      Similarly if Q is the empty polynomial, P is copied to sum.           *
+ *      If p or q are the empty polynomial, tmpl_IntPolynomial_Copy is called *
+ *      instead. That is, if p is the empty polynomial, q is copied to sum.   *
+ *      Similarly if q is the empty polynomial, p is copied to sum.           *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  2.) tmpl_string.h:                                                        *
- *          Header file where tmpl_String_Duplicate is declared.              *
- *  3.) tmpl_polynomial_integer.h:                                            *
+ *  2.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
@@ -108,22 +103,22 @@
  *      Added doc-string and comments.                                        *
  *  2023/05/18: Ryan Maguire                                                  *
  *      Changed behavior so that a NULL summand is treated as zero.           *
+ *  2025/12/03: Ryan Maguire                                                  *
+ *      Changed order of function call, sum is now first. This mimics the     *
+ *      behavior of many C libraries (memcpy, for example), dest is first.    *
  ******************************************************************************/
 
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
-
-/*  tmpl_String_Duplicate function provided here.                             */
-#include <libtmpl/include/tmpl_string.h>
 
 /*  Polynomial typedefs and function prototype.                               */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
 /*  Function for adding two polynomials over Z[x].                            */
 void
-tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
-                       const tmpl_IntPolynomial *Q,
-                       tmpl_IntPolynomial *sum)
+tmpl_IntPolynomial_Add(tmpl_IntPolynomial * const sum,
+                       const tmpl_IntPolynomial * const p,
+                       const tmpl_IntPolynomial * const q)
 {
     /*  If the output pointer is NULL there's nothing to be done.             */
     if (!sum)
@@ -133,48 +128,50 @@ tmpl_IntPolynomial_Add(const tmpl_IntPolynomial *P,
     if (sum->error_occurred)
         return;
 
-    /*  If P is NULL treat it as a zero polynomial. The sum is thus Q.        */
-    if (!P)
+    /*  If p is NULL treat it as a zero polynomial. The sum is thus q.        */
+    if (!p)
     {
-        /*  Copy the data in Q to sum and then shrink the redundant terms.    */
-        tmpl_IntPolynomial_Copy(sum, Q);
+        /*  Copy the data in q to sum and then remove the redundant terms.    */
+        tmpl_IntPolynomial_Copy(sum, q);
         tmpl_IntPolynomial_Shrink(sum);
         return;
     }
 
-    /*  Similarly if Q is NULL the sum should be P.                           */
-    if (!Q)
+    /*  Similarly if q is NULL the sum is then p.                             */
+    if (!q)
     {
-        /*  Copy the data in P to sum and then shrink the redundant terms.    */
-        tmpl_IntPolynomial_Copy(sum, P);
+        /*  Copy the data in p to sum and then shrink the redundant terms.    */
+        tmpl_IntPolynomial_Copy(sum, p);
         tmpl_IntPolynomial_Shrink(sum);
         return;
     }
 
-    /*  If either P or Q have an error abort the computation.                 */
-    if (P->error_occurred || Q->error_occurred)
+    /*  If either p or q have an error, abort the computation. Treat this as  *
+     *  an error, set the Boolean and an error message.                       */
+    if (p->error_occurred || q->error_occurred)
     {
         sum->error_occurred = tmpl_True;
-        sum->error_message = tmpl_String_Duplicate(
+        sum->error_message =
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_Add\n\n"
-            "Input polynomial has error_occurred set to true. Aborting.\n\n"
-        );
+            "Input polynomial has error_occurred set to true.\n\n";
+
         return;
     }
 
-    /*  Special case. If the coefficients of P are NULL we have an empty      *
-     *  polynomial, which can be treated as the zero polynomial. Return Q.    */
-    if (!P->coeffs)
-        tmpl_IntPolynomial_Copy(sum, Q);
+    /*  Special case. If the coefficients of p are NULL we have an empty      *
+     *  polynomial, which can be treated as the zero polynomial. Return q.    */
+    if (!p->coeffs)
+        tmpl_IntPolynomial_Copy(sum, q);
 
-    /*  Same idea if Q is an empty polynomial.                                */
-    else if (!Q->coeffs)
-        tmpl_IntPolynomial_Copy(sum, P);
+    /*  Same idea if q is an empty polynomial.                                */
+    else if (!q->coeffs)
+        tmpl_IntPolynomial_Copy(sum, q);
 
-    /*  Add the polynomials and store the result in sum.                      */
+    /*  Otherwise we have a computation to do. The Add_Kernel function deals  *
+     *  with the majority of the work, use it to compute sum = p + q.         */
     else
-        tmpl_IntPolynomial_Add_Kernel(P, Q, sum);
+        tmpl_IntPolynomial_Add_Kernel(sum, p, q);
 
     /*  Remove all terms past the largest non-zero entry.                     */
     tmpl_IntPolynomial_Shrink(sum);
