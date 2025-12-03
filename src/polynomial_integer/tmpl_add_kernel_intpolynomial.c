@@ -69,10 +69,10 @@
  *      1.) This function does not check for NULL pointers nor shrinks the    *
  *          end result. Use tmpl_IntPolynomial_Add for a safer alternative.   *
  *          That function checks the inputs and then calls this function.     *
- *      2.) The option to use memcpy, instead of a for-loop call, used to be  *
- *          available by setting USE_MEMCPY at compile time. For this         *
- *          function this may produce undefined behavior if sum and p point   *
- *          to the same polynomial, or if sum and q point to the same struct. *
+ *      2.) The option to use memcpy, instead of a for-loop, used to be       *
+ *          available by setting USE_MEMCPY at compile time. In this          *
+ *          function memcpy may produce undefined behavior if sum and p point *
+ *          to the same polynomial, or if sum and q are the same.             *
  *          Benchmarks show that the for-loop method is just as fast (faster, *
  *          actually) than the memcpy method when a compiler with decent      *
  *          optimizations is used. Because of this the memcpy method has been *
@@ -90,6 +90,8 @@
  *          Header file providing Booleans.                                   *
  *  4.) tmpl_polynomial_int.h:                                                *
  *          Header where the tmpl_IntPolynomial typedef is given.             *
+ *  5.) stddef.h:                                                             *
+ *          Standard library header providing the size_t type.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       April 25, 2023                                                *
@@ -113,6 +115,9 @@
 
 /*  Integer polynomial typedef provided here.                                 */
 #include <libtmpl/include/types/tmpl_polynomial_int.h>
+
+/*  size_t typedef found here.                                                */
+#include <stddef.h>
 
 /*  Forward declaration / function prototype.                                 */
 extern void
