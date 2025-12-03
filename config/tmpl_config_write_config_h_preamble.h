@@ -57,30 +57,11 @@
 /*  FILE type and fputs provided here.                                        */
 #include <stdio.h>
 
-/*  Forward declaration for the string. This is provided after the function.  */
-static const char tmpl_preamble_config_h[1847];
-
-/*  Function for writing the docstring for config.h to the file.              */
-static void tmpl_write_config_h_preamble(FILE *fp)
-{
-    /*  Avoid writing to a NULL file. Check first.                            */
-    if (!fp)
-    {
-        puts(
-            "Error Encountered: libtmpl\n"
-            "    tmpl_write_config_h_preamble\n\n"
-            "Input FILE pointer is NULL.\n"
-        );
-
-        return;
-    }
-
-    /*  Write the preamble to the file using fputs.                           */
-    fputs(tmpl_preamble_config_h, fp);
-}
-/*  End of tmpl_write_config_h_preamble.                                      */
-
-/*  The docstring that is printed at the start for config.h after the license.*/
+/*  Docstring for the preamble. C89 compilers have a ~500 character max       *
+ *  length for string literals that they are required to support, anything    *
+ *  larger is compiler dependent. To avoid this, use a char array. Infinitely *
+ *  less readable, but portable. A program was used to convert a string       *
+ *  literal into this char array, it was not typed out by hand.               */
 static const char tmpl_preamble_config_h[1847] = {
     ' ', '*', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
     ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
@@ -209,6 +190,26 @@ static const char tmpl_preamble_config_h[1847] = {
     'E', '_', 'D', 'O', 'U', 'B', 'L', 'E', 'D', 'O', 'U', 'B', 'L', 'E', ' ',
     '3', '\n', '\n', '\0'
 };
+
+/*  Function for writing the docstring for config.h to the file.              */
+static void tmpl_write_config_h_preamble(FILE *fp)
+{
+    /*  Avoid writing to a NULL file. Check first.                            */
+    if (!fp)
+    {
+        puts(
+            "Error Encountered: libtmpl\n"
+            "    tmpl_write_config_h_preamble\n\n"
+            "Input FILE pointer is NULL.\n"
+        );
+
+        return;
+    }
+
+    /*  Write the preamble to the file using fputs.                           */
+    fputs(tmpl_preamble_config_h, fp);
+}
+/*  End of tmpl_write_config_h_preamble.                                      */
 
 #endif
 /*  End of include guard.                                                     */
