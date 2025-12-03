@@ -27,31 +27,28 @@
  *      tmpl_IntPolynomial_Add_Same_Degree_Kernel                             *
  *  Purpose:                                                                  *
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
- *      Given polynomials P, Q in Z[x] of the same degree this computes P + Q.*
+ *      Given polynomials p, q in Z[x] of the same degree this computes p + q.*
  *  Arguments:                                                                *
- *      P (const tmpl_IntPolynomial *):                                       *
- *          A pointer to a polynomial.                                        *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial, of the same degree as P.         *
- *      sum (tmpl_IntPolynomial *):                                           *
+ *      sum (tmpl_IntPolynomial * const):                                     *
  *          A pointer to a polynomial. The sum is stored here.                *
+ *      p (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being added.                               *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      stdlib.h:                                                             *
  *          realloc:                                                          *
  *              Resizes an array.                                             *
- *      tmpl_string.h:                                                        *
- *          tmpl_String_Duplicate:                                            *
- *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
- *      O(N), N being the degree of P and Q. That is, if we have:             *
+ *      O(N), N being the degree of p and q. That is, if we have:             *
  *                                                                            *
  *                   N                       N                                *
  *                 -----                   -----                              *
  *                 \          n            \          n                       *
- *          P(x) = /      a  x      Q(x) = /      b  x                        *
+ *          p(x) = /      a  x      q(x) = /      b  x                        *
  *                 -----   n               -----   n                          *
  *                 n = 0                   n = 0                              *
  *                                                                            *
@@ -60,80 +57,93 @@
  *                          N                                                 *
  *                        -----                                               *
  *                        \                 n                                 *
- *          P(x) + Q(x) = /      (a  + b ) x                                  *
+ *          p(x) + q(x) = /      (a  + b ) x                                  *
  *                        -----    n    n                                     *
  *                        n = 0                                               *
  *                                                                            *
  *  Notes:                                                                    *
- *      This function does not check for NULL pointers nor shrinks the end    *
- *      result. Use tmpl_IntPolynomial_Add_Same_Degree for a safer            *
- *      alternative. It checks the inputs and then uses this function.        *
+ *      1.) This function does not check for NULL pointers nor shrinks the    *
+ *          end result. Use tmpl_IntPolynomial_Add_Same_Degree for a safer    *
+ *          alternative. That checks the inputs and then uses this function.  *
+ *      2.) This function assumes that deg(p) = deg(q).                       *
+ *      3.) If realloc fails, the error_occurred Boolean is set to true.      *
+ *          The data in sum is not free'd in this case, it is left alone.     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stdlib.h:                                                             *
- *          Standard library file with realloc and size_t.                    *
- *  2.) tmpl_bool.h:                                                          *
+ *  1.) tmpl_cast.h:                                                          *
+ *          Header with TMPL_CAST for casting with C vs. C++ compatibility.   *
+ *  2.) tmpl_realloc.h:                                                       *
+ *          Header providing TMPL_REALLOC.                                    *
+ *  3.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  3.) tmpl_string.h:                                                        *
- *          Header file where tmpl_String_Duplicate is declared.              *
- *  4.) tmpl_polynomial_integer.h:                                            *
- *          Header file where the function prototype is given.                *
+ *  4.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 19, 2023                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/12/03: Ryan Maguire                                                  *
+ *      Changed order of function call, sum is now first. This mimics the     *
+ *      behavior of many C libraries (memcpy, for example), dest is first.    *
+ *      Removed memcpy method. Only the for-loop method remains.              *
  ******************************************************************************/
-
-/*  realloc found here.                                                       */
-#include <stdlib.h>
 
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_String_Duplicate function provided here.                             */
-#include <libtmpl/include/tmpl_string.h>
+/*  realloc and casting with C vs. C++ compatibility provided here.           */
+#include <libtmpl/include/compat/tmpl_cast.h>
+#include <libtmpl/include/compat/tmpl_realloc.h>
 
-/*  Polynomial typedefs and function prototype.                               */
-#include <libtmpl/include/tmpl_polynomial_integer.h>
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
+
+/*  Forward declaration / function prototype.                                 */
+extern void
+tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
+                                          const tmpl_IntPolynomial * const p,
+                                          const tmpl_IntPolynomial * const q);
 
 /*  Function for adding two polynomials over Z[x].                            */
 void
-tmpl_IntPolynomial_Add_Same_Degree_Kernel(const tmpl_IntPolynomial *P,
-                                          const tmpl_IntPolynomial *Q,
-                                          tmpl_IntPolynomial *sum)
+tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
+                                          const tmpl_IntPolynomial * const p,
+                                          const tmpl_IntPolynomial * const q)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
 
     /*  The length of the array of coefficients for the sum.                  */
-    const size_t len = P->degree + (size_t)1;
+    const size_t length = p->degree + 1;
 
     /*  Check if sum needs to be resized.                                     */
-    if (sum->degree != P->degree)
+    if (sum->degree != p->degree)
     {
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
-        void *tmp = realloc(sum->coeffs, sizeof(*sum->coeffs)*len);
+        void * const tmp = TMPL_REALLOC(sum->coeffs, length);
 
         /*  Check if realloc failed.                                          */
         if (!tmp)
         {
             sum->error_occurred = tmpl_True;
-            sum->error_message = tmpl_String_Duplicate(
+            sum->error_message =
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Add_Same_Degree_Kernel\n\n"
-                "realloc failed. Aborting.\n\n"
-            );
+                "realloc failed. Aborting.\n\n";
 
             return;
         }
 
         /*  Otherwise reset the degree and the coefficients pointer.          */
         sum->coeffs = tmp;
-        sum->degree = P->degree;
+        sum->degree = p->degree;
     }
 
     /*  Compute the sum term by term.                                         */
-    for (n = (size_t)0; n < len; ++n)
-        sum->coeffs[n] = P->coeffs[n] + Q->coeffs[n];
+    for (n = 0; n < length; ++n)
+        sum->coeffs[n] = p->coeffs[n] + q->coeffs[n];
 }
 /*  End of tmpl_IntPolynomial_Add_Same_Degree_Kernel.                         */
