@@ -27,16 +27,16 @@
  *      tmpl_IntPolynomial_AddTo                                              *
  *  Purpose:                                                                  *
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
- *      That is, given polynomials P, Q in Z[x], computes P += Q.             *
+ *      That is, given polynomials p, q in Z[x], computes p += q.             *
  *  Arguments:                                                                *
- *      P (tmpl_IntPolynomial *):                                             *
+ *      p (tmpl_IntPolynomial * const):                                       *
  *          A pointer to a polynomial. The sum is stored here.                *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_polynomial_integer.h:                                            *
+ *      src/polynomial_integer/                                               *
  *          tmpl_IntPolynomial_AddTo_Kernel:                                  *
  *              Adds two polynomials without error checking or shrinking.     *
  *          tmpl_IntPolynomial_Copy:                                          *
@@ -49,12 +49,12 @@
  *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
- *      O(max(deg(P), deg(Q)). That is, if we have:                           *
+ *      O(max(deg(p), deg(q)). That is, if we have:                           *
  *                                                                            *
  *                   N                       M                                *
  *                 -----                   -----                              *
  *                 \          n            \          m                       *
- *          P(x) = /      a  x      Q(x) = /      b  x                        *
+ *          p(x) = /      a  x      q(x) = /      b  x                        *
  *                 -----   n               -----   m                          *
  *                 n = 0                   m = 0                              *
  *                                                                            *
@@ -63,7 +63,7 @@
  *                          K                                                 *
  *                        -----                                               *
  *                        \                 k                                 *
- *          P(x) + Q(x) = /      (a  + b ) x                                  *
+ *          p(x) + q(x) = /      (a  + b ) x                                  *
  *                        -----    k    k                                     *
  *                        k = 0                                               *
  *                                                                            *
@@ -73,13 +73,13 @@
  *      degree polynomial for min(N, M) < k <= max(N, M).                     *
  *  Notes:                                                                    *
  *      There are several possible ways for an error to occur.                *
- *          1.) The "P" variable is NULL, or has error_occurred = true.       *
- *          2.) Q has error_occurred = true.                                  *
+ *          1.) The "p" variable is NULL, or has error_occurred = true.       *
+ *          2.) q has error_occurred = true.                                  *
  *          3.) realloc fails to resize the coefficient array.                *
- *      One can safely handle all cases by inspecting "P" after using this    *
+ *      One can safely handle all cases by inspecting "p" after using this    *
  *      function. First check if it is NULL, then if error_occurred = true.   *
  *                                                                            *
- *      It does not matter if P = Q. In this case realloc is not needed.      *
+ *      It does not matter if p = q. In this case realloc is not needed.      *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -105,29 +105,29 @@
 
 /*  Function for adding two polynomials over Z[x].                            */
 void
-tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *P, const tmpl_IntPolynomial *Q)
+tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *p, const tmpl_IntPolynomial *q)
 {
-    /*  If P is NULL there is nothing to be done. Return.                     */
-    if (!P)
+    /*  If p is NULL there is nothing to be done. Return.                     */
+    if (!p)
         return;
 
-    /*  Similarly if P had an error occur previously.                         */
-    if (P->error_occurred)
+    /*  Similarly if p had an error occur previously.                         */
+    if (p->error_occurred)
         return;
 
-    /*  If Q is NULL there is nothing to add.                                 */
-    if (!Q)
+    /*  If q is NULL there is nothing to add.                                 */
+    if (!q)
     {
         /*  Remove redundant zero terms and return.                           */
-        tmpl_IntPolynomial_Shrink(P);
+        tmpl_IntPolynomial_Shrink(p);
         return;
     }
 
-    /*  If Q has an error abort the computation.                              */
-    if (Q->error_occurred)
+    /*  If q has an error abort the computation.                              */
+    if (q->error_occurred)
     {
-        P->error_occurred = tmpl_True;
-        P->error_message = tmpl_String_Duplicate(
+        p->error_occurred = tmpl_True;
+        p->error_message = tmpl_String_Duplicate(
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_AddTo\n\n"
             "Input polynomial has error_occurred set to true. Aborting.\n\n"
@@ -135,15 +135,15 @@ tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *P, const tmpl_IntPolynomial *Q)
         return;
     }
 
-    /*  Special case. If P is the empty polynomial copy Q to P.               */
-    if (!P->coeffs)
-        tmpl_IntPolynomial_Copy(P, Q);
+    /*  Special case. If p is the empty polynomial copy q to p.               */
+    if (!p->coeffs)
+        tmpl_IntPolynomial_Copy(p, q);
 
-    /*  If Q is empty we don't need to add anything and can skip the sum.     */
-    else if (Q->coeffs)
-        tmpl_IntPolynomial_AddTo_Kernel(P, Q);
+    /*  If q is empty we don't need to add anything and can skip the sum.     */
+    else if (q->coeffs)
+        tmpl_IntPolynomial_AddTo_Kernel(p, q);
 
     /*  Remove all terms past the largest non-zero entry.                     */
-    tmpl_IntPolynomial_Shrink(P);
+    tmpl_IntPolynomial_Shrink(p);
 }
 /*  End of tmpl_IntPolynomial_AddTo.                                          */
