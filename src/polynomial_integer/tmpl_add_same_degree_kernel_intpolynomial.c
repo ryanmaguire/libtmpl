@@ -88,7 +88,6 @@
  *  2025/12/03: Ryan Maguire                                                  *
  *      Changed order of function call, sum is now first. This mimics the     *
  *      behavior of many C libraries (memcpy, for example), dest is first.    *
- *      Removed memcpy method. Only the for-loop method remains.              *
  ******************************************************************************/
 
 /*  Booleans given here.                                                      */

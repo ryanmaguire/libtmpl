@@ -77,8 +77,10 @@
  *          actually) than the memcpy method when a compiler with decent      *
  *          optimizations is used. Because of this the memcpy method has been *
  *          removed. It is valid to do tmpl_IntPolynomial_Add(p, p, q) or     *
- *          tmpl_IntPolynomial(q, p, q), but note that it is faster to use    *
- *          tmpl_IntPolynomial_AddTo instead.                                 *
+ *          tmpl_IntPolynomial_Add(q, p, q), but note that it is faster to    *
+ *          use tmpl_IntPolynomial_AddTo instead.                             *
+ *      3.) If realloc fails, the error_occurred Boolean is set to true.      *
+ *          The data in sum is not free'd in this case, it is left alone.     *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
