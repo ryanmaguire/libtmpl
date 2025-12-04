@@ -34,6 +34,9 @@
 #ifndef TMPL_TYPES_POLYNOMIAL_INT_H
 #define TMPL_TYPES_POLYNOMIAL_INT_H
 
+/*  Booleans given here.                                                      */
+#include <libtmpl/include/tmpl_bool.h>
+
 /*  size_t typedef provided here.                                             */
 #include <stddef.h>
 
