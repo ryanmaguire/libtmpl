@@ -90,6 +90,8 @@
  ******************************************************************************
  *  2023/04/25: Ryan Maguire                                                  *
  *      Added doc-string and comments.                                        *
+ *  2025/12/04: Ryan Maguire                                                  *
+ *      Removed tmpl_String_Duplicate call, error_message is now const.       *
  ******************************************************************************/
 
 /*  Booleans given here.                                                      */

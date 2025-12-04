@@ -19,7 +19,7 @@
  *                    tmpl_addto_same_degree_intpolynomial                    *
  ******************************************************************************
  *  Purpose:                                                                  *
- *      Adds two polynomials with integer coefficients.                       *
+ *      Adds two polynomials with integer coefficients of the same degree.    *
  ******************************************************************************
  *                             DEFINED FUNCTIONS                              *
  ******************************************************************************
@@ -27,32 +27,29 @@
  *      tmpl_IntPolynomial_AddTo_Same_Degree                                  *
  *  Purpose:                                                                  *
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
- *      That is, given polynomials P, Q in Z[x], computes P += Q.             *
+ *      That is, given polynomials p, q in Z[x], computes p += q.             *
  *  Arguments:                                                                *
- *      P (tmpl_IntPolynomial *):                                             *
+ *      p (tmpl_IntPolynomial * const):                                       *
  *          A pointer to a polynomial. The sum is stored here.                *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
- *      tmpl_polynomial_integer.h:                                            *
+ *      src/polynomial_integer/                                               *
  *          tmpl_IntPolynomial_AddTo_Same_Degree_Kernel:                      *
  *              Adds two polynomials without error checking or shrinking.     *
  *          tmpl_IntPolynomial_Shrink:                                        *
  *              Shrinks a polynomial by removing all terms past the largest   *
  *              non-zero coefficient.                                         *
- *      tmpl_string.h:                                                        *
- *          tmpl_String_Duplicate:                                            *
- *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
- *      O(N), N being the degree of P and Q. That is, if we have:             *
+ *      O(N), N being the degree of p and q. That is, if we have:             *
  *                                                                            *
  *                   N                       N                                *
  *                 -----                   -----                              *
  *                 \          n            \          n                       *
- *          P(x) = /      a  x      Q(x) = /      b  x                        *
+ *          p(x) = /      a  x      q(x) = /      b  x                        *
  *                 -----   n               -----   n                          *
  *                 n = 0                   n = 0                              *
  *                                                                            *
@@ -61,61 +58,85 @@
  *                          N                                                 *
  *                        -----                                               *
  *                        \                 n                                 *
- *          P(x) + Q(x) = /      (a  + b ) x                                  *
+ *          p(x) + q(x) = /      (a  + b ) x                                  *
  *                        -----    n    n                                     *
  *                        n = 0                                               *
  *                                                                            *
+ *  Notes:                                                                    *
+ *      1.) There are a few possible ways for an error to occur.              *
+ *              a.) The "p" variable is NULL, or has error_occurred = true.   *
+ *              b.) The input polynomial (q) has error_occurred = true.       *
+ *          One can safely handle these cases by inspecting "p" after using   *
+ *          this function. First check if it is NULL, then if                 *
+ *          error_occurred = true.                                            *
+ *      2.) It does not matter if p = q.                                      *
+ *      3.) This function assumes deg(p) = deg(q).                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  2.) tmpl_string.h:                                                        *
- *          Header file where tmpl_String_Duplicate is declared.              *
+ *  2.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
  *  3.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 19, 2023                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/12/04: Ryan Maguire                                                  *
+ *      Removed tmpl_String_Duplicate call, error_message is now const.       *
  ******************************************************************************/
 
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_String_Duplicate function provided here.                             */
-#include <libtmpl/include/tmpl_string.h>
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
 
-/*  Polynomial typedefs and function prototype.                               */
+/*  Polynomial functions provided here, as is the function prototype.         */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  Function for adding two polynomials over Z[x].                            */
+/*  Function for adding two polynomials over Z[x], p += q.                    */
 void
-tmpl_IntPolynomial_AddTo_Same_Degree(tmpl_IntPolynomial *P,
-                                     const tmpl_IntPolynomial *Q)
+tmpl_IntPolynomial_AddTo_Same_Degree(tmpl_IntPolynomial * const p,
+                                     const tmpl_IntPolynomial * const q)
 {
-    /*  If P is NULL there is nothing to do.                                  */
-    if (!P)
+    /*  If p is NULL there is nothing to do.                                  */
+    if (!p)
         return;
 
-    /*  If P had an error occur previously abort.                             */
-    if (P->error_occurred)
+    /*  If p had an error occur previously, abort.                            */
+    if (p->error_occurred)
         return;
 
-    /*  If Q has an error abort the computation.                              */
-    if (Q->error_occurred)
+    /*  Since we assume p and q are the same degree, if q is empty, then p    *
+     *  must be empty as well. Check if q is empty, and return if so.         */
+    if (!q)
+        return;
+
+    /*  If q has an error, abort the computation. Treat this as an error.     */
+    if (q->error_occurred)
     {
-        P->error_occurred = tmpl_True;
-        P->error_message = tmpl_String_Duplicate(
+        p->error_occurred = tmpl_True;
+        p->error_message =
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_AddTo_Same_Degree\n\n"
-            "Input polynomial has error_occurred set to true. Aborting.\n\n"
-        );
+            "Input polynomial has error_occurred set to true. Aborting.\n\n";
+
         return;
     }
+
+    /*  Similar check for the coeffs array. If NULL, there's nothing to do.   */
+    if (!q->coeffs)
+        return;
+
     /*  Add the polynomials term-by-term.                                     */
-    tmpl_IntPolynomial_AddTo_Same_Degree_Kernel(P, Q);
+    tmpl_IntPolynomial_AddTo_Same_Degree_Kernel(p, q);
 
     /*  Remove all terms past the largest non-zero entry.                     */
-    tmpl_IntPolynomial_Shrink(P);
+    tmpl_IntPolynomial_Shrink(p);
 }
 /*  End of tmpl_IntPolynomial_AddTo_Same_Degree.                              */
