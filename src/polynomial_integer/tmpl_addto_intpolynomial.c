@@ -40,13 +40,10 @@
  *          tmpl_IntPolynomial_AddTo_Kernel:                                  *
  *              Adds two polynomials without error checking or shrinking.     *
  *          tmpl_IntPolynomial_Copy:                                          *
- *              Copies the data in a polynomial to another.                   *
+ *              Copies the data in one polynomial to another.                 *
  *          tmpl_IntPolynomial_Shrink:                                        *
  *              Shrinks a polynomial by removing all terms past the largest   *
  *              non-zero coefficient.                                         *
- *      tmpl_string.h:                                                        *
- *          tmpl_String_Duplicate:                                            *
- *              Duplicates a string. Equivalent to the POSIX function strdup. *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
  *      O(max(deg(p), deg(q)). That is, if we have:                           *
@@ -85,27 +82,33 @@
  ******************************************************************************
  *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  2.) tmpl_string.h:                                                        *
- *          Header file where tmpl_String_Duplicate is declared.              *
+ *  2.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
  *  3.) tmpl_polynomial_integer.h:                                            *
  *          Header file where the function prototype is given.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 18, 2023                                                  *
+ ******************************************************************************
+ *                              Revision History                              *
+ ******************************************************************************
+ *  2025/12/04: Ryan Maguire                                                  *
+ *      Removed tmpl_String_Duplicate call, error_message is now const.       *
  ******************************************************************************/
 
 /*  Booleans given here.                                                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_String_Duplicate function provided here.                             */
-#include <libtmpl/include/tmpl_string.h>
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
 
-/*  Polynomial typedefs and function prototype.                               */
+/*  Polynomial functions provided here, as is the function prototype.         */
 #include <libtmpl/include/tmpl_polynomial_integer.h>
 
-/*  Function for adding two polynomials over Z[x].                            */
+/*  Function for adding two polynomials over Z[x], p += q.                    */
 void
-tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *p, const tmpl_IntPolynomial *q)
+tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial * const p,
+                         const tmpl_IntPolynomial * const q)
 {
     /*  If p is NULL there is nothing to be done. Return.                     */
     if (!p)
@@ -123,15 +126,15 @@ tmpl_IntPolynomial_AddTo(tmpl_IntPolynomial *p, const tmpl_IntPolynomial *q)
         return;
     }
 
-    /*  If q has an error abort the computation.                              */
+    /*  If q has an error, abort the computation. Treat this as an error.     */
     if (q->error_occurred)
     {
         p->error_occurred = tmpl_True;
-        p->error_message = tmpl_String_Duplicate(
+        p->error_message =
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_AddTo\n\n"
-            "Input polynomial has error_occurred set to true. Aborting.\n\n"
-        );
+            "Input polynomial has error_occurred set to true.\n\n";
+
         return;
     }
 
