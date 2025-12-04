@@ -35,23 +35,20 @@
  *      poly (tmpl_IntPolynomial):                                            *
  *          A polynomial with its coeffs pointer allocated memory.            *
  *  Called Functions:                                                         *
- *      calloc (stdlib.h):                                                    *
- *          Creates an array and initializes all elements to zero.            *
- *      tmpl_strdup (tmpl_string.h):                                          *
- *          Duplicates a string. Equivalent to the POSIX function strdup.     *
+ *      stdlib.h:                                                             *
+ *          calloc:                                                           *
+ *              Creates an array and initializes all elements to zero.        *
  *  Method:                                                                   *
- *      Call calloc and check for errors.                                     *
+ *      Call calloc and check for errors. Set other variables to zero values. *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) stdlib.h:                                                             *
- *          Standard library file where calloc is provided.                   *
- *  2.) tmpl_bool.h:                                                          *
+ *  1.) tmpl_bool.h:                                                          *
  *          Header file providing Booleans.                                   *
- *  3.) tmpl_string.h:                                                        *
- *          Header file where tmpl_strdup is declared.                        *
- *  4.) tmpl_polynomial_integer.h:                                            *
- *          Header file where the function prototype is given.                *
+ *  2.) tmpl_calloc.h:                                                        *
+ *          Header providing TMPL_CALLOC.                                     *
+ *  3.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       February 8, 2023                                              *
@@ -68,14 +65,14 @@
 /*  tmpl_Bool, tmpl_False, and tmpl_True are given here.                      */
 #include <libtmpl/include/tmpl_bool.h>
 
-/*  tmpl_strdup found here.                                                   */
-#include <libtmpl/include/tmpl_string.h>
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
 
-/*  Polynomial typedefs and function prototypes contained here.               */
-#include <libtmpl/include/tmpl_polynomial_integer.h>
+/*  Forward declaration / function prototype.                                 */
+extern tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(const size_t length);
 
 /*  Function for creating a polynomial and setting all coefficients to zero.  */
-tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(size_t length)
+tmpl_IntPolynomial tmpl_IntPolynomial_Calloc(const size_t length)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IntPolynomial poly;
