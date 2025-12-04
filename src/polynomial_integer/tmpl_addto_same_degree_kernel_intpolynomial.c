@@ -27,24 +27,24 @@
  *      tmpl_IntPolynomial_AddTo_Same_Degree_Kernel                           *
  *  Purpose:                                                                  *
  *      Computes the sum of two polynomials over Z[x] with 'int' coefficients.*
- *      That is, given polynomials P, Q in Z[x], computes P += Q.             *
+ *      That is, given polynomials p, q in Z[x], computes p += q.             *
  *  Arguments:                                                                *
- *      P (tmpl_IntPolynomial *):                                             *
+ *      p (tmpl_IntPolynomial * const):                                       *
  *          A pointer to a polynomial. The sum is stored here.                *
- *      Q (const tmpl_IntPolynomial *):                                       *
- *          Another pointer to a polynomial.                                  *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being added to p.                                  *
  *  Output:                                                                   *
  *      None (void).                                                          *
  *  Called Functions:                                                         *
  *      None.                                                                 *
  *  Method:                                                                   *
  *      Polynomial addition is performed term-by-term. The complexity is thus *
- *      O(N), N being the degree of P and Q. That is, if we have:             *
+ *      O(N), N being the degree of p and q. That is, if we have:             *
  *                                                                            *
  *                   N                       N                                *
  *                 -----                   -----                              *
  *                 \          n            \          n                       *
- *          P(x) = /      a  x      Q(x) = /      b  x                        *
+ *          p(x) = /      a  x      q(x) = /      b  x                        *
  *                 -----   n               -----   n                          *
  *                 n = 0                   n = 0                              *
  *                                                                            *
@@ -53,33 +53,48 @@
  *                          N                                                 *
  *                        -----                                               *
  *                        \                 n                                 *
- *          P(x) + Q(x) = /      (a  + b ) x                                  *
+ *          p(x) + q(x) = /      (a  + b ) x                                  *
  *                        -----    n    n                                     *
  *                        n = 0                                               *
  *                                                                            *
+ *  Notes:                                                                    *
+ *      1.) This function does not check for NULL pointers nor shrinks the    *
+ *          end result. Use tmpl_IntPolynomial_AddTo_Same_Degree for a safer  *
+ *          alternative. That checks the inputs and then uses this function.  *
+ *      2.) This function assumes deg(p) = deg(q).                            *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
- *  1.) tmpl_polynomial_integer.h:                                            *
- *          Header file where the function prototype is given.                *
+ *  1.) tmpl_polynomial_int.h:                                                *
+ *          Header where the tmpl_IntPolynomial typedef is given.             *
+ *  2.) stddef.h:                                                             *
+ *          Standard library header providing the size_t type.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 19, 2023                                                  *
  ******************************************************************************/
 
-/*  Polynomial typedefs and function prototype.                               */
-#include <libtmpl/include/tmpl_polynomial_integer.h>
+/*  Integer polynomial typedef provided here.                                 */
+#include <libtmpl/include/types/tmpl_polynomial_int.h>
 
-/*  Function for adding two polynomials over Z[x].                            */
+/*  size_t typedef found here.                                                */
+#include <stddef.h>
+
+/*  Forward declaration / function prototype.                                 */
+extern void
+tmpl_IntPolynomial_AddTo_Same_Degree_Kernel(tmpl_IntPolynomial * const p,
+                                            const tmpl_IntPolynomial * const q);
+
+/*  Function for adding two polynomials over Z[x], p += q.                    */
 void
-tmpl_IntPolynomial_AddTo_Same_Degree_Kernel(tmpl_IntPolynomial *P,
-                                            const tmpl_IntPolynomial *Q)
+tmpl_IntPolynomial_AddTo_Same_Degree_Kernel(tmpl_IntPolynomial * const p,
+                                            const tmpl_IntPolynomial * const q)
 {
     /*  Variable for indexing over the sum.                                   */
     size_t n;
 
     /*  Perform the addition term-by-term.                                    */
-    for (n = (size_t)0; n <= P->degree; ++n)
-        P->coeffs[n] += Q->coeffs[n];
+    for (n = 0; n <= p->degree; ++n)
+        p->coeffs[n] += q->coeffs[n];
 }
 /*  End of tmpl_IntPolynomial_AddTo_Same_Degree_Kernel.                       */
