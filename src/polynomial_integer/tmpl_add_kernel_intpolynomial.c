@@ -68,6 +68,7 @@
  *  Notes:                                                                    *
  *      1.) This function does not check for NULL pointers nor shrinks the    *
  *          end result. Use tmpl_IntPolynomial_Add for a safer alternative.   *
+ *                                                                            *
  *          That function checks the inputs and then calls this function.     *
  *      2.) The option to use memcpy, instead of a for-loop, used to be       *
  *          available by setting USE_MEMCPY at compile time. In this          *
@@ -79,6 +80,7 @@
  *          removed. It is valid to do tmpl_IntPolynomial_Add(p, p, q) or     *
  *          tmpl_IntPolynomial_Add(q, p, q), but note that it is faster to    *
  *          use tmpl_IntPolynomial_AddTo instead.                             *
+ *                                                                            *
  *      3.) If realloc fails, the error_occurred Boolean is set to true.      *
  *          The data in sum is not free'd in this case, it is left alone.     *
  ******************************************************************************
