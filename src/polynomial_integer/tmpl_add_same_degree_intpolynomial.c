@@ -125,14 +125,15 @@ tmpl_IntPolynomial_Add_Same_Degree(tmpl_IntPolynomial * const sum,
         return;
     }
 
-    /*  If either p or q have an error, abort the computation.                */
+    /*  If either p or q have an error, abort the computation. Treat this as  *
+     *  an error, set the Boolean and an error message.                       */
     if (p->error_occurred || q->error_occurred)
     {
         sum->error_occurred = tmpl_True;
         sum->error_message =
             "\nError Encountered:\n"
             "    tmpl_IntPolynomial_Add_Same_Degree\n\n"
-            "Input polynomial has error_occurred set to true. Aborting.\n\n";
+            "Input polynomial has error_occurred set to true.\n\n";
 
         return;
     }
