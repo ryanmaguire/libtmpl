@@ -149,14 +149,14 @@ tmpl_IntPolynomial_Add_Kernel(tmpl_IntPolynomial * const sum,
         /*  Reallocate memory for the sum pointer. This needs degree+1 terms. */
         void * const tmp = TMPL_REALLOC(sum->coeffs, length);
 
-        /*  Check if realloc failed.                                          */
+        /*  Check if realloc failed. Treat this as an error if it did.        */
         if (!tmp)
         {
             sum->error_occurred = tmpl_True;
             sum->error_message =
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Add_Kernel\n\n"
-                "realloc failed. Aborting.\n\n";
+                "realloc failed and returned NULL.\n\n";
 
             return;
         }
