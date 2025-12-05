@@ -69,10 +69,15 @@
  *                                                                            *
  *  Notes:                                                                    *
  *      1.) One should check if "sum" is NULL or has error_occurred set to    *
- *          True after calling this function to safely handle errors.         *
- *      2.) This function assumes p and q are of the same degree.             *
- *      3.) If p, q, p->coeffs, or q->coeffs are NULL, sum is made empty.     *
- *      4.) If sum is NULL or sum->error_occurred is True, nothing is done.   *
+ *          true after calling this function to safely handle errors.         *
+ *                                                                            *
+ *      2.) This function assumes p and q are of the same degree. No checks   *
+ *          for this are performed, only use this if you know this is true.   *
+ *                                                                            *
+ *      3.) If either p or q are NULL, or if the coefficient arrays p->coeffs *
+ *          or q->coeffs are NULL, then sum is made into the empty polynomial.*
+ *                                                                            *
+ *      4.) If sum is NULL or sum->error_occurred is true, nothing is done.   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
