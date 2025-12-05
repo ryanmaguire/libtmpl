@@ -123,12 +123,12 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
     /*  Declare necessary variables. C89 requires this at the top.            */
     size_t n;
 
-    /*  The length of the array of coefficients for the sum.                  */
-    const size_t length = p->degree + 1;
-
     /*  Check if sum needs to be resized.                                     */
     if (sum->degree != p->degree)
     {
+        /*  The length of the array of coefficients for the sum.              */
+        const size_t length = p->degree + 1;
+
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
         void * const tmp = TMPL_REALLOC(sum->coeffs, length);
 
@@ -150,7 +150,7 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
     }
 
     /*  Compute the sum term by term. Note, we are assuming deg(p) = deg(q).  */
-    for (n = 0; n < length; ++n)
+    for (n = 0; n <= p->degree; ++n)
         sum->coeffs[n] = p->coeffs[n] + q->coeffs[n];
 }
 /*  End of tmpl_IntPolynomial_Add_Same_Degree_Kernel.                         */

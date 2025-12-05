@@ -65,8 +65,9 @@
  *      degree polynomial for min(N, M) < k <= max(N, M).                     *
  *  Notes:                                                                    *
  *      1.) This function does not check for NULL pointers nor shrinks the    *
- *          end result. Use tmpl_IntPolynomial_AddTo for a safer alternative  *
- *          That checks the inputs and then uses this function.               *
+ *          end result. Use tmpl_IntPolynomial_AddTo for a safer alternative. *
+ *          That function checks the inputs and then uses this function.      *
+ *                                                                            *
  *      2.) If realloc fails, the error_occurred Boolean is set to true.      *
  *          The data in p is not free'd in this case, it is left alone.       *
  ******************************************************************************

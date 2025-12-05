@@ -142,12 +142,12 @@ tmpl_IntPolynomial_Add_Kernel(tmpl_IntPolynomial * const sum,
     const tmpl_IntPolynomial * const first = (p->degree < q->degree ? q : p);
     const tmpl_IntPolynomial * const second = (p->degree < q->degree ? p : q);
 
-    /*  The length of the array of coefficients for the sum.                  */
-    const size_t length = first->degree + 1;
-
     /*  Check if sum needs to be resized.                                     */
     if (sum->degree != first->degree)
     {
+        /*  The length of the array of coefficients for the sum.              */
+        const size_t length = first->degree + 1;
+
         /*  Reallocate memory for the sum pointer. This needs degree+1 terms. */
         void * const tmp = TMPL_REALLOC(sum->coeffs, length);
 
@@ -173,7 +173,7 @@ tmpl_IntPolynomial_Add_Kernel(tmpl_IntPolynomial * const sum,
         sum->coeffs[n] = first->coeffs[n] + second->coeffs[n];
 
     /*  Add the coefficients of the larger polynomial.                        */
-    for (n = second->degree + 1; n < length; ++n)
+    for (n = second->degree + 1; n <= first->degree; ++n)
         sum->coeffs[n] = first->coeffs[n];
 }
 /*  End of tmpl_IntPolynomial_Add_Kernel.                                     */
