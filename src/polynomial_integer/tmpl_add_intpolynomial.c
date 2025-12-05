@@ -71,21 +71,23 @@
  *      0 <= k <= min(N, M) and then copy the coefficients of the larger      *
  *      degree polynomial for min(N, M) < k <= max(N, M).                     *
  *  Notes:                                                                    *
- *      There are several possible ways for an error to occur.                *
- *          1.) The "sum" variable is NULL, or has error_occurred = true.     *
- *          2.) An input polynomial (p or q) has error_occurred = true.       *
- *          3.) realloc fails to resize the coefficient array.                *
- *      One can safely handle all cases by inspecting "sum" after using this  *
- *      function. First check if it is NULL, then if error_occurred = true.   *
+ *      1.) There are several possible ways for an error to occur.            *
+ *              a.) The "sum" variable is NULL, or has error_occurred = true. *
+ *              b.) An input polynomial (p or q) has error_occurred = true.   *
+ *              c.) realloc fails to resize the coefficient array.            *
+ *          One can safely handle all cases by inspecting "sum" after using   *
+ *          this function. First check if it is NULL, then if                 *
+ *          error_occurred = true.                                            *
  *                                                                            *
- *      It does not matter if p = q, p = sum, or if q = sum. realloc does not *
- *      overwrite data when enlarging an array. However it is faster to call  *
- *      tmpl_IntPolynomial_Scale when p = q or tmpl_IntPolynomial_AddTo when  *
- *      p = sum or q = sum.                                                   *
+ *      2.) It does not matter if p = q, p = sum, or if q = sum. realloc does *
+ *          not overwrite data when enlarging an array. However it is faster  *
+ *          to call tmpl_IntPolynomial_Scale when p = q or                    *
+ *          tmpl_IntPolynomial_AddTo when p = sum or q = sum.                 *
  *                                                                            *
- *      If p or q are the empty polynomial, tmpl_IntPolynomial_Copy is called *
- *      instead. That is, if p is the empty polynomial, q is copied to sum.   *
- *      Similarly if q is the empty polynomial, p is copied to sum.           *
+ *      3.) If p or q are the empty polynomial, tmpl_IntPolynomial_Copy is    *
+ *          called instead. That is, if p is the empty polynomial, q is       *
+ *          copied to sum. Similarly if q is the empty polynomial, p is       *
+ *          copied to sum.                                                    *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
