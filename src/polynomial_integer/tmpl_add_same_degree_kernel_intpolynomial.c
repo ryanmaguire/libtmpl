@@ -65,7 +65,10 @@
  *      1.) This function does not check for NULL pointers nor shrinks the    *
  *          end result. Use tmpl_IntPolynomial_Add_Same_Degree for a safer    *
  *          alternative. That checks the inputs and then uses this function.  *
- *      2.) This function assumes that deg(p) = deg(q).                       *
+ *                                                                            *
+ *      2.) This function assumes that deg(p) = deg(q). No checks for this    *
+ *          are performed, only use this function if you know this is true.   *
+ *                                                                            *
  *      3.) If realloc fails, the error_occurred Boolean is set to true.      *
  *          The data in sum is not free'd in this case, it is left alone.     *
  ******************************************************************************
@@ -79,6 +82,8 @@
  *          Header file providing Booleans.                                   *
  *  4.) tmpl_polynomial_int.h:                                                *
  *          Header where the tmpl_IntPolynomial typedef is given.             *
+ *  5.) stddef.h:                                                             *
+ *          Standard library header providing the size_t type.                *
  ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       May 19, 2023                                                  *
@@ -99,6 +104,9 @@
 
 /*  Integer polynomial typedef provided here.                                 */
 #include <libtmpl/include/types/tmpl_polynomial_int.h>
+
+/*  size_t typedef found here.                                                */
+#include <stddef.h>
 
 /*  Forward declaration / function prototype.                                 */
 extern void
@@ -124,14 +132,14 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
         /*  reallocate memory for the sum pointer. This needs degree+1 terms. */
         void * const tmp = TMPL_REALLOC(sum->coeffs, length);
 
-        /*  Check if realloc failed.                                          */
+        /*  Check if realloc failed. Treat this as an error if it did.        */
         if (!tmp)
         {
             sum->error_occurred = tmpl_True;
             sum->error_message =
                 "\nError Encountered:\n"
                 "    tmpl_IntPolynomial_Add_Same_Degree_Kernel\n\n"
-                "realloc failed. Aborting.\n\n";
+                "realloc failed and returned NULL.\n\n";
 
             return;
         }
@@ -141,7 +149,7 @@ tmpl_IntPolynomial_Add_Same_Degree_Kernel(tmpl_IntPolynomial * const sum,
         sum->degree = p->degree;
     }
 
-    /*  Compute the sum term by term.                                         */
+    /*  Compute the sum term by term. Note, we are assuming deg(p) = deg(q).  */
     for (n = 0; n < length; ++n)
         sum->coeffs[n] = p->coeffs[n] + q->coeffs[n];
 }
