@@ -69,14 +69,19 @@
  *      0 <= k <= min(N, M) and then copy the coefficients of the larger      *
  *      degree polynomial for min(N, M) < k <= max(N, M).                     *
  *  Notes:                                                                    *
- *      There are several possible ways for an error to occur.                *
- *          1.) The "p" variable is NULL, or has error_occurred = true.       *
- *          2.) q has error_occurred = true.                                  *
- *          3.) realloc fails to resize the coefficient array.                *
- *      One can safely handle all cases by inspecting "p" after using this    *
- *      function. First check if it is NULL, then if error_occurred = true.   *
+ *      1.) There are several possible ways for an error to occur.            *
+ *              a.) The "p" variable is NULL, or has error_occurred = true.   *
+ *              b.) q has error_occurred = true.                              *
+ *              c.) realloc fails to resize the coefficient array.            *
+ *          One can safely handle all cases by inspecting "p" after using     *
+ *          this function. First check if it is NULL, then if                 *
+ *          error_occurred = true.                                            *
  *                                                                            *
- *      It does not matter if p = q. In this case realloc is not needed.      *
+ *      2.) It does not matter if p = q. In this case realloc is not needed.  *
+ *          Note, it is faster to use tmpl_IntPolynomial_ScaleBy in this case *
+ *          since p += p is equivalent to p *= 2.                             *
+ *                                                                            *
+ *      3.) If p is NULL or p->error_occurred is true, nothing is done.       *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
