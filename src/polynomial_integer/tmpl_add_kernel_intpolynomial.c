@@ -68,8 +68,8 @@
  *  Notes:                                                                    *
  *      1.) This function does not check for NULL pointers nor shrinks the    *
  *          end result. Use tmpl_IntPolynomial_Add for a safer alternative.   *
- *                                                                            *
  *          That function checks the inputs and then calls this function.     *
+ *                                                                            *
  *      2.) The option to use memcpy, instead of a for-loop, used to be       *
  *          available by setting USE_MEMCPY at compile time. In this          *
  *          function memcpy may produce undefined behavior if sum and p point *
