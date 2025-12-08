@@ -281,6 +281,48 @@ tmpl_IntPolynomial_AddTo_Kernel(tmpl_IntPolynomial * const p,
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Product_Cauchy                               *
+ *  Purpose:                                                                  *
+ *      Performs p += q*r for polynomials p, q, r in Z[x].                    *
+ *  Arguments:                                                                *
+ *      p (tmpl_IntPolynomial * const):                                       *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being multiplied.                          *
+ *      r (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being multiplied with q.                           *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Product_Cauchy(tmpl_IntPolynomial * const p,
+                                        const tmpl_IntPolynomial * const q,
+                                        const tmpl_IntPolynomial * const r);
+
+/******************************************************************************
+ *  Function:                                                                 *
+ *      tmpl_IntPolynomial_AddTo_Product_Cauchy_Kernel                        *
+ *  Purpose:                                                                  *
+ *      Performs p += q*r for polynomials p, q, r in Z[x].                    *
+ *  Arguments:                                                                *
+ *      p (tmpl_IntPolynomial * const):                                       *
+ *          A pointer to a polynomial. The sum is stored here.                *
+ *      q (const tmpl_IntPolynomial * const):                                 *
+ *          One of the polynomials being multiplied.                          *
+ *      r (const tmpl_IntPolynomial * const):                                 *
+ *          The polynomial being multiplied with q.                           *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+extern void
+tmpl_IntPolynomial_AddTo_Product_Cauchy_Kernel(
+    tmpl_IntPolynomial * const p,
+    const tmpl_IntPolynomial * const q,
+    const tmpl_IntPolynomial * const r
+);
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_IntPolynomial_AddTo_Product_Naive                                *
  *  Purpose:                                                                  *
  *      Computes P += A*B. Redundant zeros are removed from the result.       *
