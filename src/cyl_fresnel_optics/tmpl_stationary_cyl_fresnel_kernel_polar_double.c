@@ -16,10 +16,16 @@
  *  You should have received a copy of the GNU General Public License         *
  *  along with libtmpl.  If not, see <https://www.gnu.org/licenses/>.         *
  ******************************************************************************
+ *              tmpl_stationary_cyl_fresnel_kernel_polar_double               *
+ ******************************************************************************
+ *  Purpose:                                                                  *
+ *      Computes the stationary Fresnel kernel in polar form.                 *
+ ******************************************************************************
  *  Author:     Ryan Maguire                                                  *
  *  Date:       November 11, 2025                                             *
  ******************************************************************************/
 
+/*  TMPL_RESTRICT mcaro provided here.                                        */
 #include <libtmpl/include/tmpl_config.h>
 
 /*  The cylindrical Fresnel geometry struct.                                  */
@@ -37,7 +43,7 @@
 /*  Forward declaration / function prototype.                                 */
 #include <libtmpl/include/tmpl_cyl_fresnel_optics.h>
 
-/*  Function for computing the full stationary Fresnel kernel.                */
+/*  Function for computing the full stationary Fresnel kernel in polar form.  */
 void
 tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
     double k,
@@ -66,7 +72,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
 
     /*  Using u and rho, we can compute the sine of the opening angle without *
      *  the need for trig functions. Compute.                                 */
-    const double sin_opening = uz / rho0_dist;
+    const double sin_opening = uz * rcpr_rho0_dist;
 
     /*  The radius of the dummy variable does not change, but we still need   *
      *  this to update the angle in the Newton-Raphson loop.                  */
@@ -88,30 +94,38 @@ tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
 
     /*  Variables for the computation of psi. psi is computed via:            *
      *                                                                        *
-     *      psi = k (|| R - rho || - un . (R - rho))                          *
+     *      psi = || R - rho || - un . (R - rho)                              *
      *                                                                        *
      *  mag is the left term, dot is the right term, and dx_s and dx_y are    *
-     *  x and y components of R - rho, respectively.                          */
+     *  x and y components of R - rho, respectively. Note, we omit the "k"    *
+     *  scale factor in the definition of psi. Since psi, psi', and psi''     *
+     *  will all have this k scale factor as well, the ratios of these will   *
+     *  hence have the k cancel. We can save a few redundant multiplications  *
+     *  by removing "k" from the definition of psi. The wavenumber appears at *
+     *  the very end of the computation for the final expression.             */
     double dx_s, dy_s, dot, mag;
 
-    /*  Variable for the output, which is given by:                           *
+    /*  Variables for the output, which is given by:                          *
      *                                                                        *
-     *                               ---------                                *
-     *            sin(B)  1 - i     /   2 pi     exp(i psi_s)                 *
-     *      ker = ------ -------   / --------- ---------------                *
-     *               L   sqrt(2) \/  |psi_s''| || R - rho_s ||                *
+     *                               -----------                              *
+     *            sin(B)  1 - i     /   2 pi      exp(i psi_s)                *
+     *      ker = ------ -------   / ----------- ---------------              *
+     *               L   sqrt(2) \/  k |psi_s''| || R - rho_s ||              *
      *                                                                        *
-     *                                 ---------                              *
-     *             sin(B)   1 - i     /   2 pi     exp(i psi_s)               *
-     *          = -------- -------   / --------- ---------------              *
-     *            2 pi / k sqrt(2) \/  |psi_s''| || R - rho_s ||              *
+     *                                 -----------                            *
+     *             sin(B)   1 - i     /   2 pi      exp(i psi_s)              *
+     *          = -------- -------   / ----------- ---------------            *
+     *            2 pi / k sqrt(2) \/  k |psi_s''| || R - rho_s ||            *
      *                                                                        *
      *                                 ------------                           *
-     *                      1 - i     /     1        exp(i psi_s)             *
-     *          = k sin(B) -------   / ------------ ---------------           *
-     *                        2    \/  pi |psi_s''| || R - rho_s ||           *
+     *                    1 - i     /     k        exp(i psi_s)               *
+     *          = sin(B) -------   / ------------ ---------------             *
+     *                      2    \/  pi |psi_s''| || R - rho_s ||             *
      *                                                                        *
-     *  We need variables for psi, psi'', and the scale factor for the kernel.*/
+     *  Where L is the wavelength, L = 2 pi / k, where k is the wavenumber.   *
+     *  The output is the above expression in polar form. We need a variable  *
+     *  for psi'', and a variable for the "scale" factor, which is the term   *
+     *  that appears in the square root above, multiplied by k.               */
     double d2psi, factor;
 
     /*  The wavenumber is usually quite large. To get a good relative error,  *
@@ -139,7 +153,7 @@ tmpl_Double_Stationary_Cyl_Fresnel_Phase_And_Weight(
          *                                                                    *
          *               -                                                 -  *
          *              | dx * rho_y - dy * rho_x   uy * rho_x -ux * rho_y  | *
-         *      psi' = k| ----------------------- + ----------------------  | *
+         *      psi' =  | ----------------------- + ----------------------  | *
          *              |     || R - rho ||             || R - rho0 ||      | *
          *               -                                                 -  *
          *                                                                    *
