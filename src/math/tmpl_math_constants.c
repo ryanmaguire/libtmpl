@@ -55,11 +55,11 @@ const long double tmpl_ldouble_two_pi = TMPL_LDOUBLE_TWO_PI;
 
 const float tmpl_float_four_pi = TMPL_FLOAT_FOUR_PI;
 const double tmpl_double_four_pi = TMPL_DOUBLE_FOUR_PI;
-const long double tmpl_LDouble_Four_Pi = TMPL_LDOUBLE_FOUR_PI;
+const long double tmpl_ldouble_four_pi = TMPL_LDOUBLE_FOUR_PI;
 
 const float tmpl_float_eight_pi = TMPL_FLOAT_EIGHT_PI;
 const double tmpl_double_eight_pi = TMPL_DOUBLE_EIGHT_PI;
-const long double tmpl_LDouble_Eight_Pi = TMPL_LDOUBLE_EIGHT_PI;
+const long double tmpl_ldouble_eight_pi = TMPL_LDOUBLE_EIGHT_PI;
 
 /******************************************************************************
  *                          Fractional Values of Pi                           *
