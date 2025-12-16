@@ -69,7 +69,7 @@ double tmpl_Double_SinPi(double x)
     {
         /*  For very small x, sin(pi x) = pi x + O(x^3). Return pi x.         */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 27U)
-            return tmpl_Double_Pi * x;
+            return tmpl_double_pi * x;
 
         /*  For |x| < 2^-4 we may use a Remez polynomial that is quite fast.  */
         if (TMPL_DOUBLE_EXPO_BITS(w) < TMPL_DOUBLE_UBIAS - 4U)
@@ -214,7 +214,7 @@ double tmpl_Double_SinPi(double x)
     if (abs_x < 0.5)
     {
         if (abs_x < 7.450580596923828e-09)
-            return tmpl_Double_Pi * x;
+            return tmpl_double_pi * x;
 
         if (abs_x < 0.0625)
             return tmpl_Double_SinPi_Remez(x);

@@ -38,7 +38,7 @@ double tmpl_Double_Coss_Window(double x, double W)
     /*  Compute the cosine squared window function.                           */
     if (abs_x <= W/2.0)
     {
-        arg    = abs_x * tmpl_Double_Pi/W;
+        arg    = abs_x * tmpl_double_pi/W;
         coss_x = tmpl_Double_Cos(arg);
         coss_x *= coss_x;
     }

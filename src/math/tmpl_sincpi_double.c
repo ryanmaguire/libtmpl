@@ -42,7 +42,7 @@ double tmpl_Double_SincPi(double x)
         return tmpl_Double_SincPi_Rat_Remez(x);
     }
 
-    return tmpl_Double_SinPi(x) / (tmpl_Double_Pi * x);
+    return tmpl_Double_SinPi(x) / (tmpl_double_pi * x);
 }
 
 #else
@@ -52,7 +52,7 @@ double tmpl_Double_SincPi(double x)
     if (x == 0.0)
         return 1.0;
 
-    return tmpl_Double_SinPi(x) / (tmpl_Double_Pi * x);
+    return tmpl_Double_SinPi(x) / (tmpl_double_pi * x);
 }
 
 #endif
