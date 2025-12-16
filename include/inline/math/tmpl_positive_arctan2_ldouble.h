@@ -63,7 +63,7 @@
 /*  Location of the TMPL_INLINE_DECL macro.                                   */
 #include <libtmpl/include/tmpl_config.h>
 
-/*  tmpl_LDouble_Two_Pi provided here.                                        */
+/*  tmpl_ldouble_two_pi provided here.                                        */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
 
 /*  Tell the compiler about the main Arctan2 function.                        */
@@ -83,7 +83,7 @@ long double tmpl_LDouble_Positive_Arctan2(long double y, long double x)
      *  output will also be NaN since comparing a NaN using "==" always       *
      *  returns False. Hence there are no checks for NaNs here.               */
     if (angle < 0.0L)
-        return angle + tmpl_LDouble_Two_Pi;
+        return angle + tmpl_ldouble_two_pi;
 
     /*  Otherwise the angle lies between 0 and pi already. Simply return it.  */
     return angle;

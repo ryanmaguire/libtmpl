@@ -215,15 +215,15 @@ extern const long double tmpl_ldouble_pi;
 
 extern const float tmpl_float_two_pi;
 extern const double tmpl_double_two_pi;
-extern const long double tmpl_LDouble_Two_Pi;
+extern const long double tmpl_ldouble_two_pi;
 
 extern const float tmpl_float_four_pi;
 extern const double tmpl_double_four_pi;
-extern const long double tmpl_LDouble_Four_Pi;
+extern const long double tmpl_ldouble_four_pi;
 
 extern const float tmpl_float_eight_pi;
 extern const double tmpl_double_eight_pi;
-extern const long double tmpl_LDouble_Eight_Pi;
+extern const long double tmpl_ldouble_eight_pi;
 
 /******************************************************************************
  *                          Fractional Values of Pi                           *
