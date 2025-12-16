@@ -209,8 +209,8 @@
 /******************************************************************************
  *                              Multiples of Pi                               *
  ******************************************************************************/
-extern const float tmpl_Float_Pi;
-extern const double tmpl_Double_Pi;
+extern const float tmpl_float_pi;
+extern const double tmpl_double_pi;
 extern const long double tmpl_LDouble_Pi;
 
 extern const float tmpl_Float_Two_Pi;
