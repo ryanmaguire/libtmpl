@@ -6,5 +6,5 @@ long double tmpl_LDouble_SincPi(long double x)
     if (x == 0.0L)
         return 1.0L;
 
-    return tmpl_LDouble_SinPi(x) / (tmpl_LDouble_Pi * x);
+    return tmpl_LDouble_SinPi(x) / (tmpl_ldouble_pi * x);
 }

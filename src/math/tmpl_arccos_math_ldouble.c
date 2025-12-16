@@ -378,7 +378,7 @@ long double tmpl_LDouble_Arccos(long double x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (TMPL_LDOUBLE_IS_NEGATIVE(w))
-            return tmpl_LDouble_Pi - tmpl_LDouble_Arccos_Tail_End(-x);
+            return tmpl_ldouble_pi - tmpl_LDouble_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_LDouble_Arccos_Tail_End(x);
@@ -386,7 +386,7 @@ long double tmpl_LDouble_Arccos(long double x)
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0L)
-        return tmpl_LDouble_Pi;
+        return tmpl_ldouble_pi;
 
     /*  Similarly, since cos(0) = 1 we have acos(1) = 0. Use this.            */
     if (x == 1.0L)
@@ -453,7 +453,7 @@ long double tmpl_LDouble_Arccos(long double x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (x < 0.0L)
-            return tmpl_LDouble_Pi - tmpl_LDouble_Arccos_Tail_End(abs_x);
+            return tmpl_ldouble_pi - tmpl_LDouble_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_LDouble_Arccos_Tail_End(abs_x);
@@ -461,7 +461,7 @@ long double tmpl_LDouble_Arccos(long double x)
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0L)
-        return tmpl_LDouble_Pi;
+        return tmpl_ldouble_pi;
 
     /*  Similarly, since cos(0) = 1 we have acos(1) = 0. Use this.            */
     if (x == 1.0L)

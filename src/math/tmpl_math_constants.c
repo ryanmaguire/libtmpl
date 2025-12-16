@@ -47,7 +47,7 @@
  ******************************************************************************/
 const float tmpl_float_pi = TMPL_FLOAT_PI;
 const double tmpl_double_pi = TMPL_DOUBLE_PI;
-const long double tmpl_LDouble_Pi = TMPL_LDOUBLE_PI;
+const long double tmpl_ldouble_pi = TMPL_LDOUBLE_PI;
 
 const float tmpl_Float_Two_Pi = TMPL_FLOAT_TWO_PI;
 const double tmpl_Double_Two_Pi = TMPL_DOUBLE_TWO_PI;

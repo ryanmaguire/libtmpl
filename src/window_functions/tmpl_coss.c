@@ -59,7 +59,7 @@ long double tmpl_LDouble_Coss_Window(long double x, long double W)
     /*  Compute the cosine squared window function.                           */
     if (abs_x <= W/2.0L)
     {
-        arg    = abs_x * tmpl_LDouble_Pi/W;
+        arg    = abs_x * tmpl_ldouble_pi/W;
         coss_x = tmpl_LDouble_Cos(arg);
         coss_x *= coss_x;
     }
