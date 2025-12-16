@@ -268,7 +268,7 @@ float tmpl_Float_Arccos(float x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (TMPL_FLOAT_IS_NEGATIVE(w))
-            return tmpl_Float_Pi - tmpl_Float_Arccos_Tail_End(-x);
+            return tmpl_float_pi - tmpl_Float_Arccos_Tail_End(-x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Float_Arccos_Tail_End(x);
@@ -276,7 +276,7 @@ float tmpl_Float_Arccos(float x)
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0F)
-        return tmpl_Float_Pi;
+        return tmpl_float_pi;
 
     /*  Similarly, since cos(0) = 1 we have acos(1) = 0. Use this.            */
     if (x == 1.0F)
@@ -339,7 +339,7 @@ float tmpl_Float_Arccos(float x)
     {
         /*  For negative inputs use the formula acos(x) = pi - acos(-x).      */
         if (x < 0.0F)
-            return tmpl_Float_Pi - tmpl_Float_Arccos_Tail_End(abs_x);
+            return tmpl_float_pi - tmpl_Float_Arccos_Tail_End(abs_x);
 
         /*  Otherwise use the tail-end function for 0.5 <= x < 1.             */
         return tmpl_Float_Arccos_Tail_End(abs_x);
@@ -347,7 +347,7 @@ float tmpl_Float_Arccos(float x)
 
     /*  Since cos(pi) = -1, we have acos(-1) = pi. Return pi.                 */
     if (x == -1.0F)
-        return tmpl_Float_Pi;
+        return tmpl_float_pi;
 
     /*  Similarly, since cos(0) = 1 we have acos(1) = 0. Use this.            */
     if (x == 1.0F)

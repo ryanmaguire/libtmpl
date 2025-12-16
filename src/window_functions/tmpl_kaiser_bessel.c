@@ -25,7 +25,7 @@ float tmpl_Float_Kaiser_Bessel(float x, float W, float alpha)
             arg = 2.0F* abs_x/W;
             arg = tmpl_Float_Sqrt(1.0F - arg*arg);
 
-            alpha *= tmpl_Float_Pi;
+            alpha *= tmpl_float_pi;
             kbmd = tmpl_Float_Bessel_I0(alpha*arg)/tmpl_Float_Bessel_I0(alpha);
         }
         else

@@ -17,7 +17,7 @@ float tmpl_Float_Coss_Window(float x, float W)
     /*  Compute the cosine squared window function.                           */
     if (abs_x <= W/2.0F)
     {
-        arg    = abs_x * tmpl_Float_Pi / W;
+        arg    = abs_x * tmpl_float_pi / W;
         coss_x = tmpl_Float_Cos(arg);
         coss_x *= coss_x;
     }

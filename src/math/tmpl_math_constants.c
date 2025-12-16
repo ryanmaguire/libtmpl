@@ -45,7 +45,7 @@
 /******************************************************************************
  *                              Multiples of Pi                               *
  ******************************************************************************/
-const float tmpl_Float_Pi = TMPL_FLOAT_PI;
+const float tmpl_float_pi = TMPL_FLOAT_PI;
 const double tmpl_Double_Pi = TMPL_DOUBLE_PI;
 const long double tmpl_LDouble_Pi = TMPL_LDOUBLE_PI;
 
