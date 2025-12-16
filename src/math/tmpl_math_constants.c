@@ -50,15 +50,15 @@ const double tmpl_double_pi = TMPL_DOUBLE_PI;
 const long double tmpl_ldouble_pi = TMPL_LDOUBLE_PI;
 
 const float tmpl_Float_Two_Pi = TMPL_FLOAT_TWO_PI;
-const double tmpl_Double_Two_Pi = TMPL_DOUBLE_TWO_PI;
+const double tmpl_double_two_pi = TMPL_DOUBLE_TWO_PI;
 const long double tmpl_LDouble_Two_Pi = TMPL_LDOUBLE_TWO_PI;
 
 const float tmpl_Float_Four_Pi = TMPL_FLOAT_FOUR_PI;
-const double tmpl_Double_Four_Pi = TMPL_DOUBLE_FOUR_PI;
+const double tmpl_double_four_pi = TMPL_DOUBLE_FOUR_PI;
 const long double tmpl_LDouble_Four_Pi = TMPL_LDOUBLE_FOUR_PI;
 
 const float tmpl_Float_Eight_Pi = TMPL_FLOAT_EIGHT_PI;
-const double tmpl_Double_Eight_Pi = TMPL_DOUBLE_EIGHT_PI;
+const double tmpl_double_eight_pi = TMPL_DOUBLE_EIGHT_PI;
 const long double tmpl_LDouble_Eight_Pi = TMPL_LDOUBLE_EIGHT_PI;
 
 /******************************************************************************

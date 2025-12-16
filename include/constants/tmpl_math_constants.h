@@ -214,15 +214,15 @@ extern const double tmpl_double_pi;
 extern const long double tmpl_ldouble_pi;
 
 extern const float tmpl_Float_Two_Pi;
-extern const double tmpl_Double_Two_Pi;
+extern const double tmpl_double_two_pi;
 extern const long double tmpl_LDouble_Two_Pi;
 
 extern const float tmpl_Float_Four_Pi;
-extern const double tmpl_Double_Four_Pi;
+extern const double tmpl_double_four_pi;
 extern const long double tmpl_LDouble_Four_Pi;
 
 extern const float tmpl_Float_Eight_Pi;
-extern const double tmpl_Double_Eight_Pi;
+extern const double tmpl_double_eight_pi;
 extern const long double tmpl_LDouble_Eight_Pi;
 
 /******************************************************************************
