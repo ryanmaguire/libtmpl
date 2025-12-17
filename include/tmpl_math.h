@@ -556,10 +556,10 @@ extern const long double tmpl_ldouble_pow_2_table[65];
  *  Purpose:                                                                  *
  *      Compute the arccos (inverse cosine) of a real number.                 *
  *  Arguments:                                                                *
- *      double x:                                                             *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
- *      double acos_x:                                                        *
+ *      acos_x (double):                                                      *
  *          The inverse cosine of x, cos^-1(x).                               *
  *  Notes:                                                                    *
  *      Float and long double equivalents are provided as well.               *
@@ -581,9 +581,9 @@ extern const long double tmpl_ldouble_pow_2_table[65];
 /*  Else for #if TMPL_USE_MATH_ALGORITHMS != 1.                               */
 
 /*  Otherwise use the functions in src/math/.                                 */
-extern float tmpl_Float_Arccos(float x);
-extern double tmpl_Double_Arccos(double x);
-extern long double tmpl_LDouble_Arccos(long double x);
+extern float tmpl_Float_Arccos(const float x);
+extern double tmpl_Double_Arccos(const double x);
+extern long double tmpl_LDouble_Arccos(const long double x);
 
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS != 1.                                 */
