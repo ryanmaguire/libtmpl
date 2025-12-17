@@ -99,7 +99,7 @@
 #define TMPL_RCPR_BIG_SCALE (7.458340731200206743290965E-155)
 
 /*  Function for computing the magnitude of the vector (x, y) in the plane.   */
-double tmpl_Double_Hypot(double x, double y)
+double tmpl_Double_Hypot(const double x, const double y)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     tmpl_IEEE754_Double w;
@@ -180,7 +180,7 @@ double tmpl_Double_Hypot(double x, double y)
  *  algorithm requires divisions and multiplications by non-constants.        */
 
 /*  Function for computing the magnitude of the vector (x, y) in the plane.   */
-double tmpl_Double_Hypot(double x, double y)
+double tmpl_Double_Hypot(const double x, const double y)
 {
     /*  Declare necessary variables. C89 requires declarations at the top.    */
     double rcpr_t;

@@ -98,7 +98,7 @@ extern tmpl_TwoVectorDouble
 tmpl_2DDouble_Normalize(const tmpl_TwoVectorDouble * const P);
 
 /*  Tell the compiler about the hypotenuse function.                          */
-extern double tmpl_Double_Hypot(double x, double y);
+extern double tmpl_Double_Hypot(const double x, const double y);
 
 /*  We can safely handle denormal numbers if IEEE-754 support is available.   */
 #if TMPL_HAS_IEEE754_DOUBLE == 1

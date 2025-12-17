@@ -117,7 +117,7 @@
 #include <libtmpl/include/types/tmpl_complex_double.h>
 
 /*  The hypot function does all of the heavy lifting.                         */
-extern double tmpl_Double_Hypot(double x, double y);
+extern double tmpl_Double_Hypot(const double x, const double y);
 
 /*  Function for computing the magnitude, or modulus, of a complex number.    */
 TMPL_INLINE_DECL

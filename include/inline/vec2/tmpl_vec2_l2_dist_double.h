@@ -80,7 +80,7 @@
 #include <libtmpl/include/types/tmpl_vec2_double.h>
 
 /*  Tell the compiler about the hypotenuse function.                          */
-extern double tmpl_Double_Hypot(double x, double y);
+extern double tmpl_Double_Hypot(const double x, const double y);
 
 /*  Function for computing the Euclidean distance between two points.         */
 TMPL_INLINE_DECL
