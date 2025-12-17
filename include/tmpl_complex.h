@@ -940,6 +940,8 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z);
 #if TMPL_USE_INLINE == 1
 
 #include TMPL_INLINE_FILE(tmpl_complex_horner_sum_real_double.h)
+#include TMPL_INLINE_FILE(tmpl_complex_horner_sum_real_float.h)
+#include TMPL_INLINE_FILE(tmpl_complex_horner_sum_real_ldouble.h)
 
 #else
 
@@ -947,6 +949,16 @@ extern void
 tmpl_CDouble_Horner_Sum_Real(tmpl_ComplexDouble * const self,
                              const tmpl_ComplexDouble * const arg,
                              const double coeff);
+
+extern void
+tmpl_CFloat_Horner_Sum_Real(tmpl_ComplexFloat * const self,
+                            const tmpl_ComplexFloat * const arg,
+                            const float coeff);
+
+extern void
+tmpl_CLDouble_Horner_Sum_Real(tmpl_ComplexLongDouble * const self,
+                              const tmpl_ComplexLongDouble * const arg,
+                              const long double coeff);
 
 #endif
 
