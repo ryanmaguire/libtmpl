@@ -924,6 +924,34 @@ extern tmpl_ComplexLongDouble tmpl_CLDouble_Faddeeva(tmpl_ComplexLongDouble z);
 
 /******************************************************************************
  *  Function:                                                                 *
+ *      tmpl_CDouble_Horner_Sum_Real                                          *
+ *  Purpose:                                                                  *
+ *      Compute the Horner iterate, w = z * w + c, where c is real.           *
+ *  Arguments:                                                                *
+ *      self (tmpl_ComplexDouble * const):                                    *
+ *          A pointer to a complex number. The result is stored here.         *
+ *      arg (const tmpl_ComplexDouble * const):                               *
+ *          The variable for the polynomial. This is z in w = z * w + c.      *
+ *      coeff (const double):                                                 *
+ *          The real coefficient. This is c in w = z * w + c.                 *
+ *  Output:                                                                   *
+ *      None (void).                                                          *
+ ******************************************************************************/
+#if TMPL_USE_INLINE == 1
+
+#include TMPL_INLINE_FILE(tmpl_complex_horner_sum_real_double.h)
+
+#else
+
+extern void
+tmpl_CDouble_Horner_Sum_Real(tmpl_ComplexDouble * const self,
+                             const tmpl_ComplexDouble * const arg,
+                             const double coeff);
+
+#endif
+
+/******************************************************************************
+ *  Function:                                                                 *
  *      tmpl_CDouble_Imag_Part                                                *
  *  Purpose:                                                                  *
  *      Return the imaginary part of a complex number. This is equivalent to  *
