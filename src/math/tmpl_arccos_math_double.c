@@ -28,7 +28,7 @@
  *  Purpose:                                                                  *
  *      Computes acos(x), the inverse cosine function.                        *
  *  Arguments:                                                                *
- *      x (double):                                                           *
+ *      x (const double):                                                     *
  *          A real number.                                                    *
  *  Output:                                                                   *
  *      acos_x (double):                                                      *
@@ -206,7 +206,7 @@
 #if TMPL_USE_MATH_ALGORITHMS == 1
 
 /*  Forward declaration for the function, also found in tmpl_math.h.          */
-extern double tmpl_Double_Arccos(double x);
+extern double tmpl_Double_Arccos(const double x);
 
 /*  Mathematical constants like pi and pi / 2 are found here.                 */
 #include <libtmpl/include/constants/tmpl_math_constants.h>
@@ -242,7 +242,7 @@ extern double tmpl_Double_Arccos(double x);
  *  method a slight performance boost over the portable one below.            */
 
 /*  Double precision inverse cosine (acos equivalent).                        */
-double tmpl_Double_Arccos(double x)
+double tmpl_Double_Arccos(const double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     tmpl_IEEE754_Double w;
@@ -316,7 +316,7 @@ extern double tmpl_Double_Abs(double x);
 /*  End of #if TMPL_USE_INLINE == 1.                                          */
 
 /*  Double precision inverse cosine (acos equivalent).                        */
-double tmpl_Double_Arccos(double x)
+double tmpl_Double_Arccos(const double x)
 {
     /*  Declare necessary variables. C89 requires this at the top.            */
     const double abs_x = tmpl_Double_Abs(x);
