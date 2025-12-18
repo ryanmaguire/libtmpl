@@ -28,9 +28,9 @@
  *  Purpose:                                                                  *
  *      Evaluates the sum of two floats, returning the sum and the error.     *
  *  Arguments:                                                                *
- *      x (float):                                                            *
+ *      x (const float):                                                      *
  *          A real number.                                                    *
- *      y (float):                                                            *
+ *      y (const float):                                                      *
  *          Another real number.                                              *
  *      out (float * TMPL_RESTRICT const):                                    *
  *          The rounded sum x + y will be stored here.                        *
@@ -63,23 +63,53 @@
  *      1.) Depending on compiler and architecture we may need to declare     *
  *          certain variables as volatile. Failure to do so results in a      *
  *          poor Fast2Sum.                                                    *
+ *                                                                            *
  *      2.) On compilers supporting the "restrict" keyword, out and err are   *
  *          declared as "restrict" pointers. This requires that out and err   *
  *          point to different locations. To properly use this function, the  *
  *          caller should do this regardless.                                 *
+ *                                                                            *
+ *      3.) There are no checks for NULL pointers.                            *
+ *                                                                            *
+ *      4.) There are no checks for NaN or Infinity.                          *
  *  References:                                                               *
  *      1.) https://en.wikipedia.org/wiki/2Sum                                *
+ *                                                                            *
+ *          Wikipedia article on the 2Sum algorithm, which is the more        *
+ *          accurate version of Fast2Sum. Unlike Fast2Sum, 2Sum does not      *
+ *          assume |x| >= |y|, but 2Sum requires 5 additions, and Fast2Sum    *
+ *          only needs 3.                                                     *
+ *                                                                            *
  *      2.) https://en.wikipedia.org/wiki/Kahan_summation_algorithm           *
+ *                                                                            *
+ *          Wikipedia article for Kahan summation. The standard Kahan         *
+ *          algorithm uses Fast2Sum to improve the accuracy when summing      *
+ *          multiple floating-point numbers.                                  *
+ *                                                                            *
  *      3.) Dekker, T.J. (June 1971).                                         *
- *          "A floating-point technique for                                   *
- *              extending the available precision."                           *
+ *          A floating-point technique for extending the available precision. *
  *          Numerische Mathematik. Volume 18, Number 3: Pages 224-242.        *
+ *                                                                            *
+ *          Classic paper on double-double arithmetic. The original Fast2Sum  *
+ *          algorithm is described here.                                      *
+ *                                                                            *
  *      4.) Hida, Y., Li, X., Bailey, D. (May 2008).                          *
- *          "Library for Double-Double and Quad-Double Arithmetic."           *
+ *          Library for Double-Double and Quad-Double Arithmetic.             *
+ *                                                                            *
+ *          Paper detailing the implementation of double-double and           *
+ *          quad-double arithmetic. The 2Sum and Fast2Sum algorithms are      *
+ *          described here, as is the 2Prod algorithm.                        *
+ *                                                                            *
  *      5.) Schewchuk, J. (October 1997).                                     *
- *          "Adaptive Precision Floating-Point Arithmetic                     *
- *              and Fast Robust Geometric Predicates."                        *
+ *          Adaptive Precision Floating-Point Arithmetic and                  *
+ *          Fast Robust Geometric Predicates.                                 *
  *          Discrete & Computational Geometry Vol 18, Number 3: Pages 305-363 *
+ *                                                                            *
+ *          Detailed analysis of 2Sum, Fast2Sum, and 2Prod, allowing for      *
+ *          arbitrarily sized floating-point types. This paper is useful for  *
+ *          extending 2Prod to the various long double types such as 80-bit   *
+ *          extended and 128-bit quadruple. Proofs are included along with    *
+ *          the algorithms.                                                   *
  ******************************************************************************
  *                                DEPENDENCIES                                *
  ******************************************************************************
@@ -100,8 +130,8 @@
 /*  Standard Fast2Sum algorithm at single precision.                          */
 TMPL_INLINE_DECL
 void
-tmpl_Float_Fast_Two_Sum(float x,
-                        float y,
+tmpl_Float_Fast_Two_Sum(const float x,
+                        const float y,
                         float * TMPL_RESTRICT const out,
                         float * TMPL_RESTRICT const err)
 {
@@ -111,7 +141,7 @@ tmpl_Float_Fast_Two_Sum(float x,
     /*  The compensated y term, i.e. the bits lost from summing with x.       */
     TMPL_VOLATILE const float ycomp = sum - x;
 
-    /*  The output is the floating point sum, the error can be computed by    *
+    /*  The output is the floating-point sum, the error can be computed by    *
      *  summing together the error terms for x and y.                         */
     *out = sum;
     *err = y - ycomp;
