@@ -31,8 +31,11 @@
 /*  Only used if inline support is not available.                             */
 #if TMPL_USE_INLINE != 1
 
-/*  Function prototype given here.                                            */
-#include <libtmpl/include/tmpl_two_sum.h>
+/*  Function prototype / forward declaration.                                 */
+extern void
+tmpl_Double_Neumaier_Two_Sum(double input,
+                             double * TMPL_RESTRICT const sum,
+                             double * TMPL_RESTRICT const err);
 
 /*  Implemented in include/two_sum/tmpl_neumaier_two_sum_double.h.            */
 #include "../../include/inline/two_sum/tmpl_neumaier_two_sum_double.h"
