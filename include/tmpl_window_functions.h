@@ -3,7 +3,14 @@
 #define TMPL_WINDOW_FUNCTIONS_H
 
 /*  complex data types are defined here.                                      */
-#include <libtmpl/include/tmpl_complex.h>
+#include <libtmpl/include/types/tmpl_complex_double.h>
+#include <libtmpl/include/types/tmpl_complex_float.h>
+#include <libtmpl/include/types/tmpl_complex_ldouble.h>
+
+/*  Window function typedefs found here (function pointers).                  */
+#include <libtmpl/include/types/tmpl_window_function_double.h>
+#include <libtmpl/include/types/tmpl_window_function_float.h>
+#include <libtmpl/include/types/tmpl_window_function_ldouble.h>
 
 /*  If using with C++ (and not C), wrap the entire header file in an extern   *
  *  "C" statement. Check if C++ is being used with __cplusplus.               */
@@ -23,15 +30,6 @@ tmpl_Complex_Window_Normalization(tmpl_ComplexDouble *ker,
 #define KBMD20NormEQ 1.52048382
 #define KBMD25NormEQ 1.65994438
 #define KBMD35NormEQ 1.52048382
-
-/*  typedef for the window function pointers. Window functions take in two    *
- *  doubles (the x-value and the window width), and return a double.          *
- *  The function pointer works as follows:                                    *
- *      return_type  (*type_name)(type_var1, type_var2, ...)                  *
- *  So, let's typedef this for the window function.                           */
-typedef float (*tmpl_WindowFuncFloat)(float, float);
-typedef double (*tmpl_WindowFuncDouble)(double, double);
-typedef long double (*tmpl_WindowFuncLDouble)(long double, long double);
 
 /*  As a side comment, the FresT function pointer takes a different number of *
  *  variables depending on which method of diffraction correction is being    *
