@@ -497,16 +497,6 @@ extern const long double tmpl_ldouble_log_table[128];
 #endif
 /*  End of #if TMPL_USE_MATH_ALGORITHMS == 1.                                 */
 
-/*  The values cos((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_cosd_table[180];
-extern const float tmpl_float_cosd_table[180];
-extern const long double tmpl_ldouble_cosd_table[180];
-
-/*  The values cos(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_cospi_table[128];
-extern const float tmpl_float_cospi_table[128];
-extern const long double tmpl_ldouble_cospi_table[128];
-
 /*  Factorial tables.                                                         */
 extern const float tmpl_float_factorial_table[34];
 
@@ -531,20 +521,15 @@ extern const double tmpl_double_rcpr_table[128];
 extern const float tmpl_float_rcpr_table[128];
 extern const long double tmpl_ldouble_rcpr_table[128];
 
-/*  The values sin((pi/180)*k) for k = 0, 1, ..., 179.                        */
-extern const double tmpl_double_sind_table[180];
-extern const float tmpl_float_sind_table[180];
-extern const long double tmpl_ldouble_sind_table[180];
-
-/*  The values sin(pi*k/128) for k = 0, 1, ..., 127.                          */
-extern const double tmpl_double_sinpi_table[128];
-extern const float tmpl_float_sinpi_table[128];
-extern const long double tmpl_ldouble_sinpi_table[128];
-
 /*  The powers 2^n for n = 0, 1, ..., 64, at different precisions.            */
 extern const double tmpl_double_pow_2_table[65];
 extern const float tmpl_float_pow_2_table[65];
 extern const long double tmpl_ldouble_pow_2_table[65];
+
+#include <libtmpl/include/tables/tmpl_cosd_tables.h>
+#include <libtmpl/include/tables/tmpl_cospi_tables.h>
+#include <libtmpl/include/tables/tmpl_sind_tables.h>
+#include <libtmpl/include/tables/tmpl_sinpi_tables.h>
 
 /******************************************************************************
  *                           Non-Inlined Functions                            *
